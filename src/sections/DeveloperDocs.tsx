@@ -1,7 +1,7 @@
 import React from 'react';
 import { TerminalIcon, ArrowUpRightIcon, GlobeIcon, KanbanIcon } from '@/src/components/Icons';
 import { APP_CONTENT } from '@/src/services/dataService';
-import { FadeIn, ScrambleText } from '@/src/components/Animators';
+import { FadeIn, GlideText } from '@/src/components/Animators';
 
 const DeveloperDocs: React.FC = () => {
   const data = APP_CONTENT.developerDocs;
@@ -54,7 +54,7 @@ const DeveloperDocs: React.FC = () => {
           </FadeIn>
           
           <h2 className="text-4xl md:text-6xl text-white font-medium tracking-tight mb-6 min-h-[1.2em]">
-            <ScrambleText text={data.headline} />
+            <GlideText text={data.headline} />
           </h2>
           
           <FadeIn delay={200}>

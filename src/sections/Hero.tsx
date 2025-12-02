@@ -4,7 +4,7 @@ import DownloadWidget from '@/src/components/DownloadWidget';
 import TrustedBy from '@/src/components/TrustedBy';
 import AddressDisplay from '@/src/components/AddressDisplay';
 import { APP_CONTENT } from '@/src/services/dataService';
-import { FadeIn, ScrambleText } from '@/src/components/Animators';
+import { FadeIn, GlideText } from '@/src/components/Animators';
 
 const Hero: React.FC = () => {
   const data = APP_CONTENT.hero;
@@ -34,7 +34,7 @@ const Hero: React.FC = () => {
 
           {/* Headline */}
           <h1 className="text-5xl md:text-7xl lg:text-8xl tracking-tight text-white mb-8 leading-[1.05] min-h-[1.1em]">
-            <ScrambleText text={data.headline} />
+            <GlideText text={data.headline} />
           </h1>
 
           {/* Subhead */}

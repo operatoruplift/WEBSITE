@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { TerminalIcon, GlobeIcon, ChevronRight, MessageIcon, KanbanIcon, CheckIcon } from '@/src/components/Icons';
 import { APP_CONTENT } from '@/src/services/dataService';
 import { SandboxVisual, StoreVisual, RuntimeVisual, TokenVisual, PermissionsVisual } from '@/src/components/ProductVisuals';
-import { FadeIn, ScrambleText } from '@/src/components/Animators';
+import { FadeIn, GlideText } from '@/src/components/Animators';
 
 const Product: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -121,7 +121,7 @@ const Product: React.FC = () => {
                 </div>
               </FadeIn>
               <h2 className="text-4xl md:text-5xl lg:text-6xl text-white tracking-tight mb-6 leading-tight font-medium min-h-[1.2em]">
-                 <ScrambleText text={data.headline} />
+                 <GlideText text={data.headline} />
               </h2>
               <FadeIn delay={200}>
                 <p className="text-muted text-lg font-mono leading-relaxed max-w-md">

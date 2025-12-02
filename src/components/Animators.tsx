@@ -64,22 +64,19 @@ export const FadeIn: React.FC<FadeInProps> = ({
   );
 };
 
-// --- SCRAMBLE TEXT ANIMATION (REPURPOSED AS GLITCH REVEAL) ---
-interface ScrambleTextProps {
+// --- GLIDE TEXT ANIMATION ---
+interface GlideTextProps {
   text: string;
   className?: string;
-  scrambleSpeed?: number;
-  revealSpeed?: number;
-  triggerOnce?: boolean;
+  delay?: number;
 }
 
-export const ScrambleText: React.FC<ScrambleTextProps> = ({ 
+export const GlideText: React.FC<GlideTextProps> = ({ 
   text, 
   className = "", 
-  triggerOnce = true
+  delay = 0
 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [isGlitching, setIsGlitching] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -87,23 +84,7 @@ export const ScrambleText: React.FC<ScrambleTextProps> = ({
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          setIsGlitching(true);
-          if (triggerOnce) observer.unobserve(entry.target);
-          
-          // Optional: Turn off the heavy glitch animation after it reveals
-          // to save CPU/GPU and reduce distraction.
-          setTimeout(() => {
-            if (ref.current) {
-                ref.current.classList.remove('glitch-reveal');
-                // We keep opacity 1 via a manual style or class if needed, 
-                // but the animation 'both' mode handles the final state.
-                // However, removing the class removes the pseudo-elements (opacity 0 default).
-                // So we need to ensure the main text stays visible.
-                ref.current.style.opacity = '1';
-                ref.current.style.transform = 'skew(0deg)';
-                setIsGlitching(false);
-            }
-          }, 1000); // 1s matches the animation + buffer
+          observer.unobserve(entry.target);
         }
       },
       { threshold: 0.1 }
@@ -111,19 +92,18 @@ export const ScrambleText: React.FC<ScrambleTextProps> = ({
 
     if (ref.current) observer.observe(ref.current);
     return () => { if (ref.current) observer.unobserve(ref.current); };
-  }, [triggerOnce]);
+  }, []);
 
   return (
-    <span className={`relative inline-block ${className}`}>
-        <span 
-          ref={ref} 
-          className={`glitch ${isVisible ? 'glitch-reveal' : ''} relative inline-block`}
-          data-text={text}
-          style={{ opacity: 0 }} // Starts hidden, animation handles opacity
-        >
-          {text}
-        </span>
-        {isGlitching && <span className="glitch-lines-overlay"></span>}
+    <span 
+      ref={ref} 
+      className={`inline-block transition-opacity duration-1000 ease-out ${className}`}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transitionDelay: `${delay}ms`
+      }}
+    >
+      {text}
     </span>
   );
 };

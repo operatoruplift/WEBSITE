@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronRight } from '@/src/components/Icons';
 import { APP_CONTENT } from '@/src/services/dataService';
-import { FadeIn, ScrambleText } from '@/src/components/Animators';
+import { FadeIn, GlideText } from '@/src/components/Animators';
 
 const Security: React.FC = () => {
   const [time, setTime] = useState(0);
@@ -51,7 +51,7 @@ const Security: React.FC = () => {
             </div>
            </FadeIn>
            <h2 className="text-3xl md:text-5xl mb-6 text-white font-medium tracking-tight leading-[1.15] min-h-[1.2em]">
-                <ScrambleText text={data.headline} />
+                <GlideText text={data.headline} />
            </h2>
            <FadeIn delay={300}>
                 <h4 className="text-muted text-lg font-mono leading-relaxed">{data.subhead}</h4>
