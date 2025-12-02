@@ -1,26 +1,261 @@
+@import url('https://fonts.cdnfonts.com/css/sf-pro-display');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #050505;
+    --primary: #FF5500;
+    --muted: #888888;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--background);
+    color: white;
+    overflow-x: hidden;
+    font-family: SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0a0a0a;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  /* Futuristic Selection */
+  ::selection {
+    background: rgba(255, 85, 0, 0.3);
+    color: white;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Marquee Mask */
+  .mask-gradient {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
+  }
+
+  /* Slanted Lines Background Pattern */
+  .bg-slanted-lines {
+    background-color: #050505;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 5px,
+      rgba(255, 255, 255, 0.035) 5px,
+      rgba(255, 255, 255, 0.035) 6px
+    );
+    background-attachment: fixed;
+  }
+
+  /* Dot Pattern Background */
+  .bg-dot-pattern {
+    background-color: #f2f2f2;
+    background-image: radial-gradient(#ccc 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes shine {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes glitch-anim-1 {
+  0% { clip: rect(30px, 9999px, 10px, 0); }
+  20% { clip: rect(70px, 9999px, 90px, 0); }
+  40% { clip: rect(10px, 9999px, 50px, 0); }
+  60% { clip: rect(80px, 9999px, 40px, 0); }
+  80% { clip: rect(40px, 9999px, 70px, 0); }
+  100% { clip: rect(90px, 9999px, 30px, 0); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip: rect(10px, 9999px, 50px, 0); }
+  20% { clip: rect(80px, 9999px, 40px, 0); }
+  40% { clip: rect(30px, 9999px, 10px, 0); }
+  60% { clip: rect(90px, 9999px, 80px, 0); }
+  80% { clip: rect(50px, 9999px, 30px, 0); }
+  100% { clip: rect(70px, 9999px, 90px, 0); }
+}
+
+@keyframes glitch-skew {
+  0% { transform: skew(0deg); opacity: 0; }
+  10% { transform: skew(-10deg); opacity: 1; }
+  20% { transform: skew(0deg); }
+  30% { transform: skew(10deg); }
+  40% { transform: skew(0deg); }
+  50% { transform: skew(-5deg); }
+  60% { transform: skew(0deg); }
+  70% { transform: skew(5deg); }
+  80% { transform: skew(0deg); }
+  100% { transform: skew(0deg); opacity: 1; }
+}
+
+@keyframes glitch-lines-anim {
+  0% { clip-path: inset(20% 0 80% 0); }
+  20% { clip-path: inset(60% 0 10% 0); }
+  40% { clip-path: inset(40% 0 50% 0); }
+  60% { clip-path: inset(80% 0 5% 0); }
+  80% { clip-path: inset(10% 0 70% 0); }
+  100% { clip-path: inset(30% 0 50% 0); }
+}
+
+@layer components {
+  /* Glitch Effect Styles */
+  .glitch {
+    position: relative;
+    color: white;
+  }
+
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--background);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .glitch-reveal::before,
+  .glitch-reveal::after {
+    opacity: 1;
+  }
+
+  .glitch-reveal::before {
+    left: 2px;
+    text-shadow: -1px 0 var(--primary);
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim-1 0.6s infinite linear alternate-reverse;
+  }
+
+  .glitch-reveal::after {
+    left: -2px;
+    text-shadow: -1px 0 #00fff9;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim-2 0.6s infinite linear alternate-reverse;
+  }
+
+  .glitch-reveal {
+    animation: glitch-skew 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+
+  .glitch-lines-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    opacity: 0.1;
+    z-index: 10;
+    pointer-events: none;
+    animation: glitch-lines-anim 0.2s infinite linear;
+    mix-blend-mode: overlay;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+
+  .animate-marquee {
+    animation: marquee 40s linear infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-shine {
+    animation: shine 2s linear infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spin 8s linear infinite;
+  }
+
+  .animate-slide-right {
+    animation: slide-right 3s linear infinite;
+  }
 }
