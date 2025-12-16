@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { HeroData } from '@/lib/types';
 import { DownloadIcon, AppleIcon, WindowsIcon, LinuxIcon } from './Icons';
 
@@ -9,86 +9,9 @@ interface DownloadWidgetProps {
 const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
   const [activeTab, setActiveTab] = useState<'windows'>('windows');
   const [showModal, setShowModal] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
-  const [isAvailable, setIsAvailable] = useState(false);
 
   const currentDownload = data.downloads[activeTab];
   const downloadUrl = 'https://avenindia.blob.core.windows.net/avenstorage/Uplift.exe';
-
-  // Countdown timer to 10AM CET
-  useEffect(() => {
-    const getCETDate = () => {
-      const now = new Date();
-      // Get current date/time in CET/CEST timezone
-      const formatter = new Intl.DateTimeFormat('en-US', {
-        timeZone: 'Europe/Paris',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      });
-      
-      const parts = formatter.formatToParts(now);
-      const cetDate = new Date(
-        parseInt(parts.find(p => p.type === 'year')!.value),
-        parseInt(parts.find(p => p.type === 'month')!.value) - 1,
-        parseInt(parts.find(p => p.type === 'day')!.value),
-        parseInt(parts.find(p => p.type === 'hour')!.value),
-        parseInt(parts.find(p => p.type === 'minute')!.value),
-        parseInt(parts.find(p => p.type === 'second')!.value)
-      );
-      
-      return cetDate;
-    };
-
-    const getNext10PMCET = () => {
-      const now = new Date();
-      const cetNow = getCETDate();
-      
-      // Create target date for today at 10AM CET
-      const targetCET = new Date(cetNow);
-      targetCET.setHours(10, 0, 0, 0); // 10AM = 10:00
-      
-      // If it's already past 10PM today, set target to tomorrow
-      if (cetNow >= targetCET) {
-        targetCET.setDate(targetCET.getDate() + 1);
-      }
-      
-      // Calculate the difference in milliseconds
-      const cetDiff = targetCET.getTime() - cetNow.getTime();
-      // Add the difference to current local time
-      return new Date(now.getTime() + cetDiff);
-    };
-    
-    const updateTimer = () => {
-      const cetNow = getCETDate();
-      const now = new Date();
-      const target = getNext10PMCET();
-      const difference = target.getTime() - now.getTime();
-
-      // Check if current CET time is 10AM or later
-      if (difference <= 0 || cetNow.getHours() >= 10) {
-        setIsAvailable(true);
-        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
-        return;
-      }
-
-      const hours = Math.floor(difference / (1000 * 60 * 60));
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-      setTimeLeft({ hours, minutes, seconds });
-      setIsAvailable(false);
-    };
-
-    updateTimer();
-    const interval = setInterval(updateTimer, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const handleDownloadClick = () => {
     setShowModal(true);
@@ -106,10 +29,6 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
 
   const handleCancelDownload = () => {
     setShowModal(false);
-  };
-
-  const formatTime = (value: number) => {
-    return value.toString().padStart(2, '0');
   };
 
   return (
@@ -135,21 +54,13 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
 
         {/* Main Download Button Container */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          {isAvailable ? (
-            <button
-              onClick={handleDownloadClick}
-              className="group relative overflow-hidden bg-white text-black text-sm md:text-base py-4 px-8 rounded-sm w-full sm:w-auto min-w-[240px] flex items-center justify-center space-x-3 hover:bg-gray-100 transition-colors duration-300 cursor-pointer"
-            >
-              <DownloadIcon className="w-5 h-5" />
-              <span>Download</span>
-            </button>
-          ) : (
-            <div className="group relative overflow-hidden bg-white/10 border border-white/20 text-white text-sm md:text-base py-4 px-8 rounded-sm w-full sm:w-auto min-w-[240px] flex items-center justify-center space-x-3">
-              <span className="font-mono text-sm md:text-base">
-                {formatTime(timeLeft.hours)}:{formatTime(timeLeft.minutes)}:{formatTime(timeLeft.seconds)}
-              </span>
-            </div>
-          )}
+          <button
+            onClick={handleDownloadClick}
+            className="group relative overflow-hidden bg-white text-black text-sm md:text-base py-4 px-8 rounded-sm w-full sm:w-auto min-w-[240px] flex items-center justify-center space-x-3 hover:bg-gray-100 transition-colors duration-300 cursor-pointer"
+          >
+            <DownloadIcon className="w-5 h-5" />
+            <span>Download</span>
+          </button>
 
           <div className="flex flex-col justify-center">
               <span className="text-gray-300 text-sm font-mono">{currentDownload.version}</span>
@@ -161,46 +72,63 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
       {/* Modal */}
       {showModal && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in"
           onClick={handleCancelDownload}
         >
           <div 
-            className="bg-background border border-white/10 rounded-sm p-6 md:p-8 max-w-md w-full shadow-2xl relative"
+            className="bg-background border border-white/20 rounded-lg p-8 md:p-10 max-w-lg w-full shadow-2xl relative overflow-hidden transform transition-all duration-300 scale-100"
             onClick={(e) => e.stopPropagation()}
+            style={{
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+            }}
           >
+            {/* Subtle gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none"></div>
+            
             {/* Close button */}
             <button
               onClick={handleCancelDownload}
-              className="absolute top-4 right-4 text-muted hover:text-white transition-colors duration-300"
+              className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white transition-all duration-300 rounded-full hover:bg-white/10 group"
               aria-label="Close"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
-            {/* Primary indicator dot */}
-            <div className="flex items-center mb-6">
-              <span className="w-2 h-2 rounded-full bg-primary mr-3 shadow-[0_0_8px_rgba(255,85,0,0.6)]"></span>
-              <h3 className="text-lg md:text-xl font-bold text-white uppercase tracking-wider">
-                MVP Version Notice
-              </h3>
+            {/* Header */}
+            <div className="relative mb-8">
+              <div className="flex items-center mb-4">
+                <span className="w-2.5 h-2.5 rounded-full bg-primary mr-3 shadow-[0_0_12px_rgba(255,85,0,0.8)] animate-pulse"></span>
+                <h3 className="text-xl md:text-2xl font-bold text-white uppercase tracking-widest">
+                  MVP Version Notice
+                </h3>
+              </div>
+              <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
             </div>
 
-            <p className="text-gray-300 text-sm md:text-base mb-8 leading-relaxed pl-5">
-              This is an MVP version. Users might face some bugs. Please cooperate and show us support.
-            </p>
+            {/* Content */}
+            <div className="relative mb-10">
+              <p className="text-gray-300 text-base md:text-lg leading-relaxed">
+                This is an MVP version. Users might face some bugs. Please cooperate and show us support.
+              </p>
+            </div>
 
-            <div className="flex items-center space-x-3 pl-5">
+            {/* Buttons */}
+            <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <button
                 onClick={handleConfirmDownload}
-                className="flex-1 bg-white text-black text-sm md:text-base py-3 px-6 rounded-sm font-semibold hover:bg-gray-100 transition-colors duration-300"
+                className="flex-1 group relative overflow-hidden bg-white text-black text-sm md:text-base py-3.5 px-8 rounded-sm font-semibold hover:bg-gray-50 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
               >
-                Continue Download
+                <span className="relative z-10 flex items-center justify-center">
+                  <DownloadIcon className="w-4 h-4 mr-2" />
+                  Download
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
               </button>
               <button
                 onClick={handleCancelDownload}
-                className="flex-1 bg-transparent border border-white/20 text-white text-sm md:text-base py-3 px-6 rounded-sm font-semibold hover:border-primary hover:text-primary transition-colors duration-300"
+                className="flex-1 bg-transparent border border-white/30 text-white text-sm md:text-base py-3.5 px-8 rounded-sm font-semibold hover:border-primary/50 hover:text-primary transition-all duration-300 hover:bg-white/5"
               >
                 Cancel
               </button>
