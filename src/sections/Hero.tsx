@@ -2,7 +2,6 @@ import React from 'react';
 import HeroAnimation from '@/src/components/HeroAnimation';
 import DownloadWidget from '@/src/components/DownloadWidget';
 import TrustedBy from '@/src/components/TrustedBy';
-import AddressDisplay from '@/src/components/AddressDisplay';
 import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn, GlideText } from '@/src/components/Animators';
 
@@ -49,9 +48,6 @@ const Hero: React.FC = () => {
             <p className="text-base md:text-lg text-gray-400 mb-8 max-w-xl leading-relaxed">
                 {data.description}
             </p>
-            <div className="mb-8">
-              <AddressDisplay address={data.contractAddress} label={data.contractLabel} />
-            </div>
           </FadeIn>
 
           {/* Mobile Animation Container - Placed between Text and Download */}
