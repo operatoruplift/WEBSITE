@@ -68,7 +68,7 @@ export default function RootLayout({
               "sameAs": [
                 "https://x.com/OperatorUplift",
                 "https://www.linkedin.com/company/operatoruplift",
-                "https://github.com/uplift-labs"
+                "https://github.com/operatoruplift"
               ]
             }
           `}
