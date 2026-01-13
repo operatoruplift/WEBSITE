@@ -117,8 +117,8 @@ export const APP_CONTENT: AppData = {
     tag: "GET IN TOUCH",
     headline: "Let's Connect",
     subhead: "We know no one likes to fill forms, so just choose your way of communication and we'll come there, and if you're looking for job follow us on",
-    subheadLinkText: "Wellfound",
-    subheadLinkUrl: "https://wellfound.com/company/uplift-os",
+    subheadLinkText: "LinkedIn",
+    subheadLinkUrl: "https://linkedin.com/company/operatoruplift",
     options: [
       {
         id: 'whatsapp',
@@ -130,16 +130,16 @@ export const APP_CONTENT: AppData = {
       {
         id: 'email',
         title: 'Email',
-        description: 'dhruv@operatoruplift.com',
+        description: 'operatoruplift@gmail.com',
         iconType: 'email',
-        url: 'mailto:dhruv@operatoruplift.com'
+        url: 'mailto:operatoruplift@gmail.com'
       },
       {
         id: 'meeting',
         title: 'Book a Meeting',
         description: 'Schedule a video call',
         iconType: 'calendar',
-        url: 'https://calendly.com/dhruv-helloaven/30min'
+        url: 'https://cal.com/rvaclassic'
       },
       {
         id: 'twitter',
@@ -153,7 +153,7 @@ export const APP_CONTENT: AppData = {
         title: 'Discord',
         description: 'Join our community',
         iconType: 'discord',
-        url: 'https://discord.gg/duvYhkW5'
+        url: 'https://discord.gg/eka7hqJcAY'
       },
       {
         id: 'linkedin',
@@ -170,7 +170,7 @@ export const APP_CONTENT: AppData = {
     socials: {
       twitter: "https://x.com/OperatorUplift",
       linkedin: "https://www.linkedin.com/company/operatoruplift",
-      github: "https://github.com/uplift-labs"
+      github: "https://github.com/operatoruplift"
     },
     sections: {
       resources: {
@@ -183,7 +183,7 @@ export const APP_CONTENT: AppData = {
       company: {
         title: "Company",
         links: [
-          { label: "Careers", url: "https://wellfound.com/company/uplift-os" },
+          { label: "Careers", url: "https://linkedin.com/company/operatoruplift" },
           { label: "Enterprise", action: "security" }
         ]
       },
