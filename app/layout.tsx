@@ -3,11 +3,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Uplift - The First Local AI Agent Platform",
-  description: "Install. Plug. Run. Uplift is a secure, open-source platform for running autonomous AI agents locally. Connect them with your Agentic Vault for unlimited personal memory and collaboration.",
+  description: "Millions of Agents. One Voice. Uplift is a secure, open-source platform for running autonomous AI agents locally. Connect them with your Agentic Vault for unlimited personal memory and collaboration.",
   keywords: ["AI Agents", "Local AI", "Open Source", "Agentic Vault", "Secure AI", "Autonomous Agents", "Uplift"],
   openGraph: {
     title: "Uplift - The First Local AI Agent Platform",
-    description: "Install. Plug. Run. Uplift is a secure, open-source platform for running autonomous AI agents locally.",
+    description: "Millions of Agents. One Voice. Uplift is a secure, open-source platform for running autonomous AI agents locally.",
     url: "https://operatoruplift.com",
     siteName: "Uplift",
     images: [
