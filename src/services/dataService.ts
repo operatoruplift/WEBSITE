@@ -90,19 +90,19 @@ export const APP_CONTENT: AppData = {
         title: "Quickstart Guide",
         description: "Get up and running with Uplift in minutes. Deploy your first agent container.",
         iconType: 'terminal',
-        url: "https://docs.operatoruplift.com/"
+        url: "https://help.operatoruplift.com/"
       },
       {
         title: "Core Concepts",
         description: "Deep dive into the architecture, session tokens, and security vaults.",
         iconType: 'kanban',
-        url: "https://docs.operatoruplift.com/"
+        url: "https://help.operatoruplift.com/"
       },
       {
         title: "API Reference",
         description: "Complete reference for the Agent Store API and Runtime SDKs.",
         iconType: 'globe',
-        url: "https://docs.operatoruplift.com/"
+        url: "https://help.operatoruplift.com/"
       }
     ]
   },
@@ -111,7 +111,7 @@ export const APP_CONTENT: AppData = {
     cta: "START BUILDING",
     headline: "Ready to build the software of the future?",
     buttonText: "Start Building",
-    url: "https://docs.operatoruplift.com"
+    url: "https://help.operatoruplift.com"
   },
   contact: {
     tag: "GET IN TOUCH",
@@ -176,7 +176,7 @@ export const APP_CONTENT: AppData = {
       resources: {
         title: "Resources",
         links: [
-          { label: "Docs", url: "https://docs.operatoruplift.com" },
+          { label: "Docs", url: "https://help.operatoruplift.com" },
           { label: "Contact Sales", action: "contact" }
         ]
       },
