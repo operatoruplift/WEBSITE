@@ -346,7 +346,7 @@ const ProductPage: React.FC = () => {
       <div className="w-full max-w-[1200px] mt-32 text-center border-t border-white/5 pt-24">
          <h2 className="text-3xl text-white mb-8">Ready to start building?</h2>
          <a 
-           href="https://docs.operatoruplift.com" 
+           href="https://help.operatoruplift.com" 
            target="_blank" 
            rel="noreferrer"
            className="inline-flex items-center bg-white text-black px-8 py-4 rounded-sm text-sm font-bold tracking-widest uppercase hover:bg-gray-200 transition-colors group"
