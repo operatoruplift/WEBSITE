@@ -48,8 +48,8 @@ export const Logo = ({ className = "text-white" }: { className?: string }) => (
         <stop offset="1" stopColor="#F1AD83"/>
       </linearGradient>
       <linearGradient id="paint1_linear_243_2" x1="0" y1="254.863" x2="471.78" y2="254.863" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#FF3F02"/>
-        <stop offset="1" stopColor="#FDC103"/>
+        <stop stopColor="#E77630"/>
+        <stop offset="1" stopColor="#F1AD83"/>
       </linearGradient>
       <linearGradient id="paint2_linear_243_2" x1="92.2098" y1="144.373" x2="379.57" y2="144.373" gradientUnits="userSpaceOnUse">
         <stop stopColor="#E77630"/>
@@ -75,8 +75,8 @@ export const UpliftLogo = ({ className = "w-16 h-16" }: { className?: string }) 
         <stop offset="1" stopColor="#F1AD83"/>
       </linearGradient>
       <linearGradient id="paint1_linear_243_2_large" x1="0" y1="254.863" x2="471.78" y2="254.863" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#FF3F02"/>
-        <stop offset="1" stopColor="#FDC103"/>
+        <stop stopColor="#E77630"/>
+        <stop offset="1" stopColor="#F1AD83"/>
       </linearGradient>
       <linearGradient id="paint2_linear_243_2_large" x1="92.2098" y1="144.373" x2="379.57" y2="144.373" gradientUnits="userSpaceOnUse">
         <stop stopColor="#E77630"/>
