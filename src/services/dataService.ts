@@ -3,7 +3,7 @@ import { AppData } from '@/lib/types';
 export const APP_CONTENT: AppData = {
   hero: {
     visionTag: "VISION",
-    headline: "Install. Plug. Run.",
+    headline: "Millions of Agents. One Voice.",
     subhead: "Run your AI Agents in a secured Environment and connect them with your Agentic Vault",
     description: "Download an open-source platform where locally-run agents collaborate through shared context with unlimited personal memory.",
     contractAddress: "6zn51qJZs4P5MG1Miq79KH8mFEpi9yV232SHKz8zBAGS",
