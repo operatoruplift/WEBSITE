@@ -47,7 +47,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
         </div>
 
         <a 
-          href="https://github.com/uplift-labs/" 
+          href="https://github.com/operatoruplift/" 
           target="_blank" 
           rel="noreferrer"
           className="flex items-center space-x-2 text-xs font-bold bg-white/5 text-white border border-white/10 px-3 py-2 rounded-sm hover:bg-white/10 transition-all uppercase tracking-wide"
