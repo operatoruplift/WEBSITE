@@ -35,11 +35,11 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     let labelText = "";
     let startTime = Date.now();
 
-    const PRIMARY_COLOR = '#FF5500';
+        const PRIMARY_COLOR = '#E77630';
 
     const resize = () => {
       width = canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth;
-      height = canvas.height = canvas.parentElement?.offsetHeight || window.innerHeight;
+      height = canvas.parentElement?.offsetHeight || window.innerHeight;7630' canvas.parentElement?.offsetHeight || window.innerHeight;
       isMobile = width < 768;
       initParticles();
     };
@@ -70,7 +70,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         
         ctx.font = "10px 'SF Mono', 'Menlo', monospace";
         ctx.textAlign = "center";
-        ctx.fillStyle = PRIMARY_COLOR;
+        ctx.fillStyle = 38
+          ;
         ctx.shadowColor = PRIMARY_COLOR;
         ctx.shadowBlur = 10;
         
