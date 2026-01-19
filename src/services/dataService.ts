@@ -4,8 +4,8 @@ export const APP_CONTENT: AppData = {
   hero: {
     visionTag: "VISION",
     headline: "Millions of Agents. One Voice.",
-    subhead: "Run your AI Agents in a secured Environment and connect them with your Agentic Vault",
-    description: "Download an open-source platform where locally-run agents collaborate through shared context with unlimited personal memory.",
+    subhead: "Local-first AI agents with private, secure memory—no cloud required"
+    description: "Build, deploy, and monetize autonomous AI agents that run entirely on your machine. With Uplift's local runtime and private memory, your agents operate independently while you maintain full control—powered by Solana for true agent ownership and marketplace integration"
     contractAddress: "6zn51qJZs4P5MG1Miq79KH8mFEpi9yV232SHKz8zBAGS",
     contractLabel: "$UPLIFT: Internal currency for computation",
     downloads: {
@@ -20,22 +20,21 @@ export const APP_CONTENT: AppData = {
   },
   product: {
     tag: "PRODUCT",
-    headline: "Self-Contained AI Environment",
-    subhead: "A new compute layer with containerized agents, user controlled data and a marketplace for agents",
+    headline: "Local-First Agent Command Center"
+    subhead: "Build and deploy agents locally with private memory, then monetize them on Solana's agent marketplace"
     features: [
       {
         id: 'isolated',
         navTitle: 'ISOLATED ENV',
         cardTitle: '1. Isolated Environment',
-        description: 'A secure and high-speed sandbox where every agent runs independently. Your data stays local, execution is fast, and each agent operates inside a protected space built for safety and performance.',
+        description: 'Your agents run entirely on your local machine with private, encrypted memory. No cloud required—your data never leaves your device, giving you complete control and security',
         iconType: 'kanban'
       },
       {
         id: 'store',
         navTitle: 'AGENT STORE',
         cardTitle: '2. Agent Store',
-        description: 'A curated store where you can access, install, and deploy agents with one click. Developers get a space for monetizing their agents, and users get effortless setup and clear permissions.',
-        iconType: 'globe'
+      description: 'Discover, install, and deploy agents from Solana-powered marketplace. Developers earn revenue through the $UPLIFT token, while users get one-click agent deployment with transparent permissions and ownership',        iconType: 'globe'
       },
       {
         id: 'runtime',
