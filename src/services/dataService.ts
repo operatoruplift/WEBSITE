@@ -20,7 +20,7 @@ export const APP_CONTENT: AppData = {
   },
   product: {
     tag: "PRODUCT",
-    headline: "Local-First Agent Command Center"
+    headline: "Local-First Agent Command Center",
     subhead: "Build and deploy agents locally with private memory, then monetize them on Solana's agent marketplace"
     features: [
       {
