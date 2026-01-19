@@ -39,8 +39,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
 
     const resize = () => {
       width = canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth;
-      height = canvas.parentElement?.offsetHeight || window.innerHeight;7630' canvas.parentElement?.offsetHeight || window.innerHeight;
-      isMobile = width < 768;
+      height = canvas.parentElement?.offsetHeight || window.innerHeight;
+            isMobile = width < 768;
       initParticles();
     };
 
