@@ -8,8 +8,8 @@ export const APP_CONTENT: AppData = {
     description: "Build, deploy, and monetize autonomous AI agents that run entirely on your machine. With Uplift's local runtime and private memory, your agents operate independently while you maintain full control—powered by Solana for true agent ownership and marketplace integration"
     contractAddress: "6zn51qJZs4P5MG1Miq79KH8mFEpi9yV232SHKz8zBAGS",
     contractLabel: "$UPLIFT: Internal currency for computation",
-    downloads: {,
-      windows: {
+    downloads: {
+  windows: {
         id: "windows",
         label: "Download for Windows",
         url: "#",
