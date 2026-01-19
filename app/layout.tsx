@@ -3,10 +3,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Uplift - Local-First Agent Command Center",
-  description: "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana—no cloud required",  keywords: ["Local AI", "Agent Platform", "Solana AI", "Private Memory", "Autonomous Agents", "Local Runtime", "Agent Marketplace"]
+  description: "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana—no cloud required",  keywords: ["Local AI", "Agent Platform", "Solana AI", "Private Memory", "Autonomous Agents", "Local Runtime", "Agent Marketplace"],
   openGraph: {
     title: "Uplift - Local-First Agent Command Center",
-    description: "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana—no cloud required"
+    description: "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana—no cloud required",
     url: "https://operatoruplift.com",
     siteName: "Uplift",
     images: [
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Uplift - Local-First Agent Command Center",    description: "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana—no cloud required"
+    title: "Uplift - Local-First Agent Command Center",    description: "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana—no cloud required",
     creator: "@OperatorUplift",
     images: ["/logo.svg"], // Recommended: Replace with a 1200x630 .png image
   },
