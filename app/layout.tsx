@@ -3,7 +3,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Uplift - Local-First Agent Command Center",
-  description: "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana—no cloud required"
+  description: "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on,7
+    Solana—no cloud required",
   keywords: ["Local AI", "Agent Platform", "Solana AI", "Private Memory", "Autonomous Agents", "Local Runtime", "Agent Marketplace"]
   openGraph: {
     title: "Uplift - Local-First Agent Command Center",
