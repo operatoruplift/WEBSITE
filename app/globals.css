@@ -3,7 +3,7 @@
 /* Put CSS variables at the top so they're available at runtime */
 
 @theme{
-  --color-primary: #FF5500;
+  --color-primary: #E77630;
   --color-muted: #888888;
   --color-background: #050505;
 }
