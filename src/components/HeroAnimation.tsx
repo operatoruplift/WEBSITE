@@ -70,8 +70,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         
         ctx.font = "10px 'SF Mono', 'Menlo', monospace";
         ctx.textAlign = "center";
-        ctx.fillStyle = 38
-          ;
+    ctx.fillStyle = PRIMARY_COLOR;          ;
         ctx.shadowColor = PRIMARY_COLOR;
         ctx.shadowBlur = 10;
         
