@@ -92,7 +92,7 @@ const NetworkVis: React.FC = () => {
                 />
                 {/* Moving particle on some lines */}
                 {conn.id.charCodeAt(0) % 3 === 0 && (
-                   <circle r="2" fill={start.type === 'primary' ? '#FF5500' : '#FFF'}>
+                   <circle r="2" fill={start.type === 'primary' ? '#E77630' : '#FFF'}>
                      <animateMotion 
                         dur={`${2 + (conn.id.charCodeAt(0) % 5)}s`} 
                         repeatCount="indefinite"
@@ -116,7 +116,7 @@ const NetworkVis: React.FC = () => {
             
             <circle 
               r={node.type === 'primary' ? 4 : node.type === 'secondary' ? 3 : 2} 
-              fill={node.type === 'primary' ? '#FF5500' : node.type === 'secondary' ? '#888' : '#333'}
+              fill={node.type === 'primary' ? '#E77630' : node.type === 'secondary' ? '#888' : '#333'}
             >
                {node.type === 'primary' && (
                   <animate attributeName="r" values="4;5;4" dur="3s" repeatCount="indefinite" />
@@ -128,7 +128,7 @@ const NetworkVis: React.FC = () => {
                  <circle 
                  r={node.type === 'primary' ? 8 : 6} 
                  fill="none" 
-                 stroke={node.type === 'primary' ? '#FF5500' : '#555'}
+                 stroke={node.type === 'primary' ? '#E77630' : '#555'}
                  strokeWidth="1"
                  opacity="0.3"
                />
