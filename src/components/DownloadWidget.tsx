@@ -117,10 +117,10 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
                 <div className="flex flex-col">
                   <span className="text-gray-400 text-sm mb-1">Contact us for support:</span>
                   <a 
-                    href="mailto:support@operatoruplift.com" 
+                    href="mailto:operatoruplift@gmail.com" 
                     className="text-primary hover:text-primary/80 transition-colors duration-300 text-base font-medium"
                   >
-                    support@operatoruplift.com
+                    operatoruplift@gmail.com
                   </a>
                 </div>
               </div>
