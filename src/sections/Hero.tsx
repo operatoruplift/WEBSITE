@@ -13,7 +13,9 @@ const Hero: React.FC = () => {
       
       {/* Background Visualization Layer - Desktop Only */}
       <div className="hidden lg:block absolute inset-0 z-0 lg:left-[10%] pointer-events-none opacity-60 mix-blend-screen">
-        <HeroAnimation />
+<FadeIn delay={200}>
+                <HeroAnimation />
+      </FadeIn>
         <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent w-1/3"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent h-32 bottom-0"></div>
       </div>
@@ -51,7 +53,8 @@ const Hero: React.FC = () => {
           </FadeIn>
 
           {/* Mobile Animation Container - Placed between Text and Download */}
-          <div className="block lg:hidden w-full h-[220px] sm:h-[280px] md:h-[320px] relative mb-8 rounded-xl overflow-hidden bg-white/5 border border-white/10">
+<FadeIn delay={550}>
+                  <div className="block lg:hidden w-full h-[220px] sm:h-[280px] md:h-[320px] relative mb-8 rounded-xl overflow-hidden bg-white/5 border border-white/10">
               <HeroAnimation className="w-full h-full" />
               {/* Gradients to blend edges slightly */}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/50 pointer-events-none"></div>
