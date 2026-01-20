@@ -138,8 +138,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
              const xPos = isUser ? (w/2 - 20 - b.width) : (-w/2 + 20);
              const yPos = -h/2 + 50 + (i * 50);
              
-             ctx.fillStyle = isUser ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 85, 0, 0.1)';
-             ctx.beginPath();
+      ctx.fillStyle = isUser ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 85, 0, 0.3)';             ctx.beginPath();
              if (ctx.roundRect) {
                  ctx.roundRect(xPos, yPos, b.width, b.height, 6);
              } else {
@@ -207,8 +206,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
             else if (i === 4) { tx = cx; ty = cy - h/2; } 
             else if (i === 5) { tx = cx; ty = cy + h/2; } 
             
-            p.x += (tx - p.x) * 0.08;
-            p.y += (ty - p.y) * 0.08;
+            p.x += (tx - p.x) * 0.25;
+            p.y += (ty - p.y) * 0.25;
           } else {
              p.alpha *= 0.95;
           }
