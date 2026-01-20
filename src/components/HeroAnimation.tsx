@@ -168,7 +168,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     const render = () => {
       const now = Date.now();
       let elapsed = now - startTime;
-      const LOOP_DURATION = 18000;
+      const LOOP_DURATION = 35000;
 
       if (elapsed > LOOP_DURATION) {
         startTime = now;
