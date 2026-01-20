@@ -13,9 +13,7 @@ const Hero: React.FC = () => {
       
       {/* Background Visualization Layer - Desktop Only */}
       <div className="hidden lg:block absolute inset-0 z-0 lg:left-[10%] pointer-events-none opacity-60 mix-blend-screen">
-        <FadeIn delay={200}>
-          <HeroAnimation />
-        </FadeIn>
+        <HeroAnimation />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent w-1/3"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent h-32 bottom-0"></div>
       </div>
@@ -26,7 +24,7 @@ const Hero: React.FC = () => {
         <div className="lg:col-span-7 flex flex-col justify-center">
           
           {/* Vision Tag */}
-          <FadeIn delay={100} direction="down" threshold={0.4}>
+          <FadeIn delay={100} direction="down">
             <div className="flex items-center mb-8">
               <span className="w-2 h-2 rounded-full bg-primary mr-3 shadow-[0_0_8px_rgba(231,118,48,0.6)] animate-pulse"></span>
               <span className="text-xs font-bold tracking-[0.2em] text-white uppercase">{data.visionTag}</span>
@@ -39,14 +37,14 @@ const Hero: React.FC = () => {
           </h1>
 
           {/* Subhead */}
-          <FadeIn delay={400} threshold={0.4}>
+          <FadeIn delay={400}>
             <p className="text-lg md:text-xl text-muted font-mono mb-4 max-w-2xl">
               {data.subhead}
             </p>
           </FadeIn>
 
           {/* Description */}
-          <FadeIn delay={600} threshold={0.4}>
+          <FadeIn delay={600}>
             <p className="text-base md:text-lg text-gray-400 mb-8 max-w-xl leading-relaxed">
               {data.description}
             </p>
@@ -54,20 +52,18 @@ const Hero: React.FC = () => {
 
           {/* Mobile Animation Container - Placed between Text and Download */}
           <div className="block lg:hidden w-full h-[220px] sm:h-[280px] md:h-[320px] relative mb-8 rounded-xl overflow-hidden bg-white/5 border border-white/10">
-            <div className="relative w-full h-full">
-              <HeroAnimation className="w-full h-full" />
-            </div>
+            <HeroAnimation className="w-full h-full" />
             {/* Gradients to blend edges slightly */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/50 pointer-events-none"></div>
           </div>
 
           {/* Download Widget */}
-          <FadeIn delay={800} threshold={0.3}>
+          <FadeIn delay={800}>
             <DownloadWidget data={data} />
           </FadeIn>
 
           {/* Powered By (Marquee) */}
-          <FadeIn delay={1000} threshold={0.3}>
+          <FadeIn delay={1000}>
             <TrustedBy />
           </FadeIn>
 
