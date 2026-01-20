@@ -24,7 +24,7 @@ export const FadeIn: React.FC<FadeInProps> = ({
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.unobserve(entry.target);
+          // Animation completes on its own
         }
       },
       { threshold }
@@ -84,7 +84,7 @@ export const GlideText: React.FC<GlideTextProps> = ({
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.unobserve(entry.target);
+          // Animation completes on its own
         }
       },
       { threshold: 0.1 }
