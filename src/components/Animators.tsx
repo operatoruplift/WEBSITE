@@ -25,7 +25,8 @@ export const FadeIn: React.FC<FadeInProps> = ({
         if (entry.isIntersecting) {
           setIsVisible(true);
           observer.unobserve(entry.target);
-      }
+        }
+      },
       { threshold }
     );
 
