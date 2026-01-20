@@ -35,14 +35,14 @@ const SandboxVisual = () => {
         ctx.clearRect(0, 0, width, height);
         
         // Draw Boundary
-        ctx.strokeStyle = '#FF5500';
+        ctx.strokeStyle = '#E77630';
         ctx.lineWidth = 2;
         ctx.setLineDash([10, 5]);
         ctx.strokeRect(boxX, boxY, boxSize, boxSize);
         ctx.setLineDash([]);
         
         // Label
-        ctx.fillStyle = '#FF5500';
+        ctx.fillStyle = '#E77630';
         ctx.font = '10px monospace';
         ctx.fillText('ISOLATED_PROCESS_ID_99', boxX, boxY - 10);
 
