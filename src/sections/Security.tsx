@@ -36,7 +36,7 @@ const Security: React.FC = () => {
       <div className="w-full max-w-[1600px] py-24 flex items-center justify-center">
         <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-white/15 to-transparent relative">
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-1 bg-background flex items-center justify-center">
-                 <div className="w-1.5 h-1.5 rounded-full bg-primary/50 shadow-[0_0_8px_rgba(255,85,0,0.6)]"></div>
+                 <div className="w-1.5 h-1.5 rounded-full bg-primary/50 shadow-[0_0_8px_rgba(231,118,48,0.6)]"></div>
             </div>
         </div>
       </div>
@@ -46,7 +46,7 @@ const Security: React.FC = () => {
         <div className="mb-20 max-w-4xl">
            <FadeIn>
             <div className="flex items-center mb-6">
-                <span className="w-2 h-2 rounded-full bg-primary mr-3 shadow-[0_0_8px_rgba(255,85,0,0.6)]"></span>
+                <span className="w-2 h-2 rounded-full bg-primary mr-3 shadow-[0_0_8px_rgba(231,118,48,0.6)]"></span>
                 <span className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase">{data.tag}</span>
             </div>
            </FadeIn>
@@ -86,7 +86,7 @@ const Security: React.FC = () => {
 
                     <div className="relative w-64 h-64 flex items-center justify-center transform scale-90 md:scale-100">
                         <div className="absolute w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center blur-sm animate-pulse"></div>
-                        <div className="absolute w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(255,85,0,0.4)]">
+                        <div className="absolute w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(231,118,48,0.4)]">
                              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                              </svg>
