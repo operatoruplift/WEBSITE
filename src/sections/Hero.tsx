@@ -26,7 +26,7 @@ const Hero: React.FC = () => {
           {/* Vision Tag */}
           <FadeIn delay={100} direction="down">
             <div className="flex items-center mb-8">
-                <span className="w-2 h-2 rounded-full bg-primary mr-3 shadow-[0_0_8px_rgba(255,85,0,0.6)] animate-pulse"></span>
+                <span className="w-2 h-2 rounded-full bg-primary mr-3 shadow-[0_0_8px_rgba(231,118,48,0.6)] animate-pulse"></span>
                 <span className="text-xs font-bold tracking-[0.2em] text-white uppercase">{data.visionTag}</span>
             </div>
           </FadeIn>
@@ -51,7 +51,7 @@ const Hero: React.FC = () => {
           </FadeIn>
 
           {/* Mobile Animation Container - Placed between Text and Download */}
-          <div className="block lg:hidden w-full h-[300px] relative mb-8 rounded-xl overflow-hidden bg-white/5 border border-white/10">
+          <div className="block lg:hidden w-full h-[220px] sm:h-[280px] md:h-[320px] relative mb-8 rounded-xl overflow-hidden bg-white/5 border border-white/10">
               <HeroAnimation className="w-full h-full" />
               {/* Gradients to blend edges slightly */}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/50 pointer-events-none"></div>
