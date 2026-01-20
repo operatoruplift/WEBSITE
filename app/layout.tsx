@@ -29,6 +29,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/logo.svg",
   },
+    manifest: "/manifest.json",
 };
 
 import Script from "next/script";
