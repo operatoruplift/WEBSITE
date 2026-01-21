@@ -65,8 +65,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     const drawLabel = (cx: number, cy: number, text: string, progress: number) => {
         if (!text) return;
         ctx.save();
-        ctx.translate(cx, cy + 160);
-        ctx.globalAlpha = Math.min(1, Math.sin(progress * Math.PI));
+    ctx.translate(cx, cy - 180);        ctx.globalAlpha = Math.min(1, Math.sin(progress * Math.PI));
         
         ctx.font = "10px 'SF Mono', 'Menlo', monospace";
         ctx.textAlign = "center";
