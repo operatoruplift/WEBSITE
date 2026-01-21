@@ -65,7 +65,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     const drawLabel = (cx: number, cy: number, text: string, progress: number) => {
         if (!text) return;
         ctx.save();
-    ctx.translate(cx, cy - 180);        ctx.globalAlpha = 1;
+        ctx.translate(cx, cy + 160);
+        ctx.globalAlpha = Math.min(1, Math.sin(progress * Math.PI));
         
         ctx.font = "10px 'SF Mono', 'Menlo', monospace";
         ctx.textAlign = "center";
@@ -137,7 +138,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
              const xPos = isUser ? (w/2 - 20 - b.width) : (-w/2 + 20);
              const yPos = -h/2 + 50 + (i * 50);
              
-      ctx.fillStyle = isUser ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 85, 0, 0.3)';             ctx.beginPath();
+             ctx.fillStyle = isUser ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 85, 0, 0.1)';
+             ctx.beginPath();
              if (ctx.roundRect) {
                  ctx.roundRect(xPos, yPos, b.width, b.height, 6);
              } else {
@@ -166,7 +168,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     const render = () => {
       const now = Date.now();
       let elapsed = now - startTime;
-      const LOOP_DURATION = 35000;
+      const LOOP_DURATION = 18000;
 
       if (elapsed > LOOP_DURATION) {
         startTime = now;
@@ -175,12 +177,12 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         initParticles(); 
       }
 
-    if (elapsed < 2000) { phase = 'FLOW'; labelText = "AWAITING INPUT"; }
-    else if (elapsed < 4000) { phase = 'SPARK'; labelText = "DETECTING SIGNAL"; }
-    else if (elapsed < 6500) { phase = 'CONNECT'; labelText = "ESTABLISHING CONTEXT"; }
-    else if (elapsed < 9000) { phase = 'FORM'; labelText = "ISOLATING ENVIRONMENT"; }
-    else if (elapsed < 11500) { phase = 'GUARD'; labelText = "APPLYING GUARDRAILS"; }
-    else { phase = 'CHAT'; labelText = "AGENT ACTIVE"; }
+      if (elapsed < 2000) { phase = 'FLOW'; labelText = "AWAITING INPUT"; }
+      else if (elapsed < 4000) { phase = 'SPARK'; labelText = "DETECTING SIGNAL"; }
+      else if (elapsed < 6500) { phase = 'CONNECT'; labelText = "ESTABLISHING CONTEXT"; }
+      else if (elapsed < 9000) { phase = 'FORM'; labelText = "ISOLATING ENVIRONMENT"; }
+      else if (elapsed < 11500) { phase = 'GUARD'; labelText = "APPLYING GUARDRAILS"; }
+      else { phase = 'CHAT'; labelText = "AGENT ACTIVE"; }
 
       ctx.clearRect(0, 0, width, height);
       
@@ -199,16 +201,18 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
           if (p.isAgent) {
             let tx = cx;
             let ty = cy;
-      const w = isMobile ? 180 : 280;
-      const h = isMobile ? 240 : 320;            if (i === 0) { tx = cx - w/2; ty = cy - h/2; } 
+            const w = isMobile ? 160 : 200;
+            const h = isMobile ? 200 : 260;
+            
+            if (i === 0) { tx = cx - w/2; ty = cy - h/2; } 
             else if (i === 1) { tx = cx + w/2; ty = cy - h/2; } 
             else if (i === 2) { tx = cx + w/2; ty = cy + h/2; } 
             else if (i === 3) { tx = cx - w/2; ty = cy + h/2; } 
             else if (i === 4) { tx = cx; ty = cy - h/2; } 
             else if (i === 5) { tx = cx; ty = cy + h/2; } 
             
-            p.x += (tx - p.x) * 0.25;
-            p.y += (ty - p.y) * 0.25;
+            p.x += (tx - p.x) * 0.08;
+            p.y += (ty - p.y) * 0.08;
           } else {
              p.alpha *= 0.95;
           }
