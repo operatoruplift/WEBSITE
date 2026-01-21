@@ -176,10 +176,12 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         initParticles(); 
       }
 
-    if (elapsed < 5000) { phase = 'FLOW'; labelText = "AWAITING INPUT"; }      else if (elapsed < 4000) { phase = 'SPARK'; labelText = "DETECTING SIGNAL"; }
-    el    else if (elapsed < 16000) { phase = 'CONNECT'; labelText = "ESTABLISHING CONTEXT"; }
-          else if (elapsed < 21000) { phase = 'FORM'; labelText = "ISOLATING ENVIRONMENT"; }
-    else if (elapsed < 26000) { phase = 'GUARD'; labelText = "APPLYING GUARDRAILS"; }      else { phase = 'CHAT'; labelText = "AGENT ACTIVE"; }
+    if (elapsed < 2000) { phase = 'FLOW'; labelText = "AWAITING INPUT"; }
+    else if (elapsed < 4000) { phase = 'SPARK'; labelText = "DETECTING SIGNAL"; }
+    else if (elapsed < 6500) { phase = 'CONNECT'; labelText = "ESTABLISHING CONTEXT"; }
+    else if (elapsed < 9000) { phase = 'FORM'; labelText = "ISOLATING ENVIRONMENT"; }
+    else if (elapsed < 11500) { phase = 'GUARD'; labelText = "APPLYING GUARDRAILS"; }
+    else { phase = 'CHAT'; labelText = "AGENT ACTIVE"; }
 
       ctx.clearRect(0, 0, width, height);
       
@@ -198,7 +200,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
           if (p.isAgent) {
             let tx = cx;
             let ty = cy;
-      const w = isMobile ? 180 : 280;            const h = isMobile ? 200 : 260;
+      const w = isMobile ? 180 : 280;
       const h = isMobile ? 240 : 320;            if (i === 0) { tx = cx - w/2; ty = cy - h/2; } 
             else if (i === 1) { tx = cx + w/2; ty = cy - h/2; } 
             else if (i === 2) { tx = cx + w/2; ty = cy + h/2; } 
