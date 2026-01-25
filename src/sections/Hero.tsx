@@ -2,6 +2,7 @@ import React from 'react';
 import HeroAnimation from '@/src/components/HeroAnimation';
 import DownloadWidget from '@/src/components/DownloadWidget';
 import TrustedBy from '@/src/components/TrustedBy';
+import AddressDisplay from '@/src/components/AddressDisplay';
 import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn, GlideText } from '@/src/components/Animators';
 
@@ -48,10 +49,13 @@ const Hero: React.FC = () => {
             <p className="text-base md:text-lg text-gray-400 mb-8 max-w-xl leading-relaxed">
               {data.description}
             </p>
+             <div className="mb-8">
+              <AddressDisplay address={data.contractAddress} label={data.contractLabel} />
+            </div>
           </FadeIn>
 
           {/* Mobile Animation Container - Placed between Text and Download */}
-          <div className="block lg:hidden w-full h-[300px] relative mb-8 rounded-xl overflow-hidden bg-white/5 border border-white/10">
+          <div className="block lg:hidden w-full h-full relative mb-8 rounded-xl overflow-hidden bg-white/5 border border-white/10">
             <HeroAnimation className="w-full h-full" />
             {/* Gradients to blend edges slightly */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/50 pointer-events-none"></div>
