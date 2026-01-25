@@ -55,7 +55,7 @@ const Hero: React.FC = () => {
           </FadeIn>
 
           {/* Mobile Animation Container - Placed between Text and Download */}
-          <div className="block lg:hidden w-full h-full relative mb-8 rounded-xl overflow-hidden bg-white/5 border border-white/10">
+          <div className="block lg:hidden w-full h-[500px] md:h-[600px] relative mb-8 rounded-xl overflow-hidden bg-white/5 border border-white/10">
             <HeroAnimation className="w-full h-full" />
             {/* Gradients to blend edges slightly */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/50 pointer-events-none"></div>
