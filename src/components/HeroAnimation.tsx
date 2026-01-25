@@ -186,7 +186,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
 
       ctx.clearRect(0, 0, width, height);
       
-      const cx = width / 2;
+      const cx = isMobile ? width / 2 : (width > 1024 ? width * 0.75 : width / 2);
       const cy = height / 2;
 
       particles.forEach((p, i) => {
