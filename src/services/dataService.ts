@@ -4,10 +4,10 @@ export const APP_CONTENT: AppData = {
   hero: {
     visionTag: "VISION",
     headline: "Millions of Agents. One Voice.",
-    subhead: "Local-first AI agents with private, secure memory—no cloud required",
-    description: "Build, deploy, and monetize autonomous AI agents that run entirely on your machine. With Uplift's local runtime and private memory, your agents operate independently while you maintain full control—powered by Solana for true agent ownership and marketplace integration",
-    contractAddress: "6zn51qJZs4P5MG1Miq79KH8mFEpi9yV232SHKz8zBAGS",
-    contractLabel: "$UPLIFT: Internal currency for computation",
+    subhead: "Local first AI agents you control, running on your device.",
+    description: "Run agents on your machine, install agents from the marketplace, and control what they can access.",
+    contractAddress: "",
+    contractLabel: "Internal currency for computation",
     downloads: {
   windows: {
         id: "windows",
@@ -21,40 +21,40 @@ export const APP_CONTENT: AppData = {
   product: {
     tag: "PRODUCT",
     headline: "Local-First Agent Command Center",
-    subhead: "Build and deploy agents locally with private memory, then monetize them on Solana's agent marketplace",
+    subhead: "Install agents, run tasks in secure sessions, and approve access with clear permissions.",
     features: [
       {
         id: 'isolated',
         navTitle: 'ISOLATED ENV',
         cardTitle: '1. Isolated Environment',
-        description: 'Your agents run entirely on your local machine with private, encrypted memory. No cloud required—your data never leaves your device, giving you complete control and security',
+        description: 'Agents use private, encrypted local memory where supported, with optional sync, so your data starts on your device and stays under your control.',
         iconType: 'kanban'
       },
       {
         id: 'store',
         navTitle: 'AGENT STORE',
         cardTitle: '2. Agent Store',
-      description: 'Discover, install, and deploy agents from Solana-powered marketplace. Developers earn revenue through the $UPLIFT token, while users get one-click agent deployment with transparent permissions and ownership',        iconType: 'globe'
+      description: 'Discover, install, and run agents from a Solana powered marketplace, with marketplace and ownership primitives powered by Solana. Developers can price agents; payment rails may include Solana based credits. Developers earn revenue through the $UPLIFT token, while users get one-click agent deployment with transparent permissions and ownership',        iconType: 'globe'
       },
       {
         id: 'runtime',
         navTitle: 'SESSION RUNTIME',
-        cardTitle: '3. Session-Based Runtime',
-        description: 'Agents receive a temporary, secure workspace for each task they perform. This plug-and-play mechanism ensures fast execution, strict isolation, and no long-term access to your system once the session ends.',
+        cardTitle: '3. Session Runtime',
+        description: 'Each task runs in a session based runtime that starts fast, stays isolated, and ends cleanly. When the session ends, the agent loses access to your system. This plug-and-play mechanism ensures fast execution, strict isolation, and no long-term access to your system once the session ends.',
         iconType: 'terminal'
       },
       {
         id: 'tokens',
-        navTitle: 'SESSION TOKENS',
-        cardTitle: '4. Session-Based Tokens',
-        description: 'Short-lived, context-aware tokens define exactly what an agent can see or do. They unlock the Agentic Vault, ensuring that permissions are precise, revocable, and always under your control.',
+        navTitle: 'TIME LIMITED ACCESS KEYS',
+        cardTitle: '4. Time Limited Access Keys',
+        description: 'Time limited access keys define exactly what an agent can see or do for a specific task. Keys unlock the Agentic Vault only for that session and can be revoked at any time. They unlock the Agentic Vault, ensuring that permissions are precise, revocable, and always under your control.',
         iconType: 'message'
       },
       {
         id: 'permissions',
         navTitle: 'PERMISSIONS',
         cardTitle: '5. Permission Actions',
-        description: 'Every outward action—file access, device control, network calls—is governed by explicit permissions. No silent behavior, no surprises. You define what agents can do, and UPLIFT enforces those boundaries automatically.',
+        description: 'Every file read, device control, and network call is a permission action that you can see and approve. Uplift enforces the boundaries you set—file access, device control, network calls—is governed by explicit permissions. No silent behavior, no surprises. You define what agents can do, and UPLIFT enforces those boundaries automatically.',
         iconType: 'check'
       }
     ]
