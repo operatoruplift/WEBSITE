@@ -9,12 +9,12 @@ interface FadeInProps {
   threshold?: number;
 }
 
-export const FadeIn: React.FC<FadeInProps> = ({ 
-  children, 
-  delay = 0, 
-  direction = 'up', 
-  className = "",
-  threshold = 0.1 
+export const FadeIn: React.FC<FadeInProps> = ({
+  children,
+  delay = 0,
+  direction = 'up',
+  className = '',
+  threshold = 0.1
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -34,17 +34,16 @@ export const FadeIn: React.FC<FadeInProps> = ({
       observer.observe(ref.current);
     }
 
-    return () => {
-      if (ref.current) observer.unobserve(ref.current);
-    };
+    return () => { if (ref.current) observer.unobserve(ref.current); };
   }, [threshold]);
 
   const getTransform = () => {
+    const distance = 30;
     switch (direction) {
-      case 'up': return 'translateY(20px)';
-      case 'down': return 'translateY(-20px)';
-      case 'left': return 'translateX(20px)';
-      case 'right': return 'translateX(-20px)';
+      case 'up': return `translateY(${distance}px)`;
+      case 'down': return `translateY(-${distance}px)`;
+      case 'left': return `translateX(${distance}px)`;
+      case 'right': return `translateX(-${distance}px)`;
       default: return 'none';
     }
   };
@@ -52,7 +51,7 @@ export const FadeIn: React.FC<FadeInProps> = ({
   return (
     <div
       ref={ref}
-      className={`${className} transition-all duration-1000 ease-out`}
+      className={`inline-block transition-opacity duration-1000 ease-out ${className}`}
       style={{
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'none' : getTransform(),
@@ -71,11 +70,7 @@ interface GlideTextProps {
   delay?: number;
 }
 
-export const GlideText: React.FC<GlideTextProps> = ({ 
-  text, 
-  className = "", 
-  delay = 0
-}) => {
+export const GlideText: React.FC<GlideTextProps> = ({ text, className = '', delay = 0 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
 
@@ -85,18 +80,19 @@ export const GlideText: React.FC<GlideTextProps> = ({
         if (entry.isIntersecting) {
           setIsVisible(true);
           observer.unobserve(entry.target);
-              }
-        },
+        }
+      },
       { threshold: 0.1 }
     );
 
     if (ref.current) observer.observe(ref.current);
+
     return () => { if (ref.current) observer.unobserve(ref.current); };
   }, []);
 
   return (
-    <span 
-      ref={ref} 
+    <span
+      ref={ref}
       className={`inline-block transition-opacity duration-1000 ease-out ${className}`}
       style={{
         opacity: isVisible ? 1 : 0,
