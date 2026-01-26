@@ -244,7 +244,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
                     }
                 });
           
-              } else {} ctx.strokeStyle = `rgba(${PRIMARY_COLOR_RGB}, ${1 - dist/(isMobile ? 150 : 300)})`;
+              }
+                                  ctx.strokeStyle = `rgba(${PRIMARY_COLOR_RGB}, ${1 - dist/(isMobile ? 150 : 300)})`;
         }
 
         if ((phase === 'FORM' || phase === 'GUARD') && p.isAgent) {
