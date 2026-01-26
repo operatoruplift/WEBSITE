@@ -44,6 +44,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
             isMobile = width < 768;
       initParticles();
     };
+    
+    const initParticles = () => {
       particles = [];
       const count = isMobile ? 30 : 60;
       
