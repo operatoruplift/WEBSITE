@@ -73,11 +73,10 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         ctx.shadowColor = PRIMARY_COLOR;
         ctx.shadowBlur = 10;
         
-        const chars = Math.floor(text.length * Math.min(1, progres
+        const chars = Math.floor(text.length * Math.min(1, progress * 3));
         const currentText = text.substring(0, chars);
         
         ctx.fillText(`[ ${currentText} ]`, 0, 0);
-        s * 3));
         ctx.strokeStyle = `rgba(255, 255, 255, 0.2)`;
         ctx.beginPath();
         ctx.moveTo(-20, 15);
