@@ -41,11 +41,9 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     const resize = () => {
       width = canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth;
       height = canvas.parentElement?.offsetHeight || window.innerHeight;
-            const PRIMARY_COLOR_RGB = '142'; // RGB equivalent of #E77630
             isMobile = width < 768;
       initParticles();
     };
-    const initParticles = () => {
       particles = [];
       const count = isMobile ? 30 : 60;
       
@@ -79,7 +77,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         const currentText = text.substring(0, chars);
         
         ctx.fillText(`[ ${currentText} ]`, 0, 0);
-        
+        s * 3));
         ctx.strokeStyle = `rgba(255, 255, 255, 0.2)`;
         ctx.beginPath();
         ctx.moveTo(-20, 15);
@@ -143,7 +141,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
              ctx.beginPath();
              if (ctx.roundRect) {
                  ctx.roundRect(xPos, yPos, b.width, b.height, 6);
-             } else {
+             } else)`
                  ctx.rect(xPos, yPos, b.width, b.height);
              }
              ctx.fill();
@@ -249,7 +247,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         }
 
         if ((phase === 'FORM' || phase === 'GUARD') && p.isAgent) {
-             particles.filter(n => n.isAgent && n !== p).forEach(neighbor => {
+             p
+              ctx.strokeStylerticles.filter(n => n.isAgent && n !== p).forEach(neighbor => {
                  ctx.beginPath();
                  ctx.moveTo(p.x, p.y);
                  ctx.lineTo(neighbor.x, neighbor.y);
@@ -273,8 +272,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
             ctx.fillStyle = `rgba(${PRIMARY_COLOR_RGB}, 0.05)';
             ctx.fillRect(-size/2, -size/2 + (elapsed % 1000)/1000 * size, size, 2);
             ctx.restore();
-        }
-
+        )`
         if (phase === 'CHAT') {
            drawChatInterface(cx, cy, Math.min(1, (elapsed - 11500) / 1000));
         }
