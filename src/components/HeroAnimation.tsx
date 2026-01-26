@@ -140,7 +140,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
              ctx.beginPath();
              if (ctx.roundRect) {
                  ctx.roundRect(xPos, yPos, b.width, b.height, 6);
-             } else)`
+             } else {
                  ctx.rect(xPos, yPos, b.width, b.height);
              }
              ctx.fill();
@@ -242,7 +242,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
                     }
                 });
           
-              }ctx.strokeStyle = `rgba(${PRIMARY_COLOR_RGB}, ${1 - dist/(isMobile ? 150 : 300)})`;
+              } else {} ctx.strokeStyle = `rgba(${PRIMARY_COLOR_RGB}, ${1 - dist/(isMobile ? 150 : 300)})`;
         }
 
         if ((phase === 'FORM' || phase === 'GUARD') && p.isAgent) {
