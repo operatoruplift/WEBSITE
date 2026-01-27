@@ -5,7 +5,7 @@ export const APP_CONTENT: AppData = {
     visionTag: "VISION",
     headline: "Millions of Agents. One Voice.",
     subhead: "Local first AI agents you control, running on your device.",
-    description: "Run agents on your machine, install agents from the marketplace, and control what they can access.",
+    description: "Install agents, run tasks in secure sessions, and approve access with clear permissions.",
     contractAddress: "",
     contractLabel: "Internal currency for computation",
     downloads: {
