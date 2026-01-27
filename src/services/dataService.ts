@@ -41,7 +41,8 @@ export const APP_CONTENT: AppData = {
         id: 'store',
         navTitle: 'AGENT STORE',
         cardTitle: '2. Agent Store',
-      description: 'Discover, install, and run agents from a Solana powered marketplace, with marketplace and ownership primitives powered by Solana. Developers can price agents; payment rails may include Solana based credits.',        iconType: 'globe'
+      description: 'Discover, install, and run agents from a Solana powered marketplace, with marketplace and ownership primitives powered by Solana. Developers can price agents; payment rails may include Solana based credits.',
+              iconType: 'globe'
       },
       {
         id: 'runtime',
