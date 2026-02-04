@@ -36,7 +36,6 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     let startTime = Date.now();
 
         const PRIMARY_COLOR = '#E77630';
-          const PRIMARY_COLOR_RGB = '231, 118, 48'; // RGB equivalent of #E77630
 
     const resize = () => {
       width = canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth;
@@ -44,7 +43,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
             isMobile = width < 768;
       initParticles();
     };
-    
+
     const initParticles = () => {
       particles = [];
       const count = isMobile ? 30 : 60;
@@ -71,7 +70,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         
         ctx.font = "10px 'SF Mono', 'Menlo', monospace";
         ctx.textAlign = "center";
-    ctx.fillStyle = PRIMARY_COLOR;   
+    ctx.fillStyle = PRIMARY_COLOR;          ;
         ctx.shadowColor = PRIMARY_COLOR;
         ctx.shadowBlur = 10;
         
@@ -79,6 +78,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         const currentText = text.substring(0, chars);
         
         ctx.fillText(`[ ${currentText} ]`, 0, 0);
+        
         ctx.strokeStyle = `rgba(255, 255, 255, 0.2)`;
         ctx.beginPath();
         ctx.moveTo(-20, 15);
@@ -138,8 +138,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
              const xPos = isUser ? (w/2 - 20 - b.width) : (-w/2 + 20);
              const yPos = -h/2 + 50 + (i * 50);
              
-             ctx.fillStyle = isUser ? 'rgba(255, 255, 255, 0.08)' : rgba(${PRIMARY_COLOR_RGB}, 0.1);
-              ctx.beginPath();
+             ctx.fillStyle = isUser ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 85, 0, 0.1)';
+             ctx.beginPath();
              if (ctx.roundRect) {
                  ctx.roundRect(xPos, yPos, b.width, b.height, 6);
              } else {
@@ -186,7 +186,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
 
       ctx.clearRect(0, 0, width, height);
       
-      const cx = isMobile ? width / 2 : (width > 1024 ? width * 0.75 : width / 2);
+      const cx = width > 1024 ? width * 0.75 : width / 2;
       const cy = height / 2;
 
       particles.forEach((p, i) => {
@@ -240,17 +240,15 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
                         ctx.moveTo(p.x, p.y);
                         ctx.lineTo(other.x, other.y);
                         ctx.lineWidth = isMobile ? 0.2 : 0.5;
+                        ctx.strokeStyle = `rgba(255, 85, 0, ${1 - dist/(isMobile ? 150 : 300)})`;
                         ctx.stroke();
                     }
                 });
-          
-              }
-                              ctx.strokeStyle = rgba(${PRIMARY_COLOR_RGB}, ${1 - dist/(isMobile ? 150 : 300)})';
+            }
         }
 
         if ((phase === 'FORM' || phase === 'GUARD') && p.isAgent) {
-             p
-              ctx.strokeStylerticles.filter(n => n.isAgent && n !== p).forEach(neighbor => {
+             particles.filter(n => n.isAgent && n !== p).forEach(neighbor => {
                  ctx.beginPath();
                  ctx.moveTo(p.x, p.y);
                  ctx.lineTo(neighbor.x, neighbor.y);
@@ -271,10 +269,11 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
             ctx.rect(-size/2, -size/2, size, size);
             ctx.stroke();
             
-            ctx.fillStyle = `rgba(${PRIMARY_COLOR_RGB}, 0.05)';
+            ctx.fillStyle = 'rgba(255, 85, 0, 0.05)';
             ctx.fillRect(-size/2, -size/2 + (elapsed % 1000)/1000 * size, size, 2);
             ctx.restore();
-        )`
+        }
+
         if (phase === 'CHAT') {
            drawChatInterface(cx, cy, Math.min(1, (elapsed - 11500) / 1000));
         }
