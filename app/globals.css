@@ -137,5 +137,25 @@
 
   .animate-slide-right {
     animation: slide-right 3s linear infinite;
+
+      /* Additional responsive utilities */
+  .text-responsive {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  .prevent-overflow {
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  @media (min-width: 640px) {
+    .sm\:text-responsive {
+      word-wrap: normal;
+      overflow-wrap: normal;
+      hyphens: none;
+    }
+  }
   }
 }
