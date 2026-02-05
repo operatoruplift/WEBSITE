@@ -34,7 +34,7 @@ export const APP_CONTENT: AppData = {
         id: 'store',
         navTitle: 'AGENT STORE',
         cardTitle: '2. Agent Store',
-      description: 'Discover, install, and run agents from a Solana powered marketplace, powered by Solana. Developers can price agents, and payment rails may include Solana-based credits, while users get one-click agent deployment with transparent permissions and ownership',        iconType: 'globe'
+      description: 'Discover, install, and run agents from a Solana-powered marketplace. Developers can price agents, and payment rails may include Solana-based credits, while users get one-click agent deployment with transparent permissions and ownership',        iconType: 'globe'
       },
       {
         id: 'runtime',
@@ -54,7 +54,7 @@ export const APP_CONTENT: AppData = {
         id: 'permissions',
         navTitle: 'PERMISSIONS',
         cardTitle: '5. Permission Actions',
-        description: 'Every file read, device control, and network call is a permission action that you can see and approve. Uplift enforces the boundaries you set—file access, device control, network calls—is governed by explicit permissions. No silent behavior, no surprises. You define what agents can do, and UPLIFT enforces those boundaries automatically.',
+        description: 'Every file read, device control, and network call is a permission action that you can see and approve. Uplift enforces the boundaries you set—file access, device control, and network calls—are governed by explicit permissions. No silent behavior, no surprises. You define what agents can do, and UPLIFT enforces those boundaries automatically.',
         iconType: 'check'
       }
     ]
