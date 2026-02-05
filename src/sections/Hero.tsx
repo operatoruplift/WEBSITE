@@ -19,43 +19,43 @@ const Hero: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent h-32 bottom-0"></div>
       </div>
 
-      <div className="relative z-10 pt-32 pb-12 px-6 md:px-12 lg:pt-32 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 flex-grow">
+      <div className="relative z-10 pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-10 md:pb-12 px-4 sm:px-6 md:px-12 lg:pt-32 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 lg:gap-12 flex-grow">
         
         {/* Left Content Column */}
         <div className="lg:col-span-7 flex flex-col justify-center">
           
           {/* Vision Tag */}
           <FadeIn delay={100} direction="down">
-            <div className="flex items-center mb-8">
+            <div className="flex items-center mb-6 md:mb-8">
               <span className="w-2 h-2 rounded-full bg-primary mr-3 shadow-[0_0_8px_rgba(231,118,48,0.6)] animate-pulse"></span>
               <span className="text-xs font-bold tracking-[0.2em] text-white uppercase">{data.visionTag}</span>
             </div>
           </FadeIn>
 
           {/* Headline */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl tracking-tight text-white mb-8 leading-[1.05] min-h-[1.1em]">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl tracking-tight text-white mb-6 md:mb-8 leading-[1.05] min-h-[1.1em]">
             <GlideText text={data.headline} />
           </h1>
 
           {/* Subhead */}
           <FadeIn delay={400}>
-            <p className="text-lg md:text-xl text-muted font-mono mb-4 max-w-2xl">
+            <p className="text-base sm:text-lg md:text-xl text-muted font-mono mb-3 md:mb-4 max-w-2xl">
               {data.subhead}
             </p>
           </FadeIn>
 
           {/* Description */}
           <FadeIn delay={600}>
-            <p className="text-base md:text-lg text-gray-400 mb-8 max-w-xl leading-relaxed">
+            <p className="text-sm sm:text-base md:text-lg text-gray-400 mb-6 md:mb-8 max-w-xl leading-relaxed">
               {data.description}
             </p>
-             <div className="mb-8">
+            <div className="mb-6 md:mb-8">
               <AddressDisplay address={data.contractAddress} label={data.contractLabel} />
             </div>
           </FadeIn>
 
-          {/* Mobile Animation Container - Placed between Text and Download */}
-          <div className="block lg:hidden w-full h-[500px] md:h-[600px] relative mb-8 rounded-xl overflow-hidden bg-white/5 border border-white/10">
+          {/* Mobile & Tablet Animation Container - Placed between Text and Download */}
+          <div className="block lg:hidden w-full h-[400px] sm:h-[500px] md:h-[600px] relative mb-6 md:mb-8 rounded-xl overflow-hidden bg-white/5 border border-white/10">
             <HeroAnimation className="w-full h-full" />
             {/* Gradients to blend edges slightly */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/50 pointer-events-none"></div>
@@ -70,7 +70,7 @@ const Hero: React.FC = () => {
           <FadeIn delay={1000}>
             <TrustedBy />
           </FadeIn>
-
+          
         </div>
 
         {/* Right Column Spacer - Desktop Animation lives behind here */}
