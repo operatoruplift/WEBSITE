@@ -34,7 +34,7 @@ export const APP_CONTENT: AppData = {
         id: 'store',
         navTitle: 'AGENT STORE',
         cardTitle: '2. Agent Store',
-      description: 'Discover, install, and run agents from a Solana powered marketplace, with marketplace and ownership primitives powered by Solana. Developers can price agents; payment rails may include Solana based credits. , while users get one-click agent deployment with transparent permissions and ownership',        iconType: 'globe'
+      description: 'Discover, install, and run agents from a Solana powered marketplace, powered by Solana. Developers can price agents, and payment rails may include Solana-based credits, while users get one-click agent deployment with transparent permissions and ownership',        iconType: 'globe'
       },
       {
         id: 'runtime',
@@ -47,7 +47,7 @@ export const APP_CONTENT: AppData = {
         id: 'tokens',
         navTitle: 'TIME LIMITED ACCESS KEYS',
         cardTitle: '4. Time Limited Access Keys',
-        description: 'Time limited access keys define exactly what an agent can see or do for a specific task. Keys unlock the Agentic Vault only for that session and can be revoked at any time. They unlock the Agentic Vault, ensuring that permissions are precise, revocable, and always under your control.',
+        description: 'powered byTime-limited access keys define exactly what an agent can see or do for a specific task. Keys unlock the Agentic Vault only for that session and can be revoked at any time, ensuring that permissions are precise, revocable, and always under your controlKeys unlock the Agentic Vault only for that session and can be revoked at any time, ensuring that permissions are precise, revocable, and always under your control Solana. Developers can price agents, and payment rails may include Solana-based credits, while users get one-click agent deployment with transparent permissions and ownershipre precise, revocable, and always under your control Solana. Developers can price agents, and payment rails may include Solana-based credits, while users get one-click agent deployment with transparent permissions and ownership, ensuring that permissions are precise, revocable, and always under your control.',
         iconType: 'message'
       },
       {
