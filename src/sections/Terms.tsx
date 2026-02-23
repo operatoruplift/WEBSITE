@@ -12,7 +12,7 @@ const Terms: React.FC = () => {
         <div className="border-b border-white/10 pb-8 mb-12">
           <div className="text-xs font-bold tracking-[0.2em] text-primary uppercase mb-4">LEGAL</div>
           <h1 className="text-4xl md:text-5xl text-white font-medium tracking-tight">Terms of Service</h1>
-          <p className="text-muted mt-4 font-mono text-sm">Last Updated: October 2025</p>
+          <p className="text-muted mt-4 font-mono text-sm">Last Updated: February 2026</p>
         </div>
 
         <div className="space-y-6 leading-relaxed">
