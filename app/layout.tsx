@@ -2,19 +2,19 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Uplift - Local-First Agent Command Center",
+  title: "Operator Uplift - Local-First Agent Command Center",
   description: "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana—no cloud required",  keywords: ["Local AI", "Agent Platform", "Solana AI", "Private Memory", "Autonomous Agents", "Local Runtime", "Agent Marketplace"],
   openGraph: {
-    title: "Uplift - Local-First Agent Command Center",
+    title: "Operator Uplift - Local-First Agent Command Center",
     description: "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana—no cloud required",
     url: "https://operatoruplift.com",
-    siteName: "Uplift",
+    siteName: "Operator Uplift",
     images: [
       {
         url: "/logo.svg", // Recommended: Replace with a 1200x630 .png image
         width: 1200,
         height: 630,
-        alt: "Uplift AI Platform",
+        alt: "Operator Uplift AI Platform",
       },
     ],
     locale: "en_US",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Uplift - Local-First Agent Command Center",    description: "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana—no cloud required",
+    title: "Operator Uplift - Local-First Agent Command Center",    description: "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana—no cloud required",
     creator: "@OperatorUplift",
     images: ["/logo.svg"], // Recommended: Replace with a 1200x630 .png image
   },
@@ -61,7 +61,7 @@ export default function RootLayout({
             {
               "@context": "https://schema.org",
               "@type": "Organization",
-              "name": "Uplift",
+              "name": "Operator Uplift",
               "url": "https://operatoruplift.com",
               "logo": "https://operatoruplift.com/logo.svg",
               "sameAs": [
