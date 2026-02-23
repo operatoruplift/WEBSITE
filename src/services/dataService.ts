@@ -165,7 +165,7 @@ export const APP_CONTENT: AppData = {
   },
   footer: {
     tag: "FOOTER",
-    copyright: "@Uplift 2025. All rights reserved.",
+    copyright: "@Operator Uplift 2025. All rights reserved.",
     socials: {
       twitter: "https://x.com/OperatorUplift",
       linkedin: "https://www.linkedin.com/company/operatoruplift",
