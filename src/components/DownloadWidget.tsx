@@ -11,7 +11,7 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
   const [showModal, setShowModal] = useState(false);
 
   const currentDownload = data.downloads[activeTab];
-  const downloadUrl = 'https://avenindia.blob.core.windows.net/avenstorage/Uplift.exe';
+  const downloadUrl = '#';
 
   const handleDownloadClick = () => {
     setShowModal(true);
