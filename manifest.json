@@ -3,7 +3,7 @@
   "description": "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana—no cloud required",
   "dir": "ltr",
   "display": "standalone",
-  "name": "Uplift",
+  "name": "Operator Uplift",
   "orientation": "any",
   "scope": "/",
   "short_name": "Uplift",
