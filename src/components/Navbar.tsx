@@ -40,7 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
               </a>
             ))}
             <a
-              href="https://help.operatoruplift.com"
+              href="https://docs.operatoruplift.com"
               target="_blank"
               rel="noreferrer"
               className="group flex items-center text-xs font-bold text-muted hover:text-white transition-colors tracking-wide"
@@ -60,7 +60,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
           </a>
           
           <Link 
-            href="/"
+            href="https://docs.operatoruplift.com/getting-started"
             className="text-xs font-bold bg-white text-black px-3 lg:px-4 py-2 rounded-sm hover:bg-gray-200 transition-colors uppercase tracking-wide whitespace-nowrap"
           >
             Get Started
@@ -103,7 +103,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
             </a>
           ))}
           <a
-            href="https://help.operatoruplift.com"
+            href="https://docs.operatoruplift.com"
             target="_blank"
             rel="noreferrer"
             className="text-lg font-bold text-white hover:text-primary transition-colors tracking-wide"
@@ -124,7 +124,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
           </a>
           
           <Link 
-            href="/"
+            href="https://docs.operatoruplift.com/getting-started"
             className="text-sm font-bold bg-white text-black px-4 py-3 rounded-sm hover:bg-gray-200 transition-colors uppercase tracking-wide w-full text-center"
             onClick={() => setMobileMenuOpen(false)}
           >
