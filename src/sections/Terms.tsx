@@ -19,14 +19,14 @@ const Terms: React.FC = () => {
           <section>
             <h2 className="text-xl text-white font-bold mb-3">1. Acceptance of Terms</h2>
             <p>
-              By accessing and using the Uplift platform ("Service"), you agree to comply with and be bound by these Terms of Service. If you do not agree to these terms, you may not access or use the Service.
+              By accessing and using the Opeartor Uplift platform ("Service"), you agree to comply with and be bound by these Terms of Service. If you do not agree to these terms, you may not access or use the Service.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl text-white font-bold mb-3">2. Description of Service</h2>
             <p>
-              Uplift provides an agentic AI infrastructure platform that allows users to run, manage, and deploy AI agents in isolated environments. We reserve the right to modify, suspend, or discontinue the Service at any time.
+              Operator Uplift provides an agentic AI infrastructure platform that allows users to run, manage, and deploy AI agents in isolated environments. We reserve the right to modify, suspend, or discontinue the Service at any time.
             </p>
           </section>
 
@@ -40,7 +40,7 @@ const Terms: React.FC = () => {
           <section>
             <h2 className="text-xl text-white font-bold mb-3">4. Intellectual Property</h2>
             <p>
-              The Service and its original content, features, and functionality are and will remain the exclusive property of Uplift and its licensors. The Service is protected by copyright, trademark, and other laws.
+              The Service and its original content, features, and functionality are and will remain the exclusive property of Operator Uplift and its licensors. The Service is protected by copyright, trademark, and other laws.
             </p>
           </section>
 
@@ -54,7 +54,7 @@ const Terms: React.FC = () => {
            <section>
             <h2 className="text-xl text-white font-bold mb-3">6. Limitation of Liability</h2>
             <p>
-              In no event shall Uplift, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses.
+              In no event shall Operator Uplift, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses.
             </p>
           </section>
         </div>
