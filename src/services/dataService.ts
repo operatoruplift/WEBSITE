@@ -54,27 +54,27 @@ export const APP_CONTENT: AppData = {
         id: 'permissions',
         navTitle: 'PERMISSIONS',
         cardTitle: '5. Permission Actions',
-        description: 'Every file read, device control, and network call is a permission action that you can see and approve. Uplift enforces the boundaries you set—file access, device control, and network calls—are governed by explicit permissions. No silent behavior, no surprises. You define what agents can do, and UPLIFT enforces those boundaries automatically.',
+        description: 'Every file read, device control, and network call is a permission action that you can see and approve. Operator Uplift enforces the boundaries you set—file access, device control, and network calls—are governed by explicit permissions. No silent behavior, no surprises. You define what agents can do, and Operator Uplift enforces those boundaries automatically.',
         iconType: 'check'
       }
     ]
   },
   security: {
     tag: "ENTERPRISE",
-    headline: "Uplift delivers an enterprise-grade agentic infrastructure",
+    headline: "Operator Uplift delivers an enterprise-grade agentic infrastructure",
     subhead: "With isolated runtimes for maximum security, a unified interface that minimizes learning curve, and seamless integration of private AI agents for scalable automation.",
     features: {
       security: {
         tag: "SECURE AT EVERY LEVEL",
         title: "Local-first security and full compliance",
-        description: "Uplift uses isolated sandboxes, encrypted local memory and token based access rules to ensure that your data, intellectual property, logs and workflows never leave your environment. Agents receive only the context you explicitly approve for a limited time window, which prevents oversharing and eliminates the risk of cloud based data leakage.",
+        description: "Operator Uplift uses isolated sandboxes, encrypted local memory and token based access rules to ensure that your data, intellectual property, logs and workflows never leave your environment. Agents receive only the context you explicitly approve for a limited time window, which prevents oversharing and eliminates the risk of cloud based data leakage.",
         linkText: "Learn more about security",
         linkUrl: "#"
       },
       enterprise: {
         tag: "ACROSS YOUR DEVELOPMENT STACK",
         title: "Independent of interfaces and external vendors",
-        description: "Uplift integrates with any model provider, internal API, or device. Deploy the agents with one interface, and evolve them over time without vendor lock-in. As your internal systems mature, your agents upgrade seamlessly with shared memory, cross-device sync, and modular extensions.",
+        description: "Opeartor Uplift integrates with any model provider, internal API, or device. Deploy the agents with one interface, and evolve them over time without vendor lock-in. As your internal systems mature, your agents upgrade seamlessly with shared memory, cross-device sync, and modular extensions.",
         linkText: "Learn more about enterprise",
         linkUrl: "#"
       }
@@ -83,11 +83,11 @@ export const APP_CONTENT: AppData = {
   developerDocs: {
     tag: "BUILD WITH US",
     headline: "Developer Docs",
-    description: "Everything you need to integrate Uplift agents into your infrastructure. Explore our guides, samples, and API references.",
+    description: "Everything you need to integrate Operator Uplift agents into your infrastructure. Explore our guides, samples, and API references.",
     links: [
       {
         title: "Quickstart Guide",
-        description: "Get up and running with Uplift in minutes. Deploy your first agent container.",
+        description: "Get up and running with Operator Uplift in minutes. Deploy your first agent container.",
         iconType: 'terminal',
         url: "https://help.operatoruplift.com/"
       },
