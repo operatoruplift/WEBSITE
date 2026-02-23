@@ -126,7 +126,7 @@ const Security: React.FC = () => {
                 <div className="h-64 w-full flex items-center justify-center relative bg-gradient-to-t from-black/50 to-transparent overflow-visible">
                     <div className="relative z-20 flex flex-col items-center justify-center w-20 h-20 bg-blue-500/10 border border-blue-500/50 rounded-xl backdrop-blur-md shadow-[0_0_20px_rgba(59,130,246,0.2)]">
                         <div className="w-8 h-8 border-2 border-blue-500 rounded-md"></div>
-                        <span className="text-[8px] font-mono text-blue-400 mt-2 tracking-widest">UPLIFT</span>
+                        <span className="text-[8px] font-mono text-blue-400 mt-2 tracking-widest">OPERATOR UPLIFT</span>
                     </div>
 
                     {/* Scaled down container to keep orbiting elements within bounds */}
