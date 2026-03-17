@@ -19,8 +19,8 @@ const TractionBar: React.FC = () => {
                                               <div className="hidden md:block w-px h-12 bg-white/10" />
                                             )}
                                           <div className="flex flex-col items-center text-center">
-                                                            <span className="text-3xl md:text-4xl font-bold text-white">{stat.value}</span>span>
-                                                            <span className="text-sm text-gray-400 font-mono mt-1">{stat.label}</span>span>
+                                                            <span className="text-3xl md:text-4xl font-bold text-white">{stat.value}</span>
+                                                            <span className="text-sm text-gray-400 font-mono mt-1">{stat.label}</span>
                                           </div>
                           </React.Fragment>
                         ))}
