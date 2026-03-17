@@ -6,6 +6,7 @@ import Product from '@/src/sections/Product';
 import Security from '@/src/sections/Security';
 import DeveloperDocs from '@/src/sections/DeveloperDocs';
 import BuildWithUs from '@/src/sections/BuildWithUs';
+import TractionBar from '@/src/sections/TractionBar';
 import Footer from '@/src/components/Footer';
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
                     <Product />
                     <Security />
                     <DeveloperDocs />
+                              <TractionBar />
                     <BuildWithUs />
                     <Footer />
               </div>
