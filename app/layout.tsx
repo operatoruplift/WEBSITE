@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://operatoruplift.com"),
   title: "Operator Uplift - Your Life, Automated",
   description: "One App. Every Agent. All Yours. Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana — no cloud required.",
   keywords: ["Local AI", "Agent Platform", "Solana AI", "Private Memory", "Autonomous Agents", "Local Runtime", "Agent Marketplace", "AI OS", "Local-First"],
