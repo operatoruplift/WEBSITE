@@ -29,30 +29,30 @@ export interface MarketData {
 
 export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData } = {
   problem: {
-    stat: '80+',
-    subline: 'The average person uses 80+ apps. None of them talk to each other. Your data is trapped, your attention fragmented, your time wasted.',
+    stat: '40+',
+    subline: 'You have 40 apps. 40 subscriptions. 40 different places storing your data. None of them talk to each other. None are yours.',
     pillars: [
-      { id: 'fragmentation', emoji: '🔄', problem: 'App Overload', solution: 'One Agent', description: 'Stop alt-tabbing between 80 apps. One agent, one interface, every capability.', href: '#product' },
-      { id: 'cloud-lock', emoji: '☁️', problem: 'Cloud Lock-in', solution: 'Local-First', description: 'Your data lives on your hardware. Your models run on your GPU. Zero vendor lock-in.', href: '#product' },
-      { id: 'value-leak', emoji: '💸', problem: 'Value Extraction', solution: 'You Own It', description: 'Big tech monetizes your data. Operator Uplift lets you own, stake, and profit from your agents.', href: '#product' },
+      { id: 'siloed-memory', emoji: '🧠', problem: 'Siloed Memory', solution: 'Unified Context', description: 'No unified shared context across your tools. Your agents should remember everything — across apps, sessions, and devices.', href: '#product' },
+      { id: 'exposed-privacy', emoji: '🔓', problem: 'Exposed Privacy', solution: 'Local-First', description: 'Your data leaks to unknown servers. With Operator Uplift, your data lives on your hardware. Zero vendor lock-in.', href: '#product' },
+      { id: 'no-boundaries', emoji: '⚠️', problem: 'No Boundaries', solution: 'You Own It', description: 'Agents monetize your private data. Operator Uplift gives you full ownership — every permission explicit, every action approved.', href: '#product' },
     ],
     solution: 'A local-first AI operating system that replaces your entire app stack with one intelligent agent.',
   },
   market: {
     headline: 'Massive and Growing.',
-    subhead: 'The AI agent market is projected to reach $65B by 2028. Operator Uplift is positioned at the intersection of AI, crypto, and consumer software.',
+    subhead: 'The AI agent market is accelerating. Operator Uplift is positioned at the intersection of AI, crypto, and consumer software.',
     stats: [
-      { value: '$65B', label: 'AI Agent Market by 2028' },
-      { value: '3.2B', label: 'Smartphone Users Worldwide' },
-      { value: '40%', label: 'CAGR in AI Automation' },
+      { value: '$103B', label: 'Total Addressable Market' },
+      { value: '$18B', label: 'Serviceable Addressable Market' },
+      { value: '100M+', label: 'Target Users (SOM)' },
       { value: '#1', label: 'Local-First AI OS' },
     ],
   },
   hero: {
     visionTag: "VISION",
-    headline: "Millions of Agents. One Voice.",
-    subhead: "Local first AI agents you control, running on your device.",
-    description: "Install agents, run tasks in secure sessions, and approve access with clear permissions.",
+    headline: "Your Life, Automated.",
+    subhead: "One App. Every Agent. All Yours.",
+    description: "Local-first AI agents you control, running on your device. Install agents, run tasks in secure sessions, and approve access with clear permissions.",
     contractAddress: "Coming Soon",
     contractLabel: "Internal currency for computation",
     downloads: {

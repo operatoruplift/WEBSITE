@@ -2,19 +2,20 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Operator Uplift - Local-First Agent Command Center",
-  description: "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana—no cloud required",  keywords: ["Local AI", "Agent Platform", "Solana AI", "Private Memory", "Autonomous Agents", "Local Runtime", "Agent Marketplace"],
+  title: "Operator Uplift - Your Life, Automated",
+  description: "One App. Every Agent. All Yours. Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana — no cloud required.",
+  keywords: ["Local AI", "Agent Platform", "Solana AI", "Private Memory", "Autonomous Agents", "Local Runtime", "Agent Marketplace", "AI OS", "Local-First"],
   openGraph: {
-    title: "Operator Uplift - Local-First Agent Command Center",
-    description: "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana—no cloud required",
+    title: "Operator Uplift - Your Life, Automated",
+    description: "One App. Every Agent. All Yours. Local-first AI agents with secure, private memory — no cloud required.",
     url: "https://operatoruplift.com",
     siteName: "Operator Uplift",
     images: [
       {
-        url: "/logo.svg", // Recommended: Replace with a 1200x630 .png image
+        url: "/logo.svg",
         width: 1200,
         height: 630,
-        alt: "Operator Uplift AI Platform",
+        alt: "Operator Uplift - Local-First AI OS",
       },
     ],
     locale: "en_US",
@@ -22,14 +23,15 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Operator Uplift - Local-First Agent Command Center",    description: "Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana—no cloud required",
+    title: "Operator Uplift - Your Life, Automated",
+    description: "One App. Every Agent. All Yours. Local-first AI agents with secure, private memory — no cloud required.",
     creator: "@OperatorUplift",
-    images: ["/logo.svg"], // Recommended: Replace with a 1200x630 .png image
+    images: ["/logo.svg"],
   },
   icons: {
     icon: "/logo.svg",
   },
-    manifest: "/manifest.json",
+  manifest: "/manifest.json",
 };
 
 import Script from "next/script";
