@@ -34,9 +34,9 @@ const DeveloperDocs: React.FC = () => {
   );
 
   return (
-    <section className="w-full bg-background pb-24 px-6 md:px-12 flex justify-center flex-col items-center">
+    <section className="w-full bg-background pb-16 px-6 md:px-12 flex justify-center flex-col items-center">
       
-      <div className="w-full max-w-[1600px] py-24 flex items-center justify-center">
+      <div className="w-full max-w-[1600px] py-12 flex items-center justify-center">
         <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-white/15 to-transparent relative">
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-1 bg-background flex items-center justify-center">
                  <div className="w-1.5 h-1.5 rounded-full bg-white/30 shadow-[0_0_8px_rgba(255,255,255,0.4)] animate-pulse"></div>
