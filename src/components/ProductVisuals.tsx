@@ -91,21 +91,28 @@ export const StoreVisual = () => {
   const [phase, setPhase] = useState<'fetching' | 'complete'>('fetching');
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveItem(prev => {
-        if (prev >= 5) {
-          setPhase('complete');
-          // Reset after showing complete state
-          setTimeout(() => {
-            setActiveItem(0);
-            setPhase('fetching');
-          }, 2000);
-          return 5;
-        }
-        return prev + 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
+    // Full cycle: 6 items at 800ms each = 4.8s fetch, 2s complete, then reset
+    const FETCH_INTERVAL = 800;
+    const COMPLETE_PAUSE = 2000;
+    let timeout: NodeJS.Timeout;
+
+    const step = (current: number) => {
+      if (current < 6) {
+        setActiveItem(current);
+        setPhase('fetching');
+        timeout = setTimeout(() => step(current + 1), FETCH_INTERVAL);
+      } else {
+        setPhase('complete');
+        timeout = setTimeout(() => {
+          setActiveItem(0);
+          setPhase('fetching');
+          timeout = setTimeout(() => step(1), FETCH_INTERVAL);
+        }, COMPLETE_PAUSE);
+      }
+    };
+
+    step(0);
+    return () => clearTimeout(timeout);
   }, []);
 
   return (
@@ -144,20 +151,27 @@ export const RuntimeVisual = () => {
   const [phase, setPhase] = useState<'running' | 'complete'>('running');
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setStep(prev => {
-        if (prev >= 3) {
-          setPhase('complete');
-          setTimeout(() => {
-            setStep(0);
-            setPhase('running');
-          }, 2000);
-          return 3;
-        }
-        return prev + 1;
-      });
-    }, 1200);
-    return () => clearInterval(interval);
+    const STEP_INTERVAL = 1200;
+    const COMPLETE_PAUSE = 2000;
+    let timeout: NodeJS.Timeout;
+
+    const advance = (current: number) => {
+      if (current <= 3) {
+        setStep(current);
+        setPhase('running');
+        timeout = setTimeout(() => advance(current + 1), STEP_INTERVAL);
+      } else {
+        setPhase('complete');
+        timeout = setTimeout(() => {
+          setStep(0);
+          setPhase('running');
+          timeout = setTimeout(() => advance(1), STEP_INTERVAL);
+        }, COMPLETE_PAUSE);
+      }
+    };
+
+    advance(0);
+    return () => clearTimeout(timeout);
   }, []);
 
   const steps = [
@@ -195,24 +209,26 @@ export const RuntimeVisual = () => {
 
 export const TokenVisual = () => {
   const [cycle, setCycle] = useState(0);
-  const completed = cycle > 0 && (Date.now() % 6000) > 4000;
+  const [tokenPhase, setTokenPhase] = useState<'keys' | 'locked'>('keys');
 
-  // Force re-render loop
-  const [, setTick] = useState(0);
   useEffect(() => {
-    const interval = setInterval(() => setTick(t => t + 1), 100);
-    return () => clearInterval(interval);
+    let timeout: NodeJS.Timeout;
+
+    const run = () => {
+      setTokenPhase('keys');
+      setCycle(c => c + 1);
+      timeout = setTimeout(() => {
+        setTokenPhase('locked');
+        timeout = setTimeout(run, 2000);
+      }, 4000);
+    };
+
+    run();
+    return () => clearTimeout(timeout);
   }, []);
 
-  // Cycle the animation
-  useEffect(() => {
-    const interval = setInterval(() => setCycle(c => c + 1), 6000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const elapsed = Date.now() % 6000;
-  const showKeys = elapsed < 4000;
-  const showLocked = elapsed >= 4000;
+  const showKeys = tokenPhase === 'keys';
+  const showLocked = tokenPhase === 'locked';
 
   return (
     <div className="w-full h-full flex items-center justify-center p-6">

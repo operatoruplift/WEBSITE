@@ -101,8 +101,8 @@ const Product: React.FC = () => {
     <div
       id="product"
       ref={sectionRef}
-      className="relative bg-slanted-lines w-full lg:min-h-[600vh] min-h-screen"
-      style={{ backgroundColor: '#0c0c0c' }}
+      className="relative bg-slanted-lines w-full lg:min-h-[700vh] min-h-screen"
+      style={{ backgroundColor: '#050505' }}
     >
 
       {/* --- DESKTOP VIEW (Sticky & Scroll-linked) --- */}

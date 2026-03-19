@@ -46,13 +46,13 @@
 
   /* Slanted Lines Background Pattern */
   .bg-slanted-lines {
-    background-color: #050505;
+    background-color: var(--color-background);
     background-image: repeating-linear-gradient(
       -45deg,
       transparent,
       transparent 5px,
-      rgba(255, 255, 255, 0.035) 5px,
-      rgba(255, 255, 255, 0.035) 6px
+      rgba(255, 255, 255, 0.02) 5px,
+      rgba(255, 255, 255, 0.02) 6px
     );
     background-attachment: fixed;
   }

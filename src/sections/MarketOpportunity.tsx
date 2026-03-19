@@ -17,10 +17,10 @@ const MarketOpportunity: React.FC = () => {
   return (
     <section className="w-full bg-background px-6 md:px-12 flex justify-center flex-col items-center">
       {/* Divider matching site style */}
-      <div className="w-full max-w-[1600px] py-24 flex items-center justify-center">
+      <div className="w-full max-w-[1600px] py-16 flex items-center justify-center">
         <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-white/15 to-transparent relative">
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-1 bg-background flex items-center justify-center">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary/50 shadow-[0_0_8px_rgba(231,118,48,0.6)]"></div>
+            <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(231,118,48,0.6)]"></div>
           </div>
         </div>
       </div>
@@ -28,8 +28,8 @@ const MarketOpportunity: React.FC = () => {
       <div className="w-full max-w-[1200px] pb-24 relative z-10">
         <div className="text-center mb-16 max-w-2xl mx-auto">
           <FadeIn>
-            <div className="inline-flex items-center gap-3 mb-6">
-              <span className="w-2 h-2 rounded-full bg-primary mr-1 shadow-[0_0_8px_rgba(231,118,48,0.6)]"></span>
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <span className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(231,118,48,0.6)]"></span>
               <span className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase">Market Opportunity</span>
             </div>
           </FadeIn>

@@ -81,28 +81,28 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
         id: 'store',
         navTitle: 'AGENT STORE',
         cardTitle: '2. Agent Store',
-        description: 'Discover, install, and run agents from a Solana-powered marketplace. Developers can price agents, and payment rails may include Solana-based credits, while users get one-click agent deployment with transparent permissions and ownership.',
+        description: 'Discover, install, and run agents from a Solana-powered marketplace. One-click deployment with transparent permissions and ownership.',
         iconType: 'globe'
       },
       {
         id: 'runtime',
         navTitle: 'SESSION RUNTIME',
         cardTitle: '3. Session Runtime',
-        description: 'Each task runs in a session-based runtime that starts fast, stays isolated, and ends cleanly. When the session ends, the agent loses access to your system — ensuring strict isolation with no long-term persistence.',
+        description: 'Each task runs in an isolated runtime that starts fast and ends cleanly. When the session ends, the agent loses all access to your system.',
         iconType: 'terminal'
       },
       {
         id: 'tokens',
-        navTitle: 'TIME LIMITED ACCESS KEYS',
-        cardTitle: '4. Time Limited Access Keys',
-        description: 'Time-limited access keys define exactly what an agent can see or do for a specific task. Keys unlock the Agentic Vault only for that session and can be revoked at any time, ensuring that permissions are precise, revocable, and always under your control.',
+        navTitle: 'ACCESS KEYS',
+        cardTitle: '4. Time-Limited Access Keys',
+        description: 'Keys define exactly what an agent can see or do. They unlock the Agentic Vault for one session only and can be revoked at any time.',
         iconType: 'message'
       },
       {
         id: 'permissions',
         navTitle: 'PERMISSIONS',
         cardTitle: '5. Permission Actions',
-        description: 'Every file read, device control, and network call is a permission action that you can see and approve. Operator Uplift enforces the boundaries you set — file access, device control, and network calls — are governed by explicit permissions. No silent behavior, no surprises.',
+        description: 'Every file read, device control, and network call requires explicit approval. No silent behavior, no surprises. You define the boundaries.',
         iconType: 'check'
       }
     ]

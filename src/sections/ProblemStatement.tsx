@@ -15,11 +15,11 @@ const ProblemStatement: React.FC = () => {
 
   return (
     <section className="w-full bg-background px-6 md:px-12 flex justify-center flex-col items-center">
-      {/* Divider matching DeveloperDocs style */}
-      <div className="w-full max-w-[1600px] py-24 flex items-center justify-center">
+      {/* Divider matching site style */}
+      <div className="w-full max-w-[1600px] py-16 flex items-center justify-center">
         <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-white/15 to-transparent relative">
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-1 bg-background flex items-center justify-center">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary/50 shadow-[0_0_8px_rgba(231,118,48,0.6)]"></div>
+            <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(231,118,48,0.6)]"></div>
           </div>
         </div>
       </div>
@@ -27,21 +27,21 @@ const ProblemStatement: React.FC = () => {
       <div className="w-full max-w-[1200px] pb-24 relative z-10">
         {/* Big number callout — all centered */}
         <div className="flex flex-col items-center text-center mb-20">
-          {/* Tag centered above */}
+          {/* Tag centered above the number */}
           <FadeIn>
-            <div className="flex items-center justify-center gap-3 mb-10">
+            <div className="flex items-center justify-center gap-3 mb-16">
               <span className="h-px w-16 bg-primary/40" />
               <span className="text-xs font-bold tracking-[0.25em] text-primary uppercase">The Problem</span>
               <span className="h-px w-16 bg-primary/40" />
             </div>
           </FadeIn>
 
-          {/* Number with ghost behind */}
-          <div className="relative mb-4">
-            <span className="text-[160px] md:text-[220px] font-black leading-none text-white/[0.03] select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+          {/* Number with ghost behind — clear vertical spacing */}
+          <div className="relative mb-6">
+            <span className="text-[120px] md:text-[180px] font-black leading-[0.85] text-white/[0.03] select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
               {problem.stat}
             </span>
-            <span className="relative z-10 text-8xl md:text-[120px] font-black leading-none bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
+            <span className="relative z-10 text-7xl md:text-[100px] font-black leading-[0.85] bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
               {problem.stat}
             </span>
           </div>
