@@ -84,7 +84,7 @@ export default function AgentsPage() {
                     <div className="flex flex-col md:flex-row gap-3">
                         <div className="relative flex-1">
                             <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
-                            <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search agents..." className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-primary/50 focus:outline-none transition-colors" />
+                            <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search agents..." aria-label="Search agents" className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-primary/50 focus:outline-none transition-colors" />
                         </div>
                         <div className="flex gap-1 bg-white/5 border border-white/10 rounded-xl p-1">
                             {(['all', 'running', 'idle', 'error'] as const).map(f => (

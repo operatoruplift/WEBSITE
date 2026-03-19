@@ -108,7 +108,6 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
       ctx.fillStyle = 'rgba(5, 5, 5, 0.8)';
 
       ctx.beginPath();
-      // @ts-ignore
       if (ctx.roundRect) {
         ctx.roundRect(-w / 2, -h / 2, w, h, 12);
       } else {

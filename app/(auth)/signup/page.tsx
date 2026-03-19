@@ -49,19 +49,19 @@ export default function SignupPage() {
 
                 <form onSubmit={handleSignup} className="space-y-4">
                     <div>
-                        <label className="text-sm text-gray-400 block mb-2">Full Name</label>
-                        <div className="relative"><User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" /><input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Your name" className="w-full bg-white/5 border border-white/10 rounded-lg pl-12 pr-4 py-3 text-white focus:border-primary/50 focus:outline-none transition-colors" required /></div>
+                        <label htmlFor="signup-name" className="text-sm text-gray-400 block mb-2">Full Name</label>
+                        <div className="relative"><User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" /><input id="signup-name" type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Your name" aria-label="Full name" className="w-full bg-white/5 border border-white/10 rounded-lg pl-12 pr-4 py-3 text-white focus:border-primary/50 focus:outline-none transition-colors" required /></div>
                     </div>
                     <div>
-                        <label className="text-sm text-gray-400 block mb-2">Email</label>
-                        <div className="relative"><Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" /><input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" className="w-full bg-white/5 border border-white/10 rounded-lg pl-12 pr-4 py-3 text-white focus:border-primary/50 focus:outline-none transition-colors" required /></div>
+                        <label htmlFor="signup-email" className="text-sm text-gray-400 block mb-2">Email</label>
+                        <div className="relative"><Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" /><input id="signup-email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" aria-label="Email address" className="w-full bg-white/5 border border-white/10 rounded-lg pl-12 pr-4 py-3 text-white focus:border-primary/50 focus:outline-none transition-colors" required /></div>
                     </div>
                     <div>
-                        <label className="text-sm text-gray-400 block mb-2">Password</label>
+                        <label htmlFor="signup-password" className="text-sm text-gray-400 block mb-2">Password</label>
                         <div className="relative">
                             <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                            <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="Create a password" className="w-full bg-white/5 border border-white/10 rounded-lg pl-12 pr-12 py-3 text-white focus:border-primary/50 focus:outline-none transition-colors" required minLength={6} />
-                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button>
+                            <input id="signup-password" type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="Create a password" aria-label="Password" className="w-full bg-white/5 border border-white/10 rounded-lg pl-12 pr-12 py-3 text-white focus:border-primary/50 focus:outline-none transition-colors" required minLength={6} />
+                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white" aria-label="Toggle password visibility">{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button>
                         </div>
                         {password.length > 0 && (
                             <div className="mt-2">

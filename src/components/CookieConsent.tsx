@@ -24,7 +24,8 @@ export function CookieConsent() {
         setShow(false);
         // Disable Google Analytics
         if (typeof window !== 'undefined') {
-            (window as any)[`ga-disable-G-9VBF7HTRBJ`] = true;
+            // @ts-expect-error — GA opt-out property is not in Window type
+            window[`ga-disable-G-9VBF7HTRBJ`] = true;
         }
     };
 

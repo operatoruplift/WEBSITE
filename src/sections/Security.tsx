@@ -5,9 +5,11 @@ import { FadeIn, GlideText } from '@/src/components/Animators';
 
 const Security: React.FC = () => {
   const [time, setTime] = useState(0);
+  const [mounted, setMounted] = useState(false);
   const data = APP_CONTENT.security;
 
   useEffect(() => {
+    setMounted(true);
     let animationFrameId: number;
     const animate = () => {
       setTime(t => t + 0.02);
@@ -91,18 +93,18 @@ const Security: React.FC = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                              </svg>
                         </div>
-                        <div 
+                        {mounted && <div
                             className="absolute w-32 h-32 border border-primary/30 rounded-full"
                             style={{ transform: `rotate(${time * 20}deg)` }}
                         >
                             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-primary rounded-full"></div>
-                        </div>
-                        <div 
+                        </div>}
+                        {mounted && <div
                             className="absolute w-48 h-48 border border-white/10 rounded-full border-dashed"
                             style={{ transform: `rotate(${-time * 15}deg)` }}
                         >
                              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-3 h-3 bg-gray-600 rounded-full"></div>
-                        </div>
+                        </div>}
                     </div>
                 </div>
             </TechCard>
@@ -130,8 +132,8 @@ const Security: React.FC = () => {
                     </div>
 
                     {/* Scaled down container to keep orbiting elements within bounds */}
-                    <div className="absolute w-full h-full flex items-center justify-center transform scale-75 md:scale-100">
-                        {[0, 1, 2, 3, 4].map(i => {
+                    <div className="absolute w-full h-full flex items-center justify-center transform scale-75 md:scale-100" suppressHydrationWarning>
+                        {mounted && [0, 1, 2, 3, 4].map(i => {
                             const angle = (i * (360/5) + time * 10) * (Math.PI / 180);
                             const radius = 100;
                             const x = Math.cos(angle) * radius;

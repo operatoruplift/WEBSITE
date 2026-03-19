@@ -84,7 +84,7 @@ export default function MemoryPage() {
                             type="text"
                             value={search}
                             onChange={e => setSearch(e.target.value)}
-                            placeholder="Search memory nodes, tags..."
+                            placeholder="Search memory nodes, tags..." aria-label="Search memory nodes"
                             className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:border-primary/50 focus:outline-none transition-colors"
                         />
                     </div>
