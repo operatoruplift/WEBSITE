@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Bot, MessageSquare, Settings, LayoutDashboard, ChevronDown, Sparkles, Shield, Search, Plus, Cpu, Store, Bell, GitBranch, Brain } from 'lucide-react';
+import { Bot, MessageSquare, Settings, LayoutDashboard, ChevronDown, Sparkles, Shield, Search, Plus, Cpu, Store, Bell, GitBranch, Brain, BarChart3, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface NavItem { href: string; label: string; icon: any; gradient: string; }
@@ -29,7 +29,9 @@ const NAV_SECTIONS: NavSection[] = [
     {
         title: 'Account',
         items: [
+            { href: '/analytics', label: 'Analytics', icon: BarChart3, gradient: 'from-cyan-500/20 to-blue-500/10' },
             { href: '/notifications', label: 'Notifications', icon: Bell, gradient: 'from-sky-500/20 to-blue-500/10' },
+            { href: '/profile', label: 'Profile', icon: User, gradient: 'from-indigo-500/20 to-blue-500/10' },
             { href: '/security', label: 'Security', icon: Shield, gradient: 'from-red-500/20 to-rose-500/10' },
             { href: '/settings', label: 'Settings', icon: Settings, gradient: 'from-gray-500/20 to-slate-500/10' },
         ],

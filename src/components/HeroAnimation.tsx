@@ -31,7 +31,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     let height = 0;
     let isMobile = false;
     let particles: Particle[] = [];
-    let phase: 'FLOW' | 'SPARK' | 'CONNECT' | 'FORM' | 'GUARD' | 'CHAT' = 'FLOW';
+    let phase: 'FLOW' | 'SPARK' | 'CONNECT' | 'FORM' | 'GUARD' | 'CHAT' | 'RESPOND' | 'COMPLETE' = 'FLOW';
     let labelText = "";
     let startTime = Date.now();
 
@@ -184,7 +184,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     const render = () => {
       const now = Date.now();
       let elapsed = now - startTime;
-      const LOOP_DURATION = 26000;
+      const LOOP_DURATION = 34000;
 
       if (elapsed > LOOP_DURATION) {
         startTime = now;
@@ -198,7 +198,9 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
       else if (elapsed < 8000) { phase = 'CONNECT'; labelText = "ESTABLISHING CONTEXT"; }
       else if (elapsed < 11500) { phase = 'FORM'; labelText = "ISOLATING ENVIRONMENT"; }
       else if (elapsed < 15000) { phase = 'GUARD'; labelText = "APPLYING GUARDRAILS"; }
-      else { phase = 'CHAT'; labelText = "AGENT ACTIVE"; }
+      else if (elapsed < 24000) { phase = 'CHAT'; labelText = "AGENT ACTIVE"; }
+      else if (elapsed < 29000) { phase = 'RESPOND'; labelText = "TASK COMPLETE"; }
+      else { phase = 'COMPLETE'; labelText = "SESSION CLOSED"; }
 
       ctx.clearRect(0, 0, width, height);
 
@@ -213,7 +215,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
           if (p.y > height) p.y = 0;
           if (p.y < 0) p.y = height;
         }
-        else if (phase === 'FORM' || phase === 'GUARD' || phase === 'CHAT') {
+        else if (phase === 'FORM' || phase === 'GUARD' || phase === 'CHAT' || phase === 'RESPOND' || phase === 'COMPLETE') {
           if (p.isAgent) {
             let tx = cx;
             let ty = cy;
@@ -274,6 +276,19 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
           });
         }
 
+        // RESPOND phase: agents drift outward slowly
+        if (phase === 'RESPOND' && p.isAgent) {
+          const angle = Math.atan2(p.y - cy, p.x - cx);
+          p.x += Math.cos(angle) * 0.3;
+          p.y += Math.sin(angle) * 0.3;
+        }
+
+        // COMPLETE phase: everything fades out
+        if (phase === 'COMPLETE') {
+          p.alpha *= 0.97;
+        }
+
+
         const mobileAlphaMod = isMobile ? 0.4 : 1;
 
         ctx.fillStyle = p.isHero || (phase !== 'FLOW' && p.isAgent) ? PRIMARY_COLOR : '#fff';
@@ -306,19 +321,90 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
 
       // Draw CHAT interface ONCE per frame (outside particle loop)
       if (phase === 'CHAT') {
-        // Chat phase: 15000-26000 = 11s. Progress 0→1 over 10s so all 4 bubbles appear.
-        // timeInChat = progress * 5, last bubble at 4.5 → needs progress > 0.9 → elapsed > 24000
-        drawChatInterface(cx, cy, Math.min(1, (elapsed - 15000) / 10000));
+        drawChatInterface(cx, cy, Math.min(1, (elapsed - 15000) / 8000));
+      }
+
+      // RESPOND phase: show completed chat with success indicator
+      if (phase === 'RESPOND') {
+        // Draw the chat interface at full progress (all bubbles visible)
+        drawChatInterface(cx, cy, 1);
+
+        // Draw success checkmark overlay
+        const respondProgress = Math.min(1, (elapsed - 24000) / 1500);
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.globalAlpha = respondProgress;
+
+        // Success glow
+        const glowRadius = 30 + respondProgress * 10;
+        const gradient = ctx.createRadialGradient(0, 50, 0, 0, 50, glowRadius);
+        gradient.addColorStop(0, 'rgba(34, 197, 94, 0.3)');
+        gradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(0, 50, glowRadius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Checkmark circle
+        ctx.strokeStyle = 'rgba(34, 197, 94, 0.8)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 50, 16, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Checkmark
+        ctx.strokeStyle = 'rgba(34, 197, 94, 1)';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(-6, 50);
+        ctx.lineTo(-1, 55);
+        ctx.lineTo(7, 44);
+        ctx.stroke();
+
+        // "Delivered" text
+        ctx.font = "9px 'SF Mono', monospace";
+        ctx.textAlign = 'center';
+        ctx.fillStyle = 'rgba(34, 197, 94, 0.7)';
+        ctx.fillText('DELIVERED', 0, 78);
+
+        ctx.restore();
+      }
+
+      // COMPLETE phase: fade everything out gracefully
+      if (phase === 'COMPLETE') {
+        const completeProgress = Math.min(1, (elapsed - 29000) / 3000);
+        // Fading chat interface
+        ctx.save();
+        ctx.globalAlpha = 1 - completeProgress;
+        drawChatInterface(cx, cy, 1);
+        ctx.restore();
+
+        // Session closed indicator
+        if (completeProgress > 0.3) {
+          ctx.save();
+          ctx.globalAlpha = Math.min(1, (completeProgress - 0.3) * 2);
+          ctx.font = "11px 'SF Mono', monospace";
+          ctx.textAlign = 'center';
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+          ctx.fillText('[ SESSION TERMINATED ]', cx, cy);
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(cx - 60, cy + 8);
+          ctx.lineTo(cx + 60, cy + 8);
+          ctx.stroke();
+          ctx.restore();
+        }
       }
 
       if (phase !== 'FLOW') {
-        const phaseStartTimes: Record<string, number> = { SPARK: 2500, CONNECT: 5000, FORM: 8000, GUARD: 11500, CHAT: 15000 };
-        const phaseDurations: Record<string, number> = { SPARK: 2500, CONNECT: 3000, FORM: 3500, GUARD: 3500, CHAT: 11000 };
+        const phaseStartTimes: Record<string, number> = { SPARK: 2500, CONNECT: 5000, FORM: 8000, GUARD: 11500, CHAT: 15000, RESPOND: 24000, COMPLETE: 29000 };
+        const phaseDurations: Record<string, number> = { SPARK: 2500, CONNECT: 3000, FORM: 3500, GUARD: 3500, CHAT: 9000, RESPOND: 5000, COMPLETE: 5000 };
         const currentPhaseStart = phaseStartTimes[phase] || 0;
         const phaseDuration = phaseDurations[phase] || 2500;
         const progress = Math.min(1, Math.max(0, (elapsed - currentPhaseStart) / phaseDuration));
 
-        drawLabel(cx, cy, labelText, progress, phase === 'CHAT');
+        drawLabel(cx, cy, labelText, progress, phase === 'CHAT' || phase === 'RESPOND' || phase === 'COMPLETE');
       }
 
       animationFrameId = requestAnimationFrame(render);
