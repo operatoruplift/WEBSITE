@@ -168,7 +168,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     const render = () => {
       const now = Date.now();
       let elapsed = now - startTime;
-      const LOOP_DURATION = 18000;
+      const LOOP_DURATION = 26000;
 
       if (elapsed > LOOP_DURATION) {
         startTime = now;
@@ -177,11 +177,11 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         initParticles();
       }
 
-      if (elapsed < 2000) { phase = 'FLOW'; labelText = "AWAITING INPUT"; }
-      else if (elapsed < 4000) { phase = 'SPARK'; labelText = "DETECTING SIGNAL"; }
-      else if (elapsed < 6500) { phase = 'CONNECT'; labelText = "ESTABLISHING CONTEXT"; }
-      else if (elapsed < 9000) { phase = 'FORM'; labelText = "ISOLATING ENVIRONMENT"; }
-      else if (elapsed < 11500) { phase = 'GUARD'; labelText = "APPLYING GUARDRAILS"; }
+      if (elapsed < 2500) { phase = 'FLOW'; labelText = "AWAITING INPUT"; }
+      else if (elapsed < 5000) { phase = 'SPARK'; labelText = "DETECTING SIGNAL"; }
+      else if (elapsed < 8000) { phase = 'CONNECT'; labelText = "ESTABLISHING CONTEXT"; }
+      else if (elapsed < 11500) { phase = 'FORM'; labelText = "ISOLATING ENVIRONMENT"; }
+      else if (elapsed < 15000) { phase = 'GUARD'; labelText = "APPLYING GUARDRAILS"; }
       else { phase = 'CHAT'; labelText = "AGENT ACTIVE"; }
 
       ctx.clearRect(0, 0, width, height);
@@ -290,11 +290,12 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
 
       // Draw CHAT interface ONCE per frame (outside particle loop)
       if (phase === 'CHAT') {
-        drawChatInterface(cx, cy, Math.min(1, (elapsed - 11500) / 1000));
+        // Spread chat progress over the full CHAT phase (15000-26000 = 11 seconds)
+        drawChatInterface(cx, cy, Math.min(1, (elapsed - 15000) / 8000));
       }
 
       if (phase !== 'FLOW') {
-        const phaseStartTimes: Record<string, number> = { SPARK: 2000, CONNECT: 4000, FORM: 6500, GUARD: 9000, CHAT: 11500 };
+        const phaseStartTimes: Record<string, number> = { SPARK: 2500, CONNECT: 5000, FORM: 8000, GUARD: 11500, CHAT: 15000 };
         const phaseDuration = 2500;
         const currentPhaseStart = phaseStartTimes[phase] || 0;
         const progress = Math.min(1, Math.max(0, (elapsed - currentPhaseStart) / phaseDuration));

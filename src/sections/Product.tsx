@@ -24,7 +24,7 @@ const Product: React.FC = () => {
     }
   };
 
-  const getStepHeight = () => window.innerHeight * 0.8;
+  const getStepHeight = () => window.innerHeight * 1.0;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,7 +57,7 @@ const Product: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimStep((prev) => (prev + 1) % 4);
-    }, 2000);
+    }, 3000);
     return () => clearInterval(interval);
   }, [activeIndex]);
 
@@ -101,7 +101,7 @@ const Product: React.FC = () => {
     <div
       id="product"
       ref={sectionRef}
-      className="relative bg-slanted-lines w-full lg:min-h-[500vh] min-h-screen"
+      className="relative bg-slanted-lines w-full lg:min-h-[600vh] min-h-screen"
       style={{ backgroundColor: '#0c0c0c' }}
     >
 
