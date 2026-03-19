@@ -59,7 +59,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
       windows: {
         id: "windows",
         label: "Download for Windows",
-        url: "#",
+        url: "https://github.com/operatoruplift/releases",
         version: "v0.0.1-beta (x64)",
         type: "windows"
       }
@@ -88,7 +88,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
         id: 'runtime',
         navTitle: 'SESSION RUNTIME',
         cardTitle: '3. Session Runtime',
-        description: 'Each task runs in a session based runtime that starts fast, stays isolated, and ends cleanly. When the session ends, the agent loses access to your system. This plug-and-play mechanism ensures fast execution, strict isolation, and no long-term access to your system once the session ends.',
+        description: 'Each task runs in a session-based runtime that starts fast, stays isolated, and ends cleanly. When the session ends, the agent loses access to your system — ensuring strict isolation with no long-term persistence.',
         iconType: 'terminal'
       },
       {
@@ -102,7 +102,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
         id: 'permissions',
         navTitle: 'PERMISSIONS',
         cardTitle: '5. Permission Actions',
-        description: 'Every file read, device control, and network call is a permission action that you can see and approve. Operator Uplift enforces the boundaries you set\u2014file access, device control, and network calls\u2014are governed by explicit permissions. No silent behavior, no surprises.',
+        description: 'Every file read, device control, and network call is a permission action that you can see and approve. Operator Uplift enforces the boundaries you set — file access, device control, and network calls — are governed by explicit permissions. No silent behavior, no surprises.',
         iconType: 'check'
       }
     ]
@@ -122,7 +122,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
       enterprise: {
         tag: "ACROSS YOUR DEVELOPMENT STACK",
         title: "Independent of interfaces and external vendors",
-        description: "Operator Uplift integrates with any model provider, internal API, or device. Deploy the agents with one interface, and evolve them over time without vendor lock-in. As your internal systems mature, your agents upgrade seamlessly with shared memory, cross-device sync, and modular extensions.",
+        description: "Operator Uplift integrates with any model provider, internal API, or device. Deploy agents with one interface, and evolve them over time without vendor lock-in. As your internal systems mature, your agents upgrade seamlessly with shared memory, cross-device sync, and modular extensions.",
         linkText: "Learn more about enterprise",
         linkUrl: "/contact"
       }
@@ -137,19 +137,19 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
         title: "Quickstart Guide",
         description: "Get up and running with Operator Uplift in minutes. Deploy your first agent container.",
         iconType: 'terminal',
-        url: "https://help.operatoruplift.com/"
+        url: "https://help.operatoruplift.com/getting-started"
       },
       {
         title: "Core Concepts",
         description: "Deep dive into the architecture, session tokens, and security vaults.",
         iconType: 'kanban',
-        url: "https://help.operatoruplift.com/"
+        url: "https://help.operatoruplift.com/core-concepts"
       },
       {
         title: "API Reference",
         description: "Complete reference for the Agent Store API and Runtime SDKs.",
         iconType: 'globe',
-        url: "https://help.operatoruplift.com/"
+        url: "https://help.operatoruplift.com/api-reference"
       }
     ]
   },

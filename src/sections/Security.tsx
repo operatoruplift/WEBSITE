@@ -31,9 +31,9 @@ const Security: React.FC = () => {
   );
 
   return (
-    <section id="security" className="w-full bg-background pb-24 px-6 md:px-12 flex justify-center flex-col items-center">
-      
-      <div className="w-full max-w-[1600px] py-24 flex items-center justify-center">
+    <section id="security" className="w-full bg-background pb-16 px-6 md:px-12 flex justify-center flex-col items-center">
+
+      <div className="w-full max-w-[1600px] py-16 flex items-center justify-center">
         <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-white/15 to-transparent relative">
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-1 bg-background flex items-center justify-center">
                  <div className="w-1.5 h-1.5 rounded-full bg-primary/50 shadow-[0_0_8px_rgba(231,118,48,0.6)]"></div>
@@ -50,11 +50,11 @@ const Security: React.FC = () => {
                 <span className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase">{data.tag}</span>
             </div>
            </FadeIn>
-           <h2 className="text-3xl md:text-5xl mb-6 text-white font-medium tracking-tight leading-[1.15] min-h-[1.2em]">
+           <h2 className="text-3xl md:text-5xl lg:text-6xl mb-6 text-white font-medium tracking-tight leading-[1.15] min-h-[1.2em]">
                 <GlideText text={data.headline} />
            </h2>
            <FadeIn delay={300}>
-                <h4 className="text-muted text-lg font-mono leading-relaxed">{data.subhead}</h4>
+                <h4 className="text-gray-300 text-lg font-mono leading-relaxed max-w-3xl">{data.subhead}</h4>
            </FadeIn>
         </div>
 
@@ -66,7 +66,7 @@ const Security: React.FC = () => {
                 <div className="p-8 md:p-12 relative z-10 flex flex-col h-full">
                     <div className="text-xs font-bold tracking-[0.2em] text-primary uppercase mb-4">{data.features.security.tag}</div>
                     <h3 className="text-3xl text-white font-medium mb-4 tracking-tight leading-tight">{data.features.security.title}</h3>
-                    <p className="text-lg text-muted  leading-relaxed mb-8 max-w-lg">
+                    <p className="text-lg text-gray-400 leading-relaxed mb-8 max-w-lg">
                       {data.features.security.description}
                     </p>
                     <a href={data.features.security.linkUrl} className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-white hover:text-primary transition-colors mt-auto">
@@ -114,7 +114,7 @@ const Security: React.FC = () => {
                 <div className="p-8 md:p-12 relative z-10 flex flex-col h-full">
                     <div className="text-xs font-bold tracking-[0.2em] text-blue-400 uppercase mb-4">{data.features.enterprise.tag}</div>
                     <h3 className="text-3xl text-white font-medium mb-4 tracking-tight leading-tight">{data.features.enterprise.title}</h3>
-                    <p className="text-lg text-muted  leading-relaxed mb-8 max-w-lg">
+                    <p className="text-lg text-gray-400 leading-relaxed mb-8 max-w-lg">
                       {data.features.enterprise.description}
                     </p>
                     <a href={data.features.enterprise.linkUrl} className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-white hover:text-blue-400 transition-colors mt-auto">
