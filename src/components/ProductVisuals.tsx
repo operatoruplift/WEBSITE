@@ -91,9 +91,9 @@ export const StoreVisual = () => {
   const [phase, setPhase] = useState<'fetching' | 'complete'>('fetching');
 
   useEffect(() => {
-    // Full cycle: 6 items at 800ms each = 4.8s fetch, 2s complete, then reset
-    const FETCH_INTERVAL = 800;
-    const COMPLETE_PAUSE = 2000;
+    // Full cycle: 6 items at 600ms each = 3.6s fetch, 1.5s complete, then reset
+    const FETCH_INTERVAL = 600;
+    const COMPLETE_PAUSE = 1500;
     let timeout: NodeJS.Timeout;
 
     const step = (current: number) => {
@@ -151,8 +151,8 @@ export const RuntimeVisual = () => {
   const [phase, setPhase] = useState<'running' | 'complete'>('running');
 
   useEffect(() => {
-    const STEP_INTERVAL = 1200;
-    const COMPLETE_PAUSE = 2000;
+    const STEP_INTERVAL = 900;
+    const COMPLETE_PAUSE = 1500;
     let timeout: NodeJS.Timeout;
 
     const advance = (current: number) => {
@@ -219,8 +219,8 @@ export const TokenVisual = () => {
       setCycle(c => c + 1);
       timeout = setTimeout(() => {
         setTokenPhase('locked');
-        timeout = setTimeout(run, 2000);
-      }, 4000);
+        timeout = setTimeout(run, 1500);
+      }, 3000);
     };
 
     run();
@@ -260,7 +260,7 @@ export const TokenVisual = () => {
           100% { transform: translateX(100px); opacity: 0; }
         }
         .animate-access-key {
-          animation: access-key 2.5s ease-in-out forwards;
+          animation: access-key 2s ease-in-out forwards;
         }
         .animate-spin-slow {
           animation: spin 6s linear infinite;
@@ -282,9 +282,9 @@ export const PermissionsVisual = () => {
 
     const runCycle = () => {
       setStatus('PENDING');
-      t1 = setTimeout(() => setStatus('REQUESTING'), 1000);
-      t2 = setTimeout(() => setStatus('ALLOWED'), 3000);
-      t3 = setTimeout(() => runCycle(), 6000);
+      t1 = setTimeout(() => setStatus('REQUESTING'), 800);
+      t2 = setTimeout(() => setStatus('ALLOWED'), 2200);
+      t3 = setTimeout(() => runCycle(), 4500);
     };
 
     runCycle();

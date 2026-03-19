@@ -62,11 +62,16 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
       }
     };
 
-    const drawLabel = (cx: number, cy: number, text: string, progress: number) => {
+    const drawLabel = (cx: number, cy: number, text: string, progress: number, hold?: boolean) => {
       if (!text) return;
       ctx.save();
       ctx.translate(cx, cy + 160);
-      ctx.globalAlpha = Math.min(1, Math.sin(progress * Math.PI));
+      // For held labels (CHAT phase), fade in then stay visible; otherwise fade in and out
+      if (hold) {
+        ctx.globalAlpha = Math.min(1, progress * 4);
+      } else {
+        ctx.globalAlpha = Math.min(1, Math.sin(progress * Math.PI));
+      }
 
       ctx.font = "10px 'SF Mono', 'Menlo', monospace";
       ctx.textAlign = "center";
@@ -301,8 +306,9 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
 
       // Draw CHAT interface ONCE per frame (outside particle loop)
       if (phase === 'CHAT') {
-        // Spread chat progress over the full CHAT phase (15000-26000 = 11 seconds)
-        drawChatInterface(cx, cy, Math.min(1, (elapsed - 15000) / 8000));
+        // Chat phase: 15000-26000 = 11s. Progress 0→1 over 10s so all 4 bubbles appear.
+        // timeInChat = progress * 5, last bubble at 4.5 → needs progress > 0.9 → elapsed > 24000
+        drawChatInterface(cx, cy, Math.min(1, (elapsed - 15000) / 10000));
       }
 
       if (phase !== 'FLOW') {
@@ -312,7 +318,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         const phaseDuration = phaseDurations[phase] || 2500;
         const progress = Math.min(1, Math.max(0, (elapsed - currentPhaseStart) / phaseDuration));
 
-        drawLabel(cx, cy, labelText, progress);
+        drawLabel(cx, cy, labelText, progress, phase === 'CHAT');
       }
 
       animationFrameId = requestAnimationFrame(render);
