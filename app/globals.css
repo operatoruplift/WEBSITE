@@ -11,7 +11,7 @@
 @layer base {
   /* reset, body, selection, scrollbar etc */
   * { margin:0; padding:0; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: auto; }
   body {
     background: var(--color-background);
     color: white;
