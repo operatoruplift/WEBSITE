@@ -147,6 +147,17 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
           }
           ctx.fill();
 
+          // Draw text placeholder lines inside bubbles
+          if (b.type === 'user' || b.type === 'system') {
+            const lineColor = isUser ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 85, 0, 0.2)';
+            const lineCount = b.type === 'system' ? 3 : (b.height > 24 ? 2 : 1);
+            for (let ln = 0; ln < lineCount; ln++) {
+              const lineWidth = b.width * (ln === lineCount - 1 ? 0.6 : 0.85) - 16;
+              ctx.fillStyle = lineColor;
+              ctx.fillRect(xPos + 8, yPos + 7 + (ln * 9), Math.max(lineWidth, 20), 2);
+            }
+          }
+
           if (b.type === 'typing') {
             const dotTime = Date.now() / 200;
             ctx.fillStyle = PRIMARY_COLOR;
@@ -296,8 +307,9 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
 
       if (phase !== 'FLOW') {
         const phaseStartTimes: Record<string, number> = { SPARK: 2500, CONNECT: 5000, FORM: 8000, GUARD: 11500, CHAT: 15000 };
-        const phaseDuration = 2500;
+        const phaseDurations: Record<string, number> = { SPARK: 2500, CONNECT: 3000, FORM: 3500, GUARD: 3500, CHAT: 11000 };
         const currentPhaseStart = phaseStartTimes[phase] || 0;
+        const phaseDuration = phaseDurations[phase] || 2500;
         const progress = Math.min(1, Math.max(0, (elapsed - currentPhaseStart) / phaseDuration));
 
         drawLabel(cx, cy, labelText, progress);

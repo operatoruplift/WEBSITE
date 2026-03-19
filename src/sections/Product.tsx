@@ -177,20 +177,20 @@ const Product: React.FC = () => {
              {/* Box 1: Text Description */}
              <div className="lg:col-span-5 lg:self-end w-full h-fit order-1 lg:order-1">
                 <TechBorderContainer>
-                    <div className="w-full bg-[#080808] rounded-xl border border-white/5 p-6 md:p-8 flex flex-col justify-end shadow-2xl animate-fade-in relative">
+                    <div className="w-full bg-[#080808] rounded-xl border border-white/5 p-5 md:p-6 flex flex-col justify-end shadow-2xl animate-fade-in relative">
                        <div key={activeIndex} className="animate-slide-up">
-                          <div className="mb-4 md:mb-6 opacity-70 text-primary">
+                          <div className="mb-3 opacity-70 text-primary">
                               {getIcon(features[activeIndex].iconType)}
                           </div>
-                          <h3 className="text-2xl md:text-3xl text-white font-medium mb-4 tracking-tight leading-tight">
+                          <h3 className="text-xl md:text-2xl text-white font-medium mb-3 tracking-tight leading-tight">
                             {features[activeIndex].cardTitle}
                           </h3>
-                          <p className="text-base md:text-lg text-gray-300 leading-relaxed mb-6 md:mb-8">
+                          <p className="text-sm md:text-base text-gray-300 leading-relaxed mb-4">
                             {features[activeIndex].description}
                           </p>
-                          <a 
+                          <a
                             href="/product"
-                            className="bg-white text-black px-6 py-3 rounded-sm text-xs font-bold tracking-widest uppercase transition-all hover:bg-gray-200 flex items-center w-fit group"
+                            className="bg-white text-black px-5 py-2.5 rounded-sm text-xs font-bold tracking-widest uppercase transition-all hover:bg-gray-200 flex items-center w-fit group"
                           >
                             <span>Explore</span>
                             <ChevronRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />

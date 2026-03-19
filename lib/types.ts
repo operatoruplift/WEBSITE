@@ -10,7 +10,7 @@ export interface DownloadOption {
   label: string;
   url: string;
   version: string;
-  type: 'macos' | 'windows' | 'linux';
+  type: 'macos' | 'windows' | 'linux' | 'ios' | 'android';
 }
 
 export interface HeroData {
@@ -24,6 +24,8 @@ export interface HeroData {
     macos?: DownloadOption;
     windows: DownloadOption;
     linux?: DownloadOption;
+    ios?: DownloadOption;
+    android?: DownloadOption;
   };
 }
 

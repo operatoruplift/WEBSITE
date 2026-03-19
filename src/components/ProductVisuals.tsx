@@ -3,7 +3,7 @@ import { GlobeIcon } from './Icons';
 
 export const SandboxVisual = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -11,7 +11,7 @@ export const SandboxVisual = () => {
     if (!ctx) return;
     let animationFrameId: number;
     let particles: {x: number, y: number, vx: number, vy: number}[] = [];
-    
+
     const resize = () => {
       const parent = canvas.parentElement;
       if (parent) {
@@ -21,13 +21,13 @@ export const SandboxVisual = () => {
     };
     window.addEventListener('resize', resize);
     resize();
-    
+
     let width = canvas.width;
     let height = canvas.height;
     let boxSize = Math.min(width, height) * 0.7;
     let boxX = (width - boxSize) / 2;
     let boxY = (height - boxSize) / 2;
-    
+
     for(let i=0; i<15; i++) {
       particles.push({
         x: boxX + Math.random() * boxSize,
@@ -44,13 +44,13 @@ export const SandboxVisual = () => {
       const bX = (w - bSize) / 2;
       const bY = (h - bSize) / 2;
       ctx.clearRect(0, 0, w, h);
-      
+
       ctx.strokeStyle = '#E77630';
       ctx.lineWidth = 1.5;
       ctx.setLineDash([8, 4]);
       ctx.strokeRect(bX, bY, bSize, bSize);
       ctx.setLineDash([]);
-      
+
       ctx.fillStyle = '#E77630';
       ctx.font = '10px monospace';
       ctx.textAlign = 'center';
@@ -73,7 +73,7 @@ export const SandboxVisual = () => {
       ctx.font = '10px monospace';
       ctx.textAlign = 'left';
       ctx.fillText('HOST_SECURE', 15, 25);
-      
+
       animationFrameId = requestAnimationFrame(animate);
     };
     animate();
@@ -82,25 +82,29 @@ export const SandboxVisual = () => {
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
-  
+
   return <canvas ref={canvasRef} className="w-full h-full block" />;
 };
 
 export const StoreVisual = () => {
   const [activeItem, setActiveItem] = useState(0);
-  const [completed, setCompleted] = useState(false);
-  
+  const [phase, setPhase] = useState<'fetching' | 'complete'>('fetching');
+
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveItem(prev => {
         if (prev >= 5) {
-          setCompleted(true);
-          clearInterval(interval);
+          setPhase('complete');
+          // Reset after showing complete state
+          setTimeout(() => {
+            setActiveItem(0);
+            setPhase('fetching');
+          }, 2000);
           return 5;
         }
         return prev + 1;
       });
-    }, 1200);
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -109,17 +113,17 @@ export const StoreVisual = () => {
       <div className="grid grid-cols-3 gap-3 w-full max-w-[280px]">
         {[0,1,2,3,4,5].map(i => (
           <div key={i} className={`aspect-square border rounded-lg flex flex-col items-center justify-center transition-all duration-500 relative
-            ${i === activeItem ? 'border-primary bg-primary/10 shadow-[0_0_15px_rgba(255,85,0,0.3)]' : 
-              i < activeItem ? 'border-primary/40 bg-primary/5 opacity-80' : 'border-white/10 bg-white/5 opacity-40'}`}>
-            <div className={`w-6 h-6 rounded bg-white/20 mb-2 ${i <= activeItem ? 'opacity-100' : 'opacity-40'}`}></div>
-            <div className={`w-10 h-1 bg-white/20 rounded ${i <= activeItem ? 'opacity-100' : 'opacity-40'}`}></div>
-            
-            {i === activeItem && !completed && (
+            ${i === activeItem && phase === 'fetching' ? 'border-primary bg-primary/10 shadow-[0_0_15px_rgba(255,85,0,0.3)]' :
+              i < activeItem || phase === 'complete' ? 'border-primary/40 bg-primary/5 opacity-80' : 'border-white/10 bg-white/5 opacity-40'}`}>
+            <div className={`w-6 h-6 rounded bg-white/20 mb-2 ${i <= activeItem || phase === 'complete' ? 'opacity-100' : 'opacity-40'}`}></div>
+            <div className={`w-10 h-1 bg-white/20 rounded ${i <= activeItem || phase === 'complete' ? 'opacity-100' : 'opacity-40'}`}></div>
+
+            {i === activeItem && phase === 'fetching' && i <= 5 && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[1px] rounded-lg">
                 <div className="text-[8px] font-mono text-primary font-bold animate-pulse">GET</div>
               </div>
             )}
-            {i <= activeItem && (i < activeItem || completed) && (
+            {(i < activeItem || phase === 'complete') && (
               <div className="absolute top-1 right-1">
                 <div className="w-2 h-2 bg-primary rounded-full"></div>
               </div>
@@ -128,8 +132,8 @@ export const StoreVisual = () => {
         ))}
       </div>
       <div className="mt-8 flex items-center space-x-2 text-[10px] font-mono text-gray-400">
-        <GlobeIcon className={`w-4 h-4 ${completed ? 'text-primary' : 'animate-spin'}`} />
-        <span>{completed ? 'STORE_SYNC_COMPLETE' : 'FETCHING_AGENTS...'}</span>
+        <GlobeIcon className={`w-4 h-4 ${phase === 'complete' ? 'text-primary' : 'animate-spin'}`} />
+        <span>{phase === 'complete' ? 'STORE_SYNC_COMPLETE' : 'FETCHING_AGENTS...'}</span>
       </div>
     </div>
   );
@@ -137,19 +141,22 @@ export const StoreVisual = () => {
 
 export const RuntimeVisual = () => {
   const [step, setStep] = useState(0);
-  const [completed, setCompleted] = useState(false);
-  
+  const [phase, setPhase] = useState<'running' | 'complete'>('running');
+
   useEffect(() => {
     const interval = setInterval(() => {
       setStep(prev => {
         if (prev >= 3) {
-          setCompleted(true);
-          clearInterval(interval);
+          setPhase('complete');
+          setTimeout(() => {
+            setStep(0);
+            setPhase('running');
+          }, 2000);
           return 3;
         }
         return prev + 1;
       });
-    }, 1500);
+    }, 1200);
     return () => clearInterval(interval);
   }, []);
 
@@ -164,19 +171,19 @@ export const RuntimeVisual = () => {
     <div className="w-full h-full flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-[240px] space-y-5 relative">
         <div className="absolute left-[15px] top-4 bottom-4 w-[2px] bg-white/10 z-0"></div>
-        
+
         {steps.map((s, i) => (
           <div key={i} className={`relative z-10 flex items-center space-x-4 transition-all duration-500 ${i <= step ? 'opacity-100' : 'opacity-20'}`}>
             <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-colors duration-300 bg-[#0c0c0c]
-              ${i === step && !completed ? 'border-primary shadow-[0_0_10px_rgba(255,85,0,0.5)]' : i < step || completed ? 'border-green-500' : 'border-gray-700'}`}>
-              {(i < step || (i === step && completed)) && <div className="w-2 h-2 bg-green-500 rounded-full"></div>}
-              {i === step && !completed && <div className="w-2 h-2 bg-primary rounded-full animate-ping"></div>}
+              ${i === step && phase === 'running' ? 'border-primary shadow-[0_0_10px_rgba(255,85,0,0.5)]' : i < step || phase === 'complete' ? 'border-green-500' : 'border-gray-700'}`}>
+              {(i < step || (i === step && phase === 'complete')) && <div className="w-2 h-2 bg-green-500 rounded-full"></div>}
+              {i === step && phase === 'running' && <div className="w-2 h-2 bg-primary rounded-full animate-ping"></div>}
             </div>
-            <div className={`flex-1 border rounded p-3 flex justify-between items-center transition-all ${i === step ? 'border-white/20 bg-white/10' : 'border-white/5 bg-white/5'}`}>
+            <div className={`flex-1 border rounded p-3 flex justify-between items-center transition-all ${i === step && phase === 'running' ? 'border-white/20 bg-white/10' : 'border-white/5 bg-white/5'}`}>
               <span className="font-mono text-xs text-white">{s.label}</span>
-              <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded 
-                ${i === step && !completed ? 'bg-primary/20 text-primary' : i < step || completed ? 'bg-green-500/20 text-green-400' : 'bg-gray-800 text-gray-500'}`}>
-                {i < step || (i === step && completed) ? 'DONE' : i === step ? s.status : 'WAIT'}
+              <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded
+                ${i === step && phase === 'running' ? 'bg-primary/20 text-primary' : i < step || phase === 'complete' ? 'bg-green-500/20 text-green-400' : 'bg-gray-800 text-gray-500'}`}>
+                {i < step || (i === step && phase === 'complete') ? 'DONE' : i === step ? s.status : 'WAIT'}
               </span>
             </div>
           </div>
@@ -187,29 +194,39 @@ export const RuntimeVisual = () => {
 };
 
 export const TokenVisual = () => {
-  const [completed, setCompleted] = useState(false);
-  const [keys, setKeys] = useState([0, 1, 2]);
+  const [cycle, setCycle] = useState(0);
+  const completed = cycle > 0 && (Date.now() % 6000) > 4000;
 
+  // Force re-render loop
+  const [, setTick] = useState(0);
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setCompleted(true);
-    }, 4000);
-    return () => clearTimeout(timer);
+    const interval = setInterval(() => setTick(t => t + 1), 100);
+    return () => clearInterval(interval);
   }, []);
+
+  // Cycle the animation
+  useEffect(() => {
+    const interval = setInterval(() => setCycle(c => c + 1), 6000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const elapsed = Date.now() % 6000;
+  const showKeys = elapsed < 4000;
+  const showLocked = elapsed >= 4000;
 
   return (
     <div className="w-full h-full flex items-center justify-center p-6">
       <div className="relative w-full max-w-[280px] h-40 flex flex-col items-center justify-center">
         <div className="w-24 h-24 border-2 border-white/20 rounded-2xl flex items-center justify-center relative bg-black/40 z-10 backdrop-blur-sm">
-          <div className={`w-16 h-16 border border-dashed border-primary/40 rounded-full ${!completed ? 'animate-spin-slow' : ''}`}></div>
+          <div className={`w-16 h-16 border border-dashed border-primary/40 rounded-full ${showKeys ? 'animate-spin-slow' : ''}`}></div>
           <div className="absolute text-[10px] font-mono text-primary/70 top-3 tracking-widest">VAULT</div>
-          {completed && <div className="absolute inset-0 flex items-center justify-center text-primary font-mono text-xs">LOCKED</div>}
+          {showLocked && <div className="absolute inset-0 flex items-center justify-center text-primary font-mono text-xs">LOCKED</div>}
         </div>
 
-        {!completed && keys.map(i => (
-          <div key={i} className="absolute left-0 flex items-center space-x-2 animate-access-key" 
-            style={{ 
-              top: `${25 + i * 25}%`, 
+        {showKeys && [0, 1, 2].map(i => (
+          <div key={`${cycle}-${i}`} className="absolute left-0 flex items-center space-x-2 animate-access-key"
+            style={{
+              top: `${25 + i * 25}%`,
               animationDelay: `${i * 0.8}s`,
             }}>
             <div className="w-20 h-7 bg-primary/20 border border-primary/60 text-primary font-mono text-[10px] flex items-center justify-center rounded shadow-lg shadow-primary/10">
@@ -242,15 +259,20 @@ export const TokenVisual = () => {
 };
 
 export const PermissionsVisual = () => {
-  const [status, setStatus] = useState('PENDING');
-  
+  const [status, setStatus] = useState<'PENDING' | 'REQUESTING' | 'ALLOWED'>('PENDING');
+
   useEffect(() => {
-    const timer1 = setTimeout(() => setStatus('REQUESTING'), 1000);
-    const timer2 = setTimeout(() => setStatus('ALLOWED'), 3000);
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
+    let t1: NodeJS.Timeout, t2: NodeJS.Timeout, t3: NodeJS.Timeout;
+
+    const runCycle = () => {
+      setStatus('PENDING');
+      t1 = setTimeout(() => setStatus('REQUESTING'), 1000);
+      t2 = setTimeout(() => setStatus('ALLOWED'), 3000);
+      t3 = setTimeout(() => runCycle(), 6000);
     };
+
+    runCycle();
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, []);
 
   return (
@@ -261,7 +283,7 @@ export const PermissionsVisual = () => {
           <span>Security_Protocol</span>
           <span className="text-primary/60">v1.0.4</span>
         </div>
-        
+
         <div className="space-y-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -273,15 +295,15 @@ export const PermissionsVisual = () => {
                 <span className="text-[9px] text-gray-500 font-mono">Outbound_Request</span>
               </div>
             </div>
-            <div className={`w-2 h-2 rounded-full ${status === 'ALLOWED' ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : status === 'PENDING' ? 'bg-gray-600' : 'bg-primary animate-pulse'}`}></div>
+            <div className={`w-2 h-2 rounded-full transition-all duration-500 ${status === 'ALLOWED' ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : status === 'PENDING' ? 'bg-gray-600' : 'bg-primary animate-pulse'}`}></div>
           </div>
-          
+
           <div className="h-[1px] bg-white/5 w-full"></div>
-          
+
           <div className="flex items-center justify-between">
             <span className="text-xs text-gray-500 font-mono">ACCESS_LEVEL</span>
             <div className={`transition-all duration-500 text-[10px] font-bold px-3 py-1 rounded border ${
-              status === 'ALLOWED' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 
+              status === 'ALLOWED' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
               status === 'REQUESTING' ? 'bg-primary/10 text-primary border-primary/20' : 'bg-gray-800 text-gray-500 border-transparent'}`}>
               {status}
             </div>
