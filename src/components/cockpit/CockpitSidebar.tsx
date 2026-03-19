@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Bot, MessageSquare, Settings, LayoutDashboard, ChevronDown, Sparkles, Shield, Search, Plus, Cpu, Store, Bell } from 'lucide-react';
+import { Bot, MessageSquare, Settings, LayoutDashboard, ChevronDown, Sparkles, Shield, Search, Plus, Cpu, Store, Bell, GitBranch, Brain } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface NavItem { href: string; label: string; icon: any; gradient: string; }
@@ -22,6 +22,8 @@ const NAV_SECTIONS: NavSection[] = [
         items: [
             { href: '/marketplace', label: 'Agent Store', icon: Store, gradient: 'from-purple-500/20 to-blue-500/10' },
             { href: '/agents/builder', label: 'Builder', icon: Sparkles, gradient: 'from-pink-500/20 to-rose-500/10' },
+            { href: '/workflows', label: 'Workflows', icon: GitBranch, gradient: 'from-violet-500/20 to-purple-500/10' },
+            { href: '/memory', label: 'Memory Bank', icon: Brain, gradient: 'from-amber-500/20 to-orange-500/10' },
         ],
     },
     {

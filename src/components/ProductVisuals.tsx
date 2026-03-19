@@ -87,33 +87,17 @@ export const SandboxVisual = () => {
 };
 
 export const StoreVisual = () => {
-  const [activeItem, setActiveItem] = useState(0);
-  const [phase, setPhase] = useState<'fetching' | 'complete'>('fetching');
+  const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    // Full cycle: 6 items at 600ms each = 3.6s fetch, 1.5s complete, then reset
-    const FETCH_INTERVAL = 600;
-    const COMPLETE_PAUSE = 1500;
-    let timeout: NodeJS.Timeout;
-
-    const step = (current: number) => {
-      if (current < 6) {
-        setActiveItem(current);
-        setPhase('fetching');
-        timeout = setTimeout(() => step(current + 1), FETCH_INTERVAL);
-      } else {
-        setPhase('complete');
-        timeout = setTimeout(() => {
-          setActiveItem(0);
-          setPhase('fetching');
-          timeout = setTimeout(() => step(1), FETCH_INTERVAL);
-        }, COMPLETE_PAUSE);
-      }
-    };
-
-    step(0);
-    return () => clearTimeout(timeout);
+    const interval = setInterval(() => setTick(t => t + 1), 700);
+    return () => clearInterval(interval);
   }, []);
+
+  // 8-tick cycle: ticks 0-5 = fetching items 0-5, ticks 6-7 = complete pause
+  const cyclePos = tick % 8;
+  const phase = cyclePos >= 6 ? 'complete' : 'fetching';
+  const activeItem = phase === 'complete' ? 5 : cyclePos;
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-black/20">
@@ -147,32 +131,17 @@ export const StoreVisual = () => {
 };
 
 export const RuntimeVisual = () => {
-  const [step, setStep] = useState(0);
-  const [phase, setPhase] = useState<'running' | 'complete'>('running');
+  const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    const STEP_INTERVAL = 900;
-    const COMPLETE_PAUSE = 1500;
-    let timeout: NodeJS.Timeout;
-
-    const advance = (current: number) => {
-      if (current <= 3) {
-        setStep(current);
-        setPhase('running');
-        timeout = setTimeout(() => advance(current + 1), STEP_INTERVAL);
-      } else {
-        setPhase('complete');
-        timeout = setTimeout(() => {
-          setStep(0);
-          setPhase('running');
-          timeout = setTimeout(() => advance(1), STEP_INTERVAL);
-        }, COMPLETE_PAUSE);
-      }
-    };
-
-    advance(0);
-    return () => clearTimeout(timeout);
+    const interval = setInterval(() => setTick(t => t + 1), 1000);
+    return () => clearInterval(interval);
   }, []);
+
+  // 6-tick cycle: ticks 0-3 = steps 0-3 running, ticks 4-5 = complete pause
+  const cyclePos = tick % 6;
+  const phase = cyclePos >= 4 ? 'complete' : 'running';
+  const step = phase === 'complete' ? 3 : cyclePos;
 
   const steps = [
     { label: "SPAWN", status: "OK" },
@@ -208,27 +177,18 @@ export const RuntimeVisual = () => {
 };
 
 export const TokenVisual = () => {
-  const [cycle, setCycle] = useState(0);
-  const [tokenPhase, setTokenPhase] = useState<'keys' | 'locked'>('keys');
+  const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
-
-    const run = () => {
-      setTokenPhase('keys');
-      setCycle(c => c + 1);
-      timeout = setTimeout(() => {
-        setTokenPhase('locked');
-        timeout = setTimeout(run, 1500);
-      }, 3000);
-    };
-
-    run();
-    return () => clearTimeout(timeout);
+    const interval = setInterval(() => setTick(t => t + 1), 500);
+    return () => clearInterval(interval);
   }, []);
 
-  const showKeys = tokenPhase === 'keys';
-  const showLocked = tokenPhase === 'locked';
+  // 10-tick cycle (5s): ticks 0-5 = keys visible (3s), ticks 6-9 = locked (2s)
+  const cyclePos = tick % 10;
+  const showKeys = cyclePos < 6;
+  const showLocked = !showKeys;
+  const cycle = Math.floor(tick / 10);
 
   return (
     <div className="w-full h-full flex items-center justify-center p-6">
@@ -282,9 +242,9 @@ export const PermissionsVisual = () => {
 
     const runCycle = () => {
       setStatus('PENDING');
-      t1 = setTimeout(() => setStatus('REQUESTING'), 800);
-      t2 = setTimeout(() => setStatus('ALLOWED'), 2200);
-      t3 = setTimeout(() => runCycle(), 4500);
+      t1 = setTimeout(() => setStatus('REQUESTING'), 1000);
+      t2 = setTimeout(() => setStatus('ALLOWED'), 2500);
+      t3 = setTimeout(() => runCycle(), 5000);
     };
 
     runCycle();

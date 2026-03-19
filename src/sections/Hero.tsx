@@ -13,11 +13,15 @@ const Hero: React.FC = () => {
   return (
     <div className="relative min-h-screen w-full bg-background overflow-hidden selection:bg-primary/30 selection:text-white flex flex-col">
       
-      {/* Background Visualization Layer - Desktop Only */}
-      <div className="hidden lg:block absolute inset-0 z-0 lg:left-[10%] pointer-events-none opacity-60 mix-blend-screen">
-        <HeroAnimation />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent w-1/3"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent h-32 bottom-0"></div>
+      {/* Background Visualization Layer - Desktop Only — covers full viewport */}
+      <div className="hidden lg:block absolute inset-0 z-0 pointer-events-none opacity-70">
+        <HeroAnimation className="w-full h-full" />
+        {/* Left fade so text remains readable */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" style={{ width: '45%' }}></div>
+        {/* Bottom fade into next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent"></div>
+        {/* Top fade under navbar */}
+        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background/80 to-transparent"></div>
       </div>
 
       <div className="relative z-10 pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-10 md:pb-12 px-4 sm:px-6 md:px-12 lg:pt-32 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 lg:gap-12 flex-grow">

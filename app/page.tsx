@@ -4,6 +4,7 @@ import Navbar from '@/src/components/Navbar';
 import Hero from '@/src/sections/Hero';
 import ProblemStatement from '@/src/sections/ProblemStatement';
 import Product from '@/src/sections/Product';
+import StatsBar from '@/src/sections/StatsBar';
 import MarketOpportunity from '@/src/sections/MarketOpportunity';
 import Security from '@/src/sections/Security';
 import DeveloperDocs from '@/src/sections/DeveloperDocs';
@@ -18,6 +19,7 @@ export default function Home() {
       <Hero />
       <ProblemStatement />
       <Product />
+      <StatsBar />
       <MarketOpportunity />
       <Security />
       <DeveloperDocs />
