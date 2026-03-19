@@ -55,8 +55,13 @@ function renderMarkdown(text: string): React.ReactNode {
     return <div className="space-y-1">{elements}</div>;
 }
 
+function escapeHtml(text: string): string {
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 function inlineMarkdown(text: string): string {
-    return text.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>').replace(/`(.+?)`/g, '<code class="px-1.5 py-0.5 rounded bg-black/60 text-green-300 font-mono text-[13px] border border-white/10">$1</code>');
+    const safe = escapeHtml(text);
+    return safe.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>').replace(/`(.+?)`/g, '<code class="px-1.5 py-0.5 rounded bg-black/60 text-green-300 font-mono text-[13px] border border-white/10">$1</code>');
 }
 
 export default function ChatPage() {

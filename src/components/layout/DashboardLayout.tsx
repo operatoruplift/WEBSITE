@@ -1,6 +1,7 @@
 "use client";
 
 import { AgentProvider } from '@/src/components/providers/AgentProvider';
+import { AuthGate } from '@/src/components/AuthGate';
 import { CockpitSidebar } from '@/src/components/cockpit/CockpitSidebar';
 import { NebulaBackground, ParticleBackground } from '@/src/components/effects/CinematicBackgrounds';
 import { CommandBar } from '@/src/components/ui/CommandBar';
@@ -26,10 +27,12 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (
-        <AgentProvider>
-            <ToastProvider>
-                <DashboardLayoutContent>{children}</DashboardLayoutContent>
-            </ToastProvider>
-        </AgentProvider>
+        <AuthGate>
+            <AgentProvider>
+                <ToastProvider>
+                    <DashboardLayoutContent>{children}</DashboardLayoutContent>
+                </ToastProvider>
+            </AgentProvider>
+        </AuthGate>
     );
 }

@@ -20,6 +20,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
         <Link
           href="/"
           className="flex items-center hover:opacity-80 transition-opacity z-50"
+          aria-label="Operator Uplift home"
         >
           <Logo className="w-8 h-8 md:w-10 md:h-10" />
         </Link>

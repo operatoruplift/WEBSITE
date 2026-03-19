@@ -36,6 +36,7 @@ export const metadata: Metadata = {
 };
 
 import Script from "next/script";
+import { CookieConsent } from "@/src/components/CookieConsent";
 
 export default function RootLayout({
   children,
@@ -76,6 +77,7 @@ export default function RootLayout({
           `}
         </Script>
         {children}
+        <CookieConsent />
       </body>
     </html>
   );
