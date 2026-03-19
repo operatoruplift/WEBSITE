@@ -3,14 +3,14 @@ import React from 'react';
 
 const TrustedBy: React.FC = () => {
   const models = [
+    { name: "Claude Opus 4.6", provider: "Anthropic" },
     { name: "GPT-4.1", provider: "OpenAI" },
-    { name: "Claude Opus 4", provider: "Anthropic" },
     { name: "Gemini 2.5 Pro", provider: "Google" },
-    { name: "Llama 4", provider: "Meta" },
-    { name: "Mistral Large", provider: "Mistral AI" },
-    { name: "Command A", provider: "Cohere" },
+    { name: "Llama 3.3", provider: "Meta" },
+    { name: "Mistral Large 2", provider: "Mistral AI" },
+    { name: "Command R+", provider: "Cohere" },
     { name: "Grok 3", provider: "xAI" },
-    { name: "DeepSeek-R1", provider: "DeepSeek" },
+    { name: "DeepSeek-V3", provider: "DeepSeek" },
   ];
 
   // Duplicate the array to ensure seamless scrolling

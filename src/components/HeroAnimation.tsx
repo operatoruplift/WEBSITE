@@ -258,26 +258,6 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
           });
         }
 
-        if (phase === 'GUARD') {
-          const size = isMobile ? 130 : 160;
-          ctx.save();
-          ctx.translate(cx, cy);
-          ctx.strokeStyle = `rgba(255, 255, 255, ${Math.abs(Math.sin(elapsed / 200)) * 0.4 + 0.1})`;
-          ctx.lineWidth = 1;
-          ctx.setLineDash([10, 10]);
-          ctx.beginPath();
-          ctx.rect(-size / 2, -size / 2, size, size);
-          ctx.stroke();
-
-          ctx.fillStyle = 'rgba(255, 85, 0, 0.05)';
-          ctx.fillRect(-size / 2, -size / 2 + (elapsed % 1000) / 1000 * size, size, 2);
-          ctx.restore();
-        }
-
-        if (phase === 'CHAT') {
-          drawChatInterface(cx, cy, Math.min(1, (elapsed - 11500) / 1000));
-        }
-
         const mobileAlphaMod = isMobile ? 0.4 : 1;
 
         ctx.fillStyle = p.isHero || (phase !== 'FLOW' && p.isAgent) ? PRIMARY_COLOR : '#fff';
@@ -289,6 +269,29 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         ctx.fill();
         ctx.globalAlpha = 1;
       });
+
+      // Draw GUARD boundary ONCE per frame (outside particle loop)
+      if (phase === 'GUARD') {
+        const size = isMobile ? 130 : 160;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.strokeStyle = `rgba(255, 255, 255, ${Math.abs(Math.sin(elapsed / 200)) * 0.4 + 0.1})`;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([10, 10]);
+        ctx.beginPath();
+        ctx.rect(-size / 2, -size / 2, size, size);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = 'rgba(255, 85, 0, 0.05)';
+        ctx.fillRect(-size / 2, -size / 2 + (elapsed % 1000) / 1000 * size, size, 2);
+        ctx.restore();
+      }
+
+      // Draw CHAT interface ONCE per frame (outside particle loop)
+      if (phase === 'CHAT') {
+        drawChatInterface(cx, cy, Math.min(1, (elapsed - 11500) / 1000));
+      }
 
       if (phase !== 'FLOW') {
         const phaseStartTimes: Record<string, number> = { SPARK: 2000, CONNECT: 4000, FORM: 6500, GUARD: 9000, CHAT: 11500 };

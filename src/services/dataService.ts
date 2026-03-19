@@ -53,8 +53,8 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
     headline: "Your Life, Automated.",
     subhead: "One App. Every Agent. All Yours.",
     description: "Local-first AI agents you control, running on your device. Install agents, run tasks in secure sessions, and approve access with clear permissions.",
-    contractAddress: "Coming Soon",
-    contractLabel: "Internal currency for computation",
+    contractAddress: "",
+    contractLabel: "",
     downloads: {
       windows: {
         id: "windows",

@@ -4,7 +4,7 @@ import { FadeIn } from '@/src/components/Animators';
 const TractionBar: React.FC = () => {
   const stats = [
     { value: '300+', label: 'Beta Users (Previous Build)' },
-    { value: '90%', label: 'Retention Rate' },
+    { value: '96%', label: 'Retention Rate' },
     { value: '$0', label: 'Paid Marketing' },
   ];
 
