@@ -219,9 +219,12 @@ const Product: React.FC = () => {
                           style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
                         </div>
 
-                        <div key={activeIndex} className="w-full h-full flex items-center justify-center relative">
-                           {renderVisual(activeIndex)}
-                        </div>
+                        {/* Render all visuals, show/hide to prevent remounting */}
+                        {features.map((feature, idx) => (
+                          <div key={feature.id} className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ${idx === activeIndex ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
+                            {renderVisual(idx)}
+                          </div>
+                        ))}
                       </div>
                     </div>
                 </TechBorderContainer>

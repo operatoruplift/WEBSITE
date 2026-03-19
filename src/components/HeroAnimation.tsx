@@ -128,7 +128,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
       ctx.arc(-w / 2 + 32, -h / 2 + 15, 2, 0, Math.PI * 2);
       ctx.fill();
 
-      const timeInChat = progress * 5;
+      // Bubbles appear in first 60% of chat progress, leaving 40% for viewing
+      const timeInChat = Math.min(5, progress * 8);
 
       const bubbles = [
         { start: 0.5, type: 'user', width: w * 0.6, height: 24 },

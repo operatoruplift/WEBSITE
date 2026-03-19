@@ -20,6 +20,7 @@ const NAV_SECTIONS: NavSection[] = [
     {
         title: 'AI',
         items: [
+            { href: '/agents', label: 'My Agents', icon: Bot, gradient: 'from-orange-500/20 to-amber-500/10' },
             { href: '/marketplace', label: 'Agent Store', icon: Store, gradient: 'from-purple-500/20 to-blue-500/10' },
             { href: '/agents/builder', label: 'Builder', icon: Sparkles, gradient: 'from-pink-500/20 to-rose-500/10' },
             { href: '/workflows', label: 'Workflows', icon: GitBranch, gradient: 'from-violet-500/20 to-purple-500/10' },
