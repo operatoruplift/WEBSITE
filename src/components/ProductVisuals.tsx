@@ -94,8 +94,8 @@ export const StoreVisual = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // 8-tick cycle: ticks 0-5 = fetching items 0-5, ticks 6-7 = complete pause
-  const cyclePos = tick % 8;
+  // 12-tick cycle: ticks 0-5 = fetching items 0-5, ticks 6-11 = complete pause (longer hold)
+  const cyclePos = tick % 12;
   const phase = cyclePos >= 6 ? 'complete' : 'fetching';
   const activeItem = phase === 'complete' ? 5 : cyclePos;
 
@@ -138,8 +138,8 @@ export const RuntimeVisual = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // 6-tick cycle: ticks 0-3 = steps 0-3 running, ticks 4-5 = complete pause
-  const cyclePos = tick % 6;
+  // 10-tick cycle: ticks 0-3 = steps 0-3 running, ticks 4-9 = complete pause (longer hold)
+  const cyclePos = tick % 10;
   const phase = cyclePos >= 4 ? 'complete' : 'running';
   const step = phase === 'complete' ? 3 : cyclePos;
 
@@ -184,11 +184,11 @@ export const TokenVisual = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // 10-tick cycle (5s): ticks 0-5 = keys visible (3s), ticks 6-9 = locked (2s)
-  const cyclePos = tick % 10;
-  const showKeys = cyclePos < 6;
+  // 16-tick cycle (8s): ticks 0-7 = keys visible (4s), ticks 8-15 = locked (4s)
+  const cyclePos = tick % 16;
+  const showKeys = cyclePos < 8;
   const showLocked = !showKeys;
-  const cycle = Math.floor(tick / 10);
+  const cycle = Math.floor(tick / 16);
 
   return (
     <div className="w-full h-full flex items-center justify-center p-6">
@@ -242,9 +242,9 @@ export const PermissionsVisual = () => {
 
     const runCycle = () => {
       setStatus('PENDING');
-      t1 = setTimeout(() => setStatus('REQUESTING'), 1000);
-      t2 = setTimeout(() => setStatus('ALLOWED'), 2500);
-      t3 = setTimeout(() => runCycle(), 5000);
+      t1 = setTimeout(() => setStatus('REQUESTING'), 1500);
+      t2 = setTimeout(() => setStatus('ALLOWED'), 3500);
+      t3 = setTimeout(() => runCycle(), 8000);
     };
 
     runCycle();
