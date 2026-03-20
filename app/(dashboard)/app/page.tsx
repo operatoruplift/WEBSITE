@@ -22,15 +22,15 @@ const fetchDashboardData = async () => {
         setTimeout(() => {
             resolve({
                 stats: [
-                    { id: '1', label: 'Active Agents', value: '14', change: '+3 this week', positive: true, icon: Bot, gradient: 'from-[#00D4FF]/20 to-[#9945FF]/10' },
-                    { id: '2', label: 'Workflows Running', value: '8', change: 'Stable', positive: true, icon: Workflow, gradient: 'from-[#E77630]/20 to-[#9945FF]/10' },
-                    { id: '3', label: 'Memory Bank Nodes', value: '12.4K', change: '+2.1K today', positive: true, icon: Brain, gradient: 'from-[#9945FF]/20 to-[#00D4FF]/10' },
+                    { id: '1', label: 'Active Agents', value: '14', change: '+3 this week', positive: true, icon: Bot, gradient: 'from-[#F59E0B]/20 to-[#E77630]/10' },
+                    { id: '2', label: 'Workflows Running', value: '8', change: 'Stable', positive: true, icon: Workflow, gradient: 'from-[#E77630]/20 to-[#E77630]/10' },
+                    { id: '3', label: 'Memory Bank Nodes', value: '12.4K', change: '+2.1K today', positive: true, icon: Brain, gradient: 'from-[#E77630]/20 to-[#F59E0B]/10' },
                     { id: '4', label: 'Security Threats Blocked', value: '47', change: '-12% vs yesterday', positive: true, icon: Shield, gradient: 'from-emerald-500/20 to-teal-500/10' },
                 ],
                 activity: [
                     { id: '101', type: 'security', title: 'Blackwall Blocked SQLi', description: 'Agent prompt injection attempt neutralised', time: '2m ago', icon: Shield, color: 'text-emerald-400' },
-                    { id: '102', type: 'agent', title: 'DeepRepo Orchestration', description: 'Recursive codebase scan completed on 3 repos', time: '14m ago', icon: Bot, color: 'text-[#00D4FF]' },
-                    { id: '103', type: 'workflow', title: 'Nightly Sync Executed', description: 'GitHub issue sync and embeddings update', time: '1h ago', icon: Workflow, color: 'text-[#9945FF]' },
+                    { id: '102', type: 'agent', title: 'DeepRepo Orchestration', description: 'Recursive codebase scan completed on 3 repos', time: '14m ago', icon: Bot, color: 'text-[#F59E0B]' },
+                    { id: '103', type: 'workflow', title: 'Nightly Sync Executed', description: 'GitHub issue sync and embeddings update', time: '1h ago', icon: Workflow, color: 'text-[#E77630]' },
                     { id: '104', type: 'memory', title: 'Knowledge Indexed', description: 'Zo.computer rules loaded to agent memory', time: '4h ago', icon: Brain, color: 'text-[#E77630]' },
                     { id: '105', type: 'chat', title: 'Founder Ops Briefing', description: 'Weekly roundup synthesized', time: '5h ago', icon: MessageSquare, color: 'text-gray-400' },
                 ],
@@ -46,8 +46,8 @@ const fetchDashboardData = async () => {
 };
 
 const QUICK_ACTIONS = [
-    { label: 'Chat', href: '/chat', icon: MessageSquare, text: 'text-[#00D4FF]', bg: 'bg-[#00D4FF]/10' },
-    { label: 'Agent Store', href: '/marketplace', icon: Bot, text: 'text-[#9945FF]', bg: 'bg-[#9945FF]/10' },
+    { label: 'Chat', href: '/chat', icon: MessageSquare, text: 'text-[#F59E0B]', bg: 'bg-[#F59E0B]/10' },
+    { label: 'Agent Store', href: '/marketplace', icon: Bot, text: 'text-[#E77630]', bg: 'bg-[#E77630]/10' },
     { label: 'Builder', href: '/agents/builder', icon: Sparkles, text: 'text-[#E77630]', bg: 'bg-[#E77630]/10' },
     { label: 'Blackwall', href: '/security', icon: Shield, text: 'text-rose-400', bg: 'bg-rose-400/10' },
     { label: 'Settings', href: '/settings', icon: Code, text: 'text-emerald-400', bg: 'bg-emerald-400/10' },
@@ -81,7 +81,7 @@ export default function DashboardPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
                         <div className="relative z-10">
                             <div className="flex items-center gap-3 mb-2">
-                                <div className="w-10 h-10 rounded-xl flex items-center justify-center relative shadow-[0_0_20px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #E77630, #9945FF, #00D4FF)' }}>
+                                <div className="w-10 h-10 rounded-xl flex items-center justify-center relative shadow-[0_0_20px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #E77630, #E77630, #F59E0B)' }}>
                                     <Cpu size={20} className="text-white" />
                                 </div>
                                 <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2 py-1 rounded-md text-[10px] uppercase tracking-widest font-mono flex items-center gap-1.5 backdrop-blur-md">
@@ -89,7 +89,7 @@ export default function DashboardPage() {
                                 </div>
                             </div>
                             <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-400">Good {greeting}, Commander.</h1>
-                            <p className="text-sm text-gray-400 mt-2 font-mono flex items-center gap-2"><Activity size={12} className="text-[#00D4FF]" /> Systems optimized. Monitoring {isLoading ? '...' : activity.length} critical events.</p>
+                            <p className="text-sm text-gray-400 mt-2 font-mono flex items-center gap-2"><Activity size={12} className="text-[#F59E0B]" /> Systems optimized. Monitoring {isLoading ? '...' : activity.length} critical events.</p>
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="text-right">
@@ -164,7 +164,7 @@ export default function DashboardPage() {
                             </Card>
                         </div>
                         <div className="space-y-6">
-                            <Card variant="glass" className="card-animate border-[#00D4FF]/20" style={{ animationDelay: '500ms', background: 'radial-gradient(circle at top right, rgba(0,212,255,0.05), transparent 70%)' }}>
+                            <Card variant="glass" className="card-animate border-[#F59E0B]/20" style={{ animationDelay: '500ms', background: 'radial-gradient(circle at top right, rgba(0,212,255,0.05), transparent 70%)' }}>
                                 <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2 text-xs font-mono text-gray-400 uppercase tracking-widest"><ServerIcon /> Core Infrastructure</CardTitle></CardHeader>
                                 <CardContent>
                                     {isLoading ? <div className="space-y-3">{[1,2,3,4].map(i => <div key={i} className="h-6 bg-white/5 rounded animate-pulse" />)}</div> :
@@ -187,16 +187,16 @@ export default function DashboardPage() {
                                 </CardContent>
                             </Card>
                             <Card variant="glass" className="card-animate group overflow-hidden" style={{ animationDelay: '600ms' }}>
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#9945FF]/20 to-transparent blur-2xl" />
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#E77630]/20 to-transparent blur-2xl" />
                                 <CardContent className="p-6 relative z-10">
                                     <div className="flex items-center justify-between mb-6">
-                                        <div className="flex items-center gap-2 text-xs font-mono text-gray-400 uppercase tracking-widest"><Network size={14} className="text-[#9945FF]" /> ATP Treasury</div>
+                                        <div className="flex items-center gap-2 text-xs font-mono text-gray-400 uppercase tracking-widest"><Network size={14} className="text-[#E77630]" /> ATP Treasury</div>
                                     </div>
-                                    <div className="mb-2"><span className="text-4xl font-bold font-mono text-white tracking-tighter">24,500</span><span className="text-sm font-bold text-[#9945FF] ml-1">ATP</span></div>
+                                    <div className="mb-2"><span className="text-4xl font-bold font-mono text-white tracking-tighter">24,500</span><span className="text-sm font-bold text-[#E77630] ml-1">ATP</span></div>
                                     <div className="text-xs text-gray-400 mb-6">≈ $8,452.10 USD</div>
                                     <div className="space-y-2">
                                         <div className="flex justify-between text-[10px] font-mono"><span className="text-gray-500">Allocated to Agents</span><span className="text-white">68%</span></div>
-                                        <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-[#9945FF] to-[#00D4FF] w-[68%]" /></div>
+                                        <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-[#E77630] to-[#F59E0B] w-[68%]" /></div>
                                     </div>
                                 </CardContent>
                             </Card>

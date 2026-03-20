@@ -42,7 +42,7 @@ export default function WorkflowsPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <GitBranch size={16} className="text-[#9945FF]" />
+                                <GitBranch size={16} className="text-[#E77630]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Automation</span>
                             </div>
                             <h1 className="text-3xl lg:text-4xl font-bold text-white">Workflows</h1>
@@ -57,7 +57,7 @@ export default function WorkflowsPage() {
                         {[
                             { label: 'Active Workflows', value: workflows.filter(w => w.status === 'active').length, icon: Play, color: 'text-emerald-400' },
                             { label: 'Total Runs', value: workflows.reduce((sum, w) => sum + w.runs, 0).toLocaleString(), icon: Zap, color: 'text-[#E77630]' },
-                            { label: 'Total Steps', value: workflows.reduce((sum, w) => sum + w.steps, 0), icon: GitBranch, color: 'text-[#9945FF]' },
+                            { label: 'Total Steps', value: workflows.reduce((sum, w) => sum + w.steps, 0), icon: GitBranch, color: 'text-[#E77630]' },
                         ].map(stat => {
                             const Icon = stat.icon;
                             return (

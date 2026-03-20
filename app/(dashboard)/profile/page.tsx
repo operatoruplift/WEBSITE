@@ -43,13 +43,13 @@ export default function ProfilePage() {
                     </div>
 
                     <Card variant="glass" className="overflow-hidden">
-                        <div className="h-32 bg-gradient-to-r from-[#E77630]/20 via-[#9945FF]/20 to-[#00D4FF]/20 relative">
+                        <div className="h-32 bg-gradient-to-r from-[#E77630]/20 via-[#E77630]/20 to-[#F59E0B]/20 relative">
                             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxIiBjeT0iMSIgcj0iMSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIvPjwvc3ZnPg==')] opacity-50" />
                         </div>
                         <CardContent className="p-6 -mt-16 relative">
                             <div className="flex flex-col md:flex-row md:items-end gap-6">
                                 <div className="relative">
-                                    <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#E77630] to-[#9945FF] flex items-center justify-center text-3xl font-bold text-white shadow-2xl border-4 border-[#050508]">
+                                    <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#E77630] to-[#E77630] flex items-center justify-center text-3xl font-bold text-white shadow-2xl border-4 border-[#050508]">
                                         {user.name.charAt(0).toUpperCase()}
                                     </div>
                                     <button className="absolute -bottom-1 -right-1 w-7 h-7 bg-white/10 border border-white/20 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/20 transition-all">

@@ -38,7 +38,7 @@ export default function AnalyticsPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <BarChart3 size={16} className="text-[#00D4FF]" />
+                                <BarChart3 size={16} className="text-[#F59E0B]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Insights</span>
                             </div>
                             <h1 className="text-3xl lg:text-4xl font-bold text-white">Analytics</h1>
@@ -58,7 +58,7 @@ export default function AnalyticsPage() {
                                 <Card key={m.label} variant="glass" className="card-animate" style={{ animationDelay: `${i * 80}ms` }}>
                                     <CardContent className="p-5">
                                         <div className="flex justify-between items-start mb-4">
-                                            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center"><Icon size={18} className="text-[#00D4FF]" /></div>
+                                            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center"><Icon size={18} className="text-[#F59E0B]" /></div>
                                             <div className={`flex items-center gap-1 text-xs font-mono ${m.positive ? 'text-emerald-400' : 'text-red-400'}`}>
                                                 {m.positive ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}{m.change}
                                             </div>
@@ -75,14 +75,14 @@ export default function AnalyticsPage() {
                         <Card variant="glass" className="lg:col-span-2 card-animate" style={{ animationDelay: '300ms' }}>
                             <CardHeader className="border-b border-white/5 pb-4">
                                 <CardTitle className="flex items-center gap-2 text-sm text-gray-300 font-mono uppercase tracking-widest">
-                                    <Activity size={14} className="text-[#00D4FF]" /> Session Activity (Today)
+                                    <Activity size={14} className="text-[#F59E0B]" /> Session Activity (Today)
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="p-6">
                                 <div className="flex items-end gap-1 h-40">
                                     {hourlyData.map((d, i) => (
                                         <div key={i} className="flex-1 flex flex-col items-center gap-1 group">
-                                            <div className="w-full rounded-t transition-all duration-300 group-hover:bg-[#00D4FF] bg-[#00D4FF]/40" style={{ height: `${d.value}%` }} />
+                                            <div className="w-full rounded-t transition-all duration-300 group-hover:bg-[#F59E0B] bg-[#F59E0B]/40" style={{ height: `${d.value}%` }} />
                                             {i % 4 === 0 && <span className="text-[8px] text-gray-600 font-mono">{d.hour}</span>}
                                         </div>
                                     ))}
@@ -111,7 +111,7 @@ export default function AnalyticsPage() {
                                                 </div>
                                             </div>
                                             <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-                                                <div className="h-full bg-gradient-to-r from-[#E77630] to-[#9945FF] rounded-full transition-all duration-700" style={{ width: `${agent.bar}%` }} />
+                                                <div className="h-full bg-gradient-to-r from-[#E77630] to-[#E77630] rounded-full transition-all duration-700" style={{ width: `${agent.bar}%` }} />
                                             </div>
                                         </div>
                                     ))}

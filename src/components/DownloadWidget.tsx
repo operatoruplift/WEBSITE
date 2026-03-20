@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { HeroData } from '@/lib/types';
-import { DownloadIcon, AppleIcon, WindowsIcon, LinuxIcon, AndroidIcon, SmartphoneIcon, MailIcon } from './Icons';
+import { DownloadIcon, AppleIcon, WindowsIcon, LinuxIcon, AndroidIcon, SmartphoneIcon, SolanaIcon, MailIcon } from './Icons';
 
 interface DownloadWidgetProps {
   data: HeroData;
 }
 
 const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
-  const [activeTab, setActiveTab] = useState<'macos' | 'windows' | 'linux' | 'ios' | 'android'>('macos');
+  const [activeTab, setActiveTab] = useState<'macos' | 'windows' | 'linux' | 'ios' | 'android' | 'seeker'>('macos');
   const [showModal, setShowModal] = useState(false);
 
   const platformInfo: Record<string, { label: string; version: string }> = {
@@ -16,6 +16,7 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
     linux: { label: 'Download for Linux', version: 'v0.0.1-beta (x64)' },
     ios: { label: 'Download for iOS', version: 'Coming Soon' },
     android: { label: 'Download for Android', version: 'Coming Soon' },
+    seeker: { label: 'Download for Seeker', version: 'Solana Phone' },
   };
 
   const current = platformInfo[activeTab];
@@ -99,6 +100,18 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
         >
           <AndroidIcon className="w-4 h-4" />
           <span>Android</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('seeker')}
+          className={`flex items-center space-x-2 text-xs font-bold tracking-wider uppercase transition-all duration-300 pb-2 border-b-2 ${
+            activeTab === 'seeker'
+              ? 'text-white border-primary'
+              : 'text-muted border-transparent hover:text-white'
+          }`}
+        >
+          <SolanaIcon className="w-4 h-4" />
+          <span>Seeker</span>
         </button>
       </div>
 

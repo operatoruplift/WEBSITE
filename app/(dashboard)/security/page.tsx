@@ -26,7 +26,7 @@ const fetchSecurityFeed = async () => new Promise<{ events: ThreatEvent[] }>(res
 const typeLabels: Record<string, string> = { sqli: 'SQL Injection', xss: 'XSS', prompt_injection: 'Prompt Injection', ssrf: 'SSRF', brute_force: 'Brute Force', path_traversal: 'Path Traversal' };
 const typeIcons: Record<string, any> = { sqli: Code, xss: Bug, prompt_injection: Skull, ssrf: Globe, brute_force: Zap, path_traversal: Eye };
 const severityColors: Record<string, string> = { low: 'text-gray-400 border-gray-400/20 bg-gray-400/10', medium: 'text-yellow-400 border-yellow-400/20 bg-yellow-400/10', high: 'text-orange-400 border-orange-400/20 bg-orange-400/10', critical: 'text-red-400 border-red-400/20 bg-red-400/10' };
-const actionColors: Record<string, string> = { blocked: 'text-red-400', rate_limited: 'text-yellow-400', flagged: 'text-[#00D4FF]' };
+const actionColors: Record<string, string> = { blocked: 'text-red-400', rate_limited: 'text-yellow-400', flagged: 'text-[#F59E0B]' };
 
 export default function SecurityPage() {
     const [filter, setFilter] = useState<string>('all');
@@ -65,7 +65,7 @@ export default function SecurityPage() {
                     <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 animate-fadeInUp" style={{ animationDelay: '100ms' }}>
                         {[{ label: 'Threats Blocked', value: isLoading ? '--' : `${1247 + liveCount}`, icon: ShieldAlert, color: 'text-red-400', gradient: 'from-red-500/20 to-transparent', trend: '+12% vs last hr' },
                           { label: 'IPs Blacklisted', value: isLoading ? '--' : '342', icon: Ban, color: 'text-orange-400', gradient: 'from-orange-500/20 to-transparent' },
-                          { label: 'Requests Scanned', value: isLoading ? '--' : '4.2M', icon: Eye, color: 'text-[#00D4FF]', gradient: 'from-[#00D4FF]/20 to-transparent' },
+                          { label: 'Requests Scanned', value: isLoading ? '--' : '4.2M', icon: Eye, color: 'text-[#F59E0B]', gradient: 'from-[#F59E0B]/20 to-transparent' },
                           { label: 'Avg Latency', value: isLoading ? '--' : '0.8ms', icon: Clock, color: 'text-green-400', gradient: 'from-emerald-500/20 to-transparent' },
                           { label: 'Uptime', value: isLoading ? '--' : '99.97%', icon: Activity, color: 'text-emerald-400', gradient: 'from-emerald-500/20 to-transparent' },
                         ].map(stat => { const Icon = stat.icon; return (
@@ -128,7 +128,7 @@ export default function SecurityPage() {
                                                         <div className="flex flex-wrap items-center gap-2 mb-1">
                                                             <span className="text-white text-sm font-bold">{typeLabels[event.type]}</span>
                                                             <span className={`px-2 py-0.5 rounded border text-[9px] font-mono tracking-widest uppercase font-bold ${severityColors[event.severity]}`}>{event.severity}</span>
-                                                            {event.agent_target && <span className="px-2 py-0.5 rounded border border-[#00D4FF]/20 bg-[#00D4FF]/10 text-[#00D4FF] text-[9px] font-mono flex items-center gap-1"><Bot size={10} /> {event.agent_target}</span>}
+                                                            {event.agent_target && <span className="px-2 py-0.5 rounded border border-[#F59E0B]/20 bg-[#F59E0B]/10 text-[#F59E0B] text-[9px] font-mono flex items-center gap-1"><Bot size={10} /> {event.agent_target}</span>}
                                                         </div>
                                                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-[10px] font-mono text-gray-500"><span className="flex items-center gap-1.5"><Server size={12} /> {event.source_ip}</span><span className="flex items-center gap-1.5"><Globe size={12} /> {event.endpoint}</span><span className="text-gray-600">{event.timestamp}</span></div>
                                                         <div className="mt-3 p-3 rounded-lg bg-black/80 border border-red-500/20 overflow-x-auto"><code className="text-xs text-red-400/90 font-mono break-all group-hover:text-red-300 transition-colors">{event.payload_snippet}</code></div>

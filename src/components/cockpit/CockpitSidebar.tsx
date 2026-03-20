@@ -76,7 +76,7 @@ export function CockpitSidebar() {
             style={{ background: 'rgba(5,5,8,0.85)', backdropFilter: 'blur(20px)' }}>
             <div className="px-5 py-4 border-b border-white/5">
                 <Link href="/" className="flex items-center space-x-2.5">
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #E77630, #9945FF)' }}>
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}>
                         <Cpu size={16} className="text-white" />
                     </div>
                     <span className="font-bold text-base text-white tracking-tight">Operator<span style={{ color: '#E77630' }}>Uplift</span></span>

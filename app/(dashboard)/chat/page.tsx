@@ -11,9 +11,9 @@ interface Message { id: string; role: 'user' | 'assistant'; content: string; tim
 interface ChatSession { id: string; title: string; messages: Message[]; createdAt: Date; model: string; }
 
 const MODELS = [
-    { id: 'claude-opus-4-6', label: 'Claude Opus 4.6', provider: 'Anthropic', color: 'text-[#9945FF]', badge: 'SMART' },
+    { id: 'claude-opus-4-6', label: 'Claude Opus 4.6', provider: 'Anthropic', color: 'text-[#E77630]', badge: 'SMART' },
     { id: 'gpt-4.1', label: 'GPT-4.1', provider: 'OpenAI', color: 'text-emerald-400', badge: 'FAST' },
-    { id: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro', provider: 'Google', color: 'text-[#00D4FF]', badge: 'LONG CTX' },
+    { id: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro', provider: 'Google', color: 'text-[#F59E0B]', badge: 'LONG CTX' },
     { id: 'deepseek-v3', label: 'DeepSeek V3', provider: 'DeepSeek', color: 'text-amber-400', badge: 'OPEN' },
     { id: 'grok-3', label: 'Grok 3', provider: 'xAI', color: 'text-red-400', badge: 'REASON' },
 ];
@@ -26,8 +26,8 @@ const AGENTS = [
 
 const PROMPT_SUGGESTIONS = [
     { category: 'Code', icon: Code, color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20', prompts: ['Analyze my codebase for security issues', 'Write a REST API in TypeScript'] },
-    { category: 'Research', icon: Brain, color: 'text-[#9945FF] bg-[#9945FF]/10 border-[#9945FF]/20', prompts: ['Summarize recent AI research papers', 'Compare top vector databases'] },
-    { category: 'Write', icon: FileText, color: 'text-[#00D4FF] bg-[#00D4FF]/10 border-[#00D4FF]/20', prompts: ['Write a blog post about AI agents', 'Draft a technical README'] },
+    { category: 'Research', icon: Brain, color: 'text-[#E77630] bg-[#E77630]/10 border-[#E77630]/20', prompts: ['Summarize recent AI research papers', 'Compare top vector databases'] },
+    { category: 'Write', icon: FileText, color: 'text-[#F59E0B] bg-[#F59E0B]/10 border-[#F59E0B]/20', prompts: ['Write a blog post about AI agents', 'Draft a technical README'] },
     { category: 'Analyze', icon: Zap, color: 'text-amber-400 bg-amber-400/10 border-amber-400/20', prompts: ['Build an AI agent swarm workflow', 'Generate documentation for this code'] },
 ];
 
@@ -48,7 +48,7 @@ function renderMarkdown(text: string): React.ReactNode {
         if (inCodeBlock) { codeLines.push(line); return; }
         if (line.startsWith('### ')) elements.push(<h3 key={i} className="text-base font-bold text-white mt-4 mb-1">{line.slice(4)}</h3>);
         else if (line.startsWith('## ')) elements.push(<h2 key={i} className="text-lg font-bold text-white mt-5 mb-2">{line.slice(3)}</h2>);
-        else if (line.startsWith('- ') || line.startsWith('* ')) elements.push(<div key={i} className="flex gap-2 text-[15px] leading-relaxed"><span className="text-[#9945FF] mt-1.5">•</span><span dangerouslySetInnerHTML={{ __html: inlineMarkdown(line.slice(2)) }} /></div>);
+        else if (line.startsWith('- ') || line.startsWith('* ')) elements.push(<div key={i} className="flex gap-2 text-[15px] leading-relaxed"><span className="text-[#E77630] mt-1.5">•</span><span dangerouslySetInnerHTML={{ __html: inlineMarkdown(line.slice(2)) }} /></div>);
         else if (line.trim() === '') elements.push(<div key={i} className="h-2" />);
         else elements.push(<p key={i} className="text-[15px] leading-relaxed" dangerouslySetInnerHTML={{ __html: inlineMarkdown(line) }} />);
     });
@@ -122,17 +122,17 @@ export default function ChatPage() {
     return (
         <MobilePageWrapper>
             <div className="flex h-[calc(100vh-48px)] relative">
-                <div className="absolute top-0 right-0 w-[400px] h-[300px] bg-[#9945FF]/5 blur-[120px] rounded-full pointer-events-none z-0" />
+                <div className="absolute top-0 right-0 w-[400px] h-[300px] bg-[#E77630]/5 blur-[120px] rounded-full pointer-events-none z-0" />
                 <aside className="hidden md:flex w-72 flex-col border-r border-white/5 bg-black/60 relative z-10 shrink-0">
                     <div className="p-4 border-b border-white/5 space-y-3">
-                        <GlowButton onClick={createNewSession} className="w-full justify-center bg-gradient-to-r from-[#9945FF]/20 to-[#00D4FF]/20 border-[#9945FF]/30 hover:from-[#9945FF]/30 hover:to-[#00D4FF]/30 text-white h-10"><Plus size={16} className="mr-2" /> New Chat</GlowButton>
+                        <GlowButton onClick={createNewSession} className="w-full justify-center bg-gradient-to-r from-[#E77630]/20 to-[#F59E0B]/20 border-[#E77630]/30 hover:from-[#E77630]/30 hover:to-[#F59E0B]/30 text-white h-10"><Plus size={16} className="mr-2" /> New Chat</GlowButton>
                         <div className="relative"><Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" /><input value={sidebarSearch} onChange={e => setSidebarSearch(e.target.value)} placeholder="Search sessions..." aria-label="Search chat sessions" className="w-full bg-white/5 border border-white/5 rounded-xl pl-9 pr-3 py-2 text-xs text-gray-400 placeholder-gray-600 focus:outline-none focus:border-white/20 transition-all" /></div>
                     </div>
                     <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-none">
                         {filteredSessions.length === 0 ? <div className="text-center py-8"><MessageSquare size={24} className="text-gray-700 mx-auto mb-2" /><p className="text-xs text-gray-600">No sessions yet</p></div> :
                             filteredSessions.map(session => (
-                                <div key={session.id} className={`group flex items-start gap-2 p-3 rounded-xl cursor-pointer transition-all ${activeSessionId === session.id ? 'bg-[#9945FF]/10 border border-[#9945FF]/20' : 'hover:bg-white/5 border border-transparent'}`} onClick={() => setActiveSessionId(session.id)}>
-                                    <Bot size={14} className={`shrink-0 mt-0.5 ${activeSessionId === session.id ? 'text-[#9945FF]' : 'text-gray-500'}`} />
+                                <div key={session.id} className={`group flex items-start gap-2 p-3 rounded-xl cursor-pointer transition-all ${activeSessionId === session.id ? 'bg-[#E77630]/10 border border-[#E77630]/20' : 'hover:bg-white/5 border border-transparent'}`} onClick={() => setActiveSessionId(session.id)}>
+                                    <Bot size={14} className={`shrink-0 mt-0.5 ${activeSessionId === session.id ? 'text-[#E77630]' : 'text-gray-500'}`} />
                                     <div className="flex-1 min-w-0"><p className={`text-sm truncate font-medium ${activeSessionId === session.id ? 'text-white' : 'text-gray-400'}`}>{session.title}</p><p className="text-[10px] text-gray-600 font-mono mt-0.5">{session.messages.length} msgs · {MODELS.find(m => m.id === session.model)?.label || 'Claude'}</p></div>
                                     <button onClick={e => { e.stopPropagation(); deleteSession(session.id); }} className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 text-gray-600 transition-all shrink-0"><Trash2 size={12} /></button>
                                 </div>
@@ -145,7 +145,7 @@ export default function ChatPage() {
                         <div className="flex items-center gap-3">
                             <div className="flex gap-1 p-1 bg-white/5 rounded-xl border border-white/5">
                                 {AGENTS.map(agent => { const Icon = agent.icon; return (
-                                    <button key={agent.id} onClick={() => setSelectedAgent(agent.id)} className={`px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-widest flex items-center gap-1.5 transition-all ${selectedAgent === agent.id ? 'bg-[#9945FF]/20 text-[#9945FF] border border-[#9945FF]/30' : 'text-gray-500 hover:text-white'}`}>
+                                    <button key={agent.id} onClick={() => setSelectedAgent(agent.id)} className={`px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-widest flex items-center gap-1.5 transition-all ${selectedAgent === agent.id ? 'bg-[#E77630]/20 text-[#E77630] border border-[#E77630]/30' : 'text-gray-500 hover:text-white'}`}>
                                         <Icon size={10} /> {agent.label.split(' ')[0]}
                                     </button>
                                 ); })}
@@ -170,7 +170,7 @@ export default function ChatPage() {
                     <div className="flex-1 overflow-y-auto scrollbar-none" onClick={() => setShowModelPicker(false)}>
                         {!activeSession || activeSession.messages.length === 0 ? (
                             <div className="h-full flex flex-col items-center justify-center p-8">
-                                <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(153,69,255,0.3)]" style={{ background: 'linear-gradient(135deg, #9945FF, #00D4FF)' }}><Sparkles size={36} className="text-white" /></div>
+                                <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(153,69,255,0.3)]" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}><Sparkles size={36} className="text-white" /></div>
                                 <h1 className="text-3xl font-bold text-white mb-2 text-center">How can I help you?</h1>
                                 <p className="text-gray-500 text-sm text-center mb-8 max-w-md">Powered by <span className={activeModel.color + ' font-bold'}>{activeModel.label}</span> · Ask me anything</p>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl w-full">
@@ -187,10 +187,10 @@ export default function ChatPage() {
                             <div className="p-4 md:p-8 space-y-8 max-w-4xl mx-auto">
                                 {activeSession.messages.map((msg, index) => (
                                     <div key={msg.id} className={`flex gap-4 animate-fadeInUp ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`} style={{ animationDelay: `${Math.min(index * 30, 300)}ms` }}>
-                                        {msg.role === 'assistant' && <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(153,69,255,0.3)]" style={{ background: 'linear-gradient(135deg, #9945FF, #00D4FF)' }}><Bot size={20} className="text-white" /></div>}
+                                        {msg.role === 'assistant' && <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(153,69,255,0.3)]" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}><Bot size={20} className="text-white" /></div>}
                                         <div className={`group relative max-w-[80%] md:max-w-[72%] ${msg.role === 'user' ? 'order-first' : ''}`}>
                                             {msg.role === 'assistant' && msg.model && <p className="text-[10px] font-mono text-gray-600 mb-1 ml-1">{MODELS.find(m => m.id === msg.model)?.label || msg.model}</p>}
-                                            <div className={`p-5 rounded-2xl ${msg.role === 'user' ? 'bg-gradient-to-br from-[#9945FF] to-[#6633CC] text-white rounded-br-md shadow-[0_0_20px_rgba(153,69,255,0.2)]' : 'bg-white/5 border border-white/10 text-white rounded-bl-md'}`}>
+                                            <div className={`p-5 rounded-2xl ${msg.role === 'user' ? 'bg-gradient-to-br from-[#E77630] to-[#6633CC] text-white rounded-br-md shadow-[0_0_20px_rgba(153,69,255,0.2)]' : 'bg-white/5 border border-white/10 text-white rounded-bl-md'}`}>
                                                 {msg.role === 'assistant' ? renderMarkdown(msg.content) : <p className="text-[15px] leading-relaxed whitespace-pre-wrap">{msg.content}</p>}
                                             </div>
                                             {msg.role === 'assistant' && <button onClick={() => copyMessage(msg.content, msg.id)} className="absolute -bottom-3 right-2 opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-white/10 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">{copiedId === msg.id ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}{copiedId === msg.id ? 'Copied' : 'Copy'}</button>}
@@ -198,21 +198,21 @@ export default function ChatPage() {
                                         {msg.role === 'user' && <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center shrink-0"><User size={20} className="text-white" /></div>}
                                     </div>
                                 ))}
-                                {isLoading && <div className="flex gap-4 animate-fadeInUp"><div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg, #9945FF, #00D4FF)' }}><Bot size={20} className="text-white" /></div><div className="bg-white/5 border border-white/10 rounded-2xl rounded-bl-md p-5"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#9945FF] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{activeModel.label} is thinking...</span></div></div></div>}
+                                {isLoading && <div className="flex gap-4 animate-fadeInUp"><div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}><Bot size={20} className="text-white" /></div><div className="bg-white/5 border border-white/10 rounded-2xl rounded-bl-md p-5"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#E77630] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{activeModel.label} is thinking...</span></div></div></div>}
                                 <div ref={messagesEndRef} />
                             </div>
                         )}
                     </div>
                     <div className="p-4 border-t border-white/5 bg-black/40 backdrop-blur-sm shrink-0">
                         <div className="max-w-4xl mx-auto">
-                            <div className="flex items-end gap-3 p-3 rounded-2xl bg-white/5 border border-white/10 focus-within:border-[#9945FF]/40 transition-all">
+                            <div className="flex items-end gap-3 p-3 rounded-2xl bg-white/5 border border-white/10 focus-within:border-[#E77630]/40 transition-all">
                                 <button onClick={createNewSession} className="p-2 rounded-xl text-gray-500 hover:text-white hover:bg-white/10 transition-all md:hidden shrink-0"><Plus size={20} /></button>
                                 <button onClick={() => showToast('File attachments coming soon', 'info')} className="p-2 rounded-xl text-gray-600 hover:text-gray-400 hover:bg-white/5 transition-all shrink-0"><Paperclip size={18} /></button>
                                 <textarea ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyDown} placeholder={`Message ${activeModel.label}...`} aria-label="Chat message input" rows={1}
                                     className="flex-1 bg-transparent text-white placeholder-gray-600 focus:outline-none resize-none text-[15px] leading-relaxed min-h-[40px] max-h-40" style={{ height: 'auto' }}
                                     onInput={e => { const t = e.currentTarget; t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight, 160) + 'px'; }} />
                                 <button onClick={() => showToast('Voice input coming soon', 'info')} className="p-2 rounded-xl text-gray-600 hover:text-gray-400 hover:bg-white/5 transition-all shrink-0"><Mic size={18} /></button>
-                                <button onClick={handleSend} disabled={!input.trim() || isLoading} className="w-10 h-10 rounded-xl flex items-center justify-center transition-all shrink-0 disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(153,69,255,0.3)] hover:shadow-[0_0_20px_rgba(153,69,255,0.5)]" style={{ background: 'linear-gradient(135deg, #9945FF, #00D4FF)' }}>
+                                <button onClick={handleSend} disabled={!input.trim() || isLoading} className="w-10 h-10 rounded-xl flex items-center justify-center transition-all shrink-0 disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(153,69,255,0.3)] hover:shadow-[0_0_20px_rgba(153,69,255,0.5)]" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}>
                                     {isLoading ? <Loader2 size={18} className="animate-spin text-white" /> : <Send size={18} className="text-white" />}
                                 </button>
                             </div>

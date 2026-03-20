@@ -62,8 +62,8 @@ export default function MemoryPage() {
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         {[
                             { label: 'Memory Nodes', value: nodes.length, icon: Brain, color: 'text-[#E77630]' },
-                            { label: 'Vector Embeddings', value: totalVectors.toLocaleString(), icon: Sparkles, color: 'text-[#9945FF]' },
-                            { label: 'Sources Indexed', value: nodes.length, icon: Link2, color: 'text-[#00D4FF]' },
+                            { label: 'Vector Embeddings', value: totalVectors.toLocaleString(), icon: Sparkles, color: 'text-[#E77630]' },
+                            { label: 'Sources Indexed', value: nodes.length, icon: Link2, color: 'text-[#F59E0B]' },
                             { label: 'Tags', value: [...new Set(nodes.flatMap(n => n.tags))].length, icon: Tag, color: 'text-emerald-400' },
                         ].map(stat => {
                             const Icon = stat.icon;

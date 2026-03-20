@@ -11,8 +11,8 @@ interface Notification { id: string; type: string; title: string; message: strin
 
 const INITIAL_NOTIFICATIONS: Notification[] = [
     { id: '1', type: 'security', title: 'Blackwall: 3 threats blocked', message: 'Prompt injection attempts neutralized from 2 IPs', time: '5m ago', read: false, icon: Shield, color: 'text-red-400' },
-    { id: '2', type: 'agent', title: 'CodePilot Pro updated', message: 'Version 2.4.1 available with TypeScript improvements', time: '1h ago', read: false, icon: Bot, color: 'text-[#00D4FF]' },
-    { id: '3', type: 'chat', title: 'New message from Founder Ops', message: 'Weekly summary report is ready for review', time: '2h ago', read: false, icon: MessageSquare, color: 'text-[#9945FF]' },
+    { id: '2', type: 'agent', title: 'CodePilot Pro updated', message: 'Version 2.4.1 available with TypeScript improvements', time: '1h ago', read: false, icon: Bot, color: 'text-[#F59E0B]' },
+    { id: '3', type: 'chat', title: 'New message from Founder Ops', message: 'Weekly summary report is ready for review', time: '2h ago', read: false, icon: MessageSquare, color: 'text-[#E77630]' },
     { id: '4', type: 'workflow', title: 'Nightly sync completed', message: 'GitHub issue sync and embeddings updated successfully', time: '6h ago', read: true, icon: Workflow, color: 'text-emerald-400' },
     { id: '5', type: 'memory', title: 'Knowledge base indexed', message: '1,247 new documents processed and embedded', time: '1d ago', read: true, icon: Brain, color: 'text-primary' },
 ];

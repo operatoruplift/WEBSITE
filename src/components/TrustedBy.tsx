@@ -6,11 +6,15 @@ const TrustedBy: React.FC = () => {
     { name: "Claude Opus 4.6", provider: "Anthropic" },
     { name: "GPT-4.1", provider: "OpenAI" },
     { name: "Gemini 2.5 Pro", provider: "Google" },
-    { name: "Llama 3.3", provider: "Meta" },
+    { name: "Llama 4", provider: "Meta" },
     { name: "Mistral Large 2", provider: "Mistral AI" },
     { name: "Command R+", provider: "Cohere" },
     { name: "Grok 3", provider: "xAI" },
     { name: "DeepSeek-V3", provider: "DeepSeek" },
+    { name: "Qwen 2.5", provider: "Alibaba" },
+    { name: "Phi-4", provider: "Microsoft" },
+    { name: "Ollama", provider: "Local" },
+    { name: "LM Studio", provider: "Local" },
   ];
 
   // Duplicate the array to ensure seamless scrolling
@@ -22,7 +26,7 @@ const TrustedBy: React.FC = () => {
         <span className="w-2 h-2 rounded-full bg-primary mr-2 shadow-[0_0_8px_rgba(231,118,48,0.4)]"></span>
         <span className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">Powered By</span>
       </div>
-      
+
       {/* Container with fade-in masks on sides */}
       <div className="relative w-full overflow-hidden mask-gradient">
         {/* Gradient overlays for fade effect */}
@@ -32,8 +36,8 @@ const TrustedBy: React.FC = () => {
         {/* Marquee Track */}
         <div className="flex w-fit animate-marquee whitespace-nowrap">
           {marqueeItems.map((model, index) => (
-            <div 
-              key={`${model.name}-${index}`} 
+            <div
+              key={`${model.name}-${index}`}
               className="flex items-center space-x-3 mx-8 opacity-50 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 cursor-default group"
             >
               <div className="flex flex-col">
