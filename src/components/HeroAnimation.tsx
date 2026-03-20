@@ -6,8 +6,6 @@ interface Particle {
   vx: number;
   vy: number;
   size: number;
-  targetX?: number;
-  targetY?: number;
   alpha: number;
   isHero?: boolean;
   isAgent?: boolean;
@@ -35,7 +33,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     let labelText = "";
     let startTime = Date.now();
 
-    const PRIMARY_COLOR = '#E77630';
+    const PRIMARY = '#E77630';
+    const GREEN = 'rgba(34, 197, 94,';
 
     const resize = () => {
       width = canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth;
@@ -47,7 +46,6 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     const initParticles = () => {
       particles = [];
       const count = isMobile ? 30 : 60;
-
       for (let i = 0; i < count; i++) {
         particles.push({
           x: Math.random() * width,
@@ -66,125 +64,85 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
       if (!text) return;
       ctx.save();
       ctx.translate(cx, cy + 160);
-      // For held labels (CHAT phase), fade in then stay visible; otherwise fade in and out
-      if (hold) {
-        ctx.globalAlpha = Math.min(1, progress * 4);
-      } else {
-        ctx.globalAlpha = Math.min(1, Math.sin(progress * Math.PI));
-      }
-
+      ctx.globalAlpha = hold ? Math.min(1, progress * 4) : Math.min(1, Math.sin(progress * Math.PI));
       ctx.font = "10px 'SF Mono', 'Menlo', monospace";
       ctx.textAlign = "center";
-      ctx.fillStyle = PRIMARY_COLOR;
-      ctx.shadowColor = PRIMARY_COLOR;
+      ctx.fillStyle = PRIMARY;
+      ctx.shadowColor = PRIMARY;
       ctx.shadowBlur = 10;
-
       const chars = Math.floor(text.length * Math.min(1, progress * 3));
-      const currentText = text.substring(0, chars);
-
-      ctx.fillText(`[ ${currentText} ]`, 0, 0);
-
-      ctx.strokeStyle = `rgba(255, 255, 255, 0.2)`;
-      ctx.beginPath();
-      ctx.moveTo(-20, 15);
-      ctx.lineTo(20, 15);
-      ctx.stroke();
-
+      ctx.fillText(`[ ${text.substring(0, chars)} ]`, 0, 0);
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.beginPath(); ctx.moveTo(-20, 12); ctx.lineTo(20, 12); ctx.stroke();
       ctx.restore();
     };
 
-    const drawChatInterface = (cx: number, cy: number, progress: number) => {
+    // Draw the chat window — progress controls how many messages appear
+    // showComplete: if true, show final response instead of typing dots
+    const drawChat = (cx: number, cy: number, progress: number, showComplete: boolean) => {
       ctx.save();
       ctx.translate(cx, cy);
-
       const w = isMobile ? 160 : 200;
       const h = isMobile ? 200 : 260;
-      const scale = Math.min(1, Math.max(0.8, progress * 2));
-
+      const scale = Math.min(1, Math.max(0.85, progress * 3));
       ctx.scale(scale, scale);
 
-      ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 + Math.min(0.2, progress)})`;
+      // Window background
+      ctx.fillStyle = 'rgba(5, 5, 8, 0.9)';
+      ctx.strokeStyle = `rgba(255,255,255,${0.08 + Math.min(0.12, progress * 0.2)})`;
       ctx.lineWidth = 0.5;
-      ctx.fillStyle = 'rgba(5, 5, 5, 0.8)';
-
       ctx.beginPath();
-      if (ctx.roundRect) {
-        ctx.roundRect(-w / 2, -h / 2, w, h, 12);
-      } else {
-        ctx.rect(-w / 2, -h / 2, w, h);
-      }
-      ctx.fill();
-      ctx.stroke();
+      if (ctx.roundRect) ctx.roundRect(-w/2, -h/2, w, h, 10);
+      else ctx.rect(-w/2, -h/2, w, h);
+      ctx.fill(); ctx.stroke();
 
-      ctx.beginPath();
-      ctx.moveTo(-w / 2, -h / 2 + 30);
-      ctx.lineTo(w / 2, -h / 2 + 30);
-      ctx.stroke();
-
+      // Title bar
+      ctx.beginPath(); ctx.moveTo(-w/2, -h/2 + 28); ctx.lineTo(w/2, -h/2 + 28); ctx.stroke();
       // Window dots
-      ctx.fillStyle = 'rgba(255, 80, 80, 0.5)';
-      ctx.beginPath(); ctx.arc(-w / 2 + 16, -h / 2 + 15, 3, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = 'rgba(255, 180, 0, 0.5)';
-      ctx.beginPath(); ctx.arc(-w / 2 + 28, -h / 2 + 15, 3, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = 'rgba(80, 200, 80, 0.5)';
-      ctx.beginPath(); ctx.arc(-w / 2 + 40, -h / 2 + 15, 3, 0, Math.PI * 2); ctx.fill();
+      [['rgba(255,80,80,0.5)', -w/2+14], ['rgba(255,180,0,0.5)', -w/2+26], ['rgba(80,200,80,0.5)', -w/2+38]].forEach(([c, x]) => {
+        ctx.fillStyle = c as string; ctx.beginPath(); ctx.arc(x as number, -h/2+14, 2.5, 0, Math.PI*2); ctx.fill();
+      });
+      ctx.font = "7px 'SF Mono', monospace"; ctx.textAlign = 'center';
+      ctx.fillStyle = 'rgba(255,255,255,0.25)'; ctx.fillText('UPLIFT', 0, -h/2+17);
+      // Online dot
+      ctx.fillStyle = `${GREEN}0.7)`; ctx.beginPath(); ctx.arc(w/2-14, -h/2+14, 2.5, 0, Math.PI*2); ctx.fill();
 
-      // Title text
-      ctx.font = "8px 'SF Mono', monospace";
-      ctx.textAlign = 'center';
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-      ctx.fillText('UPLIFT SESSION', 0, -h / 2 + 18);
-
-      // Online indicator
-      ctx.fillStyle = 'rgba(34, 197, 94, 0.8)';
-      ctx.beginPath(); ctx.arc(w / 2 - 16, -h / 2 + 15, 3, 0, Math.PI * 2); ctx.fill();
-
-      // Chat messages with real text and typing→response transition
-      const timeInChat = Math.min(7, progress * 9);
-      const fontSize = isMobile ? 6 : 7;
-
-      const messages: { start: number; type: 'user' | 'system' | 'typing'; text: string; width: number; height: number }[] = [
-        { start: 0.3, type: 'user', text: 'Refactor the auth module', width: w * 0.65, height: 22 },
-        { start: 1.5, type: 'system', text: 'Analyzing 14 files...', width: w * 0.7, height: 22 },
-        { start: 3.0, type: 'user', text: 'Use session tokens', width: w * 0.5, height: 22 },
-        { start: 4.0, type: 'typing', text: '', width: 40, height: 20 },
-        { start: 5.5, type: 'system', text: 'Done. PR #47 created.', width: w * 0.65, height: 22 },
+      // Messages
+      const t = Math.min(6, progress * 8);
+      const fs = isMobile ? 6 : 7;
+      const msgs = [
+        { at: 0.3, user: true,  text: 'Refactor auth module' },
+        { at: 1.2, user: false, text: 'Scanning 14 files...' },
+        { at: 2.8, user: true,  text: 'Use session tokens' },
+        { at: 3.8, user: false, text: showComplete ? 'Done. PR #47 ready.' : '', typing: !showComplete },
       ];
 
-      messages.forEach((msg, i) => {
-        // Skip typing dots once the response replaces it
-        if (msg.type === 'typing' && timeInChat > 5.5) return;
-        if (timeInChat <= msg.start) return;
-
-        const isUser = msg.type === 'user';
-        const xPos = isUser ? (w / 2 - 20 - msg.width) : (-w / 2 + 20);
-        const yPos = -h / 2 + 48 + (i * 40);
-
-        ctx.fillStyle = isUser ? 'rgba(255, 255, 255, 0.08)' : 'rgba(231, 118, 48, 0.1)';
+      msgs.forEach((m, i) => {
+        if (t < m.at) return;
+        const bw = m.user ? w * 0.6 : w * 0.65;
+        const bh = 20;
+        const x = m.user ? (w/2 - 16 - bw) : (-w/2 + 16);
+        const y = -h/2 + 38 + (i * 42);
+        // Bubble
+        ctx.fillStyle = m.user ? 'rgba(255,255,255,0.06)' : 'rgba(231,118,48,0.08)';
         ctx.beginPath();
-        if (ctx.roundRect) {
-          ctx.roundRect(xPos, yPos, msg.width, msg.height, 6);
-        } else {
-          ctx.rect(xPos, yPos, msg.width, msg.height);
-        }
+        if (ctx.roundRect) ctx.roundRect(x, y, bw, bh, 5);
+        else ctx.rect(x, y, bw, bh);
         ctx.fill();
-
-        if (msg.type === 'typing') {
-          const dotTime = Date.now() / 200;
-          ctx.fillStyle = PRIMARY_COLOR;
+        // Content
+        if (m.typing) {
+          const dt = Date.now() / 220;
+          ctx.fillStyle = PRIMARY;
           for (let d = 0; d < 3; d++) {
-            ctx.globalAlpha = Math.floor(dotTime) % 3 === d ? 1 : 0.3;
-            ctx.beginPath();
-            ctx.arc(xPos + 12 + (d * 8), yPos + 10, 1.5, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.globalAlpha = Math.floor(dt) % 3 === d ? 0.9 : 0.25;
+            ctx.beginPath(); ctx.arc(x+12+(d*7), y+10, 1.5, 0, Math.PI*2); ctx.fill();
           }
           ctx.globalAlpha = 1;
-        } else {
-          // Real text inside bubbles
-          ctx.font = `${fontSize}px 'SF Mono', monospace`;
-          ctx.textAlign = 'left';
-          ctx.fillStyle = isUser ? 'rgba(255, 255, 255, 0.6)' : 'rgba(231, 118, 48, 0.7)';
-          ctx.fillText(msg.text, xPos + 8, yPos + 14);
+        } else if (m.text) {
+          ctx.font = `${fs}px 'SF Mono', monospace`; ctx.textAlign = 'left';
+          ctx.fillStyle = m.user ? 'rgba(255,255,255,0.5)' : `rgba(231,118,48,0.6)`;
+          ctx.fillText(m.text, x+7, y+13);
         }
       });
 
@@ -194,296 +152,159 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     const render = () => {
       const now = Date.now();
       let elapsed = now - startTime;
-      const LOOP_DURATION = 34000;
+      const LOOP = 32000;
+      if (elapsed > LOOP) { startTime = now; elapsed = 0; phase = 'FLOW'; initParticles(); }
 
-      if (elapsed > LOOP_DURATION) {
-        startTime = now;
-        elapsed = 0;
-        phase = 'FLOW';
-        initParticles();
-      }
-
-      if (elapsed < 2500) { phase = 'FLOW'; labelText = "AWAITING INPUT"; }
-      else if (elapsed < 5000) { phase = 'SPARK'; labelText = "DETECTING SIGNAL"; }
-      else if (elapsed < 8000) { phase = 'CONNECT'; labelText = "ESTABLISHING CONTEXT"; }
-      else if (elapsed < 11500) { phase = 'FORM'; labelText = "ISOLATING ENVIRONMENT"; }
-      else if (elapsed < 15000) { phase = 'GUARD'; labelText = "APPLYING GUARDRAILS"; }
-      else if (elapsed < 24000) { phase = 'CHAT'; labelText = "AGENT ACTIVE"; }
-      else if (elapsed < 29000) { phase = 'RESPOND'; labelText = "TASK COMPLETE"; }
-      else { phase = 'COMPLETE'; labelText = "SESSION CLOSED"; }
+      // Phase timing (32s total)
+      if      (elapsed < 2500)  { phase = 'FLOW';     labelText = "AWAITING INPUT"; }
+      else if (elapsed < 5000)  { phase = 'SPARK';    labelText = "DETECTING SIGNAL"; }
+      else if (elapsed < 7500)  { phase = 'CONNECT';  labelText = "ESTABLISHING CONTEXT"; }
+      else if (elapsed < 10500) { phase = 'FORM';     labelText = "ISOLATING ENVIRONMENT"; }
+      else if (elapsed < 14000) { phase = 'GUARD';    labelText = "APPLYING GUARDRAILS"; }
+      else if (elapsed < 22000) { phase = 'CHAT';     labelText = "AGENT ACTIVE"; }
+      else if (elapsed < 27000) { phase = 'RESPOND';  labelText = "TASK COMPLETE"; }
+      else                      { phase = 'COMPLETE'; labelText = "SESSION CLOSED"; }
 
       ctx.clearRect(0, 0, width, height);
-
       const cx = width > 1024 ? width * 0.75 : width / 2;
       const cy = height / 2;
 
+      // --- Particles ---
       particles.forEach((p, i) => {
+        // Movement
         if (phase === 'FLOW' || phase === 'SPARK' || (phase === 'CONNECT' && !p.isHero)) {
-          p.x += p.vx;
-          p.y += p.vy;
+          p.x += p.vx; p.y += p.vy;
           if (p.x > width) p.x = 0;
           if (p.y > height) p.y = 0;
           if (p.y < 0) p.y = height;
-        }
-        else if (phase === 'FORM' || phase === 'GUARD' || phase === 'CHAT' || phase === 'RESPOND' || phase === 'COMPLETE') {
+        } else if (['FORM','GUARD','CHAT','RESPOND'].includes(phase)) {
           if (p.isAgent) {
-            let tx = cx;
-            let ty = cy;
-            const w = isMobile ? 160 : 200;
-            const h = isMobile ? 200 : 260;
-
-            if (i === 0) { tx = cx - w / 2; ty = cy - h / 2; }
-            else if (i === 1) { tx = cx + w / 2; ty = cy - h / 2; }
-            else if (i === 2) { tx = cx + w / 2; ty = cy + h / 2; }
-            else if (i === 3) { tx = cx - w / 2; ty = cy + h / 2; }
-            else if (i === 4) { tx = cx; ty = cy - h / 2; }
-            else if (i === 5) { tx = cx; ty = cy + h / 2; }
-
-            p.x += (tx - p.x) * 0.08;
-            p.y += (ty - p.y) * 0.08;
-          } else {
-            p.alpha *= 0.95;
+            const w = isMobile ? 160 : 200; const h = isMobile ? 200 : 260;
+            const targets = [[cx-w/2,cy-h/2],[cx+w/2,cy-h/2],[cx+w/2,cy+h/2],[cx-w/2,cy+h/2],[cx,cy-h/2],[cx,cy+h/2]];
+            if (targets[i]) { p.x += (targets[i][0]-p.x)*0.08; p.y += (targets[i][1]-p.y)*0.08; }
+          } else { p.alpha *= 0.96; }
+        } else if (phase === 'COMPLETE') {
+          if (p.isAgent) {
+            const angle = Math.atan2(p.y-cy, p.x-cx);
+            p.x += Math.cos(angle) * 0.5; p.y += Math.sin(angle) * 0.5;
           }
+          p.alpha *= 0.985;
         }
 
+        // SPARK: hero particle glows
         if (phase === 'SPARK' && p.isHero) {
-          p.x += (cx - p.x) * 0.05;
-          p.y += (cy - p.y) * 0.05;
-
-          ctx.shadowBlur = 15;
-          ctx.shadowColor = PRIMARY_COLOR;
-          ctx.fillStyle = PRIMARY_COLOR;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
-          ctx.fill();
+          p.x += (cx-p.x)*0.05; p.y += (cy-p.y)*0.05;
+          ctx.shadowBlur = 15; ctx.shadowColor = PRIMARY;
+          ctx.fillStyle = PRIMARY; ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size*2, 0, Math.PI*2); ctx.fill();
           ctx.shadowBlur = 0;
         }
 
-        if (phase === 'CONNECT' || phase === 'FORM') {
-          if (p.isHero) {
-            particles.forEach(other => {
-              const dist = Math.hypot(p.x - other.x, p.y - other.y);
-              if (dist < (isMobile ? 150 : 300)) {
-                ctx.beginPath();
-                ctx.moveTo(p.x, p.y);
-                ctx.lineTo(other.x, other.y);
-                ctx.lineWidth = isMobile ? 0.2 : 0.5;
-                ctx.strokeStyle = `rgba(255, 85, 0, ${1 - dist / (isMobile ? 150 : 300)})`;
-                ctx.stroke();
-              }
-            });
-          }
-        }
-
-        if ((phase === 'FORM' || phase === 'GUARD') && p.isAgent) {
-          particles.filter(n => n.isAgent && n !== p).forEach(neighbor => {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(neighbor.x, neighbor.y);
-            ctx.strokeStyle = `rgba(255, 255, 255, 0.15)`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
+        // CONNECT: lines from hero to nearby particles
+        if ((phase === 'CONNECT' || phase === 'FORM') && p.isHero) {
+          particles.forEach(o => {
+            const d = Math.hypot(p.x-o.x, p.y-o.y);
+            if (d < (isMobile?150:300)) {
+              ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(o.x,o.y);
+              ctx.lineWidth = isMobile?0.2:0.5;
+              ctx.strokeStyle = `rgba(231,118,48,${1-d/(isMobile?150:300)})`; ctx.stroke();
+            }
           });
         }
 
-        // RESPOND phase: agents drift outward slowly
-        if (phase === 'RESPOND' && p.isAgent) {
-          const angle = Math.atan2(p.y - cy, p.x - cx);
-          p.x += Math.cos(angle) * 0.3;
-          p.y += Math.sin(angle) * 0.3;
+        // FORM/GUARD: agent-to-agent lines
+        if ((phase === 'FORM' || phase === 'GUARD') && p.isAgent) {
+          particles.filter(n => n.isAgent && n !== p).forEach(n => {
+            ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(n.x,n.y);
+            ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 0.5; ctx.stroke();
+          });
         }
 
-        // COMPLETE phase: everything fades out
-        if (phase === 'COMPLETE') {
-          p.alpha *= 0.97;
-        }
-
-
-        const mobileAlphaMod = isMobile ? 0.4 : 1;
-
-        ctx.fillStyle = p.isHero || (phase !== 'FLOW' && p.isAgent) ? PRIMARY_COLOR : '#fff';
-        if (phase === 'CHAT' && p.isAgent) ctx.fillStyle = '#fff';
-
-        ctx.globalAlpha = p.alpha * mobileAlphaMod;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * (isMobile ? 0.7 : 1), 0, Math.PI * 2);
-        ctx.fill();
+        // Draw particle
+        const alphaMod = isMobile ? 0.4 : 1;
+        ctx.fillStyle = (p.isHero || (phase !== 'FLOW' && p.isAgent)) ? PRIMARY : '#fff';
+        if ((phase === 'CHAT' || phase === 'RESPOND') && p.isAgent) ctx.fillStyle = '#fff';
+        ctx.globalAlpha = p.alpha * alphaMod;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.size*(isMobile?0.7:1), 0, Math.PI*2); ctx.fill();
         ctx.globalAlpha = 1;
       });
 
-      // Draw GUARD boundary ONCE per frame (outside particle loop)
+      // --- Phase-specific overlays ---
+
+      // GUARD: dashed boundary + scan line
       if (phase === 'GUARD') {
-        const size = isMobile ? 130 : 160;
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.strokeStyle = `rgba(255, 255, 255, ${Math.abs(Math.sin(elapsed / 200)) * 0.4 + 0.1})`;
-        ctx.lineWidth = 1;
-        ctx.setLineDash([10, 10]);
-        ctx.beginPath();
-        ctx.rect(-size / 2, -size / 2, size, size);
-        ctx.stroke();
+        const sz = isMobile ? 130 : 160;
+        ctx.save(); ctx.translate(cx, cy);
+        ctx.strokeStyle = `rgba(255,255,255,${0.15 + Math.abs(Math.sin(elapsed/200))*0.3})`;
+        ctx.lineWidth = 1; ctx.setLineDash([8, 6]);
+        ctx.beginPath(); ctx.rect(-sz/2, -sz/2, sz, sz); ctx.stroke();
         ctx.setLineDash([]);
-
-        ctx.fillStyle = 'rgba(255, 85, 0, 0.05)';
-        ctx.fillRect(-size / 2, -size / 2 + (elapsed % 1000) / 1000 * size, size, 2);
+        ctx.fillStyle = 'rgba(231,118,48,0.04)';
+        ctx.fillRect(-sz/2, -sz/2 + (elapsed%1200)/1200*sz, sz, 2);
         ctx.restore();
       }
 
-      // Draw CHAT interface ONCE per frame (outside particle loop)
+      // CHAT: draw conversation with typing dots
       if (phase === 'CHAT') {
-        drawChatInterface(cx, cy, Math.min(1, (elapsed - 15000) / 8000));
+        drawChat(cx, cy, Math.min(1, (elapsed-14000)/6000), false);
       }
 
-      // RESPOND phase: completed chat + success indicator + stats
+      // RESPOND: show completed conversation + success badge below
       if (phase === 'RESPOND') {
-        drawChatInterface(cx, cy, 1);
-
-        const respondProgress = Math.min(1, (elapsed - 24000) / 2000);
-        ctx.save();
-        ctx.translate(cx, cy);
-
-        // Expanding green ring
-        const ringRadius = 20 + respondProgress * 30;
-        ctx.globalAlpha = respondProgress * 0.15;
-        ctx.strokeStyle = 'rgba(34, 197, 94, 1)';
-        ctx.lineWidth = 1;
+        const rp = Math.min(1, (elapsed-22000)/2000);
+        drawChat(cx, cy, 1, true);
+        // Success badge below the chat window
+        ctx.save(); ctx.translate(cx, cy);
+        const badgeY = (isMobile ? 110 : 140);
+        ctx.globalAlpha = Math.min(1, rp * 2);
+        // Badge background
+        ctx.fillStyle = `${GREEN}0.1)`;
         ctx.beginPath();
-        ctx.arc(0, 50, ringRadius, 0, Math.PI * 2);
-        ctx.stroke();
-
-        ctx.globalAlpha = respondProgress;
-
-        // Success glow
-        const glowGrad = ctx.createRadialGradient(0, 50, 0, 0, 50, 35);
-        glowGrad.addColorStop(0, 'rgba(34, 197, 94, 0.4)');
-        glowGrad.addColorStop(1, 'transparent');
-        ctx.fillStyle = glowGrad;
-        ctx.beginPath();
-        ctx.arc(0, 50, 35, 0, Math.PI * 2);
+        if (ctx.roundRect) ctx.roundRect(-50, badgeY-12, 100, 24, 12);
+        else ctx.rect(-50, badgeY-12, 100, 24);
         ctx.fill();
-
-        // Checkmark circle with fill
-        ctx.fillStyle = 'rgba(34, 197, 94, 0.15)';
-        ctx.beginPath();
-        ctx.arc(0, 50, 18, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(34, 197, 94, 0.9)';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        // Animated checkmark draw
-        const checkProg = Math.min(1, respondProgress * 2.5);
-        ctx.strokeStyle = 'rgba(34, 197, 94, 1)';
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        if (checkProg < 0.4) {
-          const t = checkProg / 0.4;
-          ctx.moveTo(-6, 50);
-          ctx.lineTo(-6 + 5 * t, 50 + 5 * t);
-        } else {
-          const t = (checkProg - 0.4) / 0.6;
-          ctx.moveTo(-6, 50);
-          ctx.lineTo(-1, 55);
-          ctx.lineTo(-1 + 8 * t, 55 - 11 * t);
+        ctx.strokeStyle = `${GREEN}0.3)`; ctx.lineWidth = 0.5; ctx.stroke();
+        // Checkmark
+        if (rp > 0.3) {
+          ctx.strokeStyle = `${GREEN}1)`; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(-22, badgeY); ctx.lineTo(-18, badgeY+4); ctx.lineTo(-12, badgeY-4); ctx.stroke();
+          ctx.font = "bold 8px 'SF Mono', monospace"; ctx.textAlign = 'left';
+          ctx.fillStyle = `${GREEN}0.8)`; ctx.fillText('DELIVERED', -6, badgeY+3);
         }
-        ctx.stroke();
-
-        // "DELIVERED" text
-        if (respondProgress > 0.4) {
-          const textAlpha = Math.min(1, (respondProgress - 0.4) * 2);
-          ctx.globalAlpha = textAlpha;
-          ctx.font = "bold 9px 'SF Mono', monospace";
-          ctx.textAlign = 'center';
-          ctx.fillStyle = 'rgba(34, 197, 94, 0.8)';
-          ctx.fillText('TASK DELIVERED', 0, 80);
-
-          // Stats line
-          if (respondProgress > 0.6) {
-            const statsAlpha = Math.min(1, (respondProgress - 0.6) * 3);
-            ctx.globalAlpha = statsAlpha * 0.5;
-            ctx.font = "8px 'SF Mono', monospace";
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-            ctx.fillText('14 files · 1 PR · 3.2s', 0, 95);
-          }
-        }
-
         ctx.restore();
       }
 
-      // COMPLETE phase: graceful shutdown with dissolve effect
+      // COMPLETE: fade chat → session closed
       if (phase === 'COMPLETE') {
-        const completeProgress = Math.min(1, (elapsed - 29000) / 4000);
-
-        // Fading chat interface with glitch
-        ctx.save();
-        ctx.globalAlpha = Math.max(0, 1 - completeProgress * 1.5);
-        drawChatInterface(cx, cy, 1);
-        ctx.restore();
-
-        // Dissolving particles scatter outward
-        if (completeProgress > 0.2) {
-          const scatterProg = (completeProgress - 0.2) / 0.8;
-          ctx.save();
-          for (let i = 0; i < 12; i++) {
-            const angle = (i / 12) * Math.PI * 2 + elapsed * 0.001;
-            const dist = 20 + scatterProg * 120;
-            const px = cx + Math.cos(angle) * dist;
-            const py = cy + Math.sin(angle) * dist;
-            ctx.globalAlpha = Math.max(0, 0.6 - scatterProg * 0.8);
-            ctx.fillStyle = PRIMARY_COLOR;
-            ctx.beginPath();
-            ctx.arc(px, py, 1.5 - scatterProg, 0, Math.PI * 2);
-            ctx.fill();
-          }
-          ctx.restore();
+        const cp = Math.min(1, (elapsed-27000)/4000);
+        // Fading chat
+        if (cp < 0.6) {
+          ctx.save(); ctx.globalAlpha = 1 - cp * 1.8;
+          drawChat(cx, cy, 1, true); ctx.restore();
         }
-
-        // Session closed text with horizontal scan line
-        if (completeProgress > 0.3) {
+        // Session terminated
+        if (cp > 0.25) {
           ctx.save();
-          const textAlpha = Math.min(1, (completeProgress - 0.3) * 2);
-          ctx.globalAlpha = textAlpha;
-
-          // Scan line
-          const scanY = cy - 15 + Math.sin(elapsed * 0.003) * 5;
-          ctx.fillStyle = 'rgba(231, 118, 48, 0.03)';
-          ctx.fillRect(cx - 80, scanY, 160, 2);
-
-          // Box around text
-          ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 + Math.sin(elapsed * 0.005) * 0.05})`;
-          ctx.lineWidth = 0.5;
-          ctx.setLineDash([4, 4]);
-          if (ctx.roundRect) {
-            ctx.beginPath();
-            ctx.roundRect(cx - 75, cy - 18, 150, 36, 4);
-            ctx.stroke();
-          }
-          ctx.setLineDash([]);
-
-          // Text
-          ctx.font = "bold 11px 'SF Mono', monospace";
-          ctx.textAlign = 'center';
-          ctx.fillStyle = `rgba(231, 118, 48, ${0.5 + Math.sin(elapsed * 0.004) * 0.2})`;
-          ctx.fillText('SESSION TERMINATED', cx, cy + 1);
-
-          // Subtext
-          ctx.globalAlpha = textAlpha * 0.4;
-          ctx.font = "8px 'SF Mono', monospace";
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-          ctx.fillText('memory encrypted · vault sealed', cx, cy + 18);
-
+          ctx.globalAlpha = Math.min(0.7, (cp-0.25)*2);
+          ctx.font = "10px 'SF Mono', monospace"; ctx.textAlign = 'center';
+          ctx.fillStyle = `rgba(231,118,48,${0.4 + Math.sin(elapsed*0.003)*0.15})`;
+          ctx.fillText('[ SESSION TERMINATED ]', cx, cy - 5);
+          ctx.font = "7px 'SF Mono', monospace";
+          ctx.fillStyle = 'rgba(255,255,255,0.2)';
+          ctx.fillText('vault sealed · memory encrypted', cx, cy + 12);
+          // Subtle underline
+          ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 0.5;
+          ctx.beginPath(); ctx.moveTo(cx-55, cy+18); ctx.lineTo(cx+55, cy+18); ctx.stroke();
           ctx.restore();
         }
       }
 
+      // Phase label
       if (phase !== 'FLOW') {
-        const phaseStartTimes: Record<string, number> = { SPARK: 2500, CONNECT: 5000, FORM: 8000, GUARD: 11500, CHAT: 15000, RESPOND: 24000, COMPLETE: 29000 };
-        const phaseDurations: Record<string, number> = { SPARK: 2500, CONNECT: 3000, FORM: 3500, GUARD: 3500, CHAT: 9000, RESPOND: 5000, COMPLETE: 5000 };
-        const currentPhaseStart = phaseStartTimes[phase] || 0;
-        const phaseDuration = phaseDurations[phase] || 2500;
-        const progress = Math.min(1, Math.max(0, (elapsed - currentPhaseStart) / phaseDuration));
-
-        drawLabel(cx, cy, labelText, progress, phase === 'CHAT' || phase === 'RESPOND' || phase === 'COMPLETE');
+        const starts: Record<string,number> = { SPARK:2500, CONNECT:5000, FORM:7500, GUARD:10500, CHAT:14000, RESPOND:22000, COMPLETE:27000 };
+        const durs: Record<string,number> = { SPARK:2500, CONNECT:2500, FORM:3000, GUARD:3500, CHAT:8000, RESPOND:5000, COMPLETE:5000 };
+        const p = Math.min(1, Math.max(0, (elapsed-(starts[phase]||0))/(durs[phase]||2500)));
+        drawLabel(cx, cy, labelText, p, phase === 'CHAT' || phase === 'RESPOND' || phase === 'COMPLETE');
       }
 
       animationFrameId = requestAnimationFrame(render);
@@ -492,11 +313,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     resize();
     window.addEventListener('resize', resize);
     render();
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animationFrameId);
-    };
+    return () => { window.removeEventListener('resize', resize); cancelAnimationFrame(animationFrameId); };
   }, []);
 
   return (
