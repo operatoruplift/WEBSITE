@@ -170,6 +170,31 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         ctx.font = `${fs - 1}px 'SF Mono', monospace`; ctx.textAlign = 'left';
         ctx.fillStyle = `${GREEN}0.7)`;
         ctx.fillText('PR #47 · 14 files · 3.2s', statusX + 22, statusY + 14);
+
+        // Session closing progress bar below status
+        const barY = statusY + 32;
+        const barW = w - 40;
+        const barX = -w/2 + 20;
+        // Progress fills over the RESPOND phase (5 seconds)
+        const barProgress = Math.min(1, (t - 4.5) / 1.5);
+        // Track background
+        ctx.fillStyle = 'rgba(255,255,255,0.03)';
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(barX, barY, barW, 4, 2);
+        else ctx.rect(barX, barY, barW, 4);
+        ctx.fill();
+        // Progress fill
+        if (barProgress > 0) {
+          ctx.fillStyle = `${GREEN}0.3)`;
+          ctx.beginPath();
+          if (ctx.roundRect) ctx.roundRect(barX, barY, barW * barProgress, 4, 2);
+          else ctx.rect(barX, barY, barW * barProgress, 4);
+          ctx.fill();
+        }
+        // Label
+        ctx.font = `${fs - 2}px 'SF Mono', monospace`; ctx.textAlign = 'center';
+        ctx.fillStyle = 'rgba(255,255,255,0.2)';
+        ctx.fillText(barProgress >= 1 ? 'SESSION READY TO CLOSE' : 'ENCRYPTING MEMORY...', 0, barY + 16);
       }
 
       ctx.restore();
@@ -280,27 +305,26 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         drawChat(cx, cy, 1, true);
       }
 
-      // COMPLETE: fade chat → session closed
+      // COMPLETE: smooth crossfade from chat → session closed
       if (phase === 'COMPLETE') {
-        const cp = Math.min(1, (elapsed-27000)/4000);
-        // Fading chat
-        if (cp < 0.6) {
-          ctx.save(); ctx.globalAlpha = 1 - cp * 1.8;
+        const cp = Math.min(1, (elapsed-27000)/5000);
+        // Chat fades out smoothly over first 50% of phase
+        const chatAlpha = Math.max(0, 1 - cp * 2.5);
+        if (chatAlpha > 0.01) {
+          ctx.save(); ctx.globalAlpha = chatAlpha;
           drawChat(cx, cy, 1, true); ctx.restore();
         }
-        // Session terminated
-        if (cp > 0.25) {
+        // Session terminated text fades IN starting at 20%, full at 60%
+        const textAlpha = Math.max(0, Math.min(0.8, (cp - 0.2) * 2));
+        if (textAlpha > 0) {
           ctx.save();
-          ctx.globalAlpha = Math.min(0.7, (cp-0.25)*2);
+          ctx.globalAlpha = textAlpha;
           ctx.font = "10px 'SF Mono', monospace"; ctx.textAlign = 'center';
-          ctx.fillStyle = `rgba(231,118,48,${0.4 + Math.sin(elapsed*0.003)*0.15})`;
+          ctx.fillStyle = `rgba(231,118,48,${0.5 + Math.sin(elapsed*0.003)*0.15})`;
           ctx.fillText('[ SESSION TERMINATED ]', cx, cy - 5);
           ctx.font = "7px 'SF Mono', monospace";
-          ctx.fillStyle = 'rgba(255,255,255,0.2)';
+          ctx.fillStyle = 'rgba(255,255,255,0.25)';
           ctx.fillText('vault sealed · memory encrypted', cx, cy + 12);
-          // Subtle underline
-          ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 0.5;
-          ctx.beginPath(); ctx.moveTo(cx-55, cy+18); ctx.lineTo(cx+55, cy+18); ctx.stroke();
           ctx.restore();
         }
       }
