@@ -19,7 +19,7 @@ const StatsBar: React.FC = () => {
             <FadeIn key={stat.label} delay={i * 100}>
               <div className="text-center group">
                 <div className="text-4xl md:text-5xl font-black text-white mb-2 tracking-tight group-hover:text-primary transition-colors">
-                  {stat.value}<span className="text-primary">{stat.suffix}</span>
+                  {stat.value}{stat.suffix}
                 </div>
                 <div className="text-xs text-gray-500 uppercase tracking-widest font-mono">{stat.label}</div>
               </div>

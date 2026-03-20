@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronRight, Logo } from '@/src/components/Icons';
+import { AnthropicLogo, OpenAILogo, GoogleLogo, MetaLogo, XAILogo } from '@/src/components/ProviderLogos';
 import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn, GlideText } from '@/src/components/Animators';
 
@@ -133,25 +134,26 @@ const Security: React.FC = () => {
                     {/* Orbiting LLM provider logos */}
                     <div className="absolute w-full h-full flex items-center justify-center transform scale-75 md:scale-100" suppressHydrationWarning>
                         {mounted && [
-                          { label: 'A', title: 'Anthropic' },
-                          { label: 'G', title: 'Google' },
-                          { label: 'O', title: 'OpenAI' },
-                          { label: 'M', title: 'Meta' },
-                          { label: 'X', title: 'xAI' },
+                          { Logo: AnthropicLogo, title: 'Anthropic' },
+                          { Logo: GoogleLogo, title: 'Google' },
+                          { Logo: OpenAILogo, title: 'OpenAI' },
+                          { Logo: MetaLogo, title: 'Meta' },
+                          { Logo: XAILogo, title: 'xAI' },
                         ].map((llm, i) => {
                             const angle = (i * (360/5) + time * 10) * (Math.PI / 180);
                             const radius = 100;
                             const x = Math.cos(angle) * radius;
                             const y = Math.sin(angle) * radius;
+                            const LLMLogo = llm.Logo;
 
                             return (
                                 <React.Fragment key={i}>
                                     <div
-                                        className="absolute w-10 h-10 bg-[#1a1a1a] border border-white/10 rounded-lg flex items-center justify-center shadow-lg transition-all duration-500"
+                                        className="absolute w-10 h-10 bg-[#1a1a1a] border border-white/10 rounded-lg flex items-center justify-center shadow-lg"
                                         style={{ transform: `translate(${x}px, ${y}px)` }}
                                         title={llm.title}
                                     >
-                                        <span className="text-[9px] font-bold font-mono text-gray-400">{llm.label}</span>
+                                        <LLMLogo className="w-4 h-4 text-gray-400" />
                                     </div>
                                 </React.Fragment>
                             );
