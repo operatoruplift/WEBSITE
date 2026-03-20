@@ -121,11 +121,23 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
       ctx.lineTo(w / 2, -h / 2 + 30);
       ctx.stroke();
 
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-      ctx.beginPath();
-      ctx.arc(-w / 2 + 20, -h / 2 + 15, 2, 0, Math.PI * 2);
-      ctx.arc(-w / 2 + 32, -h / 2 + 15, 2, 0, Math.PI * 2);
-      ctx.fill();
+      // Window dots
+      ctx.fillStyle = 'rgba(255, 80, 80, 0.5)';
+      ctx.beginPath(); ctx.arc(-w / 2 + 16, -h / 2 + 15, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'rgba(255, 180, 0, 0.5)';
+      ctx.beginPath(); ctx.arc(-w / 2 + 28, -h / 2 + 15, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'rgba(80, 200, 80, 0.5)';
+      ctx.beginPath(); ctx.arc(-w / 2 + 40, -h / 2 + 15, 3, 0, Math.PI * 2); ctx.fill();
+
+      // Title text
+      ctx.font = "8px 'SF Mono', monospace";
+      ctx.textAlign = 'center';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+      ctx.fillText('UPLIFT SESSION', 0, -h / 2 + 18);
+
+      // Online indicator
+      ctx.fillStyle = 'rgba(34, 197, 94, 0.8)';
+      ctx.beginPath(); ctx.arc(w / 2 - 16, -h / 2 + 15, 3, 0, Math.PI * 2); ctx.fill();
 
       // Bubbles appear in first 60% of chat progress, leaving 40% for viewing
       const timeInChat = Math.min(5, progress * 8);
@@ -324,75 +336,144 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         drawChatInterface(cx, cy, Math.min(1, (elapsed - 15000) / 8000));
       }
 
-      // RESPOND phase: show completed chat with success indicator
+      // RESPOND phase: completed chat + success indicator + stats
       if (phase === 'RESPOND') {
-        // Draw the chat interface at full progress (all bubbles visible)
         drawChatInterface(cx, cy, 1);
 
-        // Draw success checkmark overlay
-        const respondProgress = Math.min(1, (elapsed - 24000) / 1500);
+        const respondProgress = Math.min(1, (elapsed - 24000) / 2000);
         ctx.save();
         ctx.translate(cx, cy);
+
+        // Expanding green ring
+        const ringRadius = 20 + respondProgress * 30;
+        ctx.globalAlpha = respondProgress * 0.15;
+        ctx.strokeStyle = 'rgba(34, 197, 94, 1)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(0, 50, ringRadius, 0, Math.PI * 2);
+        ctx.stroke();
+
         ctx.globalAlpha = respondProgress;
 
         // Success glow
-        const glowRadius = 30 + respondProgress * 10;
-        const gradient = ctx.createRadialGradient(0, 50, 0, 0, 50, glowRadius);
-        gradient.addColorStop(0, 'rgba(34, 197, 94, 0.3)');
-        gradient.addColorStop(1, 'transparent');
-        ctx.fillStyle = gradient;
+        const glowGrad = ctx.createRadialGradient(0, 50, 0, 0, 50, 35);
+        glowGrad.addColorStop(0, 'rgba(34, 197, 94, 0.4)');
+        glowGrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = glowGrad;
         ctx.beginPath();
-        ctx.arc(0, 50, glowRadius, 0, Math.PI * 2);
+        ctx.arc(0, 50, 35, 0, Math.PI * 2);
         ctx.fill();
 
-        // Checkmark circle
-        ctx.strokeStyle = 'rgba(34, 197, 94, 0.8)';
-        ctx.lineWidth = 2;
+        // Checkmark circle with fill
+        ctx.fillStyle = 'rgba(34, 197, 94, 0.15)';
         ctx.beginPath();
-        ctx.arc(0, 50, 16, 0, Math.PI * 2);
+        ctx.arc(0, 50, 18, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(34, 197, 94, 0.9)';
+        ctx.lineWidth = 2;
         ctx.stroke();
 
-        // Checkmark
+        // Animated checkmark draw
+        const checkProg = Math.min(1, respondProgress * 2.5);
         ctx.strokeStyle = 'rgba(34, 197, 94, 1)';
         ctx.lineWidth = 2.5;
         ctx.beginPath();
-        ctx.moveTo(-6, 50);
-        ctx.lineTo(-1, 55);
-        ctx.lineTo(7, 44);
+        if (checkProg < 0.4) {
+          const t = checkProg / 0.4;
+          ctx.moveTo(-6, 50);
+          ctx.lineTo(-6 + 5 * t, 50 + 5 * t);
+        } else {
+          const t = (checkProg - 0.4) / 0.6;
+          ctx.moveTo(-6, 50);
+          ctx.lineTo(-1, 55);
+          ctx.lineTo(-1 + 8 * t, 55 - 11 * t);
+        }
         ctx.stroke();
 
-        // "Delivered" text
-        ctx.font = "9px 'SF Mono', monospace";
-        ctx.textAlign = 'center';
-        ctx.fillStyle = 'rgba(34, 197, 94, 0.7)';
-        ctx.fillText('DELIVERED', 0, 78);
+        // "DELIVERED" text
+        if (respondProgress > 0.4) {
+          const textAlpha = Math.min(1, (respondProgress - 0.4) * 2);
+          ctx.globalAlpha = textAlpha;
+          ctx.font = "bold 9px 'SF Mono', monospace";
+          ctx.textAlign = 'center';
+          ctx.fillStyle = 'rgba(34, 197, 94, 0.8)';
+          ctx.fillText('TASK DELIVERED', 0, 80);
+
+          // Stats line
+          if (respondProgress > 0.6) {
+            const statsAlpha = Math.min(1, (respondProgress - 0.6) * 3);
+            ctx.globalAlpha = statsAlpha * 0.5;
+            ctx.font = "8px 'SF Mono', monospace";
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.fillText('14 files · 1 PR · 3.2s', 0, 95);
+          }
+        }
 
         ctx.restore();
       }
 
-      // COMPLETE phase: fade everything out gracefully
+      // COMPLETE phase: graceful shutdown with dissolve effect
       if (phase === 'COMPLETE') {
-        const completeProgress = Math.min(1, (elapsed - 29000) / 3000);
-        // Fading chat interface
+        const completeProgress = Math.min(1, (elapsed - 29000) / 4000);
+
+        // Fading chat interface with glitch
         ctx.save();
-        ctx.globalAlpha = 1 - completeProgress;
+        ctx.globalAlpha = Math.max(0, 1 - completeProgress * 1.5);
         drawChatInterface(cx, cy, 1);
         ctx.restore();
 
-        // Session closed indicator
+        // Dissolving particles scatter outward
+        if (completeProgress > 0.2) {
+          const scatterProg = (completeProgress - 0.2) / 0.8;
+          ctx.save();
+          for (let i = 0; i < 12; i++) {
+            const angle = (i / 12) * Math.PI * 2 + elapsed * 0.001;
+            const dist = 20 + scatterProg * 120;
+            const px = cx + Math.cos(angle) * dist;
+            const py = cy + Math.sin(angle) * dist;
+            ctx.globalAlpha = Math.max(0, 0.6 - scatterProg * 0.8);
+            ctx.fillStyle = PRIMARY_COLOR;
+            ctx.beginPath();
+            ctx.arc(px, py, 1.5 - scatterProg, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.restore();
+        }
+
+        // Session closed text with horizontal scan line
         if (completeProgress > 0.3) {
           ctx.save();
-          ctx.globalAlpha = Math.min(1, (completeProgress - 0.3) * 2);
-          ctx.font = "11px 'SF Mono', monospace";
-          ctx.textAlign = 'center';
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-          ctx.fillText('[ SESSION TERMINATED ]', cx, cy);
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+          const textAlpha = Math.min(1, (completeProgress - 0.3) * 2);
+          ctx.globalAlpha = textAlpha;
+
+          // Scan line
+          const scanY = cy - 15 + Math.sin(elapsed * 0.003) * 5;
+          ctx.fillStyle = 'rgba(231, 118, 48, 0.03)';
+          ctx.fillRect(cx - 80, scanY, 160, 2);
+
+          // Box around text
+          ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 + Math.sin(elapsed * 0.005) * 0.05})`;
           ctx.lineWidth = 0.5;
-          ctx.beginPath();
-          ctx.moveTo(cx - 60, cy + 8);
-          ctx.lineTo(cx + 60, cy + 8);
-          ctx.stroke();
+          ctx.setLineDash([4, 4]);
+          if (ctx.roundRect) {
+            ctx.beginPath();
+            ctx.roundRect(cx - 75, cy - 18, 150, 36, 4);
+            ctx.stroke();
+          }
+          ctx.setLineDash([]);
+
+          // Text
+          ctx.font = "bold 11px 'SF Mono', monospace";
+          ctx.textAlign = 'center';
+          ctx.fillStyle = `rgba(231, 118, 48, ${0.5 + Math.sin(elapsed * 0.004) * 0.2})`;
+          ctx.fillText('SESSION TERMINATED', cx, cy + 1);
+
+          // Subtext
+          ctx.globalAlpha = textAlpha * 0.4;
+          ctx.font = "8px 'SF Mono', monospace";
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+          ctx.fillText('memory encrypted · vault sealed', cx, cy + 18);
+
           ctx.restore();
         }
       }

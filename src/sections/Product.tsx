@@ -24,7 +24,7 @@ const Product: React.FC = () => {
     }
   };
 
-  const getStepHeight = () => window.innerHeight * 2;
+  const getStepHeight = () => window.innerHeight * 3;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -104,7 +104,7 @@ const Product: React.FC = () => {
     <div
       id="product"
       ref={sectionRef}
-      className="relative bg-slanted-lines w-full lg:min-h-[1100vh] min-h-screen"
+      className="relative bg-slanted-lines w-full lg:min-h-[1600vh] min-h-screen"
       style={{ backgroundColor: '#050505' }}
     >
 
