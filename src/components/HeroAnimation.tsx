@@ -110,7 +110,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
 
       // Messages
       const t = Math.min(6, progress * 8);
-      const fs = isMobile ? 6 : 7;
+      const fs = isMobile ? 7 : 9;
       const msgs = [
         { at: 0.3, user: true,  text: 'Refactor auth module' },
         { at: 1.2, user: false, text: 'Scanning 14 files...' },
@@ -125,7 +125,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         const x = m.user ? (w/2 - 16 - bw) : (-w/2 + 16);
         const y = -h/2 + 38 + (i * 42);
         // Bubble
-        ctx.fillStyle = m.user ? 'rgba(255,255,255,0.06)' : 'rgba(231,118,48,0.08)';
+        ctx.fillStyle = m.user ? 'rgba(255,255,255,0.1)' : 'rgba(231,118,48,0.15)';
         ctx.beginPath();
         if (ctx.roundRect) ctx.roundRect(x, y, bw, bh, 5);
         else ctx.rect(x, y, bw, bh);
@@ -141,7 +141,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
           ctx.globalAlpha = 1;
         } else if (m.text) {
           ctx.font = `${fs}px 'SF Mono', monospace`; ctx.textAlign = 'left';
-          ctx.fillStyle = m.user ? 'rgba(255,255,255,0.5)' : `rgba(231,118,48,0.6)`;
+          ctx.fillStyle = m.user ? 'rgba(255,255,255,0.8)' : `rgba(231,118,48,0.85)`;
           ctx.fillText(m.text, x+7, y+13);
         }
       });
@@ -255,7 +255,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         drawChat(cx, cy, 1, true);
         // Success badge below the chat window
         ctx.save(); ctx.translate(cx, cy);
-        const badgeY = (isMobile ? 110 : 140);
+        const badgeY = (isMobile ? 120 : 160);
         ctx.globalAlpha = Math.min(1, rp * 2);
         // Badge background — opaque dark fill so text is readable over chat
         ctx.fillStyle = 'rgba(5, 5, 8, 0.95)';

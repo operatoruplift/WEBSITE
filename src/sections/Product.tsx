@@ -8,6 +8,8 @@ const Product: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [animStep, setAnimStep] = useState(0);
+  const lastChangeTime = useRef(0);
+  const MIN_DISPLAY_MS = 10000; // minimum 10 seconds per feature
 
   const data = APP_CONTENT.product;
   const features = data.features;
@@ -52,8 +54,13 @@ const Product: React.FC = () => {
       );
 
       if (index !== activeIndex) {
-        setActiveIndex(index);
-        setAnimStep(0);
+        const now = Date.now();
+        // Only allow switching if minimum display time has elapsed
+        if (now - lastChangeTime.current >= MIN_DISPLAY_MS) {
+          lastChangeTime.current = now;
+          setActiveIndex(index);
+          setAnimStep(0);
+        }
       }
     };
 
@@ -79,6 +86,7 @@ const Product: React.FC = () => {
     const targetY = sectionTop + featureProgress * totalScrollable;
 
     window.scrollTo({ top: targetY, behavior: 'smooth' });
+    lastChangeTime.current = Date.now();
     setActiveIndex(index);
     setAnimStep(0);
   };
