@@ -108,9 +108,10 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
       // Online dot
       ctx.fillStyle = `${GREEN}0.7)`; ctx.beginPath(); ctx.arc(w/2-14, -h/2+14, 2.5, 0, Math.PI*2); ctx.fill();
 
-      // Messages
+      // Messages — tighter spacing (32px between bubbles)
       const t = Math.min(6, progress * 8);
       const fs = isMobile ? 7 : 9;
+      const gap = 32;
       const msgs = [
         { at: 0.3, user: true,  text: 'Refactor auth module' },
         { at: 1.2, user: false, text: 'Scanning 14 files...' },
@@ -123,7 +124,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         const bw = m.user ? w * 0.6 : w * 0.65;
         const bh = 20;
         const x = m.user ? (w/2 - 16 - bw) : (-w/2 + 16);
-        const y = -h/2 + 38 + (i * 42);
+        const y = -h/2 + 38 + (i * gap);
         // Bubble
         ctx.fillStyle = m.user ? 'rgba(255,255,255,0.1)' : 'rgba(231,118,48,0.15)';
         ctx.beginPath();
@@ -145,6 +146,31 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
           ctx.fillText(m.text, x+7, y+13);
         }
       });
+
+      // Show success status line inside chat when complete
+      if (showComplete && t > 4.5) {
+        const statusY = -h/2 + 38 + (4 * gap);
+        // Green status bar
+        const statusW = w * 0.75;
+        const statusX = -w/2 + (w - statusW) / 2;
+        ctx.fillStyle = `${GREEN}0.08)`;
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(statusX, statusY, statusW, 22, 5);
+        else ctx.rect(statusX, statusY, statusW, 22);
+        ctx.fill();
+        ctx.strokeStyle = `${GREEN}0.2)`; ctx.lineWidth = 0.5; ctx.stroke();
+        // Checkmark
+        ctx.strokeStyle = `${GREEN}0.9)`; ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(statusX + 8, statusY + 11);
+        ctx.lineTo(statusX + 11, statusY + 14);
+        ctx.lineTo(statusX + 16, statusY + 8);
+        ctx.stroke();
+        // Status text
+        ctx.font = `${fs - 1}px 'SF Mono', monospace`; ctx.textAlign = 'left';
+        ctx.fillStyle = `${GREEN}0.7)`;
+        ctx.fillText('PR #47 · 14 files · 3.2s', statusX + 22, statusY + 14);
+      }
 
       ctx.restore();
     };
@@ -249,29 +275,9 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         drawChat(cx, cy, Math.min(1, (elapsed-14000)/6000), false);
       }
 
-      // RESPOND: show completed conversation + success badge below
+      // RESPOND: show completed conversation with success status inside the chat
       if (phase === 'RESPOND') {
-        const rp = Math.min(1, (elapsed-22000)/2000);
         drawChat(cx, cy, 1, true);
-        // Success badge below the chat window
-        ctx.save(); ctx.translate(cx, cy);
-        const badgeY = (isMobile ? 120 : 160);
-        ctx.globalAlpha = Math.min(1, rp * 2);
-        // Badge background — opaque dark fill so text is readable over chat
-        ctx.fillStyle = 'rgba(5, 5, 8, 0.95)';
-        ctx.beginPath();
-        if (ctx.roundRect) ctx.roundRect(-50, badgeY-12, 100, 24, 12);
-        else ctx.rect(-50, badgeY-12, 100, 24);
-        ctx.fill();
-        ctx.strokeStyle = `${GREEN}0.4)`; ctx.lineWidth = 0.5; ctx.stroke();
-        // Checkmark + text
-        if (rp > 0.3) {
-          ctx.strokeStyle = `${GREEN}1)`; ctx.lineWidth = 2;
-          ctx.beginPath(); ctx.moveTo(-22, badgeY); ctx.lineTo(-18, badgeY+4); ctx.lineTo(-12, badgeY-4); ctx.stroke();
-          ctx.font = "bold 8px 'SF Mono', monospace"; ctx.textAlign = 'left';
-          ctx.fillStyle = `${GREEN}0.9)`; ctx.fillText('DELIVERED', -6, badgeY+3);
-        }
-        ctx.restore();
       }
 
       // COMPLETE: fade chat → session closed
