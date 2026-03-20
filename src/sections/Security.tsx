@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronRight } from '@/src/components/Icons';
+import { ChevronRight, Logo } from '@/src/components/Icons';
 import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn, GlideText } from '@/src/components/Animators';
 
@@ -126,37 +126,37 @@ const Security: React.FC = () => {
 
                 {/* Adjusted scale/padding to fix cropping */}
                 <div className="h-64 w-full flex items-center justify-center relative bg-gradient-to-t from-black/50 to-transparent overflow-visible">
-                    <div className="relative z-20 flex flex-col items-center justify-center w-24 h-24 bg-blue-500/10 border border-blue-500/50 rounded-xl backdrop-blur-md shadow-[0_0_20px_rgba(59,130,246,0.2)]">
-                        <div className="w-8 h-8 border-2 border-blue-500 rounded-md"></div>
-                        <span className="text-[7px] font-mono text-blue-400 mt-2 tracking-wider text-center leading-tight">OPERATOR<br/>UPLIFT</span>
+                    <div className="relative z-20 flex flex-col items-center justify-center w-24 h-24 bg-primary/10 border border-primary/50 rounded-xl backdrop-blur-md shadow-[0_0_20px_rgba(231,118,48,0.2)]">
+                        <Logo className="w-10 h-10" />
                     </div>
 
-                    {/* Scaled down container to keep orbiting elements within bounds */}
+                    {/* Orbiting LLM provider logos */}
                     <div className="absolute w-full h-full flex items-center justify-center transform scale-75 md:scale-100" suppressHydrationWarning>
-                        {mounted && [0, 1, 2, 3, 4].map(i => {
+                        {mounted && [
+                          { label: 'A', title: 'Anthropic' },
+                          { label: 'G', title: 'Google' },
+                          { label: 'O', title: 'OpenAI' },
+                          { label: 'M', title: 'Meta' },
+                          { label: 'X', title: 'xAI' },
+                        ].map((llm, i) => {
                             const angle = (i * (360/5) + time * 10) * (Math.PI / 180);
                             const radius = 100;
                             const x = Math.cos(angle) * radius;
                             const y = Math.sin(angle) * radius;
-                            
+
                             return (
                                 <React.Fragment key={i}>
-                                    <div 
+                                    <div
                                         className="absolute w-10 h-10 bg-[#1a1a1a] border border-white/10 rounded-lg flex items-center justify-center shadow-lg transition-all duration-500"
-                                        style={{ 
-                                            transform: `translate(${x}px, ${y}px)`,
-                                        }}
+                                        style={{ transform: `translate(${x}px, ${y}px)` }}
+                                        title={llm.title}
                                     >
-                                        {i === 0 && <div className="w-4 h-4 rounded-full bg-green-500/50"></div>}
-                                        {i === 1 && <div className="w-4 h-4 border border-amber-500/50"></div>}
-                                        {i === 2 && <div className="w-4 h-4 bg-orange-500/50 rotate-45"></div>}
-                                        {i === 3 && <div className="w-4 h-4 border-b-2 border-red-500/50 rounded-full"></div>}
-                                        {i === 4 && <div className="w-4 h-1 bg-white/50"></div>}
+                                        <span className="text-[9px] font-bold font-mono text-gray-400">{llm.label}</span>
                                     </div>
                                 </React.Fragment>
                             );
                         })}
-                        <div className="absolute w-64 h-64 border border-blue-500/5 rounded-full animate-ping opacity-20" style={{ animationDuration: '3s' }}></div>
+                        <div className="absolute w-64 h-64 border border-primary/5 rounded-full animate-ping opacity-20" style={{ animationDuration: '3s' }}></div>
                     </div>
                 </div>
             </TechCard>
