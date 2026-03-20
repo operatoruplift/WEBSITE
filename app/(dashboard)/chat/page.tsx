@@ -170,7 +170,7 @@ export default function ChatPage() {
                     <div className="flex-1 overflow-y-auto scrollbar-none" onClick={() => setShowModelPicker(false)}>
                         {!activeSession || activeSession.messages.length === 0 ? (
                             <div className="h-full flex flex-col items-center justify-center p-8">
-                                <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(153,69,255,0.3)]" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}><Sparkles size={36} className="text-white" /></div>
+                                <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}><Sparkles size={36} className="text-white" /></div>
                                 <h1 className="text-3xl font-bold text-white mb-2 text-center">How can I help you?</h1>
                                 <p className="text-gray-500 text-sm text-center mb-8 max-w-md">Powered by <span className={activeModel.color + ' font-bold'}>{activeModel.label}</span> · Ask me anything</p>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl w-full">
@@ -187,10 +187,10 @@ export default function ChatPage() {
                             <div className="p-4 md:p-8 space-y-8 max-w-4xl mx-auto">
                                 {activeSession.messages.map((msg, index) => (
                                     <div key={msg.id} className={`flex gap-4 animate-fadeInUp ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`} style={{ animationDelay: `${Math.min(index * 30, 300)}ms` }}>
-                                        {msg.role === 'assistant' && <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(153,69,255,0.3)]" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}><Bot size={20} className="text-white" /></div>}
+                                        {msg.role === 'assistant' && <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}><Bot size={20} className="text-white" /></div>}
                                         <div className={`group relative max-w-[80%] md:max-w-[72%] ${msg.role === 'user' ? 'order-first' : ''}`}>
                                             {msg.role === 'assistant' && msg.model && <p className="text-[10px] font-mono text-gray-600 mb-1 ml-1">{MODELS.find(m => m.id === msg.model)?.label || msg.model}</p>}
-                                            <div className={`p-5 rounded-2xl ${msg.role === 'user' ? 'bg-gradient-to-br from-[#E77630] to-[#6633CC] text-white rounded-br-md shadow-[0_0_20px_rgba(153,69,255,0.2)]' : 'bg-white/5 border border-white/10 text-white rounded-bl-md'}`}>
+                                            <div className={`p-5 rounded-2xl ${msg.role === 'user' ? 'bg-gradient-to-br from-[#E77630] to-[#F59E0B] text-white rounded-br-md shadow-[0_0_20px_rgba(231,118,48,0.2)]' : 'bg-white/5 border border-white/10 text-white rounded-bl-md'}`}>
                                                 {msg.role === 'assistant' ? renderMarkdown(msg.content) : <p className="text-[15px] leading-relaxed whitespace-pre-wrap">{msg.content}</p>}
                                             </div>
                                             {msg.role === 'assistant' && <button onClick={() => copyMessage(msg.content, msg.id)} className="absolute -bottom-3 right-2 opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-white/10 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">{copiedId === msg.id ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}{copiedId === msg.id ? 'Copied' : 'Copy'}</button>}
@@ -212,7 +212,7 @@ export default function ChatPage() {
                                     className="flex-1 bg-transparent text-white placeholder-gray-600 focus:outline-none resize-none text-[15px] leading-relaxed min-h-[40px] max-h-40" style={{ height: 'auto' }}
                                     onInput={e => { const t = e.currentTarget; t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight, 160) + 'px'; }} />
                                 <button onClick={() => showToast('Voice input coming soon', 'info')} className="p-2 rounded-xl text-gray-600 hover:text-gray-400 hover:bg-white/5 transition-all shrink-0"><Mic size={18} /></button>
-                                <button onClick={handleSend} disabled={!input.trim() || isLoading} className="w-10 h-10 rounded-xl flex items-center justify-center transition-all shrink-0 disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(153,69,255,0.3)] hover:shadow-[0_0_20px_rgba(153,69,255,0.5)]" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}>
+                                <button onClick={handleSend} disabled={!input.trim() || isLoading} className="w-10 h-10 rounded-xl flex items-center justify-center transition-all shrink-0 disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(231,118,48,0.3)] hover:shadow-[0_0_20px_rgba(231,118,48,0.5)]" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}>
                                     {isLoading ? <Loader2 size={18} className="animate-spin text-white" /> : <Send size={18} className="text-white" />}
                                 </button>
                             </div>

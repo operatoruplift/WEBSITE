@@ -148,7 +148,7 @@ const Security: React.FC = () => {
                                         }}
                                     >
                                         {i === 0 && <div className="w-4 h-4 rounded-full bg-green-500/50"></div>}
-                                        {i === 1 && <div className="w-4 h-4 border border-purple-500/50"></div>}
+                                        {i === 1 && <div className="w-4 h-4 border border-amber-500/50"></div>}
                                         {i === 2 && <div className="w-4 h-4 bg-orange-500/50 rotate-45"></div>}
                                         {i === 3 && <div className="w-4 h-4 border-b-2 border-red-500/50 rounded-full"></div>}
                                         {i === 4 && <div className="w-4 h-1 bg-white/50"></div>}

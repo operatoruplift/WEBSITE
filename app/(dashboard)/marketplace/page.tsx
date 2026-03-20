@@ -59,7 +59,7 @@ export default function MarketplacePage() {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fadeInUp">
                         <div>
                             <div className="flex items-center gap-3 mb-2">
-                                <div className="w-10 h-10 rounded-xl flex items-center justify-center relative shadow-[0_0_20px_rgba(153,69,255,0.3)]" style={{ background: 'linear-gradient(135deg, #F59E0B, #E77630)' }}><Store size={20} className="text-white" /></div>
+                                <div className="w-10 h-10 rounded-xl flex items-center justify-center relative shadow-[0_0_20px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #F59E0B, #E77630)' }}><Store size={20} className="text-white" /></div>
                                 <Badge variant="default" className="bg-[#E77630]/10 text-[#E77630] border-[#E77630]/20 text-[10px] tracking-widest font-mono">v2.0 ORCHESTRATION</Badge>
                             </div>
                             <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white">Agent Marketplace</h1>
@@ -81,7 +81,7 @@ export default function MarketplacePage() {
                     </div>
                     <div className="flex flex-col xl:flex-row gap-4 justify-between items-start xl:items-center bg-black/40 p-2 rounded-2xl border border-white/5 backdrop-blur-md animate-fadeInUp" style={{ animationDelay: '200ms' }}>
                         <div className="flex flex-1 w-full xl:w-auto overflow-x-auto gap-1 pb-2 xl:pb-0 scrollbar-none">
-                            {CATEGORIES.map(cat => <button key={cat} onClick={() => setCategory(cat)} className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wide whitespace-nowrap transition-all duration-300 ${category === cat ? 'bg-gradient-to-r from-[#E77630] to-[#F59E0B] text-white shadow-[0_0_15px_rgba(153,69,255,0.4)]' : 'bg-transparent text-gray-400 hover:text-white hover:bg-white/5'}`}>{cat}</button>)}
+                            {CATEGORIES.map(cat => <button key={cat} onClick={() => setCategory(cat)} className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wide whitespace-nowrap transition-all duration-300 ${category === cat ? 'bg-gradient-to-r from-[#E77630] to-[#F59E0B] text-white shadow-[0_0_15px_rgba(231,118,48,0.4)]' : 'bg-transparent text-gray-400 hover:text-white hover:bg-white/5'}`}>{cat}</button>)}
                         </div>
                         <div className="flex w-full xl:w-auto gap-2 shrink-0">
                             <div className="relative flex-1 xl:w-64"><Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" /><input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search agents..." aria-label="Search marketplace agents" className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:border-[#F59E0B]/50 focus:outline-none transition-all" /></div>

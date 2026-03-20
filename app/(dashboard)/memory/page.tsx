@@ -30,7 +30,7 @@ const DEMO_NODES: MemoryNode[] = [
 const typeConfig = {
     document: { icon: FileText, color: 'text-blue-400', bg: 'bg-blue-400/10' },
     code: { icon: Code, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
-    url: { icon: Globe, color: 'text-purple-400', bg: 'bg-purple-400/10' },
+    url: { icon: Globe, color: 'text-amber-400', bg: 'bg-amber-400/10' },
     note: { icon: FileText, color: 'text-amber-400', bg: 'bg-amber-400/10' },
 };
 

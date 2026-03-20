@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Bot, MessageSquare, Settings, LayoutDashboard, ChevronDown, Sparkles, Shield, Search, Plus, Cpu, Store, Bell, GitBranch, Brain, BarChart3, User } from 'lucide-react';
+import { Bot, MessageSquare, Settings, LayoutDashboard, ChevronDown, Sparkles, Shield, Search, Plus, Store, Bell, GitBranch, Brain, BarChart3, User } from 'lucide-react';
+import { Logo } from '@/src/components/Icons';
 import { cn } from '@/lib/utils';
 
 interface NavItem { href: string; label: string; icon: React.ComponentType<{ size?: number; className?: string }>; gradient: string; }
@@ -14,25 +15,25 @@ const NAV_SECTIONS: NavSection[] = [
         title: 'Core',
         items: [
             { href: '/app', label: 'Cockpit', icon: LayoutDashboard, gradient: 'from-primary/20 to-orange-500/10' },
-            { href: '/chat', label: 'Chat', icon: MessageSquare, gradient: 'from-blue-500/20 to-cyan-500/10' },
+            { href: '/chat', label: 'Chat', icon: MessageSquare, gradient: 'from-amber-500/20 to-orange-500/10' },
         ],
     },
     {
         title: 'AI',
         items: [
             { href: '/agents', label: 'My Agents', icon: Bot, gradient: 'from-orange-500/20 to-amber-500/10' },
-            { href: '/marketplace', label: 'Agent Store', icon: Store, gradient: 'from-purple-500/20 to-blue-500/10' },
-            { href: '/agents/builder', label: 'Builder', icon: Sparkles, gradient: 'from-pink-500/20 to-rose-500/10' },
-            { href: '/workflows', label: 'Workflows', icon: GitBranch, gradient: 'from-violet-500/20 to-purple-500/10' },
+            { href: '/marketplace', label: 'Agent Store', icon: Store, gradient: 'from-orange-500/20 to-amber-500/10' },
+            { href: '/agents/builder', label: 'Builder', icon: Sparkles, gradient: 'from-orange-400/20 to-yellow-500/10' },
+            { href: '/workflows', label: 'Workflows', icon: GitBranch, gradient: 'from-amber-400/20 to-orange-500/10' },
             { href: '/memory', label: 'Memory Bank', icon: Brain, gradient: 'from-amber-500/20 to-orange-500/10' },
         ],
     },
     {
         title: 'Account',
         items: [
-            { href: '/analytics', label: 'Analytics', icon: BarChart3, gradient: 'from-cyan-500/20 to-blue-500/10' },
+            { href: '/analytics', label: 'Analytics', icon: BarChart3, gradient: 'from-orange-500/20 to-yellow-500/10' },
             { href: '/notifications', label: 'Notifications', icon: Bell, gradient: 'from-sky-500/20 to-blue-500/10' },
-            { href: '/profile', label: 'Profile', icon: User, gradient: 'from-indigo-500/20 to-blue-500/10' },
+            { href: '/profile', label: 'Profile', icon: User, gradient: 'from-amber-500/20 to-orange-400/10' },
             { href: '/security', label: 'Security', icon: Shield, gradient: 'from-red-500/20 to-rose-500/10' },
             { href: '/settings', label: 'Settings', icon: Settings, gradient: 'from-gray-500/20 to-slate-500/10' },
         ],
@@ -76,9 +77,7 @@ export function CockpitSidebar() {
             style={{ background: 'rgba(5,5,8,0.85)', backdropFilter: 'blur(20px)' }}>
             <div className="px-5 py-4 border-b border-white/5">
                 <Link href="/" className="flex items-center space-x-2.5">
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}>
-                        <Cpu size={16} className="text-white" />
-                    </div>
+                    <Logo className="w-8 h-8" />
                     <span className="font-bold text-base text-white tracking-tight">Operator<span style={{ color: '#E77630' }}>Uplift</span></span>
                 </Link>
             </div>

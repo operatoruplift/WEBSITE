@@ -5,10 +5,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
     MessageSquare, Workflow, Bot, Code, Sparkles, TrendingUp,
-    Brain, Zap, ArrowRight, Activity, Cpu, Plus, Loader2, Shield, Network
+    Brain, Zap, ArrowRight, Activity, Plus, Loader2, Shield, Network
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
+import { Logo } from '@/src/components/Icons';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
@@ -81,8 +82,8 @@ export default function DashboardPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
                         <div className="relative z-10">
                             <div className="flex items-center gap-3 mb-2">
-                                <div className="w-10 h-10 rounded-xl flex items-center justify-center relative shadow-[0_0_20px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #E77630, #E77630, #F59E0B)' }}>
-                                    <Cpu size={20} className="text-white" />
+                                <div className="w-10 h-10 rounded-xl flex items-center justify-center relative shadow-[0_0_20px_rgba(231,118,48,0.3)]">
+                                    <Logo className="w-10 h-10" />
                                 </div>
                                 <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2 py-1 rounded-md text-[10px] uppercase tracking-widest font-mono flex items-center gap-1.5 backdrop-blur-md">
                                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Uplift Core Online
