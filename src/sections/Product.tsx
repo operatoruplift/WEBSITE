@@ -109,7 +109,7 @@ const Product: React.FC = () => {
     <div
       id="product"
       ref={sectionRef}
-      className="relative bg-slanted-lines w-full lg:min-h-[1600vh] min-h-screen"
+      className="relative bg-slanted-lines w-full lg:min-h-[3000vh] min-h-screen"
       style={{ backgroundColor: '#050505' }}
     >
 

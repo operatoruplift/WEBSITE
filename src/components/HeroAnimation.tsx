@@ -257,19 +257,19 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         ctx.save(); ctx.translate(cx, cy);
         const badgeY = (isMobile ? 110 : 140);
         ctx.globalAlpha = Math.min(1, rp * 2);
-        // Badge background
-        ctx.fillStyle = `${GREEN}0.1)`;
+        // Badge background — opaque dark fill so text is readable over chat
+        ctx.fillStyle = 'rgba(5, 5, 8, 0.95)';
         ctx.beginPath();
         if (ctx.roundRect) ctx.roundRect(-50, badgeY-12, 100, 24, 12);
         else ctx.rect(-50, badgeY-12, 100, 24);
         ctx.fill();
-        ctx.strokeStyle = `${GREEN}0.3)`; ctx.lineWidth = 0.5; ctx.stroke();
-        // Checkmark
+        ctx.strokeStyle = `${GREEN}0.4)`; ctx.lineWidth = 0.5; ctx.stroke();
+        // Checkmark + text
         if (rp > 0.3) {
           ctx.strokeStyle = `${GREEN}1)`; ctx.lineWidth = 2;
           ctx.beginPath(); ctx.moveTo(-22, badgeY); ctx.lineTo(-18, badgeY+4); ctx.lineTo(-12, badgeY-4); ctx.stroke();
           ctx.font = "bold 8px 'SF Mono', monospace"; ctx.textAlign = 'left';
-          ctx.fillStyle = `${GREEN}0.8)`; ctx.fillText('DELIVERED', -6, badgeY+3);
+          ctx.fillStyle = `${GREEN}0.9)`; ctx.fillText('DELIVERED', -6, badgeY+3);
         }
         ctx.restore();
       }
