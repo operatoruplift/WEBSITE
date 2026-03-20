@@ -24,24 +24,27 @@ const Product: React.FC = () => {
     }
   };
 
-  const getStepHeight = () => window.innerHeight * 2.5;
+  const getStepHeight = () => window.innerHeight * 2;
 
   useEffect(() => {
     const handleScroll = () => {
-      // Only handle scroll sync on desktop where the list is visible
       if (window.innerWidth < 1024) return;
-
       if (!sectionRef.current) return;
+
       const scrollY = window.scrollY;
       const offsetTop = sectionRef.current.offsetTop;
       const stepHeight = getStepHeight();
-      const scrollDistance = scrollY - offsetTop;
+      // Start counting from when the section enters view (after 1 viewport of initial content)
+      const scrollDistance = scrollY - offsetTop - window.innerHeight * 0.5;
 
-      if (scrollDistance < -window.innerHeight * 0.2) return;
+      if (scrollDistance < 0) {
+        if (activeIndex !== 0) { setActiveIndex(0); setAnimStep(0); }
+        return;
+      }
 
       const index = Math.min(
         features.length - 1,
-        Math.max(0, Math.floor((scrollDistance + stepHeight * 0.3) / stepHeight))
+        Math.max(0, Math.floor(scrollDistance / stepHeight))
       );
 
       if (index !== activeIndex) {
@@ -65,7 +68,7 @@ const Product: React.FC = () => {
     if (!sectionRef.current) return;
     const offsetTop = sectionRef.current.offsetTop;
     const stepHeight = getStepHeight();
-    const targetY = offsetTop + (index * stepHeight);
+    const targetY = offsetTop + window.innerHeight * 0.5 + (index * stepHeight) + stepHeight * 0.1;
 
     window.scrollTo({
       top: targetY,
@@ -101,7 +104,7 @@ const Product: React.FC = () => {
     <div
       id="product"
       ref={sectionRef}
-      className="relative bg-slanted-lines w-full lg:min-h-[1300vh] min-h-screen"
+      className="relative bg-slanted-lines w-full lg:min-h-[1100vh] min-h-screen"
       style={{ backgroundColor: '#050505' }}
     >
 
