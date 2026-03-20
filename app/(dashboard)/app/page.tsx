@@ -89,7 +89,7 @@ export default function DashboardPage() {
                                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Uplift Core Online
                                 </div>
                             </div>
-                            <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-400">Good {greeting}, Commander.</h1>
+                            <h1 className="text-4xl lg:text-5xl font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-400">Good {greeting}, Commander.</h1>
                             <p className="text-sm text-gray-400 mt-2 font-mono flex items-center gap-2"><Activity size={12} className="text-[#F59E0B]" /> Systems optimized. Monitoring {isLoading ? '...' : activity.length} critical events.</p>
                         </div>
                         <div className="flex items-center gap-4">

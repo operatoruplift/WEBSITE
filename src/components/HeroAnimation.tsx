@@ -139,54 +139,52 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
       ctx.fillStyle = 'rgba(34, 197, 94, 0.8)';
       ctx.beginPath(); ctx.arc(w / 2 - 16, -h / 2 + 15, 3, 0, Math.PI * 2); ctx.fill();
 
-      // Bubbles appear in first 60% of chat progress, leaving 40% for viewing
-      const timeInChat = Math.min(5, progress * 8);
+      // Chat messages with real text and typing→response transition
+      const timeInChat = Math.min(7, progress * 9);
+      const fontSize = isMobile ? 6 : 7;
 
-      const bubbles = [
-        { start: 0.5, type: 'user', width: w * 0.6, height: 24 },
-        { start: 1.5, type: 'system', width: w * 0.7, height: 40 },
-        { start: 3.5, type: 'user', width: w * 0.4, height: 24 },
-        { start: 4.5, type: 'typing', width: 40, height: 20 },
+      const messages: { start: number; type: 'user' | 'system' | 'typing'; text: string; width: number; height: number }[] = [
+        { start: 0.3, type: 'user', text: 'Refactor the auth module', width: w * 0.65, height: 22 },
+        { start: 1.5, type: 'system', text: 'Analyzing 14 files...', width: w * 0.7, height: 22 },
+        { start: 3.0, type: 'user', text: 'Use session tokens', width: w * 0.5, height: 22 },
+        { start: 4.0, type: 'typing', text: '', width: 40, height: 20 },
+        { start: 5.5, type: 'system', text: 'Done. PR #47 created.', width: w * 0.65, height: 22 },
       ];
 
-      bubbles.forEach((b, i) => {
-        if (timeInChat > b.start) {
-          const isUser = b.type === 'user';
-          const xPos = isUser ? (w / 2 - 20 - b.width) : (-w / 2 + 20);
-          const yPos = -h / 2 + 50 + (i * 50);
+      messages.forEach((msg, i) => {
+        // Skip typing dots once the response replaces it
+        if (msg.type === 'typing' && timeInChat > 5.5) return;
+        if (timeInChat <= msg.start) return;
 
-          ctx.fillStyle = isUser ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 85, 0, 0.1)';
-          ctx.beginPath();
-          if (ctx.roundRect) {
-            ctx.roundRect(xPos, yPos, b.width, b.height, 6);
-          } else {
-            ctx.rect(xPos, yPos, b.width, b.height);
-          }
-          ctx.fill();
+        const isUser = msg.type === 'user';
+        const xPos = isUser ? (w / 2 - 20 - msg.width) : (-w / 2 + 20);
+        const yPos = -h / 2 + 48 + (i * 40);
 
-          // Draw text placeholder lines inside bubbles
-          if (b.type === 'user' || b.type === 'system') {
-            const lineColor = isUser ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 85, 0, 0.2)';
-            const lineCount = b.type === 'system' ? 3 : (b.height > 24 ? 2 : 1);
-            for (let ln = 0; ln < lineCount; ln++) {
-              const lineWidth = b.width * (ln === lineCount - 1 ? 0.6 : 0.85) - 16;
-              ctx.fillStyle = lineColor;
-              ctx.fillRect(xPos + 8, yPos + 7 + (ln * 9), Math.max(lineWidth, 20), 2);
-            }
-          }
+        ctx.fillStyle = isUser ? 'rgba(255, 255, 255, 0.08)' : 'rgba(231, 118, 48, 0.1)';
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(xPos, yPos, msg.width, msg.height, 6);
+        } else {
+          ctx.rect(xPos, yPos, msg.width, msg.height);
+        }
+        ctx.fill();
 
-          if (b.type === 'typing') {
-            const dotTime = Date.now() / 200;
-            ctx.fillStyle = PRIMARY_COLOR;
-            for (let d = 0; d < 3; d++) {
-              const active = Math.floor(dotTime) % 3 === d;
-              ctx.globalAlpha = active ? 1 : 0.3;
-              ctx.beginPath();
-              ctx.arc(xPos + 12 + (d * 8), yPos + 10, 1.5, 0, Math.PI * 2);
-              ctx.fill();
-            }
-            ctx.globalAlpha = 1;
+        if (msg.type === 'typing') {
+          const dotTime = Date.now() / 200;
+          ctx.fillStyle = PRIMARY_COLOR;
+          for (let d = 0; d < 3; d++) {
+            ctx.globalAlpha = Math.floor(dotTime) % 3 === d ? 1 : 0.3;
+            ctx.beginPath();
+            ctx.arc(xPos + 12 + (d * 8), yPos + 10, 1.5, 0, Math.PI * 2);
+            ctx.fill();
           }
+          ctx.globalAlpha = 1;
+        } else {
+          // Real text inside bubbles
+          ctx.font = `${fontSize}px 'SF Mono', monospace`;
+          ctx.textAlign = 'left';
+          ctx.fillStyle = isUser ? 'rgba(255, 255, 255, 0.6)' : 'rgba(231, 118, 48, 0.7)';
+          ctx.fillText(msg.text, xPos + 8, yPos + 14);
         }
       });
 

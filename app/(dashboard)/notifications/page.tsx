@@ -35,7 +35,7 @@ export default function NotificationsPage() {
                                 <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-sky-500 to-blue-700 border border-sky-500/50"><Bell size={20} className="text-white" /></div>
                                 {unreadCount > 0 && <Badge variant="primary" className="text-[10px] font-mono">{unreadCount} NEW</Badge>}
                             </div>
-                            <h1 className="text-4xl font-bold tracking-tight text-white">Notifications</h1>
+                            <h1 className="text-4xl font-medium tracking-tight text-white">Notifications</h1>
                         </div>
                         {unreadCount > 0 && <GlowButton variant="outline" size="sm" onClick={markAllRead}><CheckCheck size={14} className="mr-2" /> Mark all read</GlowButton>}
                     </div>

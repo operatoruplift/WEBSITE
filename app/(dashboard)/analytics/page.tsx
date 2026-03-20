@@ -41,7 +41,7 @@ export default function AnalyticsPage() {
                                 <BarChart3 size={16} className="text-[#F59E0B]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Insights</span>
                             </div>
-                            <h1 className="text-3xl lg:text-4xl font-bold text-white">Analytics</h1>
+                            <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Analytics</h1>
                             <p className="text-sm text-gray-400 mt-1">Platform usage, agent performance, and trends</p>
                         </div>
                         <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-lg p-1">

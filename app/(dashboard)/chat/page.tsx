@@ -171,7 +171,7 @@ export default function ChatPage() {
                         {!activeSession || activeSession.messages.length === 0 ? (
                             <div className="h-full flex flex-col items-center justify-center p-8">
                                 <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}><Sparkles size={36} className="text-white" /></div>
-                                <h1 className="text-3xl font-bold text-white mb-2 text-center">How can I help you?</h1>
+                                <h1 className="text-3xl font-medium tracking-tight text-white mb-2 text-center">How can I help you?</h1>
                                 <p className="text-gray-500 text-sm text-center mb-8 max-w-md">Powered by <span className={activeModel.color + ' font-bold'}>{activeModel.label}</span> · Ask me anything</p>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl w-full">
                                     {PROMPT_SUGGESTIONS.map(cat => { const Icon = cat.icon; return cat.prompts.map((prompt, pi) => (

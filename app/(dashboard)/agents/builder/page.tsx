@@ -57,7 +57,7 @@ export default function AgentBuilderPage() {
                             </div>
                             <Badge variant="primary" className="text-[10px] tracking-widest font-mono">WIZARD</Badge>
                         </div>
-                        <h1 className="text-4xl font-bold tracking-tight text-white">Agent Builder</h1>
+                        <h1 className="text-4xl font-medium tracking-tight text-white">Agent Builder</h1>
                         <p className="text-sm text-gray-400 mt-2 font-mono">Create and deploy custom AI agents in minutes</p>
                     </div>
 

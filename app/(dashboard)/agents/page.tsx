@@ -73,7 +73,7 @@ export default function AgentsPage() {
                                 <Bot size={16} className="text-[#E77630]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Fleet</span>
                             </div>
-                            <h1 className="text-3xl lg:text-4xl font-bold text-white">My Agents</h1>
+                            <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">My Agents</h1>
                             <p className="text-sm text-gray-400 mt-1">{agents.filter(a => a.status === 'running').length} running, {agents.length} total</p>
                         </div>
                         <Link href="/agents/builder">

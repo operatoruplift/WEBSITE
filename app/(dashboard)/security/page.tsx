@@ -49,7 +49,7 @@ export default function SecurityPage() {
                                 <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(239,68,68,0.3)] bg-gradient-to-br from-red-500 to-red-900 border border-red-500/50"><Shield size={20} className="text-white" /></div>
                                 <Badge variant="default" className="text-xs bg-red-500/10 border-red-500/20 text-red-500 font-mono tracking-widest backdrop-blur-md flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" /> ACTIVE DEFENSE</Badge>
                             </div>
-                            <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white">Blackwall Security</h1>
+                            <h1 className="text-4xl lg:text-5xl font-medium tracking-tight text-white">Blackwall Security</h1>
                             <p className="text-sm text-gray-400 mt-2 font-mono flex items-center gap-2"><ShieldCheck size={14} className="text-emerald-400" /> AI-powered threat detection · Real-time API protection · OWASP compliance</p>
                         </div>
                         <div className="flex gap-3">

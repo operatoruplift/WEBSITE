@@ -62,7 +62,7 @@ export default function MarketplacePage() {
                                 <div className="w-10 h-10 rounded-xl flex items-center justify-center relative shadow-[0_0_20px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #F59E0B, #E77630)' }}><Store size={20} className="text-white" /></div>
                                 <Badge variant="default" className="bg-[#E77630]/10 text-[#E77630] border-[#E77630]/20 text-[10px] tracking-widest font-mono">v2.0 ORCHESTRATION</Badge>
                             </div>
-                            <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white">Agent Marketplace</h1>
+                            <h1 className="text-4xl lg:text-5xl font-medium tracking-tight text-white">Agent Marketplace</h1>
                             <p className="text-sm text-gray-400 mt-2 font-mono">Deploy pre-trained intelligences directly into your swarm architecture</p>
                         </div>
                         <GlowButton onClick={() => showToast('Agent submission portal opening soon. Build your own in the Agent Builder!', 'info')} className="h-11 px-6 bg-white/5 border border-white/10 hover:bg-white/10 group transition-all"><Sparkles size={16} className="mr-2 text-[#E77630]" /><span className="font-medium tracking-wide">Submit Agent</span></GlowButton>

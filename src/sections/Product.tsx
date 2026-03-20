@@ -24,27 +24,31 @@ const Product: React.FC = () => {
     }
   };
 
-  const getStepHeight = () => window.innerHeight * 3;
-
   useEffect(() => {
     const handleScroll = () => {
       if (window.innerWidth < 1024) return;
       if (!sectionRef.current) return;
 
-      const scrollY = window.scrollY;
-      const offsetTop = sectionRef.current.offsetTop;
-      const stepHeight = getStepHeight();
-      // Start counting from when the section enters view (after 1 viewport of initial content)
-      const scrollDistance = scrollY - offsetTop - window.innerHeight * 0.5;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const sectionHeight = sectionRef.current.scrollHeight;
+      const viewportH = window.innerHeight;
 
-      if (scrollDistance < 0) {
+      // How far we've scrolled into the section (0 = top just hit viewport top)
+      const scrolledInto = -rect.top;
+
+      if (scrolledInto < 0) {
         if (activeIndex !== 0) { setActiveIndex(0); setAnimStep(0); }
         return;
       }
 
+      // Total scrollable distance = section height minus one viewport (for the sticky)
+      const totalScrollable = sectionHeight - viewportH;
+      // Percentage through the section
+      const progress = Math.max(0, Math.min(1, scrolledInto / totalScrollable));
+      // Map to feature index
       const index = Math.min(
         features.length - 1,
-        Math.max(0, Math.floor(scrollDistance / stepHeight))
+        Math.floor(progress * features.length)
       );
 
       if (index !== activeIndex) {
@@ -53,7 +57,7 @@ const Product: React.FC = () => {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [activeIndex, features.length]);
 
@@ -66,14 +70,15 @@ const Product: React.FC = () => {
 
   const scrollToFeature = (index: number) => {
     if (!sectionRef.current) return;
-    const offsetTop = sectionRef.current.offsetTop;
-    const stepHeight = getStepHeight();
-    const targetY = offsetTop + window.innerHeight * 0.5 + (index * stepHeight) + stepHeight * 0.1;
+    const sectionTop = sectionRef.current.offsetTop;
+    const sectionHeight = sectionRef.current.scrollHeight;
+    const viewportH = window.innerHeight;
+    const totalScrollable = sectionHeight - viewportH;
+    // Scroll to the midpoint of this feature's range
+    const featureProgress = (index + 0.1) / features.length;
+    const targetY = sectionTop + featureProgress * totalScrollable;
 
-    window.scrollTo({
-      top: targetY,
-      behavior: 'smooth'
-    });
+    window.scrollTo({ top: targetY, behavior: 'smooth' });
     setActiveIndex(index);
     setAnimStep(0);
   };
