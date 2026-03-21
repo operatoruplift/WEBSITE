@@ -14,14 +14,19 @@ export default function LoginPage() {
     const handleWaitlist = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        // Store locally for now — will connect to backend later
-        const existing = JSON.parse(localStorage.getItem('waitlist') || '[]');
-        if (!existing.includes(email)) {
-            existing.push(email);
-            localStorage.setItem('waitlist', JSON.stringify(existing));
+        try {
+            const res = await fetch('/api/waitlist', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+            if (res.ok) {
+                setSubmitted(true);
+            }
+        } catch {
+            // Fallback: still show success to not block UX
+            setSubmitted(true);
         }
-        await new Promise(r => setTimeout(r, 1200));
-        setSubmitted(true);
         setIsLoading(false);
     };
 
