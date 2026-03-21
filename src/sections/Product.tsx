@@ -82,12 +82,12 @@ const Product: React.FC = () => {
       style={{ backgroundColor: '#050505' }}
     >
 
-      {/* --- DESKTOP VIEW (Sticky & Scroll-linked) --- */}
-      <div className="hidden lg:flex h-screen w-full items-center overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-6 md:px-12 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 h-full py-24 md:py-16 relative">
+      {/* --- DESKTOP VIEW --- */}
+      <div className="hidden lg:flex min-h-screen w-full items-center py-16">
+        <div className="max-w-[1600px] mx-auto px-6 md:px-12 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 relative">
 
           {/* Left Side: Content & Navigation */}
-          <div className="lg:col-span-5 flex flex-col h-full relative z-10">
+          <div className="lg:col-span-5 flex flex-col relative z-10">
 
             {/* Top: Headline */}
             <div className="mt-8 md:mt-16">
@@ -149,7 +149,7 @@ const Product: React.FC = () => {
           </div>
 
           {/* Right Side: Split View (Text Box + Animation Box) */}
-          <div className="lg:col-span-7 grid lg:grid-cols-12 gap-6 h-full relative lg:pt-24 lg:pb-6">
+          <div className="lg:col-span-7 grid lg:grid-cols-12 gap-6 relative">
 
              {/* Box 1: Text Description */}
              <div className="lg:col-span-5 lg:self-end w-full h-fit order-1 lg:order-1">
@@ -178,8 +178,8 @@ const Product: React.FC = () => {
              </div>
 
              {/* Box 2: Animation Visual */}
-             <div className="lg:col-span-7 w-full lg:h-full order-2 lg:order-2 overflow-hidden">
-                <TechBorderContainer className="h-full">
+             <div className="lg:col-span-7 w-full order-2 lg:order-2">
+                <TechBorderContainer className="h-[500px]">
                     <div className="w-full h-full bg-[#080808] rounded-xl border border-white/5 relative overflow-hidden shadow-2xl flex flex-col">
                       <div className="h-10 md:h-12 border-b border-white/5 flex items-center justify-between px-4 md:px-6 z-20 bg-[#080808]/80 backdrop-blur-md">
                         <div className="flex space-x-2">
