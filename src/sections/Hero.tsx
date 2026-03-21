@@ -24,34 +24,34 @@ const Hero: React.FC = () => {
         <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background/80 to-transparent"></div>
       </div>
 
-      <div className="relative z-10 pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-10 md:pb-12 px-4 sm:px-6 md:px-12 lg:pt-32 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 lg:gap-12 flex-grow">
+      <div className="relative z-10 pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 md:pb-10 px-4 sm:px-6 md:px-12 lg:pt-28 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 lg:gap-10 flex-grow">
         
         {/* Left Content Column */}
         <div className="lg:col-span-7 flex flex-col justify-center">
           
           {/* Vision Tag */}
           <FadeIn delay={100} direction="down">
-            <div className="flex items-center mb-6 md:mb-8">
+            <div className="flex items-center mb-4 md:mb-6">
               <span className="w-2 h-2 rounded-full bg-primary mr-3 shadow-[0_0_8px_rgba(231,118,48,0.6)] animate-pulse"></span>
               <span className="text-xs font-bold tracking-[0.2em] text-white uppercase">{data.visionTag}</span>
             </div>
           </FadeIn>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl tracking-tight text-white mb-6 md:mb-8 leading-[1.05] min-h-[1.1em]">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl tracking-tight text-white mb-5 md:mb-6 leading-[1.05] min-h-[1.1em]">
             <GlideText text={data.headline} />
           </h1>
 
           {/* Subhead */}
           <FadeIn delay={400}>
-            <p className="text-base sm:text-lg md:text-xl text-muted font-mono mb-3 md:mb-4 max-w-2xl">
+            <p className="text-sm sm:text-base md:text-lg text-muted font-mono mb-2 md:mb-3 max-w-2xl">
               {data.subhead}
             </p>
           </FadeIn>
 
           {/* Description */}
           <FadeIn delay={600}>
-            <p className="text-sm sm:text-base md:text-lg text-gray-400 mb-6 md:mb-8 max-w-xl leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-gray-400 mb-4 md:mb-6 max-w-xl leading-relaxed">
               {data.description}
             </p>
             {data.contractAddress && (
