@@ -9,7 +9,8 @@ const Product: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [animStep, setAnimStep] = useState(0);
   const [isInView, setIsInView] = useState(false);
-  const CYCLE_MS = 10000; // 10 seconds per feature
+  const [timerKey, setTimerKey] = useState(0); // increment to reset timer
+  const CYCLE_MS = 12000; // 12 seconds per feature
 
   const data = APP_CONTENT.product;
   const features = data.features;
@@ -37,7 +38,7 @@ const Product: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Auto-advance on a fixed timer when in view
+  // Auto-advance on a fixed timer when in view — resets when timerKey changes (user scrolls)
   useEffect(() => {
     if (!isInView) return;
     const timer = setInterval(() => {
@@ -45,7 +46,7 @@ const Product: React.FC = () => {
       setAnimStep(0);
     }, CYCLE_MS);
     return () => clearInterval(timer);
-  }, [isInView, features.length]);
+  }, [isInView, features.length, timerKey]);
 
   // Scroll wheel advances features when section is in view (desktop only)
   // Uses a ref for activeIndex so the non-passive wheel handler always has current state
@@ -85,6 +86,7 @@ const Product: React.FC = () => {
         setActiveIndex(prev => Math.max(0, prev - 1));
       }
       setAnimStep(0);
+      setTimerKey(k => k + 1); // reset auto-advance timer
     };
 
     // Must be non-passive to allow preventDefault
@@ -95,6 +97,7 @@ const Product: React.FC = () => {
   const scrollToFeature = (index: number) => {
     setActiveIndex(index);
     setAnimStep(0);
+    setTimerKey(k => k + 1); // reset auto-advance timer
   };
 
   const renderVisual = (index: number) => {
@@ -198,7 +201,7 @@ const Product: React.FC = () => {
 
              {/* Box 1: Animation Visual */}
              <div className="w-full">
-                <TechBorderContainer className="h-[340px]">
+                <TechBorderContainer className="h-[280px]">
                     <div className="w-full h-full bg-[#080808] rounded-xl border border-white/5 relative overflow-hidden shadow-2xl flex flex-col">
                       <div className="h-10 md:h-12 border-b border-white/5 flex items-center justify-between px-4 md:px-6 z-20 bg-[#080808]/80 backdrop-blur-md">
                         <div className="flex space-x-2">
