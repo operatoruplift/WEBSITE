@@ -71,14 +71,14 @@ const Hero: React.FC = () => {
           {/* CTAs */}
           <FadeIn delay={800}>
             <div className="flex flex-col sm:flex-row items-start gap-3 mb-8">
-              <Link href="/app"
+              <Link href="/login"
                 className="inline-flex items-center px-6 py-3 bg-primary text-white font-bold text-sm rounded-lg hover:bg-primary/80 transition-all shadow-[0_0_20px_rgba(231,118,48,0.3)] hover:shadow-[0_0_30px_rgba(231,118,48,0.5)] uppercase tracking-wide">
-                Launch App
+                Join Waitlist
                 <svg className="ml-2 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
               </Link>
-              <Link href="/signup"
+              <Link href="/product"
                 className="inline-flex items-center px-6 py-3 bg-white/5 text-white font-bold text-sm rounded-lg border border-white/10 hover:bg-white/10 transition-all uppercase tracking-wide">
-                Sign Up Free
+                Explore Product
               </Link>
             </div>
             <DownloadWidget data={data} />

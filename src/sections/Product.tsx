@@ -47,6 +47,34 @@ const Product: React.FC = () => {
     return () => clearInterval(timer);
   }, [isInView, features.length]);
 
+  // Scroll wheel advances features when section is in view (desktop only)
+  useEffect(() => {
+    if (!isInView || typeof window === 'undefined') return;
+    if (window.innerWidth < 1024) return;
+    let lastWheelTime = 0;
+    const WHEEL_COOLDOWN = 800; // prevent rapid-fire from trackpad
+
+    const handleWheel = (e: WheelEvent) => {
+      const now = Date.now();
+      if (now - lastWheelTime < WHEEL_COOLDOWN) return;
+      if (Math.abs(e.deltaY) < 30) return; // ignore tiny movements
+
+      lastWheelTime = now;
+      if (e.deltaY > 0) {
+        // Scroll down → next feature
+        setActiveIndex(prev => Math.min(features.length - 1, prev + 1));
+      } else {
+        // Scroll up → previous feature
+        setActiveIndex(prev => Math.max(0, prev - 1));
+      }
+      setAnimStep(0);
+    };
+
+    const section = sectionRef.current;
+    if (section) section.addEventListener('wheel', handleWheel, { passive: true });
+    return () => { if (section) section.removeEventListener('wheel', handleWheel); };
+  }, [isInView, features.length]);
+
   const scrollToFeature = (index: number) => {
     setActiveIndex(index);
     setAnimStep(0);
@@ -148,38 +176,12 @@ const Product: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Side: Split View (Text Box + Animation Box) */}
-          <div className="lg:col-span-7 grid lg:grid-cols-12 gap-6 relative">
+          {/* Right Side: Stacked (Animation on top, Description below) */}
+          <div className="lg:col-span-7 flex flex-col gap-6 relative">
 
-             {/* Box 1: Text Description */}
-             <div className="lg:col-span-5 lg:self-end w-full h-fit order-1 lg:order-1">
-                <TechBorderContainer>
-                    <div className="w-full bg-[#080808] rounded-xl border border-white/5 p-5 md:p-6 flex flex-col justify-end shadow-2xl animate-fade-in relative">
-                       <div key={activeIndex} className="animate-slide-up">
-                          <div className="mb-3 opacity-70 text-primary">
-                              {getIcon(features[activeIndex].iconType)}
-                          </div>
-                          <h3 className="text-xl md:text-2xl text-white font-medium mb-3 tracking-tight leading-tight">
-                            {features[activeIndex].cardTitle}
-                          </h3>
-                          <p className="text-sm md:text-base text-gray-300 leading-relaxed mb-4">
-                            {features[activeIndex].description}
-                          </p>
-                          <a
-                            href="/product"
-                            className="bg-white text-black px-5 py-2.5 rounded-sm text-xs font-bold tracking-widest uppercase transition-all hover:bg-gray-200 flex items-center w-fit group"
-                          >
-                            <span>Explore</span>
-                            <ChevronRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-                          </a>
-                        </div>
-                    </div>
-                </TechBorderContainer>
-             </div>
-
-             {/* Box 2: Animation Visual */}
-             <div className="lg:col-span-7 w-full order-2 lg:order-2">
-                <TechBorderContainer className="h-[500px]">
+             {/* Box 1: Animation Visual */}
+             <div className="w-full">
+                <TechBorderContainer className="h-[420px]">
                     <div className="w-full h-full bg-[#080808] rounded-xl border border-white/5 relative overflow-hidden shadow-2xl flex flex-col">
                       <div className="h-10 md:h-12 border-b border-white/5 flex items-center justify-between px-4 md:px-6 z-20 bg-[#080808]/80 backdrop-blur-md">
                         <div className="flex space-x-2">
@@ -201,6 +203,29 @@ const Product: React.FC = () => {
                           {renderVisual(activeIndex)}
                         </div>
                       </div>
+                    </div>
+                </TechBorderContainer>
+             </div>
+
+             {/* Box 2: Text Description */}
+             <div className="w-full">
+                <TechBorderContainer>
+                    <div className="w-full bg-[#080808] rounded-xl border border-white/5 p-5 md:p-6 shadow-2xl relative">
+                       <div key={activeIndex} className="animate-slide-up">
+                          <div className="mb-3 opacity-70 text-primary">
+                              {getIcon(features[activeIndex].iconType)}
+                          </div>
+                          <h3 className="text-xl md:text-2xl text-white font-medium mb-3 tracking-tight leading-tight">
+                            {features[activeIndex].cardTitle}
+                          </h3>
+                          <p className="text-sm text-gray-300 leading-relaxed mb-4">
+                            {features[activeIndex].description}
+                          </p>
+                          <a href="/product" className="bg-white text-black px-5 py-2.5 rounded-sm text-xs font-bold tracking-widest uppercase transition-all hover:bg-gray-200 flex items-center w-fit group">
+                            <span>Explore</span>
+                            <ChevronRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                          </a>
+                        </div>
                     </div>
                 </TechBorderContainer>
              </div>

@@ -2,50 +2,89 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Bot, Github, Chrome, ArrowRight, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Bot, ArrowRight, Mail, Sparkles, CheckCircle2 } from 'lucide-react';
 import { GlowButton } from '@/src/components/ui/GlowButton';
+import { Logo } from '@/src/components/Icons';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleWaitlist = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        // Demo mode: just redirect to dashboard
-        localStorage.setItem('token', 'demo-token');
-        localStorage.setItem('user', JSON.stringify({ email, name: 'Commander' }));
-        window.location.href = '/app';
+        // Store locally for now — will connect to backend later
+        const existing = JSON.parse(localStorage.getItem('waitlist') || '[]');
+        if (!existing.includes(email)) {
+            existing.push(email);
+            localStorage.setItem('waitlist', JSON.stringify(existing));
+        }
+        await new Promise(r => setTimeout(r, 1200));
+        setSubmitted(true);
+        setIsLoading(false);
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center relative" style={{ background: '#050508' }}>
             <div className="absolute inset-0 opacity-40" style={{
-                background: `radial-gradient(ellipse 80% 50% at 50% 30%, rgba(231, 118, 48, 0.15) 0%, transparent 50%),
-                    radial-gradient(ellipse 60% 40% at 80% 70%, rgba(153, 69, 255, 0.1) 0%, transparent 40%)`
+                background: `radial-gradient(ellipse 80% 50% at 50% 30%, rgba(231, 118, 48, 0.15) 0%, transparent 50%)`
             }} />
             <div className="w-full max-w-md p-8 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl relative z-10 shadow-2xl">
                 <div className="text-center mb-8">
                     <Link href="/" className="inline-flex items-center space-x-3">
-                        <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center"><Bot size={28} className="text-black" /></div>
+                        <Logo className="w-12 h-12" />
                         <span className="text-2xl font-bold text-white">Operator<span className="text-primary">Uplift</span></span>
                     </Link>
-                    <h1 className="text-2xl font-bold text-white mt-6">Welcome back</h1>
-                    <p className="text-gray-400 mt-2">Sign in to continue to your dashboard</p>
                 </div>
-                <div className="space-y-3 mb-6">
-                    <button className="w-full flex items-center justify-center space-x-3 px-4 py-3 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all"><Chrome size={20} className="text-white" /><span className="text-white font-medium">Continue with Google</span></button>
-                    <button className="w-full flex items-center justify-center space-x-3 px-4 py-3 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all"><Github size={20} className="text-white" /><span className="text-white font-medium">Continue with GitHub</span></button>
-                </div>
-                <div className="flex items-center space-x-4 mb-6"><div className="flex-1 h-px bg-white/10" /><span className="text-sm text-gray-500">or continue with email</span><div className="flex-1 h-px bg-white/10" /></div>
-                <form onSubmit={handleLogin} className="space-y-4">
-                    <div><label htmlFor="login-email" className="text-sm text-gray-400 block mb-2">Email</label><div className="relative"><Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" /><input id="login-email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" aria-label="Email address" className="w-full bg-white/5 border border-white/10 rounded-lg pl-12 pr-4 py-3 text-white focus:border-primary/50 focus:outline-none transition-colors" required /></div></div>
-                    <div><div className="flex items-center justify-between mb-2"><label htmlFor="login-password" className="text-sm text-gray-400">Password</label></div><div className="relative"><Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" /><input id="login-password" type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" aria-label="Password" className="w-full bg-white/5 border border-white/10 rounded-lg pl-12 pr-12 py-3 text-white focus:border-primary/50 focus:outline-none transition-colors" required /><button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white" aria-label="Toggle password visibility">{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div></div>
-                    <GlowButton type="submit" className="w-full" disabled={isLoading}>{isLoading ? 'Signing in...' : 'Sign In'} <ArrowRight size={18} className="ml-2" /></GlowButton>
-                </form>
-                <p className="text-center text-gray-400 mt-6">Don&apos;t have an account?{' '}<Link href="/signup" className="text-primary hover:underline">Sign up for free</Link></p>
+
+                {submitted ? (
+                    <div className="text-center py-8">
+                        <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto mb-6">
+                            <CheckCircle2 size={32} className="text-emerald-400" />
+                        </div>
+                        <h2 className="text-2xl font-bold text-white mb-3">You&apos;re on the list</h2>
+                        <p className="text-gray-400 mb-2">We&apos;ll notify you at <span className="text-white">{email}</span> when early access opens.</p>
+                        <p className="text-gray-500 text-sm mt-4">Follow us for updates:</p>
+                        <div className="flex items-center justify-center gap-4 mt-3">
+                            <a href="https://x.com/OperatorUplift" target="_blank" rel="noreferrer" className="text-xs text-gray-400 hover:text-primary transition-colors">X (Twitter)</a>
+                            <a href="https://discord.gg/eka7hqJcAY" target="_blank" rel="noreferrer" className="text-xs text-gray-400 hover:text-primary transition-colors">Discord</a>
+                            <a href="https://github.com/operatoruplift" target="_blank" rel="noreferrer" className="text-xs text-gray-400 hover:text-primary transition-colors">GitHub</a>
+                        </div>
+                        <Link href="/" className="inline-block mt-8 text-sm text-gray-500 hover:text-white transition-colors">&larr; Back to home</Link>
+                    </div>
+                ) : (
+                    <>
+                        <div className="text-center mb-8">
+                            <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 text-primary px-3 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest mb-6">
+                                <Sparkles size={12} /> Early Access
+                            </div>
+                            <h1 className="text-2xl font-bold text-white">Join the Waitlist</h1>
+                            <p className="text-gray-400 mt-2">Operator Uplift is currently in private beta. Sign up to get early access when we launch.</p>
+                        </div>
+                        <form onSubmit={handleWaitlist} className="space-y-4">
+                            <div>
+                                <label htmlFor="waitlist-email" className="text-sm text-gray-400 block mb-2">Email</label>
+                                <div className="relative">
+                                    <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                    <input id="waitlist-email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" aria-label="Email address" className="w-full bg-white/5 border border-white/10 rounded-lg pl-12 pr-4 py-3 text-white focus:border-primary/50 focus:outline-none transition-colors" required />
+                                </div>
+                            </div>
+                            <GlowButton type="submit" className="w-full" disabled={isLoading}>
+                                {isLoading ? 'Joining...' : 'Join Waitlist'} <ArrowRight size={18} className="ml-2" />
+                            </GlowButton>
+                        </form>
+                        <div className="mt-6 pt-6 border-t border-white/5">
+                            <div className="flex items-center justify-center gap-6 text-[10px] font-mono text-gray-500 uppercase tracking-widest">
+                                <span>Local-first</span>
+                                <span className="w-1 h-1 rounded-full bg-gray-700" />
+                                <span>Privacy-first</span>
+                                <span className="w-1 h-1 rounded-full bg-gray-700" />
+                                <span>Open source</span>
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

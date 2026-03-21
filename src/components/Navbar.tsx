@@ -61,10 +61,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
           </a>
           
           <Link
-            href="/app"
+            href="/login"
             className="text-xs font-bold bg-primary text-white px-3 lg:px-4 py-2 rounded-sm hover:bg-primary/80 transition-colors uppercase tracking-wide whitespace-nowrap shadow-[0_0_12px_rgba(231,118,48,0.3)]"
           >
-            Launch App
+            Join Waitlist
           </Link>
 
           <Link
