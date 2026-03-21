@@ -147,14 +147,14 @@ const Product: React.FC = () => {
             </div>
 
             {/* Bottom: Progress Navigation List */}
-            <div className="mt-auto mb-12 lg:mb-24 relative pl-4">
+            <div className="mt-auto mb-12 lg:mb-24 relative pl-4 pt-8">
               <div className="absolute left-[7px] top-2 bottom-2 w-[2px] bg-white/10 z-0 rounded-full"></div>
               <div
                 className="absolute left-[7px] top-2 w-[2px] bg-primary z-0 rounded-full transition-all duration-500 ease-out"
                 style={{ height: `${(activeIndex / (features.length - 1)) * 100}%` }}
               ></div>
 
-              <div className="flex flex-col space-y-4">
+              <div className="flex flex-col space-y-5">
                 {features.map((feature, index) => {
                   const isActive = index === activeIndex;
                   const isPast = index <= activeIndex;
@@ -235,12 +235,10 @@ const Product: React.FC = () => {
                           style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
                         </div>
 
-                        {/* Render all visuals, show/hide to prevent remounting */}
-                        {features.map((feature, idx) => (
-                          <div key={feature.id} className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ${idx === activeIndex ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
-                            {renderVisual(idx)}
-                          </div>
-                        ))}
+                        {/* Only mount the active visual — remounts on index change to restart animation */}
+                        <div key={`visual-${activeIndex}`} className="absolute inset-0 flex items-center justify-center animate-fade-in">
+                          {renderVisual(activeIndex)}
+                        </div>
                       </div>
                     </div>
                 </TechBorderContainer>
