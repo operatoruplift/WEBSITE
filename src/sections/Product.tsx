@@ -123,12 +123,12 @@ const Product: React.FC = () => {
     <div
       id="product"
       ref={sectionRef}
-      className="relative bg-slanted-lines w-full min-h-screen"
+      className="relative bg-slanted-lines w-full lg:min-h-[500vh] min-h-screen"
       style={{ backgroundColor: '#050505' }}
     >
 
       {/* --- DESKTOP VIEW --- */}
-      <div className="hidden lg:flex min-h-screen w-full items-center py-16">
+      <div className="hidden lg:flex lg:sticky lg:top-0 h-screen w-full items-center">
         <div className="max-w-[1600px] mx-auto px-6 md:px-12 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 relative">
 
           {/* Left Side: Content & Navigation */}
@@ -194,11 +194,11 @@ const Product: React.FC = () => {
           </div>
 
           {/* Right Side: Stacked (Animation on top, Description below) */}
-          <div className="lg:col-span-7 flex flex-col gap-6 relative">
+          <div className="lg:col-span-7 flex flex-col gap-4 relative">
 
              {/* Box 1: Animation Visual */}
              <div className="w-full">
-                <TechBorderContainer className="h-[420px]">
+                <TechBorderContainer className="h-[340px]">
                     <div className="w-full h-full bg-[#080808] rounded-xl border border-white/5 relative overflow-hidden shadow-2xl flex flex-col">
                       <div className="h-10 md:h-12 border-b border-white/5 flex items-center justify-between px-4 md:px-6 z-20 bg-[#080808]/80 backdrop-blur-md">
                         <div className="flex space-x-2">
@@ -227,15 +227,15 @@ const Product: React.FC = () => {
              {/* Box 2: Text Description */}
              <div className="w-full">
                 <TechBorderContainer>
-                    <div className="w-full bg-[#080808] rounded-xl border border-white/5 p-5 md:p-6 shadow-2xl relative">
+                    <div className="w-full bg-[#080808] rounded-xl border border-white/5 p-4 md:p-5 shadow-2xl relative">
                        <div key={activeIndex} className="animate-slide-up">
                           <div className="mb-3 opacity-70 text-primary">
                               {getIcon(features[activeIndex].iconType)}
                           </div>
-                          <h3 className="text-xl md:text-2xl text-white font-medium mb-3 tracking-tight leading-tight">
+                          <h3 className="text-lg md:text-xl text-white font-medium mb-2 tracking-tight leading-tight">
                             {features[activeIndex].cardTitle}
                           </h3>
-                          <p className="text-sm text-gray-300 leading-relaxed mb-4">
+                          <p className="text-sm text-gray-300 leading-relaxed mb-3 line-clamp-3">
                             {features[activeIndex].description}
                           </p>
                           <a href="/product" className="bg-white text-black px-5 py-2.5 rounded-sm text-xs font-bold tracking-widest uppercase transition-all hover:bg-gray-200 flex items-center w-fit group">
