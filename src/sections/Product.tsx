@@ -8,8 +8,8 @@ const Product: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [animStep, setAnimStep] = useState(0);
-  const lastChangeTime = useRef(0);
-  const MIN_DISPLAY_MS = 10000; // minimum 10 seconds per feature
+  const [isInView, setIsInView] = useState(false);
+  const CYCLE_MS = 10000; // 10 seconds per feature
 
   const data = APP_CONTENT.product;
   const features = data.features;
@@ -26,67 +26,28 @@ const Product: React.FC = () => {
     }
   };
 
+  // Track when section is in view
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.innerWidth < 1024) return;
-      if (!sectionRef.current) return;
+    if (!sectionRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
 
-      const rect = sectionRef.current.getBoundingClientRect();
-      const sectionHeight = sectionRef.current.scrollHeight;
-      const viewportH = window.innerHeight;
-
-      // How far we've scrolled into the section (0 = top just hit viewport top)
-      const scrolledInto = -rect.top;
-
-      if (scrolledInto < 0) {
-        if (activeIndex !== 0) { setActiveIndex(0); setAnimStep(0); }
-        return;
-      }
-
-      // Total scrollable distance = section height minus one viewport (for the sticky)
-      const totalScrollable = sectionHeight - viewportH;
-      // Percentage through the section
-      const progress = Math.max(0, Math.min(1, scrolledInto / totalScrollable));
-      // Map to feature index
-      const index = Math.min(
-        features.length - 1,
-        Math.floor(progress * features.length)
-      );
-
-      if (index !== activeIndex) {
-        const now = Date.now();
-        // Only allow switching if minimum display time has elapsed
-        if (now - lastChangeTime.current >= MIN_DISPLAY_MS) {
-          lastChangeTime.current = now;
-          setActiveIndex(index);
-          setAnimStep(0);
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [activeIndex, features.length]);
-
+  // Auto-advance on a fixed timer when in view
   useEffect(() => {
-    const interval = setInterval(() => {
-      setAnimStep((prev) => (prev + 1) % 4);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [activeIndex]);
+    if (!isInView) return;
+    const timer = setInterval(() => {
+      setActiveIndex(prev => (prev + 1) % features.length);
+      setAnimStep(0);
+    }, CYCLE_MS);
+    return () => clearInterval(timer);
+  }, [isInView, features.length]);
 
   const scrollToFeature = (index: number) => {
-    if (!sectionRef.current) return;
-    const sectionTop = sectionRef.current.offsetTop;
-    const sectionHeight = sectionRef.current.scrollHeight;
-    const viewportH = window.innerHeight;
-    const totalScrollable = sectionHeight - viewportH;
-    // Scroll to the midpoint of this feature's range
-    const featureProgress = (index + 0.1) / features.length;
-    const targetY = sectionTop + featureProgress * totalScrollable;
-
-    window.scrollTo({ top: targetY, behavior: 'smooth' });
-    lastChangeTime.current = Date.now();
     setActiveIndex(index);
     setAnimStep(0);
   };
@@ -117,12 +78,12 @@ const Product: React.FC = () => {
     <div
       id="product"
       ref={sectionRef}
-      className="relative bg-slanted-lines w-full lg:min-h-[3000vh] min-h-screen"
+      className="relative bg-slanted-lines w-full min-h-screen"
       style={{ backgroundColor: '#050505' }}
     >
 
       {/* --- DESKTOP VIEW (Sticky & Scroll-linked) --- */}
-      <div className="hidden lg:flex lg:sticky lg:top-0 h-screen w-full items-center overflow-hidden">
+      <div className="hidden lg:flex h-screen w-full items-center overflow-hidden">
         <div className="max-w-[1600px] mx-auto px-6 md:px-12 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 h-full py-24 md:py-16 relative">
 
           {/* Left Side: Content & Navigation */}

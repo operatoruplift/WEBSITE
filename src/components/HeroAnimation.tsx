@@ -80,7 +80,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
 
     // Draw the chat window — progress controls how many messages appear
     // showComplete: if true, show final response instead of typing dots
-    const drawChat = (cx: number, cy: number, progress: number, showComplete: boolean) => {
+    // respondProgress: 0-1 for the RESPOND phase progress bar animation
+    const drawChat = (cx: number, cy: number, progress: number, showComplete: boolean, respondProgress?: number) => {
       ctx.save();
       ctx.translate(cx, cy);
       const w = isMobile ? 160 : 200;
@@ -175,8 +176,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         const barY = statusY + 32;
         const barW = w - 40;
         const barX = -w/2 + 20;
-        // Progress fills over the RESPOND phase (5 seconds)
-        const barProgress = Math.min(1, (t - 4.5) / 1.5);
+        // Progress fills over the RESPOND phase using actual elapsed time
+        const barProgress = respondProgress !== undefined ? respondProgress : 0;
         // Track background
         ctx.fillStyle = 'rgba(255,255,255,0.03)';
         ctx.beginPath();
@@ -300,22 +301,23 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         drawChat(cx, cy, Math.min(1, (elapsed-14000)/6000), false);
       }
 
-      // RESPOND: show completed conversation with success status inside the chat
+      // RESPOND: show completed conversation with success status + animated progress bar
       if (phase === 'RESPOND') {
-        drawChat(cx, cy, 1, true);
+        const rp = Math.min(1, (elapsed - 22000) / 4000); // fills over 4 seconds
+        drawChat(cx, cy, 1, true, rp);
       }
 
-      // COMPLETE: smooth crossfade from chat → session closed
+      // COMPLETE: slow crossfade from chat → session closed
       if (phase === 'COMPLETE') {
         const cp = Math.min(1, (elapsed-27000)/5000);
-        // Chat fades out smoothly over first 50% of phase
-        const chatAlpha = Math.max(0, 1 - cp * 2.5);
+        // Chat fades out slowly over 70% of phase
+        const chatAlpha = Math.max(0, 1 - cp * 1.5);
         if (chatAlpha > 0.01) {
           ctx.save(); ctx.globalAlpha = chatAlpha;
-          drawChat(cx, cy, 1, true); ctx.restore();
+          drawChat(cx, cy, 1, true, 1); ctx.restore();
         }
-        // Session terminated text fades IN starting at 20%, full at 60%
-        const textAlpha = Math.max(0, Math.min(0.8, (cp - 0.2) * 2));
+        // Session terminated text fades IN starting at 40%, full at 80%
+        const textAlpha = Math.max(0, Math.min(0.8, (cp - 0.4) * 2));
         if (textAlpha > 0) {
           ctx.save();
           ctx.globalAlpha = textAlpha;
