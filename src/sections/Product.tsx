@@ -57,7 +57,7 @@ const Product: React.FC = () => {
     if (typeof window === 'undefined') return;
     if (window.innerWidth < 1024) return;
     let lastWheelTime = 0;
-    const WHEEL_COOLDOWN = 600;
+    const WHEEL_COOLDOWN = 800;
 
     const handleWheel = (e: WheelEvent) => {
       const section = sectionRef.current;
@@ -138,32 +138,33 @@ const Product: React.FC = () => {
           <div className="lg:col-span-5 flex flex-col relative z-10">
 
             {/* Top: Headline */}
-            <div className="mt-8 md:mt-16">
+            <div className="mt-4 md:mt-8">
               <FadeIn direction="right">
                 <div className="flex items-center mb-4">
                     <span className="w-2 h-2 rounded-full bg-primary mr-3 shadow-[0_0_8px_rgba(255,85,0,0.8)]"></span>
                     <span className="text-xs font-bold tracking-[0.2em] text-white uppercase">{data.tag}</span>
                 </div>
               </FadeIn>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl text-white tracking-tight mb-5 leading-tight font-medium min-h-[1.2em]">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl text-white tracking-tight mb-4 leading-tight font-medium min-h-[1.2em]">
                  <GlideText text={data.headline} />
               </h2>
               <FadeIn delay={200}>
-                <p className="text-muted text-lg font-mono leading-relaxed max-w-md">
+                <p className="text-muted text-sm font-mono leading-relaxed max-w-md">
                     {data.subhead}
                 </p>
               </FadeIn>
             </div>
 
             {/* Bottom: Progress Navigation List */}
-            <div className="mt-auto mb-12 lg:mb-16 relative pl-4 pt-6">
-              <div className="absolute left-[7px] top-8 bottom-2 w-[2px] bg-white/10 z-0 rounded-full"></div>
+            <div className="mt-auto mb-8 lg:mb-12 relative pl-4 pt-4">
+              {/* Track line — height calculated from item count and spacing */}
+              <div className="absolute left-[7px] w-[2px] bg-white/10 z-0 rounded-full" style={{ top: '20px', height: `${(features.length - 1) * 28}px` }}></div>
               <div
-                className="absolute left-[7px] top-8 w-[2px] bg-primary z-0 rounded-full transition-all duration-500 ease-out"
-                style={{ height: `${(activeIndex / (features.length - 1)) * 100}%` }}
+                className="absolute left-[7px] w-[2px] bg-primary z-0 rounded-full transition-all duration-500 ease-out"
+                style={{ top: '20px', height: `${activeIndex * 28}px` }}
               ></div>
 
-              <div className="flex flex-col space-y-5">
+              <div className="flex flex-col space-y-3">
                 {features.map((feature, index) => {
                   const isActive = index === activeIndex;
                   const isPast = index <= activeIndex;
@@ -201,7 +202,7 @@ const Product: React.FC = () => {
 
              {/* Box 1: Animation Visual */}
              <div className="lg:col-span-7 lg:order-2 w-full">
-                <TechBorderContainer className="h-[350px]">
+                <TechBorderContainer className="h-[300px]">
                     <div className="w-full h-full bg-[#080808] rounded-xl border border-white/5 relative overflow-hidden shadow-2xl flex flex-col">
                       <div className="h-10 md:h-12 border-b border-white/5 flex items-center justify-between px-4 md:px-6 z-20 bg-[#080808]/80 backdrop-blur-md">
                         <div className="flex space-x-2">
