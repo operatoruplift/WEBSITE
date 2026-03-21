@@ -48,32 +48,49 @@ const Product: React.FC = () => {
   }, [isInView, features.length]);
 
   // Scroll wheel advances features when section is in view (desktop only)
+  // Uses a ref for activeIndex so the non-passive wheel handler always has current state
+  const activeIndexRef = useRef(activeIndex);
+  activeIndexRef.current = activeIndex;
+
   useEffect(() => {
-    if (!isInView || typeof window === 'undefined') return;
+    if (typeof window === 'undefined') return;
     if (window.innerWidth < 1024) return;
     let lastWheelTime = 0;
-    const WHEEL_COOLDOWN = 800; // prevent rapid-fire from trackpad
+    const WHEEL_COOLDOWN = 600;
 
     const handleWheel = (e: WheelEvent) => {
-      const now = Date.now();
-      if (now - lastWheelTime < WHEEL_COOLDOWN) return;
-      if (Math.abs(e.deltaY) < 30) return; // ignore tiny movements
+      const section = sectionRef.current;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      // Only intercept when section is mostly in view
+      if (rect.top > window.innerHeight * 0.3 || rect.bottom < window.innerHeight * 0.5) return;
 
+      const now = Date.now();
+      if (Math.abs(e.deltaY) < 20) return;
+
+      const idx = activeIndexRef.current;
+      // At first feature scrolling up, or last feature scrolling down — let page scroll
+      if (e.deltaY < 0 && idx === 0) return;
+      if (e.deltaY > 0 && idx === features.length - 1) return;
+
+      // Prevent page scroll — we handle it
+      e.preventDefault();
+
+      if (now - lastWheelTime < WHEEL_COOLDOWN) return;
       lastWheelTime = now;
+
       if (e.deltaY > 0) {
-        // Scroll down → next feature
         setActiveIndex(prev => Math.min(features.length - 1, prev + 1));
       } else {
-        // Scroll up → previous feature
         setActiveIndex(prev => Math.max(0, prev - 1));
       }
       setAnimStep(0);
     };
 
-    const section = sectionRef.current;
-    if (section) section.addEventListener('wheel', handleWheel, { passive: true });
-    return () => { if (section) section.removeEventListener('wheel', handleWheel); };
-  }, [isInView, features.length]);
+    // Must be non-passive to allow preventDefault
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    return () => window.removeEventListener('wheel', handleWheel);
+  }, [features.length]);
 
   const scrollToFeature = (index: number) => {
     setActiveIndex(index);
