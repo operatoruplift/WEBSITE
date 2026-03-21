@@ -39,7 +39,7 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
     <div className="mt-12 w-full max-w-xl animate-slide-up" style={{ animationDelay: '0.4s' }}>
 
       {/* OS Selection Tabs */}
-      <div className="flex items-center space-x-6 mb-4 ml-1">
+      <div className="flex items-center flex-wrap gap-x-4 gap-y-2 mb-4 ml-1">
         <button
           onClick={() => setActiveTab('macos')}
           className={`flex items-center space-x-2 text-xs font-bold tracking-wider uppercase transition-all duration-300 pb-2 border-b-2 ${
@@ -49,7 +49,7 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
           }`}
         >
           <AppleIcon className="w-4 h-4" />
-          <span>macOS</span>
+          <span className="hidden sm:inline">macOS</span>
         </button>
 
         <button
@@ -61,7 +61,7 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
           }`}
         >
           <WindowsIcon className="w-4 h-4" />
-          <span>Windows</span>
+          <span className="hidden sm:inline">Windows</span>
         </button>
 
         <button
@@ -73,7 +73,7 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
           }`}
         >
           <LinuxIcon className="w-4 h-4" />
-          <span>Linux</span>
+          <span className="hidden sm:inline">Linux</span>
         </button>
 
         <span className="w-px h-4 bg-white/10" />
@@ -87,7 +87,7 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
           }`}
         >
           <SmartphoneIcon className="w-4 h-4" />
-          <span>iOS</span>
+          <span className="hidden sm:inline">iOS</span>
         </button>
 
         <button
@@ -99,7 +99,7 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
           }`}
         >
           <AndroidIcon className="w-4 h-4" />
-          <span>Android</span>
+          <span className="hidden sm:inline">Android</span>
         </button>
 
         <button
@@ -111,7 +111,7 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
           }`}
         >
           <SolanaIcon className="w-4 h-4" />
-          <span>Seeker</span>
+          <span className="hidden sm:inline">Seeker</span>
         </button>
       </div>
 

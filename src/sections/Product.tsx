@@ -63,11 +63,11 @@ const Product: React.FC = () => {
       const section = sectionRef.current;
       if (!section) return;
       const rect = section.getBoundingClientRect();
-      // Only intercept when section is mostly in view
-      if (rect.top > window.innerHeight * 0.3 || rect.bottom < window.innerHeight * 0.5) return;
+      // Intercept when section is in view (top is above 60% of viewport, bottom is below 40%)
+      if (rect.top > window.innerHeight * 0.6 || rect.bottom < window.innerHeight * 0.4) return;
 
       const now = Date.now();
-      if (Math.abs(e.deltaY) < 20) return;
+      if (Math.abs(e.deltaY) < 5) return;
 
       const idx = activeIndexRef.current;
       // At first feature scrolling up, or last feature scrolling down — let page scroll
@@ -145,7 +145,7 @@ const Product: React.FC = () => {
                     <span className="text-xs font-bold tracking-[0.2em] text-white uppercase">{data.tag}</span>
                 </div>
               </FadeIn>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl text-white tracking-tight mb-6 leading-tight font-medium min-h-[1.2em]">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl text-white tracking-tight mb-5 leading-tight font-medium min-h-[1.2em]">
                  <GlideText text={data.headline} />
               </h2>
               <FadeIn delay={200}>
@@ -156,10 +156,10 @@ const Product: React.FC = () => {
             </div>
 
             {/* Bottom: Progress Navigation List */}
-            <div className="mt-auto mb-12 lg:mb-24 relative pl-4 pt-8">
-              <div className="absolute left-[7px] top-2 bottom-2 w-[2px] bg-white/10 z-0 rounded-full"></div>
+            <div className="mt-auto mb-12 lg:mb-16 relative pl-4 pt-6">
+              <div className="absolute left-[7px] top-8 bottom-2 w-[2px] bg-white/10 z-0 rounded-full"></div>
               <div
-                className="absolute left-[7px] top-2 w-[2px] bg-primary z-0 rounded-full transition-all duration-500 ease-out"
+                className="absolute left-[7px] top-8 w-[2px] bg-primary z-0 rounded-full transition-all duration-500 ease-out"
                 style={{ height: `${(activeIndex / (features.length - 1)) * 100}%` }}
               ></div>
 
@@ -201,7 +201,7 @@ const Product: React.FC = () => {
 
              {/* Box 1: Animation Visual */}
              <div className="lg:col-span-7 lg:order-2 w-full">
-                <TechBorderContainer className="h-[320px]">
+                <TechBorderContainer className="h-[350px]">
                     <div className="w-full h-full bg-[#080808] rounded-xl border border-white/5 relative overflow-hidden shadow-2xl flex flex-col">
                       <div className="h-10 md:h-12 border-b border-white/5 flex items-center justify-between px-4 md:px-6 z-20 bg-[#080808]/80 backdrop-blur-md">
                         <div className="flex space-x-2">
