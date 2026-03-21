@@ -200,8 +200,8 @@ const Product: React.FC = () => {
           <div className="lg:col-span-7 grid lg:grid-cols-12 gap-4 relative items-center">
 
              {/* Box 1: Animation Visual */}
-             <div className="lg:col-span-7 w-full h-full">
-                <TechBorderContainer className="h-full min-h-[360px]">
+             <div className="lg:col-span-7 lg:order-2 w-full">
+                <TechBorderContainer className="h-[320px]">
                     <div className="w-full h-full bg-[#080808] rounded-xl border border-white/5 relative overflow-hidden shadow-2xl flex flex-col">
                       <div className="h-10 md:h-12 border-b border-white/5 flex items-center justify-between px-4 md:px-6 z-20 bg-[#080808]/80 backdrop-blur-md">
                         <div className="flex space-x-2">
@@ -228,7 +228,7 @@ const Product: React.FC = () => {
              </div>
 
              {/* Box 2: Text Description */}
-             <div className="lg:col-span-5 w-full">
+             <div className="lg:col-span-5 lg:order-1 w-full">
                 <TechBorderContainer>
                     <div className="w-full bg-[#080808] rounded-xl border border-white/5 p-4 md:p-5 shadow-2xl relative">
                        <div key={activeIndex} className="animate-slide-up">
