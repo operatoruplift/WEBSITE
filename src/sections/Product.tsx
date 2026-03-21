@@ -63,20 +63,28 @@ const Product: React.FC = () => {
       const section = sectionRef.current;
       if (!section) return;
       const rect = section.getBoundingClientRect();
-      // Intercept when section is in view (top is above 60% of viewport, bottom is below 40%)
-      if (rect.top > window.innerHeight * 0.6 || rect.bottom < window.innerHeight * 0.4) return;
+      const vh = window.innerHeight;
 
-      const now = Date.now();
-      if (Math.abs(e.deltaY) < 5) return;
+      // Check if section overlaps the viewport at all
+      const sectionVisible = rect.top < vh && rect.bottom > 0;
+      if (!sectionVisible) return;
+
+      // Check if the sticky content is roughly centered (section top scrolled past)
+      const stickyActive = rect.top <= vh * 0.1 && rect.bottom > vh * 0.5;
+      if (!stickyActive) return;
+
+      if (Math.abs(e.deltaY) < 3) return;
 
       const idx = activeIndexRef.current;
-      // At first feature scrolling up, or last feature scrolling down — let page scroll
+      // At first feature scrolling up, or last feature scrolling down — let page scroll through
       if (e.deltaY < 0 && idx === 0) return;
       if (e.deltaY > 0 && idx === features.length - 1) return;
 
-      // Prevent page scroll — we handle it
+      // ALWAYS block scroll first, then check cooldown
       e.preventDefault();
+      e.stopPropagation();
 
+      const now = Date.now();
       if (now - lastWheelTime < WHEEL_COOLDOWN) return;
       lastWheelTime = now;
 
@@ -86,7 +94,7 @@ const Product: React.FC = () => {
         setActiveIndex(prev => Math.max(0, prev - 1));
       }
       setAnimStep(0);
-      setTimerKey(k => k + 1); // reset auto-advance timer
+      setTimerKey(k => k + 1);
     };
 
     // Must be non-passive to allow preventDefault
@@ -126,7 +134,7 @@ const Product: React.FC = () => {
     <div
       id="product"
       ref={sectionRef}
-      className="relative bg-slanted-lines w-full lg:min-h-[500vh] min-h-screen"
+      className="relative bg-slanted-lines w-full lg:min-h-[600vh] min-h-screen"
       style={{ backgroundColor: '#050505' }}
     >
 
