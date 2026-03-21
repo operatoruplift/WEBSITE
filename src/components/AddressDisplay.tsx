@@ -14,8 +14,8 @@ const AddressDisplay: React.FC<AddressDisplayProps> = ({ address, label = "We Br
       await navigator.clipboard.writeText(address);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy text: ', err);
+    } catch {
+      // clipboard API may not be available in all contexts
     }
   };
 

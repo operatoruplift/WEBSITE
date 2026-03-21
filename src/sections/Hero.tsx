@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import HeroAnimation from '@/src/components/HeroAnimation';
 import DownloadWidget from '@/src/components/DownloadWidget';
 import TrustedBy from '@/src/components/TrustedBy';
@@ -12,11 +13,15 @@ const Hero: React.FC = () => {
   return (
     <div className="relative min-h-screen w-full bg-background overflow-hidden selection:bg-primary/30 selection:text-white flex flex-col">
       
-      {/* Background Visualization Layer - Desktop Only */}
-      <div className="hidden lg:block absolute inset-0 z-0 lg:left-[10%] pointer-events-none opacity-60 mix-blend-screen">
-        <HeroAnimation />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent w-1/3"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent h-32 bottom-0"></div>
+      {/* Background Visualization Layer - Desktop Only — covers full viewport */}
+      <div className="hidden lg:block absolute inset-0 z-0 pointer-events-none opacity-70">
+        <HeroAnimation className="w-full h-full" />
+        {/* Left fade so text remains readable */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" style={{ width: '45%' }}></div>
+        {/* Bottom fade into next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent"></div>
+        {/* Top fade under navbar */}
+        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background/80 to-transparent"></div>
       </div>
 
       <div className="relative z-10 pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-10 md:pb-12 px-4 sm:px-6 md:px-12 lg:pt-32 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 lg:gap-12 flex-grow">
@@ -49,9 +54,11 @@ const Hero: React.FC = () => {
             <p className="text-sm sm:text-base md:text-lg text-gray-400 mb-6 md:mb-8 max-w-xl leading-relaxed">
               {data.description}
             </p>
-            <div className="mb-6 md:mb-8">
-              <AddressDisplay address={data.contractAddress} label={data.contractLabel} />
-            </div>
+            {data.contractAddress && (
+              <div className="mb-6 md:mb-8">
+                <AddressDisplay address={data.contractAddress} label={data.contractLabel} />
+              </div>
+            )}
           </FadeIn>
 
           {/* Mobile & Tablet Animation Container - Placed between Text and Download */}
@@ -61,8 +68,19 @@ const Hero: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/50 pointer-events-none"></div>
           </div>
 
-          {/* Download Widget */}
+          {/* CTAs */}
           <FadeIn delay={800}>
+            <div className="flex flex-col sm:flex-row items-start gap-3 mb-8">
+              <Link href="/login"
+                className="inline-flex items-center px-6 py-3 bg-primary text-white font-bold text-sm rounded-lg hover:bg-primary/80 transition-all shadow-[0_0_20px_rgba(231,118,48,0.3)] hover:shadow-[0_0_30px_rgba(231,118,48,0.5)] uppercase tracking-wide">
+                Join Waitlist
+                <svg className="ml-2 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+              </Link>
+              <Link href="/product"
+                className="inline-flex items-center px-6 py-3 bg-white/5 text-white font-bold text-sm rounded-lg border border-white/10 hover:bg-white/10 transition-all uppercase tracking-wide">
+                Explore Product
+              </Link>
+            </div>
             <DownloadWidget data={data} />
           </FadeIn>
 

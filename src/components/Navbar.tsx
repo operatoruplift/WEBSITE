@@ -20,6 +20,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
         <Link
           href="/"
           className="flex items-center hover:opacity-80 transition-opacity z-50"
+          aria-label="Operator Uplift home"
         >
           <Logo className="w-8 h-8 md:w-10 md:h-10" />
         </Link>
@@ -59,14 +60,14 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
             <span className="hidden xl:inline">Open Source</span>
           </a>
           
-          <Link 
-            href="https://help.operatoruplift.com/getting-started"
-            className="text-xs font-bold bg-white text-black px-3 lg:px-4 py-2 rounded-sm hover:bg-gray-200 transition-colors uppercase tracking-wide whitespace-nowrap"
+          <Link
+            href="/login"
+            className="text-xs font-bold bg-primary text-white px-3 lg:px-4 py-2 rounded-sm hover:bg-primary/80 transition-colors uppercase tracking-wide whitespace-nowrap shadow-[0_0_12px_rgba(231,118,48,0.3)]"
           >
-            Get Started
+            Join Waitlist
           </Link>
-          
-          <Link 
+
+          <Link
             href="/contact"
             className="text-xs font-bold bg-white/10 text-white border border-white/10 px-3 lg:px-4 py-2 rounded-sm hover:bg-white/20 transition-all uppercase tracking-wide whitespace-nowrap"
           >
@@ -123,15 +124,15 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
             <span>Open Source</span>
           </a>
           
-          <Link 
-            href="https://help.operatoruplift.com/getting-started"
-            className="text-sm font-bold bg-white text-black px-4 py-3 rounded-sm hover:bg-gray-200 transition-colors uppercase tracking-wide w-full text-center"
+          <Link
+            href="/app"
+            className="text-sm font-bold bg-primary text-white px-4 py-3 rounded-sm hover:bg-primary/80 transition-colors uppercase tracking-wide w-full text-center shadow-[0_0_12px_rgba(231,118,48,0.3)]"
             onClick={() => setMobileMenuOpen(false)}
           >
-            Get Started
+            Launch App
           </Link>
-          
-          <Link 
+
+          <Link
             href="/contact"
             className="text-sm font-bold bg-white/10 text-white border border-white/10 px-4 py-3 rounded-sm hover:bg-white/20 transition-all uppercase tracking-wide w-full text-center"
             onClick={() => setMobileMenuOpen(false)}

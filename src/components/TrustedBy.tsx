@@ -1,19 +1,23 @@
 
 import React from 'react';
+import { providerLogos } from './ProviderLogos';
 
 const TrustedBy: React.FC = () => {
   const models = [
-    { name: "GPT-4o", provider: "OpenAI" },
-    { name: "Claude 3.5 Sonnet", provider: "Anthropic" },
-    { name: "Gemini 1.5 Pro", provider: "Google" },
-    { name: "Llama 3.1", provider: "Meta" },
-    { name: "Mistral Large", provider: "Mistral AI" },
-    { name: "Command R+", provider: "Cohere" },
-    { name: "Grok-1", provider: "xAI" },
-    { name: "DeepSeek-V2", provider: "DeepSeek" },
+    { name: "Claude Opus 4.6", provider: "Anthropic" },
+    { name: "GPT-4.1", provider: "OpenAI" },
+    { name: "Gemini 2.5 Pro", provider: "Google" },
+    { name: "Llama 4 Maverick", provider: "Meta" },
+    { name: "Mistral Large 25.03", provider: "Mistral AI" },
+    { name: "Command A", provider: "Cohere" },
+    { name: "Grok 3", provider: "xAI" },
+    { name: "DeepSeek-R1", provider: "DeepSeek" },
+    { name: "Qwen 3", provider: "Alibaba" },
+    { name: "Phi-4", provider: "Microsoft" },
+    { name: "Ollama", provider: "Local" },
+    { name: "LM Studio", provider: "Local" },
   ];
 
-  // Duplicate the array to ensure seamless scrolling
   const marqueeItems = [...models, ...models];
 
   return (
@@ -22,32 +26,36 @@ const TrustedBy: React.FC = () => {
         <span className="w-2 h-2 rounded-full bg-primary mr-2 shadow-[0_0_8px_rgba(231,118,48,0.4)]"></span>
         <span className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">Powered By</span>
       </div>
-      
-      {/* Container with fade-in masks on sides */}
+
       <div className="relative w-full overflow-hidden mask-gradient">
-        {/* Gradient overlays for fade effect */}
         <div className="absolute top-0 left-0 w-12 md:w-24 h-full bg-gradient-to-r from-background to-transparent z-10"></div>
         <div className="absolute top-0 right-0 w-12 md:w-24 h-full bg-gradient-to-l from-background to-transparent z-10"></div>
 
-        {/* Marquee Track */}
         <div className="flex w-fit animate-marquee whitespace-nowrap">
-          {marqueeItems.map((model, index) => (
-            <div 
-              key={`${model.name}-${index}`} 
-              className="flex items-center space-x-3 mx-8 opacity-50 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 cursor-default group"
-            >
-              <div className="flex flex-col">
-                <span className="text-lg md:text-xl text-white font-mono tracking-tight group-hover:text-primary transition-colors">
-                  {model.name}
-                </span>
-                <span className="text-[10px] text-muted font-bold tracking-wider uppercase">
-                  {model.provider}
-                </span>
+          {marqueeItems.map((model, index) => {
+            const LogoComponent = providerLogos[model.provider];
+            return (
+              <div
+                key={`${model.name}-${index}`}
+                className="flex items-center space-x-3 mx-8 opacity-50 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 cursor-default group"
+              >
+                {LogoComponent && (
+                  <div className="text-gray-500 group-hover:text-primary transition-colors">
+                    <LogoComponent className="w-5 h-5" />
+                  </div>
+                )}
+                <div className="flex flex-col">
+                  <span className="text-lg md:text-xl text-white font-mono tracking-tight group-hover:text-primary transition-colors">
+                    {model.name}
+                  </span>
+                  <span className="text-[10px] text-muted font-bold tracking-wider uppercase">
+                    {model.provider}
+                  </span>
+                </div>
+                <div className="w-1 h-1 bg-white/20 rounded-full ml-8"></div>
               </div>
-              {/* Separator dot */}
-              <div className="w-1 h-1 bg-white/20 rounded-full ml-8"></div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

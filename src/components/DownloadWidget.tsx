@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
 import { HeroData } from '@/lib/types';
-import { DownloadIcon, AppleIcon, WindowsIcon, LinuxIcon, MailIcon } from './Icons';
+import { DownloadIcon, AppleIcon, WindowsIcon, LinuxIcon, AndroidIcon, SmartphoneIcon, SolanaIcon, MailIcon } from './Icons';
 
 interface DownloadWidgetProps {
   data: HeroData;
 }
 
 const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
-  const [activeTab, setActiveTab] = useState<'windows'>('windows');
+  const [activeTab, setActiveTab] = useState<'macos' | 'windows' | 'linux' | 'ios' | 'android' | 'seeker'>('macos');
   const [showModal, setShowModal] = useState(false);
 
-  const currentDownload = data.downloads[activeTab];
-  const downloadUrl = '#';
+  const platformInfo: Record<string, { label: string; version: string }> = {
+    macos: { label: 'Download for macOS', version: 'v0.0.1-beta (ARM64)' },
+    windows: { label: 'Download for Windows', version: 'v0.0.1-beta (x64)' },
+    linux: { label: 'Download for Linux', version: 'v0.0.1-beta (x64)' },
+    ios: { label: 'Download for iOS', version: 'Coming Soon' },
+    android: { label: 'Download for Android', version: 'Coming Soon' },
+    seeker: { label: 'Download for Seeker', version: 'Solana Phone' },
+  };
+
+  const current = platformInfo[activeTab];
 
   const handleDownloadClick = () => {
     setShowModal(true);
@@ -19,12 +27,7 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
 
   const handleConfirmDownload = () => {
     setShowModal(false);
-    const link = document.createElement('a');
-    link.href = downloadUrl;
-    link.download = 'Uplift.exe';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Download URL will be set when builds are available
   };
 
   const handleCancelDownload = () => {
@@ -34,15 +37,26 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
   return (
     <>
     <div className="mt-12 w-full max-w-xl animate-slide-up" style={{ animationDelay: '0.4s' }}>
-      
+
       {/* OS Selection Tabs */}
       <div className="flex items-center space-x-6 mb-4 ml-1">
+        <button
+          onClick={() => setActiveTab('macos')}
+          className={`flex items-center space-x-2 text-xs font-bold tracking-wider uppercase transition-all duration-300 pb-2 border-b-2 ${
+            activeTab === 'macos'
+              ? 'text-white border-primary'
+              : 'text-muted border-transparent hover:text-white'
+          }`}
+        >
+          <AppleIcon className="w-4 h-4" />
+          <span>macOS</span>
+        </button>
 
         <button
           onClick={() => setActiveTab('windows')}
           className={`flex items-center space-x-2 text-xs font-bold tracking-wider uppercase transition-all duration-300 pb-2 border-b-2 ${
-            activeTab === 'windows' 
-              ? 'text-white border-primary' 
+            activeTab === 'windows'
+              ? 'text-white border-primary'
               : 'text-muted border-transparent hover:text-white'
           }`}
         >
@@ -50,6 +64,55 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
           <span>Windows</span>
         </button>
 
+        <button
+          onClick={() => setActiveTab('linux')}
+          className={`flex items-center space-x-2 text-xs font-bold tracking-wider uppercase transition-all duration-300 pb-2 border-b-2 ${
+            activeTab === 'linux'
+              ? 'text-white border-primary'
+              : 'text-muted border-transparent hover:text-white'
+          }`}
+        >
+          <LinuxIcon className="w-4 h-4" />
+          <span>Linux</span>
+        </button>
+
+        <span className="w-px h-4 bg-white/10" />
+
+        <button
+          onClick={() => setActiveTab('ios')}
+          className={`flex items-center space-x-2 text-xs font-bold tracking-wider uppercase transition-all duration-300 pb-2 border-b-2 ${
+            activeTab === 'ios'
+              ? 'text-white border-primary'
+              : 'text-muted border-transparent hover:text-white'
+          }`}
+        >
+          <SmartphoneIcon className="w-4 h-4" />
+          <span>iOS</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('android')}
+          className={`flex items-center space-x-2 text-xs font-bold tracking-wider uppercase transition-all duration-300 pb-2 border-b-2 ${
+            activeTab === 'android'
+              ? 'text-white border-primary'
+              : 'text-muted border-transparent hover:text-white'
+          }`}
+        >
+          <AndroidIcon className="w-4 h-4" />
+          <span>Android</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('seeker')}
+          className={`flex items-center space-x-2 text-xs font-bold tracking-wider uppercase transition-all duration-300 pb-2 border-b-2 ${
+            activeTab === 'seeker'
+              ? 'text-white border-primary'
+              : 'text-muted border-transparent hover:text-white'
+          }`}
+        >
+          <SolanaIcon className="w-4 h-4" />
+          <span>Seeker</span>
+        </button>
       </div>
 
       {/* Main Download Button Container */}
@@ -63,7 +126,7 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
           </button>
 
         <div className="flex flex-col justify-center">
-            <span className="text-gray-300 text-sm font-mono">{currentDownload.version}</span>
+            <span className="text-gray-300 text-sm font-mono">{current.version}</span>
             <span className="text-muted text-xs mt-0.5">SHA256 Signed</span>
         </div>
       </div>
@@ -71,11 +134,11 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
 
       {/* Modal */}
       {showModal && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in"
           onClick={handleCancelDownload}
         >
-          <div 
+          <div
             className="bg-background border border-white/20 rounded-lg p-8 md:p-10 max-w-lg w-full shadow-2xl relative overflow-hidden transform transition-all duration-300 scale-100"
             onClick={(e) => e.stopPropagation()}
             style={{
@@ -84,7 +147,7 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
           >
             {/* Subtle gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none"></div>
-            
+
             {/* Close button */}
             <button
               onClick={handleCancelDownload}
@@ -101,7 +164,7 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
               <div className="flex items-center mb-4">
                 <span className="w-2.5 h-2.5 rounded-full bg-primary mr-3 shadow-[0_0_12px_rgba(255,85,0,0.8)] animate-pulse"></span>
                 <h3 className="text-xl md:text-2xl font-bold text-white uppercase tracking-widest">
-                  MVP Version Notice
+                  Coming Soon
                 </h3>
               </div>
               <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
@@ -110,17 +173,17 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
             {/* Content */}
             <div className="relative mb-10">
               <p className="text-gray-300 text-base md:text-lg leading-relaxed mb-6">
-                This is an MVP version. Users might face some bugs. Please cooperate and show us support.
+                We&apos;re rebuilding from the ground up to deliver the right foundation. Join the waitlist to be first in line.
               </p>
               <div className="flex items-center gap-3 pt-4 border-t border-white/10">
                 <MailIcon className="w-5 h-5 text-primary flex-shrink-0" />
                 <div className="flex flex-col">
-                  <span className="text-gray-400 text-sm mb-1">Contact us for support:</span>
-                  <a 
-                    href="mailto:operatoruplift@gmail.com" 
+                  <span className="text-gray-400 text-sm mb-1">Get notified:</span>
+                  <a
+                    href="mailto:matt@operatoruplift.com"
                     className="text-primary hover:text-primary/80 transition-colors duration-300 text-base font-medium"
                   >
-                    operatoruplift@gmail.com
+                    matt@operatoruplift.com
                   </a>
                 </div>
               </div>
@@ -129,20 +192,12 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = ({ data }) => {
             {/* Buttons */}
             <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <button
-                onClick={handleConfirmDownload}
+                onClick={handleCancelDownload}
                 className="flex-1 group relative overflow-hidden bg-white text-black text-sm md:text-base py-3.5 px-8 rounded-sm font-semibold hover:bg-gray-50 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
               >
                 <span className="relative z-10 flex items-center justify-center">
-                  <DownloadIcon className="w-4 h-4 mr-2" />
-                  Download
+                  Got It
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-              </button>
-              <button
-                onClick={handleCancelDownload}
-                className="flex-1 bg-transparent border border-white/30 text-white text-sm md:text-base py-3.5 px-8 rounded-sm font-semibold hover:border-primary/50 hover:text-primary transition-all duration-300 hover:bg-white/5"
-              >
-                Cancel
               </button>
             </div>
           </div>
