@@ -19,12 +19,22 @@ interface ActivityEvent { id: string; type: string; title: string; description: 
 interface SystemHealth { label: string; status: string; color: string; }
 
 const fetchDashboardData = async () => {
+    // Pull real counts from localStorage
+    let agentCount = 0, chatCount = 0;
+    try {
+        const installed = JSON.parse(localStorage.getItem('installed-agents') || '[]');
+        const custom = JSON.parse(localStorage.getItem('custom-agents') || '[]');
+        const sessions = JSON.parse(localStorage.getItem('chat-sessions-v2') || '[]');
+        agentCount = installed.length + custom.length;
+        chatCount = sessions.length;
+    } catch { /* demo fallback */ }
+
     return new Promise<{ stats: StatData[], activity: ActivityEvent[], health: SystemHealth[] }>((resolve) => {
         setTimeout(() => {
             resolve({
                 stats: [
-                    { id: '1', label: 'Active Agents', value: '14', change: '+3 this week', positive: true, icon: Bot, gradient: 'from-[#F59E0B]/20 to-[#E77630]/10' },
-                    { id: '2', label: 'Workflows Running', value: '8', change: 'Stable', positive: true, icon: Workflow, gradient: 'from-[#E77630]/20 to-[#E77630]/10' },
+                    { id: '1', label: 'Active Agents', value: String(agentCount || 14), change: agentCount ? `${agentCount} installed` : '+3 this week', positive: true, icon: Bot, gradient: 'from-[#F59E0B]/20 to-[#E77630]/10' },
+                    { id: '2', label: 'Chat Sessions', value: String(chatCount || 8), change: chatCount ? 'Local storage' : 'Stable', positive: true, icon: Workflow, gradient: 'from-[#E77630]/20 to-[#E77630]/10' },
                     { id: '3', label: 'Memory Bank Nodes', value: '12.4K', change: '+2.1K today', positive: true, icon: Brain, gradient: 'from-[#E77630]/20 to-[#F59E0B]/10' },
                     { id: '4', label: 'Security Threats Blocked', value: '47', change: '-12% vs yesterday', positive: true, icon: Shield, gradient: 'from-emerald-500/20 to-teal-500/10' },
                 ],
