@@ -7,7 +7,7 @@ import { FadeIn } from './Animators';
 const Footer: React.FC = () => {
   const data = APP_CONTENT.footer;
 
-  const getLinkHref = (link: any): string => {
+  const getLinkHref = (link: { url?: string; action?: string; label: string }): string => {
     if (link.url) return link.url;
     if (link.action === 'contact') return '/contact';
     if (link.action === 'terms') return '/terms';

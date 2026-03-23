@@ -27,7 +27,7 @@ const Contact: React.FC = () => {
     }
   };
 
-  const TechContact = ({ option, children }: { option: any; children: React.ReactNode }) => (
+  const TechContact = ({ option, children }: { option: { id: string; title: string; description: string; iconType: string; url: string }; children: React.ReactNode }) => (
     <div className="relative p-2 rounded-2xl border border-dashed border-white/10 bg-white/[0.01] flex flex-col group h-full">
          <div className="absolute -top-[1px] -left-[1px] w-4 h-4 border-t border-l border-white/30 rounded-tl-lg transition-colors group-hover:border-primary/50"></div>
          <div className="absolute -top-[1px] -right-[1px] w-4 h-4 border-t border-r border-white/30 rounded-tr-lg transition-colors group-hover:border-primary/50"></div>

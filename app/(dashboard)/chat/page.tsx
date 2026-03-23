@@ -82,7 +82,7 @@ export default function ChatPage() {
 
     useEffect(() => {
         const saved = localStorage.getItem('chat-sessions-v2');
-        if (saved) { try { const parsed = JSON.parse(saved); setSessions(parsed.map((s: any) => ({ ...s, createdAt: new Date(s.createdAt), messages: s.messages.map((m: any) => ({ ...m, timestamp: new Date(m.timestamp) })) }))); if (parsed.length > 0) setActiveSessionId(parsed[0].id); } catch {} }
+        if (saved) { try { const parsed = JSON.parse(saved); setSessions(parsed.map((s: ChatSession & { createdAt: string; messages: (Message & { timestamp: string })[] }) => ({ ...s, createdAt: new Date(s.createdAt), messages: s.messages.map((m) => ({ ...m, timestamp: new Date(m.timestamp) })) }))); if (parsed.length > 0) setActiveSessionId(parsed[0].id); } catch {} }
     }, []);
 
     useEffect(() => { if (sessions.length > 0) localStorage.setItem('chat-sessions-v2', JSON.stringify(sessions)); }, [sessions]);
