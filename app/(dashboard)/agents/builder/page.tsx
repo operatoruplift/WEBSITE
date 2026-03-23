@@ -78,7 +78,7 @@ export default function AgentBuilderPage() {
                     <Card variant="glass" className="p-8 border-white/5 bg-black/40 min-h-[400px]">
                         {step === 0 && (
                             <div className="space-y-6">
-                                <h2 className="text-lg font-bold text-white">Choose a template</h2>
+                                <h2 className="text-lg font-medium text-white">Choose a template</h2>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     {TEMPLATES.map(t => {
                                         const Icon = t.icon;
@@ -102,7 +102,7 @@ export default function AgentBuilderPage() {
 
                         {step === 1 && (
                             <div className="space-y-6">
-                                <h2 className="text-lg font-bold text-white">Configure your agent</h2>
+                                <h2 className="text-lg font-medium text-white">Configure your agent</h2>
                                 <div><label className="text-sm text-gray-400 block mb-2">Agent Name</label><input type="text" value={name} onChange={e => setName(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="My Agent" /></div>
                                 <div><label className="text-sm text-gray-400 block mb-2">Description</label><input type="text" value={description} onChange={e => setDescription(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="What does this agent do?" /></div>
                                 <div><label className="text-sm text-gray-400 block mb-2">System Prompt (optional)</label><textarea value={systemPrompt} onChange={e => setSystemPrompt(e.target.value)} rows={5} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none resize-none font-mono text-sm" placeholder="You are a helpful assistant that..." /></div>
@@ -111,7 +111,7 @@ export default function AgentBuilderPage() {
 
                         {step === 2 && (
                             <div className="space-y-6">
-                                <h2 className="text-lg font-bold text-white">Select a model</h2>
+                                <h2 className="text-lg font-medium text-white">Select a model</h2>
                                 <div className="space-y-3">
                                     {MODELS.map(m => (
                                         <button key={m.id} onClick={() => setModel(m.id)}
@@ -129,11 +129,11 @@ export default function AgentBuilderPage() {
 
                         {step === 3 && (
                             <div className="space-y-6">
-                                <h2 className="text-lg font-bold text-white">Review & Deploy</h2>
+                                <h2 className="text-lg font-medium text-white">Review & Deploy</h2>
                                 <div className="space-y-4 p-6 rounded-xl bg-white/[0.02] border border-white/5">
                                     <div className="flex items-center gap-4">
                                         {selectedTemplate && <div className={`w-12 h-12 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center ${selectedTemplate.color}`}><selectedTemplate.icon size={22} /></div>}
-                                        <div><p className="text-lg font-bold text-white">{name || 'Unnamed Agent'}</p><p className="text-xs text-gray-500">{description}</p></div>
+                                        <div><p className="text-lg font-medium text-white">{name || 'Unnamed Agent'}</p><p className="text-xs text-gray-500">{description}</p></div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
                                         <div><p className="text-[10px] text-gray-500 uppercase font-mono mb-1">Template</p><p className="text-sm text-white">{selectedTemplate?.name}</p></div>

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Ca
 import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
 
-interface MetricCard { label: string; value: string; change: string; positive: boolean; icon: any; }
+interface MetricCard { label: string; value: string; change: string; positive: boolean; icon: React.ComponentType<{ size?: number; className?: string }>; }
 
 export default function AnalyticsPage() {
     const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('7d');

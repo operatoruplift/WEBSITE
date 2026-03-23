@@ -7,7 +7,7 @@ import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
 
-interface Notification { id: string; type: string; title: string; message: string; time: string; read: boolean; icon: any; color: string; }
+interface Notification { id: string; type: string; title: string; message: string; time: string; read: boolean; icon: React.ComponentType<{ size?: number; className?: string }>; color: string; }
 
 const INITIAL_NOTIFICATIONS: Notification[] = [
     { id: '1', type: 'security', title: 'Blackwall: 3 threats blocked', message: 'Prompt injection attempts neutralized from 2 IPs', time: '5m ago', read: false, icon: Shield, color: 'text-red-400' },
