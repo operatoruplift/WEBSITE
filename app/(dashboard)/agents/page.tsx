@@ -44,6 +44,32 @@ export default function AgentsPage() {
     const [filter, setFilter] = useState<'all' | 'running' | 'idle' | 'error'>('all');
     const { showToast } = useToast();
 
+    // Load custom agents from builder and installed agents from marketplace
+    useEffect(() => {
+        try {
+            const custom: { name: string; description?: string; model?: string }[] = JSON.parse(localStorage.getItem('custom-agents') || '[]');
+            const installed: string[] = JSON.parse(localStorage.getItem('installed-agents') || '[]');
+
+            const customAgents: Agent[] = custom.map((a, i) => ({
+                id: `custom-${i}`, name: a.name, description: a.description || 'Custom agent',
+                status: 'idle' as const, model: a.model || 'Claude Opus 4.6',
+                lastActive: 'Ready', sessions: 0, memoryUsage: '0MB', favorite: false,
+            }));
+
+            const installedAgents: Agent[] = installed
+                .filter(name => !DEMO_AGENTS.some(d => d.name === name))
+                .map((name, i) => ({
+                    id: `installed-${i}`, name, description: 'Installed from marketplace',
+                    status: 'idle' as const, model: 'Auto', lastActive: 'Ready',
+                    sessions: 0, memoryUsage: '0MB', favorite: false,
+                }));
+
+            if (customAgents.length || installedAgents.length) {
+                setAgents(prev => [...prev, ...customAgents, ...installedAgents]);
+            }
+        } catch { /* demo fallback */ }
+    }, []);
+
     const filtered = agents.filter(a => {
         const matchSearch = !search || a.name.toLowerCase().includes(search.toLowerCase()) || a.description.toLowerCase().includes(search.toLowerCase());
         const matchFilter = filter === 'all' || a.status === filter;
