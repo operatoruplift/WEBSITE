@@ -36,12 +36,28 @@ export default function ProfilePage() {
         setEditing(false);
     };
 
-    const stats = [
-        { label: 'Sessions', value: '247' },
-        { label: 'Agents Used', value: '12' },
-        { label: 'Workflows', value: '5' },
-        { label: 'Memory Nodes', value: '6.2K' },
-    ];
+    const [stats, setStats] = useState([
+        { label: 'Chat Sessions', value: '0' },
+        { label: 'Installed Agents', value: '0' },
+        { label: 'Custom Agents', value: '0' },
+        { label: 'API Keys', value: '0' },
+    ]);
+
+    useEffect(() => {
+        try {
+            const sessions = JSON.parse(localStorage.getItem('chat-sessions-v2') || '[]');
+            const installed = JSON.parse(localStorage.getItem('installed-agents') || '[]');
+            const custom = JSON.parse(localStorage.getItem('custom-agents') || '[]');
+            const settings = JSON.parse(localStorage.getItem('ou-settings') || '{}');
+            const keys = settings.apiKeys || [];
+            setStats([
+                { label: 'Chat Sessions', value: String(sessions.length) },
+                { label: 'Installed Agents', value: String(installed.length) },
+                { label: 'Custom Agents', value: String(custom.length) },
+                { label: 'API Keys', value: String(keys.length) },
+            ]);
+        } catch { /* demo mode */ }
+    }, []);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -119,8 +135,8 @@ export default function ProfilePage() {
                             {[
                                 { icon: Mail, label: 'Email', value: user.email },
                                 { icon: Calendar, label: 'Member Since', value: user.joined },
-                                { icon: Shield, label: 'Security', value: '2FA Enabled' },
-                                { icon: Key, label: 'API Keys', value: '2 active keys' },
+                                { icon: Shield, label: 'Security', value: 'Password Protected' },
+                                { icon: Key, label: 'API Keys', value: `${stats[3]?.value || '0'} active` },
                             ].map(item => {
                                 const Icon = item.icon;
                                 return (

@@ -1,35 +1,59 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { BarChart3, TrendingUp, Users, Zap, Clock, ArrowUpRight, ArrowDownRight, Activity } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
 
-interface MetricCard { label: string; value: string; change: string; positive: boolean; icon: React.ComponentType<{ size?: number; className?: string }>; }
+// Seeded random for consistent but different data per range
+function seededRandom(seed: number) {
+    let s = seed;
+    return () => { s = (s * 16807 + 0) % 2147483647; return s / 2147483647; };
+}
+
+const RANGE_DATA = {
+    '24h': { sessions: '342', users: '89', invocations: '2.1K', avgTime: '0.9s', sessionChange: '+5.2%', userChange: '+2.1%', invokeChange: '+18.4%', timeChange: '-8%', seed: 42 },
+    '7d':  { sessions: '2,847', users: '342', invocations: '18.2K', avgTime: '1.2s', sessionChange: '+12.3%', userChange: '+8.1%', invokeChange: '+24.7%', timeChange: '-15%', seed: 77 },
+    '30d': { sessions: '11,204', users: '1,247', invocations: '74.6K', avgTime: '1.4s', sessionChange: '+31.2%', userChange: '+22.5%', invokeChange: '+42.1%', timeChange: '-6%', seed: 123 },
+};
 
 export default function AnalyticsPage() {
     const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('7d');
+    const data = RANGE_DATA[timeRange];
 
-    const metrics: MetricCard[] = [
-        { label: 'Total Sessions', value: '2,847', change: '+12.3%', positive: true, icon: Activity },
-        { label: 'Active Users', value: '342', change: '+8.1%', positive: true, icon: Users },
-        { label: 'Agent Invocations', value: '18.2K', change: '+24.7%', positive: true, icon: Zap },
-        { label: 'Avg Response Time', value: '1.2s', change: '-15%', positive: true, icon: Clock },
+    const metrics = [
+        { label: 'Total Sessions', value: data.sessions, change: data.sessionChange, positive: true, icon: Activity },
+        { label: 'Active Users', value: data.users, change: data.userChange, positive: true, icon: Users },
+        { label: 'Agent Invocations', value: data.invocations, change: data.invokeChange, positive: true, icon: Zap },
+        { label: 'Avg Response Time', value: data.avgTime, change: data.timeChange, positive: true, icon: Clock },
     ];
 
-    const topAgents = [
-        { name: 'Code Reviewer', invocations: 4200, trend: '+18%', bar: 85 },
-        { name: 'Research Assistant', invocations: 3100, trend: '+12%', bar: 63 },
-        { name: 'Writing Coach', invocations: 2800, trend: '+9%', bar: 57 },
-        { name: 'Data Analyst', invocations: 2100, trend: '+22%', bar: 43 },
-        { name: 'Security Scanner', invocations: 1800, trend: '+5%', bar: 37 },
-    ];
+    const topAgents = useMemo(() => {
+        const multiplier = timeRange === '24h' ? 0.15 : timeRange === '30d' ? 4.2 : 1;
+        return [
+            { name: 'Code Reviewer', invocations: Math.round(4200 * multiplier), trend: '+18%', bar: 85 },
+            { name: 'Research Assistant', invocations: Math.round(3100 * multiplier), trend: '+12%', bar: 63 },
+            { name: 'Writing Coach', invocations: Math.round(2800 * multiplier), trend: '+9%', bar: 57 },
+            { name: 'Data Analyst', invocations: Math.round(2100 * multiplier), trend: '+22%', bar: 43 },
+            { name: 'Security Scanner', invocations: Math.round(1800 * multiplier), trend: '+5%', bar: 37 },
+        ];
+    }, [timeRange]);
 
-    const hourlyData = Array.from({ length: 24 }, (_, i) => ({
-        hour: `${i.toString().padStart(2, '0')}:00`,
-        value: Math.floor(Math.random() * 80 + 20 + (i > 8 && i < 20 ? 60 : 0)),
-    }));
+    const chartData = useMemo(() => {
+        const rand = seededRandom(data.seed);
+        const count = timeRange === '24h' ? 24 : timeRange === '7d' ? 7 : 30;
+        return Array.from({ length: count }, (_, i) => {
+            const label = timeRange === '24h' ? `${i.toString().padStart(2, '0')}:00`
+                : timeRange === '7d' ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i]
+                : `${(i + 1).toString()}`;
+            const base = timeRange === '24h' ? (i > 8 && i < 20 ? 60 : 10) : 30;
+            return { label, value: Math.floor(rand() * 60 + base) };
+        });
+    }, [timeRange, data.seed]);
+
+    const chartLabel = timeRange === '24h' ? 'Hourly Activity' : timeRange === '7d' ? 'Daily Activity' : 'Daily Activity (30d)';
+    const showLabel = (i: number) => timeRange === '24h' ? i % 4 === 0 : timeRange === '7d' ? true : i % 5 === 0;
 
     return (
         <MobilePageWrapper>
@@ -75,15 +99,15 @@ export default function AnalyticsPage() {
                         <Card variant="glass" className="lg:col-span-2 card-animate" style={{ animationDelay: '300ms' }}>
                             <CardHeader className="border-b border-white/5 pb-4">
                                 <CardTitle className="flex items-center gap-2 text-sm text-gray-300 font-mono uppercase tracking-widest">
-                                    <Activity size={14} className="text-[#F59E0B]" /> Session Activity (Today)
+                                    <Activity size={14} className="text-[#F59E0B]" /> {chartLabel}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="p-6">
                                 <div className="flex items-end gap-1 h-40">
-                                    {hourlyData.map((d, i) => (
-                                        <div key={i} className="flex-1 flex flex-col items-center gap-1 group">
+                                    {chartData.map((d, i) => (
+                                        <div key={`${timeRange}-${i}`} className="flex-1 flex flex-col items-center gap-1 group">
                                             <div className="w-full rounded-t transition-all duration-300 group-hover:bg-[#F59E0B] bg-[#F59E0B]/40" style={{ height: `${d.value}%` }} />
-                                            {i % 4 === 0 && <span className="text-[8px] text-gray-600 font-mono">{d.hour}</span>}
+                                            {showLabel(i) && <span className="text-[8px] text-gray-600 font-mono">{d.label}</span>}
                                         </div>
                                     ))}
                                 </div>
