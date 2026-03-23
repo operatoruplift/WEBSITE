@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from 'react';
-import { Plus, Play, Pause, Trash2, Zap, ArrowRight, Clock, CheckCircle2, AlertCircle, GitBranch } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Card';
+import { Plus, Play, Pause, Trash2, Zap, ArrowRight, Clock, GitBranch, X } from 'lucide-react';
+import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
+import { useToast } from '@/src/components/ui/Toast';
 
 interface Workflow {
     id: string;
@@ -33,7 +34,45 @@ const statusConfig = {
 };
 
 export default function WorkflowsPage() {
-    const [workflows] = useState<Workflow[]>(DEMO_WORKFLOWS);
+    const [workflows, setWorkflows] = useState<Workflow[]>(DEMO_WORKFLOWS);
+    const [showCreate, setShowCreate] = useState(false);
+    const [newName, setNewName] = useState('');
+    const [newDesc, setNewDesc] = useState('');
+    const [newTrigger, setNewTrigger] = useState('Manual');
+    const { showToast } = useToast();
+
+    const toggleStatus = (id: string) => {
+        setWorkflows(prev => prev.map(wf => {
+            if (wf.id !== id) return wf;
+            const newStatus = wf.status === 'active' ? 'paused' : 'active';
+            showToast(`${wf.name} ${newStatus === 'active' ? 'activated' : 'paused'}`, newStatus === 'active' ? 'success' : 'info');
+            return { ...wf, status: newStatus };
+        }));
+    };
+
+    const deleteWorkflow = (id: string) => {
+        const wf = workflows.find(w => w.id === id);
+        setWorkflows(prev => prev.filter(w => w.id !== id));
+        showToast(`${wf?.name || 'Workflow'} deleted`, 'info');
+    };
+
+    const createWorkflow = () => {
+        if (!newName.trim()) return;
+        const wf: Workflow = {
+            id: Date.now().toString(),
+            name: newName.trim(),
+            description: newDesc.trim() || 'New workflow',
+            status: 'draft',
+            steps: 1,
+            lastRun: 'Never',
+            runs: 0,
+            trigger: newTrigger,
+        };
+        setWorkflows(prev => [wf, ...prev]);
+        setNewName(''); setNewDesc(''); setNewTrigger('Manual');
+        setShowCreate(false);
+        showToast(`${wf.name} created`, 'success');
+    };
 
     return (
         <MobilePageWrapper>
@@ -48,10 +87,36 @@ export default function WorkflowsPage() {
                             <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Workflows</h1>
                             <p className="text-sm text-gray-400 mt-1">Design and manage multi-step agent pipelines</p>
                         </div>
-                        <GlowButton className="h-11 px-5">
+                        <GlowButton className="h-11 px-5" onClick={() => setShowCreate(true)}>
                             <Plus size={16} className="mr-2" /> New Workflow
                         </GlowButton>
                     </div>
+
+                    {/* Create Modal */}
+                    {showCreate && (
+                        <Card variant="glass" className="border-primary/20">
+                            <CardContent className="p-6">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-white font-semibold">New Workflow</h3>
+                                    <button onClick={() => setShowCreate(false)} className="text-gray-500 hover:text-white"><X size={16} /></button>
+                                </div>
+                                <div className="space-y-4">
+                                    <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="Workflow name" aria-label="Workflow name"
+                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
+                                    <input value={newDesc} onChange={e => setNewDesc(e.target.value)} placeholder="Description" aria-label="Workflow description"
+                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
+                                    <select value={newTrigger} onChange={e => setNewTrigger(e.target.value)} aria-label="Trigger type"
+                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none">
+                                        <option value="Manual">Manual</option>
+                                        <option value="Cron: Daily">Cron: Daily</option>
+                                        <option value="Webhook: GitHub">Webhook: GitHub</option>
+                                        <option value="Event: signup">Event: signup</option>
+                                    </select>
+                                    <GlowButton onClick={createWorkflow} className="w-full">Create Workflow</GlowButton>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {[
@@ -72,7 +137,9 @@ export default function WorkflowsPage() {
                     </div>
 
                     <div className="space-y-3">
-                        {workflows.map((wf, i) => {
+                        {workflows.length === 0 ? (
+                            <div className="text-center py-20"><GitBranch size={48} className="text-gray-700 mx-auto mb-4" /><p className="text-gray-500">No workflows yet</p></div>
+                        ) : workflows.map((wf, i) => {
                             const status = statusConfig[wf.status];
                             return (
                                 <Card key={wf.id} variant="glass" className="card-animate group hover:border-white/10 transition-all" style={{ animationDelay: `${i * 80}ms` }}>
@@ -97,10 +164,15 @@ export default function WorkflowsPage() {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-2 flex-shrink-0">
-                                                {wf.status === 'active' && <button className="p-2 rounded-lg bg-amber-400/10 text-amber-400 hover:bg-amber-400/20 transition-colors"><Pause size={14} /></button>}
-                                                {wf.status === 'paused' && <button className="p-2 rounded-lg bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20 transition-colors"><Play size={14} /></button>}
-                                                {wf.status === 'draft' && <button className="p-2 rounded-lg bg-[#E77630]/10 text-[#E77630] hover:bg-[#E77630]/20 transition-colors"><Play size={14} /></button>}
-                                                <button className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"><Trash2 size={14} /></button>
+                                                {(wf.status === 'active' || wf.status === 'paused') && (
+                                                    <button onClick={() => toggleStatus(wf.id)} className={`p-2 rounded-lg transition-colors ${wf.status === 'active' ? 'bg-amber-400/10 text-amber-400 hover:bg-amber-400/20' : 'bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20'}`}>
+                                                        {wf.status === 'active' ? <Pause size={14} /> : <Play size={14} />}
+                                                    </button>
+                                                )}
+                                                {wf.status === 'draft' && (
+                                                    <button onClick={() => toggleStatus(wf.id)} className="p-2 rounded-lg bg-[#E77630]/10 text-[#E77630] hover:bg-[#E77630]/20 transition-colors"><Play size={14} /></button>
+                                                )}
+                                                <button onClick={() => deleteWorkflow(wf.id)} className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"><Trash2 size={14} /></button>
                                             </div>
                                         </div>
                                     </CardContent>
