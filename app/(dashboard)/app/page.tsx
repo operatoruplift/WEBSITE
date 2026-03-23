@@ -14,8 +14,8 @@ import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
 
-interface StatData { id: string; label: string; value: string; change: string; positive: boolean; icon: any; gradient: string; }
-interface ActivityEvent { id: string; type: string; title: string; description: string; time: string; icon: any; color: string; }
+interface StatData { id: string; label: string; value: string; change: string; positive: boolean; icon: React.ComponentType<{ size?: number; className?: string }>; gradient: string; }
+interface ActivityEvent { id: string; type: string; title: string; description: string; time: string; icon: React.ComponentType<{ size?: number; className?: string }>; color: string; }
 interface SystemHealth { label: string; status: string; color: string; }
 
 const fetchDashboardData = async () => {

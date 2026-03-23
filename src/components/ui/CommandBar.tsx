@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, MessageSquare, Workflow, Bot, Code, Settings, Brain, Layers, Bell, Coins, Network, Sparkles, LayoutDashboard, ArrowRight, Command, Shield } from 'lucide-react';
 
-interface CommandItem { id: string; label: string; description: string; icon: any; href?: string; action?: () => void; category: string; }
+interface CommandItem { id: string; label: string; description: string; icon: React.ComponentType<{ size?: number; className?: string }>; href?: string; action?: () => void; category: string; }
 
 const COMMANDS: CommandItem[] = [
     { id: 'nav-cockpit', label: 'Go to Cockpit', description: 'Dashboard overview', icon: LayoutDashboard, href: '/app', category: 'Navigation' },

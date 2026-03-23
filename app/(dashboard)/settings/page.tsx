@@ -136,7 +136,7 @@ export default function SettingsPage() {
                             <Card variant="glass" className="p-8 border-white/5 bg-black/40">
                                 {activeTab === 'profile' && (
                                     <div className="space-y-6">
-                                        <h2 className="text-lg font-bold text-white">Profile</h2>
+                                        <h2 className="text-lg font-medium text-white">Profile</h2>
                                         <div className="flex items-center gap-6"><div className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold text-white" style={{ background: 'linear-gradient(135deg, #E77630, #E77630)' }}>{displayName.charAt(0).toUpperCase()}</div><div><p className="text-sm text-white font-medium">{displayName}</p><p className="text-xs text-gray-500">{email}</p></div></div>
                                         <div className="space-y-4">
                                             <div><label className="text-sm text-gray-400 block mb-2">Display Name</label><input type="text" value={displayName} onChange={e => setDisplayName(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" /></div>
@@ -146,7 +146,7 @@ export default function SettingsPage() {
                                 )}
                                 {activeTab === 'notifications' && (
                                     <div className="space-y-6">
-                                        <h2 className="text-lg font-bold text-white">Notifications</h2>
+                                        <h2 className="text-lg font-medium text-white">Notifications</h2>
                                         {[
                                             { label: 'Email notifications', value: emailNotifs, set: setEmailNotifs },
                                             { label: 'Push notifications', value: pushNotifs, set: setPushNotifs },
@@ -162,7 +162,7 @@ export default function SettingsPage() {
                                 )}
                                 {activeTab === 'appearance' && (
                                     <div className="space-y-6">
-                                        <h2 className="text-lg font-bold text-white">Appearance</h2>
+                                        <h2 className="text-lg font-medium text-white">Appearance</h2>
                                         <div className="grid grid-cols-3 gap-4">
                                             {['Dark', 'Light', 'System'].map(t => (
                                                 <button key={t} onClick={() => setTheme(t)} className={`p-4 rounded-xl border text-center transition-all ${theme === t ? 'bg-primary/10 border-primary/30 text-white' : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20'}`}>
@@ -175,14 +175,14 @@ export default function SettingsPage() {
                                 )}
                                 {activeTab === 'security' && (
                                     <div className="space-y-6">
-                                        <h2 className="text-lg font-bold text-white">Security</h2>
+                                        <h2 className="text-lg font-medium text-white">Security</h2>
                                         <PasswordChangeForm showToast={showToast} />
                                         <div className="p-4 rounded-xl bg-white/5 border border-white/5"><div className="flex items-center justify-between"><div><p className="text-sm text-white font-medium">Two-Factor Authentication</p><p className="text-xs text-gray-500 mt-1">Add an extra layer of security</p></div><GlowButton variant="outline" size="sm" onClick={() => showToast('2FA requires a connected backend. Coming soon.', 'info')}>Enable 2FA</GlowButton></div></div>
                                     </div>
                                 )}
                                 {activeTab === 'api' && (
                                     <div className="space-y-6">
-                                        <h2 className="text-lg font-bold text-white">API Keys</h2>
+                                        <h2 className="text-lg font-medium text-white">API Keys</h2>
                                         {apiKeys.length > 0 ? (
                                             <div className="space-y-3">
                                                 {apiKeys.map(k => (
@@ -203,7 +203,7 @@ export default function SettingsPage() {
                                 )}
                                 {activeTab === 'data' && (
                                     <div className="space-y-6">
-                                        <h2 className="text-lg font-bold text-white">Data & Storage</h2>
+                                        <h2 className="text-lg font-medium text-white">Data & Storage</h2>
                                         <div className="p-4 rounded-xl bg-white/5 border border-white/5"><div className="flex items-center justify-between"><div><p className="text-sm text-white">Export your data</p><p className="text-xs text-gray-500 mt-1">Download all your data as JSON</p></div><GlowButton variant="outline" size="sm" onClick={handleExportData}>Export</GlowButton></div></div>
                                         <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20"><div className="flex items-center justify-between"><div><p className="text-sm text-red-400 font-medium">Delete All Data</p><p className="text-xs text-gray-500 mt-1">Clear all local storage data</p></div><GlowButton variant="outline" size="sm" className="border-red-500/50 text-red-400 hover:bg-red-500/10" onClick={handleDeleteAccount}>Delete</GlowButton></div></div>
                                     </div>
