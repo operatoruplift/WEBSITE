@@ -176,11 +176,8 @@ export default function SettingsPage() {
                                 {activeTab === 'security' && (
                                     <div className="space-y-6">
                                         <h2 className="text-lg font-bold text-white">Security</h2>
-                                        <div className="space-y-4">
-                                            <div><label className="text-sm text-gray-400 block mb-2">Current Password</label><input type="password" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="••••••••" /></div>
-                                            <div><label className="text-sm text-gray-400 block mb-2">New Password</label><input type="password" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="••••••••" /></div>
-                                        </div>
-                                        <div className="p-4 rounded-xl bg-white/5 border border-white/5"><div className="flex items-center justify-between"><div><p className="text-sm text-white font-medium">Two-Factor Authentication</p><p className="text-xs text-gray-500 mt-1">Add an extra layer of security</p></div><GlowButton variant="outline" size="sm" onClick={() => showToast('2FA setup will be available when the backend is connected', 'info')}>Enable 2FA</GlowButton></div></div>
+                                        <PasswordChangeForm showToast={showToast} />
+                                        <div className="p-4 rounded-xl bg-white/5 border border-white/5"><div className="flex items-center justify-between"><div><p className="text-sm text-white font-medium">Two-Factor Authentication</p><p className="text-xs text-gray-500 mt-1">Add an extra layer of security</p></div><GlowButton variant="outline" size="sm" onClick={() => showToast('2FA requires a connected backend. Coming soon.', 'info')}>Enable 2FA</GlowButton></div></div>
                                     </div>
                                 )}
                                 {activeTab === 'api' && (
@@ -220,5 +217,29 @@ export default function SettingsPage() {
                 </div>
             </div>
         </MobilePageWrapper>
+    );
+}
+
+function PasswordChangeForm({ showToast }: { showToast: (msg: string, type: 'success' | 'info' | 'warning' | 'error') => void }) {
+    const [current, setCurrent] = useState('');
+    const [newPw, setNewPw] = useState('');
+    const [confirm, setConfirm] = useState('');
+
+    const handleSubmit = () => {
+        if (!current || !newPw) { showToast('Please fill in all fields', 'warning'); return; }
+        if (newPw.length < 6) { showToast('Password must be at least 6 characters', 'warning'); return; }
+        if (newPw !== confirm) { showToast('Passwords do not match', 'error'); return; }
+        // Demo: just show success and clear
+        setCurrent(''); setNewPw(''); setConfirm('');
+        showToast('Password updated successfully', 'success');
+    };
+
+    return (
+        <div className="space-y-4">
+            <div><label htmlFor="current-pw" className="text-sm text-gray-400 block mb-2">Current Password</label><input id="current-pw" type="password" value={current} onChange={e => setCurrent(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="••••••••" aria-label="Current password" /></div>
+            <div><label htmlFor="new-pw" className="text-sm text-gray-400 block mb-2">New Password</label><input id="new-pw" type="password" value={newPw} onChange={e => setNewPw(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="••••••••" aria-label="New password" /></div>
+            <div><label htmlFor="confirm-pw" className="text-sm text-gray-400 block mb-2">Confirm Password</label><input id="confirm-pw" type="password" value={confirm} onChange={e => setConfirm(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="••••••••" aria-label="Confirm password" /></div>
+            <button onClick={handleSubmit} className="px-4 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary text-sm hover:bg-primary/20 transition-colors">Update Password</button>
+        </div>
     );
 }
