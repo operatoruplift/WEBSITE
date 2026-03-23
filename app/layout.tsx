@@ -11,14 +11,6 @@ export const metadata: Metadata = {
     description: "One App. Every Agent. All Yours. Local-first AI agents with secure, private memory — no cloud required.",
     url: "https://operatoruplift.com",
     siteName: "Operator Uplift",
-    images: [
-      {
-        url: "/logo.svg",
-        width: 1200,
-        height: 630,
-        alt: "Operator Uplift - Local-First AI OS",
-      },
-    ],
     locale: "en_US",
     type: "website",
   },
@@ -27,7 +19,6 @@ export const metadata: Metadata = {
     title: "Operator Uplift - Your Life, Automated",
     description: "One App. Every Agent. All Yours. Local-first AI agents with secure, private memory — no cloud required.",
     creator: "@OperatorUplift",
-    images: ["/logo.svg"],
   },
   icons: {
     icon: "/logo.svg",
@@ -64,14 +55,35 @@ export default function RootLayout({
           {`
             {
               "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "Operator Uplift",
-              "url": "https://operatoruplift.com",
-              "logo": "https://operatoruplift.com/logo.svg",
-              "sameAs": [
-                "https://x.com/OperatorUplift",
-                "https://www.linkedin.com/company/operatoruplift",
-                "https://github.com/operatoruplift"
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "name": "Operator Uplift",
+                  "url": "https://operatoruplift.com",
+                  "logo": "https://operatoruplift.com/logo.svg",
+                  "founder": {
+                    "@type": "Person",
+                    "name": "Matt Sim"
+                  },
+                  "sameAs": [
+                    "https://x.com/OperatorUplift",
+                    "https://www.linkedin.com/company/operatoruplift",
+                    "https://github.com/operatoruplift",
+                    "https://discord.gg/eka7hqJcAY"
+                  ]
+                },
+                {
+                  "@type": "SoftwareApplication",
+                  "name": "Operator Uplift",
+                  "applicationCategory": "DeveloperApplication",
+                  "operatingSystem": "Windows, macOS, Linux",
+                  "description": "Local-first AI agent platform with secure, private memory. Build, deploy, and monetize autonomous agents — no cloud required.",
+                  "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                  }
+                }
               ]
             }
           `}
