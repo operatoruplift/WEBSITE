@@ -9,7 +9,8 @@ const Product: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [animStep, setAnimStep] = useState(0);
   const [isInView, setIsInView] = useState(false);
-  const CYCLE_MS = 10000; // 10 seconds per feature
+  const [timerKey, setTimerKey] = useState(0); // increment to reset timer
+  const CYCLE_MS = 12000; // 12 seconds per feature
 
   const data = APP_CONTENT.product;
   const features = data.features;
@@ -37,7 +38,7 @@ const Product: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Auto-advance on a fixed timer when in view
+  // Auto-advance on a fixed timer when in view — resets when timerKey changes (user scrolls)
   useEffect(() => {
     if (!isInView) return;
     const timer = setInterval(() => {
@@ -45,7 +46,7 @@ const Product: React.FC = () => {
       setAnimStep(0);
     }, CYCLE_MS);
     return () => clearInterval(timer);
-  }, [isInView, features.length]);
+  }, [isInView, features.length, timerKey]);
 
   // Scroll wheel advances features when section is in view (desktop only)
   // Uses a ref for activeIndex so the non-passive wheel handler always has current state
@@ -56,26 +57,34 @@ const Product: React.FC = () => {
     if (typeof window === 'undefined') return;
     if (window.innerWidth < 1024) return;
     let lastWheelTime = 0;
-    const WHEEL_COOLDOWN = 600;
+    const WHEEL_COOLDOWN = 800;
 
     const handleWheel = (e: WheelEvent) => {
       const section = sectionRef.current;
       if (!section) return;
       const rect = section.getBoundingClientRect();
-      // Only intercept when section is mostly in view
-      if (rect.top > window.innerHeight * 0.3 || rect.bottom < window.innerHeight * 0.5) return;
+      const vh = window.innerHeight;
 
-      const now = Date.now();
-      if (Math.abs(e.deltaY) < 20) return;
+      // Check if section overlaps the viewport at all
+      const sectionVisible = rect.top < vh && rect.bottom > 0;
+      if (!sectionVisible) return;
+
+      // Check if the sticky content is roughly centered (section top scrolled past)
+      const stickyActive = rect.top <= vh * 0.1 && rect.bottom > vh * 0.5;
+      if (!stickyActive) return;
+
+      if (Math.abs(e.deltaY) < 3) return;
 
       const idx = activeIndexRef.current;
-      // At first feature scrolling up, or last feature scrolling down — let page scroll
+      // At first feature scrolling up, or last feature scrolling down — let page scroll through
       if (e.deltaY < 0 && idx === 0) return;
       if (e.deltaY > 0 && idx === features.length - 1) return;
 
-      // Prevent page scroll — we handle it
+      // ALWAYS block scroll first, then check cooldown
       e.preventDefault();
+      e.stopPropagation();
 
+      const now = Date.now();
       if (now - lastWheelTime < WHEEL_COOLDOWN) return;
       lastWheelTime = now;
 
@@ -85,6 +94,7 @@ const Product: React.FC = () => {
         setActiveIndex(prev => Math.max(0, prev - 1));
       }
       setAnimStep(0);
+      setTimerKey(k => k + 1);
     };
 
     // Must be non-passive to allow preventDefault
@@ -95,6 +105,7 @@ const Product: React.FC = () => {
   const scrollToFeature = (index: number) => {
     setActiveIndex(index);
     setAnimStep(0);
+    setTimerKey(k => k + 1); // reset auto-advance timer
   };
 
   const renderVisual = (index: number) => {
@@ -123,44 +134,45 @@ const Product: React.FC = () => {
     <div
       id="product"
       ref={sectionRef}
-      className="relative bg-slanted-lines w-full min-h-screen"
+      className="relative bg-slanted-lines w-full lg:min-h-[600vh] min-h-screen"
       style={{ backgroundColor: '#050505' }}
     >
 
       {/* --- DESKTOP VIEW --- */}
-      <div className="hidden lg:flex min-h-screen w-full items-center py-16">
+      <div className="hidden lg:flex lg:sticky lg:top-0 h-screen w-full items-center">
         <div className="max-w-[1600px] mx-auto px-6 md:px-12 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 relative">
 
           {/* Left Side: Content & Navigation */}
           <div className="lg:col-span-5 flex flex-col relative z-10">
 
             {/* Top: Headline */}
-            <div className="mt-8 md:mt-16">
+            <div className="mt-4 md:mt-8">
               <FadeIn direction="right">
                 <div className="flex items-center mb-4">
                     <span className="w-2 h-2 rounded-full bg-primary mr-3 shadow-[0_0_8px_rgba(255,85,0,0.8)]"></span>
                     <span className="text-xs font-bold tracking-[0.2em] text-white uppercase">{data.tag}</span>
                 </div>
               </FadeIn>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl text-white tracking-tight mb-6 leading-tight font-medium min-h-[1.2em]">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl text-white tracking-tight mb-4 leading-tight font-medium min-h-[1.2em]">
                  <GlideText text={data.headline} />
               </h2>
               <FadeIn delay={200}>
-                <p className="text-muted text-lg font-mono leading-relaxed max-w-md">
+                <p className="text-muted text-sm font-mono leading-relaxed max-w-md">
                     {data.subhead}
                 </p>
               </FadeIn>
             </div>
 
             {/* Bottom: Progress Navigation List */}
-            <div className="mt-auto mb-12 lg:mb-24 relative pl-4 pt-8">
-              <div className="absolute left-[7px] top-2 bottom-2 w-[2px] bg-white/10 z-0 rounded-full"></div>
+            <div className="mt-auto mb-8 lg:mb-12 relative pl-4 pt-4">
+              {/* Track line — height calculated from item count and spacing */}
+              <div className="absolute left-[7px] w-[2px] bg-white/10 z-0 rounded-full" style={{ top: '20px', height: `${(features.length - 1) * 28}px` }}></div>
               <div
-                className="absolute left-[7px] top-2 w-[2px] bg-primary z-0 rounded-full transition-all duration-500 ease-out"
-                style={{ height: `${(activeIndex / (features.length - 1)) * 100}%` }}
+                className="absolute left-[7px] w-[2px] bg-primary z-0 rounded-full transition-all duration-500 ease-out"
+                style={{ top: '20px', height: `${activeIndex * 28}px` }}
               ></div>
 
-              <div className="flex flex-col space-y-5">
+              <div className="flex flex-col space-y-3">
                 {features.map((feature, index) => {
                   const isActive = index === activeIndex;
                   const isPast = index <= activeIndex;
@@ -193,12 +205,12 @@ const Product: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Side: Stacked (Animation on top, Description below) */}
-          <div className="lg:col-span-7 flex flex-col gap-6 relative">
+          {/* Right Side: Side by side (Description left, Animation right) */}
+          <div className="lg:col-span-7 grid lg:grid-cols-12 gap-4 relative items-center">
 
              {/* Box 1: Animation Visual */}
-             <div className="w-full">
-                <TechBorderContainer className="h-[420px]">
+             <div className="lg:col-span-7 lg:order-2 w-full">
+                <TechBorderContainer className="h-[380px]">
                     <div className="w-full h-full bg-[#080808] rounded-xl border border-white/5 relative overflow-hidden shadow-2xl flex flex-col">
                       <div className="h-10 md:h-12 border-b border-white/5 flex items-center justify-between px-4 md:px-6 z-20 bg-[#080808]/80 backdrop-blur-md">
                         <div className="flex space-x-2">
@@ -225,7 +237,7 @@ const Product: React.FC = () => {
              </div>
 
              {/* Box 2: Text Description */}
-             <div className="w-full">
+             <div className="lg:col-span-5 lg:order-1 w-full">
                 <TechBorderContainer>
                     <div className="w-full bg-[#080808] rounded-xl border border-white/5 p-5 md:p-6 shadow-2xl relative">
                        <div key={activeIndex} className="animate-slide-up">

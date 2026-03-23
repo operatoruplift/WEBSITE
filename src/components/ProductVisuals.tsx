@@ -94,10 +94,10 @@ export const StoreVisual = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // 16-tick cycle (16s): ticks 0-5 = fetching (6s), ticks 6-15 = complete hold (10s)
-  const cyclePos = tick % 16;
-  const phase = cyclePos >= 6 ? 'complete' : 'fetching';
-  const activeItem = phase === 'complete' ? 5 : cyclePos;
+  // 12-tick cycle: 0-5 fetching, 6-7 installing, 8-11 installed
+  const cyclePos = tick % 12;
+  const phase = cyclePos >= 8 ? 'installed' : cyclePos >= 6 ? 'installing' : 'fetching';
+  const activeItem = phase === 'fetching' ? cyclePos : 5;
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-black/20">
@@ -105,26 +105,31 @@ export const StoreVisual = () => {
         {[0,1,2,3,4,5].map(i => (
           <div key={i} className={`aspect-square border rounded-lg flex flex-col items-center justify-center transition-all duration-500 relative
             ${i === activeItem && phase === 'fetching' ? 'border-primary bg-primary/10 shadow-[0_0_15px_rgba(255,85,0,0.3)]' :
-              i < activeItem || phase === 'complete' ? 'border-primary/40 bg-primary/5 opacity-80' : 'border-white/10 bg-white/5 opacity-40'}`}>
-            <div className={`w-6 h-6 rounded bg-white/20 mb-2 ${i <= activeItem || phase === 'complete' ? 'opacity-100' : 'opacity-40'}`}></div>
-            <div className={`w-10 h-1 bg-white/20 rounded ${i <= activeItem || phase === 'complete' ? 'opacity-100' : 'opacity-40'}`}></div>
+              i < activeItem || phase !== 'fetching' ? 'border-primary/40 bg-primary/5 opacity-80' : 'border-white/10 bg-white/5 opacity-40'}`}>
+            <div className={`w-6 h-6 rounded bg-white/20 mb-2 ${i <= activeItem || phase !== 'fetching' ? 'opacity-100' : 'opacity-40'}`}></div>
+            <div className={`w-10 h-1 bg-white/20 rounded ${i <= activeItem || phase !== 'fetching' ? 'opacity-100' : 'opacity-40'}`}></div>
 
-            {i === activeItem && phase === 'fetching' && i <= 5 && (
+            {i === activeItem && phase === 'fetching' && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[1px] rounded-lg">
                 <div className="text-[8px] font-mono text-primary font-bold animate-pulse">GET</div>
               </div>
             )}
-            {(i < activeItem || phase === 'complete') && (
+            {phase === 'installing' && i === 5 && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[1px] rounded-lg border border-primary/50">
+                <div className="text-[7px] font-mono text-primary font-bold animate-pulse">INSTALLING</div>
+              </div>
+            )}
+            {(i < activeItem || phase === 'installed') && !(phase === 'installing' && i === 5) && (
               <div className="absolute top-1 right-1">
-                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                <div className={`w-2 h-2 rounded-full ${phase === 'installed' ? 'bg-green-500' : 'bg-primary'}`}></div>
               </div>
             )}
           </div>
         ))}
       </div>
-      <div className="mt-8 flex items-center space-x-2 text-[10px] font-mono text-gray-400">
-        <GlobeIcon className={`w-4 h-4 ${phase === 'complete' ? 'text-primary' : 'animate-spin'}`} />
-        <span>{phase === 'complete' ? 'STORE_SYNC_COMPLETE' : 'FETCHING_AGENTS...'}</span>
+      <div className="mt-6 flex items-center space-x-2 text-[10px] font-mono text-gray-400">
+        <GlobeIcon className={`w-4 h-4 ${phase === 'installed' ? 'text-green-500' : phase === 'installing' ? 'text-primary animate-spin' : 'animate-spin'}`} />
+        <span>{phase === 'installed' ? 'AGENT_INSTALLED ✓' : phase === 'installing' ? 'INSTALLING_AGENT...' : 'FETCHING_AGENTS...'}</span>
       </div>
     </div>
   );
