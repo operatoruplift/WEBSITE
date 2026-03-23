@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from 'react';
-import { Brain, Search, Plus, FileText, Code, Globe, Link2, Tag, Clock, Trash2, Sparkles } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Card';
+import { Brain, Search, Plus, FileText, Code, Globe, Link2, Tag, Clock, Trash2, Sparkles, X } from 'lucide-react';
+import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
+import { useToast } from '@/src/components/ui/Toast';
 
 interface MemoryNode {
     id: string;
@@ -35,11 +36,41 @@ const typeConfig = {
 };
 
 export default function MemoryPage() {
-    const [nodes] = useState<MemoryNode[]>(DEMO_NODES);
+    const [nodes, setNodes] = useState<MemoryNode[]>(DEMO_NODES);
     const [search, setSearch] = useState('');
+    const [showAdd, setShowAdd] = useState(false);
+    const [newTitle, setNewTitle] = useState('');
+    const [newSource, setNewSource] = useState('');
+    const [newType, setNewType] = useState<MemoryNode['type']>('document');
+    const [newTags, setNewTags] = useState('');
+    const { showToast } = useToast();
 
     const totalVectors = nodes.reduce((sum, n) => sum + n.vectors, 0);
     const filtered = search ? nodes.filter(n => n.title.toLowerCase().includes(search.toLowerCase()) || n.tags.some(t => t.includes(search.toLowerCase()))) : nodes;
+
+    const deleteNode = (id: string) => {
+        const node = nodes.find(n => n.id === id);
+        setNodes(prev => prev.filter(n => n.id !== id));
+        showToast(`${node?.title || 'Node'} removed from memory`, 'info');
+    };
+
+    const addNode = () => {
+        if (!newTitle.trim()) return;
+        const node: MemoryNode = {
+            id: Date.now().toString(),
+            title: newTitle.trim(),
+            type: newType,
+            source: newSource.trim() || 'Manual entry',
+            tags: newTags.split(',').map(t => t.trim()).filter(Boolean),
+            vectors: Math.floor(Math.random() * 2000) + 100,
+            lastIndexed: 'Just now',
+            size: `${Math.floor(Math.random() * 100) + 4}KB`,
+        };
+        setNodes(prev => [node, ...prev]);
+        setNewTitle(''); setNewSource(''); setNewTags(''); setNewType('document');
+        setShowAdd(false);
+        showToast(`${node.title} indexed with ${node.vectors} vectors`, 'success');
+    };
 
     return (
         <MobilePageWrapper>
@@ -54,10 +85,39 @@ export default function MemoryPage() {
                             <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Memory Bank</h1>
                             <p className="text-sm text-gray-400 mt-1">Your agents&apos; shared knowledge — indexed and searchable</p>
                         </div>
-                        <GlowButton className="h-11 px-5">
+                        <GlowButton className="h-11 px-5" onClick={() => setShowAdd(true)}>
                             <Plus size={16} className="mr-2" /> Add Knowledge
                         </GlowButton>
                     </div>
+
+                    {showAdd && (
+                        <Card variant="glass" className="border-primary/20">
+                            <CardContent className="p-6">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-white font-semibold">Add Knowledge Source</h3>
+                                    <button onClick={() => setShowAdd(false)} className="text-gray-500 hover:text-white"><X size={16} /></button>
+                                </div>
+                                <div className="space-y-4">
+                                    <input value={newTitle} onChange={e => setNewTitle(e.target.value)} placeholder="Title" aria-label="Knowledge title"
+                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
+                                    <input value={newSource} onChange={e => setNewSource(e.target.value)} placeholder="Source (URL, file path, or manual)" aria-label="Source"
+                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <select value={newType} onChange={e => setNewType(e.target.value as MemoryNode['type'])} aria-label="Type"
+                                            className="bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none">
+                                            <option value="document">Document</option>
+                                            <option value="code">Code</option>
+                                            <option value="url">URL</option>
+                                            <option value="note">Note</option>
+                                        </select>
+                                        <input value={newTags} onChange={e => setNewTags(e.target.value)} placeholder="Tags (comma separated)" aria-label="Tags"
+                                            className="bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
+                                    </div>
+                                    <GlowButton onClick={addNode} className="w-full">Index Knowledge</GlowButton>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
 
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         {[
@@ -80,17 +140,15 @@ export default function MemoryPage() {
 
                     <div className="relative">
                         <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
-                        <input
-                            type="text"
-                            value={search}
-                            onChange={e => setSearch(e.target.value)}
+                        <input type="text" value={search} onChange={e => setSearch(e.target.value)}
                             placeholder="Search memory nodes, tags..." aria-label="Search memory nodes"
-                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:border-primary/50 focus:outline-none transition-colors"
-                        />
+                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:border-primary/50 focus:outline-none transition-colors" />
                     </div>
 
                     <div className="space-y-3">
-                        {filtered.map((node, i) => {
+                        {filtered.length === 0 ? (
+                            <div className="text-center py-20"><Brain size={48} className="text-gray-700 mx-auto mb-4" /><p className="text-gray-500">{search ? 'No matching nodes' : 'No knowledge indexed yet'}</p></div>
+                        ) : filtered.map((node, i) => {
                             const config = typeConfig[node.type];
                             const Icon = config.icon;
                             return (
@@ -119,7 +177,7 @@ export default function MemoryPage() {
                                                 <div className="text-right">
                                                     <div className="flex items-center gap-1 text-[10px] text-gray-500"><Clock size={10} />{node.lastIndexed}</div>
                                                 </div>
-                                                <button className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"><Trash2 size={14} /></button>
+                                                <button onClick={() => deleteNode(node.id)} className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"><Trash2 size={14} /></button>
                                             </div>
                                         </div>
                                     </CardContent>

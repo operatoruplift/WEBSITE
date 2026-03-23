@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { User, Mail, Calendar, Shield, Key, LogOut, Edit3, Camera, Globe, Github, ExternalLink } from 'lucide-react';
+import { Mail, Calendar, Shield, Key, LogOut, Edit3, Camera, X, Check } from 'lucide-react';
 import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
@@ -9,6 +9,9 @@ import { MobilePageWrapper } from '@/src/components/mobile';
 
 export default function ProfilePage() {
     const [user, setUser] = useState({ name: 'Commander', email: 'you@example.com', plan: 'Pro', joined: 'March 2026' });
+    const [editing, setEditing] = useState(false);
+    const [editName, setEditName] = useState('');
+    const [editEmail, setEditEmail] = useState('');
 
     useEffect(() => {
         try {
@@ -19,6 +22,19 @@ export default function ProfilePage() {
             }
         } catch { /* demo mode */ }
     }, []);
+
+    const startEdit = () => {
+        setEditName(user.name);
+        setEditEmail(user.email);
+        setEditing(true);
+    };
+
+    const saveEdit = () => {
+        const updated = { ...user, name: editName.trim() || user.name, email: editEmail.trim() || user.email };
+        setUser(updated);
+        localStorage.setItem('user', JSON.stringify(updated));
+        setEditing(false);
+    };
 
     const stats = [
         { label: 'Sessions', value: '247' },
@@ -57,15 +73,33 @@ export default function ProfilePage() {
                                     </button>
                                 </div>
                                 <div className="flex-1">
-                                    <div className="flex items-center gap-3 mb-1">
-                                        <h2 className="text-2xl font-bold text-white">{user.name}</h2>
-                                        <Badge variant="default" className="bg-primary/10 text-primary border border-primary/20">{user.plan}</Badge>
-                                    </div>
-                                    <p className="text-sm text-gray-400">{user.email}</p>
+                                    {editing ? (
+                                        <div className="space-y-2">
+                                            <input value={editName} onChange={e => setEditName(e.target.value)} aria-label="Name"
+                                                className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white text-lg font-bold focus:border-primary/50 focus:outline-none" />
+                                            <input value={editEmail} onChange={e => setEditEmail(e.target.value)} aria-label="Email"
+                                                className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-gray-300 text-sm focus:border-primary/50 focus:outline-none" />
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div className="flex items-center gap-3 mb-1">
+                                                <h2 className="text-2xl font-bold text-white">{user.name}</h2>
+                                                <Badge variant="default" className="bg-primary/10 text-primary border border-primary/20">{user.plan}</Badge>
+                                            </div>
+                                            <p className="text-sm text-gray-400">{user.email}</p>
+                                        </>
+                                    )}
                                 </div>
-                                <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all text-sm">
-                                    <Edit3 size={14} /> Edit Profile
-                                </button>
+                                {editing ? (
+                                    <div className="flex gap-2">
+                                        <button onClick={saveEdit} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all text-sm"><Check size={14} /> Save</button>
+                                        <button onClick={() => setEditing(false)} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white transition-all text-sm"><X size={14} /></button>
+                                    </div>
+                                ) : (
+                                    <button onClick={startEdit} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all text-sm">
+                                        <Edit3 size={14} /> Edit Profile
+                                    </button>
+                                )}
                             </div>
 
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
