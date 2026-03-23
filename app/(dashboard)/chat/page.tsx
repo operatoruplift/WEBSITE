@@ -114,7 +114,20 @@ export default function ChatPage() {
         } finally { setIsLoading(false); }
     };
 
-    const getFallbackResponse = (msg: string) => `You asked: **"${msg.slice(0, 60)}${msg.length > 60 ? '...' : ''}"**\n\nI'm your **${activeModel.label}** powered assistant running via the Operator Uplift platform.\n\nHere's what I can help with:\n\n- **Code Analysis**: Understand and navigate your codebase\n- **Documentation**: Generate docs for your projects\n- **Agent Workflows**: Create and manage AI agent pipelines\n- **Research**: Synthesize information from multiple sources\n\nTo enable real AI responses, configure your API keys in **Settings**.`;
+    const getFallbackResponse = (msg: string) => {
+        const lower = msg.toLowerCase();
+        if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey'))
+            return `Hey Commander! I'm your **${activeModel.label}** assistant on the Operator Uplift platform.\n\nI'm currently in **demo mode** — connect your API keys in Settings to unlock full capabilities.\n\nWhat can I help you with today?`;
+        if (lower.includes('agent') || lower.includes('build'))
+            return `### Building Agents\n\nYou can create custom agents using the **Agent Builder** (\`/agents/builder\`):\n\n1. Choose a template (Code Assistant, Research, DevOps, Custom)\n2. Select your LLM model\n3. Write a system prompt\n4. Deploy — your agent will appear in the sidebar\n\nEach agent runs in an **isolated session** with scoped permissions. No data leaks between agents.`;
+        if (lower.includes('workflow') || lower.includes('automate'))
+            return `### Workflows\n\nHead to **Workflows** (\`/workflows\`) to create multi-step agent pipelines:\n\n- **Triggers**: Cron schedules, webhooks, or manual\n- **Steps**: Chain multiple agents together\n- **Output**: Each step feeds into the next\n\nExample: \`GitHub webhook → Triage Bot → Code Review Agent → Slack notification\``;
+        if (lower.includes('security') || lower.includes('privacy'))
+            return `### Security Model\n\nOperator Uplift is **local-first**:\n\n- Agents run in **isolated sandboxes** — no shared state\n- Memory is **encrypted at rest** on your device\n- **Time-limited access keys** expire after each session\n- Every action requires explicit **permission approval**\n- Zero data sent to cloud unless you explicitly enable sync`;
+        if (lower.includes('help') || lower.includes('what can'))
+            return `### Available Commands\n\n- **Chat**: Ask me anything — I'll respond contextually\n- **Agent Builder**: Create custom agents at \`/agents/builder\`\n- **Marketplace**: Install pre-built agents at \`/marketplace\`\n- **Workflows**: Automate multi-agent pipelines at \`/workflows\`\n- **Memory Bank**: Index knowledge sources at \`/memory\`\n- **Settings**: Configure API keys, export data at \`/settings\`\n\nConnect API keys in Settings for live AI responses.`;
+        return `You asked: **"${msg.slice(0, 80)}${msg.length > 80 ? '...' : ''}"**\n\nI'm running in **demo mode** via **${activeModel.label}**. To get real AI responses:\n\n1. Go to **Settings** → **API**\n2. Generate or add your API key\n3. Messages will route through the Operator Uplift runtime\n\nIn the meantime, try asking about **agents**, **workflows**, **security**, or type **help**.`;
+    };
     const handleKeyDown = (e: React.KeyboardEvent) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } };
     const copyMessage = async (content: string, id: string) => { await navigator.clipboard.writeText(content); setCopiedId(id); setTimeout(() => setCopiedId(null), 2000); };
     const filteredSessions = sessions.filter(s => !sidebarSearch || s.title.toLowerCase().includes(sidebarSearch.toLowerCase()));
