@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Store, Search, Star, Download, TrendingUp, Grid, List, Bot, ChevronDown, Sparkles, Crown, Check, Users, Loader2, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
@@ -76,7 +77,7 @@ export default function MarketplacePage() {
                             <h1 className="text-4xl lg:text-5xl font-medium tracking-tight text-white">Agent Marketplace</h1>
                             <p className="text-sm text-gray-400 mt-2 font-mono">Deploy pre-trained intelligences directly into your swarm architecture</p>
                         </div>
-                        <GlowButton onClick={() => showToast('Agent submission portal opening soon. Build your own in the Agent Builder!', 'info')} className="h-11 px-6 bg-white/5 border border-white/10 hover:bg-white/10 group transition-all"><Sparkles size={16} className="mr-2 text-[#E77630]" /><span className="font-medium tracking-wide">Submit Agent</span></GlowButton>
+                        <Link href="/agents/builder"><GlowButton className="h-11 px-6 bg-white/5 border border-white/10 hover:bg-white/10 group transition-all"><Sparkles size={16} className="mr-2 text-[#E77630]" /><span className="font-medium tracking-wide">Build Your Own</span></GlowButton></Link>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fadeInUp" style={{ animationDelay: '100ms' }}>
                         {[{ label: 'Available Agents', value: '2,400+', icon: Bot, gradient: 'from-[#F59E0B]/20 to-transparent', color: 'text-[#F59E0B]' },
