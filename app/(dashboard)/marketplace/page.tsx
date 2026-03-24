@@ -43,8 +43,19 @@ export default function MarketplacePage() {
         try { const saved = JSON.parse(localStorage.getItem('installed-agents') || '[]'); setInstalled(new Set(saved)); } catch {}
     }, []);
 
-    const installAgent = (id: string, agentName: string) => {
+    const installAgent = async (id: string, agentName: string) => {
         setInstalled(prev => { const next = new Set(prev); next.add(id); localStorage.setItem('installed-agents', JSON.stringify([...next])); return next; });
+        // Also persist to API if authenticated
+        const token = localStorage.getItem('token');
+        if (token && token !== 'demo-token') {
+            try {
+                await fetch('/api/agents', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                    body: JSON.stringify({ name: agentName, description: `Installed from marketplace`, source: 'marketplace' }),
+                });
+            } catch { /* localStorage already updated */ }
+        }
         showToast(`${agentName} installed successfully`, 'success');
     };
 

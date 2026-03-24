@@ -36,12 +36,29 @@ export default function AgentBuilderPage() {
     const steps = ['Template', 'Configure', 'Model', 'Review'];
     const selectedTemplate = TEMPLATES.find(t => t.id === template);
 
-    const handleDeploy = () => {
+    const handleDeploy = async () => {
+        // Try API first, fall back to localStorage
+        const token = localStorage.getItem('token');
+        if (token && token !== 'demo-token') {
+            try {
+                const res = await fetch('/api/agents', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                    body: JSON.stringify({ name, description, template, model, systemPrompt }),
+                });
+                if (res.ok) {
+                    showToast(`Agent "${name}" deployed to cloud!`, 'success');
+                    setStep(0); setName(''); setDescription(''); setTemplate(''); setSystemPrompt('');
+                    return;
+                }
+            } catch { /* fall through to localStorage */ }
+        }
+        // Fallback: localStorage
         const agent = { name, description, template, model, systemPrompt, id: Date.now().toString(), createdAt: new Date().toISOString() };
         const existing = JSON.parse(localStorage.getItem('custom-agents') || '[]');
         existing.push(agent);
         localStorage.setItem('custom-agents', JSON.stringify(existing));
-        showToast(`Agent "${name}" deployed successfully!`, 'success');
+        showToast(`Agent "${name}" deployed locally!`, 'success');
         setStep(0); setName(''); setDescription(''); setTemplate(''); setSystemPrompt('');
     };
 
