@@ -29,7 +29,8 @@ export async function POST(request: Request) {
       user: data.user,
       session: data.session,
     });
-  } catch {
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Unknown error';
+    return NextResponse.json({ error: 'Internal server error', details: msg }, { status: 500 });
   }
 }
