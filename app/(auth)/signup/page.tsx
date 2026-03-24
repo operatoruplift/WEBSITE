@@ -14,6 +14,7 @@ export default function SignupPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [confirmationSent, setConfirmationSent] = useState(false);
     const router = useRouter();
 
     const handleSignup = async (e: React.FormEvent) => {
@@ -34,8 +35,8 @@ export default function SignupPage() {
                 localStorage.setItem('user', JSON.stringify({ name: name || 'Commander', email, plan: 'Pro' }));
                 router.push('/app');
             } else {
-                // Email confirmation required
-                setError('Check your email to confirm your account, then sign in.');
+                // Email confirmation required — show success state
+                setConfirmationSent(true);
             }
         } catch {
             setError('Connection error. Please try again.');
@@ -59,6 +60,20 @@ export default function SignupPage() {
                         <span className="text-2xl font-bold text-white">Operator<span className="text-primary">Uplift</span></span>
                     </Link>
                 </div>
+
+                {confirmationSent ? (
+                    <div className="text-center py-8">
+                        <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto mb-6">
+                            <Mail size={32} className="text-emerald-400" />
+                        </div>
+                        <h2 className="text-2xl font-bold text-white mb-3">Check your email</h2>
+                        <p className="text-gray-400 mb-2">We sent a confirmation link to <span className="text-white">{email}</span></p>
+                        <p className="text-gray-500 text-sm mt-2">Click the link in the email, then come back and sign in.</p>
+                        <Link href="/login" className="inline-block mt-8 px-6 py-3 bg-primary/10 border border-primary/20 text-primary rounded-lg text-sm font-medium hover:bg-primary/20 transition-colors">
+                            Go to Sign In
+                        </Link>
+                    </div>
+                ) : (<>
 
                 <div className="text-center mb-8">
                     <h1 className="text-2xl font-bold text-white">Create your account</h1>
@@ -114,6 +129,7 @@ export default function SignupPage() {
                         Already have an account? <span className="text-primary">Sign in</span>
                     </Link>
                 </div>
+                </>)}
 
                 <div className="mt-6 flex items-center justify-center gap-6 text-[10px] font-mono text-gray-500 uppercase tracking-widest">
                     <span>Local-first</span>

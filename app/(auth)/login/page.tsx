@@ -46,7 +46,13 @@ export default function LoginPage() {
             });
             const data = await res.json();
             if (!res.ok) {
-                setError(data.error || 'Invalid credentials');
+                if (data.error?.includes('Email not confirmed')) {
+                    setError('Please check your email and click the confirmation link before signing in.');
+                } else if (data.error?.includes('Invalid login')) {
+                    setError('Invalid email or password. Please try again.');
+                } else {
+                    setError(data.error || 'Invalid credentials');
+                }
                 setIsLoading(false);
                 return;
             }
