@@ -99,17 +99,49 @@ export default function ChatPage() {
         let sessionId = activeSessionId;
         if (!sessionId) { const session: ChatSession = { id: Date.now().toString(), title: input.slice(0, 30) + (input.length > 30 ? '...' : ''), messages: [], createdAt: new Date(), model: selectedModel }; setSessions(prev => [session, ...prev]); sessionId = session.id; setActiveSessionId(sessionId); }
         const userMessage: Message = { id: Date.now().toString(), role: 'user', content: input.trim(), timestamp: new Date() };
+        const currentSession = sessions.find(s => s.id === sessionId);
         setSessions(prev => prev.map(s => s.id === sessionId ? { ...s, messages: [...s.messages, userMessage], title: s.messages.length === 0 ? input.slice(0, 30) : s.title } : s));
         setInput(''); setIsLoading(true);
+
+        // Build conversation history for context
+        const history = (currentSession?.messages || []).map(m => ({ role: m.role, content: m.content }));
+
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${apiUrl}/api/chat/stream`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...(token && { Authorization: `Bearer ${token}` }) }, body: JSON.stringify({ sessionId, message: userMessage.content, model: selectedModel }) });
-            let content = '';
-            if (response.ok) { const data = await response.json(); content = data.response || data.content || getFallbackResponse(userMessage.content); } else { content = getFallbackResponse(userMessage.content); }
-            setSessions(prev => prev.map(s => s.id === sessionId ? { ...s, messages: [...s.messages, { id: (Date.now() + 1).toString(), role: 'assistant', content, timestamp: new Date(), model: selectedModel }] } : s));
+            // Try real LLM API first
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMessage.content, model: selectedModel, history }),
+            });
+
+            if (response.ok && response.body) {
+                // Stream the response
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                const assistantId = (Date.now() + 1).toString();
+                let content = '';
+
+                // Add empty assistant message
+                setSessions(prev => prev.map(s => s.id === sessionId ? { ...s, messages: [...s.messages, { id: assistantId, role: 'assistant', content: '', timestamp: new Date(), model: selectedModel }] } : s));
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    content += decoder.decode(value, { stream: true });
+                    const currentContent = content;
+                    setSessions(prev => prev.map(s => s.id === sessionId ? {
+                        ...s,
+                        messages: s.messages.map(m => m.id === assistantId ? { ...m, content: currentContent } : m),
+                    } : s));
+                }
+            } else {
+                // API returned error — fall back to demo
+                const content = getFallbackResponse(userMessage.content);
+                setSessions(prev => prev.map(s => s.id === sessionId ? { ...s, messages: [...s.messages, { id: (Date.now() + 1).toString(), role: 'assistant', content, timestamp: new Date(), model: selectedModel }] } : s));
+            }
         } catch {
-            const content = `I'm running in **demo mode**. Here's what **${activeModel.label}** can help with:\n\n- **Code Analysis** — Review and debug your codebase\n- **Agent Workflows** — Design multi-agent pipelines\n- **Research** — Summarize and synthesize information\n- **Writing** — Draft technical docs and content\n\nConnect your API keys in Settings to enable live AI responses.`;
+            // No API available — fall back to demo responses
+            const content = getFallbackResponse(userMessage.content);
             setSessions(prev => prev.map(s => s.id === sessionId ? { ...s, messages: [...s.messages, { id: (Date.now() + 1).toString(), role: 'assistant', content, timestamp: new Date(), model: selectedModel }] } : s));
         } finally { setIsLoading(false); }
     };
