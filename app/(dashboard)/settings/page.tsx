@@ -33,7 +33,7 @@ export default function SettingsPage() {
     const [theme, setTheme] = useState('Dark');
 
     // API Keys
-    const [apiKeys, setApiKeys] = useState<{ key: string; created: string }[]>([]);
+    const [apiKeys, setApiKeys] = useState<{ key: string; created: string; expires?: string }[]>([]);
 
     // Load from localStorage
     useEffect(() => {
@@ -59,9 +59,14 @@ export default function SettingsPage() {
     };
 
     const handleGenerateKey = () => {
-        const newKey = { key: generateApiKey(), created: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) };
+        const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now
+        const newKey = {
+            key: generateApiKey(),
+            created: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            expires: expires.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        };
         setApiKeys(prev => [...prev, newKey]);
-        showToast('New API key generated', 'success');
+        showToast('API key generated (expires in 30 days)', 'success');
     };
 
     const handleCopyKey = async (key: string) => {
@@ -187,7 +192,7 @@ export default function SettingsPage() {
                                             <div className="space-y-3">
                                                 {apiKeys.map(k => (
                                                     <div key={k.key} className="p-4 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
-                                                        <div><p className="text-sm text-gray-400 font-mono">{k.key.substring(0, 12)}••••••••{k.key.substring(k.key.length - 4)}</p><p className="text-[10px] text-gray-600 mt-1">Created {k.created}</p></div>
+                                                        <div><p className="text-sm text-gray-400 font-mono">{k.key.substring(0, 12)}••••••••{k.key.substring(k.key.length - 4)}</p><p className="text-[10px] text-gray-600 mt-1">Created {k.created}{k.expires ? ` · Expires ${k.expires}` : ''}</p></div>
                                                         <div className="flex gap-2">
                                                             <button onClick={() => handleCopyKey(k.key)} className="text-xs text-primary hover:underline flex items-center gap-1"><Copy size={12} /> Copy</button>
                                                             <button onClick={() => handleRevokeKey(k.key)} className="text-xs text-red-400 hover:underline">Revoke</button>

@@ -50,6 +50,31 @@ export default function WorkflowsPage() {
         }));
     };
 
+    const [runningId, setRunningId] = useState<string | null>(null);
+    const [runProgress, setRunProgress] = useState(0);
+
+    const runWorkflow = (id: string) => {
+        const wf = workflows.find(w => w.id === id);
+        if (!wf || runningId) return;
+        setRunningId(id);
+        setRunProgress(0);
+        showToast(`Running "${wf.name}"...`, 'info');
+        // Simulate step-by-step execution
+        let step = 0;
+        const totalSteps = wf.steps;
+        const interval = setInterval(() => {
+            step++;
+            setRunProgress(Math.round((step / totalSteps) * 100));
+            if (step >= totalSteps) {
+                clearInterval(interval);
+                setRunningId(null);
+                setRunProgress(0);
+                setWorkflows(prev => prev.map(w => w.id === id ? { ...w, runs: w.runs + 1, lastRun: 'Just now', status: 'active' as const } : w));
+                showToast(`"${wf.name}" completed successfully! (${totalSteps} steps)`, 'success');
+            }
+        }, 1200);
+    };
+
     const deleteWorkflow = (id: string) => {
         const wf = workflows.find(w => w.id === id);
         setWorkflows(prev => prev.filter(w => w.id !== id));
@@ -164,16 +189,23 @@ export default function WorkflowsPage() {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-2 flex-shrink-0">
+                                                <button onClick={() => runWorkflow(wf.id)} disabled={runningId === wf.id || !!runningId}
+                                                    className={`px-3 py-2 rounded-lg text-xs font-bold transition-colors ${runningId === wf.id ? 'bg-[#E77630]/20 text-[#E77630] cursor-wait' : 'bg-[#E77630]/10 text-[#E77630] hover:bg-[#E77630]/20'}`}>
+                                                    {runningId === wf.id ? `${runProgress}%` : <><Zap size={12} className="inline mr-1" />Run</>}
+                                                </button>
                                                 {(wf.status === 'active' || wf.status === 'paused') && (
                                                     <button onClick={() => toggleStatus(wf.id)} className={`p-2 rounded-lg transition-colors ${wf.status === 'active' ? 'bg-amber-400/10 text-amber-400 hover:bg-amber-400/20' : 'bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20'}`}>
                                                         {wf.status === 'active' ? <Pause size={14} /> : <Play size={14} />}
                                                     </button>
                                                 )}
                                                 {wf.status === 'draft' && (
-                                                    <button onClick={() => toggleStatus(wf.id)} className="p-2 rounded-lg bg-[#E77630]/10 text-[#E77630] hover:bg-[#E77630]/20 transition-colors"><Play size={14} /></button>
+                                                    <button onClick={() => toggleStatus(wf.id)} className="p-2 rounded-lg bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20 transition-colors"><Play size={14} /></button>
                                                 )}
                                                 <button onClick={() => deleteWorkflow(wf.id)} className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"><Trash2 size={14} /></button>
                                             </div>
+                                            {runningId === wf.id && (
+                                                <div className="w-full mt-3"><div className="w-full h-1 bg-white/5 rounded-full overflow-hidden"><div className="h-full bg-[#E77630] rounded-full transition-all duration-500" style={{ width: `${runProgress}%` }} /></div></div>
+                                            )}
                                         </div>
                                     </CardContent>
                                 </Card>
