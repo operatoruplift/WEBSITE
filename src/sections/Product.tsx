@@ -62,25 +62,25 @@ const Product: React.FC = () => {
     const handleWheel = (e: WheelEvent) => {
       const section = sectionRef.current;
       if (!section) return;
-      const rect = section.getBoundingClientRect();
+
+      // Use offsetTop for stable detection (not affected by scroll momentum)
+      const sectionTop = section.offsetTop;
+      const sectionBottom = sectionTop + section.offsetHeight;
+      const scrollY = window.scrollY;
       const vh = window.innerHeight;
 
-      // Check if section overlaps the viewport at all
-      const sectionVisible = rect.top < vh && rect.bottom > 0;
-      if (!sectionVisible) return;
-
-      // Check if the sticky content is roughly centered (section top scrolled past)
-      const stickyActive = rect.top <= vh * 0.1 && rect.bottom > vh * 0.5;
-      if (!stickyActive) return;
+      // Are we scrolled into the section? (with generous margins)
+      const inSection = scrollY >= sectionTop - vh * 0.5 && scrollY + vh <= sectionBottom + vh * 0.5;
+      if (!inSection) return;
 
       if (Math.abs(e.deltaY) < 3) return;
 
       const idx = activeIndexRef.current;
-      // At first feature scrolling up, or last feature scrolling down — let page scroll through
+      // At boundaries, let the page scroll through
       if (e.deltaY < 0 && idx === 0) return;
       if (e.deltaY > 0 && idx === features.length - 1) return;
 
-      // ALWAYS block scroll first, then check cooldown
+      // Block page scroll — we handle feature advancement
       e.preventDefault();
       e.stopPropagation();
 
