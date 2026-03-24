@@ -15,13 +15,20 @@ const TEMPLATES = [
     { id: 'writer', name: 'Content Writer', icon: FileText, color: 'text-[#F59E0B]', desc: 'Blog posts, docs, social media, and more', capabilities: ['Blog', 'Social', 'Docs'] },
     { id: 'security', name: 'Security Analyst', icon: Shield, color: 'text-red-400', desc: 'Threat detection, vulnerability scanning, compliance', capabilities: ['OWASP', 'Audit', 'Monitor'] },
     { id: 'web', name: 'Web Agent', icon: Globe, color: 'text-amber-400', desc: 'Browse, scrape, and interact with the web', capabilities: ['Browse', 'Scrape', 'API'] },
+    { id: 'devops', name: 'DevOps Engineer', icon: Zap, color: 'text-emerald-400', desc: 'CI/CD pipelines, monitoring, incident response', capabilities: ['Deploy', 'Monitor', 'Alert'] },
+    { id: 'data', name: 'Data Analyst', icon: Bot, color: 'text-[#F59E0B]', desc: 'SQL queries, data viz, insight extraction', capabilities: ['SQL', 'Charts', 'Reports'] },
+    { id: 'support', name: 'Customer Support', icon: MessageSquare, color: 'text-primary', desc: 'Ticket triage, auto-responses, escalation workflows', capabilities: ['Triage', 'Reply', 'Escalate'] },
 ];
 
 const MODELS = [
-    { id: 'claude-opus-4-6', name: 'Claude Opus 4.6', provider: 'Anthropic', badge: 'RECOMMENDED' },
-    { id: 'gpt-4.1', name: 'GPT-4.1', provider: 'OpenAI', badge: 'FAST' },
+    { id: 'claude-opus-4-6', name: 'Claude Opus 4.6', provider: 'Anthropic', badge: 'BEST' },
+    { id: 'claude-sonnet-4-6', name: 'Claude Sonnet 4.6', provider: 'Anthropic', badge: 'FAST' },
+    { id: 'gpt-4.1', name: 'GPT-4.1', provider: 'OpenAI', badge: 'VERSATILE' },
+    { id: 'gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'OpenAI', badge: 'CHEAP' },
     { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', provider: 'Google', badge: 'LONG CTX' },
-    { id: 'deepseek-v3', name: 'DeepSeek V3', provider: 'DeepSeek', badge: 'OPEN' },
+    { id: 'grok-3', name: 'Grok 3', provider: 'xAI', badge: 'REASONING' },
+    { id: 'llama-4-maverick', name: 'Llama 4 Maverick', provider: 'Meta', badge: 'OPEN' },
+    { id: 'deepseek-r1', name: 'DeepSeek R1', provider: 'DeepSeek', badge: 'LOCAL' },
 ];
 
 export default function AgentBuilderPage() {
@@ -29,11 +36,31 @@ export default function AgentBuilderPage() {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [template, setTemplate] = useState('');
-    const [model, setModel] = useState('claude-4-sonnet');
+    const [model, setModel] = useState('claude-sonnet-4-6');
     const [systemPrompt, setSystemPrompt] = useState('');
+    const [selectedTools, setSelectedTools] = useState<string[]>([]);
     const { showToast } = useToast();
 
-    const steps = ['Template', 'Configure', 'Model', 'Review'];
+    const TOOLS = [
+        { id: 'web-search', name: 'Web Search', desc: 'Search the internet in real-time' },
+        { id: 'web-scrape', name: 'Web Scraper', desc: 'Extract content from URLs' },
+        { id: 'code-exec', name: 'Code Executor', desc: 'Run Python/JS code in sandbox' },
+        { id: 'file-system', name: 'File System', desc: 'Read, write, and manage files' },
+        { id: 'database', name: 'Database', desc: 'Query SQL/NoSQL databases' },
+        { id: 'api-call', name: 'HTTP/API', desc: 'Make REST/GraphQL API calls' },
+        { id: 'email', name: 'Email', desc: 'Send and read emails' },
+        { id: 'calendar', name: 'Calendar', desc: 'Manage calendar events' },
+        { id: 'slack', name: 'Slack', desc: 'Send messages and manage channels' },
+        { id: 'github', name: 'GitHub', desc: 'PRs, issues, repos, and actions' },
+        { id: 'memory', name: 'Memory Bank', desc: 'Read/write to knowledge base' },
+        { id: 'image-gen', name: 'Image Gen', desc: 'Generate images with DALL-E/Flux' },
+    ];
+
+    const toggleTool = (id: string) => {
+        setSelectedTools(prev => prev.includes(id) ? prev.filter(t => t !== id) : [...prev, id]);
+    };
+
+    const steps = ['Template', 'Configure', 'Tools', 'Model', 'Review'];
     const selectedTemplate = TEMPLATES.find(t => t.id === template);
 
     const handleDeploy = async () => {
@@ -44,7 +71,7 @@ export default function AgentBuilderPage() {
                 const res = await fetch('/api/agents', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                    body: JSON.stringify({ name, description, template, model, systemPrompt }),
+                    body: JSON.stringify({ name, description, template, model, systemPrompt, tools: selectedTools }),
                 });
                 if (res.ok) {
                     showToast(`Agent "${name}" deployed to cloud!`, 'success');
@@ -54,7 +81,7 @@ export default function AgentBuilderPage() {
             } catch { /* fall through to localStorage */ }
         }
         // Fallback: localStorage
-        const agent = { name, description, template, model, systemPrompt, id: Date.now().toString(), createdAt: new Date().toISOString() };
+        const agent = { name, description, template, model, systemPrompt, tools: selectedTools, id: Date.now().toString(), createdAt: new Date().toISOString() };
         const existing = JSON.parse(localStorage.getItem('custom-agents') || '[]');
         existing.push(agent);
         localStorage.setItem('custom-agents', JSON.stringify(existing));
@@ -128,6 +155,24 @@ export default function AgentBuilderPage() {
 
                         {step === 2 && (
                             <div className="space-y-6">
+                                <h2 className="text-lg font-medium text-white">Select tools</h2>
+                                <p className="text-sm text-gray-400">Choose what your agent can interact with. Tools define the agent&apos;s capabilities.</p>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                    {TOOLS.map(tool => (
+                                        <button key={tool.id} onClick={() => toggleTool(tool.id)}
+                                            className={`p-4 rounded-xl border text-left transition-all ${selectedTools.includes(tool.id) ? 'border-primary/50 bg-primary/10' : 'border-white/5 bg-white/[0.02] hover:border-white/20'}`}>
+                                            <p className="text-sm font-bold text-white">{tool.name}</p>
+                                            <p className="text-[10px] text-gray-500 mt-1">{tool.desc}</p>
+                                            {selectedTools.includes(tool.id) && <Check size={12} className="text-primary mt-2" />}
+                                        </button>
+                                    ))}
+                                </div>
+                                {selectedTools.length > 0 && <p className="text-xs text-gray-500 font-mono">{selectedTools.length} tool{selectedTools.length !== 1 ? 's' : ''} selected</p>}
+                            </div>
+                        )}
+
+                        {step === 3 && (
+                            <div className="space-y-6">
                                 <h2 className="text-lg font-medium text-white">Select a model</h2>
                                 <div className="space-y-3">
                                     {MODELS.map(m => (
@@ -144,7 +189,7 @@ export default function AgentBuilderPage() {
                             </div>
                         )}
 
-                        {step === 3 && (
+                        {step === 4 && (
                             <div className="space-y-6">
                                 <h2 className="text-lg font-medium text-white">Review & Deploy</h2>
                                 <div className="space-y-4 p-6 rounded-xl bg-white/[0.02] border border-white/5">
@@ -155,6 +200,7 @@ export default function AgentBuilderPage() {
                                     <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
                                         <div><p className="text-[10px] text-gray-500 uppercase font-mono mb-1">Template</p><p className="text-sm text-white">{selectedTemplate?.name}</p></div>
                                         <div><p className="text-[10px] text-gray-500 uppercase font-mono mb-1">Model</p><p className="text-sm text-white">{MODELS.find(m => m.id === model)?.name}</p></div>
+                                        <div className="col-span-2"><p className="text-[10px] text-gray-500 uppercase font-mono mb-1">Tools ({selectedTools.length})</p><p className="text-sm text-white">{selectedTools.length > 0 ? selectedTools.map(t => TOOLS.find(tool => tool.id === t)?.name).join(', ') : 'None'}</p></div>
                                     </div>
                                     {systemPrompt && <div className="pt-4 border-t border-white/5"><p className="text-[10px] text-gray-500 uppercase font-mono mb-1">System Prompt</p><p className="text-xs text-gray-300 font-mono bg-black/40 p-3 rounded-lg border border-white/5">{systemPrompt}</p></div>}
                                 </div>
