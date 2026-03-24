@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Bot, MessageSquare, Settings, LayoutDashboard, ChevronDown, Sparkles, Shield, Search, Plus, Store, Bell, GitBranch, Brain, BarChart3, User } from 'lucide-react';
+import { Bot, MessageSquare, Settings, LayoutDashboard, ChevronDown, Sparkles, Shield, Search, Plus, Store, Bell, GitBranch, Brain, BarChart3, User, LogOut } from 'lucide-react';
 import { Logo } from '@/src/components/Icons';
 import { cn } from '@/lib/utils';
 
@@ -116,6 +116,17 @@ export function CockpitSidebar() {
                         <span className="ml-auto w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_5px_rgba(16,185,129,0.8)]" />
                     </div>
                 ))}
+            </div>
+            {/* Logout button */}
+            <div className="px-3 py-3 border-t border-white/5">
+                <button onClick={() => {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = '/login';
+                }} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-gray-500 hover:text-red-400 hover:bg-red-400/5 transition-all">
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Sign Out</span>
+                </button>
             </div>
         </aside>
     );
