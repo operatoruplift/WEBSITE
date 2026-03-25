@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, MessageSquare, Store, Settings } from 'lucide-react';
+import { Home, MessageSquare, Store, Network, Settings } from 'lucide-react';
 
 const navItems = [
     { href: '/app', icon: <Home size={22} />, label: 'Home' },
     { href: '/chat', icon: <MessageSquare size={22} />, label: 'Chat' },
     { href: '/marketplace', icon: <Store size={22} />, label: 'Agents' },
-    { href: '/settings', icon: <Settings size={22} />, label: 'Settings' },
+    { href: '/swarm', icon: <Network size={22} />, label: 'Swarm' },
+    { href: '/settings', icon: <Settings size={22} />, label: 'More' },
 ];
 
 export function MobileNav() {

@@ -251,12 +251,12 @@ export default function ChatPage() {
                     <div className="p-4 border-t border-white/5 bg-black/40 backdrop-blur-sm shrink-0">
                         <div className="max-w-4xl mx-auto">
                             <div className="flex items-end gap-3 p-3 rounded-2xl bg-white/5 border border-white/10 focus-within:border-[#E77630]/40 transition-all">
-                                <button onClick={createNewSession} className="p-2 rounded-xl text-gray-500 hover:text-white hover:bg-white/10 transition-all md:hidden shrink-0"><Plus size={20} /></button>
-                                <button onClick={() => showToast('File attachments coming soon', 'info')} className="p-2 rounded-xl text-gray-600 hover:text-gray-400 hover:bg-white/5 transition-all shrink-0"><Paperclip size={18} /></button>
+                                <button onClick={createNewSession} aria-label="New chat" className="p-2 rounded-xl text-gray-500 hover:text-white hover:bg-white/10 transition-all md:hidden shrink-0"><Plus size={20} /></button>
+                                <button onClick={() => showToast('File attachments coming soon', 'info')} aria-label="Attach file" className="p-2 rounded-xl text-gray-600 hover:text-gray-400 hover:bg-white/5 transition-all shrink-0"><Paperclip size={18} /></button>
                                 <textarea ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyDown} placeholder={`Message ${activeModel.label}...`} aria-label="Chat message input" rows={1}
                                     className="flex-1 bg-transparent text-white placeholder-gray-600 focus:outline-none resize-none text-[15px] leading-relaxed min-h-[40px] max-h-40" style={{ height: 'auto' }}
                                     onInput={e => { const t = e.currentTarget; t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight, 160) + 'px'; }} />
-                                <button onClick={() => showToast('Voice input coming soon', 'info')} className="p-2 rounded-xl text-gray-600 hover:text-gray-400 hover:bg-white/5 transition-all shrink-0"><Mic size={18} /></button>
+                                <button onClick={() => showToast('Voice input coming soon', 'info')} aria-label="Voice input" className="p-2 rounded-xl text-gray-600 hover:text-gray-400 hover:bg-white/5 transition-all shrink-0"><Mic size={18} /></button>
                                 <button onClick={handleSend} disabled={!input.trim() || isLoading} className="w-10 h-10 rounded-xl flex items-center justify-center transition-all shrink-0 disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(231,118,48,0.3)] hover:shadow-[0_0_20px_rgba(231,118,48,0.5)]" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}>
                                     {isLoading ? <Loader2 size={18} className="animate-spin text-white" /> : <Send size={18} className="text-white" />}
                                 </button>

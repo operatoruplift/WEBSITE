@@ -105,7 +105,7 @@ export function CockpitSidebar() {
             </nav>
             <div className="border-t border-white/5 px-4 py-2 flex items-center justify-between">
                 <span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">My Agents</span>
-                <Link href="/agents/builder" className="p-1 text-gray-600 hover:text-white hover:bg-white/5 rounded transition-all" title="Create New Agent"><Plus size={12} /></Link>
+                <Link href="/agents/builder" className="p-1 text-gray-600 hover:text-white hover:bg-white/5 rounded transition-all" title="Create New Agent" aria-label="Create new agent"><Plus size={12} /></Link>
             </div>
             <div className="px-3 pb-3 space-y-0.5 max-h-32 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.05) transparent' }}>
                 {customAgents.length === 0 ? (
