@@ -182,6 +182,7 @@ export default function SettingsPage() {
                                     <div className="space-y-6">
                                         <h2 className="text-lg font-medium text-white">Security</h2>
                                         <PasswordChangeForm showToast={showToast} />
+                                        <EncryptionSetup showToast={showToast} />
                                         <div className="p-4 rounded-xl bg-white/5 border border-white/5"><div className="flex items-center justify-between"><div><p className="text-sm text-white font-medium">Two-Factor Authentication</p><p className="text-xs text-gray-500 mt-1">Add an extra layer of security</p></div><GlowButton variant="outline" size="sm" onClick={() => showToast('2FA requires a connected backend. Coming soon.', 'info')}>Enable 2FA</GlowButton></div></div>
                                     </div>
                                 )}
@@ -245,6 +246,59 @@ function PasswordChangeForm({ showToast }: { showToast: (msg: string, type: 'suc
             <div><label htmlFor="new-pw" className="text-sm text-gray-400 block mb-2">New Password</label><input id="new-pw" type="password" value={newPw} onChange={e => setNewPw(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="••••••••" aria-label="New password" /></div>
             <div><label htmlFor="confirm-pw" className="text-sm text-gray-400 block mb-2">Confirm Password</label><input id="confirm-pw" type="password" value={confirm} onChange={e => setConfirm(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="••••••••" aria-label="Confirm password" /></div>
             <button onClick={handleSubmit} className="px-4 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary text-sm hover:bg-primary/20 transition-colors">Update Password</button>
+        </div>
+    );
+}
+
+function EncryptionSetup({ showToast }: { showToast: (msg: string, type: 'success' | 'info' | 'warning' | 'error') => void }) {
+    const [isConfigured, setIsConfigured] = useState(false);
+    const [encPassword, setEncPassword] = useState('');
+    const [verifying, setVerifying] = useState(false);
+
+    useEffect(() => {
+        import('@/lib/encryption').then(({ isEncryptionConfigured }) => {
+            setIsConfigured(isEncryptionConfigured());
+        });
+    }, []);
+
+    const handleSetup = async () => {
+        if (encPassword.length < 8) { showToast('Encryption password must be at least 8 characters', 'warning'); return; }
+        setVerifying(true);
+        try {
+            const { setupEncryption } = await import('@/lib/encryption');
+            await setupEncryption(encPassword);
+            setIsConfigured(true);
+            setEncPassword('');
+            showToast('AES-256 encryption enabled for local data', 'success');
+        } catch {
+            showToast('Failed to set up encryption', 'error');
+        }
+        setVerifying(false);
+    };
+
+    return (
+        <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+            <div className="flex items-center justify-between">
+                <div>
+                    <p className="text-sm text-white font-medium flex items-center gap-2">
+                        AES-256 Encryption
+                        {isConfigured && <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-400/10 text-emerald-400 border border-emerald-400/20 uppercase font-mono">Active</span>}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                        {isConfigured ? 'Local data encrypted with AES-256-GCM via Web Crypto API' : 'Encrypt agent configs, chat sessions, and memory with AES-256-GCM'}
+                    </p>
+                </div>
+            </div>
+            {!isConfigured && (
+                <div className="mt-4 flex gap-3">
+                    <input type="password" value={encPassword} onChange={e => setEncPassword(e.target.value)} placeholder="Encryption password (min 8 chars)" aria-label="Encryption password"
+                        className="flex-1 bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:border-primary/50 focus:outline-none" />
+                    <button onClick={handleSetup} disabled={verifying}
+                        className="px-4 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary text-sm hover:bg-primary/20 transition-colors whitespace-nowrap">
+                        {verifying ? 'Setting up...' : 'Enable'}
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
