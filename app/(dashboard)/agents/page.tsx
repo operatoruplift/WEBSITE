@@ -147,8 +147,8 @@ export default function AgentsPage() {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-2 flex-shrink-0">
-                                                <button onClick={() => toggleFavorite(agent.id)} className={`p-2 rounded-lg transition-colors ${agent.favorite ? 'bg-amber-400/10 text-amber-400' : 'bg-white/5 text-gray-500 hover:text-amber-400'}`}><Star size={14} /></button>
-                                                <button onClick={() => toggleAgent(agent.id)} className={`p-2 rounded-lg transition-colors ${agent.status === 'running' ? 'bg-amber-400/10 text-amber-400 hover:bg-amber-400/20' : 'bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20'}`}>
+                                                <button onClick={() => toggleFavorite(agent.id)} aria-label={agent.favorite ? 'Remove from favorites' : 'Add to favorites'} className={`p-2 rounded-lg transition-colors ${agent.favorite ? 'bg-amber-400/10 text-amber-400' : 'bg-white/5 text-gray-500 hover:text-amber-400'}`}><Star size={14} /></button>
+                                                <button onClick={() => toggleAgent(agent.id)} aria-label={agent.status === 'running' ? 'Pause agent' : 'Start agent'} className={`p-2 rounded-lg transition-colors ${agent.status === 'running' ? 'bg-amber-400/10 text-amber-400 hover:bg-amber-400/20' : 'bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20'}`}>
                                                     {agent.status === 'running' ? <Pause size={14} /> : <Play size={14} />}
                                                 </button>
                                                 <Link href="/settings" className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-white hover:bg-white/10 transition-colors"><Settings size={14} /></Link>

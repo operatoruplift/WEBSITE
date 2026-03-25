@@ -60,9 +60,9 @@ const QUICK_ACTIONS = [
     { label: 'Chat', href: '/chat', icon: MessageSquare, text: 'text-[#F59E0B]', bg: 'bg-[#F59E0B]/10' },
     { label: 'Agent Store', href: '/marketplace', icon: Bot, text: 'text-[#E77630]', bg: 'bg-[#E77630]/10' },
     { label: 'Builder', href: '/agents/builder', icon: Sparkles, text: 'text-[#E77630]', bg: 'bg-[#E77630]/10' },
+    { label: 'Swarm', href: '/swarm', icon: Network, text: 'text-[#E77630]', bg: 'bg-[#E77630]/10' },
     { label: 'Blackwall', href: '/security', icon: Shield, text: 'text-rose-400', bg: 'bg-rose-400/10' },
     { label: 'Settings', href: '/settings', icon: Code, text: 'text-emerald-400', bg: 'bg-emerald-400/10' },
-    { label: 'Website', href: '/', icon: Network, text: 'text-amber-400', bg: 'bg-amber-400/10' },
 ];
 
 export default function DashboardPage() {
