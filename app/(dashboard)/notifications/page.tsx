@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Bell, Check, CheckCheck, Shield, Bot, MessageSquare, Workflow, Brain, Trash2 } from 'lucide-react';
+import { getNotifications, markNotificationRead, markAllRead as markAllReadStore, deleteNotification as deleteNotifStore } from '@/lib/notifications';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
@@ -17,13 +18,30 @@ const INITIAL_NOTIFICATIONS: Notification[] = [
     { id: '5', type: 'memory', title: 'Knowledge base indexed', message: '1,247 new documents processed and embedded', time: '1d ago', read: true, icon: Brain, color: 'text-primary' },
 ];
 
+const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+    bot: Bot, shield: Shield, message: MessageSquare, workflow: Workflow, brain: Brain,
+};
+
 export default function NotificationsPage() {
     const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
     const unreadCount = notifications.filter(n => !n.read).length;
 
-    const markAllRead = () => setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-    const markRead = (id: string) => setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
-    const deleteNotification = (id: string) => setNotifications(prev => prev.filter(n => n.id !== id));
+    // Load real notifications from localStorage and merge with demos
+    useEffect(() => {
+        const stored = getNotifications();
+        if (stored.length > 0) {
+            const realNotifs: Notification[] = stored.map(n => ({
+                id: n.id, type: n.type, title: n.title, message: n.message,
+                time: n.time, read: n.read,
+                icon: iconMap[n.icon] || Bot, color: n.color,
+            }));
+            setNotifications([...realNotifs, ...INITIAL_NOTIFICATIONS]);
+        }
+    }, []);
+
+    const markAllRead = () => { setNotifications(prev => prev.map(n => ({ ...n, read: true }))); markAllReadStore(); };
+    const markRead = (id: string) => { setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n)); markNotificationRead(id); };
+    const deleteNotification = (id: string) => { setNotifications(prev => prev.filter(n => n.id !== id)); deleteNotifStore(id); };
 
     return (
         <MobilePageWrapper>
