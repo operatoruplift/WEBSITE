@@ -133,7 +133,7 @@ export default function AgentsPage() {
                                                 </div>
                                                 <div className="min-w-0">
                                                     <div className="flex items-center gap-2 mb-0.5">
-                                                        <h3 className="text-white font-semibold truncate">{agent.name}</h3>
+                                                        <Link href={`/agents/${agent.id}`} className="text-white font-semibold truncate hover:text-primary transition-colors">{agent.name}</Link>
                                                         <Badge variant="default" className={`text-[9px] ${status.color} bg-white/5 border border-white/10`}>{status.label}</Badge>
                                                         {agent.favorite && <Star size={12} className="text-amber-400 fill-amber-400" />}
                                                     </div>

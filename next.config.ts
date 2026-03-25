@@ -28,11 +28,6 @@ const nextConfig: NextConfig = {
                 destination: 'https://help.operatoruplift.com/:path*',
                 permanent: true,
             },
-            {
-                source: '/pricing',
-                destination: '/contact',
-                permanent: false,
-            },
         ];
     },
 };
