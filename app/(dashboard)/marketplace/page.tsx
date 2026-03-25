@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Store, Search, Star, Download, TrendingUp, Grid, List, Bot, ChevronDown, Sparkles, Crown, Check, Users, Loader2, ArrowRight } from 'lucide-react';
+import { addNotification } from '@/lib/notifications';
 import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
@@ -68,6 +69,7 @@ export default function MarketplacePage() {
             } catch { /* localStorage already updated */ }
         }
         showToast(`${agentName} installed successfully`, 'success');
+        addNotification({ type: 'agent', title: `${agentName} installed`, message: 'Agent added to your fleet from marketplace', icon: 'bot', color: 'text-emerald-400' });
     };
 
     const filtered = agents.filter(a => category === 'All' || a.category === category).filter(a => !search || a.name.toLowerCase().includes(search.toLowerCase()) || a.description.toLowerCase().includes(search.toLowerCase())).sort((a, b) => sortBy === 'rating' ? b.rating - a.rating : b.reviews - a.reviews);

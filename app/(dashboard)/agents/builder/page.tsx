@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Sparkles, ArrowRight, ArrowLeft, Check, Bot, Brain, Code, FileText, Globe, Shield, Zap, MessageSquare } from 'lucide-react';
 import { GlowButton } from '@/src/components/ui/GlowButton';
+import { addNotification } from '@/lib/notifications';
 import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
@@ -86,6 +87,7 @@ export default function AgentBuilderPage() {
         existing.push(agent);
         localStorage.setItem('custom-agents', JSON.stringify(existing));
         showToast(`Agent "${name}" deployed locally!`, 'success');
+        addNotification({ type: 'agent', title: `Agent "${name}" deployed`, message: `${model} agent with ${selectedTools.length} tools`, icon: 'bot', color: 'text-[#E77630]' });
         setStep(0); setName(''); setDescription(''); setTemplate(''); setSystemPrompt('');
     };
 

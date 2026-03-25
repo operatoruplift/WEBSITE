@@ -7,6 +7,7 @@ import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
+import { addNotification } from '@/lib/notifications';
 
 interface Workflow {
     id: string;
@@ -71,6 +72,7 @@ export default function WorkflowsPage() {
                 setRunProgress(0);
                 setWorkflows(prev => prev.map(w => w.id === id ? { ...w, runs: w.runs + 1, lastRun: 'Just now', status: 'active' as const } : w));
                 showToast(`"${wf.name}" completed successfully! (${totalSteps} steps)`, 'success');
+                addNotification({ type: 'workflow', title: `${wf.name} completed`, message: `${totalSteps} steps executed successfully`, icon: 'workflow', color: 'text-emerald-400' });
             }
         }, 1200);
     };

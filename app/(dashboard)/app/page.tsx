@@ -13,6 +13,7 @@ import { Logo } from '@/src/components/Icons';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
+import { getNotifications } from '@/lib/notifications';
 
 interface StatData { id: string; label: string; value: string; change: string; positive: boolean; icon: React.ComponentType<{ size?: number; className?: string }>; gradient: string; }
 interface ActivityEvent { id: string; type: string; title: string; description: string; time: string; icon: React.ComponentType<{ size?: number; className?: string }>; color: string; }
@@ -81,7 +82,18 @@ export default function DashboardPage() {
         const updateTime = () => setCurrentTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }));
         updateTime();
         const t = setInterval(updateTime, 10000);
-        fetchDashboardData().then(data => { setStats(data.stats); setActivity(data.activity); setHealth(data.health); setIsLoading(false); });
+        fetchDashboardData().then(data => {
+            setStats(data.stats);
+            // Merge real notifications into activity stream
+            const realNotifs = getNotifications().slice(0, 3).map(n => ({
+                id: n.id, type: n.type, title: n.title, description: n.message, time: n.time,
+                icon: n.icon === 'bot' ? Bot : n.icon === 'workflow' ? Workflow : n.icon === 'shield' ? Shield : MessageSquare,
+                color: n.color,
+            }));
+            setActivity(realNotifs.length > 0 ? [...realNotifs, ...data.activity.slice(realNotifs.length)] : data.activity);
+            setHealth(data.health);
+            setIsLoading(false);
+        });
         return () => clearInterval(t);
     }, []);
 
