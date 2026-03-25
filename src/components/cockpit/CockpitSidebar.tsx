@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Bot, MessageSquare, Settings, LayoutDashboard, ChevronDown, Sparkles, Shield, Search, Plus, Store, Bell, GitBranch, Brain, BarChart3, User, LogOut } from 'lucide-react';
+import { Bot, MessageSquare, Settings, LayoutDashboard, ChevronDown, Sparkles, Shield, Search, Plus, Store, Bell, GitBranch, Brain, BarChart3, User, LogOut, Network } from 'lucide-react';
 import { Logo } from '@/src/components/Icons';
 import { cn } from '@/lib/utils';
 
@@ -25,6 +25,7 @@ const NAV_SECTIONS: NavSection[] = [
             { href: '/marketplace', label: 'Agent Store', icon: Store, gradient: 'from-orange-500/20 to-amber-500/10' },
             { href: '/agents/builder', label: 'Builder', icon: Sparkles, gradient: 'from-orange-400/20 to-yellow-500/10' },
             { href: '/workflows', label: 'Workflows', icon: GitBranch, gradient: 'from-amber-400/20 to-orange-500/10' },
+            { href: '/swarm', label: 'Swarm', icon: Network, gradient: 'from-orange-500/20 to-red-500/10' },
             { href: '/memory', label: 'Memory Bank', icon: Brain, gradient: 'from-amber-500/20 to-orange-500/10' },
         ],
     },

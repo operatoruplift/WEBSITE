@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/app', '/chat', '/marketplace', '/security', '/settings', '/agents', '/notifications', '/workflows', '/memory', '/analytics', '/profile', '/login', '/signup'],
+      disallow: ['/app', '/chat', '/marketplace', '/security', '/settings', '/agents', '/notifications', '/workflows', '/swarm', '/memory', '/analytics', '/profile', '/login', '/signup'],
     },
     sitemap: 'https://operatoruplift.com/sitemap.xml',
   };
