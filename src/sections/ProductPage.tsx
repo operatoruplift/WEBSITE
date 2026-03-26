@@ -25,11 +25,11 @@ const visuals = [
 
 // Extended descriptions for the product deep-dive page
 const extendedDescriptions = [
-  'Every agent runs inside an isolated, encrypted sandbox on your device. Memory is local-first with optional encrypted sync. Your data starts on your machine and stays under your control — no cloud leaks, no shared state between sessions.',
+  'Every agent runs inside an isolated, encrypted sandbox on your device. Memory is local-first with optional encrypted sync. Your data starts on your machine and stays under your control. No cloud leaks, no shared state between sessions.',
   'Discover, install, and manage agents from a marketplace. Developers publish agents with transparent pricing, and users get one-click deployment with full permission visibility. Each agent is cryptographically verified before installation.',
   'Tasks execute in session-based runtimes that start fast, stay isolated, and terminate cleanly. When a session ends, the agent loses all system access. No long-running background processes, no residual permissions.',
   'Time-limited access keys define exactly what an agent can see or do. Keys unlock the Agentic Vault only for the active session and can be revoked instantly. Permissions are precise, temporary, and always under your control.',
-  'Every file read, device control action, and network call requires explicit permission. Operator Uplift enforces the boundaries you define — no silent behavior, no surprises. A human-in-the-loop firewall for every agent action.',
+  'Every file read, device control action, and network call requires explicit permission. Operator Uplift enforces the boundaries you define. No silent behavior, no surprises. A human-in-the-loop firewall for every agent action.',
 ];
 
 const technicalDetails = [

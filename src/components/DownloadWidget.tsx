@@ -70,7 +70,7 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = () => {
           {isMobile && (
             <>
               <span className="text-gray-300 text-sm font-mono">Mobile app coming soon</span>
-              <span className="text-muted text-xs mt-0.5">PWA available now — add to home screen</span>
+              <span className="text-muted text-xs mt-0.5">PWA available now. Add to home screen</span>
             </>
           )}
           {activeTab === 'seeker' && (
