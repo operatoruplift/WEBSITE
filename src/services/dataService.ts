@@ -30,13 +30,13 @@ export interface MarketData {
 export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData } = {
   problem: {
     stat: '40+',
-    subline: 'You have 40 apps. 40 subscriptions. 40 different places storing your data. None of them talk to each other. None are yours.',
+    subline: 'You juggle 40 apps. 40 passwords. 40 places your data gets stored. They don\'t talk to each other — and none of them work for you.',
     pillars: [
-      { id: 'siloed-memory', emoji: '🧠', problem: 'Siloed Memory', solution: 'Unified Context', description: 'No unified shared context across your tools. Your agents should remember everything — across apps, sessions, and devices.', href: '#product' },
-      { id: 'exposed-privacy', emoji: '🔓', problem: 'Exposed Privacy', solution: 'Local-First', description: 'Your data leaks to unknown servers. With Operator Uplift, your data lives on your hardware. Zero vendor lock-in.', href: '#product' },
-      { id: 'no-boundaries', emoji: '⚠️', problem: 'No Boundaries', solution: 'You Own It', description: 'Agents monetize your private data. Operator Uplift gives you full ownership — every permission explicit, every action approved.', href: '#product' },
+      { id: 'siloed-memory', emoji: '🧠', problem: 'Scattered Tools', solution: 'One Place', description: 'Your notes are in one app, your calendar in another, your files in a third. AI should connect all of it — and remember what matters.', href: '#product' },
+      { id: 'exposed-privacy', emoji: '🔓', problem: 'No Privacy', solution: 'Your Device', description: 'Every app you use sends your data to someone else\'s server. We think your data should stay on your device, period.', href: '#product' },
+      { id: 'no-boundaries', emoji: '⚠️', problem: 'No Control', solution: 'Your Rules', description: 'Big tech AI watches everything you do. Operator Uplift puts you in charge — you decide what AI can see and do.', href: '#product' },
     ],
-    solution: 'A local-first AI operating system that replaces your entire app stack with one intelligent agent.',
+    solution: 'One app that replaces your entire toolkit with AI that actually works for you.',
   },
   market: {
     headline: 'Massive and Growing.',
@@ -52,7 +52,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
     visionTag: "VISION",
     headline: "Your Life, Automated.",
     subhead: "One App. Every Agent. All Yours.",
-    description: "Local-first AI agents you control, running on your device. Install agents, run tasks in secure sessions, and approve access with clear permissions.",
+    description: "AI assistants that work for you — not big tech. They run on your device, respect your privacy, and do exactly what you tell them.",
     contractAddress: "",
     contractLabel: "",
     downloads: {
@@ -66,98 +66,98 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
     }
   },
   product: {
-    tag: "PRODUCT",
-    headline: "Local-First Agent Command Center",
-    subhead: "Install agents, run tasks in secure sessions, and approve access with clear permissions.",
+    tag: "HOW IT WORKS",
+    headline: "Your AI, Your Rules.",
+    subhead: "Five simple principles that keep you in control.",
     features: [
       {
         id: 'isolated',
-        navTitle: 'ISOLATED ENV',
-        cardTitle: '1. Isolated Environment',
-        description: 'Agents use private, encrypted local memory where supported, with optional sync, so your data starts on your device and stays under your control.',
+        navTitle: 'YOUR DATA',
+        cardTitle: '1. Your Data Stays Yours',
+        description: 'Everything stays on your device. Your AI assistants use private, encrypted memory — nothing gets sent to the cloud without your say-so.',
         iconType: 'kanban'
       },
       {
         id: 'store',
-        navTitle: 'AGENT STORE',
-        cardTitle: '2. Agent Store',
-        description: 'Discover, install, and run agents from a Solana-powered marketplace. One-click deployment with transparent permissions and ownership.',
+        navTitle: 'APP STORE',
+        cardTitle: '2. Pick Your Agents',
+        description: 'Browse and install AI assistants from our marketplace — like an app store for AI. One tap to add, one tap to remove.',
         iconType: 'globe'
       },
       {
         id: 'runtime',
-        navTitle: 'SESSION RUNTIME',
-        cardTitle: '3. Session Runtime',
-        description: 'Each task runs in an isolated runtime that starts fast and ends cleanly. When the session ends, the agent loses all access to your system.',
+        navTitle: 'CLEAN EXITS',
+        cardTitle: '3. They Leave When Done',
+        description: 'When an agent finishes a task, it loses access to your stuff. No background snooping, no lingering connections. Clean in, clean out.',
         iconType: 'terminal'
       },
       {
         id: 'tokens',
-        navTitle: 'ACCESS KEYS',
-        cardTitle: '4. Time-Limited Access Keys',
-        description: 'Keys define exactly what an agent can see or do. They unlock the Agentic Vault for one session only and can be revoked at any time.',
+        navTitle: 'ACCESS',
+        cardTitle: '4. Temporary Access Only',
+        description: 'Agents only see what you allow, for as long as you allow it. Like giving someone a guest pass that expires automatically.',
         iconType: 'message'
       },
       {
         id: 'permissions',
-        navTitle: 'PERMISSIONS',
-        cardTitle: '5. Permission Actions',
-        description: 'Every file read, device control, and network call requires explicit approval. No silent behavior, no surprises. You define the boundaries.',
+        navTitle: 'APPROVAL',
+        cardTitle: '5. You Approve Everything',
+        description: 'Every action an agent wants to take — reading a file, sending a message, accessing the internet — needs your OK first.',
         iconType: 'check'
       }
     ]
   },
   security: {
-    tag: "ENTERPRISE",
-    headline: "Operator Uplift delivers an enterprise-grade agentic infrastructure",
-    subhead: "With isolated runtimes for maximum security, a unified interface that minimizes learning curve, and seamless integration of private AI agents for scalable automation.",
+    tag: "TRUST",
+    headline: "Built for people who care about their privacy.",
+    subhead: "Your data never leaves your device. Your AI works for you, not advertisers. And you can switch providers anytime — no lock-in.",
     features: {
       security: {
-        tag: "SECURE AT EVERY LEVEL",
-        title: "Local-first security and full compliance",
-        description: "Operator Uplift uses isolated sandboxes, encrypted local memory and token based access rules to ensure that your data, intellectual property, logs and workflows never leave your environment. Agents receive only the context you explicitly approve for a limited time window, which prevents oversharing and eliminates the risk of cloud based data leakage.",
-        linkText: "Learn more about security",
+        tag: "PRIVATE BY DEFAULT",
+        title: "Your data stays on your device",
+        description: "Everything is encrypted and stored locally. Your conversations, files, and workflows never touch our servers. Agents only see what you share, and only for as long as you allow.",
+        linkText: "How we protect your privacy",
         linkUrl: "https://help.operatoruplift.com/"
       },
       enterprise: {
-        tag: "ACROSS YOUR DEVELOPMENT STACK",
-        title: "Independent of interfaces and external vendors",
-        description: "Operator Uplift integrates with any model provider, internal API, or device. Deploy agents with one interface, and evolve them over time without vendor lock-in. As your internal systems mature, your agents upgrade seamlessly with shared memory, cross-device sync, and modular extensions.",
-        linkText: "Learn more about enterprise",
+        tag: "WORKS WITH EVERYTHING",
+        title: "Use any AI model, any tool",
+        description: "Operator Uplift works with Claude, GPT, Gemini, Llama, and more. Switch models anytime. Connect your favorite apps. No vendor lock-in, ever.",
+        linkText: "See all integrations",
         linkUrl: "/contact"
       }
     }
   },
   developerDocs: {
-    tag: "BUILD WITH US",
-    headline: "Developer Docs",
-    description: "Everything you need to integrate Operator Uplift agents into your infrastructure. Explore our guides, samples, and API references.",
+    tag: "LEARN MORE",
+    headline: "Get Started",
+    description: "Whether you're a developer building agents or a user exploring the platform — we've got you covered.",
     links: [
       {
-        title: "Quickstart Guide",
-        description: "Get up and running with Operator Uplift in minutes. Deploy your first agent container.",
+        title: "Getting Started",
+        description: "Set up Operator Uplift and start using AI agents in minutes.",
         iconType: 'terminal',
         url: "https://help.operatoruplift.com/getting-started"
       },
       {
-        title: "Core Concepts",
-        description: "Deep dive into the architecture, session tokens, and security vaults.",
+        title: "How It Works",
+        description: "Understand how agents, permissions, and privacy work together.",
         iconType: 'kanban',
         url: "https://help.operatoruplift.com/core-concepts"
       },
       {
-        title: "API Reference",
-        description: "Complete reference for the Agent Store API and Runtime SDKs.",
+        title: "For Developers",
+        description: "Build your own agents and publish them to the marketplace.",
         iconType: 'globe',
         url: "https://help.operatoruplift.com/api-reference"
       }
     ]
   },
   buildWithUs: {
-    tag: "BUILD WITH US",
-    cta: "START BUILDING",
-    headline: "Ready to build the software of the future?",
-    buttonText: "Start Building",
+    tag: "JOIN US",
+    cta: "GET EARLY ACCESS",
+    headline: "Ready to take control of your AI?",
+    buttonText: "Join Waitlist",
     url: "https://help.operatoruplift.com"
   },
   contact: {

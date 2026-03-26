@@ -63,32 +63,30 @@ const Product: React.FC = () => {
       const section = sectionRef.current;
       if (!section) return;
 
-      // Use offsetTop for stable detection (not affected by scroll momentum)
-      const sectionTop = section.offsetTop;
-      const sectionBottom = sectionTop + section.offsetHeight;
-      const scrollY = window.scrollY;
+      const rect = section.getBoundingClientRect();
       const vh = window.innerHeight;
 
-      // Are we scrolled into the section? (with generous margins)
-      const inSection = scrollY >= sectionTop - vh * 0.5 && scrollY + vh <= sectionBottom + vh * 0.5;
-      if (!inSection) return;
+      // Only intercept when the sticky section fills most of the viewport
+      // rect.top should be near 0 (section is at the top) and bottom below viewport
+      if (rect.top > vh * 0.15 || rect.bottom < vh * 0.85) return;
 
-      if (Math.abs(e.deltaY) < 3) return;
+      // Normalize deltaY for Firefox (which uses deltaMode 1 = lines)
+      const delta = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY;
+      if (Math.abs(delta) < 10) return;
 
       const idx = activeIndexRef.current;
-      // At boundaries, let the page scroll through
-      if (e.deltaY < 0 && idx === 0) return;
-      if (e.deltaY > 0 && idx === features.length - 1) return;
+      // At boundaries, let the page scroll through naturally
+      if (delta < 0 && idx === 0) return;
+      if (delta > 0 && idx === features.length - 1) return;
 
       // Block page scroll — we handle feature advancement
       e.preventDefault();
-      e.stopPropagation();
 
       const now = Date.now();
       if (now - lastWheelTime < WHEEL_COOLDOWN) return;
       lastWheelTime = now;
 
-      if (e.deltaY > 0) {
+      if (delta > 0) {
         setActiveIndex(prev => Math.min(features.length - 1, prev + 1));
       } else {
         setActiveIndex(prev => Math.max(0, prev - 1));
