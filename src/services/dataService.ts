@@ -30,11 +30,11 @@ export interface MarketData {
 export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData } = {
   problem: {
     stat: '40+',
-    subline: 'You juggle 40 apps. 40 passwords. 40 places your data gets stored. They don\'t talk to each other — and none of them work for you.',
+    subline: 'You juggle 40 apps. 40 passwords. 40 places your data gets stored. They don\'t talk to each other, and none of them work for you.',
     pillars: [
-      { id: 'siloed-memory', emoji: '🧠', problem: 'Scattered Tools', solution: 'One Place', description: 'Your notes are in one app, your calendar in another, your files in a third. AI should connect all of it — and remember what matters.', href: '#product' },
+      { id: 'siloed-memory', emoji: '🧠', problem: 'Scattered Tools', solution: 'One Place', description: 'Your notes are in one app, your calendar in another, your files in a third. AI should connect all of it and remember what matters.', href: '#product' },
       { id: 'exposed-privacy', emoji: '🔓', problem: 'No Privacy', solution: 'Your Device', description: 'Every app you use sends your data to someone else\'s server. We think your data should stay on your device, period.', href: '#product' },
-      { id: 'no-boundaries', emoji: '⚠️', problem: 'No Control', solution: 'Your Rules', description: 'Big tech AI watches everything you do. Operator Uplift puts you in charge — you decide what AI can see and do.', href: '#product' },
+      { id: 'no-boundaries', emoji: '⚠️', problem: 'No Control', solution: 'Your Rules', description: 'Big tech AI watches everything you do. Operator Uplift puts you in charge.you decide what AI can see and do.', href: '#product' },
     ],
     solution: 'One app that replaces your entire toolkit with AI that actually works for you.',
   },
@@ -52,7 +52,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
     visionTag: "VISION",
     headline: "Your Life, Automated.",
     subhead: "One App. Every Agent. All Yours.",
-    description: "AI assistants that work for you — not big tech. They run on your device, respect your privacy, and do exactly what you tell them.",
+    description: "AI assistants that work for you, not big tech. They run on your device, respect your privacy, and do exactly what you tell them.",
     contractAddress: "",
     contractLabel: "",
     downloads: {
@@ -74,14 +74,14 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
         id: 'isolated',
         navTitle: 'YOUR DATA',
         cardTitle: '1. Your Data Stays Yours',
-        description: 'Everything stays on your device. Your AI assistants use private, encrypted memory — nothing gets sent to the cloud without your say-so.',
+        description: 'Everything stays on your device. Your AI assistants use private, encrypted memory. Nothing gets sent to the cloud without your say-so.',
         iconType: 'kanban'
       },
       {
         id: 'store',
         navTitle: 'APP STORE',
         cardTitle: '2. Pick Your Agents',
-        description: 'Browse and install AI assistants from our marketplace — like an app store for AI. One tap to add, one tap to remove.',
+        description: 'Browse and install AI assistants from our marketplace, like an app store for AI. One tap to add, one tap to remove.',
         iconType: 'globe'
       },
       {
@@ -102,7 +102,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
         id: 'permissions',
         navTitle: 'APPROVAL',
         cardTitle: '5. You Approve Everything',
-        description: 'Every action an agent wants to take — reading a file, sending a message, accessing the internet — needs your OK first.',
+        description: 'Every action an agent wants to take, like reading a file, sending a message, or accessing the internet, needs your OK first.',
         iconType: 'check'
       }
     ]
@@ -110,7 +110,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
   security: {
     tag: "TRUST",
     headline: "Built for people who care about their privacy.",
-    subhead: "Your data never leaves your device. Your AI works for you, not advertisers. And you can switch providers anytime — no lock-in.",
+    subhead: "Your data never leaves your device. Your AI works for you, not advertisers. And you can switch providers anytime, no lock-in.",
     features: {
       security: {
         tag: "PRIVATE BY DEFAULT",
@@ -131,7 +131,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
   developerDocs: {
     tag: "LEARN MORE",
     headline: "Get Started",
-    description: "Whether you're a developer building agents or a user exploring the platform — we've got you covered.",
+    description: "Whether you're a developer building agents or a user exploring the platform, we've got you covered.",
     links: [
       {
         title: "Getting Started",
