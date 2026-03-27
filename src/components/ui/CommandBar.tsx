@@ -30,10 +30,15 @@ export function CommandBar() {
         const handler = (e: KeyboardEvent) => {
             if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setOpen(prev => !prev); }
             if (e.key === 'Escape') setOpen(false);
+            // Global shortcuts (only when not typing in an input)
+            if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+            if ((e.metaKey || e.ctrlKey) && e.key === 'n') { e.preventDefault(); router.push('/chat'); }
+            if ((e.metaKey || e.ctrlKey) && e.key === 'b') { e.preventDefault(); router.push('/agents/builder'); }
+            if ((e.metaKey || e.ctrlKey) && e.key === ',') { e.preventDefault(); router.push('/settings'); }
         };
         window.addEventListener('keydown', handler);
         return () => window.removeEventListener('keydown', handler);
-    }, []);
+    }, [router]);
 
     useEffect(() => { if (open) { setQuery(''); setSelectedIndex(0); setTimeout(() => inputRef.current?.focus(), 50); } }, [open]);
 
