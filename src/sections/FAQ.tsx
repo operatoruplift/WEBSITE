@@ -42,37 +42,42 @@ const FAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="w-full bg-background px-6 md:px-12 flex justify-center flex-col items-center">
+    <section className="w-full bg-background px-6 md:px-12 flex justify-center">
       <div className="w-full max-w-[800px] py-24">
-        <FadeIn>
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <span className="h-px w-16 bg-primary/40" />
-            <span className="text-xs font-bold tracking-[0.25em] text-primary uppercase">FAQ</span>
-            <span className="h-px w-16 bg-primary/40" />
-          </div>
-        </FadeIn>
+        {/* Section tag */}
+        <div className="text-center mb-8">
+          <FadeIn>
+            <div className="inline-flex items-center gap-3 mb-6">
+              <span className="h-px w-16 bg-primary/40" />
+              <span className="text-xs font-bold tracking-[0.25em] text-primary uppercase">FAQ</span>
+              <span className="h-px w-16 bg-primary/40" />
+            </div>
+          </FadeIn>
+          <h2 className="text-3xl md:text-4xl font-medium text-white mb-4 tracking-tight">
+            Common Questions
+          </h2>
+          <p className="text-gray-400 mb-12">
+            Everything you need to know to get started.
+          </p>
+        </div>
 
-        <h2 className="text-3xl md:text-4xl font-medium text-white text-center mb-4 tracking-tight">
-          Common Questions
-        </h2>
-        <p className="text-gray-400 text-center mb-12">
-          Everything you need to know to get started.
-        </p>
-
-        <div className="space-y-3">
+        {/* FAQ items - strictly vertical stack */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {faqs.map((faq, i) => (
             <FadeIn key={i} delay={i * 50}>
-              <div
-                className={`rounded-xl border transition-all duration-300 cursor-pointer ${
+              <button
+                type="button"
+                className={`w-full text-left rounded-xl border transition-all duration-300 ${
                   openIndex === i ? 'border-primary/30 bg-primary/5' : 'border-white/10 bg-white/[0.02] hover:border-white/20'
                 }`}
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                aria-expanded={openIndex === i}
               >
                 <div className="flex items-center justify-between p-5">
-                  <span className={`text-sm font-medium transition-colors ${openIndex === i ? 'text-white' : 'text-gray-300'}`}>
+                  <span className={`text-sm font-medium transition-colors pr-4 ${openIndex === i ? 'text-white' : 'text-gray-300'}`}>
                     {faq.q}
                   </span>
-                  <span className={`text-lg transition-transform duration-300 text-gray-500 flex-shrink-0 ml-4 ${openIndex === i ? 'rotate-45' : ''}`}>
+                  <span className={`text-lg transition-transform duration-300 text-gray-500 flex-shrink-0 ${openIndex === i ? 'rotate-45' : ''}`}>
                     +
                   </span>
                 </div>
@@ -81,7 +86,7 @@ const FAQ: React.FC = () => {
                     {faq.a}
                   </div>
                 )}
-              </div>
+              </button>
             </FadeIn>
           ))}
         </div>
