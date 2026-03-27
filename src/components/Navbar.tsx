@@ -12,6 +12,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
   const navItems = [
     { name: 'PRODUCT', targetId: 'product' },
     { name: 'ENTERPRISE', targetId: 'security' },
+    { name: 'BLOG', targetId: 'blog', href: '/blog' },
   ];
 
   return (
@@ -31,7 +32,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
             {navItems.map((item) => (
               <a
                 key={item.name}
-                href={`/#${item.targetId}`}
+                href={item.href || `/#${item.targetId}`}
                 className="group flex items-center text-xs font-bold text-muted hover:text-white transition-colors tracking-wide"
               >
                 {item.name}
@@ -96,7 +97,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
           {navItems.map((item) => (
             <a
               key={item.name}
-              href={`/#${item.targetId}`}
+              href={item.href || `/#${item.targetId}`}
               onClick={() => setMobileMenuOpen(false)}
               className="text-lg font-bold text-white hover:text-primary transition-colors tracking-wide"
             >
