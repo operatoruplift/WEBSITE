@@ -11,7 +11,7 @@ const Hero: React.FC = () => {
   const data = APP_CONTENT.hero;
   
   return (
-    <div className="relative min-h-screen w-full bg-background overflow-hidden selection:bg-primary/30 selection:text-white flex flex-col">
+    <div className="relative min-h-screen w-full bg-background overflow-hidden selection:bg-primary/30 selection:text-white flex flex-col aurora-hero">
       
       {/* Background Visualization Layer - Desktop Only — covers full viewport */}
       <div className="hidden lg:block absolute inset-0 z-0 pointer-events-none opacity-70">

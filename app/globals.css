@@ -78,6 +78,61 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Aurora gradient backgrounds */
+.aurora-hero {
+  position: relative;
+}
+.aurora-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 40%, rgba(231, 118, 48, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 30%, rgba(245, 158, 11, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 50% 80%, rgba(231, 118, 48, 0.03) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.aurora-section {
+  position: relative;
+}
+.aurora-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 30% 20%, rgba(231, 118, 48, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 70% 70%, rgba(245, 158, 11, 0.03) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.aurora-glow {
+  position: relative;
+}
+.aurora-glow::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 60%;
+  background: radial-gradient(ellipse at center, rgba(231, 118, 48, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(60px);
+}
+
+/* Mesh gradient for premium feel */
+.mesh-bg {
+  background:
+    radial-gradient(at 20% 30%, rgba(231, 118, 48, 0.05) 0%, transparent 50%),
+    radial-gradient(at 80% 70%, rgba(245, 158, 11, 0.04) 0%, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(231, 118, 48, 0.02) 0%, transparent 50%);
+}
+
 /* Grid pattern for auth pages */
 .grid-pattern {
   background-image: linear-gradient(rgba(231, 118, 48, 0.05) 1px, transparent 1px),
