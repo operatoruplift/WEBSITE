@@ -41,11 +41,15 @@ const faqs = [
 const FAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
+  const toggle = (i: number) => {
+    setOpenIndex(prev => prev === i ? null : i);
+  };
+
   return (
     <section className="w-full bg-background px-6 md:px-12 flex justify-center">
       <div className="w-full max-w-[800px] py-24">
-        {/* Section tag */}
-        <div className="text-center mb-8">
+        {/* Section header */}
+        <div className="text-center mb-12">
           <FadeIn>
             <div className="inline-flex items-center gap-3 mb-6">
               <span className="h-px w-16 bg-primary/40" />
@@ -56,38 +60,39 @@ const FAQ: React.FC = () => {
           <h2 className="text-3xl md:text-4xl font-medium text-white mb-4 tracking-tight">
             Common Questions
           </h2>
-          <p className="text-gray-400 mb-12">
+          <p className="text-gray-400">
             Everything you need to know to get started.
           </p>
         </div>
 
-        {/* FAQ items - strictly vertical stack */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {/* FAQ items - no FadeIn wrapper, direct buttons for reliable mobile taps */}
+        <div className="flex flex-col gap-3">
           {faqs.map((faq, i) => (
-            <FadeIn key={i} delay={i * 50}>
-              <button
-                type="button"
-                className={`w-full text-left rounded-xl border transition-all duration-300 ${
-                  openIndex === i ? 'border-primary/30 bg-primary/5' : 'border-white/10 bg-white/[0.02] hover:border-white/20'
-                }`}
-                onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                aria-expanded={openIndex === i}
-              >
-                <div className="flex items-center justify-between p-5">
-                  <span className={`text-sm font-medium transition-colors pr-4 ${openIndex === i ? 'text-white' : 'text-gray-300'}`}>
-                    {faq.q}
-                  </span>
-                  <span className={`text-lg transition-transform duration-300 text-gray-500 flex-shrink-0 ${openIndex === i ? 'rotate-45' : ''}`}>
-                    +
-                  </span>
+            <div
+              key={i}
+              role="button"
+              tabIndex={0}
+              className={`w-full text-left rounded-xl border transition-all duration-300 cursor-pointer ${
+                openIndex === i ? 'border-primary/30 bg-primary/5' : 'border-white/10 bg-white/[0.02] hover:border-white/20'
+              }`}
+              onClick={() => toggle(i)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(i); } }}
+              aria-expanded={openIndex === i}
+            >
+              <div className="flex items-center justify-between p-5">
+                <span className={`text-sm font-medium transition-colors pr-4 ${openIndex === i ? 'text-white' : 'text-gray-300'}`}>
+                  {faq.q}
+                </span>
+                <span className={`text-lg leading-none transition-transform duration-300 text-gray-500 flex-shrink-0 ${openIndex === i ? 'rotate-45' : ''}`}>
+                  +
+                </span>
+              </div>
+              {openIndex === i && (
+                <div className="px-5 pb-5 text-sm text-gray-400 leading-relaxed border-t border-white/5 pt-4">
+                  {faq.a}
                 </div>
-                {openIndex === i && (
-                  <div className="px-5 pb-5 text-sm text-gray-400 leading-relaxed border-t border-white/5 pt-4">
-                    {faq.a}
-                  </div>
-                )}
-              </button>
-            </FadeIn>
+              )}
+            </div>
           ))}
         </div>
       </div>

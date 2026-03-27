@@ -77,17 +77,22 @@ export const QwenLogo = ({ className = "w-5 h-5" }: { className?: string }) => (
   </svg>
 );
 
-// Ollama — llama silhouette
+// Ollama — simple llama head profile
 export const OllamaLogo = ({ className = "w-5 h-5" }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2C9.5 2 7.5 4 7.5 6.5c0 1.5.7 2.8 1.8 3.7-.3.5-.5 1-.5 1.6v4.7c0 1.4.6 2.7 1.5 3.5.5.4 1 .7 1.7.7s1.2-.3 1.7-.7c.9-.8 1.5-2.1 1.5-3.5v-4.7c0-.6-.2-1.1-.5-1.6 1.1-.9 1.8-2.2 1.8-3.7C16.5 4 14.5 2 12 2zm-2 6.5c0-.6.4-1 1-1s1 .4 1 1-.4 1-1 1-1-.4-1-1zm4 0c0-.6.4-1 1-1s1 .4 1 1-.4 1-1 1-1-.4-1-1z"/>
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M8 20v-4c0-2 1-3.5 2.5-4.5C9 10.5 8 9 8 7c0-3 2-5 4-5s4 2 4 5c0 2-1 3.5-2.5 4.5C15 12.5 16 14 16 16v4"/>
+    <circle cx="10.5" cy="7" r="0.8" fill="currentColor"/>
+    <circle cx="13.5" cy="7" r="0.8" fill="currentColor"/>
   </svg>
 );
 
-// LM Studio — stylized LM
+// LM Studio — monitor with cursor
 export const LMStudioLogo = ({ className = "w-5 h-5" }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4 4v16h4"/><path d="M12 4l3 16 3-16"/><rect x="2" y="2" width="20" height="20" rx="4" strokeWidth="1.5" opacity="0.3"/>
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="18" height="14" rx="2"/>
+    <line x1="8" y1="21" x2="16" y2="21"/>
+    <line x1="12" y1="17" x2="12" y2="21"/>
+    <path d="M8 8h4M8 11h6" strokeWidth="1.5"/>
   </svg>
 );
 
