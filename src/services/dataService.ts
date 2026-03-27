@@ -34,18 +34,18 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
     pillars: [
       { id: 'siloed-memory', emoji: '🧠', problem: 'Scattered Tools', solution: 'One Place', description: 'Your notes are in one app, your calendar in another, your files in a third. AI should connect all of it and remember what matters.', href: '#product' },
       { id: 'exposed-privacy', emoji: '🔓', problem: 'No Privacy', solution: 'Your Device', description: 'Every app you use sends your data to someone else\'s server. We think your data should stay on your device, period.', href: '#product' },
-      { id: 'no-boundaries', emoji: '⚠️', problem: 'No Control', solution: 'Your Rules', description: 'Big tech AI watches everything you do. Operator Uplift puts you in charge.you decide what AI can see and do.', href: '#product' },
+      { id: 'no-boundaries', emoji: '⚠️', problem: 'No Control', solution: 'Your Rules', description: 'Big tech AI watches everything you do. Operator Uplift puts you in charge. You decide what AI can see and do.', href: '#product' },
     ],
     solution: 'One app that replaces your entire toolkit with AI that actually works for you.',
   },
   market: {
-    headline: 'Massive and Growing.',
-    subhead: 'The AI agent market is accelerating. Operator Uplift is positioned at the intersection of AI, crypto, and consumer software.',
+    headline: 'The Future is Personal AI.',
+    subhead: 'Millions of people are ready for AI that works for them, not against them. We are building the platform to make that happen.',
     stats: [
-      { value: '$103B', label: 'Total Addressable Market' },
-      { value: '$18B', label: 'Serviceable Addressable Market' },
-      { value: '100M+', label: 'Target Users (SOM)' },
-      { value: '#1', label: 'Local-First AI OS' },
+      { value: '$103B', label: 'AI Market by 2028' },
+      { value: '40+', label: 'Apps Replaced' },
+      { value: '100M+', label: 'People Ready' },
+      { value: '#1', label: 'Privacy-First AI' },
     ],
   },
   hero: {
