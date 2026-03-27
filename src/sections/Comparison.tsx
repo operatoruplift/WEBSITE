@@ -54,9 +54,9 @@ const Comparison: React.FC = () => {
         </div>
 
         {/* Table - scrollable on mobile */}
-        <FadeIn delay={200}>
+        <FadeIn delay={200} className="w-full block">
           <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
-            <div className="min-w-[600px] rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm">
+            <div className="min-w-[600px] rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm mx-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-white/10">

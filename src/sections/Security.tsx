@@ -114,21 +114,21 @@ const Security: React.FC = () => {
             {/* Card 2: Enterprise */}
             <FadeIn delay={400} className="h-full">
             <TechCard className="h-full">
-                <div className="p-8 md:p-12 relative z-10 flex flex-col h-full">
+                <div className="p-8 md:p-10 relative z-10 flex flex-col">
                     <div className="text-xs font-bold tracking-[0.2em] text-blue-400 uppercase mb-4">{data.features.enterprise.tag}</div>
                     <h3 className="text-3xl text-white font-medium mb-4 tracking-tight leading-tight">{data.features.enterprise.title}</h3>
-                    <p className="text-lg text-gray-400 leading-relaxed mb-8 max-w-lg">
+                    <p className="text-lg text-gray-400 leading-relaxed mb-4 max-w-lg">
                       {data.features.enterprise.description}
                     </p>
-                    <a href={data.features.enterprise.linkUrl} className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-white hover:text-blue-400 transition-colors mt-auto">
+                    <a href={data.features.enterprise.linkUrl} className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-white hover:text-blue-400 transition-colors">
                         {data.features.enterprise.linkText} <ChevronRight className="ml-1 w-3 h-3" />
                     </a>
                 </div>
 
-                {/* Adjusted scale/padding to fix cropping */}
-                <div className="h-72 w-full flex items-center justify-center relative bg-gradient-to-t from-black/50 to-transparent overflow-hidden">
-                    <div className="relative z-20 flex flex-col items-center justify-center w-14 h-14 bg-primary/10 border border-primary/50 rounded-xl backdrop-blur-md shadow-[0_0_20px_rgba(231,118,48,0.2)]">
-                        <Logo className="w-7 h-7" />
+                {/* Orbital animation - padded to keep logos inside */}
+                <div className="h-64 w-full flex items-center justify-center relative bg-gradient-to-t from-black/50 to-transparent overflow-hidden py-8">
+                    <div className="relative z-20 flex flex-col items-center justify-center w-12 h-12 bg-primary/10 border border-primary/50 rounded-xl backdrop-blur-md shadow-[0_0_20px_rgba(231,118,48,0.2)]">
+                        <Logo className="w-6 h-6" />
                     </div>
 
                     {/* Orbiting LLM provider logos */}
@@ -141,7 +141,7 @@ const Security: React.FC = () => {
                           { Logo: XAILogo, title: 'xAI' },
                         ].map((llm, i) => {
                             const angle = (i * (360/5) + time * 10) * (Math.PI / 180);
-                            const radius = 85;
+                            const radius = 70;
                             const x = Math.cos(angle) * radius;
                             const y = Math.sin(angle) * radius;
                             const LLMLogo = llm.Logo;
@@ -149,7 +149,7 @@ const Security: React.FC = () => {
                             return (
                                 <React.Fragment key={i}>
                                     <div
-                                        className="absolute w-10 h-10 bg-[#1a1a1a] border border-white/10 rounded-lg flex items-center justify-center shadow-lg"
+                                        className="absolute w-9 h-9 bg-[#1a1a1a] border border-white/10 rounded-lg flex items-center justify-center shadow-lg"
                                         style={{ transform: `translate(${x}px, ${y}px)` }}
                                         title={llm.title}
                                     >
