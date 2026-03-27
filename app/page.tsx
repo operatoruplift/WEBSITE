@@ -10,6 +10,8 @@ import Security from '@/src/sections/Security';
 import DeveloperDocs from '@/src/sections/DeveloperDocs';
 import TractionBar from '@/src/sections/TractionBar';
 import DemoPreview from '@/src/sections/DemoPreview';
+import Comparison from '@/src/sections/Comparison';
+import FAQ from '@/src/sections/FAQ';
 import BuildWithUs from '@/src/sections/BuildWithUs';
 import Footer from '@/src/components/Footer';
 
@@ -23,9 +25,11 @@ export default function Home() {
       <StatsBar />
       <MarketOpportunity />
       <Security />
+      <Comparison />
       <DeveloperDocs />
       <TractionBar />
       <DemoPreview />
+      <FAQ />
       <BuildWithUs />
       <Footer />
     </div>
