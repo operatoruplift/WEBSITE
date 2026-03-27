@@ -127,8 +127,8 @@ const Security: React.FC = () => {
 
                 {/* Adjusted scale/padding to fix cropping */}
                 <div className="h-64 w-full flex items-center justify-center relative bg-gradient-to-t from-black/50 to-transparent overflow-visible">
-                    <div className="relative z-20 flex flex-col items-center justify-center w-24 h-24 bg-primary/10 border border-primary/50 rounded-xl backdrop-blur-md shadow-[0_0_20px_rgba(231,118,48,0.2)]">
-                        <Logo className="w-10 h-10" />
+                    <div className="relative z-20 flex flex-col items-center justify-center w-16 h-16 bg-primary/10 border border-primary/50 rounded-xl backdrop-blur-md shadow-[0_0_20px_rgba(231,118,48,0.2)]">
+                        <Logo className="w-8 h-8" />
                     </div>
 
                     {/* Orbiting LLM provider logos */}
