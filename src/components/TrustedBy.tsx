@@ -14,8 +14,8 @@ const TrustedBy: React.FC = () => {
     { name: "DeepSeek-R1", provider: "DeepSeek" },
     { name: "Qwen 3", provider: "Alibaba" },
     { name: "Phi-4", provider: "Microsoft" },
-    { name: "Ollama", provider: "Local" },
-    { name: "LM Studio", provider: "Local" },
+    { name: "Ollama", provider: "Ollama" },
+    { name: "LM Studio", provider: "LM Studio" },
   ];
 
   const marqueeItems = [...models, ...models];

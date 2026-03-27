@@ -46,10 +46,11 @@ export const CohereLogo = ({ className = "w-5 h-5" }: { className?: string }) =>
   </svg>
 );
 
-// xAI — X mark
+// xAI/Grok — circle with diagonal slash
 export const XAILogo = ({ className = "w-5 h-5" }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M2 3h4.5l5.5 8.5L17.5 3H22l-8 12.3L22 21h-4.5L12 13.5 6.5 21H2l8-5.7L2 3z"/>
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <circle cx="12" cy="12" r="9" />
+    <line x1="6" y1="18" x2="18" y2="6" />
   </svg>
 );
 
@@ -77,10 +78,17 @@ export const QwenLogo = ({ className = "w-5 h-5" }: { className?: string }) => (
   </svg>
 );
 
-// Local — terminal/monitor
-export const LocalLogo = ({ className = "w-5 h-5" }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>
+// Ollama — llama silhouette
+export const OllamaLogo = ({ className = "w-5 h-5" }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2C9.5 2 7.5 4 7.5 6.5c0 1.5.7 2.8 1.8 3.7-.3.5-.5 1-.5 1.6v4.7c0 1.4.6 2.7 1.5 3.5.5.4 1 .7 1.7.7s1.2-.3 1.7-.7c.9-.8 1.5-2.1 1.5-3.5v-4.7c0-.6-.2-1.1-.5-1.6 1.1-.9 1.8-2.2 1.8-3.7C16.5 4 14.5 2 12 2zm-2 6.5c0-.6.4-1 1-1s1 .4 1 1-.4 1-1 1-1-.4-1-1zm4 0c0-.6.4-1 1-1s1 .4 1 1-.4 1-1 1-1-.4-1-1z"/>
+  </svg>
+);
+
+// LM Studio — stylized LM
+export const LMStudioLogo = ({ className = "w-5 h-5" }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 4v16h4"/><path d="M12 4l3 16 3-16"/><rect x="2" y="2" width="20" height="20" rx="4" strokeWidth="1.5" opacity="0.3"/>
   </svg>
 );
 
@@ -96,5 +104,6 @@ export const providerLogos: Record<string, React.FC<{ className?: string }>> = {
   'DeepSeek': DeepSeekLogo,
   'Microsoft': MicrosoftLogo,
   'Alibaba': QwenLogo,
-  'Local': LocalLogo,
+  'Ollama': OllamaLogo,
+  'LM Studio': LMStudioLogo,
 };
