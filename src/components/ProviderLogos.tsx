@@ -46,11 +46,10 @@ export const CohereLogo = ({ className = "w-5 h-5" }: { className?: string }) =>
   </svg>
 );
 
-// xAI/Grok — circle with diagonal slash
+// xAI — stylized x letterform
 export const XAILogo = ({ className = "w-5 h-5" }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <circle cx="12" cy="12" r="9" />
-    <line x1="6" y1="18" x2="18" y2="6" />
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M4 4h3.5l4.5 7.2L16.5 4H20l-6.3 9.8L20 20h-3.5L12 13l-4.5 7H4l6.3-6.2L4 4z"/>
   </svg>
 );
 
