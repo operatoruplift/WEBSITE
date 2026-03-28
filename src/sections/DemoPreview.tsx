@@ -36,7 +36,7 @@ const DemoPreview: React.FC = () => {
   }, []);
 
   return (
-    <section className="w-full bg-background px-6 md:px-12 flex justify-center flex-col items-center pb-16">
+    <section className="w-full bg-background px-6 md:px-12 flex justify-center flex-col items-center pb-16 aurora-section">
       {/* Divider */}
       <div className="w-full max-w-[1600px] py-12 flex items-center justify-center">
         <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-white/15 to-transparent relative">

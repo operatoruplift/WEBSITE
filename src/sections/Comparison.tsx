@@ -27,7 +27,7 @@ const platforms = [
 
 const Comparison: React.FC = () => {
   return (
-    <section className="w-full bg-background px-6 md:px-12 flex justify-center">
+    <section className="w-full bg-background px-6 md:px-12 flex justify-center aurora-section">
       {/* Divider */}
       <div className="w-full max-w-[1200px] pt-16 pb-24">
         <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-white/15 to-transparent relative mb-16">
