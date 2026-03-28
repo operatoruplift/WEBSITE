@@ -44,7 +44,7 @@ const Hero: React.FC = () => {
 
           {/* Subhead */}
           <FadeIn delay={400}>
-            <p className="text-sm sm:text-base md:text-lg text-muted font-mono mb-2 md:mb-3 max-w-2xl">
+            <p className="text-sm sm:text-base md:text-lg font-mono mb-2 md:mb-3 max-w-2xl gradient-text-animated font-semibold">
               {data.subhead}
             </p>
           </FadeIn>

@@ -315,3 +315,119 @@
     }
   }
 }
+
+/* ==========================================
+   Magic UI / Aceternity-inspired effects
+   ========================================== */
+
+/* Border Beam - animated gradient border that rotates around a card */
+@keyframes border-beam {
+  0% { offset-distance: 0%; }
+  100% { offset-distance: 100%; }
+}
+
+.border-beam {
+  position: relative;
+  overflow: hidden;
+}
+.border-beam::after {
+  content: '';
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, rgba(231, 118, 48, 0.6) 0%, transparent 70%);
+  offset-path: rect(0 100% 100% 0 round 16px);
+  animation: border-beam 6s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Spotlight Card - mouse-following radial gradient */
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+}
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(231, 118, 48, 0.06), transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.spotlight-card:hover::before {
+  opacity: 1;
+}
+
+/* Animated Gradient Text */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.gradient-text-animated {
+  background: linear-gradient(90deg, #ffffff, #E77630, #F59E0B, #ffffff);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 6s ease-in-out infinite;
+}
+
+/* Meteors - shooting stars effect */
+@keyframes meteor {
+  0% { transform: translateY(-100%) translateX(0) rotate(215deg); opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: translateY(300%) translateX(-200px) rotate(215deg); opacity: 0; }
+}
+
+.meteor {
+  position: absolute;
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(to bottom, rgba(231, 118, 48, 0.4), transparent);
+  animation: meteor 3s linear infinite;
+  border-radius: 999px;
+}
+
+/* Dot Pattern - subtle animated dots */
+@keyframes dot-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+.dot-pattern-animated {
+  background-image: radial-gradient(rgba(231, 118, 48, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+  animation: dot-pulse 4s ease-in-out infinite;
+}
+
+/* Glow Effect - pulsing orange glow behind elements */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(231, 118, 48, 0.1), 0 0 40px rgba(231, 118, 48, 0.05); }
+  50% { box-shadow: 0 0 30px rgba(231, 118, 48, 0.2), 0 0 60px rgba(231, 118, 48, 0.1); }
+}
+
+.glow-card {
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+/* Shimmer - loading/skeleton shimmer effect */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(231, 118, 48, 0.04), transparent);
+  animation: shimmer 3s infinite;
+}

@@ -9,7 +9,7 @@ const BuildWithUs: React.FC = () => {
   return (
     <section className="w-full bg-background pb-24 px-6 md:px-12 flex justify-center">
       <FadeIn className="w-full max-w-[1200px]" delay={200}>
-        <div className="w-full bg-[#f2f2f2] rounded-3xl p-8 md:p-16 relative overflow-hidden group hover:shadow-[0_0_40px_rgba(255,255,255,0.1)] transition-shadow duration-500">
+        <div className="w-full bg-[#f2f2f2] rounded-3xl p-8 md:p-16 relative overflow-hidden group hover:shadow-[0_0_40px_rgba(255,255,255,0.1)] transition-shadow duration-500 shimmer">
             
             <div className="flex justify-between items-start mb-24 md:mb-48 relative z-10">
             <div className="flex items-center">

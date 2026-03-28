@@ -119,7 +119,8 @@ const Product: React.FC = () => {
 
   // Reusable Technical Border Wrapper
   const TechBorderContainer = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
-    <div className={`rounded-2xl border border-dashed border-white/20 p-2 relative bg-background/50 backdrop-blur-sm ${className}`}>
+    <div className={`rounded-2xl border border-dashed border-white/20 p-2 relative bg-background/50 backdrop-blur-sm spotlight-card ${className}`}
+      onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`); }}>
         <div className="absolute -top-[1px] -left-[1px] w-4 h-4 border-t border-l border-white/40 rounded-tl-lg"></div>
         <div className="absolute -top-[1px] -right-[1px] w-4 h-4 border-t border-r border-white/40 rounded-tr-lg"></div>
         <div className="absolute -bottom-[1px] -left-[1px] w-4 h-4 border-b border-l border-white/40 rounded-bl-lg"></div>
