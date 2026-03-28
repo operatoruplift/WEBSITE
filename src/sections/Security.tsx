@@ -21,7 +21,8 @@ const Security: React.FC = () => {
   }, []);
 
   const TechCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-    <div className={`relative p-2 rounded-2xl border border-dashed border-white/10 bg-white/[0.01] flex flex-col transition-all duration-300 hover:bg-white/[0.03] hover:border-white/20 ${className}`}>
+    <div className={`relative p-2 rounded-2xl border border-dashed border-white/10 bg-white/[0.01] flex flex-col transition-all duration-300 hover:bg-white/[0.03] hover:border-white/20 spotlight-card ${className}`}
+      onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`); }}>
         <div className="absolute -top-[1px] -left-[1px] w-4 h-4 border-t border-l border-white/30 rounded-tl-lg"></div>
         <div className="absolute -top-[1px] -right-[1px] w-4 h-4 border-t border-r border-white/30 rounded-tr-lg"></div>
         <div className="absolute -bottom-[1px] -left-[1px] w-4 h-4 border-b border-l border-white/30 rounded-bl-lg"></div>
