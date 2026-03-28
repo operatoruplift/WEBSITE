@@ -56,11 +56,11 @@ const Comparison: React.FC = () => {
         {/* Table - scrollable on mobile */}
         <FadeIn delay={200} className="w-full block">
           <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
-            <div className="min-w-[600px] rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm mx-auto">
-              <table className="w-full text-sm">
+            <div className="max-w-[900px] mx-auto rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm">
+              <table className="w-full text-sm table-fixed">
                 <thead>
                   <tr className="border-b border-white/10">
-                    <th className="text-left p-4 text-gray-500 font-mono text-xs uppercase tracking-wider w-[180px]">Feature</th>
+                    <th className="text-left p-4 text-gray-500 font-mono text-xs uppercase tracking-wider w-[35%]">Feature</th>
                     {platforms.map(p => (
                       <th key={p.key} className={`p-4 text-center font-mono text-[10px] uppercase tracking-wider whitespace-nowrap ${p.highlight ? 'text-primary bg-primary/5' : 'text-gray-500'}`}>
                         {p.name}

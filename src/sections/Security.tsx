@@ -125,8 +125,8 @@ const Security: React.FC = () => {
                     </a>
                 </div>
 
-                {/* Orbital animation - padded to keep logos inside */}
-                <div className="h-64 w-full flex items-center justify-center relative bg-gradient-to-t from-black/50 to-transparent overflow-hidden py-8">
+                {/* Orbital animation */}
+                <div className="h-56 w-full flex items-center justify-center relative bg-gradient-to-t from-black/50 to-transparent overflow-visible">
                     <div className="relative z-20 flex flex-col items-center justify-center w-12 h-12 bg-primary/10 border border-primary/50 rounded-xl backdrop-blur-md shadow-[0_0_20px_rgba(231,118,48,0.2)]">
                         <Logo className="w-6 h-6" />
                     </div>
@@ -141,7 +141,7 @@ const Security: React.FC = () => {
                           { Logo: XAILogo, title: 'xAI' },
                         ].map((llm, i) => {
                             const angle = (i * (360/5) + time * 10) * (Math.PI / 180);
-                            const radius = 70;
+                            const radius = 60;
                             const x = Math.cos(angle) * radius;
                             const y = Math.sin(angle) * radius;
                             const LLMLogo = llm.Logo;
