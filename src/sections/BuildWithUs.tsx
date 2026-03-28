@@ -2,6 +2,7 @@ import React from 'react';
 import { ChevronRight } from '@/src/components/Icons';
 import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn } from '@/src/components/Animators';
+import DotGlobe from '@/src/components/DotGlobe';
 
 const BuildWithUs: React.FC = () => {
   const data = APP_CONTENT.buildWithUs;
@@ -9,14 +10,19 @@ const BuildWithUs: React.FC = () => {
   return (
     <section className="w-full bg-background pb-24 px-6 md:px-12 flex justify-center">
       <FadeIn className="w-full max-w-[1200px]" delay={200}>
-        <div className="w-full bg-[#f2f2f2] rounded-3xl p-8 md:p-16 relative overflow-hidden group hover:shadow-[0_0_40px_rgba(255,255,255,0.1)] transition-shadow duration-500 shimmer">
-            
+        <div className="w-full bg-[#f2f2f2] rounded-3xl p-8 md:p-16 relative overflow-hidden group hover:shadow-[0_0_40px_rgba(255,255,255,0.1)] transition-shadow duration-500">
+
+            {/* Dot Globe - positioned in top right */}
+            <div className="absolute top-0 right-0 w-[50%] h-[70%] opacity-30 pointer-events-none hidden md:block">
+              <DotGlobe className="w-full h-full" />
+            </div>
+
             <div className="flex justify-between items-start mb-24 md:mb-48 relative z-10">
             <div className="flex items-center">
                 <span className="w-2 h-2 rounded-full bg-primary mr-3"></span>
                 <span className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase">{data.tag}</span>
             </div>
-            
+
             <div className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase hidden md:block">
                 {data.cta}
             </div>
@@ -30,14 +36,14 @@ const BuildWithUs: React.FC = () => {
                         <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                 </div>
-                
+
                 <h2 className="text-4xl md:text-6xl text-black font-medium tracking-tight mb-8 max-w-2xl leading-[1.1]">
                     {data.headline}
                 </h2>
 
-                <a 
-                href={data.url} 
-                target="_blank" 
+                <a
+                href={data.url}
+                target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center bg-[#1a1a1a] text-white px-6 py-3 rounded-sm text-xs font-bold tracking-widest uppercase hover:bg-primary transition-colors duration-300 group-hover:scale-105 transform"
                 >
