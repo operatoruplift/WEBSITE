@@ -65,6 +65,24 @@
   }
 }
 
+/* Light mode overrides (dashboard only) */
+[data-theme="light"] .dashboard-content {
+  --color-background: #fafafa;
+  color: #1a1a1a;
+}
+[data-theme="light"] .dashboard-content .bg-background { background: #fafafa; }
+[data-theme="light"] .dashboard-content .bg-black\/40,
+[data-theme="light"] .dashboard-content .bg-black\/60 { background: rgba(255,255,255,0.8); }
+[data-theme="light"] .dashboard-content .bg-white\/5,
+[data-theme="light"] .dashboard-content .bg-white\/\[0\.02\],
+[data-theme="light"] .dashboard-content .bg-white\/\[0\.03\] { background: rgba(0,0,0,0.03); }
+[data-theme="light"] .dashboard-content .border-white\/5,
+[data-theme="light"] .dashboard-content .border-white\/10 { border-color: rgba(0,0,0,0.08); }
+[data-theme="light"] .dashboard-content .text-white { color: #1a1a1a; }
+[data-theme="light"] .dashboard-content .text-gray-300 { color: #555; }
+[data-theme="light"] .dashboard-content .text-gray-400 { color: #777; }
+[data-theme="light"] .dashboard-content .text-gray-500 { color: #999; }
+
 /* Glass utility for dashboard cards */
 .glass {
   background: rgba(255, 255, 255, 0.03);
