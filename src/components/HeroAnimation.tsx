@@ -204,17 +204,17 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     const render = () => {
       const now = Date.now();
       let elapsed = now - startTime;
-      const LOOP = 32000;
+      const LOOP = 18000;
       if (elapsed > LOOP) { startTime = now; elapsed = 0; phase = 'FLOW'; initParticles(); }
 
-      // Phase timing (32s total)
-      if      (elapsed < 2500)  { phase = 'FLOW';     labelText = "AWAITING INPUT"; }
-      else if (elapsed < 5000)  { phase = 'SPARK';    labelText = "DETECTING SIGNAL"; }
-      else if (elapsed < 7500)  { phase = 'CONNECT';  labelText = "ESTABLISHING CONTEXT"; }
-      else if (elapsed < 10500) { phase = 'FORM';     labelText = "ISOLATING ENVIRONMENT"; }
-      else if (elapsed < 14000) { phase = 'GUARD';    labelText = "APPLYING GUARDRAILS"; }
-      else if (elapsed < 22000) { phase = 'CHAT';     labelText = "AGENT ACTIVE"; }
-      else if (elapsed < 27000) { phase = 'RESPOND';  labelText = "TASK COMPLETE"; }
+      // Phase timing (18s total - fast enough users see the full story)
+      if      (elapsed < 1200)  { phase = 'FLOW';     labelText = "AWAITING INPUT"; }
+      else if (elapsed < 2400)  { phase = 'SPARK';    labelText = "DETECTING SIGNAL"; }
+      else if (elapsed < 3800)  { phase = 'CONNECT';  labelText = "ESTABLISHING CONTEXT"; }
+      else if (elapsed < 5200)  { phase = 'FORM';     labelText = "ISOLATING ENVIRONMENT"; }
+      else if (elapsed < 6800)  { phase = 'GUARD';    labelText = "APPLYING GUARDRAILS"; }
+      else if (elapsed < 12000) { phase = 'CHAT';     labelText = "AGENT ACTIVE"; }
+      else if (elapsed < 15000) { phase = 'RESPOND';  labelText = "TASK COMPLETE"; }
       else                      { phase = 'COMPLETE'; labelText = "SESSION CLOSED"; }
 
       ctx.clearRect(0, 0, width, height);
@@ -298,18 +298,18 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
 
       // CHAT: draw conversation with typing dots
       if (phase === 'CHAT') {
-        drawChat(cx, cy, Math.min(1, (elapsed-14000)/6000), false);
+        drawChat(cx, cy, Math.min(1, (elapsed-6800)/4000), false);
       }
 
       // RESPOND: show completed conversation with success status + animated progress bar
       if (phase === 'RESPOND') {
-        const rp = Math.min(1, (elapsed - 22000) / 4000); // fills over 4 seconds
+        const rp = Math.min(1, (elapsed - 12000) / 2500);
         drawChat(cx, cy, 1, true, rp);
       }
 
-      // COMPLETE: slow crossfade from chat → session closed
+      // COMPLETE: crossfade from chat → session closed
       if (phase === 'COMPLETE') {
-        const cp = Math.min(1, (elapsed-27000)/5000);
+        const cp = Math.min(1, (elapsed-15000)/3000);
         // Chat fades out slowly over 70% of phase
         const chatAlpha = Math.max(0, 1 - cp * 1.5);
         if (chatAlpha > 0.01) {
@@ -333,8 +333,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
 
       // Phase label
       if (phase !== 'FLOW') {
-        const starts: Record<string,number> = { SPARK:2500, CONNECT:5000, FORM:7500, GUARD:10500, CHAT:14000, RESPOND:22000, COMPLETE:27000 };
-        const durs: Record<string,number> = { SPARK:2500, CONNECT:2500, FORM:3000, GUARD:3500, CHAT:8000, RESPOND:5000, COMPLETE:5000 };
+        const starts: Record<string,number> = { SPARK:1200, CONNECT:2400, FORM:3800, GUARD:5200, CHAT:6800, RESPOND:12000, COMPLETE:15000 };
+        const durs: Record<string,number> = { SPARK:1200, CONNECT:1400, FORM:1400, GUARD:1600, CHAT:5200, RESPOND:3000, COMPLETE:3000 };
         const p = Math.min(1, Math.max(0, (elapsed-(starts[phase]||0))/(durs[phase]||2500)));
         drawLabel(cx, cy, labelText, p, phase === 'CHAT' || phase === 'RESPOND' || phase === 'COMPLETE');
       }
