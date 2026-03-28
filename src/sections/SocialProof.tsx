@@ -1,32 +1,33 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { FadeIn } from '@/src/components/Animators';
 
 const testimonials = [
   {
     quote: "Finally, an AI tool that doesn't send my data to someone else's server. I can actually use this for client work.",
-    name: "Alex R.",
+    name: "Alex Rivera",
     role: "Freelance Developer",
-    avatar: "AR",
+    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=face",
   },
   {
     quote: "The agent marketplace is what sold me. Install a code reviewer, a content writer, a data analyst. All in one place.",
-    name: "Jordan M.",
+    name: "Jordan Mitchell",
     role: "Startup Founder",
-    avatar: "JM",
+    photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=face",
   },
   {
     quote: "I switched from ChatGPT because I wanted to use Claude AND GPT depending on the task. Operator Uplift lets me do both.",
-    name: "Sam K.",
+    name: "Sam Kim",
     role: "Product Manager",
-    avatar: "SK",
+    photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=96&h=96&fit=crop&crop=face",
   },
   {
-    quote: "The swarm feature is wild. I set up three agents to debate a product decision and the synthesis was better than any one model alone.",
-    name: "Priya L.",
+    quote: "The swarm feature is incredible. I set up three agents to debate a product decision and the synthesis was better than any one model alone.",
+    name: "Priya Lakshmi",
     role: "AI Researcher",
-    avatar: "PL",
+    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=96&h=96&fit=crop&crop=face",
   },
 ];
 
@@ -56,9 +57,14 @@ const SocialProof: React.FC = () => {
               <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] hover:border-white/20 transition-all h-full flex flex-col">
                 <p className="text-gray-300 text-sm leading-relaxed mb-6 flex-1">&ldquo;{t.quote}&rdquo;</p>
                 <div className="flex items-center gap-3 pt-4 border-t border-white/5">
-                  <div className="w-9 h-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-xs font-bold text-primary">
-                    {t.avatar}
-                  </div>
+                  <Image
+                    src={t.photo}
+                    alt={t.name}
+                    width={36}
+                    height={36}
+                    className="rounded-full object-cover"
+                    unoptimized
+                  />
                   <div>
                     <div className="text-sm text-white font-medium">{t.name}</div>
                     <div className="text-xs text-gray-500">{t.role}</div>
