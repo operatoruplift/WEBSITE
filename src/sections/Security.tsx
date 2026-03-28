@@ -126,10 +126,10 @@ const Security: React.FC = () => {
                     </a>
                 </div>
 
-                {/* Orbital animation */}
-                <div className="h-56 w-full flex items-center justify-center relative bg-gradient-to-t from-black/50 to-transparent overflow-visible">
-                    <div className="relative z-20 flex flex-col items-center justify-center w-12 h-12 bg-primary/10 border border-primary/50 rounded-xl backdrop-blur-md shadow-[0_0_20px_rgba(231,118,48,0.2)]">
-                        <Logo className="w-6 h-6" />
+                {/* Orbital animation - flex-1 fills remaining card space */}
+                <div className="flex-1 min-h-[200px] w-full flex items-center justify-center relative overflow-visible">
+                    <div className="relative z-20 flex flex-col items-center justify-center w-16 h-16 bg-primary/10 border border-primary/50 rounded-xl backdrop-blur-md shadow-[0_0_20px_rgba(231,118,48,0.2)]">
+                        <Logo className="w-8 h-8" />
                     </div>
 
                     {/* Orbiting LLM provider logos */}
@@ -141,8 +141,8 @@ const Security: React.FC = () => {
                           { Logo: MetaLogo, title: 'Meta' },
                           { Logo: XAILogo, title: 'xAI' },
                         ].map((llm, i) => {
-                            const angle = (i * (360/5) + time * 10) * (Math.PI / 180);
-                            const radius = 60;
+                            const angle = (i * (360/5) + time * 18) * (Math.PI / 180);
+                            const radius = 72;
                             const x = Math.cos(angle) * radius;
                             const y = Math.sin(angle) * radius;
                             const LLMLogo = llm.Logo;
