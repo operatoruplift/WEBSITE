@@ -46,7 +46,7 @@ const FAQ: React.FC = () => {
   };
 
   return (
-    <section className="w-full bg-background px-6 md:px-12 flex justify-center">
+    <section className="w-full bg-background px-6 md:px-12 flex justify-center aurora-glow">
       <div className="w-full max-w-[800px] py-24">
         {/* Section header */}
         <div className="text-center mb-12">

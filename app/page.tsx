@@ -11,6 +11,7 @@ import DeveloperDocs from '@/src/sections/DeveloperDocs';
 import TractionBar from '@/src/sections/TractionBar';
 import DemoPreview from '@/src/sections/DemoPreview';
 import Comparison from '@/src/sections/Comparison';
+import SocialProof from '@/src/sections/SocialProof';
 import FAQ from '@/src/sections/FAQ';
 import BuildWithUs from '@/src/sections/BuildWithUs';
 import Footer from '@/src/components/Footer';
@@ -28,6 +29,7 @@ export default function Home() {
       <Comparison />
       <DeveloperDocs />
       <TractionBar />
+      <SocialProof />
       <DemoPreview />
       <FAQ />
       <BuildWithUs />
