@@ -45,7 +45,12 @@ export default function SettingsPage() {
             if (settings.pushNotifs !== undefined) setPushNotifs(settings.pushNotifs);
             if (settings.productUpdates !== undefined) setProductUpdates(settings.productUpdates);
             if (settings.marketing !== undefined) setMarketing(settings.marketing);
-            if (settings.theme) setTheme(settings.theme);
+            if (settings.theme) {
+                setTheme(settings.theme);
+                // Apply saved theme on load
+                if (settings.theme === 'Light') document.documentElement.setAttribute('data-theme', 'light');
+                else if (settings.theme === 'System' && window.matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.setAttribute('data-theme', 'light');
+            }
             if (settings.apiKeys) setApiKeys(settings.apiKeys);
         } catch {}
     }, []);
@@ -170,7 +175,13 @@ export default function SettingsPage() {
                                         <h2 className="text-lg font-medium text-white">Appearance</h2>
                                         <div className="grid grid-cols-3 gap-4">
                                             {['Dark', 'Light', 'System'].map(t => (
-                                                <button key={t} onClick={() => setTheme(t)} className={`p-4 rounded-xl border text-center transition-all ${theme === t ? 'bg-primary/10 border-primary/30 text-white' : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20'}`}>
+                                                <button key={t} onClick={() => {
+                                                    setTheme(t);
+                                                    const root = document.documentElement;
+                                                    if (t === 'Light') root.setAttribute('data-theme', 'light');
+                                                    else if (t === 'System' && window.matchMedia('(prefers-color-scheme: light)').matches) root.setAttribute('data-theme', 'light');
+                                                    else root.removeAttribute('data-theme');
+                                                }} className={`p-4 rounded-xl border text-center transition-all ${theme === t ? 'bg-primary/10 border-primary/30 text-white' : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20'}`}>
                                                     <div className={`w-12 h-8 rounded-lg mx-auto mb-2 ${t === 'Dark' ? 'bg-gray-900 border border-white/20' : t === 'Light' ? 'bg-white border border-gray-300' : 'bg-gradient-to-r from-gray-900 to-white border border-white/20'}`} />
                                                     <span className="text-sm font-medium">{t}</span>
                                                 </button>
