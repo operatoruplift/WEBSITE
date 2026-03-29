@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 
-const DotGlobe: React.FC<{ className?: string }> = ({ className = '' }) => {
+const DotGlobe: React.FC<{ className?: string; dark?: boolean }> = ({ className = '', dark = false }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -13,6 +13,10 @@ const DotGlobe: React.FC<{ className?: string }> = ({ className = '' }) => {
 
     let animationId: number;
     let rotation = 0;
+    // On light backgrounds, use dark dots. On dark backgrounds, use orange.
+    const dotR = dark ? 231 : 30;
+    const dotG = dark ? 118 : 30;
+    const dotB = dark ? 48 : 30;
 
     const resize = () => {
       const parent = canvas.parentElement;
@@ -71,10 +75,10 @@ const DotGlobe: React.FC<{ className?: string }> = ({ className = '' }) => {
           const y = cy - y3d * radius;
           const depth = (z3d + 1) / 2; // 0 = back, 1 = front
 
-          const dotSize = 0.5 + depth * 1;
-          const alpha = 0.05 + depth * 0.25;
+          const dotSize = 0.8 + depth * 1.2;
+          const alpha = 0.08 + depth * 0.35;
 
-          ctx.fillStyle = `rgba(231, 118, 48, ${alpha})`;
+          ctx.fillStyle = `rgba(${dotR}, ${dotG}, ${dotB}, ${alpha})`;
           ctx.beginPath();
           ctx.arc(x, y, dotSize, 0, Math.PI * 2);
           ctx.fill();
@@ -99,26 +103,26 @@ const DotGlobe: React.FC<{ className?: string }> = ({ className = '' }) => {
         const glowAlpha = 0.15 + depth * 0.3;
 
         // Outer glow
-        ctx.fillStyle = `rgba(231, 118, 48, ${glowAlpha * 0.3})`;
+        ctx.fillStyle = `rgba(${dotR}, ${dotG}, ${dotB}, ${glowAlpha * 0.3})`;
         ctx.beginPath();
         ctx.arc(x, y, pulseSize * 3, 0, Math.PI * 2);
         ctx.fill();
 
         // Inner glow
-        ctx.fillStyle = `rgba(231, 118, 48, ${glowAlpha * 0.6})`;
+        ctx.fillStyle = `rgba(${dotR}, ${dotG}, ${dotB}, ${glowAlpha * 0.6})`;
         ctx.beginPath();
         ctx.arc(x, y, pulseSize * 1.5, 0, Math.PI * 2);
         ctx.fill();
 
         // Bright center
-        ctx.fillStyle = `rgba(231, 118, 48, ${0.6 + depth * 0.4})`;
+        ctx.fillStyle = `rgba(${dotR}, ${dotG}, ${dotB}, ${0.6 + depth * 0.4})`;
         ctx.beginPath();
         ctx.arc(x, y, pulseSize * 0.6, 0, Math.PI * 2);
         ctx.fill();
       });
 
       // Draw faint equator ring
-      ctx.strokeStyle = 'rgba(231, 118, 48, 0.06)';
+      ctx.strokeStyle = `rgba(${dotR}, ${dotG}, ${dotB}, 0.06)`;
       ctx.lineWidth = 0.5;
       ctx.beginPath();
       ctx.ellipse(cx, cy, radius, radius * 0.3, 0, 0, Math.PI * 2);
