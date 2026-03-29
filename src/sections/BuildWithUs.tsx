@@ -14,7 +14,7 @@ const BuildWithUs: React.FC = () => {
 
             {/* Dot Globe - centered, fills most of the card */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-[80%] h-[80%] opacity-50">
+              <div className="w-[90%] h-[90%] opacity-80">
                 <DotGlobe className="w-full h-full" />
               </div>
             </div>
