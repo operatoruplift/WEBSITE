@@ -12,9 +12,11 @@ const BuildWithUs: React.FC = () => {
       <FadeIn className="w-full max-w-[1200px]" delay={200}>
         <div className="w-full bg-[#f2f2f2] rounded-3xl p-8 md:p-16 relative overflow-hidden group hover:shadow-[0_0_40px_rgba(255,255,255,0.1)] transition-shadow duration-500">
 
-            {/* Dot Globe - positioned in top right */}
-            <div className="absolute top-0 right-0 w-[50%] h-[70%] opacity-30 pointer-events-none hidden md:block">
-              <DotGlobe className="w-full h-full" />
+            {/* Dot Globe - centered, fills most of the card */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="w-[80%] h-[80%] opacity-50">
+                <DotGlobe className="w-full h-full" />
+              </div>
             </div>
 
             <div className="flex justify-between items-start mb-24 md:mb-48 relative z-10">
