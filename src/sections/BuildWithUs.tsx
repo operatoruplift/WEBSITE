@@ -10,36 +10,36 @@ const BuildWithUs: React.FC = () => {
   return (
     <section className="w-full bg-background pb-24 px-6 md:px-12 flex justify-center">
       <FadeIn className="w-full max-w-[1200px]" delay={200}>
-        <div className="w-full bg-[#f2f2f2] rounded-3xl p-8 md:p-16 relative overflow-hidden group hover:shadow-[0_0_40px_rgba(255,255,255,0.1)] transition-shadow duration-500">
+        <div className="w-full bg-[#0c0c0f] border border-white/10 rounded-3xl p-8 md:p-16 relative overflow-hidden group hover:shadow-[0_0_40px_rgba(231,118,48,0.1)] transition-shadow duration-500">
 
             {/* Dot Globe - centered, fills most of the card */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div className="w-[90%] h-[90%] opacity-80">
-                <DotGlobe className="w-full h-full" />
+                <DotGlobe className="w-full h-full" dark />
               </div>
             </div>
 
             <div className="flex justify-between items-start mb-24 md:mb-48 relative z-10">
             <div className="flex items-center">
                 <span className="w-2 h-2 rounded-full bg-primary mr-3"></span>
-                <span className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase">{data.tag}</span>
+                <span className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase">{data.tag}</span>
             </div>
 
-            <div className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase hidden md:block">
+            <div className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase hidden md:block">
                 {data.cta}
             </div>
             </div>
 
             <div className="relative z-10">
                 <div className="mb-6">
-                    <svg className="w-12 h-12 text-black mb-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="w-12 h-12 text-primary mb-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                 </div>
 
-                <h2 className="text-4xl md:text-6xl text-black font-medium tracking-tight mb-8 max-w-2xl leading-[1.1]">
+                <h2 className="text-4xl md:text-6xl text-white font-medium tracking-tight mb-8 max-w-2xl leading-[1.1]">
                     {data.headline}
                 </h2>
 
@@ -47,7 +47,7 @@ const BuildWithUs: React.FC = () => {
                 href={data.url}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center bg-[#1a1a1a] text-white px-6 py-3 rounded-sm text-xs font-bold tracking-widest uppercase hover:bg-primary transition-colors duration-300 group-hover:scale-105 transform"
+                className="inline-flex items-center bg-white text-black px-6 py-3 rounded-sm text-xs font-bold tracking-widest uppercase hover:bg-primary hover:text-white transition-colors duration-300"
                 >
                     {data.buttonText} <ChevronRight className="ml-2 w-3 h-3" />
                 </a>
