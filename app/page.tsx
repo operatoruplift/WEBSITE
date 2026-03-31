@@ -3,6 +3,7 @@
 import Navbar from '@/src/components/Navbar';
 import Hero from '@/src/sections/Hero';
 import ProblemStatement from '@/src/sections/ProblemStatement';
+import TrustedBy from '@/src/components/TrustedBy';
 import Product from '@/src/sections/Product';
 import StatsBar from '@/src/sections/StatsBar';
 import MarketOpportunity from '@/src/sections/MarketOpportunity';
@@ -22,6 +23,7 @@ export default function Home() {
       <Navbar currentPage="home" />
       <Hero />
       <ProblemStatement />
+      <TrustedBy />
       <Product />
       <StatsBar />
       <MarketOpportunity />

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { HeroData } from '@/lib/types';
-import { AppleIcon, WindowsIcon, LinuxIcon, AndroidIcon, SmartphoneIcon, SolanaIcon } from './Icons';
+import { AppleIcon, WindowsIcon, LinuxIcon, SolanaIcon } from './Icons';
 
 interface DownloadWidgetProps {
   data: HeroData;
@@ -14,13 +14,10 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = () => {
     { id: 'macos' as const, icon: AppleIcon, label: 'macOS' },
     { id: 'windows' as const, icon: WindowsIcon, label: 'Windows' },
     { id: 'linux' as const, icon: LinuxIcon, label: 'Linux' },
-    { id: 'ios' as const, icon: SmartphoneIcon, label: 'iOS' },
-    { id: 'android' as const, icon: AndroidIcon, label: 'Android' },
     { id: 'seeker' as const, icon: SolanaIcon, label: 'Seeker' },
   ];
 
   const isDesktop = ['macos', 'windows', 'linux'].includes(activeTab);
-  const isMobile = ['ios', 'android'].includes(activeTab);
 
   return (
     <div className="mt-12 w-full max-w-xl animate-slide-up" style={{ animationDelay: '0.4s' }}>
@@ -63,20 +60,14 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = () => {
         <div className="flex flex-col justify-center">
           {isDesktop && (
             <>
-              <span className="text-gray-300 text-sm font-mono">Desktop app in development</span>
-              <Link href="/login" className="text-primary text-xs mt-0.5 hover:underline">Join waitlist for early access →</Link>
-            </>
-          )}
-          {isMobile && (
-            <>
-              <span className="text-gray-300 text-sm font-mono">Mobile app coming soon</span>
-              <span className="text-muted text-xs mt-0.5">PWA available now. Add to home screen</span>
+              <span className="text-gray-300 text-sm font-mono">Desktop app in development, macOS beta Q3 2026</span>
+              <Link href="/login" className="text-primary text-xs mt-0.5 hover:underline">Get early access →</Link>
             </>
           )}
           {activeTab === 'seeker' && (
             <>
               <span className="text-gray-300 text-sm font-mono">Solana dApp Store</span>
-              <Link href="/login" className="text-primary text-xs mt-0.5 hover:underline">Join waitlist for Seeker build →</Link>
+              <Link href="/login" className="text-primary text-xs mt-0.5 hover:underline">Get early access for Seeker →</Link>
             </>
           )}
         </div>

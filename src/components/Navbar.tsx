@@ -11,7 +11,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
   
   const navItems = [
     { name: 'PRODUCT', targetId: 'product' },
-    { name: 'ENTERPRISE', targetId: 'security' },
+    { name: 'PRIVACY', targetId: 'security' },
     { name: 'BLOG', targetId: 'blog', href: '/blog' },
   ];
 
@@ -65,14 +65,14 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
             href="/login"
             className="text-xs font-bold bg-primary text-white px-3 lg:px-4 py-2 rounded-sm hover:bg-primary/80 transition-colors uppercase tracking-wide whitespace-nowrap shadow-[0_0_12px_rgba(231,118,48,0.3)]"
           >
-            Join Waitlist
+            Get Early Access
           </Link>
 
           <Link
             href="/contact"
             className="text-xs font-bold bg-white/10 text-white border border-white/10 px-3 lg:px-4 py-2 rounded-sm hover:bg-white/20 transition-all uppercase tracking-wide whitespace-nowrap"
           >
-            Contact Sales
+            Contact
           </Link>
         </div>
 
@@ -138,7 +138,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
             className="text-sm font-bold bg-white/10 text-white border border-white/10 px-4 py-3 rounded-sm hover:bg-white/20 transition-all uppercase tracking-wide w-full text-center"
             onClick={() => setMobileMenuOpen(false)}
           >
-            Contact Sales
+            Contact
           </Link>
         </div>
       </div>

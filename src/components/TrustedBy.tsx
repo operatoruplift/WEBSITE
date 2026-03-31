@@ -24,7 +24,7 @@ const TrustedBy: React.FC = () => {
     <div className="mt-16 md:mt-16 border-t border-white/5 pt-8 animate-fade-in" style={{ animationDelay: '0.6s' }}>
       <div className="flex items-center mb-6">
         <span className="w-2 h-2 rounded-full bg-primary mr-2 shadow-[0_0_8px_rgba(231,118,48,0.4)]"></span>
-        <span className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">Powered By</span>
+        <span className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">Works With Any Model</span>
       </div>
 
       <div className="relative w-full overflow-hidden mask-gradient">

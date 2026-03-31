@@ -118,7 +118,7 @@ export default function LoginPage() {
                                 </div>
                             </div>
                             <GlowButton type="submit" className="w-full" disabled={isLoading}>
-                                {isLoading ? 'Joining...' : 'Join Waitlist'} <ArrowRight size={18} className="ml-2" />
+                                {isLoading ? 'Submitting...' : 'Get Early Access'} <ArrowRight size={18} className="ml-2" />
                             </GlowButton>
                         </form>
                         <div className="mt-6 pt-6 border-t border-white/5 text-center">
