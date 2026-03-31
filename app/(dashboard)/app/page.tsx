@@ -210,16 +210,26 @@ export default function DashboardPage() {
                                 </CardContent>
                             </Card>
                             <Card variant="glass" className="card-animate group overflow-hidden" style={{ animationDelay: '600ms' }}>
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#E77630]/20 to-transparent blur-2xl" />
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-amber-500/20 to-transparent blur-2xl" />
                                 <CardContent className="p-6 relative z-10">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <div className="flex items-center gap-2 text-xs font-mono text-gray-400 uppercase tracking-widest"><Network size={14} className="text-[#E77630]" /> ATP Treasury</div>
+                                    <div className="flex items-center justify-between mb-4">
+                                        <div className="flex items-center gap-2 text-xs font-mono text-gray-400 uppercase tracking-widest">
+                                            <svg className="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><text x="12" y="16" textAnchor="middle" fontSize="12" fill="#000" fontWeight="bold">G</text></svg>
+                                            Gold Agent
+                                        </div>
+                                        <Badge variant="default" className="text-[9px] bg-amber-400/10 text-amber-400 border border-amber-400/20">Oro GRAIL</Badge>
                                     </div>
-                                    <div className="mb-2"><span className="text-4xl font-bold font-mono text-white tracking-tighter">24,500</span><span className="text-sm font-bold text-[#E77630] ml-1">ATP</span></div>
-                                    <div className="text-xs text-gray-400 mb-6">≈ $8,452.10 USD</div>
+                                    <div className="mb-1"><span className="text-3xl font-bold font-mono text-white tracking-tighter">0.0847</span><span className="text-sm font-bold text-amber-400 ml-1">oz</span></div>
+                                    <div className="text-xs text-gray-400 mb-4">≈ $278.24 USD</div>
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <span className="text-[10px] font-mono text-gray-500">Gold Spot</span>
+                                        <span className="text-[10px] font-mono text-white">$3,284.50/oz</span>
+                                        <span className="text-[10px] font-mono text-emerald-400">+1.2%</span>
+                                    </div>
                                     <div className="space-y-2">
-                                        <div className="flex justify-between text-[10px] font-mono"><span className="text-gray-500">Allocated to Agents</span><span className="text-white">68%</span></div>
-                                        <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-[#E77630] to-[#F59E0B] w-[68%]" /></div>
+                                        <div className="flex justify-between text-[10px] font-mono"><span className="text-gray-500">Weekly DCA</span><span className="text-white">$49.27</span></div>
+                                        <div className="flex justify-between text-[10px] font-mono"><span className="text-gray-500">Round-ups</span><span className="text-white">$9.85</span></div>
+                                        <div className="flex justify-between text-[10px] font-mono"><span className="text-gray-500">Cashback</span><span className="text-white">$3.28</span></div>
                                     </div>
                                 </CardContent>
                             </Card>
