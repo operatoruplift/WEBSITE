@@ -25,13 +25,37 @@ const categoryColors: Record<string, string> = {
 
 const posts: BlogPost[] = [
     {
+        id: 'blockchain-integrations',
+        title: 'Zcash, Prime Intellect, Oro GRAIL, and DD.xyz',
+        excerpt: 'New blockchain integrations bring privacy-preserving payments (Zcash), decentralized compute (Prime Intellect), gold-backed assets (Oro GRAIL), and real-time risk data (DD.xyz) to your agents.',
+        date: 'March 31, 2026',
+        readTime: '5 min read',
+        category: 'announcement',
+        featured: true,
+    },
+    {
+        id: 'consumer-rewrite',
+        title: 'Rewriting for Everyone, Not Just Developers',
+        excerpt: 'Based on user feedback, we rewrote all landing page copy to be consumer-friendly. No more jargon. Just clear explanations of what Operator Uplift does and why it matters.',
+        date: 'March 29, 2026',
+        readTime: '3 min read',
+        category: 'update',
+    },
+    {
+        id: 'comparison-faq',
+        title: 'New: Comparison Table and FAQ',
+        excerpt: 'See how Operator Uplift compares to ChatGPT, Claude, Gemini, and Grok across 11 features. Plus 8 common questions answered.',
+        date: 'March 28, 2026',
+        readTime: '4 min read',
+        category: 'update',
+    },
+    {
         id: 'swarm-orchestration',
         title: 'Introducing Swarm Orchestration',
         excerpt: 'Run multi-agent teams with sequential, parallel, hierarchical, and debate topologies. Design swarms that collaborate on complex tasks.',
         date: 'March 27, 2026',
         readTime: '4 min read',
         category: 'announcement',
-        featured: true,
     },
     {
         id: 'aes-256-encryption',
