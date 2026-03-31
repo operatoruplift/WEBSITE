@@ -124,7 +124,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
         title: "Use any AI model, any tool",
         description: "Operator Uplift works with Claude, GPT, Gemini, Llama, and more. Switch models anytime. Connect your favorite apps. No vendor lock-in, ever.",
         linkText: "See all integrations",
-        linkUrl: "/contact"
+        linkUrl: "/integrations"
       }
     }
   },
@@ -157,7 +157,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
     tag: "JOIN US",
     cta: "GET EARLY ACCESS",
     headline: "Ready to take control of your AI?",
-    buttonText: "Join Waitlist",
+    buttonText: "Get Early Access",
     url: "https://help.operatoruplift.com"
   },
   contact: {
@@ -224,13 +224,12 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
         title: "Resources",
         links: [
           { label: "Docs", url: "https://help.operatoruplift.com" },
-          { label: "Contact Sales", action: "contact" }
+          { label: "Contact", action: "contact" }
         ]
       },
       company: {
         title: "Company",
         links: [
-          { label: "Careers", url: "https://linkedin.com/company/operatoruplift" },
           { label: "Contact", action: "contact" }
         ]
       },

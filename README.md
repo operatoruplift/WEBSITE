@@ -1,3 +1,19 @@
+# Operator Uplift
+
+**Your Life, Automated.** One app. Every agent. All yours.
+
+Operator Uplift is a local-first AI agent operating system. It runs on your device, keeps your data encrypted, and lets you install, build, and manage AI agents without sending anything to the cloud. Privacy-first by design.
+
+- **Local-first**: Your data stays on your device, encrypted with AES-256-GCM
+- **Model agnostic**: Use Claude, GPT, Gemini, Llama, Grok, or local models via Ollama
+- **Agent marketplace**: Install pre-built agents or create your own
+- **Multi-agent swarms**: Orchestrate teams of agents with sequential, parallel, hierarchical, or debate topologies
+- **Open source**: MIT licensed
+
+**Live at [operatoruplift.com](https://operatoruplift.com)**
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

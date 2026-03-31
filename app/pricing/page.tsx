@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Check, Zap, Code, Building2, ArrowRight } from 'lucide-react';
+import { Check, Zap, Code, ArrowRight } from 'lucide-react';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 
@@ -47,26 +47,6 @@ const tiers = [
         href: '/signup',
         highlight: true,
     },
-    {
-        name: 'Enterprise',
-        price: 'Custom',
-        period: '',
-        description: 'Premium subscriptions for custom cloud server deployments.',
-        icon: Building2,
-        features: [
-            'Everything in Personal',
-            'Dedicated infrastructure',
-            'SSO / SAML authentication',
-            'Audit logs + compliance',
-            'Custom integrations',
-            'SLA guarantee',
-            'Dedicated support engineer',
-            'On-prem deployment option',
-        ],
-        cta: 'Contact Sales',
-        href: '/contact',
-        highlight: false,
-    },
 ];
 
 export default function PricingPage() {
@@ -87,7 +67,7 @@ export default function PricingPage() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1100px] w-full items-stretch">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-[800px] w-full items-stretch">
                     {tiers.map(tier => {
                         const Icon = tier.icon;
                         return (
