@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { HeroData } from '@/lib/types';
-import { AppleIcon, WindowsIcon, LinuxIcon, SolanaIcon } from './Icons';
+import { AppleIcon, WindowsIcon, LinuxIcon, AndroidIcon, SmartphoneIcon, SolanaIcon } from './Icons';
 
 interface DownloadWidgetProps {
   data: HeroData;
@@ -14,10 +14,13 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = () => {
     { id: 'macos' as const, icon: AppleIcon, label: 'macOS' },
     { id: 'windows' as const, icon: WindowsIcon, label: 'Windows' },
     { id: 'linux' as const, icon: LinuxIcon, label: 'Linux' },
+    { id: 'ios' as const, icon: SmartphoneIcon, label: 'iOS' },
+    { id: 'android' as const, icon: AndroidIcon, label: 'Android' },
     { id: 'seeker' as const, icon: SolanaIcon, label: 'Seeker' },
   ];
 
   const isDesktop = ['macos', 'windows', 'linux'].includes(activeTab);
+  const isMobile = ['ios', 'android'].includes(activeTab);
 
   return (
     <div className="mt-12 w-full max-w-xl animate-slide-up" style={{ animationDelay: '0.4s' }}>
@@ -47,14 +50,14 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = () => {
         })}
       </div>
 
-      {/* Primary CTA: Use Web App */}
+      {/* Primary CTA */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <Link href="/login"
           className="group relative overflow-hidden bg-white text-black text-sm md:text-base py-4 px-8 rounded-sm w-full sm:w-auto min-w-[240px] flex items-center justify-center space-x-3 hover:bg-gray-100 transition-colors duration-300">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          <span>Use Web App</span>
+          <span>Get Early Access</span>
         </Link>
 
         <div className="flex flex-col justify-center">
@@ -62,6 +65,12 @@ const DownloadWidget: React.FC<DownloadWidgetProps> = () => {
             <>
               <span className="text-gray-300 text-sm font-mono">Desktop app in development, macOS beta Q3 2026</span>
               <Link href="/login" className="text-primary text-xs mt-0.5 hover:underline">Get early access →</Link>
+            </>
+          )}
+          {isMobile && (
+            <>
+              <span className="text-gray-300 text-sm font-mono">Mobile app coming soon</span>
+              <span className="text-muted text-xs mt-0.5">PWA available now. Add to home screen</span>
             </>
           )}
           {activeTab === 'seeker' && (

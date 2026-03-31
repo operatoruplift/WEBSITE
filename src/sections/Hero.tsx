@@ -84,7 +84,11 @@ const Hero: React.FC = () => {
             <DownloadWidget data={data} />
           </FadeIn>
 
-          
+          {/* Works With Any Model (Marquee) */}
+          <FadeIn delay={1000}>
+            <TrustedBy />
+          </FadeIn>
+
         </div>
 
         {/* Right Column Spacer - Desktop Animation lives behind here */}
