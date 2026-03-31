@@ -49,6 +49,14 @@ const INTEGRATIONS: Integration[] = [
     // Security
     { id: 'sentry', name: 'Sentry', description: 'Error tracking, performance monitoring, alerting', category: 'Security', icon: Shield, status: 'available', howItWorks: 'Agent monitors Sentry API for new errors and creates fix PRs.' },
     { id: 'cloudflare', name: 'Cloudflare', description: 'DNS management, WAF rules, performance analytics', category: 'Security', icon: Shield, status: 'available', howItWorks: 'Agent uses Cloudflare API to manage DNS and security rules.' },
+
+    // Blockchain & Finance
+    { id: 'solana', name: 'Solana', description: 'On-chain transactions, wallet management, dApp interactions, agent registry', category: 'Blockchain', icon: Zap, status: 'available', howItWorks: 'Agent uses Solana Web3.js to sign transactions, check balances, and interact with on-chain programs.' },
+    { id: 'zcash', name: 'Zcash', description: 'Privacy-preserving payments, shielded transactions, z-addr support', category: 'Blockchain', icon: Shield, status: 'available', howItWorks: 'Agent uses Zcash RPC API for shielded (z-addr) and transparent transactions. Full privacy for agent-to-agent payments.' },
+    { id: 'prime_intellect', name: 'Prime Intellect', description: 'Decentralized AI compute, GPU marketplace, distributed training', category: 'Blockchain', icon: Zap, status: 'coming_soon', howItWorks: 'Agents can provision decentralized GPU compute for model inference and fine-tuning via Prime Intellect API.' },
+    { id: 'oro_grail', name: 'Oro GRAIL', description: 'Gold-backed digital assets, tokenized gold transactions, treasury management', category: 'Blockchain', icon: Database, status: 'coming_soon', howItWorks: 'Agent uses Oro GRAIL API to interact with gold as easily as USDC. Treasury agents can diversify into gold-backed assets.' },
+    { id: 'dd_xyz', name: 'DD.xyz', description: 'Real-time risk data, due diligence reports, compliance scoring', category: 'Blockchain', icon: Shield, status: 'available', howItWorks: 'Agent queries DD.xyz APIs for the most extensive risk-related data available. Powers Blackwall threat assessment and compliance checks.' },
+    { id: 'x402', name: 'x402 Protocol', description: 'Agent-to-agent payments, HTTP 402 micropayments, multi-chain support', category: 'Blockchain', icon: Zap, status: 'coming_soon', howItWorks: 'Enables machine-to-machine payments via HTTP 402 protocol. Zero processing fees beyond on-chain gas. Supports Solana, Ethereum, Base.' },
 ];
 
 const CATEGORIES = ['All', ...new Set(INTEGRATIONS.map(i => i.category))];
