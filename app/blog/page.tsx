@@ -25,13 +25,37 @@ const categoryColors: Record<string, string> = {
 
 const posts: BlogPost[] = [
     {
+        id: 'tool-registry',
+        title: 'Agent Builder: 20 Tools Across 5 Categories',
+        excerpt: 'The agent builder now supports 20 tools organized by Core, Developer, Communication, Blockchain, and Creative categories. Build agents with Solana, Oro GRAIL, DD.xyz, and x402 payment capabilities.',
+        date: 'April 1, 2026',
+        readTime: '4 min read',
+        category: 'update',
+        featured: true,
+    },
+    {
+        id: 'gold-agent',
+        title: 'Meet the Gold Agent: Savings Powered by Oro GRAIL',
+        excerpt: 'The new Gold Agent widget on your dashboard shows real-time gold prices, weekly DCA savings, round-ups, and cashback. All powered by Oro GRAIL API for tokenized gold transactions.',
+        date: 'April 1, 2026',
+        readTime: '3 min read',
+        category: 'announcement',
+    },
+    {
+        id: 'hackathon-prep',
+        title: 'Building for Colosseum, Superteam, and Solana dApp Store',
+        excerpt: 'Our roadmap for the Solana ecosystem: multi-agent swarms, on-chain agent registry, A2A protocol support, and Seeker phone compatibility. Targeting Colosseum Frontier hackathon and Superteam grants.',
+        date: 'March 31, 2026',
+        readTime: '6 min read',
+        category: 'engineering',
+    },
+    {
         id: 'blockchain-integrations',
         title: 'Zcash, Prime Intellect, Oro GRAIL, and DD.xyz',
         excerpt: 'New blockchain integrations bring privacy-preserving payments (Zcash), decentralized compute (Prime Intellect), gold-backed assets (Oro GRAIL), and real-time risk data (DD.xyz) to your agents.',
         date: 'March 31, 2026',
         readTime: '5 min read',
         category: 'announcement',
-        featured: true,
     },
     {
         id: 'consumer-rewrite',

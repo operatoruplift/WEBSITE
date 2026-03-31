@@ -43,18 +43,31 @@ export default function AgentBuilderPage() {
     const { showToast } = useToast();
 
     const TOOLS = [
-        { id: 'web-search', name: 'Web Search', desc: 'Search the internet in real-time' },
-        { id: 'web-scrape', name: 'Web Scraper', desc: 'Extract content from URLs' },
-        { id: 'code-exec', name: 'Code Executor', desc: 'Run Python/JS code in sandbox' },
-        { id: 'file-system', name: 'File System', desc: 'Read, write, and manage files' },
-        { id: 'database', name: 'Database', desc: 'Query SQL/NoSQL databases' },
-        { id: 'api-call', name: 'HTTP/API', desc: 'Make REST/GraphQL API calls' },
-        { id: 'email', name: 'Email', desc: 'Send and read emails' },
-        { id: 'calendar', name: 'Calendar', desc: 'Manage calendar events' },
-        { id: 'slack', name: 'Slack', desc: 'Send messages and manage channels' },
-        { id: 'github', name: 'GitHub', desc: 'PRs, issues, repos, and actions' },
-        { id: 'memory', name: 'Memory Bank', desc: 'Read/write to knowledge base' },
-        { id: 'image-gen', name: 'Image Gen', desc: 'Generate images with DALL-E/Flux' },
+        // Core
+        { id: 'web-search', name: 'Web Search', desc: 'Search the internet in real-time', category: 'Core' },
+        { id: 'web-scrape', name: 'Web Scraper', desc: 'Extract content from URLs', category: 'Core' },
+        { id: 'code-exec', name: 'Code Executor', desc: 'Run Python/JS code in sandbox', category: 'Core' },
+        { id: 'file-system', name: 'File System', desc: 'Read, write, and manage files', category: 'Core' },
+        { id: 'memory', name: 'Memory Bank', desc: 'Read/write to knowledge base', category: 'Core' },
+        // Developer
+        { id: 'database', name: 'Database', desc: 'Query SQL/NoSQL databases', category: 'Dev' },
+        { id: 'api-call', name: 'HTTP/API', desc: 'Make REST/GraphQL API calls', category: 'Dev' },
+        { id: 'github', name: 'GitHub', desc: 'PRs, issues, repos, and actions', category: 'Dev' },
+        { id: 'shell', name: 'Shell', desc: 'Execute terminal commands', category: 'Dev' },
+        { id: 'grep', name: 'Code Search', desc: 'Search codebases with regex', category: 'Dev' },
+        // Communication
+        { id: 'email', name: 'Email', desc: 'Send and read emails', category: 'Comm' },
+        { id: 'calendar', name: 'Calendar', desc: 'Manage calendar events', category: 'Comm' },
+        { id: 'slack', name: 'Slack', desc: 'Send messages and manage channels', category: 'Comm' },
+        { id: 'notion', name: 'Notion', desc: 'Read/write pages and databases', category: 'Comm' },
+        // Blockchain
+        { id: 'solana', name: 'Solana', desc: 'On-chain transactions and wallet ops', category: 'Chain' },
+        { id: 'oro-grail', name: 'Oro GRAIL', desc: 'Gold-backed asset management', category: 'Chain' },
+        { id: 'dd-xyz', name: 'DD.xyz Risk', desc: 'Real-time risk scoring and due diligence', category: 'Chain' },
+        { id: 'x402', name: 'x402 Payments', desc: 'Agent-to-agent micropayments', category: 'Chain' },
+        // Creative
+        { id: 'image-gen', name: 'Image Gen', desc: 'Generate images with DALL-E/Flux', category: 'Creative' },
+        { id: 'voice', name: 'Voice', desc: 'Text-to-speech and speech-to-text', category: 'Creative' },
     ];
 
     const toggleTool = (id: string) => {
@@ -158,17 +171,28 @@ export default function AgentBuilderPage() {
                         {step === 2 && (
                             <div className="space-y-6">
                                 <h2 className="text-lg font-medium text-white">Select tools</h2>
-                                <p className="text-sm text-gray-400">Choose what your agent can interact with. Tools define the agent&apos;s capabilities.</p>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                    {TOOLS.map(tool => (
-                                        <button key={tool.id} onClick={() => toggleTool(tool.id)}
-                                            className={`p-4 rounded-xl border text-left transition-all ${selectedTools.includes(tool.id) ? 'border-primary/50 bg-primary/10' : 'border-white/5 bg-white/[0.02] hover:border-white/20'}`}>
-                                            <p className="text-sm font-bold text-white">{tool.name}</p>
-                                            <p className="text-[10px] text-gray-500 mt-1">{tool.desc}</p>
-                                            {selectedTools.includes(tool.id) && <Check size={12} className="text-primary mt-2" />}
-                                        </button>
-                                    ))}
-                                </div>
+                                <p className="text-sm text-gray-400">Choose what your agent can interact with. Each tool grants a specific capability.</p>
+                                {(['Core', 'Dev', 'Comm', 'Chain', 'Creative'] as const).map(cat => {
+                                    const catTools = TOOLS.filter(t => t.category === cat);
+                                    const labels: Record<string, string> = { Core: 'Core', Dev: 'Developer', Comm: 'Communication', Chain: 'Blockchain', Creative: 'Creative' };
+                                    return (
+                                        <div key={cat}>
+                                            <p className="text-[10px] font-mono text-gray-600 uppercase tracking-widest mb-2">{labels[cat]}</p>
+                                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                                {catTools.map(tool => (
+                                                    <button key={tool.id} onClick={() => toggleTool(tool.id)}
+                                                        className={`p-3 rounded-xl border text-left transition-all ${selectedTools.includes(tool.id) ? 'border-primary/50 bg-primary/10' : 'border-white/5 bg-white/[0.02] hover:border-white/20'}`}>
+                                                        <div className="flex items-center justify-between">
+                                                            <p className="text-xs font-bold text-white">{tool.name}</p>
+                                                            {selectedTools.includes(tool.id) && <Check size={10} className="text-primary" />}
+                                                        </div>
+                                                        <p className="text-[9px] text-gray-500 mt-1">{tool.desc}</p>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                                 {selectedTools.length > 0 && <p className="text-xs text-gray-500 font-mono">{selectedTools.length} tool{selectedTools.length !== 1 ? 's' : ''} selected</p>}
                             </div>
                         )}
