@@ -86,79 +86,90 @@ export default function SwarmPage() {
 
     const activeSwarm = swarms.find(s => s.id === activeSwarmId);
 
-    const runSwarm = useCallback((id: string) => {
+    const callAgent = async (agent: SwarmAgent, context: string): Promise<string> => {
+        try {
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: `You are "${agent.name}" with role: ${agent.role}. Context from previous agents: ${context}. Execute your role concisely in 1-2 sentences.`,
+                    model: agent.model.toLowerCase().replace(/ /g, '-'),
+                    systemPrompt: `You are an AI agent named "${agent.name}". Your role: ${agent.role}. Be concise and action-oriented. Respond in 1-2 sentences.`,
+                }),
+            });
+            if (res.ok && res.body) {
+                const reader = res.body.getReader();
+                const decoder = new TextDecoder();
+                let output = '';
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    output += decoder.decode(value, { stream: true });
+                }
+                if (output) return output;
+            }
+        } catch { /* fall through to demo */ }
+        return `[${agent.name}] ${agent.role}. Completed successfully. (Connect API key for real execution)`;
+    };
+
+    const runSwarm = useCallback(async (id: string) => {
         const swarm = swarms.find(s => s.id === id);
         if (!swarm || swarm.status === 'running') return;
 
         setSwarms(prev => prev.map(s => s.id === id ? { ...s, status: 'running' as const } : s));
         showToast(`Running "${swarm.name}" swarm...`, 'info');
 
-        // Simulate agent-by-agent execution
-        const agents = [...swarm.agents];
         const isParallel = swarm.topology === 'parallel';
-        let step = 0;
+        let context = `Swarm: ${swarm.name}. Topology: ${swarm.topology}. Goal: ${swarm.description}`;
 
-        const outputs = [
-            'Analyzing input context... Found 12 relevant data points.',
-            'Processing patterns... Identified 3 key insights.',
-            'Cross-referencing sources... 2 conflicts resolved.',
-            'Generating synthesis... Report compiled successfully.',
-        ];
-
-        const advanceAgent = () => {
-            if (step >= agents.length) {
-                // All agents done
-                setSwarms(prev => prev.map(s => s.id === id ? {
-                    ...s, status: 'complete' as const, runs: s.runs + 1, lastRun: 'Just now',
-                    agents: s.agents.map(a => ({ ...a, status: 'done' as const, output: outputs[Math.min(step - 1, outputs.length - 1)] })),
-                } : s));
-                showToast(`"${swarm.name}" completed!`, 'success');
-                return;
-            }
-
-            if (isParallel && step < agents.length - 1) {
-                // Parallel: all agents except last start together
-                setSwarms(prev => prev.map(s => s.id === id ? {
-                    ...s,
-                    agents: s.agents.map((a, i) => i < agents.length - 1 ? { ...a, status: 'thinking' as const } : a),
-                } : s));
-                setTimeout(() => {
-                    setSwarms(prev => prev.map(s => s.id === id ? {
-                        ...s,
-                        agents: s.agents.map((a, i) => i < agents.length - 1 ? { ...a, status: 'done' as const, output: outputs[i] || 'Done.' } : a),
-                    } : s));
-                    step = agents.length - 1;
-                    setTimeout(() => advanceAgent(), 1500);
-                }, 2500);
-                step = agents.length - 1;
-                return;
-            }
-
-            // Sequential/hierarchical: one at a time
+        if (isParallel) {
+            // Set all non-final agents to thinking
             setSwarms(prev => prev.map(s => s.id === id ? {
-                ...s,
-                agents: s.agents.map((a, i) => i === step ? { ...a, status: 'thinking' as const } : a),
+                ...s, agents: s.agents.map((a, i) => i < s.agents.length - 1 ? { ...a, status: 'thinking' as const } : a),
             } : s));
 
-            setTimeout(() => {
+            // Run all non-final agents in parallel
+            const parallelAgents = swarm.agents.slice(0, -1);
+            const results = await Promise.all(parallelAgents.map(a => callAgent(a, context)));
+
+            // Mark parallel agents done
+            setSwarms(prev => prev.map(s => s.id === id ? {
+                ...s, agents: s.agents.map((a, i) => i < s.agents.length - 1 ? { ...a, status: 'done' as const, output: results[i] } : a),
+            } : s));
+
+            // Run final synthesizer agent
+            const finalAgent = swarm.agents[swarm.agents.length - 1];
+            setSwarms(prev => prev.map(s => s.id === id ? {
+                ...s, agents: s.agents.map((a, i) => i === s.agents.length - 1 ? { ...a, status: 'thinking' as const } : a),
+            } : s));
+            const finalOutput = await callAgent(finalAgent, results.join(' | '));
+            setSwarms(prev => prev.map(s => s.id === id ? {
+                ...s, status: 'complete' as const, runs: s.runs + 1, lastRun: 'Just now',
+                agents: s.agents.map((a, i) => i === s.agents.length - 1 ? { ...a, status: 'done' as const, output: finalOutput } : a),
+            } : s));
+        } else {
+            // Sequential / hierarchical / debate: one at a time
+            for (let i = 0; i < swarm.agents.length; i++) {
+                const agent = swarm.agents[i];
+                // Set to thinking
                 setSwarms(prev => prev.map(s => s.id === id ? {
-                    ...s,
-                    agents: s.agents.map((a, i) => i === step ? { ...a, status: 'executing' as const } : a),
+                    ...s, agents: s.agents.map((a, idx) => idx === i ? { ...a, status: 'thinking' as const } : a),
                 } : s));
 
-                setTimeout(() => {
-                    const currentStep = step;
-                    setSwarms(prev => prev.map(s => s.id === id ? {
-                        ...s,
-                        agents: s.agents.map((a, i) => i === currentStep ? { ...a, status: 'done' as const, output: outputs[currentStep] || 'Done.' } : a),
-                    } : s));
-                    step++;
-                    setTimeout(() => advanceAgent(), 800);
-                }, 1500);
-            }, 1000);
-        };
+                // Call LLM
+                const output = await callAgent(agent, context);
+                context = output;
 
-        advanceAgent();
+                // Set to done with output
+                setSwarms(prev => prev.map(s => s.id === id ? {
+                    ...s,
+                    ...(i === swarm.agents.length - 1 ? { status: 'complete' as const, runs: s.runs + 1, lastRun: 'Just now' } : {}),
+                    agents: s.agents.map((a, idx) => idx === i ? { ...a, status: 'done' as const, output } : a),
+                } : s));
+            }
+        }
+
+        showToast(`"${swarm.name}" completed!`, 'success');
     }, [swarms, showToast]);
 
     const resetSwarm = (id: string) => {
