@@ -32,6 +32,14 @@ const MODELS = [
     { id: 'deepseek-r1', name: 'DeepSeek R1', provider: 'DeepSeek', badge: 'LOCAL' },
 ];
 
+const AGENT_DIRECTIVES = `## Agent Directives
+- After every action, verify the result before reporting success
+- Re-read any data before modifying it (never trust cached context)
+- Break complex tasks into phases of 5 or fewer steps
+- If architecture is flawed, propose and implement structural fixes
+- State explicitly when you cannot verify something
+- Search exhaustively when renaming or changing references`;
+
 export default function AgentBuilderPage() {
     const [step, setStep] = useState(0);
     const [name, setName] = useState('');
@@ -40,6 +48,7 @@ export default function AgentBuilderPage() {
     const [model, setModel] = useState('claude-sonnet-4-6');
     const [systemPrompt, setSystemPrompt] = useState('');
     const [selectedTools, setSelectedTools] = useState<string[]>([]);
+    const [enableDirectives, setEnableDirectives] = useState(true);
     const { showToast } = useToast();
 
     const TOOLS = [
@@ -85,7 +94,7 @@ export default function AgentBuilderPage() {
                 const res = await fetch('/api/agents', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                    body: JSON.stringify({ name, description, template, model, systemPrompt, tools: selectedTools }),
+                    body: JSON.stringify({ name, description, template, model, systemPrompt: enableDirectives ? `${systemPrompt}\n\n${AGENT_DIRECTIVES}` : systemPrompt, tools: selectedTools }),
                 });
                 if (res.ok) {
                     showToast(`Agent "${name}" deployed to cloud!`, 'success');
@@ -95,7 +104,8 @@ export default function AgentBuilderPage() {
             } catch { /* fall through to localStorage */ }
         }
         // Fallback: localStorage
-        const agent = { name, description, template, model, systemPrompt, tools: selectedTools, id: Date.now().toString(), createdAt: new Date().toISOString() };
+        const finalPrompt = enableDirectives ? `${systemPrompt}\n\n${AGENT_DIRECTIVES}` : systemPrompt;
+        const agent = { name, description, template, model, systemPrompt: finalPrompt, tools: selectedTools, id: Date.now().toString(), createdAt: new Date().toISOString() };
         const existing = JSON.parse(localStorage.getItem('custom-agents') || '[]');
         existing.push(agent);
         localStorage.setItem('custom-agents', JSON.stringify(existing));
@@ -164,7 +174,16 @@ export default function AgentBuilderPage() {
                                 <h2 className="text-lg font-medium text-white">Configure your agent</h2>
                                 <div><label className="text-sm text-gray-400 block mb-2">Agent Name</label><input type="text" value={name} onChange={e => setName(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="My Agent" /></div>
                                 <div><label className="text-sm text-gray-400 block mb-2">Description</label><input type="text" value={description} onChange={e => setDescription(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="What does this agent do?" /></div>
-                                <div><label className="text-sm text-gray-400 block mb-2">System Prompt (optional)</label><textarea value={systemPrompt} onChange={e => setSystemPrompt(e.target.value)} rows={5} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none resize-none font-mono text-sm" placeholder="You are a helpful assistant that..." /></div>
+                                <div><label className="text-sm text-gray-400 block mb-2">System Prompt (optional)</label><textarea value={systemPrompt} onChange={e => setSystemPrompt(e.target.value)} rows={4} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none resize-none font-mono text-sm" placeholder="You are a helpful assistant that..." /></div>
+                                <div className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5">
+                                    <div>
+                                        <p className="text-sm text-white font-medium">Verification Directives</p>
+                                        <p className="text-[10px] text-gray-500 mt-0.5">Auto-verify results, re-read before editing, break tasks into phases</p>
+                                    </div>
+                                    <button onClick={() => setEnableDirectives(!enableDirectives)} className={`w-10 h-5 rounded-full p-0.5 transition-colors ${enableDirectives ? 'bg-primary' : 'bg-gray-700'}`}>
+                                        <div className={`w-4 h-4 bg-white rounded-full transition-transform ${enableDirectives ? 'translate-x-5' : ''}`} />
+                                    </button>
+                                </div>
                             </div>
                         )}
 
