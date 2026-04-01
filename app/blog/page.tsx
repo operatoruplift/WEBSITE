@@ -23,7 +23,7 @@ const categoryColors: Record<string, string> = {
     guide: 'text-sky-400 bg-sky-400/10 border-sky-400/20',
 };
 
-const posts: BlogPost[] = [
+export const posts: BlogPost[] = [
     {
         id: 'tool-registry',
         title: 'Agent Builder: 20 Tools Across 5 Categories',
@@ -152,7 +152,7 @@ export default function BlogPage() {
                 {/* Featured post */}
                 {featured && (
                     <FadeIn delay={100}>
-                        <div className="mb-16 p-8 md:p-12 rounded-2xl border border-white/10 bg-white/[0.02] hover:border-primary/30 transition-all group cursor-pointer relative overflow-hidden">
+                        <Link href={`/blog/${featured.id}`} className="block mb-16 p-8 md:p-12 rounded-2xl border border-white/10 bg-white/[0.02] hover:border-primary/30 transition-all group cursor-pointer relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-primary/10 to-transparent blur-3xl pointer-events-none" />
                             <div className="relative z-10">
                                 <div className="flex items-center gap-3 mb-4">
@@ -168,7 +168,7 @@ export default function BlogPage() {
                                     <span className="flex items-center gap-1"><Clock size={12} /> {featured.readTime}</span>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     </FadeIn>
                 )}
 
@@ -176,7 +176,7 @@ export default function BlogPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {rest.map((post, i) => (
                         <FadeIn key={post.id} delay={150 + i * 50}>
-                            <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] hover:border-white/20 transition-all cursor-pointer group h-full flex flex-col">
+                            <Link href={`/blog/${post.id}`} className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] hover:border-white/20 transition-all cursor-pointer group h-full flex flex-col">
                                 <div className="flex items-center gap-3 mb-4">
                                     <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded border ${categoryColors[post.category]}`}>
                                         {post.category}
@@ -191,7 +191,7 @@ export default function BlogPage() {
                                     </div>
                                     <ArrowRight size={14} className="text-gray-600 group-hover:text-primary transition-colors" />
                                 </div>
-                            </div>
+                            </Link>
                         </FadeIn>
                     ))}
                 </div>
