@@ -59,12 +59,23 @@ const PRESET_SWARMS: SwarmConfig[] = [
         ],
     },
     {
-        id: 'security', name: 'Security Audit Swarm', description: 'Hierarchical security audit: scanner → analyzer → reporter with escalation',
+        id: 'security', name: 'Security Audit Swarm', description: 'Hierarchical security audit: scanner, analyzer, reporter with escalation',
         topology: 'hierarchical', status: 'ready', runs: 0, lastRun: 'Never',
         agents: [
             { id: 'd1', name: 'Vuln Scanner', role: 'Scan for OWASP Top 10, CVEs, and misconfigs', model: 'Claude Sonnet 4.6', status: 'idle', icon: Shield },
             { id: 'd2', name: 'Threat Analyst', role: 'Classify severity and exploitation paths', model: 'Claude Opus 4.6', status: 'idle', icon: Brain },
             { id: 'd3', name: 'Remediation Agent', role: 'Generate fix PRs for critical vulnerabilities', model: 'Claude Sonnet 4.6', status: 'idle', icon: Zap },
+        ],
+    },
+    {
+        id: 'council', name: 'LLM Council', description: '5 advisors argue from different angles, blind-review each other, then a chairman synthesizes the strongest answer',
+        topology: 'parallel', status: 'ready', runs: 0, lastRun: 'Never',
+        agents: [
+            { id: 'e1', name: 'Contrarian', role: 'Find what will fail. Argue against the consensus. Be the voice of skepticism.', model: 'Claude Opus 4.6', status: 'idle', icon: Shield },
+            { id: 'e2', name: 'First Principles', role: 'Reframe the problem from scratch. Question all assumptions.', model: 'GPT-4.1', status: 'idle', icon: Brain },
+            { id: 'e3', name: 'Expansionist', role: 'Find the upside everyone missed. What opportunities are being ignored?', model: 'Claude Sonnet 4.6', status: 'idle', icon: Zap },
+            { id: 'e4', name: 'Outsider', role: 'No context, fresh eyes. What does someone with zero background see?', model: 'Gemini 2.5 Pro', status: 'idle', icon: Bot },
+            { id: 'e5', name: 'Chairman', role: 'Read all 4 responses. Identify the strongest argument, the biggest blind spot, and produce one clear verdict with a concrete next step.', model: 'Claude Opus 4.6', status: 'idle', icon: MessageSquare },
         ],
     },
 ];
@@ -74,6 +85,7 @@ const topologyLabels: Record<string, { label: string; color: string; desc: strin
     parallel: { label: 'Parallel', color: 'text-[#F59E0B]', desc: 'A | B | C → D' },
     hierarchical: { label: 'Hierarchical', color: 'text-[#E77630]', desc: 'A → [B, C]' },
     debate: { label: 'Debate', color: 'text-red-400', desc: 'A ⟷ B → Judge' },
+    council: { label: 'Council', color: 'text-amber-400', desc: '5 argue → review → chairman' },
 };
 
 export default function SwarmPage() {
