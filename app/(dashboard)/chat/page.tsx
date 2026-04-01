@@ -106,12 +106,19 @@ export default function ChatPage() {
         // Build conversation history for context
         const history = (currentSession?.messages || []).map(m => ({ role: m.role, content: m.content }));
 
+        // Inject memory context into the system prompt
+        let memoryContext = '';
+        try {
+            const { buildMemoryContext } = await import('@/lib/memoryEngine');
+            memoryContext = buildMemoryContext(userMessage.content);
+        } catch { /* no memory available */ }
+
         try {
             // Try real LLM API first
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMessage.content, model: selectedModel, history }),
+                body: JSON.stringify({ message: userMessage.content, model: selectedModel, history, ...(memoryContext && { systemPrompt: `You are a helpful AI assistant on the Operator Uplift platform. You are concise, accurate, and helpful.${memoryContext}` }) }),
             });
 
             if (response.ok && response.body) {

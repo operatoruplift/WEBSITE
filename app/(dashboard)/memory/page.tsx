@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from 'react';
-import { Brain, Search, Plus, FileText, Code, Globe, Link2, Tag, Clock, Trash2, Sparkles, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Brain, Search, Plus, FileText, Code, Globe, Link2, Tag, Clock, Trash2, Sparkles, X, RefreshCw } from 'lucide-react';
 import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
@@ -85,9 +85,19 @@ export default function MemoryPage() {
                             <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Memory Bank</h1>
                             <p className="text-sm text-gray-400 mt-1">Your agents&apos; shared knowledge — indexed and searchable</p>
                         </div>
-                        <GlowButton className="h-11 px-5" onClick={() => setShowAdd(true)}>
-                            <Plus size={16} className="mr-2" /> Add Knowledge
-                        </GlowButton>
+                        <div className="flex gap-2">
+                            <GlowButton variant="outline" className="h-11 px-4" onClick={() => {
+                                import('@/lib/memoryEngine').then(({ consolidateMemory }) => {
+                                    const result = consolidateMemory();
+                                    showToast(`Memory consolidated: ${result.merged} merged, ${result.removed} stale removed`, 'success');
+                                });
+                            }}>
+                                <RefreshCw size={14} className="mr-2" /> Consolidate
+                            </GlowButton>
+                            <GlowButton className="h-11 px-5" onClick={() => setShowAdd(true)}>
+                                <Plus size={16} className="mr-2" /> Add Knowledge
+                            </GlowButton>
+                        </div>
                     </div>
 
                     {showAdd && (
