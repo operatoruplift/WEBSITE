@@ -158,7 +158,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
     cta: "GET EARLY ACCESS",
     headline: "Ready to take control of your AI?",
     buttonText: "Get Early Access",
-    url: "https://help.operatoruplift.com"
+    url: "/login"
   },
   contact: {
     tag: "GET IN TOUCH",
