@@ -21,14 +21,14 @@ const GoingLocal: React.FC = () => {
           </p>
         </div>
 
-        <FadeIn delay={200}>
-          <div className="flex flex-col md:flex-row justify-center items-stretch gap-6 max-w-[780px] mx-auto">
+        <FadeIn delay={200} className="w-full block">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[780px] mx-auto">
             {[
               { stat: 'Gemma 4 on-device', label: 'Google, April 2026', highlight: true },
               { stat: '93% retention', label: 'Operator Uplift beta', highlight: false },
               { stat: '40 tok/sec', label: 'On Apple Silicon, no cloud', highlight: false },
             ].map((item, i) => (
-              <div key={i} className={`flex-1 max-w-[240px] p-6 rounded-2xl border text-center transition-all ${item.highlight ? 'border-primary/30 bg-primary/5' : 'border-white/10 bg-white/[0.02]'}`}>
+              <div key={i} className={`p-6 rounded-2xl border text-center transition-all ${item.highlight ? 'border-primary/30 bg-primary/5' : 'border-white/10 bg-white/[0.02]'}`}>
                 <div className={`text-2xl md:text-3xl font-bold mb-2 ${item.highlight ? 'text-primary' : 'text-white'}`}>{item.stat}</div>
                 <div className="text-xs text-gray-500 font-mono uppercase tracking-widest">{item.label}</div>
               </div>

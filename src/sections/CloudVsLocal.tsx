@@ -32,7 +32,7 @@ const CloudVsLocal: React.FC = () => {
           </FadeIn>
         </div>
 
-        <FadeIn delay={200}>
+        <FadeIn delay={200} className="w-full block">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Cloud side */}
             <div className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
