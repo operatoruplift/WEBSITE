@@ -45,8 +45,6 @@ const BuildWithUs: React.FC = () => {
 
                 <a
                 href={data.url}
-                target="_blank"
-                rel="noreferrer"
                 className="inline-flex items-center bg-[#1a1a1a] text-white px-6 py-3 rounded-sm text-xs font-bold tracking-widest uppercase hover:bg-primary transition-colors duration-300"
                 >
                     {data.buttonText} <ChevronRight className="ml-2 w-3 h-3" />
