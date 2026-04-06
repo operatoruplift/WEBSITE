@@ -5,36 +5,36 @@ import { FadeIn } from '@/src/components/Animators';
 
 const faqs = [
   {
-    q: 'What exactly is Operator Uplift?',
-    a: 'It\'s one app that lets you install, run, and manage AI assistants (we call them agents) on your own device. Think of it like an app store for AI, but everything runs locally and your data never leaves your machine.',
+    q: 'What is Operator Uplift?',
+    a: 'A local-first AI agent platform that deploys on your infrastructure. Install AI agents from a marketplace, build custom ones, and orchestrate multi-agent workflows. All data stays encrypted on your machines, never on our servers.',
   },
   {
-    q: 'How is this different from ChatGPT or Claude?',
-    a: 'ChatGPT and Claude run on their servers, and your conversations get stored (and sometimes used for training). Operator Uplift runs on YOUR device. You can use any AI model you want, switch between them freely, and your data stays encrypted on your machine.',
+    q: 'How is this different from ChatGPT Enterprise or Microsoft Copilot?',
+    a: 'Those products run on their cloud and process your data on their servers. Operator Uplift runs on YOUR infrastructure. You control the models, the data, and the permissions. Open-source runtime means full auditability.',
   },
   {
-    q: 'Do I need to be technical to use it?',
-    a: 'Not at all. You can browse the agent marketplace, install agents with one click, and start using them immediately. Building custom agents is optional and designed to be as simple as filling out a form.',
-  },
-  {
-    q: 'Is it free?',
-    a: 'The platform is free during early access. We plan to offer a free tier with basic features and paid plans for power users who need more agents, storage, and priority support.',
+    q: 'What compliance standards do you support?',
+    a: 'The platform is designed for HIPAA, SOC 2, and GDPR readiness. AES-256-GCM encryption at rest, isolated agent sessions, time-limited access keys, and a full audit trail for every action. The runtime is open-source so your security team can audit it.',
   },
   {
     q: 'What AI models does it support?',
-    a: 'Claude (Anthropic), GPT-4.1 (OpenAI), Gemini (Google), Llama (Meta), Grok (xAI), Mistral, and local models through Ollama and LM Studio. You can switch between any of them at any time.',
+    a: 'Claude (Anthropic), GPT-4.1 (OpenAI), Gemini (Google), Llama (Meta), Grok (xAI), Mistral, and local models through Ollama and LM Studio. Switch providers without changing code. Zero vendor lock-in.',
   },
   {
-    q: 'How does the privacy actually work?',
-    a: 'Your data is encrypted with AES-256 (the same standard banks use) and stored locally on your device. Agents only access what you explicitly allow, and that access expires automatically when the task is done. Nothing gets sent to our servers.',
+    q: 'How does deployment work?',
+    a: 'The web dashboard is available immediately. Desktop apps (macOS, Windows, Linux) are in development with macOS beta in Q3 2026. For enterprise, we support on-premise deployment inside your firewall.',
   },
   {
-    q: 'Can I use it on my phone?',
-    a: 'Yes! The web app works on any device with a browser. You can add it to your home screen for an app-like experience. Native mobile apps are in development.',
+    q: 'What are agents and swarms?',
+    a: 'Agents are AI assistants specialized for tasks like code review, research, or data analysis. Swarms are multi-agent teams that collaborate: sequential pipelines, parallel execution, debate topologies, or LLM councils where 5 agents argue and a chairman synthesizes.',
   },
   {
-    q: 'What are "agents" exactly?',
-    a: 'Agents are AI assistants designed for specific tasks. A code review agent analyzes your code. A research agent finds and summarizes information. A writing agent helps with content. You can install pre-built ones from the marketplace or create your own.',
+    q: 'How does pricing work?',
+    a: 'Team ($49/seat/month) for up to 10 agents. Business ($99/seat/month) for unlimited agents with priority support. Enterprise for custom deployments. All plans include AES-256 encryption and compliance features.',
+  },
+  {
+    q: 'Can individual developers use it?',
+    a: 'Absolutely. The platform is built for teams but works great for individual developers and power users. The agent builder, chat, and marketplace are designed to be intuitive without any technical setup.',
   },
 ];
 

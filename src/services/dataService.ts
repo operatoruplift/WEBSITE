@@ -30,29 +30,29 @@ export interface MarketData {
 export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData } = {
   problem: {
     stat: '40+',
-    subline: 'You juggle 40 apps. 40 passwords. 40 places your data gets stored. They don\'t talk to each other, and none of them work for you.',
+    subline: 'Your team uses 40+ SaaS tools. Each one stores your data on their servers, trains on your inputs, and locks you into their ecosystem.',
     pillars: [
-      { id: 'siloed-memory', emoji: '🧠', problem: 'Scattered Tools', solution: 'One Place', description: 'Your notes are in one app, your calendar in another, your files in a third. AI should connect all of it and remember what matters.', href: '#product' },
-      { id: 'exposed-privacy', emoji: '🔓', problem: 'No Privacy', solution: 'Your Device', description: 'Every app you use sends your data to someone else\'s server. We think your data should stay on your device, period.', href: '#product' },
-      { id: 'no-boundaries', emoji: '⚠️', problem: 'No Control', solution: 'Your Rules', description: 'Big tech AI watches everything you do. Operator Uplift puts you in charge. You decide what AI can see and do.', href: '#product' },
+      { id: 'siloed-memory', emoji: '🧠', problem: 'Fragmented Stack', solution: 'Unified Platform', description: 'Your tools don\'t talk to each other. Data lives in silos. AI agents should unify your entire workflow with shared memory across every tool.', href: '#product' },
+      { id: 'exposed-privacy', emoji: '🔓', problem: 'Data Leakage', solution: 'On-Premise', description: 'Every cloud AI tool ingests your proprietary data. Operator Uplift runs on your infrastructure. Nothing leaves your environment.', href: '#product' },
+      { id: 'no-boundaries', emoji: '⚠️', problem: 'No Compliance', solution: 'Audit-Ready', description: 'Cloud AI tools can\'t meet HIPAA, SOC 2, or GDPR requirements. Our runtime is open-source, auditable, and deploys inside your firewall.', href: '#product' },
     ],
-    solution: 'One app that replaces your entire toolkit with AI that actually works for you.',
+    solution: 'One platform that replaces fragmented SaaS with AI agents you actually control.',
   },
   market: {
-    headline: 'The Future is Personal AI.',
-    subhead: 'Millions of people are ready for AI that works for them, not against them. We are building the platform to make that happen.',
+    headline: 'Massive and Growing.',
+    subhead: 'The AI agent market is accelerating. Operator Uplift is positioned at the intersection of AI infrastructure, privacy, and enterprise automation.',
     stats: [
       { value: '$103B', label: 'AI Market by 2028' },
-      { value: '40+', label: 'Apps Replaced' },
-      { value: '100M+', label: 'People Ready' },
+      { value: '40+', label: 'SaaS Tools Replaced' },
+      { value: '100M+', label: 'Enterprise Users' },
       { value: '#1', label: 'Privacy-First AI' },
     ],
   },
   hero: {
     visionTag: "VISION",
-    headline: "Your Life, Automated.",
-    subhead: "One App. Every Agent. All Yours.",
-    description: "AI assistants that work for you, not big tech. They run on your device, respect your privacy, and do exactly what you tell them.",
+    headline: "AI That Runs on Your Terms.",
+    subhead: "One Platform. Every Agent. Your Infrastructure.",
+    description: "Deploy AI agents that run on your infrastructure, not someone else's cloud. Local-first, encrypted, compliant. Built for teams that can't afford to leak data.",
     contractAddress: "",
     contractLabel: "",
     downloads: {
@@ -108,21 +108,21 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
     ]
   },
   security: {
-    tag: "TRUST",
-    headline: "Built for people who care about their privacy.",
-    subhead: "Your data never leaves your device. Your AI works for you, not advertisers. And you can switch providers anytime, no lock-in.",
+    tag: "ENTERPRISE SECURITY",
+    headline: "Enterprise-grade infrastructure, zero cloud dependency.",
+    subhead: "AES-256 encrypted local storage. HIPAA, SOC 2, and GDPR ready. Open-source runtime anyone can audit. Deploys inside your firewall.",
     features: {
       security: {
-        tag: "PRIVATE BY DEFAULT",
-        title: "Your data stays on your device",
-        description: "Everything is encrypted and stored locally. Your conversations, files, and workflows never touch our servers. Agents only see what you share, and only for as long as you allow.",
-        linkText: "How we protect your privacy",
+        tag: "COMPLIANCE READY",
+        title: "Your data never leaves your environment",
+        description: "Everything is AES-256 encrypted and stored on your infrastructure. Agents operate in isolated sessions with time-limited access keys. Full audit trail for every action.",
+        linkText: "Security documentation",
         linkUrl: "https://help.operatoruplift.com/"
       },
       enterprise: {
-        tag: "WORKS WITH EVERYTHING",
-        title: "Use any AI model, any tool",
-        description: "Operator Uplift works with Claude, GPT, Gemini, Llama, and more. Switch models anytime. Connect your favorite apps. No vendor lock-in, ever.",
+        tag: "MODEL AGNOSTIC",
+        title: "Any model, any provider, your choice",
+        description: "Operator Uplift works with Claude, GPT, Gemini, Llama, Grok, and local models via Ollama. Switch providers without changing a line of code. Zero vendor lock-in.",
         linkText: "See all integrations",
         linkUrl: "/integrations"
       }
@@ -154,10 +154,10 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
     ]
   },
   buildWithUs: {
-    tag: "JOIN US",
-    cta: "GET EARLY ACCESS",
-    headline: "Ready to take control of your AI?",
-    buttonText: "Get Early Access",
+    tag: "GET STARTED",
+    cta: "REQUEST ACCESS",
+    headline: "Deploy AI agents on your infrastructure.",
+    buttonText: "Request Access",
     url: "/login"
   },
   contact: {
