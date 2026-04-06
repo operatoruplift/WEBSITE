@@ -10,6 +10,8 @@ import Security from '@/src/sections/Security';
 import DeveloperDocs from '@/src/sections/DeveloperDocs';
 import TractionBar from '@/src/sections/TractionBar';
 import DemoPreview from '@/src/sections/DemoPreview';
+import GoingLocal from '@/src/sections/GoingLocal';
+import CloudVsLocal from '@/src/sections/CloudVsLocal';
 import Comparison from '@/src/sections/Comparison';
 import Compliance from '@/src/sections/Compliance';
 import SocialProof from '@/src/sections/SocialProof';
@@ -27,6 +29,8 @@ export default function Home() {
       <StatsBar />
       <MarketOpportunity />
       <Security />
+      <GoingLocal />
+      <CloudVsLocal />
       <Comparison />
       <Compliance />
       <DeveloperDocs />
