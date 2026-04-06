@@ -11,6 +11,7 @@ import DeveloperDocs from '@/src/sections/DeveloperDocs';
 import TractionBar from '@/src/sections/TractionBar';
 import DemoPreview from '@/src/sections/DemoPreview';
 import Comparison from '@/src/sections/Comparison';
+import Compliance from '@/src/sections/Compliance';
 import SocialProof from '@/src/sections/SocialProof';
 import FAQ from '@/src/sections/FAQ';
 import BuildWithUs from '@/src/sections/BuildWithUs';
@@ -27,6 +28,7 @@ export default function Home() {
       <MarketOpportunity />
       <Security />
       <Comparison />
+      <Compliance />
       <DeveloperDocs />
       <TractionBar />
       <SocialProof />

@@ -81,6 +81,9 @@ const Footer: React.FC = () => {
                     <p className="text-gray-600 text-lg font-mono">
                         {data.copyright}
                     </p>
+                    <a href="https://solana.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-400 transition-colors mt-2 text-sm font-mono">
+                        Powered by Solana
+                    </a>
                     </div>
                 </div>
 
