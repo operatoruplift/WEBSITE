@@ -15,6 +15,7 @@ const features = [
   { name: 'Encrypted memory', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
   { name: 'No vendor lock-in', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
   { name: 'Open source', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'Enterprise compliance (HIPAA/SOC2/GDPR)', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
 ];
 
 const platforms = [
@@ -91,7 +92,7 @@ const Comparison: React.FC = () => {
             </div>
           </div>
           <p className="text-[10px] text-gray-600 text-center mt-4 font-mono">
-            Based on publicly available privacy policies and product features as of March 2026.
+            Based on publicly available privacy policies and product features as of April 2026.
           </p>
         </FadeIn>
       </div>

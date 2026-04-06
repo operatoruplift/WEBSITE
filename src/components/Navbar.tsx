@@ -11,6 +11,8 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
   
   const navItems = [
     { name: 'PRODUCT', targetId: 'product' },
+    { name: 'STORE', targetId: 'store', href: '/store' },
+    { name: 'DEMO', targetId: 'demo', href: '/demo' },
     { name: 'PRIVACY', targetId: 'security' },
     { name: 'BLOG', targetId: 'blog', href: '/blog' },
   ];
