@@ -125,6 +125,24 @@ export interface ContactData {
   options: ContactOption[];
 }
 
+export interface StoreAgent {
+  id: string;
+  name: string;
+  category: string;
+  author: string;
+  description: string;
+  iconType?: 'kanban' | 'globe' | 'terminal' | 'message' | 'check' | 'shield' | 'key' | 'cpu' | 'calendar' | 'brain';
+  cta: string;
+  ctaUrl?: string;
+}
+
+export interface StoreSectionData {
+  tag: string;
+  headline: string;
+  subhead: string;
+  agents: StoreAgent[];
+}
+
 export interface AppData {
   hero: HeroData;
   product: ProductSectionData;
@@ -133,4 +151,5 @@ export interface AppData {
   buildWithUs: BuildWithUsData;
   contact: ContactData;
   footer: FooterData;
+  store: StoreSectionData;
 }

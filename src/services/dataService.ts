@@ -163,6 +163,58 @@ export const APP_CONTENT: AppData = {
       }
     ]
   },
+  store: {
+    tag: "AGENT STORE",
+    headline: "Agents that run on your machine.",
+    subhead: "Every agent in the store is fully activated. No waitlists, no coming-soon gates — install and run locally today.",
+    agents: [
+      {
+        id: 'demo-agent',
+        name: 'Demo Agent',
+        category: 'General',
+        author: 'Operator Uplift',
+        description: 'The reference conversational agent. Runs local models via Ollama, with full session-based isolation and encrypted memory. Use this to see how Operator Uplift feels before installing specialized agents.',
+        iconType: 'message',
+        cta: 'Install'
+      },
+      {
+        id: 'calendar-agent',
+        name: 'Calendar Agent',
+        category: 'Productivity',
+        author: 'Operator Uplift',
+        description: 'Schedules meetings, resolves conflicts, and drafts invites against your Google Calendar through time-limited access keys. Keys can be revoked in one click from the Agentic Vault.',
+        iconType: 'calendar',
+        cta: 'Install'
+      },
+      {
+        id: 'x402-agent',
+        name: 'x402 Web3 Agent',
+        category: 'Web3',
+        author: 'Operator Uplift',
+        description: 'Speaks the x402 / M2M payment protocol for paid API access and on-chain actions. Runs in a fully isolated subprocess; wallet keys never leave the sandbox.',
+        iconType: 'globe',
+        cta: 'Install'
+      },
+      {
+        id: 'memory-agent',
+        name: 'Memory Agent',
+        category: 'Core',
+        author: 'Operator Uplift',
+        description: 'Manages the 3-layer memory engine — short-term buffer, long-term vector store, and cross-agent shared context. All entries encrypted at rest with AES-256-GCM.',
+        iconType: 'brain',
+        cta: 'Install'
+      },
+      {
+        id: 'mcp-agent',
+        name: 'MCP Tool Agent',
+        category: 'Developer',
+        author: 'Operator Uplift',
+        description: 'Connects any MCP-compatible tool server (filesystem, GitHub, Slack, custom servers) as first-class agent capabilities. Tools are gated by the permission rules engine.',
+        iconType: 'terminal',
+        cta: 'Install'
+      }
+    ]
+  },
   footer: {
     tag: "FOOTER",
     copyright: "@Operator Uplift 2025. All rights reserved.",
