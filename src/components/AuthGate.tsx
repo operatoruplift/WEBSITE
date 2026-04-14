@@ -1,29 +1,42 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { Logo } from '@/src/components/Icons';
 
-/**
- * AuthGate — wraps dashboard pages. Checks:
- * 1. Privy authentication (Google / GitHub / Wallet) — if Privy is configured
- * 2. Access tier (early_access granted via Solana Pay, approved waitlist, or legacy token)
- *
- * Falls back to localStorage token check if Privy is not configured (no NEXT_PUBLIC_PRIVY_APP_ID).
- */
 export function AuthGate({ children }: { children: React.ReactNode }) {
     const [checked, setChecked] = useState(false);
     const [hasAccess, setHasAccess] = useState(false);
 
-    useEffect(() => {
+    const checkSession = useCallback(() => {
         const token = localStorage.getItem('token');
         const earlyAccess = localStorage.getItem('early_access');
-
-        if (token || earlyAccess === 'granted') {
-            setHasAccess(true);
-        }
-        setChecked(true);
+        return !!(token || earlyAccess === 'granted');
     }, []);
+
+    useEffect(() => {
+        setHasAccess(checkSession());
+        setChecked(true);
+
+        // Re-check if another tab logs out (storage event)
+        const onStorage = (e: StorageEvent) => {
+            if (e.key === 'token' || e.key === 'early_access') {
+                const stillValid = checkSession();
+                if (!stillValid) setHasAccess(false);
+            }
+        };
+        window.addEventListener('storage', onStorage);
+
+        // Periodic session check every 60s (catches Privy expiry)
+        const interval = setInterval(() => {
+            if (!checkSession()) setHasAccess(false);
+        }, 60_000);
+
+        return () => {
+            window.removeEventListener('storage', onStorage);
+            clearInterval(interval);
+        };
+    }, [checkSession]);
 
     if (!checked) {
         return (

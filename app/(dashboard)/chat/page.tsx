@@ -269,15 +269,15 @@ export default function ChatPage() {
                         <div className="flex items-center gap-3">
                             <div className="flex gap-1 p-1 bg-white/5 rounded-xl border border-white/5">
                                 {AGENTS.map(agent => { const Icon = agent.icon; return (
-                                    <button key={agent.id} onClick={() => setSelectedAgent(agent.id)} className={`px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-widest flex items-center gap-1.5 transition-all ${selectedAgent === agent.id ? 'bg-[#E77630]/20 text-[#E77630] border border-[#E77630]/30' : 'text-gray-500 hover:text-white'}`}>
-                                        <Icon size={10} /> {agent.label.split(' ')[0]}
+                                    <button key={agent.id} onClick={() => setSelectedAgent(agent.id)} className={`px-2 sm:px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-widest flex items-center gap-1.5 transition-all ${selectedAgent === agent.id ? 'bg-[#E77630]/20 text-[#E77630] border border-[#E77630]/30' : 'text-gray-500 hover:text-white'}`}>
+                                        <Icon size={10} /> <span className="hidden sm:inline">{agent.label.split(' ')[0]}</span>
                                     </button>
                                 ); })}
                             </div>
                         </div>
                         <div className="relative">
                             <button onClick={() => setShowModelPicker(!showModelPicker)} className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm ${activeModel.color}`}>
-                                <span className="font-bold text-xs">{activeModel.label}</span>
+                                <span className="font-bold text-xs truncate max-w-[80px] sm:max-w-none">{activeModel.label}</span>
                                 <Badge variant="default" className={`text-[8px] font-mono px-1.5 py-0 ${activeModel.color}`}>{activeModel.badge}</Badge>
                                 <ChevronDown size={14} className={`text-gray-500 transition-transform ${showModelPicker ? 'rotate-180' : ''}`} />
                             </button>
