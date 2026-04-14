@@ -40,12 +40,31 @@ function renderMarkdown(text: string): React.ReactNode {
     let codeLines: string[] = [];
     let codeLang = '';
     const elements: React.ReactNode[] = [];
+
+    const flushCodeBlock = (key: string) => {
+        if (codeLines.length > 0 || inCodeBlock) {
+            elements.push(
+                <div key={key} className="my-3 rounded-xl overflow-hidden border border-white/10 bg-black/60">
+                    {codeLang && <div className="px-4 py-1.5 bg-white/5 border-b border-white/10 text-[10px] font-mono text-gray-500 uppercase tracking-widest">{codeLang}</div>}
+                    <pre className="p-4 overflow-x-auto text-sm text-green-300 font-mono leading-relaxed"><code>{codeLines.join('\n')}</code></pre>
+                </div>
+            );
+        }
+        codeLines = []; codeLang = ''; inCodeBlock = false;
+    };
+
+    // Match ``` or ~~~ fences, with optional leading whitespace
+    const isFence = (line: string) => /^\s*(```|~~~)/.test(line);
+    const getFenceLang = (line: string) => line.replace(/^\s*(```|~~~)\s*/, '').trim();
+
     lines.forEach((line, i) => {
-        if (line.startsWith('```')) {
+        if (isFence(line)) {
             if (inCodeBlock) {
-                elements.push(<div key={`code-${i}`} className="my-3 rounded-xl overflow-hidden border border-white/10 bg-black/60">{codeLang && <div className="px-4 py-1.5 bg-white/5 border-b border-white/10 text-[10px] font-mono text-gray-500 uppercase tracking-widest">{codeLang}</div>}<pre className="p-4 overflow-x-auto text-sm text-green-300 font-mono leading-relaxed"><code>{codeLines.join('\n')}</code></pre></div>);
-                codeLines = []; codeLang = ''; inCodeBlock = false;
-            } else { codeLang = line.slice(3).trim(); inCodeBlock = true; }
+                flushCodeBlock(`code-${i}`);
+            } else {
+                codeLang = getFenceLang(line);
+                inCodeBlock = true;
+            }
             return;
         }
         if (inCodeBlock) { codeLines.push(line); return; }
@@ -55,6 +74,10 @@ function renderMarkdown(text: string): React.ReactNode {
         else if (line.trim() === '') elements.push(<div key={i} className="h-2" />);
         else elements.push(<p key={i} className="text-[15px] leading-relaxed" dangerouslySetInnerHTML={{ __html: inlineMarkdown(line) }} />);
     });
+
+    // Flush any unclosed code block (truncated stream, missing closing fence)
+    if (inCodeBlock) flushCodeBlock('code-tail');
+
     return <div className="space-y-1">{elements}</div>;
 }
 
@@ -242,7 +265,7 @@ export default function ChatPage() {
                     </div>
                 </aside>
                 <main className="flex-1 flex flex-col min-w-0 relative z-10">
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-black/40 backdrop-blur-sm shrink-0">
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-black/40 backdrop-blur-sm shrink-0 sticky top-0 z-50">
                         <div className="flex items-center gap-3">
                             <div className="flex gap-1 p-1 bg-white/5 rounded-xl border border-white/5">
                                 {AGENTS.map(agent => { const Icon = agent.icon; return (
@@ -271,7 +294,7 @@ export default function ChatPage() {
                     <div className="flex-1 overflow-y-auto scrollbar-none" onClick={() => setShowModelPicker(false)}>
                         {!activeSession || activeSession.messages.length === 0 ? (
                             <div className="h-full flex flex-col items-center justify-center p-8">
-                                <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}><Sparkles size={36} className="text-white" /></div>
+                                <div className="w-20 h-20 rounded-xl flex items-center justify-center mb-6 bg-primary/20 border border-primary/30"><Sparkles size={36} className="text-primary" /></div>
                                 <h1 className="text-3xl font-medium tracking-tight text-white mb-2 text-center">How can I help you?</h1>
                                 <p className="text-gray-500 text-sm text-center mb-8 max-w-md">Powered by <span className={activeModel.color + ' font-bold'}>{activeModel.label}</span> · Ask me anything</p>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl w-full">
@@ -288,10 +311,10 @@ export default function ChatPage() {
                             <div className="p-4 md:p-8 space-y-8 max-w-4xl mx-auto">
                                 {activeSession.messages.map((msg, index) => (
                                     <div key={msg.id} className={`flex gap-4 animate-fadeInUp ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`} style={{ animationDelay: `${Math.min(index * 30, 300)}ms` }}>
-                                        {msg.role === 'assistant' && <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}><Bot size={20} className="text-white" /></div>}
+                                        {msg.role === 'assistant' && <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-primary/20 border border-primary/30"><Bot size={20} className="text-primary" /></div>}
                                         <div className={`group relative max-w-[80%] md:max-w-[72%] ${msg.role === 'user' ? 'order-first' : ''}`}>
                                             {msg.role === 'assistant' && msg.model && <p className="text-[10px] font-mono text-gray-600 mb-1 ml-1">{MODELS.find(m => m.id === msg.model)?.label || msg.model}</p>}
-                                            <div className={`p-5 rounded-2xl ${msg.role === 'user' ? 'bg-gradient-to-br from-[#E77630] to-[#F59E0B] text-white rounded-br-md shadow-[0_0_20px_rgba(231,118,48,0.2)]' : 'bg-white/5 border border-white/10 text-white rounded-bl-md'}`}>
+                                            <div className={`px-4 py-3 rounded-xl text-sm ${msg.role === 'user' ? 'bg-primary/20 text-white rounded-br-md' : 'bg-white/5 border border-white/5 text-gray-200 rounded-bl-md'}`}>
                                                 {msg.role === 'assistant' ? renderMarkdown(msg.content) : <p className="text-[15px] leading-relaxed whitespace-pre-wrap">{msg.content}</p>}
                                             </div>
                                             {msg.role === 'assistant' && <button onClick={() => copyMessage(msg.content, msg.id)} className="absolute -bottom-3 right-2 opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-white/10 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">{copiedId === msg.id ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}{copiedId === msg.id ? 'Copied' : 'Copy'}</button>}
@@ -299,7 +322,7 @@ export default function ChatPage() {
                                         {msg.role === 'user' && <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center shrink-0"><User size={20} className="text-white" /></div>}
                                     </div>
                                 ))}
-                                {isLoading && <div className="flex gap-4 animate-fadeInUp"><div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}><Bot size={20} className="text-white" /></div><div className="bg-white/5 border border-white/10 rounded-2xl rounded-bl-md p-5"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#E77630] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{activeModel.label} is thinking...</span></div></div></div>}
+                                {isLoading && <div className="flex gap-4 animate-fadeInUp"><div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-primary/20 border border-primary/30"><Bot size={20} className="text-primary" /></div><div className="bg-white/5 border border-white/5 rounded-xl rounded-bl-md px-4 py-3"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#E77630] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{activeModel.label} is thinking...</span></div></div></div>}
                                 <div ref={messagesEndRef} />
                             </div>
                         )}
@@ -308,12 +331,15 @@ export default function ChatPage() {
                         <div className="max-w-4xl mx-auto">
                             <div className="flex items-end gap-3 p-3 rounded-2xl bg-white/5 border border-white/10 focus-within:border-[#E77630]/40 transition-all">
                                 <button onClick={createNewSession} aria-label="New chat" className="p-2 rounded-xl text-gray-500 hover:text-white hover:bg-white/10 transition-all md:hidden shrink-0"><Plus size={20} /></button>
+                                {/* TODO: Agent selector — load installed agents from localStorage('installed-agents') + localStorage('custom-agents'),
+                                   show a dropdown to pick an agent whose system prompt seeds the conversation.
+                                   For now, the agent personas (General/Code/Research) in the top bar serve this role. */}
                                 <button onClick={() => showToast('File attachments coming soon', 'info')} aria-label="Attach file" className="p-2 rounded-xl text-gray-600 hover:text-gray-400 hover:bg-white/5 transition-all shrink-0"><Paperclip size={18} /></button>
                                 <textarea ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyDown} placeholder={`Message ${activeModel.label}...`} aria-label="Chat message input" rows={1}
                                     className="flex-1 bg-transparent text-white placeholder-gray-600 focus:outline-none resize-none text-[15px] leading-relaxed min-h-[40px] max-h-40" style={{ height: 'auto' }}
                                     onInput={e => { const t = e.currentTarget; t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight, 160) + 'px'; }} />
                                 <button onClick={() => showToast('Voice input coming soon', 'info')} aria-label="Voice input" className="p-2 rounded-xl text-gray-600 hover:text-gray-400 hover:bg-white/5 transition-all shrink-0"><Mic size={18} /></button>
-                                <button onClick={handleSend} disabled={!input.trim() || isLoading} className="w-10 h-10 rounded-xl flex items-center justify-center transition-all shrink-0 disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(231,118,48,0.3)] hover:shadow-[0_0_20px_rgba(231,118,48,0.5)]" style={{ background: 'linear-gradient(135deg, #E77630, #F59E0B)' }}>
+                                <button onClick={handleSend} disabled={!input.trim() || isLoading} className="w-10 h-10 rounded-xl flex items-center justify-center transition-all shrink-0 disabled:opacity-40 disabled:cursor-not-allowed bg-primary hover:bg-primary/90 shadow-[0_0_15px_rgba(231,118,48,0.3)]">
                                     {isLoading ? <Loader2 size={18} className="animate-spin text-white" /> : <Send size={18} className="text-white" />}
                                 </button>
                             </div>

@@ -111,7 +111,15 @@ export default function IntegrationsPage() {
     const handleConnect = (id: string, name: string) => {
         // Real OAuth flow for Google integrations
         if (id === 'gmail' || id === 'gcal') {
-            const userId = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!).id || 'demo-user' : 'demo-user';
+            // Guard: require a real Privy session, not a demo user
+            const userRaw = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            const userId = userRaw ? JSON.parse(userRaw).id : null;
+            if (!token || token === 'demo-token' || !userId || userId === 'demo-user' || userId === 'anon') {
+                showToast('Sign in with Google, GitHub, or a wallet first to connect.', 'warning');
+                window.location.href = '/login';
+                return;
+            }
             window.location.href = `/api/integrations/google/connect?user_id=${encodeURIComponent(userId)}`;
             return;
         }

@@ -56,7 +56,7 @@ export default function OnboardingPage() {
         }
 
         localStorage.setItem('onboarded', 'true');
-        router.push('/app');
+        router.push('/chat');
     };
 
     const steps = [

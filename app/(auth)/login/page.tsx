@@ -41,7 +41,7 @@ export default function LoginPage() {
         const token = localStorage.getItem('token');
         const earlyAccess = localStorage.getItem('early_access');
         if (token || earlyAccess === 'granted') {
-            router.push('/app');
+            router.push('/chat');
             return;
         }
 
@@ -72,7 +72,7 @@ export default function LoginPage() {
                 plan: localStorage.getItem('early_access') === 'granted' ? 'Early Access' : 'Beta',
                 id: user.id,
             }));
-            router.push('/app');
+            router.push('/chat');
             return;
         }
     }, [authenticated, user, router]);
@@ -134,7 +134,7 @@ export default function LoginPage() {
                     id: user?.id || 'anon',
                 }));
                 setView('pay-success');
-                setTimeout(() => router.push('/app'), 1500);
+                setTimeout(() => router.push('/chat'), 1500);
             } else {
                 setError(data.error || 'Payment not confirmed yet. Please wait and try again.');
             }
