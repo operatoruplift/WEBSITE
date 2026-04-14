@@ -57,16 +57,23 @@ export async function findFreeSlots(
     durationMin: number = 30,
     daysAhead: number = 7,
     maxSlots: number = 5,
+    startDayOffset: number = 0,
 ): Promise<FreeSlot[]> {
     const auth = await getAuthenticatedClient(userId);
     const cal = google.calendar({ version: 'v3', auth });
 
     const now = new Date();
-    const until = new Date(now.getTime() + daysAhead * 86400_000);
+    // Apply start offset (0 = today, 1 = tomorrow, etc.)
+    const searchStart = new Date(now);
+    if (startDayOffset > 0) {
+        searchStart.setDate(searchStart.getDate() + startDayOffset);
+        searchStart.setHours(9, 0, 0, 0); // Start at 9 AM on the offset day
+    }
+    const until = new Date(searchStart.getTime() + daysAhead * 86400_000);
 
     const busy = await cal.freebusy.query({
         requestBody: {
-            timeMin: now.toISOString(),
+            timeMin: searchStart.toISOString(),
             timeMax: until.toISOString(),
             items: [{ id: 'primary' }],
         },
@@ -82,7 +89,7 @@ export async function findFreeSlots(
     const durationMs = durationMin * 60_000;
 
     for (let day = 0; day < daysAhead && slots.length < maxSlots; day++) {
-        const dayStart = new Date(now);
+        const dayStart = new Date(searchStart);
         dayStart.setDate(dayStart.getDate() + day);
         dayStart.setHours(9, 0, 0, 0);
         if (dayStart.getTime() < now.getTime()) dayStart.setTime(now.getTime());

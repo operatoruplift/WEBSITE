@@ -89,7 +89,7 @@ export async function executeToolCall(
                 tool: call.tool,
                 action: call.action,
                 success: false,
-                error: data.error || `HTTP ${res.status}`,
+                error: humanizeToolError(data.error, call.tool, res.status),
             };
         }
 
@@ -109,6 +109,24 @@ export async function executeToolCall(
             error: err instanceof Error ? err.message : 'Network error',
         };
     }
+}
+
+/** Map raw API error codes to clean user-facing messages. */
+function humanizeToolError(rawError: string | undefined, tool: string, status: number): string {
+    const code = rawError || '';
+    if (code === 'google_not_connected' || status === 403)
+        return `Google ${tool === 'calendar' ? 'Calendar' : 'Gmail'} not connected. Go to Integrations to connect your Google account.`;
+    if (code === 'ANTHROPIC_API_KEY not configured' || code === 'OPENAI_API_KEY not configured')
+        return 'API key missing. Add your provider key in Settings → API Keys.';
+    if (status === 401)
+        return 'Session expired. Please sign in again.';
+    if (status === 429)
+        return 'Rate limited. Please wait a moment and try again.';
+    if (status === 503)
+        return 'Service temporarily unavailable. Check your connection and try again.';
+    if (code.includes('refresh token') || code.includes('token has been expired'))
+        return 'Google session expired. Reconnect your Google account in Integrations.';
+    return code || `Something went wrong (HTTP ${status}). Please try again.`;
 }
 
 /** Format a tool result as markdown for display in chat / swarm output. */
@@ -180,7 +198,7 @@ export function getToolSystemPrompt(): string {
 You have access to the user's Google Calendar and Gmail. When you need to take an action, emit a tool call using this exact format (the system will intercept it and ask the user for approval):
 
 <tool_use>
-{"tool": "calendar", "action": "free_slots", "params": {"duration_minutes": 30, "days_ahead": 7}}
+{"tool": "calendar", "action": "free_slots", "params": {"duration_minutes": 30, "days_ahead": 7, "start_day_offset": 0}}
 </tool_use>
 
 <tool_use>
