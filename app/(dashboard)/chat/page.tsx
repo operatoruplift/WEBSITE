@@ -9,8 +9,9 @@ import { useToast } from '@/src/components/ui/Toast';
 import { hasToolCalls, parseToolCalls, stripToolBlocks, formatToolResult, getToolSystemPrompt } from '@/lib/toolCalls';
 import type { ToolCall, ToolResult } from '@/lib/toolCalls';
 import { ToolApprovalModal } from '@/src/components/ui/ToolApprovalModal';
+import { runCouncil, shouldUseCouncil, type CouncilResult } from '@/lib/council';
 
-interface Message { id: string; role: 'user' | 'assistant'; content: string; timestamp: Date; model?: string; }
+interface Message { id: string; role: 'user' | 'assistant'; content: string; timestamp: Date; model?: string; councilTranscript?: CouncilResult['transcript']; }
 interface ChatSession { id: string; title: string; messages: Message[]; createdAt: Date; model: string; }
 
 const MODELS = [
@@ -102,6 +103,8 @@ export default function ChatPage() {
     const [sidebarSearch, setSidebarSearch] = useState('');
     const [pendingToolCall, setPendingToolCall] = useState<ToolCall | null>(null);
     const toolCallResolveRef = useRef<((result: ToolResult | null) => void) | null>(null);
+    const [councilProcessing, setCouncilProcessing] = useState(false);
+    const [expandedCouncil, setExpandedCouncil] = useState<string | null>(null); // message ID to show transcript
 
     const getChatUserId = (): string => {
         try { const u = localStorage.getItem('user'); if (u) return JSON.parse(u).id || 'demo-user'; } catch {} return 'demo-user';
@@ -151,6 +154,78 @@ export default function ChatPage() {
 
         const toolPrompt = getToolSystemPrompt();
         const baseSystemPrompt = `You are a helpful AI assistant on the Operator Uplift platform. You are concise, accurate, and helpful.${memoryContext}${toolPrompt}`;
+
+        // ── Council routing: route substantive messages through 5-agent debate ──
+        if (shouldUseCouncil(userMessage.content)) {
+            setCouncilProcessing(true);
+            const councilMsgId = `council-${Date.now()}`;
+
+            // Show "Council processing..." placeholder
+            setSessions(prev => prev.map(s => s.id === sessionId ? {
+                ...s,
+                messages: [...s.messages, { id: councilMsgId, role: 'assistant' as const, content: '*Council processing — 5 agents debating...*', timestamp: new Date(), model: 'LLM Council' }],
+            } : s));
+
+            try {
+                const history = (currentSession?.messages || []).map(m => ({ role: m.role, content: m.content }));
+                const result = await runCouncil(userMessage.content, history, toolPrompt);
+
+                // Update message with Chairman's synthesis + attach transcript
+                setSessions(prev => prev.map(s => s.id === sessionId ? {
+                    ...s,
+                    messages: s.messages.map(m => m.id === councilMsgId ? {
+                        ...m,
+                        content: result.synthesis,
+                        councilTranscript: result.transcript,
+                    } : m),
+                } : s));
+
+                // Check if Chairman's synthesis contains tool calls
+                if (hasToolCalls(result.synthesis)) {
+                    const calls = parseToolCalls(result.synthesis);
+                    const cleanContent = stripToolBlocks(result.synthesis);
+
+                    setSessions(prev => prev.map(s => s.id === sessionId ? {
+                        ...s,
+                        messages: s.messages.map(m => m.id === councilMsgId ? {
+                            ...m,
+                            content: cleanContent + '\n\n*Executing tool...*',
+                        } : m),
+                    } : s));
+
+                    let toolResults = '';
+                    for (const call of calls) {
+                        const toolResult = await requestChatToolApproval(call);
+                        if (toolResult) {
+                            toolResults += '\n\n' + formatToolResult(toolResult);
+                        } else {
+                            toolResults += `\n\n**Tool Denied** — ${call.tool}.${call.action} was not approved.`;
+                        }
+                    }
+
+                    setSessions(prev => prev.map(s => s.id === sessionId ? {
+                        ...s,
+                        messages: s.messages.map(m => m.id === councilMsgId ? {
+                            ...m,
+                            content: cleanContent + toolResults,
+                            councilTranscript: result.transcript,
+                        } : m),
+                    } : s));
+                }
+            } catch {
+                const content = getFallbackResponse(userMessage.content);
+                setSessions(prev => prev.map(s => s.id === sessionId ? {
+                    ...s,
+                    messages: s.messages.map(m => m.id === councilMsgId ? { ...m, content } : m),
+                } : s));
+            } finally {
+                setCouncilProcessing(false);
+                setIsLoading(false);
+            }
+            return; // Council handled this message — skip the direct LLM path
+        }
+
+        // ── Direct LLM path (short messages, greetings, follow-ups) ──
 
         // Tool-call continuation loop: keeps calling the LLM until it returns a
         // final response with no <tool_use> blocks. Max 6 iterations to prevent
@@ -352,12 +427,36 @@ export default function ChatPage() {
                                             <div className={`px-4 py-3 rounded-xl text-sm ${msg.role === 'user' ? 'bg-primary/20 text-white rounded-br-md' : 'bg-white/5 border border-white/5 text-gray-200 rounded-bl-md'}`}>
                                                 {msg.role === 'assistant' ? renderMarkdown(msg.content) : <p className="text-[15px] leading-relaxed whitespace-pre-wrap">{msg.content}</p>}
                                             </div>
-                                            {msg.role === 'assistant' && <button onClick={() => copyMessage(msg.content, msg.id)} className="absolute -bottom-3 right-2 opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-white/5 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">{copiedId === msg.id ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}{copiedId === msg.id ? 'Copied' : 'Copy'}</button>}
+                                            {msg.role === 'assistant' && (
+                                                <div className="flex items-center gap-2 mt-1">
+                                                    <button onClick={() => copyMessage(msg.content, msg.id)} className="opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-white/5 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">{copiedId === msg.id ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}{copiedId === msg.id ? 'Copied' : 'Copy'}</button>
+                                                    {msg.councilTranscript && (
+                                                        <button onClick={() => setExpandedCouncil(expandedCouncil === msg.id ? null : msg.id)} className="opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-white/5 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">
+                                                            <Brain size={12} className="text-[#E77630]" /> {expandedCouncil === msg.id ? 'Hide' : 'View'} Council
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            )}
+                                            {/* Council reasoning transcript */}
+                                            {msg.councilTranscript && expandedCouncil === msg.id && (
+                                                <div className="mt-3 p-3 rounded-lg bg-black/40 border border-white/5 space-y-2">
+                                                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">Council Debate Transcript</p>
+                                                    {msg.councilTranscript.map((agent) => (
+                                                        <div key={agent.agentId} className="p-2 rounded bg-white/[0.03] border border-white/5">
+                                                            <div className="flex items-center gap-2 mb-1">
+                                                                <span className="text-[10px] font-bold text-[#E77630]">{agent.agentName}</span>
+                                                                <span className="text-[9px] text-gray-600 font-mono">{agent.durationMs}ms</span>
+                                                            </div>
+                                                            <p className="text-xs text-gray-400 leading-relaxed">{agent.output}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
                                         {msg.role === 'user' && <div className="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center shrink-0"><User size={16} className="text-white" /></div>}
                                     </div>
                                 ))}
-                                {isLoading && <div className="flex gap-4 animate-fadeInUp"><div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 bg-white/5"><Bot size={16} className="text-gray-400" /></div><div className="bg-white/5 border border-white/5 rounded-xl rounded-bl-md px-4 py-3"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#E77630] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{activeModel.label} is thinking...</span></div></div></div>}
+                                {isLoading && <div className="flex gap-4 animate-fadeInUp"><div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 bg-white/5">{councilProcessing ? <Brain size={16} className="text-[#E77630] animate-pulse" /> : <Bot size={16} className="text-gray-400" />}</div><div className="bg-white/5 border border-white/5 rounded-xl rounded-bl-md px-4 py-3"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#E77630] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{councilProcessing ? '5 agents debating...' : `${activeModel.label} is thinking...`}</span></div></div></div>}
                                 <div ref={messagesEndRef} />
                             </div>
                         )}

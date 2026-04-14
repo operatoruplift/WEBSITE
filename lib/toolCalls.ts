@@ -8,7 +8,7 @@
 
 export interface ToolCall {
     id: string;
-    tool: 'calendar' | 'gmail';
+    tool: 'calendar' | 'gmail' | 'x402';
     action: string;
     params: Record<string, unknown>;
     rawBlock: string;
@@ -68,7 +68,9 @@ export async function executeToolCall(
 ): Promise<ToolResult> {
     const endpoint = call.tool === 'calendar'
         ? '/api/tools/calendar'
-        : '/api/tools/gmail';
+        : call.tool === 'gmail'
+            ? '/api/tools/gmail'
+            : '/api/tools/x402';
 
     try {
         // Auto-inject the client's local date for calendar calls so timezone
