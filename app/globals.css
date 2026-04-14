@@ -20,7 +20,7 @@
   }
 
   ::selection {
-    background: var(--color-primary-muted);
+    background: rgba(231, 118, 48, 0.4);
     color: white;
   }
 }
