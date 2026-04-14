@@ -279,6 +279,17 @@ export default function SwarmPage() {
                         </GlowButton>
                     </div>
 
+                    {/* API key banner — always visible, dismissed when a real response comes back */}
+                    {swarms.every(s => s.runs === 0) && (
+                        <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 animate-fadeInUp">
+                            <Zap size={16} className="text-amber-400 shrink-0" />
+                            <p className="text-sm text-gray-300 flex-1">
+                                <span className="text-amber-400 font-semibold">Demo mode</span> — swarm agents return placeholder responses until an API key is configured. Add your Anthropic API key in{' '}
+                                <a href="/settings" className="text-[#E77630] hover:underline font-medium">Settings → API Keys</a> to enable real multi-agent execution.
+                            </p>
+                        </div>
+                    )}
+
                     {/* Create Modal */}
                     {showCreate && (
                         <Card variant="glass" className="border-primary/20">
