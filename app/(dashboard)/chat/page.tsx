@@ -44,9 +44,9 @@ function renderMarkdown(text: string): React.ReactNode {
     const flushCodeBlock = (key: string) => {
         if (codeLines.length > 0 || inCodeBlock) {
             elements.push(
-                <div key={key} className="my-3 rounded-xl overflow-hidden border border-white/10 bg-black/60">
-                    {codeLang && <div className="px-4 py-1.5 bg-white/5 border-b border-white/10 text-[10px] font-mono text-gray-500 uppercase tracking-widest">{codeLang}</div>}
-                    <pre className="p-4 overflow-x-auto text-sm text-green-300 font-mono leading-relaxed"><code>{codeLines.join('\n')}</code></pre>
+                <div key={key} className="my-3 rounded-lg overflow-hidden border border-white/5 bg-black/40">
+                    {codeLang && <div className="px-3 py-1.5 bg-white/5 border-b border-white/5 text-[10px] font-mono text-gray-500 uppercase tracking-widest">{codeLang}</div>}
+                    <pre className="p-3 overflow-x-auto text-xs text-[#E77630] font-mono leading-relaxed"><code>{codeLines.join('\n')}</code></pre>
                 </div>
             );
         }
@@ -87,7 +87,7 @@ function escapeHtml(text: string): string {
 
 function inlineMarkdown(text: string): string {
     const safe = escapeHtml(text);
-    return safe.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>').replace(/`(.+?)`/g, '<code class="px-1.5 py-0.5 rounded bg-black/60 text-green-300 font-mono text-[13px] border border-white/10">$1</code>');
+    return safe.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>').replace(/`(.+?)`/g, '<code class="px-1.5 py-0.5 rounded bg-black/60 text-green-300 font-mono text-[13px] border border-white/5">$1</code>');
 }
 
 export default function ChatPage() {
@@ -311,12 +311,12 @@ export default function ChatPage() {
                             </div>
                         </div>
                         <div className="relative">
-                            <button onClick={() => setShowModelPicker(!showModelPicker)} className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm ${activeModel.color}`}>
+                            <button onClick={() => setShowModelPicker(!showModelPicker)} className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all text-sm ${activeModel.color}`}>
                                 <span className="font-bold text-xs truncate max-w-[80px] sm:max-w-none">{activeModel.label}</span>
                                 <Badge variant="default" className={`text-[8px] font-mono px-1.5 py-0 ${activeModel.color}`}>{activeModel.badge}</Badge>
                                 <ChevronDown size={14} className={`text-gray-500 transition-transform ${showModelPicker ? 'rotate-180' : ''}`} />
                             </button>
-                            {showModelPicker && <div className="absolute top-full right-0 mt-2 w-56 bg-[#0c0c0c] border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-none" style={{ isolation: 'isolate' }}>
+                            {showModelPicker && <div className="absolute top-full right-0 mt-2 w-56 bg-[#0c0c0c] border border-white/5 rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-none" style={{ isolation: 'isolate' }}>
                                 {MODELS.map(model => (
                                     <button key={model.id} onClick={() => { setSelectedModel(model.id); setShowModelPicker(false); }} className={`w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left ${selectedModel === model.id ? 'bg-white/5' : ''}`}>
                                         <div><p className={`text-sm font-bold ${model.color}`}>{model.label}</p><p className="text-[10px] text-gray-600 font-mono">{model.provider}</p></div>
@@ -329,7 +329,7 @@ export default function ChatPage() {
                     <div className="flex-1 overflow-y-auto scrollbar-none" onClick={() => setShowModelPicker(false)}>
                         {!activeSession || activeSession.messages.length === 0 ? (
                             <div className="h-full flex flex-col items-center justify-center p-8">
-                                <div className="w-20 h-20 rounded-xl flex items-center justify-center mb-6 bg-primary/20 border border-primary/30"><Sparkles size={36} className="text-primary" /></div>
+                                <div className="w-16 h-16 rounded-lg flex items-center justify-center mb-6 bg-primary/20"><Sparkles size={28} className="text-primary" /></div>
                                 <h1 className="text-3xl font-medium tracking-tight text-white mb-2 text-center">How can I help you?</h1>
                                 <p className="text-gray-500 text-sm text-center mb-8 max-w-md">Powered by <span className={activeModel.color + ' font-bold'}>{activeModel.label}</span> · Ask me anything</p>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl w-full">
@@ -346,25 +346,25 @@ export default function ChatPage() {
                             <div className="p-4 md:p-8 space-y-8 max-w-4xl mx-auto">
                                 {activeSession.messages.map((msg, index) => (
                                     <div key={msg.id} className={`flex gap-4 animate-fadeInUp ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`} style={{ animationDelay: `${Math.min(index * 30, 300)}ms` }}>
-                                        {msg.role === 'assistant' && <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-primary/20 border border-primary/30"><Bot size={20} className="text-primary" /></div>}
+                                        {msg.role === 'assistant' && <div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 bg-white/5"><Bot size={16} className="text-gray-400" /></div>}
                                         <div className={`group relative max-w-[80%] md:max-w-[72%] ${msg.role === 'user' ? 'order-first' : ''}`}>
                                             {msg.role === 'assistant' && msg.model && <p className="text-[10px] font-mono text-gray-600 mb-1 ml-1">{MODELS.find(m => m.id === msg.model)?.label || msg.model}</p>}
                                             <div className={`px-4 py-3 rounded-xl text-sm ${msg.role === 'user' ? 'bg-primary/20 text-white rounded-br-md' : 'bg-white/5 border border-white/5 text-gray-200 rounded-bl-md'}`}>
                                                 {msg.role === 'assistant' ? renderMarkdown(msg.content) : <p className="text-[15px] leading-relaxed whitespace-pre-wrap">{msg.content}</p>}
                                             </div>
-                                            {msg.role === 'assistant' && <button onClick={() => copyMessage(msg.content, msg.id)} className="absolute -bottom-3 right-2 opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-white/10 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">{copiedId === msg.id ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}{copiedId === msg.id ? 'Copied' : 'Copy'}</button>}
+                                            {msg.role === 'assistant' && <button onClick={() => copyMessage(msg.content, msg.id)} className="absolute -bottom-3 right-2 opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-white/5 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">{copiedId === msg.id ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}{copiedId === msg.id ? 'Copied' : 'Copy'}</button>}
                                         </div>
-                                        {msg.role === 'user' && <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center shrink-0"><User size={20} className="text-white" /></div>}
+                                        {msg.role === 'user' && <div className="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center shrink-0"><User size={16} className="text-white" /></div>}
                                     </div>
                                 ))}
-                                {isLoading && <div className="flex gap-4 animate-fadeInUp"><div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-primary/20 border border-primary/30"><Bot size={20} className="text-primary" /></div><div className="bg-white/5 border border-white/5 rounded-xl rounded-bl-md px-4 py-3"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#E77630] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{activeModel.label} is thinking...</span></div></div></div>}
+                                {isLoading && <div className="flex gap-4 animate-fadeInUp"><div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 bg-white/5"><Bot size={16} className="text-gray-400" /></div><div className="bg-white/5 border border-white/5 rounded-xl rounded-bl-md px-4 py-3"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#E77630] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{activeModel.label} is thinking...</span></div></div></div>}
                                 <div ref={messagesEndRef} />
                             </div>
                         )}
                     </div>
                     <div className="p-4 border-t border-white/5 bg-black/40 backdrop-blur-sm shrink-0">
                         <div className="max-w-4xl mx-auto">
-                            <div className="flex items-end gap-3 p-3 rounded-2xl bg-white/5 border border-white/10 focus-within:border-[#E77630]/40 transition-all">
+                            <div className="flex items-end gap-3 p-3 rounded-lg bg-white/5 border border-white/5 focus-within:border-[#E77630]/40 transition-all">
                                 <button onClick={createNewSession} aria-label="New chat" className="p-2 rounded-xl text-gray-500 hover:text-white hover:bg-white/10 transition-all md:hidden shrink-0"><Plus size={20} /></button>
                                 {/* TODO: Agent selector — load installed agents from localStorage('installed-agents') + localStorage('custom-agents'),
                                    show a dropdown to pick an agent whose system prompt seeds the conversation.

@@ -1,72 +1,117 @@
-# DESIGN_TOKENS.md — Extracted from @operatoruplift/ui Storybook (cody)
+# DESIGN_TOKENS.md — Canonical tokens for Operator Uplift
 
-> Source: `/workspaces/ui/cody/src/styles/globals.css` + component source files.
-> Apply these tokens to /chat and /swarm pages for visual consistency.
+> Source: `@operatoruplift/ui` (cody storybook) + uplift.exe asar extraction.
+> These tokens are the single source of truth. Every component in bucharest
+> must use these exact values.
+
+## CSS Variables (globals.css)
+
+```css
+--color-primary:     #E77630
+--color-muted:       #9ca3af      /* gray-400 */
+--color-background:  #050508      /* deep void black */
+--color-card:        #0c0c0c      /* card/panel surfaces */
+--color-border:      rgba(255, 255, 255, 0.05)   /* default border */
+```
 
 ## Color Palette
 
-| Token | Value | Usage |
-|---|---|---|
-| `--ou-primary` | `#E77630` | Brand orange, CTAs, active states |
-| `--ou-primary-foreground` | `#ffffff` | Text on primary |
-| `--ou-secondary` | `#F59E0B` | Amber accent, highlights |
-| `--ou-background` | `#050508` | Page background |
-| `--ou-card` | `#0c0c0c` | Card/panel backgrounds |
-| `--ou-card-foreground` | `#ffffff` | Text on cards |
-| `--ou-muted` | `#1a1a1e` | Muted surfaces |
-| `--ou-muted-foreground` | `#9ca3af` | Gray-400, secondary text |
-| `--ou-destructive` | `#ef4444` | Red, errors |
-| `--ou-border` | `rgba(255, 255, 255, 0.05)` | Default borders — very subtle |
-| `--ou-input` | `rgba(255, 255, 255, 0.05)` | Input backgrounds |
-| `--ou-ring` | `#E77630` | Focus ring |
+| Token | Hex / Value | Tailwind | Usage |
+|---|---|---|---|
+| Primary | `#E77630` | `text-primary`, `bg-primary` | Brand orange, CTAs, active states |
+| Primary foreground | `#ffffff` | `text-white` | Text on primary |
+| Secondary / Accent | `#F59E0B` | `text-amber-400` | Amber highlights (sparingly) |
+| Background | `#050508` | `bg-background` | Page background |
+| Card | `#0c0c0c` | `bg-card`, `bg-[#0c0c0c]` | Card/panel surfaces |
+| Muted surface | `#1a1a1e` | `bg-[#1a1a1e]` | Muted backgrounds |
+| Muted text | `#9ca3af` | `text-gray-400` | Secondary text, descriptions |
+| Faint text | `#6b7280` | `text-gray-500` | Timestamps, labels |
+| Ghost text | `rgba(255,255,255,0.2)` | `text-white/20` | Disabled, dividers |
+| Destructive | `#ef4444` | `text-red-400` | Errors |
+| Success | `#22c55e` | `text-green-400` | Running, connected |
+| Border default | `rgba(255,255,255,0.05)` | `border-white/5` | All default borders |
+| Border hover | `rgba(255,255,255,0.1)` | `border-white/10` | Hover/focus borders only |
 
 ## Typography
 
 | Property | Value |
 |---|---|
-| Font family | `Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif` |
-| Headings | `font-medium text-white` (not bold) |
-| Body | `text-sm text-gray-200` or `text-gray-400` |
-| Labels | `text-xs font-medium` or `text-[10px] font-mono text-gray-500 uppercase tracking-widest` |
-| Code | `text-primary text-xs` with `bg-black/40 rounded-lg p-3` |
+| Primary font | `"SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif` |
+| Mono font | `font-mono` (system monospace) |
+| Headings | `font-medium text-white tracking-tight` (NOT bold) |
+| Body | `text-sm text-gray-200` |
+| Secondary text | `text-sm text-gray-400` |
+| Labels / Tags | `text-[10px] font-mono text-gray-500 uppercase tracking-widest` |
 | Timestamps | `text-[10px] text-gray-500` |
 
 ## Border Radius
 
-| Token | Value | Tailwind |
-|---|---|---|
-| `--ou-radius-sm` | `0.25rem` | `rounded` |
-| `--ou-radius-md` | `0.375rem` | `rounded-md` |
-| `--ou-radius-lg` | `0.5rem` | `rounded-lg` |
-| `--ou-radius-xl` | `0.75rem` | `rounded-xl` |
+| Element | Value |
+|---|---|
+| Buttons (GlowButton) | `rounded-sm` (0.125rem) |
+| Inputs, code blocks | `rounded-lg` (0.5rem) |
+| Cards | `rounded-lg` (0.5rem) |
+| Avatars | `rounded-full` |
+| Agent card icons | `rounded-lg` (0.5rem) |
+| Modals | `rounded-xl` (0.75rem) |
 
 ## Shadows
 
 | Usage | Value |
 |---|---|
-| Card glow | `shadow-[0_0_20px_rgba(231,118,48,0.3)]` |
-| Status dot | `shadow-[0_0_8px_currentColor]` |
-| No default card shadow | Cards use border only, no box-shadow |
+| Primary glow (buttons) | `shadow-[0_0_20px_rgba(231,118,48,0.3)]` — on hover via GlowButton blur layer |
+| Status dot glow | `shadow-[0_0_8px_currentColor]` |
+| Cards | No shadow — border-only (`border-white/5`) |
+| Modals | `shadow-2xl` |
 
-## Component Patterns (from Storybook)
+## Component Tokens
 
 ### ChatBubble
-- User: `bg-primary/20 text-white rounded-xl px-4 py-3 text-sm`
-- Assistant: `bg-white/5 text-gray-200 rounded-xl px-4 py-3 text-sm`
-- Code blocks: `bg-black/40 rounded-lg p-3 overflow-x-auto`, code text: `text-primary text-xs`
-- Avatar: `h-8 w-8 rounded-full bg-white/5`
-- Copy button: `opacity-0 group-hover:opacity-100 hover:bg-white/10`
+```
+User:      bg-primary/20 text-white rounded-xl px-4 py-3 text-sm
+Assistant: bg-white/5 text-gray-200 border border-white/5 rounded-xl px-4 py-3 text-sm
+Avatar:    h-8 w-8 rounded-full bg-white/5
+Copy btn:  opacity-0 group-hover:opacity-100 hover:bg-white/10
+Timestamp: text-[10px] text-gray-500
+```
 
-### AgentCard
-- Container: `rounded-lg border border-white/5 bg-card p-4 hover:border-white/10`
-- Avatar: `h-10 w-10 rounded-lg bg-white/5` or `bg-primary/20 text-primary font-bold`
-- Status dot: `h-3 w-3 rounded-full border-2 border-card` + color (green-400/gray-500/red-400)
-- Name: `font-medium text-white truncate`
-- Description: `text-sm text-gray-400 line-clamp-2`
-- Action button: `bg-primary text-white hover:bg-primary/90` or `bg-white/5 text-gray-500`
+### Code Blocks
+```
+Container: bg-black/40 rounded-lg border border-white/5
+Lang tag:  px-3 py-1.5 bg-white/5 border-b border-white/5 text-[10px] font-mono text-gray-500 uppercase tracking-widest
+Code text: p-3 text-xs text-[#E77630] font-mono (text-primary)
+```
 
-### Key differences from current bucharest /chat page
-- Storybook uses `bg-primary/20` for user bubbles (subtle), bucharest uses `bg-gradient-to-br from-[#E77630] to-[#F59E0B]` (bold gradient)
-- Storybook uses `rounded-xl` everywhere, bucharest uses `rounded-2xl`
-- Storybook borders are `border-white/5`, bucharest uses `border-white/10` (slightly more visible)
-- Storybook uses `text-sm` for body, bucharest uses `text-[15px]`
+### AgentCard (swarm)
+```
+Container: rounded-lg border border-white/5 bg-card p-4 hover:border-white/10
+Icon:      h-10 w-10 rounded-lg bg-white/5 (or bg-primary/20 when active)
+Name:      font-medium text-white truncate
+Desc:      text-sm text-gray-400 line-clamp-2
+Status:    h-3 w-3 rounded-full border-2 border-card
+  running: bg-green-400
+  idle:    bg-gray-500
+  error:   bg-red-400
+Action:    bg-primary text-white hover:bg-primary/90 rounded-sm px-3 py-1.5 text-xs
+```
+
+### GlowButton
+```
+Base:      rounded-sm px-6 py-2.5 font-medium text-white bg-primary hover:bg-primary/90
+Glow:      blur-xl layer with #E77630 opacity-0 → group-hover:opacity-100
+Outline:   bg-white/5 border border-white/5 text-gray-400 hover:bg-white/10
+```
+
+### Input Bar (chat)
+```
+Container: rounded-lg bg-white/5 border border-white/5 focus-within:border-[#E77630]/40
+Text:      text-[15px] text-white placeholder-gray-600
+Send btn:  w-10 h-10 rounded-xl bg-primary hover:bg-primary/90
+```
+
+### Card
+```
+Default:   rounded-lg border border-white/5 bg-card
+Glass:     rounded-lg border border-white/5 bg-white/5 backdrop-blur-md
+Glass-dark: rounded-lg border border-white/5 bg-black/40 backdrop-blur-md
+```

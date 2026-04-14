@@ -4,8 +4,10 @@
 
 @theme{
   --color-primary: #E77630;
-  --color-muted: #888888;
-  --color-background: #050505;
+  --color-muted: #9ca3af;
+  --color-background: #050508;
+  --color-card: #0c0c0c;
+  --color-border: rgba(255, 255, 255, 0.05);
 }
 /* your existing @layer base, components, utilities ... */
 @layer base {

@@ -397,11 +397,11 @@ export default function SwarmPage() {
                         {/* Detail */}
                         <div className="lg:col-span-2">
                             {activeSwarm ? (
-                                <Card variant="glass" className="border-white/10">
+                                <Card variant="glass" className="border-white/5 hover:border-white/10">
                                     <CardHeader className="border-b border-white/5 pb-4">
                                         <CardTitle className="flex items-center justify-between">
                                             <div>
-                                                <h2 className="text-lg font-bold text-white">{activeSwarm.name}</h2>
+                                                <h2 className="text-lg font-medium text-white">{activeSwarm.name}</h2>
                                                 <p className="text-xs text-gray-400 mt-1">{activeSwarm.description}</p>
                                             </div>
                                             <div className="flex gap-2">
@@ -436,7 +436,7 @@ export default function SwarmPage() {
                                                                 <div className={`w-10 h-10 rounded-xl border flex items-center justify-center ${
                                                                     agent.status === 'done' ? 'bg-emerald-400/10 border-emerald-400/30' :
                                                                     agent.status === 'thinking' || agent.status === 'executing' ? 'bg-[#E77630]/10 border-[#E77630]/30' :
-                                                                    'bg-white/5 border-white/10'
+                                                                    'bg-white/5 border-white/5'
                                                                 }`}>
                                                                     <Icon size={18} className={
                                                                         agent.status === 'done' ? 'text-emerald-400' :
