@@ -155,11 +155,9 @@ export default function LoginPage() {
             </div>
 
             <div className="w-full max-w-md p-8 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl relative z-10 shadow-2xl">
-                {/* Logo */}
+                {/* Logo — icon only, no text label */}
                 <div className="text-center mb-8">
-                    <Logo className="w-14 h-14 mx-auto mb-4" />
-                    <h1 className="text-2xl font-bold text-white">Operator<span className="text-primary">Uplift</span></h1>
-                    <p className="text-gray-500 text-xs font-mono mt-1 uppercase tracking-widest">Your AI Operating System</p>
+                    <Logo className="w-14 h-14 mx-auto" />
                 </div>
 
                 {/* Gate view — choose waitlist or pay */}
