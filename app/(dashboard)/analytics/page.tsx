@@ -64,9 +64,10 @@ export default function AnalyticsPage() {
                             <div className="flex items-center gap-2 mb-2">
                                 <BarChart3 size={16} className="text-[#F59E0B]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Insights</span>
+                                <span className="text-[8px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded border bg-amber-400/10 text-amber-400 border-amber-400/20">DEMO</span>
                             </div>
                             <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Analytics</h1>
-                            <p className="text-sm text-gray-400 mt-1">Platform usage, agent performance, and trends</p>
+                            <p className="text-sm text-gray-400 mt-1">Sample data — connect Supabase metrics for live analytics</p>
                         </div>
                         <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-lg p-1">
                             {(['24h', '7d', '30d'] as const).map(range => (

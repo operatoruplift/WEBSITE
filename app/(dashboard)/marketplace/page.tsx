@@ -85,6 +85,7 @@ export default function MarketplacePage() {
                             <div className="flex items-center gap-3 mb-2">
                                 <div className="w-10 h-10 rounded-xl flex items-center justify-center relative shadow-[0_0_20px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #F59E0B, #E77630)' }}><Store size={20} className="text-white" /></div>
                                 <Badge variant="default" className="bg-[#E77630]/10 text-[#E77630] border-[#E77630]/20 text-[10px] tracking-widest font-mono">v2.0 ORCHESTRATION</Badge>
+                                <Badge variant="default" className="bg-amber-400/10 text-amber-400 border border-amber-400/20 text-[8px] font-mono tracking-widest">DEMO</Badge>
                             </div>
                             <h1 className="text-4xl lg:text-5xl font-medium tracking-tight text-white">Agent Marketplace</h1>
                             <p className="text-sm text-gray-400 mt-2 font-mono">Deploy pre-trained intelligences directly into your swarm architecture</p>

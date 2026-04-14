@@ -32,8 +32,8 @@ const DEMO_AGENTS: Agent[] = [
 ];
 
 const statusConfig: Record<string, { color: string; bg: string; label: string; pulse?: boolean }> = {
-    running: { color: 'text-emerald-400', bg: 'bg-emerald-400', label: 'Running', pulse: true },
-    idle: { color: 'text-amber-400', bg: 'bg-amber-400', label: 'Idle' },
+    running: { color: 'text-emerald-400', bg: 'bg-emerald-400', label: 'Active', pulse: true },
+    idle: { color: 'text-amber-400', bg: 'bg-amber-400', label: 'Ready' },
     error: { color: 'text-red-400', bg: 'bg-red-400', label: 'Error', pulse: true },
     stopped: { color: 'text-gray-500', bg: 'bg-gray-500', label: 'Stopped' },
 };
@@ -98,9 +98,10 @@ export default function AgentsPage() {
                             <div className="flex items-center gap-2 mb-2">
                                 <Bot size={16} className="text-[#E77630]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Fleet</span>
+                                <span className="text-[8px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded border bg-amber-400/10 text-amber-400 border-amber-400/20">DEMO</span>
                             </div>
                             <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">My Agents</h1>
-                            <p className="text-sm text-gray-400 mt-1">{agents.filter(a => a.status === 'running').length} running, {agents.length} total</p>
+                            <p className="text-sm text-gray-400 mt-1">{agents.filter(a => a.status === 'running').length} active, {agents.length} total</p>
                         </div>
                         <Link href="/agents/builder">
                             <GlowButton className="h-11 px-5"><Plus size={16} className="mr-2" /> Create Agent</GlowButton>

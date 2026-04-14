@@ -1,7 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Network, Play, Pause, Plus, Trash2, Zap, ArrowRight, Clock, Bot, Brain, Shield, MessageSquare, X, Settings } from 'lucide-react';
+import { parseToolCalls, hasToolCalls, stripToolBlocks, formatToolResult, getToolSystemPrompt } from '@/lib/toolCalls';
+import type { ToolCall, ToolResult } from '@/lib/toolCalls';
+import { ToolApprovalModal } from '@/src/components/ui/ToolApprovalModal';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
@@ -98,15 +101,36 @@ export default function SwarmPage() {
 
     const activeSwarm = swarms.find(s => s.id === activeSwarmId);
 
+    // Tool-call approval state
+    const [pendingToolCall, setPendingToolCall] = useState<{ call: ToolCall; agentName: string } | null>(null);
+    const toolCallResolveRef = useRef<((result: ToolResult | null) => void) | null>(null);
+
+    const getUserId = (): string => {
+        try {
+            const user = localStorage.getItem('user');
+            if (user) return JSON.parse(user).id || 'demo-user';
+        } catch { /* fallback */ }
+        return 'demo-user';
+    };
+
+    /** Wait for user to approve/deny a tool call via the modal. Returns ToolResult or null (denied). */
+    const requestToolApproval = (call: ToolCall, agentName: string): Promise<ToolResult | null> => {
+        return new Promise((resolve) => {
+            toolCallResolveRef.current = resolve;
+            setPendingToolCall({ call, agentName });
+        });
+    };
+
     const callAgent = async (agent: SwarmAgent, context: string): Promise<string> => {
+        const toolPrompt = getToolSystemPrompt();
         try {
             const res = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    message: `You are "${agent.name}" with role: ${agent.role}. Context from previous agents: ${context}. Execute your role concisely in 1-2 sentences.`,
+                    message: `You are "${agent.name}" with role: ${agent.role}. Context from previous agents: ${context}. Execute your role concisely. If you need calendar or email data, emit a <tool_use> block.`,
                     model: agent.model.toLowerCase().replace(/ /g, '-'),
-                    systemPrompt: `You are an AI agent named "${agent.name}". Your role: ${agent.role}. Be concise and action-oriented. Respond in 1-2 sentences.`,
+                    systemPrompt: `You are an AI agent named "${agent.name}". Your role: ${agent.role}. Be concise and action-oriented.${toolPrompt}`,
                 }),
             });
             if (res.ok && res.body) {
@@ -118,6 +142,26 @@ export default function SwarmPage() {
                     if (done) break;
                     output += decoder.decode(value, { stream: true });
                 }
+
+                // Check for tool calls in the agent's response
+                if (output && hasToolCalls(output)) {
+                    const calls = parseToolCalls(output);
+                    const displayText = stripToolBlocks(output);
+                    let fullResult = displayText;
+
+                    for (const call of calls) {
+                        const result = await requestToolApproval(call, agent.name);
+                        if (result) {
+                            const formatted = formatToolResult(result);
+                            fullResult += `\n\n${formatted}`;
+                        } else {
+                            fullResult += `\n\n**Tool Denied** — ${call.tool}.${call.action} was not approved.`;
+                        }
+                    }
+
+                    return fullResult;
+                }
+
                 if (output) return output;
             }
         } catch { /* fall through to demo */ }
@@ -400,6 +444,25 @@ export default function SwarmPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Tool Approval Modal */}
+            {pendingToolCall && (
+                <ToolApprovalModal
+                    toolCall={pendingToolCall.call}
+                    agentName={pendingToolCall.agentName}
+                    userId={getUserId()}
+                    onResult={(result) => {
+                        setPendingToolCall(null);
+                        toolCallResolveRef.current?.(result);
+                        toolCallResolveRef.current = null;
+                    }}
+                    onDeny={() => {
+                        setPendingToolCall(null);
+                        toolCallResolveRef.current?.(null);
+                        toolCallResolveRef.current = null;
+                    }}
+                />
+            )}
         </MobilePageWrapper>
     );
 }

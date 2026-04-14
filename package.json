@@ -5,16 +5,20 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:desktop": "NEXT_PUBLIC_DESKTOP=1 next build",
+    "build:desktop": "node scripts/build-desktop.mjs",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.82.0",
+    "@privy-io/react-auth": "^3.21.0",
+    "@solana/pay": "^0.2.6",
+    "@solana/web3.js": "^1.98.4",
     "@supabase/supabase-js": "^2.99.3",
     "ai": "^6.0.137",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
+    "googleapis": "^171.4.0",
     "lucide-react": "^0.577.0",
     "next": "^16.2.0",
     "openai": "^6.32.0",

@@ -9,32 +9,36 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://operatoruplift.com"),
-  title: "Operator Uplift - Your Life, Automated",
-  description: "One App. Every Agent. All Yours. Local-first AI agents with secure, private memory. Build, deploy, and monetize autonomous agents on Solana — no cloud required.",
-  keywords: ["Local AI", "Agent Platform", "Solana AI", "Private Memory", "Autonomous Agents", "Local Runtime", "Agent Marketplace", "AI OS", "Local-First"],
+  metadataBase: new URL("https://www.operatoruplift.com"),
+  title: "Operator Uplift — Your AI Operating System",
+  description: "Multi-agent orchestration with on-device encryption. Run AI agents that use your calendar, email, and on-chain tools — governed by you, not a cloud.",
+  keywords: ["AI agents", "agent orchestration", "local-first AI", "Solana AI", "encrypted agents", "multi-agent swarm", "AI OS", "agent marketplace", "on-device AI"],
   openGraph: {
-    title: "Operator Uplift - Your Life, Automated",
-    description: "One App. Every Agent. All Yours. Local-first AI agents with secure, private memory — no cloud required.",
-    url: "https://operatoruplift.com",
+    title: "Operator Uplift",
+    description: "Multi-agent orchestration with on-device encryption. Calendar, email, and on-chain tools — governed by you.",
+    url: "https://www.operatoruplift.com",
     siteName: "Operator Uplift",
     locale: "en_US",
     type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Operator Uplift — Your AI Operating System" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Operator Uplift - Your Life, Automated",
-    description: "One App. Every Agent. All Yours. Local-first AI agents with secure, private memory — no cloud required.",
+    title: "Operator Uplift",
+    description: "Multi-agent orchestration with on-device encryption. Calendar, email, and on-chain tools — governed by you.",
     creator: "@OperatorUplift",
+    images: ["/opengraph-image"],
   },
   icons: {
     icon: "/logo.svg",
+    apple: "/logo.svg",
   },
   manifest: "/manifest.json",
 };
 
 import Script from "next/script";
 import { CookieConsent } from "@/src/components/CookieConsent";
+import { PrivyWrapper } from "@/src/components/providers/PrivyWrapper";
 
 export default function RootLayout({
   children,
@@ -95,7 +99,9 @@ export default function RootLayout({
             }
           `}
         </Script>
-        {children}
+        <PrivyWrapper>
+          {children}
+        </PrivyWrapper>
         <CookieConsent />
       </body>
     </html>

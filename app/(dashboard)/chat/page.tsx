@@ -6,6 +6,9 @@ import { GlowButton } from '@/src/components/ui/GlowButton';
 import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
+import { hasToolCalls, parseToolCalls, stripToolBlocks, formatToolResult, getToolSystemPrompt } from '@/lib/toolCalls';
+import type { ToolCall, ToolResult } from '@/lib/toolCalls';
+import { ToolApprovalModal } from '@/src/components/ui/ToolApprovalModal';
 
 interface Message { id: string; role: 'user' | 'assistant'; content: string; timestamp: Date; model?: string; }
 interface ChatSession { id: string; title: string; messages: Message[]; createdAt: Date; model: string; }
@@ -74,6 +77,19 @@ export default function ChatPage() {
     const [selectedAgent, setSelectedAgent] = useState(AGENTS[0].id);
     const [showModelPicker, setShowModelPicker] = useState(false);
     const [sidebarSearch, setSidebarSearch] = useState('');
+    const [pendingToolCall, setPendingToolCall] = useState<ToolCall | null>(null);
+    const toolCallResolveRef = useRef<((result: ToolResult | null) => void) | null>(null);
+
+    const getChatUserId = (): string => {
+        try { const u = localStorage.getItem('user'); if (u) return JSON.parse(u).id || 'demo-user'; } catch {} return 'demo-user';
+    };
+
+    const requestChatToolApproval = (call: ToolCall): Promise<ToolResult | null> => {
+        return new Promise((resolve) => {
+            toolCallResolveRef.current = resolve;
+            setPendingToolCall(call);
+        });
+    };
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const { showToast } = useToast();
@@ -106,19 +122,22 @@ export default function ChatPage() {
         // Build conversation history for context
         const history = (currentSession?.messages || []).map(m => ({ role: m.role, content: m.content }));
 
-        // Inject memory context into the system prompt
+        // Inject memory context + tool instructions into the system prompt
         let memoryContext = '';
         try {
             const { buildMemoryContext } = await import('@/lib/memoryEngine');
             memoryContext = buildMemoryContext(userMessage.content);
         } catch { /* no memory available */ }
 
+        const toolPrompt = getToolSystemPrompt();
+        const baseSystemPrompt = `You are a helpful AI assistant on the Operator Uplift platform. You are concise, accurate, and helpful.${memoryContext}${toolPrompt}`;
+
         try {
             // Try real LLM API first
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMessage.content, model: selectedModel, history, ...(memoryContext && { systemPrompt: `You are a helpful AI assistant on the Operator Uplift platform. You are concise, accurate, and helpful.${memoryContext}` }) }),
+                body: JSON.stringify({ message: userMessage.content, model: selectedModel, history, systemPrompt: baseSystemPrompt }),
             });
 
             if (response.ok && response.body) {
@@ -139,6 +158,36 @@ export default function ChatPage() {
                     setSessions(prev => prev.map(s => s.id === sessionId ? {
                         ...s,
                         messages: s.messages.map(m => m.id === assistantId ? { ...m, content: currentContent } : m),
+                    } : s));
+                }
+
+                // After streaming completes — check for tool calls
+                if (hasToolCalls(content)) {
+                    const calls = parseToolCalls(content);
+                    const cleanContent = stripToolBlocks(content);
+
+                    // Update the message to show only the text part while approval is pending
+                    setSessions(prev => prev.map(s => s.id === sessionId ? {
+                        ...s,
+                        messages: s.messages.map(m => m.id === assistantId ? { ...m, content: cleanContent + '\n\n*Requesting tool permission...*' } : m),
+                    } : s));
+
+                    // Process each tool call sequentially with approval gating
+                    let toolResults = '';
+                    for (const call of calls) {
+                        const result = await requestChatToolApproval(call);
+                        if (result) {
+                            toolResults += '\n\n' + formatToolResult(result);
+                        } else {
+                            toolResults += `\n\n**Tool Denied** — ${call.tool}.${call.action} was not approved.`;
+                        }
+                    }
+
+                    // Update the final message with clean text + tool results
+                    const finalContent = cleanContent + toolResults;
+                    setSessions(prev => prev.map(s => s.id === sessionId ? {
+                        ...s,
+                        messages: s.messages.map(m => m.id === assistantId ? { ...m, content: finalContent } : m),
                     } : s));
                 }
             } else {
@@ -209,7 +258,7 @@ export default function ChatPage() {
                                 <Badge variant="default" className={`text-[8px] font-mono px-1.5 py-0 ${activeModel.color}`}>{activeModel.badge}</Badge>
                                 <ChevronDown size={14} className={`text-gray-500 transition-transform ${showModelPicker ? 'rotate-180' : ''}`} />
                             </button>
-                            {showModelPicker && <div className="absolute top-full right-0 mt-2 w-56 bg-[#0a0a0f] border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden">
+                            {showModelPicker && <div className="absolute top-full right-0 mt-2 w-56 bg-[#0c0c0c] border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-none" style={{ isolation: 'isolate' }}>
                                 {MODELS.map(model => (
                                     <button key={model.id} onClick={() => { setSelectedModel(model.id); setShowModelPicker(false); }} className={`w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left ${selectedModel === model.id ? 'bg-white/5' : ''}`}>
                                         <div><p className={`text-sm font-bold ${model.color}`}>{model.label}</p><p className="text-[10px] text-gray-600 font-mono">{model.provider}</p></div>
@@ -273,6 +322,24 @@ export default function ChatPage() {
                     </div>
                 </main>
             </div>
+
+            {/* Tool Approval Modal */}
+            {pendingToolCall && (
+                <ToolApprovalModal
+                    toolCall={pendingToolCall}
+                    userId={getChatUserId()}
+                    onResult={(result) => {
+                        setPendingToolCall(null);
+                        toolCallResolveRef.current?.(result);
+                        toolCallResolveRef.current = null;
+                    }}
+                    onDeny={() => {
+                        setPendingToolCall(null);
+                        toolCallResolveRef.current?.(null);
+                        toolCallResolveRef.current = null;
+                    }}
+                />
+            )}
         </MobilePageWrapper>
     );
 }
