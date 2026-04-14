@@ -71,12 +71,20 @@ export async function executeToolCall(
         : '/api/tools/gmail';
 
     try {
+        // Auto-inject the client's local date for calendar calls so timezone
+        // offsets (e.g., "tomorrow" in MYT UTC+8) resolve correctly server-side
+        const enrichedParams = { ...call.params };
+        if (call.tool === 'calendar' && !enrichedParams.local_date) {
+            const d = new Date();
+            enrichedParams.local_date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+
         const res = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 action: call.action,
-                params: call.params,
+                params: enrichedParams,
                 user_id: userId,
             }),
         });
@@ -198,7 +206,7 @@ export function getToolSystemPrompt(): string {
 You have access to the user's Google Calendar and Gmail. When you need to take an action, emit a tool call using this exact format (the system will intercept it and ask the user for approval):
 
 <tool_use>
-{"tool": "calendar", "action": "free_slots", "params": {"duration_minutes": 30, "days_ahead": 7, "start_day_offset": 0}}
+{"tool": "calendar", "action": "free_slots", "params": {"duration_minutes": 30, "days_ahead": 7, "start_day_offset": 0, "local_date": "YYYY-MM-DD"}}
 </tool_use>
 
 <tool_use>
@@ -230,5 +238,6 @@ You have access to the user's Google Calendar and Gmail. When you need to take a
 5. After the tool executes, you'll receive the result and can continue your response.
 6. Only emit ONE tool call per response. Wait for the result before emitting another.
 7. When presenting calendar slots, format them clearly with day, date, and time. Bold the recommended option.
+8. For calendar tool calls, ALWAYS include "local_date" set to today's date in YYYY-MM-DD format. Use start_day_offset: 0 for today, 1 for tomorrow, etc. The offset is relative to the local_date, not UTC.
 `;
 }

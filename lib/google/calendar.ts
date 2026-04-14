@@ -58,16 +58,33 @@ export async function findFreeSlots(
     daysAhead: number = 7,
     maxSlots: number = 5,
     startDayOffset: number = 0,
+    localDate?: string, // YYYY-MM-DD from the client's local timezone
 ): Promise<FreeSlot[]> {
     const auth = await getAuthenticatedClient(userId);
     const cal = google.calendar({ version: 'v3', auth });
 
-    const now = new Date();
+    // Use the client's local date if provided, otherwise fall back to server time.
+    // This ensures "tomorrow" in MYT (UTC+8) resolves correctly even when the
+    // server is in a different timezone.
+    let baseDate: Date;
+    if (localDate && /^\d{4}-\d{2}-\d{2}$/.test(localDate)) {
+        // Parse as local midnight in the date string
+        const [y, m, d] = localDate.split('-').map(Number);
+        baseDate = new Date(y, m - 1, d, 9, 0, 0, 0);
+    } else {
+        baseDate = new Date();
+    }
+
     // Apply start offset (0 = today, 1 = tomorrow, etc.)
-    const searchStart = new Date(now);
+    const searchStart = new Date(baseDate);
     if (startDayOffset > 0) {
         searchStart.setDate(searchStart.getDate() + startDayOffset);
-        searchStart.setHours(9, 0, 0, 0); // Start at 9 AM on the offset day
+        searchStart.setHours(9, 0, 0, 0);
+    }
+    // If search start is in the past (e.g., offset=0 but it's already 5 PM), use now
+    const now = new Date();
+    if (searchStart.getTime() < now.getTime()) {
+        searchStart.setTime(now.getTime());
     }
     const until = new Date(searchStart.getTime() + daysAhead * 86400_000);
 

@@ -54,6 +54,7 @@ export async function POST(request: Request) {
                     params?.days_ahead ?? 7,
                     params?.max_slots ?? 5,
                     params?.start_day_offset ?? 0,
+                    params?.local_date ?? undefined,
                 );
                 return NextResponse.json({ action: 'free_slots', slots });
             }

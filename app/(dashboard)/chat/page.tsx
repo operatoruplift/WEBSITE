@@ -142,9 +142,6 @@ export default function ChatPage() {
         setSessions(prev => prev.map(s => s.id === sessionId ? { ...s, messages: [...s.messages, userMessage], title: s.messages.length === 0 ? input.slice(0, 30) : s.title } : s));
         setInput(''); setIsLoading(true);
 
-        // Build conversation history for context
-        const history = (currentSession?.messages || []).map(m => ({ role: m.role, content: m.content }));
-
         // Inject memory context + tool instructions into the system prompt
         let memoryContext = '';
         try {
@@ -155,23 +152,50 @@ export default function ChatPage() {
         const toolPrompt = getToolSystemPrompt();
         const baseSystemPrompt = `You are a helpful AI assistant on the Operator Uplift platform. You are concise, accurate, and helpful.${memoryContext}${toolPrompt}`;
 
-        try {
-            // Try real LLM API first
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMessage.content, model: selectedModel, history, systemPrompt: baseSystemPrompt }),
-            });
+        // Tool-call continuation loop: keeps calling the LLM until it returns a
+        // final response with no <tool_use> blocks. Max 6 iterations to prevent
+        // infinite loops. Each iteration: stream → check for tool calls → execute
+        // approved tools → feed results back as context → call LLM again.
+        const MAX_TOOL_ROUNDS = 6;
 
-            if (response.ok && response.body) {
+        try {
+            // Build initial history from existing messages
+            const history: { role: string; content: string }[] = (currentSession?.messages || []).map(m => ({ role: m.role, content: m.content }));
+            // Add the new user message
+            history.push({ role: 'user', content: userMessage.content });
+
+            for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
+                // Call the LLM
+                const latestMessage = history[history.length - 1]?.content || '';
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: latestMessage,
+                        model: selectedModel,
+                        history: history.slice(0, -1),
+                        systemPrompt: baseSystemPrompt,
+                    }),
+                });
+
+                if (!response.ok || !response.body) {
+                    // API error — fall back to demo
+                    const content = getFallbackResponse(userMessage.content);
+                    setSessions(prev => prev.map(s => s.id === sessionId ? { ...s, messages: [...s.messages, { id: (Date.now() + 1).toString(), role: 'assistant', content, timestamp: new Date(), model: selectedModel }] } : s));
+                    break;
+                }
+
                 // Stream the response
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
-                const assistantId = (Date.now() + 1).toString();
+                const assistantId = `${Date.now()}-r${round}`;
                 let content = '';
 
-                // Add empty assistant message
-                setSessions(prev => prev.map(s => s.id === sessionId ? { ...s, messages: [...s.messages, { id: assistantId, role: 'assistant', content: '', timestamp: new Date(), model: selectedModel }] } : s));
+                // Add empty assistant message bubble
+                setSessions(prev => prev.map(s => s.id === sessionId ? {
+                    ...s,
+                    messages: [...s.messages, { id: assistantId, role: 'assistant' as const, content: '', timestamp: new Date(), model: selectedModel }],
+                } : s));
 
                 while (true) {
                     const { done, value } = await reader.read();
@@ -184,42 +208,53 @@ export default function ChatPage() {
                     } : s));
                 }
 
-                // After streaming completes — check for tool calls
-                if (hasToolCalls(content)) {
-                    const calls = parseToolCalls(content);
-                    const cleanContent = stripToolBlocks(content);
-
-                    // Update the message to show only the text part while approval is pending
-                    setSessions(prev => prev.map(s => s.id === sessionId ? {
-                        ...s,
-                        messages: s.messages.map(m => m.id === assistantId ? { ...m, content: cleanContent + '\n\n*Requesting tool permission...*' } : m),
-                    } : s));
-
-                    // Process each tool call sequentially with approval gating
-                    let toolResults = '';
-                    for (const call of calls) {
-                        const result = await requestChatToolApproval(call);
-                        if (result) {
-                            toolResults += '\n\n' + formatToolResult(result);
-                        } else {
-                            toolResults += `\n\n**Tool Denied** — ${call.tool}.${call.action} was not approved.`;
-                        }
-                    }
-
-                    // Update the final message with clean text + tool results
-                    const finalContent = cleanContent + toolResults;
-                    setSessions(prev => prev.map(s => s.id === sessionId ? {
-                        ...s,
-                        messages: s.messages.map(m => m.id === assistantId ? { ...m, content: finalContent } : m),
-                    } : s));
+                // Check for tool calls
+                if (!hasToolCalls(content)) {
+                    // No tool calls — this is the final response. Add to history and stop.
+                    history.push({ role: 'assistant', content });
+                    break;
                 }
-            } else {
-                // API returned error — fall back to demo
-                const content = getFallbackResponse(userMessage.content);
-                setSessions(prev => prev.map(s => s.id === sessionId ? { ...s, messages: [...s.messages, { id: (Date.now() + 1).toString(), role: 'assistant', content, timestamp: new Date(), model: selectedModel }] } : s));
+
+                // Has tool calls — execute them, then continue the loop
+                const calls = parseToolCalls(content);
+                const cleanContent = stripToolBlocks(content);
+
+                // Show pending state
+                setSessions(prev => prev.map(s => s.id === sessionId ? {
+                    ...s,
+                    messages: s.messages.map(m => m.id === assistantId ? { ...m, content: cleanContent + '\n\n*Executing tool...*' } : m),
+                } : s));
+
+                // Execute each tool call with approval
+                let toolResults = '';
+                let anyDenied = false;
+                for (const call of calls) {
+                    const result = await requestChatToolApproval(call);
+                    if (result) {
+                        toolResults += '\n\n' + formatToolResult(result);
+                    } else {
+                        toolResults += `\n\n**Tool Denied** — ${call.tool}.${call.action} was not approved.`;
+                        anyDenied = true;
+                    }
+                }
+
+                // Update the message with clean text + tool results
+                const messageWithResults = cleanContent + toolResults;
+                setSessions(prev => prev.map(s => s.id === sessionId ? {
+                    ...s,
+                    messages: s.messages.map(m => m.id === assistantId ? { ...m, content: messageWithResults } : m),
+                } : s));
+
+                // Add to history so the next LLM call sees the tool results
+                history.push({ role: 'assistant', content: cleanContent });
+                history.push({ role: 'user', content: `Tool results:\n${toolResults}` });
+
+                // If a tool was denied, stop the chain — don't continue with partial context
+                if (anyDenied) break;
+
+                // Otherwise, loop continues — LLM gets called again with the tool results
             }
         } catch {
-            // No API available — fall back to demo responses
             const content = getFallbackResponse(userMessage.content);
             setSessions(prev => prev.map(s => s.id === sessionId ? { ...s, messages: [...s.messages, { id: (Date.now() + 1).toString(), role: 'assistant', content, timestamp: new Date(), model: selectedModel }] } : s));
         } finally { setIsLoading(false); }
