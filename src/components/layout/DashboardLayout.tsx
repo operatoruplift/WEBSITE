@@ -11,7 +11,7 @@ import { MobileNav } from '@/src/components/mobile';
 
 function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
     return (
-        <div className="dashboard-content flex h-screen overflow-hidden relative bg-background">
+        <div className="dashboard-content flex h-screen overflow-hidden relative bg-background" style={{ fontFamily: '"SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
             <NebulaBackground />
             <ParticleBackground particleCount={20} colors={['#E77630', '#F97316', '#FFEDD5']} speed={0.15} interactive={false} />
             <CommandBar />
