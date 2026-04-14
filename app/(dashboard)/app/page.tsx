@@ -188,7 +188,7 @@ export default function DashboardPage() {
                         </div>
                         <div className="space-y-6">
                             <Card variant="glass" className="card-animate border-[#F59E0B]/20" style={{ animationDelay: '500ms', background: 'radial-gradient(circle at top right, rgba(0,212,255,0.05), transparent 70%)' }}>
-                                <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2 text-xs font-mono text-gray-400 uppercase tracking-widest"><ServerIcon /> Core Infrastructure</CardTitle></CardHeader>
+                                <CardHeader className="pb-2"><CardTitle className="flex items-center justify-between text-xs font-mono text-gray-400 uppercase tracking-widest"><span className="flex items-center gap-2"><ServerIcon /> Core Infrastructure</span><span className="text-[8px] font-bold tracking-widest px-1.5 py-0.5 rounded border bg-amber-400/10 text-amber-400 border-amber-400/20 normal-case">DEMO</span></CardTitle></CardHeader>
                                 <CardContent>
                                     {isLoading ? <div className="space-y-3">{[1,2,3,4].map(i => <div key={i} className="h-6 bg-white/5 rounded animate-pulse" />)}</div> :
                                         <div className="space-y-4 pt-2">

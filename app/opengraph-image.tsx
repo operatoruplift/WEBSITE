@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'Operator Uplift - Local-First AI OS';
+export const alt = 'Operator Uplift — Your AI Operating System';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -17,10 +17,10 @@ export default async function Image() {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#050508',
-          backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(231, 118, 48, 0.08) 0%, transparent 60%)',
+          backgroundImage: 'radial-gradient(circle at 50% 40%, rgba(231, 118, 48, 0.1) 0%, transparent 55%)',
         }}
       >
-        {/* Top border accent */}
+        {/* Top accent bar */}
         <div
           style={{
             position: 'absolute',
@@ -32,82 +32,93 @@ export default async function Image() {
           }}
         />
 
-        {/* Logo area */}
+        {/* Logo + brand name */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: 20,
-            marginBottom: 40,
+            marginBottom: 36,
           }}
         >
           <div
             style={{
-              width: 64,
-              height: 64,
-              borderRadius: 16,
-              background: 'linear-gradient(135deg, #E77630, #F59E0B)',
+              width: 72,
+              height: 72,
+              borderRadius: 18,
+              background: '#E77630',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 0 40px rgba(231, 118, 48, 0.4)',
+              boxShadow: '0 0 50px rgba(231, 118, 48, 0.35)',
             }}
           >
-            <div style={{ color: 'white', fontSize: 32, fontWeight: 900 }}>⬡</div>
+            <div style={{ color: 'white', fontSize: 36, fontWeight: 900, letterSpacing: -1 }}>OU</div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ color: 'white', fontSize: 42, fontWeight: 700, letterSpacing: -1 }}>
-              Operator Uplift
-            </div>
+          <div style={{ color: 'white', fontSize: 44, fontWeight: 700, letterSpacing: -1 }}>
+            Operator Uplift
           </div>
         </div>
 
-        {/* Tagline */}
+        {/* Hero tagline */}
         <div
           style={{
             color: 'white',
-            fontSize: 56,
+            fontSize: 52,
             fontWeight: 700,
             textAlign: 'center',
             letterSpacing: -2,
-            lineHeight: 1.1,
-            marginBottom: 20,
+            lineHeight: 1.15,
+            marginBottom: 24,
+            maxWidth: 800,
           }}
         >
-          Your Life, Automated.
+          Your AI Operating System
         </div>
 
         {/* Description */}
         <div
           style={{
             color: 'rgba(255, 255, 255, 0.5)',
-            fontSize: 24,
+            fontSize: 22,
             textAlign: 'center',
-            maxWidth: 700,
-            lineHeight: 1.4,
+            maxWidth: 680,
+            lineHeight: 1.5,
           }}
         >
-          Local-first AI agents with secure, private memory. No cloud required.
+          Multi-agent orchestration with on-device encryption. Calendar, email, and on-chain tools — governed by you.
         </div>
 
-        {/* Bottom stats bar */}
+        {/* Bottom capability chips */}
         <div
           style={{
             position: 'absolute',
             bottom: 40,
             display: 'flex',
-            gap: 60,
+            gap: 20,
           }}
         >
           {[
-            { value: '40+', label: 'Apps Replaced' },
-            { value: '96%', label: 'Retention' },
-            { value: '100%', label: 'Encrypted' },
-          ].map((stat) => (
-            <div key={stat.label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{ color: '#E77630', fontSize: 28, fontWeight: 700 }}>{stat.value}</div>
-              <div style={{ color: 'rgba(255, 255, 255, 0.3)', fontSize: 14, textTransform: 'uppercase', letterSpacing: 2 }}>
-                {stat.label}
+            'Multi-Agent Swarm',
+            'AES-256 Encrypted',
+            'Solana Native',
+            'Real Google APIs',
+          ].map((label) => (
+            <div
+              key={label}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '8px 16px',
+                borderRadius: 8,
+                border: '1px solid rgba(231, 118, 48, 0.25)',
+                backgroundColor: 'rgba(231, 118, 48, 0.06)',
+              }}
+            >
+              <div style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#E77630' }} />
+              <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 13, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5 }}>
+                {label}
               </div>
             </div>
           ))}

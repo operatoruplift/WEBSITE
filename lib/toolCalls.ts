@@ -1,0 +1,212 @@
+/**
+ * Tool call interceptor — parses LLM output for tool-call intent,
+ * executes approved calls, logs to the audit trail.
+ *
+ * The LLM emits tool calls as <tool_use> JSON blocks in its text output.
+ * This module extracts them, presents them for approval, and executes.
+ */
+
+export interface ToolCall {
+    id: string;
+    tool: 'calendar' | 'gmail';
+    action: string;
+    params: Record<string, unknown>;
+    rawBlock: string;
+}
+
+export interface ToolResult {
+    toolCallId: string;
+    tool: string;
+    action: string;
+    success: boolean;
+    data?: unknown;
+    error?: string;
+}
+
+const TOOL_USE_REGEX = /<tool_use>\s*([\s\S]*?)\s*<\/tool_use>/g;
+
+/** Extract tool-call blocks from LLM output text. */
+export function parseToolCalls(text: string): ToolCall[] {
+    const calls: ToolCall[] = [];
+    let match: RegExpExecArray | null;
+    const regex = new RegExp(TOOL_USE_REGEX.source, 'g');
+
+    while ((match = regex.exec(text)) !== null) {
+        try {
+            const parsed = JSON.parse(match[1]);
+            if (parsed.tool && parsed.action) {
+                calls.push({
+                    id: `tc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+                    tool: parsed.tool,
+                    action: parsed.action,
+                    params: parsed.params || {},
+                    rawBlock: match[0],
+                });
+            }
+        } catch {
+            // Malformed JSON in tool block — skip
+        }
+    }
+
+    return calls;
+}
+
+/** Remove tool-call blocks from the display text. */
+export function stripToolBlocks(text: string): string {
+    return text.replace(/<tool_use>[\s\S]*?<\/tool_use>/g, '').trim();
+}
+
+/** Check if a response contains any tool-call blocks. */
+export function hasToolCalls(text: string): boolean {
+    return /<tool_use>/.test(text);
+}
+
+/** Execute a single approved tool call against the backend. */
+export async function executeToolCall(
+    call: ToolCall,
+    userId: string,
+): Promise<ToolResult> {
+    const endpoint = call.tool === 'calendar'
+        ? '/api/tools/calendar'
+        : '/api/tools/gmail';
+
+    try {
+        const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: call.action,
+                params: call.params,
+                user_id: userId,
+            }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            return {
+                toolCallId: call.id,
+                tool: call.tool,
+                action: call.action,
+                success: false,
+                error: data.error || `HTTP ${res.status}`,
+            };
+        }
+
+        return {
+            toolCallId: call.id,
+            tool: call.tool,
+            action: call.action,
+            success: true,
+            data,
+        };
+    } catch (err) {
+        return {
+            toolCallId: call.id,
+            tool: call.tool,
+            action: call.action,
+            success: false,
+            error: err instanceof Error ? err.message : 'Network error',
+        };
+    }
+}
+
+/** Format a tool result as markdown for display in chat / swarm output. */
+export function formatToolResult(result: ToolResult): string {
+    if (!result.success) {
+        return `**Tool Error** (${result.tool}.${result.action}): ${result.error}`;
+    }
+
+    const data = result.data as Record<string, unknown> | undefined;
+    if (!data) return `**${result.tool}.${result.action}** — completed.`;
+
+    // Calendar results
+    if (result.tool === 'calendar' && result.action === 'free_slots' && Array.isArray(data.slots)) {
+        const slots = data.slots as { start: string; end: string; durationMinutes: number }[];
+        const lines = slots.map((s, i) => {
+            const start = new Date(s.start);
+            return `${i + 1}. **${start.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}** at ${start.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} (${s.durationMinutes}min)`;
+        });
+        return `**Calendar — Free Slots Found:**\n${lines.join('\n')}`;
+    }
+
+    if (result.tool === 'calendar' && result.action === 'create' && data.event) {
+        const evt = data.event as { summary: string; start: string; htmlLink?: string };
+        const start = new Date(evt.start);
+        return `**Calendar Event Created:** "${evt.summary}" on ${start.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })} at ${start.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}${evt.htmlLink ? ` — [View](${evt.htmlLink})` : ''}`;
+    }
+
+    if (result.tool === 'calendar' && result.action === 'list' && Array.isArray(data.events)) {
+        const events = data.events as { summary: string; start: string }[];
+        if (events.length === 0) return '**Calendar:** No upcoming events found.';
+        const lines = events.slice(0, 5).map(e => {
+            const d = new Date(e.start);
+            return `- ${d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} ${d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} — ${e.summary}`;
+        });
+        return `**Upcoming Events (${events.length}):**\n${lines.join('\n')}`;
+    }
+
+    // Gmail results
+    if (result.tool === 'gmail' && result.action === 'draft' && data.draft) {
+        const draft = data.draft as { draftId: string };
+        return `**Gmail Draft Created** (ID: \`${draft.draftId.slice(0, 8)}...\`). Ready to send on approval.`;
+    }
+
+    if (result.tool === 'gmail' && (result.action === 'send' || result.action === 'send_draft') && data.result) {
+        const r = data.result as { messageId: string };
+        return `**Email Sent** (Message ID: \`${r.messageId.slice(0, 8)}...\`). Delivered to recipient.`;
+    }
+
+    if (result.tool === 'gmail' && result.action === 'list' && Array.isArray(data.messages)) {
+        const msgs = data.messages as { from: string; subject: string; date: string }[];
+        if (msgs.length === 0) return '**Gmail:** No messages found.';
+        const lines = msgs.slice(0, 5).map(m => `- **${m.subject}** from ${m.from.split('<')[0].trim()}`);
+        return `**Recent Emails (${msgs.length}):**\n${lines.join('\n')}`;
+    }
+
+    // Generic fallback
+    return `**${result.tool}.${result.action}** completed:\n\`\`\`json\n${JSON.stringify(data, null, 2).slice(0, 500)}\n\`\`\``;
+}
+
+/**
+ * System prompt addition that teaches the LLM how to emit tool calls.
+ * Injected when the user has connected Google (Calendar + Gmail).
+ */
+export function getToolSystemPrompt(): string {
+    return `
+
+## Available Tools
+
+You have access to the user's Google Calendar and Gmail. When you need to take an action, emit a tool call using this exact format (the system will intercept it and ask the user for approval):
+
+<tool_use>
+{"tool": "calendar", "action": "free_slots", "params": {"duration_minutes": 30, "days_ahead": 7}}
+</tool_use>
+
+<tool_use>
+{"tool": "calendar", "action": "list", "params": {"days_ahead": 7, "max_results": 10}}
+</tool_use>
+
+<tool_use>
+{"tool": "calendar", "action": "create", "params": {"summary": "Meeting title", "start": "2026-04-15T14:00:00", "end": "2026-04-15T14:30:00", "description": "Notes", "attendees": ["email@example.com"]}}
+</tool_use>
+
+<tool_use>
+{"tool": "gmail", "action": "list", "params": {"query": "in:inbox", "max_results": 10}}
+</tool_use>
+
+<tool_use>
+{"tool": "gmail", "action": "draft", "params": {"to": "recipient@example.com", "subject": "Subject", "body": "Email body text"}}
+</tool_use>
+
+<tool_use>
+{"tool": "gmail", "action": "send", "params": {"to": "recipient@example.com", "subject": "Subject", "body": "Email body text"}}
+</tool_use>
+
+Rules:
+- ALWAYS use <tool_use> blocks for actions. Do not describe what you would do — actually emit the tool call.
+- Each tool call will be shown to the user for approval before executing.
+- After the tool executes, you'll receive the result and can continue your response.
+- Only emit ONE tool call per response. Wait for the result before emitting another.
+`;
+}

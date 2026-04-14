@@ -1,40 +1,52 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-    async headers() {
-        return [
-            {
-                source: '/(.*)',
-                headers: [
-                    { key: 'X-Frame-Options', value: 'DENY' },
-                    { key: 'X-Content-Type-Options', value: 'nosniff' },
-                    { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-                    { key: 'X-DNS-Prefetch-Control', value: 'on' },
-                    { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
-                    { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
-                ],
-            },
-        ];
-    },
-    async redirects() {
-        return [
-            {
-                source: '/docs',
-                destination: 'https://help.operatoruplift.com/',
-                permanent: true,
-            },
-            {
-                source: '/docs/:path*',
-                destination: 'https://help.operatoruplift.com/:path*',
-                permanent: true,
-            },
-            {
-                source: '/changelog',
-                destination: '/blog',
-                permanent: false,
-            },
-        ];
-    },
-};
+// Desktop build flag — set by `npm run build:desktop` (NEXT_PUBLIC_DESKTOP=1).
+// In desktop mode we produce a static export that Tauri wraps into a DMG.
+// `headers()` and `redirects()` are not supported with `output: 'export'`,
+// so they're omitted when the flag is set. The web build is unchanged.
+const isDesktop = process.env.NEXT_PUBLIC_DESKTOP === '1';
 
-export default nextConfig;
+const baseConfig: NextConfig = isDesktop
+    ? {
+          output: 'export',
+          images: { unoptimized: true },
+          trailingSlash: true,
+      }
+    : {
+          async headers() {
+              return [
+                  {
+                      source: '/(.*)',
+                      headers: [
+                          { key: 'X-Frame-Options', value: 'DENY' },
+                          { key: 'X-Content-Type-Options', value: 'nosniff' },
+                          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+                          { key: 'X-DNS-Prefetch-Control', value: 'on' },
+                          { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
+                          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+                      ],
+                  },
+              ];
+          },
+          async redirects() {
+              return [
+                  {
+                      source: '/docs',
+                      destination: 'https://help.operatoruplift.com/',
+                      permanent: true,
+                  },
+                  {
+                      source: '/docs/:path*',
+                      destination: 'https://help.operatoruplift.com/:path*',
+                      permanent: true,
+                  },
+                  {
+                      source: '/changelog',
+                      destination: '/blog',
+                      permanent: false,
+                  },
+              ];
+          },
+      };
+
+export default baseConfig;

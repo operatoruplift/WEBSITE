@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Search, ExternalLink, Check, Plug, Github, Mail, MessageSquare, Calendar, Database, FileText, Globe, Shield, Zap, Code } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
@@ -17,6 +17,21 @@ interface Integration {
     status: 'available' | 'connected' | 'coming_soon';
     howItWorks: string;
 }
+
+const LIVE_IDS = new Set(['gmail', 'gcal', 'supabase', 'web_search']);
+
+type Tier = 'live' | 'demo' | 'wired';
+function getTier(id: string, status: string): Tier {
+    if (LIVE_IDS.has(id)) return 'live';
+    if (status === 'connected') return 'live';
+    return 'demo';
+}
+
+const TIER_BADGE: Record<string, { label: string; className: string }> = {
+    live: { label: 'LIVE', className: 'bg-emerald-400/10 text-emerald-400 border-emerald-400/20' },
+    wired: { label: 'WIRED', className: 'bg-blue-400/10 text-blue-400 border-blue-400/20' },
+    demo: { label: 'DEMO', className: 'bg-amber-400/10 text-amber-400 border-amber-400/20' },
+};
 
 const INTEGRATIONS: Integration[] = [
     // Developer Tools
@@ -72,18 +87,46 @@ export default function IntegrationsPage() {
         .filter(i => category === 'All' || i.category === category)
         .filter(i => !search || i.name.toLowerCase().includes(search.toLowerCase()) || i.description.toLowerCase().includes(search.toLowerCase()));
 
-    const toggleConnect = (id: string, name: string) => {
+    const [googleConnected, setGoogleConnected] = useState(false);
+    const callbackHandled = useRef(false);
+
+    // Check URL params for OAuth callback result (ref guard prevents strict-mode double-fire)
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        if (callbackHandled.current) return;
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('google') === 'connected') {
+            callbackHandled.current = true;
+            setGoogleConnected(true);
+            setConnectedIds(prev => { const next = new Set(prev); next.add('gmail'); next.add('gcal'); return next; });
+            showToast('Google Calendar + Gmail connected!', 'success');
+            window.history.replaceState({}, '', '/integrations');
+        } else if (params.get('error')) {
+            callbackHandled.current = true;
+            showToast(`Google connection failed: ${params.get('error')}`, 'error');
+            window.history.replaceState({}, '', '/integrations');
+        }
+    }, [showToast]);
+
+    const handleConnect = (id: string, name: string) => {
+        // Real OAuth flow for Google integrations
+        if (id === 'gmail' || id === 'gcal') {
+            const userId = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!).id || 'demo-user' : 'demo-user';
+            window.location.href = `/api/integrations/google/connect?user_id=${encodeURIComponent(userId)}`;
+            return;
+        }
+
+        // Demo toggle for everything else
+        const wasConnected = connectedIds.has(id);
         setConnectedIds(prev => {
             const next = new Set(prev);
-            if (next.has(id)) {
-                next.delete(id);
-                showToast(`${name} disconnected`, 'info');
-            } else {
-                next.add(id);
-                showToast(`${name} connected! Configure in agent tools.`, 'success');
-            }
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
             return next;
         });
+        // Toast outside the updater to prevent double-fire from batched re-renders
+        if (wasConnected) showToast(`${name} disconnected`, 'info');
+        else showToast(`${name} connected! Configure in agent tools.`, 'success');
     };
 
     return (
@@ -143,6 +186,7 @@ export default function IntegrationsPage() {
                                                 </div>
                                             </div>
                                             {isConnected && <Badge variant="default" className="text-[9px] bg-emerald-400/10 text-emerald-400 border-emerald-400/20">Connected</Badge>}
+                            {(() => { const t = getTier(integration.id, integration.status); const b = TIER_BADGE[t]; return <Badge variant="default" className={`text-[8px] font-mono border ${b.className}`}>{b.label}</Badge>; })()}
                                         </div>
                                         <p className="text-xs text-gray-400 mb-4">{integration.description}</p>
 
@@ -153,7 +197,7 @@ export default function IntegrationsPage() {
                                             </div>
                                         )}
 
-                                        <button onClick={e => { e.stopPropagation(); toggleConnect(integration.id, integration.name); }}
+                                        <button onClick={e => { e.stopPropagation(); handleConnect(integration.id, integration.name); }}
                                             className={`w-full py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${
                                                 isConnected ? 'bg-white/5 text-gray-400 hover:text-red-400 hover:bg-red-400/10' : 'bg-primary/10 text-primary hover:bg-primary/20'
                                             }`}>
