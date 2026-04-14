@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { getConsentUrl } from '@/lib/google/oauth';
 
 export async function GET(request: Request) {
@@ -11,26 +10,13 @@ export async function GET(request: Request) {
             );
         }
 
-        // Try to get the real user ID from the Supabase session (cookie-based auth)
-        let userId: string | null = null;
-
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-        const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-        if (supabaseUrl && supabaseAnonKey) {
-            const cookieHeader = request.headers.get('cookie') ?? '';
-            const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-                global: { headers: { cookie: cookieHeader } },
-                auth: { persistSession: false },
-            });
-            const { data: { user } } = await supabase.auth.getUser();
-            userId = user?.id ?? null;
-        }
-
-        // Fallback to query param (for dev/testing only)
-        if (!userId) {
-            const url = new URL(request.url);
-            userId = url.searchParams.get('user_id');
-        }
+        // Get user ID from query param — this is the Privy DID from the client's
+        // localStorage.user.id, passed by the integrations page. We use this
+        // directly (not Supabase auth.uid()) because Privy manages auth sessions
+        // separately from Supabase. The same ID is used by the tool executor
+        // when looking up tokens, so they must match.
+        const url = new URL(request.url);
+        const userId = url.searchParams.get('user_id');
 
         if (!userId) {
             return NextResponse.json(
