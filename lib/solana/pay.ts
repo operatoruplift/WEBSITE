@@ -35,6 +35,27 @@ export function buildSolanaPayUrl(reference: PublicKey): string {
     return `solana:${recipient.toBase58()}?amount=${amount}&label=${label}&message=${message}&reference=${ref}`;
 }
 
+/**
+ * Build a Phantom deeplink that works on both desktop (opens Phantom browser
+ * extension or redirects to phantom.app) and mobile (opens the Phantom app).
+ * Falls back to the raw solana: URI if Phantom isn't the target.
+ */
+export function buildPhantomDeeplink(reference: PublicKey): string {
+    const recipient = getTreasuryAddress();
+    const amount = EARLY_ACCESS_PRICE_SOL;
+    const ref = reference.toBase58();
+
+    // Phantom's universal transfer deeplink
+    const transferUrl = new URL('https://phantom.app/ul/transfer');
+    transferUrl.searchParams.set('recipient', recipient.toBase58());
+    transferUrl.searchParams.set('amount', String(amount));
+    transferUrl.searchParams.set('reference', ref);
+    transferUrl.searchParams.set('label', 'Operator Uplift Early Access');
+    transferUrl.searchParams.set('message', 'Payment for immediate dashboard access');
+
+    return transferUrl.toString();
+}
+
 /** Verify that a transaction with the given reference exists on-chain. */
 export async function verifyPayment(referenceKey: string): Promise<{
     confirmed: boolean;

@@ -8,7 +8,7 @@ import { GlowButton } from '@/src/components/ui/GlowButton';
 import { Badge } from '@/src/components/ui/Badge';
 import { Logo } from '@/src/components/Icons';
 import { Keypair } from '@solana/web3.js';
-import { buildSolanaPayUrl, getEarlyAccessPriceSol } from '@/lib/solana/pay';
+import { buildSolanaPayUrl, buildPhantomDeeplink, getEarlyAccessPriceSol, getTreasuryAddress } from '@/lib/solana/pay';
 
 type ViewState = 'gate' | 'waitlist' | 'pay' | 'waitlist-success' | 'pay-pending' | 'pay-success';
 
@@ -37,7 +37,7 @@ export default function LoginPage() {
     }, [ready, authenticated]);
 
     const checkAccess = useCallback(async () => {
-        // Check if user has early access (paid) or is on the approved waitlist
+        // Check if user already has local access
         const token = localStorage.getItem('token');
         const earlyAccess = localStorage.getItem('early_access');
         if (token || earlyAccess === 'granted') {
@@ -45,28 +45,37 @@ export default function LoginPage() {
             return;
         }
 
-        // For Privy-authenticated users, check Supabase for access
-        if (user?.wallet?.address) {
-            try {
-                const res = await fetch(`/api/access/check?wallet=${user.wallet.address}`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.access) {
-                        localStorage.setItem('early_access', 'granted');
-                        localStorage.setItem('token', 'privy-session');
-                        localStorage.setItem('user', JSON.stringify({
-                            name: user.google?.name || user.github?.username || 'Commander',
-                            email: user.google?.email || user.email?.address || '',
-                            plan: 'Early Access',
-                            id: user.id,
-                        }));
-                        router.push('/app');
-                        return;
+        // Any Privy-authenticated user gets access — store session and redirect
+        if (authenticated && user) {
+            const userName = user.google?.name || user.github?.username || 'Commander';
+            const userEmail = user.google?.email || user.email?.address || '';
+            const walletAddr = user.wallet?.address || '';
+
+            // Check Supabase for paid early access (wallet users)
+            if (walletAddr) {
+                try {
+                    const res = await fetch(`/api/access/check?wallet=${walletAddr}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.access) {
+                            localStorage.setItem('early_access', 'granted');
+                        }
                     }
-                }
-            } catch { /* check failed, show gate */ }
+                } catch { /* non-blocking */ }
+            }
+
+            // Grant session access for any authenticated user
+            localStorage.setItem('token', 'privy-session');
+            localStorage.setItem('user', JSON.stringify({
+                name: userName,
+                email: userEmail,
+                plan: localStorage.getItem('early_access') === 'granted' ? 'Early Access' : 'Beta',
+                id: user.id,
+            }));
+            router.push('/app');
+            return;
         }
-    }, [user, router]);
+    }, [authenticated, user, router]);
 
     const handleWaitlist = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -85,11 +94,19 @@ export default function LoginPage() {
         setIsLoading(false);
     };
 
+    const [phantomUrl, setPhantomUrl] = useState('');
+
     const handleStartPayment = () => {
         const reference = Keypair.generate().publicKey;
         setPayReference(reference.toBase58());
         setPayUrl(buildSolanaPayUrl(reference));
+        setPhantomUrl(buildPhantomDeeplink(reference));
         setView('pay-pending');
+    };
+
+    const handleCopyAddress = async () => {
+        await navigator.clipboard.writeText(getTreasuryAddress().toBase58());
+        setError('Treasury address copied! Send ' + getEarlyAccessPriceSol() + ' SOL, then click Verify.');
     };
 
     const handleVerifyPayment = async () => {
@@ -130,7 +147,7 @@ export default function LoginPage() {
     // --- Render ---
 
     return (
-        <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ background: '#050508' }}>
+        <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ background: '#050508', fontFamily: '"SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
             {/* Ambient glow — matches /repos/UI/ LoginScreen */}
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 rounded-full bg-[#E77630]/8 blur-[120px]" />
@@ -271,14 +288,30 @@ export default function LoginPage() {
                                 <span className="text-[10px] text-gray-400 font-mono">{payReference.slice(0, 8)}...{payReference.slice(-4)}</span>
                             </div>
                             <a
-                                href={payUrl}
+                                href={phantomUrl}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="w-full flex items-center justify-center gap-2 h-11 rounded-xl text-white text-sm font-bold uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(231,118,48,0.2)]"
                                 style={{ background: '#E77630' }}
                             >
-                                <ExternalLink size={14} /> Open in Wallet
+                                <ExternalLink size={14} /> Open in Phantom
                             </a>
+                            <div className="flex gap-2">
+                                <a
+                                    href={payUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex-1 flex items-center justify-center gap-2 h-9 rounded-lg bg-white/5 border border-white/10 text-gray-400 text-xs font-medium hover:bg-white/10 transition-all"
+                                >
+                                    <Wallet size={12} /> Other Wallet
+                                </a>
+                                <button
+                                    onClick={handleCopyAddress}
+                                    className="flex-1 flex items-center justify-center gap-2 h-9 rounded-lg bg-white/5 border border-white/10 text-gray-400 text-xs font-medium hover:bg-white/10 transition-all"
+                                >
+                                    <Mail size={12} /> Copy Address
+                                </button>
+                            </div>
                         </div>
 
                         {error && (
