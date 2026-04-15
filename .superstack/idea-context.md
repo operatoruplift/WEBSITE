@@ -1,42 +1,33 @@
-# Idea Context — Prediction Market on Solana
+# Idea Context — Operator Uplift
 
 ## Domain
-Prediction markets / information markets / event contracts on Solana
+Multi-agent AI operating system with real tool integrations, human approval gates, and on-device encryption.
 
-## Landscape
+## Three Competitive Spaces
 
-### Direct Competitors
-| Name | URL | Status | Strength | Weakness |
-|------|-----|--------|----------|----------|
-| Drift Protocol (BET) | drift.trade | Live | Existing DeFi userbase, cross-margining with perps | Prediction markets are a side feature |
-| Jupiter Prediction Markets | jup.ag | Live | Largest Solana DEX, massive distribution | Late entrant, markets are an add-on |
-| Monaco Protocol | github.com/MonacoProtocol | Live | Fully on-chain, composable, open-source | Low adoption (27 stars), depends on frontends |
-| Hedgehog Markets | hedgehog.markets | Quiet | Novel no-loss parimutuel model | Small TVL, limited markets |
-| Hxro Network | hxro.com | Pivot | Institutional-grade architecture | Pivoted multiple times, unclear focus |
-| Capitola | Colosseum winner | Beta | Meta-aggregator across prediction platforms | Aggregator, not a market maker |
+### Space 1: AI Agent Platforms with Real Tool Integrations
+- **Crowdedness:** crowded (cluster 270-325)
+- **Key insight:** Nobody ships multi-agent + real OAuth + human approval + audit trail in one product
+- **Direct competitors:** AgentRunner (closest — orchestration + audit, no real OAuth), Plato AI (multi-agent, no tools), DeTask ($30K winner — task decomposition, different angle)
+- **Non-crypto substitutes:** ChatGPT (tool use, no governance), Claude Code (permission prompts, single agent), n8n/Zapier (real integrations, no intelligence)
+- **Gap:** The intersection of multi-agent orchestration + real OAuth tool calls + approval gating is empty
 
-### Substitutes
-| Name | Approach | Why Users Stay |
-|------|----------|---------------|
-| Polymarket | Polygon-based, dominant volume | Liquidity moat, brand recognition, election cycle momentum |
-| Kalshi | CFTC-regulated centralized exchange | Regulatory legitimacy, institutional trust |
-| Manifold Markets | Play-money prediction markets | Zero financial risk, instant market creation, social features |
-| Metaculus | Reputation-based forecasting (no money) | Intellectual community, no financial risk |
+### Space 2: AI Desktop Apps / Local-First AI
+- **Crowdedness:** crowded (cluster 260-325) — but each competitor has a distinct niche
+- **Key insight:** Nobody combines multi-agent orchestration + real tool integrations in a local-first desktop app
+- **Direct competitors:** Poke (messaging-first, HIGH threat for mindshare), Zo Computer (computer-use, HIGH threat for demo wow), Onyx (enterprise search, MEDIUM), SeekerOS (phone-locked), Loyal (privacy-first, no real integrations)
+- **Archive validation:** a16z "Agency by design" — safe delegation is the critical design challenge as agents become autonomous
+- **Gap:** Desktop + multi-agent + real OAuth + encrypted audit = unoccupied quadrant
 
-### Dead Projects
-| Name | Why Failed |
-|------|-----------|
-| Augur | High gas costs, complex UX, slow oracle resolution, liquidity death spiral |
-| Veil | Built on broken Augur infrastructure + regulatory concerns |
-| Frontrunner | Sports-only too narrow, team went quiet |
-| Gnosis/Omen | Gnosis pivoted to chain infrastructure, Omen had negligible volume |
+### Space 3: Agent-to-Agent Payment Infrastructure on Solana
+- **Crowdedness:** moderate-to-crowded — x402 is emerging standard, $75K+ in hackathon prizes
+- **Key insight:** OU should be a consumer of x402, not a builder of x402
+- **Key players:** MCPay ($25K winner, accelerator), Latinum ($25K winner), CORBITS ($20K winner), ClawRouter (6.2K ⭐, open-source model router with x402)
+- **OU's angle:** Integrate x402 so agents can pay for premium tools, don't build the payment rail
 
-### Assessment
-- **Crowdedness:** crowded (cross-chain), moderate (Solana-native)
-- **Moat type:** Network effects (liquidity) + AI data advantage
-- **Differentiation:** AI-native prediction market with agent-based market making, chat-native trading, and multi-agent governance (futarchy-style decision-making inside swarms)
+## Competitive Matrix Position
+- **Quadrant:** Desktop / Multi-agent — EMPTY, this is OU's target
+- **Moat:** Data (decision traces + audit trail accumulation) + Integration depth (OAuth tokens as switching cost) + Approval pattern as UX standard
 
-## Recommended Angles
-1. AI-native prediction market (LLM pricing + resolution + chat interface)
-2. Cross-margined prediction + perps (build before Hyperliquid HIP-4)
-3. Micro-prediction markets for agent governance (futarchy inside multi-agent swarms)
+## Differentiation
+Multi-agent swarm orchestration (4 topologies) + real Google Calendar/Gmail tool calls with human approval gates + AES-256-GCM encrypted audit trail + 3.9 MB Tauri DMG. Nobody in Colosseum (5,400+ projects), GitHub, or the commercial market ships all four in one product. As of 2026-04-14.

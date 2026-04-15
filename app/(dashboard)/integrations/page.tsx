@@ -140,7 +140,7 @@ export default function IntegrationsPage() {
     return (
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8">
-                <div className="max-w-[1400px] mx-auto space-y-8">
+                <div className="max-w-7xl mx-auto space-y-8">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
@@ -161,13 +161,13 @@ export default function IntegrationsPage() {
                         <div className="relative flex-1">
                             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search integrations..." aria-label="Search integrations"
-                                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:border-primary/50 focus:outline-none" />
+                                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-foreground/[0.04] border border-white/10 text-sm text-white focus:border-primary/50 focus:outline-none" />
                         </div>
                         <div className="flex gap-2 overflow-x-auto pb-1">
                             {CATEGORIES.map(cat => (
                                 <button key={cat} onClick={() => setCategory(cat)}
                                     className={`px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wide whitespace-nowrap transition-all ${
-                                        category === cat ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-white/5 text-gray-400 border border-white/10 hover:border-white/20'
+                                        category === cat ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-foreground/[0.04] text-gray-400 border border-white/10 hover:border-primary/30'
                                     }`}>{cat}</button>
                             ))}
                         </div>
@@ -180,12 +180,12 @@ export default function IntegrationsPage() {
                             const isConnected = connectedIds.has(integration.id);
                             const isExpanded = expandedId === integration.id;
                             return (
-                                <Card key={integration.id} variant="glass" className={`group transition-all cursor-pointer ${isConnected ? 'border-emerald-400/20' : 'hover:border-white/10'}`}
+                                <Card key={integration.id} variant="glass" className={`group transition-all cursor-pointer ${isConnected ? 'border-emerald-400/20' : 'hover:border-primary/30'}`}
                                     onClick={() => setExpandedId(isExpanded ? null : integration.id)}>
                                     <CardContent className="p-5">
                                         <div className="flex items-start justify-between mb-3">
                                             <div className="flex items-center gap-3">
-                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isConnected ? 'bg-emerald-400/10' : 'bg-white/5'}`}>
+                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isConnected ? 'bg-emerald-400/10' : 'bg-foreground/[0.04]'}`}>
                                                     <Icon size={18} className={isConnected ? 'text-emerald-400' : 'text-gray-400'} />
                                                 </div>
                                                 <div>
@@ -199,7 +199,7 @@ export default function IntegrationsPage() {
                                         <p className="text-xs text-gray-400 mb-4">{integration.description}</p>
 
                                         {isExpanded && (
-                                            <div className="mb-4 p-3 rounded-lg bg-white/5 border border-white/5 text-xs text-gray-300">
+                                            <div className="mb-4 p-3 rounded-lg bg-foreground/[0.04] border border-foreground/10 text-xs text-gray-300">
                                                 <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-1">How it works</span>
                                                 {integration.howItWorks}
                                             </div>
@@ -207,7 +207,7 @@ export default function IntegrationsPage() {
 
                                         <button onClick={e => { e.stopPropagation(); handleConnect(integration.id, integration.name); }}
                                             className={`w-full py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${
-                                                isConnected ? 'bg-white/5 text-gray-400 hover:text-red-400 hover:bg-red-400/10' : 'bg-primary/10 text-primary hover:bg-primary/20'
+                                                isConnected ? 'bg-foreground/[0.04] text-gray-400 hover:text-red-400 hover:bg-red-400/10' : 'bg-primary/10 text-primary hover:bg-primary/20'
                                             }`}>
                                             {isConnected ? 'Disconnect' : 'Connect'}
                                         </button>

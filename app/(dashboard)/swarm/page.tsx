@@ -272,7 +272,7 @@ export default function SwarmPage() {
     return (
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8">
-                <div className="max-w-[1400px] mx-auto space-y-8">
+                <div className="max-w-7xl mx-auto space-y-8">
                     {/* Header */}
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
                         <div>
@@ -310,11 +310,11 @@ export default function SwarmPage() {
                                 </div>
                                 <div className="space-y-4">
                                     <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="Swarm name" aria-label="Swarm name"
-                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
+                                        className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                         {Object.entries(topologyLabels).map(([key, val]) => (
                                             <button key={key} onClick={() => setNewTopology(key as typeof newTopology)}
-                                                className={`p-3 rounded-xl border text-center transition-all ${newTopology === key ? 'bg-primary/10 border-primary/30 text-white' : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20'}`}>
+                                                className={`p-3 rounded-xl border text-center transition-all ${newTopology === key ? 'bg-primary/10 border-primary/30 text-white' : 'bg-foreground/[0.04] border-white/10 text-gray-400 hover:border-primary/30'}`}>
                                                 <span className={`text-xs font-bold ${val.color}`}>{val.label}</span>
                                                 <span className="block text-[10px] text-gray-500 mt-1 font-mono">{val.desc}</span>
                                             </button>
@@ -338,7 +338,7 @@ export default function SwarmPage() {
                             return (
                                 <AnimatedCard key={stat.label} className="" hoverGlow>
                                     <div className="p-5 flex items-center gap-4 relative z-10">
-                                        <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center"><Icon size={18} className={stat.color} /></div>
+                                        <div className="w-10 h-10 rounded-xl bg-foreground/[0.04] border border-white/10 flex items-center justify-center"><Icon size={18} className={stat.color} /></div>
                                         <div><div className="text-2xl font-bold text-white">{stat.value}</div><div className="text-xs text-gray-500">{stat.label}</div></div>
                                     </div>
                                 </AnimatedCard>
@@ -381,8 +381,8 @@ export default function SwarmPage() {
                         {/* Detail */}
                         <div className="lg:col-span-2">
                             {activeSwarm ? (
-                                <Card variant="glass" className="border-white/5 hover:border-white/10">
-                                    <CardHeader className="border-b border-white/5 pb-4">
+                                <Card variant="glass" className="border-foreground/10 hover:border-primary/30">
+                                    <CardHeader className="border-b border-foreground/10 pb-4">
                                         <CardTitle className="flex items-center justify-between">
                                             <div>
                                                 <h2 className="text-lg font-medium text-white">{activeSwarm.name}</h2>
@@ -415,12 +415,12 @@ export default function SwarmPage() {
                                                 const Icon = agent.icon;
                                                 return (
                                                     <div key={agent.id}>
-                                                        <div className="flex items-start gap-4 p-4 rounded-xl bg-black/40 border border-white/5 transition-all">
+                                                        <div className="flex items-start gap-4 p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10 transition-all">
                                                             <div className="flex flex-col items-center gap-1">
                                                                 <div className={`w-10 h-10 rounded-xl border flex items-center justify-center ${
                                                                     agent.status === 'done' ? 'bg-emerald-400/10 border-emerald-400/30' :
                                                                     agent.status === 'thinking' || agent.status === 'executing' ? 'bg-[#F97316]/10 border-[#F97316]/30' :
-                                                                    'bg-white/5 border-white/5'
+                                                                    'bg-foreground/[0.04] border-foreground/10'
                                                                 }`}>
                                                                     <Icon size={18} className={
                                                                         agent.status === 'done' ? 'text-emerald-400' :
@@ -433,11 +433,11 @@ export default function SwarmPage() {
                                                             <div className="flex-1 min-w-0">
                                                                 <div className="flex items-center gap-2 mb-1">
                                                                     <span className="text-sm font-semibold text-white">{agent.name}</span>
-                                                                    <Badge variant="default" className="text-[9px] bg-white/5">{agent.model}</Badge>
+                                                                    <Badge variant="default" className="text-[9px] bg-foreground/[0.04]">{agent.model}</Badge>
                                                                 </div>
                                                                 <p className="text-xs text-gray-400">{agent.role}</p>
                                                                 {agent.output && (
-                                                                    <div className="mt-2 p-2 rounded-lg bg-white/5 border border-white/5 text-xs text-gray-300 font-mono">
+                                                                    <div className="mt-2 p-2 rounded-lg bg-foreground/[0.04] border border-foreground/10 text-xs text-gray-300 font-mono">
                                                                         {agent.output}
                                                                     </div>
                                                                 )}

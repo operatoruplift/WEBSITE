@@ -143,7 +143,7 @@ export default function WorkflowsPage() {
     return (
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8">
-                <div className="max-w-[1400px] mx-auto space-y-8">
+                <div className="max-w-7xl mx-auto space-y-8">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
@@ -168,11 +168,11 @@ export default function WorkflowsPage() {
                                 </div>
                                 <div className="space-y-4">
                                     <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="Workflow name" aria-label="Workflow name"
-                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
+                                        className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
                                     <input value={newDesc} onChange={e => setNewDesc(e.target.value)} placeholder="Description" aria-label="Workflow description"
-                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
+                                        className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
                                     <select value={newTrigger} onChange={e => setNewTrigger(e.target.value)} aria-label="Trigger type"
-                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none">
+                                        className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none">
                                         <option value="Manual">Manual</option>
                                         <option value="Cron: Daily">Cron: Daily</option>
                                         <option value="Webhook: GitHub">Webhook: GitHub</option>
@@ -194,7 +194,7 @@ export default function WorkflowsPage() {
                             return (
                                 <Card key={stat.label} variant="glass" className="group">
                                     <CardContent className="p-5 flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center"><Icon size={18} className={stat.color} /></div>
+                                        <div className="w-10 h-10 rounded-xl bg-foreground/[0.04] border border-white/10 flex items-center justify-center"><Icon size={18} className={stat.color} /></div>
                                         <div><div className="text-2xl font-bold text-white">{stat.value}</div><div className="text-xs text-gray-500">{stat.label}</div></div>
                                     </CardContent>
                                 </Card>
@@ -208,7 +208,7 @@ export default function WorkflowsPage() {
                         ) : workflows.map((wf, i) => {
                             const status = statusConfig[wf.status];
                             return (
-                                <Card key={wf.id} variant="glass" className="card-animate group hover:border-white/10 transition-all" style={{ animationDelay: `${i * 80}ms` }}>
+                                <Card key={wf.id} variant="glass" className="card-animate group hover:border-primary/30 transition-all" style={{ animationDelay: `${i * 80}ms` }}>
                                     <CardContent className="p-5">
                                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                             <div className="flex items-start gap-4 flex-1 min-w-0">
@@ -242,15 +242,15 @@ export default function WorkflowsPage() {
                                                 {wf.status === 'draft' && (
                                                     <button onClick={() => toggleStatus(wf.id)} className="p-2 rounded-lg bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20 transition-colors"><Play size={14} /></button>
                                                 )}
-                                                <button onClick={() => deleteWorkflow(wf.id)} className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"><Trash2 size={14} /></button>
+                                                <button onClick={() => deleteWorkflow(wf.id)} className="p-2 rounded-lg bg-foreground/[0.04] text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"><Trash2 size={14} /></button>
                                             </div>
                                             {(runningId === wf.id || (stepOutputs[wf.id] && stepOutputs[wf.id].length > 0)) && (
                                                 <div className="w-full mt-3 space-y-2">
                                                     {runningId === wf.id && (
-                                                        <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden"><div className="h-full bg-[#F97316] rounded-full transition-all duration-500" style={{ width: `${runProgress}%` }} /></div>
+                                                        <div className="w-full h-1 bg-foreground/[0.04] rounded-full overflow-hidden"><div className="h-full bg-[#F97316] rounded-full transition-all duration-500" style={{ width: `${runProgress}%` }} /></div>
                                                     )}
                                                     {stepOutputs[wf.id]?.map((output, i) => (
-                                                        <div key={i} className="text-xs text-gray-400 font-mono p-2 bg-black/30 rounded-lg border border-white/5 leading-relaxed">
+                                                        <div key={i} className="text-xs text-gray-400 font-mono p-2 bg-black/30 rounded-lg border border-foreground/10 leading-relaxed">
                                                             {output}
                                                         </div>
                                                     ))}

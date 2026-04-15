@@ -78,8 +78,7 @@ export function CockpitSidebar() {
     const isActive = (href: string) => { if (href === '/app') return pathname === '/app'; return pathname?.startsWith(href) ?? false; };
 
     return (
-        <aside className="w-60 flex flex-col h-full relative z-20 border-r border-white/5 hidden md:flex"
-            style={{ background: 'rgba(5,5,8,0.85)', backdropFilter: 'blur(20px)' }}>
+        <aside className="w-60 flex flex-col h-full relative z-20 border-r border-foreground/5 hidden md:flex bg-background/50 backdrop-blur-sm">
             <div className="px-5 py-4 border-b border-white/5">
                 <Link href="/" className="flex items-center">
                     <Logo className="w-8 h-8" />

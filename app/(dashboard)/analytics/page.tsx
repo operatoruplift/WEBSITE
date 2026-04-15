@@ -58,7 +58,7 @@ export default function AnalyticsPage() {
     return (
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8">
-                <div className="max-w-[1400px] mx-auto space-y-8">
+                <div className="max-w-7xl mx-auto space-y-8">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
@@ -69,7 +69,7 @@ export default function AnalyticsPage() {
                             <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Analytics</h1>
                             <p className="text-sm text-gray-400 mt-1">Sample data — connect Supabase metrics for live analytics</p>
                         </div>
-                        <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-lg p-1">
+                        <div className="flex items-center gap-1 bg-foreground/[0.04] border border-white/10 rounded-lg p-1">
                             {(['24h', '7d', '30d'] as const).map(range => (
                                 <button key={range} onClick={() => setTimeRange(range)} className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all ${timeRange === range ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-gray-300'}`}>{range}</button>
                             ))}
@@ -83,7 +83,7 @@ export default function AnalyticsPage() {
                                 <Card key={m.label} variant="glass" className="card-animate" style={{ animationDelay: `${i * 80}ms` }}>
                                     <CardContent className="p-5">
                                         <div className="flex justify-between items-start mb-4">
-                                            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center"><Icon size={18} className="text-[#F59E0B]" /></div>
+                                            <div className="w-10 h-10 rounded-xl bg-foreground/[0.04] border border-white/10 flex items-center justify-center"><Icon size={18} className="text-[#F59E0B]" /></div>
                                             <div className={`flex items-center gap-1 text-xs font-mono ${m.positive ? 'text-emerald-400' : 'text-red-400'}`}>
                                                 {m.positive ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}{m.change}
                                             </div>
@@ -98,7 +98,7 @@ export default function AnalyticsPage() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <Card variant="glass" className="lg:col-span-2 card-animate" style={{ animationDelay: '300ms' }}>
-                            <CardHeader className="border-b border-white/5 pb-4">
+                            <CardHeader className="border-b border-foreground/10 pb-4">
                                 <CardTitle className="flex items-center gap-2 text-sm text-gray-300 font-mono uppercase tracking-widest">
                                     <Activity size={14} className="text-[#F59E0B]" /> {chartLabel}
                                 </CardTitle>
@@ -116,7 +116,7 @@ export default function AnalyticsPage() {
                         </Card>
 
                         <Card variant="glass" className="card-animate" style={{ animationDelay: '400ms' }}>
-                            <CardHeader className="border-b border-white/5 pb-4">
+                            <CardHeader className="border-b border-foreground/10 pb-4">
                                 <CardTitle className="flex items-center gap-2 text-sm text-gray-300 font-mono uppercase tracking-widest">
                                     <TrendingUp size={14} className="text-[#F97316]" /> Top Agents
                                 </CardTitle>
@@ -135,7 +135,7 @@ export default function AnalyticsPage() {
                                                     <Badge variant="default" className="text-[9px] bg-emerald-400/10 text-emerald-400 border border-emerald-400/20">{agent.trend}</Badge>
                                                 </div>
                                             </div>
-                                            <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                                            <div className="w-full h-1 bg-foreground/[0.04] rounded-full overflow-hidden">
                                                 <div className="h-full bg-gradient-to-r from-[#F97316] to-[#F97316] rounded-full transition-all duration-700" style={{ width: `${agent.bar}%` }} />
                                             </div>
                                         </div>

@@ -132,7 +132,7 @@ export default function SettingsPage() {
                         <div className="w-48 shrink-0 hidden md:block">
                             <nav className="space-y-1">
                                 {tabs.map(tab => { const Icon = tab.icon; return (
-                                    <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${activeTab === tab.id ? 'bg-white/10 text-white border border-white/10' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>
+                                    <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${activeTab === tab.id ? 'bg-white/10 text-white border border-white/10' : 'text-gray-400 hover:text-white hover:bg-foreground/[0.06]'}`}>
                                         <Icon size={16} />{tab.label}
                                     </button>
                                 ); })}
@@ -141,16 +141,16 @@ export default function SettingsPage() {
                         <div className="flex-1">
                             {/* Mobile tab selector */}
                             <div className="md:hidden mb-4 flex gap-1 overflow-x-auto pb-2 scrollbar-none">
-                                {tabs.map(tab => <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap ${activeTab === tab.id ? 'bg-primary/20 text-primary border border-primary/30' : 'bg-white/5 text-gray-400'}`}>{tab.label}</button>)}
+                                {tabs.map(tab => <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap ${activeTab === tab.id ? 'bg-primary/20 text-primary border border-primary/30' : 'bg-foreground/[0.04] text-gray-400'}`}>{tab.label}</button>)}
                             </div>
-                            <Card variant="glass" className="p-8 border-white/5 bg-black/40">
+                            <Card variant="glass" className="p-8 border-foreground/10 bg-foreground/[0.04]">
                                 {activeTab === 'profile' && (
                                     <div className="space-y-6">
                                         <h2 className="text-lg font-medium text-white">Profile</h2>
                                         <div className="flex items-center gap-6"><div className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold text-white" style={{ background: 'linear-gradient(135deg, #F97316, #F97316)' }}>{displayName.charAt(0).toUpperCase()}</div><div><p className="text-sm text-white font-medium">{displayName}</p><p className="text-xs text-gray-500">{email}</p></div></div>
                                         <div className="space-y-4">
-                                            <div><label className="text-sm text-gray-400 block mb-2">Display Name</label><input type="text" value={displayName} onChange={e => setDisplayName(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" /></div>
-                                            <div><label className="text-sm text-gray-400 block mb-2">Email</label><input type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" /></div>
+                                            <div><label className="text-sm text-gray-400 block mb-2">Display Name</label><input type="text" value={displayName} onChange={e => setDisplayName(e.target.value)} className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" /></div>
+                                            <div><label className="text-sm text-gray-400 block mb-2">Email</label><input type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" /></div>
                                         </div>
                                     </div>
                                 )}
@@ -163,7 +163,7 @@ export default function SettingsPage() {
                                             { label: 'Product updates', value: productUpdates, set: setProductUpdates },
                                             { label: 'Marketing emails', value: marketing, set: setMarketing },
                                         ].map(item => (
-                                            <div key={item.label} className="flex items-center justify-between py-3 border-b border-white/5">
+                                            <div key={item.label} className="flex items-center justify-between py-3 border-b border-foreground/10">
                                                 <span className="text-sm text-gray-300">{item.label}</span>
                                                 <Toggle value={item.value} onChange={item.set} />
                                             </div>
@@ -181,7 +181,7 @@ export default function SettingsPage() {
                                                     if (t === 'Light') root.setAttribute('data-theme', 'light');
                                                     else if (t === 'System' && window.matchMedia('(prefers-color-scheme: light)').matches) root.setAttribute('data-theme', 'light');
                                                     else root.removeAttribute('data-theme');
-                                                }} className={`p-4 rounded-xl border text-center transition-all ${theme === t ? 'bg-primary/10 border-primary/30 text-white' : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20'}`}>
+                                                }} className={`p-4 rounded-xl border text-center transition-all ${theme === t ? 'bg-primary/10 border-primary/30 text-white' : 'bg-foreground/[0.04] border-white/10 text-gray-400 hover:border-primary/30'}`}>
                                                     <div className={`w-12 h-8 rounded-lg mx-auto mb-2 ${t === 'Dark' ? 'bg-gray-900 border border-white/20' : t === 'Light' ? 'bg-white border border-gray-300' : 'bg-gradient-to-r from-gray-900 to-white border border-white/20'}`} />
                                                     <span className="text-sm font-medium">{t}</span>
                                                 </button>
@@ -194,7 +194,7 @@ export default function SettingsPage() {
                                         <h2 className="text-lg font-medium text-white">Security</h2>
                                         <PasswordChangeForm showToast={showToast} />
                                         <EncryptionSetup showToast={showToast} />
-                                        <div className="p-4 rounded-xl bg-white/5 border border-white/5"><div className="flex items-center justify-between"><div><p className="text-sm text-white font-medium">Two-Factor Authentication</p><p className="text-xs text-gray-500 mt-1">Add an extra layer of security</p></div><GlowButton variant="outline" size="sm" onClick={() => showToast('2FA requires a connected backend. Coming soon.', 'info')}>Enable 2FA</GlowButton></div></div>
+                                        <div className="p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10"><div className="flex items-center justify-between"><div><p className="text-sm text-white font-medium">Two-Factor Authentication</p><p className="text-xs text-gray-500 mt-1">Add an extra layer of security</p></div><GlowButton variant="outline" size="sm" onClick={() => showToast('2FA requires a connected backend. Coming soon.', 'info')}>Enable 2FA</GlowButton></div></div>
                                     </div>
                                 )}
                                 {activeTab === 'api' && (
@@ -203,7 +203,7 @@ export default function SettingsPage() {
                                         {apiKeys.length > 0 ? (
                                             <div className="space-y-3">
                                                 {apiKeys.map(k => (
-                                                    <div key={k.key} className="p-4 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
+                                                    <div key={k.key} className="p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10 flex items-center justify-between">
                                                         <div><p className="text-sm text-gray-400 font-mono">{k.key.substring(0, 12)}••••••••{k.key.substring(k.key.length - 4)}</p><p className="text-[10px] text-gray-600 mt-1">Created {k.created}{k.expires ? ` · Expires ${k.expires}` : ''}</p></div>
                                                         <div className="flex gap-2">
                                                             <button onClick={() => handleCopyKey(k.key)} className="text-xs text-primary hover:underline flex items-center gap-1"><Copy size={12} /> Copy</button>
@@ -213,7 +213,7 @@ export default function SettingsPage() {
                                                 ))}
                                             </div>
                                         ) : (
-                                            <div className="p-6 rounded-xl bg-white/[0.02] border border-white/5 text-center"><p className="text-sm text-gray-500">No API keys generated yet</p></div>
+                                            <div className="p-6 rounded-xl bg-white/[0.02] border border-foreground/10 text-center"><p className="text-sm text-gray-500">No API keys generated yet</p></div>
                                         )}
                                         <GlowButton variant="outline" onClick={handleGenerateKey}><Key size={16} className="mr-2" /> Generate New Key</GlowButton>
                                     </div>
@@ -221,11 +221,11 @@ export default function SettingsPage() {
                                 {activeTab === 'data' && (
                                     <div className="space-y-6">
                                         <h2 className="text-lg font-medium text-white">Data & Storage</h2>
-                                        <div className="p-4 rounded-xl bg-white/5 border border-white/5"><div className="flex items-center justify-between"><div><p className="text-sm text-white">Export your data</p><p className="text-xs text-gray-500 mt-1">Download all your data as JSON</p></div><GlowButton variant="outline" size="sm" onClick={handleExportData}>Export</GlowButton></div></div>
+                                        <div className="p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10"><div className="flex items-center justify-between"><div><p className="text-sm text-white">Export your data</p><p className="text-xs text-gray-500 mt-1">Download all your data as JSON</p></div><GlowButton variant="outline" size="sm" onClick={handleExportData}>Export</GlowButton></div></div>
                                         <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20"><div className="flex items-center justify-between"><div><p className="text-sm text-red-400 font-medium">Delete All Data</p><p className="text-xs text-gray-500 mt-1">Clear all local storage data</p></div><GlowButton variant="outline" size="sm" className="border-red-500/50 text-red-400 hover:bg-red-500/10" onClick={handleDeleteAccount}>Delete</GlowButton></div></div>
                                     </div>
                                 )}
-                                <div className="mt-8 pt-6 border-t border-white/5 flex justify-end">
+                                <div className="mt-8 pt-6 border-t border-foreground/10 flex justify-end">
                                     <GlowButton onClick={handleSave} className="px-6">{saved ? <><Check size={16} className="mr-2" /> Saved</> : <><Save size={16} className="mr-2" /> Save Changes</>}</GlowButton>
                                 </div>
                             </Card>
@@ -253,9 +253,9 @@ function PasswordChangeForm({ showToast }: { showToast: (msg: string, type: 'suc
 
     return (
         <div className="space-y-4">
-            <div><label htmlFor="current-pw" className="text-sm text-gray-400 block mb-2">Current Password</label><input id="current-pw" type="password" value={current} onChange={e => setCurrent(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="••••••••" aria-label="Current password" /></div>
-            <div><label htmlFor="new-pw" className="text-sm text-gray-400 block mb-2">New Password</label><input id="new-pw" type="password" value={newPw} onChange={e => setNewPw(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="••••••••" aria-label="New password" /></div>
-            <div><label htmlFor="confirm-pw" className="text-sm text-gray-400 block mb-2">Confirm Password</label><input id="confirm-pw" type="password" value={confirm} onChange={e => setConfirm(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="••••••••" aria-label="Confirm password" /></div>
+            <div><label htmlFor="current-pw" className="text-sm text-gray-400 block mb-2">Current Password</label><input id="current-pw" type="password" value={current} onChange={e => setCurrent(e.target.value)} className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="••••••••" aria-label="Current password" /></div>
+            <div><label htmlFor="new-pw" className="text-sm text-gray-400 block mb-2">New Password</label><input id="new-pw" type="password" value={newPw} onChange={e => setNewPw(e.target.value)} className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="••••••••" aria-label="New password" /></div>
+            <div><label htmlFor="confirm-pw" className="text-sm text-gray-400 block mb-2">Confirm Password</label><input id="confirm-pw" type="password" value={confirm} onChange={e => setConfirm(e.target.value)} className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="••••••••" aria-label="Confirm password" /></div>
             <button onClick={handleSubmit} className="px-4 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary text-sm hover:bg-primary/20 transition-colors">Update Password</button>
         </div>
     );
@@ -288,7 +288,7 @@ function EncryptionSetup({ showToast }: { showToast: (msg: string, type: 'succes
     };
 
     return (
-        <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+        <div className="p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10">
             <div className="flex items-center justify-between">
                 <div>
                     <p className="text-sm text-white font-medium flex items-center gap-2">
@@ -303,7 +303,7 @@ function EncryptionSetup({ showToast }: { showToast: (msg: string, type: 'succes
             {!isConfigured && (
                 <div className="mt-4 flex gap-3">
                     <input type="password" value={encPassword} onChange={e => setEncPassword(e.target.value)} placeholder="Encryption password (min 8 chars)" aria-label="Encryption password"
-                        className="flex-1 bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:border-primary/50 focus:outline-none" />
+                        className="flex-1 bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:border-primary/50 focus:outline-none" />
                     <button onClick={handleSetup} disabled={verifying}
                         className="px-4 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary text-sm hover:bg-primary/20 transition-colors whitespace-nowrap">
                         {verifying ? 'Setting up...' : 'Enable'}

@@ -45,8 +45,8 @@ function renderMarkdown(text: string): React.ReactNode {
     const flushCodeBlock = (key: string) => {
         if (codeLines.length > 0 || inCodeBlock) {
             elements.push(
-                <div key={key} className="my-3 rounded-lg overflow-hidden border border-white/5 bg-black/40">
-                    {codeLang && <div className="px-3 py-1.5 bg-white/5 border-b border-white/5 text-[10px] font-mono text-gray-500 uppercase tracking-widest">{codeLang}</div>}
+                <div key={key} className="my-3 rounded-lg overflow-hidden border border-foreground/10 bg-foreground/[0.04]">
+                    {codeLang && <div className="px-3 py-1.5 bg-foreground/[0.04] border-b border-foreground/10 text-[10px] font-mono text-gray-500 uppercase tracking-widest">{codeLang}</div>}
                     <pre className="p-3 overflow-x-auto text-xs text-[#F97316] font-mono leading-relaxed"><code>{codeLines.join('\n')}</code></pre>
                 </div>
             );
@@ -88,7 +88,7 @@ function escapeHtml(text: string): string {
 
 function inlineMarkdown(text: string): string {
     const safe = escapeHtml(text);
-    return safe.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>').replace(/`(.+?)`/g, '<code class="px-1.5 py-0.5 rounded bg-black/60 text-green-300 font-mono text-[13px] border border-white/5">$1</code>');
+    return safe.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>').replace(/`(.+?)`/g, '<code class="px-1.5 py-0.5 rounded bg-foreground/[0.06] text-green-300 font-mono text-[13px] border border-foreground/10">$1</code>');
 }
 
 export default function ChatPage() {
@@ -437,15 +437,15 @@ export default function ChatPage() {
         <MobilePageWrapper>
             <div className="flex h-[calc(100vh-48px)] relative">
                 <div className="absolute top-0 right-0 w-[400px] h-[300px] bg-[#F97316]/5 blur-[120px] rounded-full pointer-events-none z-0" />
-                <aside className="hidden md:flex w-72 flex-col border-r border-white/5 bg-black/60 relative z-10 shrink-0">
-                    <div className="p-4 border-b border-white/5 space-y-3">
+                <aside className="hidden md:flex w-72 flex-col border-r border-foreground/10 bg-foreground/[0.06] relative z-10 shrink-0">
+                    <div className="p-4 border-b border-foreground/10 space-y-3">
                         <GlowButton onClick={createNewSession} className="w-full justify-center bg-gradient-to-r from-[#F97316]/20 to-[#F59E0B]/20 border-[#F97316]/30 hover:from-[#F97316]/30 hover:to-[#F59E0B]/30 text-white h-10"><Plus size={16} className="mr-2" /> New Chat</GlowButton>
-                        <div className="relative"><Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" /><input value={sidebarSearch} onChange={e => setSidebarSearch(e.target.value)} placeholder="Search sessions..." aria-label="Search chat sessions" className="w-full bg-white/5 border border-white/5 rounded-xl pl-9 pr-3 py-2 text-xs text-gray-400 placeholder-gray-600 focus:outline-none focus:border-white/20 transition-all" /></div>
+                        <div className="relative"><Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" /><input value={sidebarSearch} onChange={e => setSidebarSearch(e.target.value)} placeholder="Search sessions..." aria-label="Search chat sessions" className="w-full bg-foreground/[0.04] border border-foreground/10 rounded-xl pl-9 pr-3 py-2 text-xs text-gray-400 placeholder-gray-600 focus:outline-none focus:border-white/20 transition-all" /></div>
                     </div>
                     <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-none">
                         {filteredSessions.length === 0 ? <div className="text-center py-8"><MessageSquare size={24} className="text-gray-700 mx-auto mb-2" /><p className="text-xs text-gray-600">No sessions yet</p></div> :
                             filteredSessions.map(session => (
-                                <div key={session.id} className={`group flex items-start gap-2 p-3 rounded-xl cursor-pointer transition-all ${activeSessionId === session.id ? 'bg-[#F97316]/10 border border-[#F97316]/20' : 'hover:bg-white/5 border border-transparent'}`} onClick={() => setActiveSessionId(session.id)}>
+                                <div key={session.id} className={`group flex items-start gap-2 p-3 rounded-xl cursor-pointer transition-all ${activeSessionId === session.id ? 'bg-[#F97316]/10 border border-[#F97316]/20' : 'hover:bg-foreground/[0.06] border border-transparent'}`} onClick={() => setActiveSessionId(session.id)}>
                                     <Bot size={14} className={`shrink-0 mt-0.5 ${activeSessionId === session.id ? 'text-[#F97316]' : 'text-gray-500'}`} />
                                     <div className="flex-1 min-w-0"><p className={`text-sm truncate font-medium ${activeSessionId === session.id ? 'text-white' : 'text-gray-400'}`}>{session.title}</p><p className="text-[10px] text-gray-600 font-mono mt-0.5">{session.messages.length} msgs · {MODELS.find(m => m.id === session.model)?.label || 'Claude'}</p></div>
                                     <button onClick={e => { e.stopPropagation(); deleteSession(session.id); }} className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 text-gray-600 transition-all shrink-0"><Trash2 size={12} /></button>
@@ -455,9 +455,9 @@ export default function ChatPage() {
                     </div>
                 </aside>
                 <main className="flex-1 flex flex-col min-w-0 relative z-10">
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-black/40 backdrop-blur-sm shrink-0 sticky top-0 z-50">
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-foreground/10 bg-foreground/[0.04] backdrop-blur-sm shrink-0 sticky top-0 z-50">
                         <div className="flex items-center gap-3">
-                            <div className="flex gap-1 p-1 bg-white/5 rounded-xl border border-white/5">
+                            <div className="flex gap-1 p-1 bg-foreground/[0.04] rounded-xl border border-foreground/10">
                                 {AGENTS.map(agent => { const Icon = agent.icon; return (
                                     <button key={agent.id} onClick={() => setSelectedAgent(agent.id)} className={`px-2 sm:px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-widest flex items-center gap-1.5 transition-all ${selectedAgent === agent.id ? 'bg-[#F97316]/20 text-[#F97316] border border-[#F97316]/30' : 'text-gray-500 hover:text-white'}`}>
                                         <Icon size={10} /> <span className="hidden sm:inline">{agent.label.split(' ')[0]}</span>
@@ -466,14 +466,14 @@ export default function ChatPage() {
                             </div>
                         </div>
                         <div className="relative">
-                            <button onClick={() => setShowModelPicker(!showModelPicker)} className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all text-sm ${activeModel.color}`}>
+                            <button onClick={() => setShowModelPicker(!showModelPicker)} className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-foreground/[0.04] border border-foreground/10 hover:bg-white/10 transition-all text-sm ${activeModel.color}`}>
                                 <span className="font-bold text-xs truncate max-w-[80px] sm:max-w-none">{activeModel.label}</span>
                                 <Badge variant="default" className={`text-[8px] font-mono px-1.5 py-0 ${activeModel.color}`}>{activeModel.badge}</Badge>
                                 <ChevronDown size={14} className={`text-gray-500 transition-transform ${showModelPicker ? 'rotate-180' : ''}`} />
                             </button>
-                            {showModelPicker && <div className="absolute top-full right-0 mt-2 w-56 bg-surface border border-white/5 rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-none" style={{ isolation: 'isolate' }}>
+                            {showModelPicker && <div className="absolute top-full right-0 mt-2 w-56 bg-surface border border-foreground/10 rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-none" style={{ isolation: 'isolate' }}>
                                 {MODELS.map(model => (
-                                    <button key={model.id} onClick={() => { setSelectedModel(model.id); setShowModelPicker(false); }} className={`w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left ${selectedModel === model.id ? 'bg-white/5' : ''}`}>
+                                    <button key={model.id} onClick={() => { setSelectedModel(model.id); setShowModelPicker(false); }} className={`w-full flex items-center justify-between px-4 py-3 hover:bg-foreground/[0.06] transition-colors text-left ${selectedModel === model.id ? 'bg-foreground/[0.04]' : ''}`}>
                                         <div><p className={`text-sm font-bold ${model.color}`}>{model.label}</p><p className="text-[10px] text-gray-600 font-mono">{model.provider}</p></div>
                                         <div className="flex items-center gap-2"><Badge variant="default" className={`text-[8px] font-mono px-1.5 ${model.color}`}>{model.badge}</Badge>{selectedModel === model.id && <Check size={14} className={model.color} />}</div>
                                     </button>
@@ -501,17 +501,17 @@ export default function ChatPage() {
                             <div className="p-4 md:p-8 space-y-8 max-w-4xl mx-auto">
                                 {activeSession.messages.map((msg, index) => (
                                     <div key={msg.id} className={`flex gap-4 animate-fadeInUp ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`} style={{ animationDelay: `${Math.min(index * 30, 300)}ms` }}>
-                                        {msg.role === 'assistant' && <div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 bg-white/5"><Bot size={16} className="text-gray-400" /></div>}
+                                        {msg.role === 'assistant' && <div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 bg-foreground/[0.04]"><Bot size={16} className="text-gray-400" /></div>}
                                         <div className={`group relative max-w-[80%] md:max-w-[72%] ${msg.role === 'user' ? 'order-first' : ''}`}>
                                             {msg.role === 'assistant' && msg.model && <p className="text-[10px] font-mono text-gray-600 mb-1 ml-1">{MODELS.find(m => m.id === msg.model)?.label || msg.model}</p>}
-                                            <div className={`px-4 py-3 rounded-xl text-sm ${msg.role === 'user' ? 'bg-primary/20 text-white rounded-br-md' : 'bg-white/5 border border-white/5 text-gray-200 rounded-bl-md'}`}>
+                                            <div className={`px-4 py-3 rounded-xl text-sm ${msg.role === 'user' ? 'bg-primary/20 text-white rounded-br-md' : 'bg-foreground/[0.04] border border-foreground/10 text-gray-200 rounded-bl-md'}`}>
                                                 {msg.role === 'assistant' ? renderMarkdown(msg.content) : <p className="text-[15px] leading-relaxed whitespace-pre-wrap">{msg.content}</p>}
                                             </div>
                                             {msg.role === 'assistant' && (
                                                 <div className="flex items-center gap-2 mt-1">
-                                                    <button onClick={() => copyMessage(msg.content, msg.id)} className="opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-white/5 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">{copiedId === msg.id ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}{copiedId === msg.id ? 'Copied' : 'Copy'}</button>
+                                                    <button onClick={() => copyMessage(msg.content, msg.id)} className="opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-foreground/10 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">{copiedId === msg.id ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}{copiedId === msg.id ? 'Copied' : 'Copy'}</button>
                                                     {msg.councilTranscript && (
-                                                        <button onClick={() => setExpandedCouncil(expandedCouncil === msg.id ? null : msg.id)} className="opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-white/5 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">
+                                                        <button onClick={() => setExpandedCouncil(expandedCouncil === msg.id ? null : msg.id)} className="opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-foreground/10 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">
                                                             <Brain size={12} className="text-[#F97316]" /> {expandedCouncil === msg.id ? 'Hide' : 'View'} Council
                                                         </button>
                                                     )}
@@ -519,10 +519,10 @@ export default function ChatPage() {
                                             )}
                                             {/* Council reasoning transcript */}
                                             {msg.councilTranscript && expandedCouncil === msg.id && (
-                                                <div className="mt-3 p-3 rounded-lg bg-black/40 border border-white/5 space-y-2">
+                                                <div className="mt-3 p-3 rounded-lg bg-foreground/[0.04] border border-foreground/10 space-y-2">
                                                     <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">Council Debate Transcript</p>
                                                     {msg.councilTranscript.map((agent) => (
-                                                        <div key={agent.agentId} className="p-2 rounded bg-white/[0.03] border border-white/5">
+                                                        <div key={agent.agentId} className="p-2 rounded bg-foreground/[0.03] border border-foreground/10">
                                                             <div className="flex items-center gap-2 mb-1">
                                                                 <span className="text-[10px] font-bold text-[#F97316]">{agent.agentName}</span>
                                                                 <span className="text-[9px] text-gray-600 font-mono">{agent.durationMs}ms</span>
@@ -533,26 +533,26 @@ export default function ChatPage() {
                                                 </div>
                                             )}
                                         </div>
-                                        {msg.role === 'user' && <div className="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center shrink-0"><User size={16} className="text-white" /></div>}
+                                        {msg.role === 'user' && <div className="h-8 w-8 rounded-full bg-foreground/[0.04] flex items-center justify-center shrink-0"><User size={16} className="text-white" /></div>}
                                     </div>
                                 ))}
-                                {isLoading && <div className="flex gap-4 animate-fadeInUp"><div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 bg-white/5">{councilProcessing ? <Brain size={16} className="text-[#F97316] animate-pulse" /> : <Bot size={16} className="text-gray-400" />}</div><div className="bg-white/5 border border-white/5 rounded-xl rounded-bl-md px-4 py-3"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#F97316] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{councilProcessing ? '5 agents debating...' : `${activeModel.label} is thinking...`}</span></div></div></div>}
+                                {isLoading && <div className="flex gap-4 animate-fadeInUp"><div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 bg-foreground/[0.04]">{councilProcessing ? <Brain size={16} className="text-[#F97316] animate-pulse" /> : <Bot size={16} className="text-gray-400" />}</div><div className="bg-foreground/[0.04] border border-foreground/10 rounded-xl rounded-bl-md px-4 py-3"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#F97316] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{councilProcessing ? '5 agents debating...' : `${activeModel.label} is thinking...`}</span></div></div></div>}
                                 <div ref={messagesEndRef} />
                             </div>
                         )}
                     </div>
-                    <div className="p-4 border-t border-white/5 bg-black/40 backdrop-blur-sm shrink-0">
+                    <div className="p-4 border-t border-foreground/10 bg-foreground/[0.04] backdrop-blur-sm shrink-0">
                         <div className="max-w-4xl mx-auto">
-                            <div className="flex items-end gap-3 p-3 rounded-lg bg-white/5 border border-white/5 focus-within:border-[#F97316]/40 transition-all">
+                            <div className="flex items-end gap-3 p-3 rounded-lg bg-foreground/[0.04] border border-foreground/10 focus-within:border-[#F97316]/40 transition-all">
                                 <button onClick={createNewSession} aria-label="New chat" className="p-2 rounded-xl text-gray-500 hover:text-white hover:bg-white/10 transition-all md:hidden shrink-0"><Plus size={20} /></button>
                                 {/* TODO: Agent selector — load installed agents from localStorage('installed-agents') + localStorage('custom-agents'),
                                    show a dropdown to pick an agent whose system prompt seeds the conversation.
                                    For now, the agent personas (General/Code/Research) in the top bar serve this role. */}
-                                <button onClick={() => showToast('File attachments coming soon', 'info')} aria-label="Attach file" className="p-2 rounded-xl text-gray-600 hover:text-gray-400 hover:bg-white/5 transition-all shrink-0"><Paperclip size={18} /></button>
+                                <button onClick={() => showToast('File attachments coming soon', 'info')} aria-label="Attach file" className="p-2 rounded-xl text-gray-600 hover:text-gray-400 hover:bg-foreground/[0.06] transition-all shrink-0"><Paperclip size={18} /></button>
                                 <textarea ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyDown} placeholder={`Message ${activeModel.label}...`} aria-label="Chat message input" rows={1}
                                     className="flex-1 bg-transparent text-white placeholder-gray-600 focus:outline-none resize-none text-[15px] leading-relaxed min-h-[40px] max-h-40" style={{ height: 'auto' }}
                                     onInput={e => { const t = e.currentTarget; t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight, 160) + 'px'; }} />
-                                <button onClick={() => showToast('Voice input coming soon', 'info')} aria-label="Voice input" className="p-2 rounded-xl text-gray-600 hover:text-gray-400 hover:bg-white/5 transition-all shrink-0"><Mic size={18} /></button>
+                                <button onClick={() => showToast('Voice input coming soon', 'info')} aria-label="Voice input" className="p-2 rounded-xl text-gray-600 hover:text-gray-400 hover:bg-foreground/[0.06] transition-all shrink-0"><Mic size={18} /></button>
                                 <button onClick={handleSend} disabled={!input.trim() || isLoading} className="w-10 h-10 rounded-xl flex items-center justify-center transition-all shrink-0 disabled:opacity-40 disabled:cursor-not-allowed bg-primary hover:bg-primary/90 shadow-[0_0_15px_rgba(231,118,48,0.3)]">
                                     {isLoading ? <Loader2 size={18} className="animate-spin text-white" /> : <Send size={18} className="text-white" />}
                                 </button>

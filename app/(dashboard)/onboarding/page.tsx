@@ -69,7 +69,7 @@ export default function OnboardingPage() {
                 <div>
                     <label htmlFor="onboard-name" className="text-sm text-gray-400 block mb-2 text-left">What should we call you?</label>
                     <input id="onboard-name" type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Your name" aria-label="Your name"
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none text-center" autoFocus />
+                        className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none text-center" autoFocus />
                 </div>
                 <GlowButton onClick={() => setStep(1)} className="w-full" disabled={!name.trim()}>
                     Continue <ArrowRight size={16} className="ml-2" />
@@ -90,9 +90,9 @@ export default function OnboardingPage() {
                     return (
                         <button key={uc.id} onClick={() => toggleCase(uc.id)}
                             className={`p-4 rounded-xl border text-left transition-all flex items-start gap-3 ${
-                                selected ? 'bg-primary/10 border-primary/30' : 'bg-white/5 border-white/10 hover:border-white/20'
+                                selected ? 'bg-primary/10 border-primary/30' : 'bg-foreground/[0.04] border-white/10 hover:border-primary/30'
                             }`}>
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${selected ? 'bg-primary/20' : 'bg-white/5'}`}>
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${selected ? 'bg-primary/20' : 'bg-foreground/[0.04]'}`}>
                                 <Icon size={18} className={selected ? 'text-primary' : 'text-gray-500'} />
                             </div>
                             <div>
@@ -105,7 +105,7 @@ export default function OnboardingPage() {
                 })}
             </div>
             <div className="flex gap-3">
-                <button onClick={() => setStep(0)} className="px-4 py-3 rounded-lg bg-white/5 text-gray-400 text-sm hover:bg-white/10 transition-colors">Back</button>
+                <button onClick={() => setStep(0)} className="px-4 py-3 rounded-lg bg-foreground/[0.04] text-gray-400 text-sm hover:bg-white/10 transition-colors">Back</button>
                 <GlowButton onClick={() => setStep(2)} className="flex-1" disabled={selectedCases.size === 0}>
                     Continue <ArrowRight size={16} className="ml-2" />
                 </GlowButton>
@@ -122,7 +122,7 @@ export default function OnboardingPage() {
                 {STARTER_AGENTS.map(agent => (
                     <button key={agent.id} onClick={() => setSelectedAgent(selectedAgent === agent.id ? '' : agent.id)}
                         className={`p-4 rounded-xl border text-left transition-all ${
-                            selectedAgent === agent.id ? 'bg-primary/10 border-primary/30' : 'bg-white/5 border-white/10 hover:border-white/20'
+                            selectedAgent === agent.id ? 'bg-primary/10 border-primary/30' : 'bg-foreground/[0.04] border-white/10 hover:border-primary/30'
                         }`}>
                         <div className="flex items-center gap-3 mb-2">
                             <Bot size={18} className={selectedAgent === agent.id ? 'text-primary' : 'text-gray-500'} />
@@ -135,7 +135,7 @@ export default function OnboardingPage() {
                 ))}
             </div>
             <div className="flex gap-3">
-                <button onClick={() => setStep(1)} className="px-4 py-3 rounded-lg bg-white/5 text-gray-400 text-sm hover:bg-white/10 transition-colors">Back</button>
+                <button onClick={() => setStep(1)} className="px-4 py-3 rounded-lg bg-foreground/[0.04] text-gray-400 text-sm hover:bg-white/10 transition-colors">Back</button>
                 <GlowButton onClick={finishOnboarding} className="flex-1">
                     {selectedAgent ? 'Deploy & Launch' : 'Skip & Launch'} <ArrowRight size={16} className="ml-2" />
                 </GlowButton>

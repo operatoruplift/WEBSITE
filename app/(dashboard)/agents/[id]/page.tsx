@@ -131,7 +131,7 @@ export default function AgentDetailPage() {
                     {/* Header */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fadeInUp">
                         <div className="flex items-center gap-4">
-                            <Link href="/agents" className="p-2 rounded-lg bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+                            <Link href="/agents" className="p-2 rounded-lg bg-foreground/[0.04] text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
                                 <ArrowLeft size={18} />
                             </Link>
                             <div>
@@ -150,7 +150,7 @@ export default function AgentDetailPage() {
                             <GlowButton variant="outline" size="sm" onClick={toggleStatus}>
                                 {agent.status === 'running' ? <><Pause size={14} className="mr-1" /> Pause</> : <><Play size={14} className="mr-1" /> Start</>}
                             </GlowButton>
-                            <button onClick={deleteAgent} className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-colors" aria-label="Delete agent"><Trash2 size={16} /></button>
+                            <button onClick={deleteAgent} className="p-2 rounded-lg bg-foreground/[0.04] text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-colors" aria-label="Delete agent"><Trash2 size={16} /></button>
                         </div>
                     </div>
 
@@ -178,7 +178,7 @@ export default function AgentDetailPage() {
                         {/* Configuration */}
                         <div className="lg:col-span-2 space-y-6">
                             <Card variant="glass">
-                                <CardHeader className="border-b border-white/5 pb-4">
+                                <CardHeader className="border-b border-foreground/10 pb-4">
                                     <CardTitle className="flex items-center gap-2 text-sm font-mono text-gray-400 uppercase tracking-widest">
                                         <Settings size={14} className="text-[#F97316]" /> Configuration
                                     </CardTitle>
@@ -187,7 +187,7 @@ export default function AgentDetailPage() {
                                     <div>
                                         <label htmlFor="system-prompt" className="text-sm text-gray-400 block mb-2">System Prompt</label>
                                         <textarea id="system-prompt" value={editedPrompt} onChange={e => { setEditedPrompt(e.target.value); setHasChanges(true); }}
-                                            rows={5} className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm font-mono focus:border-primary/50 focus:outline-none resize-none" aria-label="System prompt" />
+                                            rows={5} className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white text-sm font-mono focus:border-primary/50 focus:outline-none resize-none" aria-label="System prompt" />
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
@@ -199,7 +199,7 @@ export default function AgentDetailPage() {
                                         <div>
                                             <label htmlFor="max-tokens" className="text-sm text-gray-400 block mb-2">Max Tokens</label>
                                             <select id="max-tokens" value={editedMaxTokens} onChange={e => { setEditedMaxTokens(parseInt(e.target.value)); setHasChanges(true); }}
-                                                className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" aria-label="Max tokens">
+                                                className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" aria-label="Max tokens">
                                                 <option value={1024}>1,024</option>
                                                 <option value={2048}>2,048</option>
                                                 <option value={4096}>4,096</option>
@@ -212,7 +212,7 @@ export default function AgentDetailPage() {
                                         <label className="text-sm text-gray-400 block mb-2">Tools</label>
                                         <div className="flex flex-wrap gap-2">
                                             {(agent.tools.length > 0 ? agent.tools : ['code_exec', 'file_read', 'web_search', 'memory_search']).map(tool => (
-                                                <Badge key={tool} variant="default" className="text-xs bg-white/5 border border-white/10">{tool}</Badge>
+                                                <Badge key={tool} variant="default" className="text-xs bg-foreground/[0.04] border border-white/10">{tool}</Badge>
                                             ))}
                                         </div>
                                     </div>
@@ -237,7 +237,7 @@ export default function AgentDetailPage() {
                         {/* Activity Log */}
                         <div>
                             <Card variant="glass">
-                                <CardHeader className="border-b border-white/5 pb-4">
+                                <CardHeader className="border-b border-foreground/10 pb-4">
                                     <CardTitle className="flex items-center gap-2 text-sm font-mono text-gray-400 uppercase tracking-widest">
                                         <Activity size={14} className="text-[#F97316]" /> Activity
                                     </CardTitle>
