@@ -4,7 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Check, RotateCcw, Sparkles } from 'lucide-react';
 
-const FAKE_TX = '4sGjMW1sUnHzSxGspuhSqn4JmAx8Q5Y7InAzAi4QyJNRQiuRcoKdAm7qPHLM6kb6sPAR7YXq';
+// Illustrative transaction signature shown in the walkthrough demo.
+// Not a real on-chain tx — real audit-trail publishes are linked from /security.
+const EXAMPLE_TX = '4sGjMW1sUnHzSxGspuhSqn4JmAx8Q5Y7InAzAi4QyJNRQiuRcoKdAm7qPHLM6kb6sPAR7YXq';
 
 export default function DemoPage() {
   const [step, setStep] = useState(0);
@@ -100,7 +102,7 @@ export default function DemoPage() {
                 {step >= 3 && (
                   <>
                     <div className="text-emerald-400">  <Check size={12} className="inline" /> Transaction confirmed on Solana devnet</div>
-                    <div className="text-gray-500">  tx: {FAKE_TX.slice(0, 44)}...</div>
+                    <div className="text-gray-500">  tx (example): {EXAMPLE_TX.slice(0, 20)}…</div>
                     <div className="text-emerald-400">  <Check size={12} className="inline" /> Calendar Agent deployed successfully</div>
                   </>
                 )}

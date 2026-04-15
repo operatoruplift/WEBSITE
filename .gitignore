@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local artifacts — not for production
+claude-session.jsonl
+codex-session.jsonl
+prediction-market-landscape.html
+operator-uplift-landscape.html
