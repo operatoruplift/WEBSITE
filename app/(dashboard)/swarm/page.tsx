@@ -164,36 +164,16 @@ export default function SwarmPage() {
 
                 if (output) return output;
             }
-        } catch { /* fall through to demo */ }
-        // Realistic mock output per agent role — simulate a real debate
-        await new Promise(r => setTimeout(r, 800 + Math.random() * 1200)); // simulate thinking delay
-        return getDemoOutput(agent.name, agent.role, context);
-    };
-
-    const getDemoOutput = (name: string, role: string, context: string): string => {
-        const roleLower = role.toLowerCase();
-        if (roleLower.includes('contrarian') || roleLower.includes('skeptic') || roleLower.includes('challenge'))
-            return `The consensus is premature. We haven't validated the core assumption: does the target user actually experience this pain point daily? I've seen 3 similar approaches fail in the last 12 months because they solved an imagined problem. Before proceeding, we need user interviews — not more engineering.`;
-        if (roleLower.includes('first principles') || roleLower.includes('reframe') || roleLower.includes('assumption'))
-            return `Strip away the implementation details. The fundamental question is: can we deliver 10x value over the existing solution? If the answer requires more than one sentence to explain, the value proposition is too complex. The simplest version of this is: one API call that replaces a 15-minute manual workflow.`;
-        if (roleLower.includes('expan') || roleLower.includes('opportunity') || roleLower.includes('upside'))
-            return `Everyone is focused on the direct use case, but the real opportunity is the data layer underneath. Every execution generates a decision trace that's more valuable than the action itself. We should be building the intelligence layer, not just the execution layer. That's a 100x market.`;
-        if (roleLower.includes('outsider') || roleLower.includes('fresh') || roleLower.includes('no context'))
-            return `I have zero context on this space and that's the point. From the outside, this looks like a developer tool pretending to be a consumer product. Pick one. The messaging says "for everyone" but the UI says "for engineers." That gap will kill adoption.`;
-        if (roleLower.includes('chairman') || roleLower.includes('synthesize') || roleLower.includes('verdict') || roleLower.includes('judge'))
-            return `**Verdict:** The Contrarian is right that validation is missing. First Principles is right that simplicity wins. The Expansionist sees the long-term moat correctly. The Outsider caught the positioning gap.\n\n**Decision:** Ship the simplest possible version (one workflow, one user type) within 2 weeks. Validate with 10 users before expanding. The data layer is the real product — build instrumentation from day one.`;
-        if (roleLower.includes('scan') || roleLower.includes('security') || roleLower.includes('vuln'))
-            return `Scan complete. Found 2 medium-severity issues: (1) API endpoint accepts unbounded input without rate limiting — add per-user throttling. (2) Session tokens don't expire — implement 24h rotation. No critical vulnerabilities detected. OWASP Top 10 coverage: 8/10.`;
-        if (roleLower.includes('fix') || roleLower.includes('patch') || roleLower.includes('remediat'))
-            return `Patches proposed for both issues: (1) Added express-rate-limit middleware with 100 req/min per IP. (2) JWT expiry set to 24h with refresh token rotation. Both changes are backwards-compatible and can be deployed independently.`;
-        if (roleLower.includes('review') || roleLower.includes('validate') || roleLower.includes('gate'))
-            return `Both patches pass review. Rate limiting is correctly scoped. Token rotation handles edge cases (concurrent sessions, offline clients). Approved for merge. No regressions detected in the test suite.`;
-        if (roleLower.includes('research') || roleLower.includes('paper') || roleLower.includes('web'))
-            return `Found 4 relevant sources: (1) Vitalik's "Info Finance" post on prediction markets as information aggregation. (2) a16z's 2025 "Big Ideas" on market design beyond prediction markets. (3) Two academic papers on Bayesian truth serum for subjective assessment. Key insight: the mechanism design is more important than the UX.`;
-        if (roleLower.includes('report') || roleLower.includes('writ') || roleLower.includes('synthes'))
-            return `**Report:** The research council agrees that the mechanism design is the defensible moat, not the frontend. The web researcher found real-world validation in prediction market literature. The paper analyst confirms the academic foundation is solid. Recommendation: focus R&D budget on the pricing algorithm, not the UI.`;
-        // Generic fallback with realistic output
-        return `Analysis complete for "${name}" role. Processed context from ${context.length > 100 ? 'previous agents' : 'initial prompt'}. Key finding: the approach is viable but needs tighter scoping before execution. Recommend proceeding with constraints defined.`;
+            return `[${agent.name}] No response from ${agent.model}. The API may be unavailable — check Settings.`;
+        } catch (err) {
+            const msg = err instanceof Error ? err.message : 'unknown error';
+            // If the error mentions a missing API key, show a connect prompt
+            if (msg.includes('not configured') || msg.includes('API_KEY')) {
+                return `[${agent.name}] ⚠️ API key missing — add it in [Settings → API Keys](/settings). Error: ${msg}`;
+            }
+            // For other errors, show the real error (not a mock)
+            return `[${agent.name}] Error: ${msg}. Check your API key and try again.`;
+        }
     };
 
     const runSwarm = useCallback(async (id: string) => {
