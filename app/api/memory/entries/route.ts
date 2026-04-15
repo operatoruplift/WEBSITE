@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { verifySession, getOptionalUser } from '@/lib/auth';
 
 export const runtime = 'nodejs';
 
@@ -16,8 +17,10 @@ function getSupabase() {
  */
 export async function GET(request: Request) {
     try {
+        // Use verified user ID from session, fall back to query param for backward compat
+        const user = await getOptionalUser(request);
         const url = new URL(request.url);
-        const userId = url.searchParams.get('user_id');
+        const userId = user?.userId || url.searchParams.get('user_id');
         if (!userId) return NextResponse.json({ error: 'user_id required' }, { status: 400 });
 
         const type = url.searchParams.get('type');

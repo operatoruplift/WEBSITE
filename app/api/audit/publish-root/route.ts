@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import { Connection, Keypair, PublicKey, Transaction, TransactionInstruction, SystemProgram } from '@solana/web3.js';
+import { Connection, Keypair, PublicKey, Transaction, TransactionInstruction } from '@solana/web3.js';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import { verifySession } from '@/lib/auth';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -20,10 +21,13 @@ const DEVNET_RPC = process.env.SOLANA_DEVNET_RPC || 'https://api.devnet.solana.c
  */
 export async function POST(request: Request) {
     try {
-        const { user_id, action_hashes } = await request.json();
+        // Server-verified auth — user_id comes from Privy JWT, not request body
+        const verified = await verifySession(request);
+        const { action_hashes } = await request.json();
+        const user_id = verified.userId;
 
-        if (!user_id || !action_hashes || !Array.isArray(action_hashes) || action_hashes.length === 0) {
-            return NextResponse.json({ error: 'user_id and action_hashes[] required' }, { status: 400 });
+        if (!action_hashes || !Array.isArray(action_hashes) || action_hashes.length === 0) {
+            return NextResponse.json({ error: 'action_hashes[] required' }, { status: 400 });
         }
 
         // Compute Merkle root from action hashes

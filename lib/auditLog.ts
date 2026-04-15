@@ -50,15 +50,30 @@ export function logAction(
     };
 
     try {
+        // Write to localStorage (fast local cache)
         const raw = localStorage.getItem(AUDIT_KEY);
         const existing: AuditEntry[] = raw ? JSON.parse(raw) : [];
         const updated = [entry, ...existing].slice(0, MAX_ENTRIES);
         localStorage.setItem(AUDIT_KEY, JSON.stringify(updated));
 
+        // Write to server-side Supabase (tamper-proof, cross-device)
+        // Fire-and-forget — don't block the UI on the audit write
+        fetch('/api/audit/log', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                category: entry.category,
+                action: entry.action,
+                details: entry.details,
+                agent_name: entry.agentName,
+                approved: entry.approved,
+            }),
+        }).catch(() => {}); // Server write is best-effort from client
+
         // Auto-publish Merkle root every 5 actions
         const unpublished = getUnpublishedCount();
         if (unpublished >= 5) {
-            publishMerkleRoot().catch(() => {}); // Fire and forget
+            publishMerkleRoot().catch(() => {});
         }
     } catch {
         console.warn('[audit-log] failed to persist:', entry);
