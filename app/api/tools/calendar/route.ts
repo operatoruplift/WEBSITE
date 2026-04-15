@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { listEvents, findFreeSlots, createEvent } from '@/lib/google/calendar';
 import { isGoogleConnected } from '@/lib/google/oauth';
+import { verifySession, AuthError } from '@/lib/auth';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -14,11 +15,10 @@ export const maxDuration = 30;
  */
 export async function POST(request: Request) {
     try {
-        const { action, params, user_id } = await request.json();
-
-        if (!user_id) {
-            return NextResponse.json({ error: 'user_id required' }, { status: 400 });
-        }
+        // Verify auth — use the verified Privy user ID, not client-supplied user_id
+        const verified = await verifySession(request);
+        const { action, params } = await request.json();
+        const user_id = verified.userId; // Server-verified, not spoofable
 
         if (!action) {
             return NextResponse.json({ error: 'action required' }, { status: 400 });

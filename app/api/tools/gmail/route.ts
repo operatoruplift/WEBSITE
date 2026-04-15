@@ -1,24 +1,19 @@
 import { NextResponse } from 'next/server';
 import { listMessages, readMessage, createDraft, sendDraft, sendEmail } from '@/lib/google/gmail';
 import { isGoogleConnected } from '@/lib/google/oauth';
+import { verifySession, AuthError } from '@/lib/auth';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
 
 /**
- * Gmail tool endpoint — called by the swarm/chat agent runner
- * when an agent emits a Gmail tool call.
- *
- * POST /api/tools/gmail
- * Body: { action: 'list' | 'read' | 'draft' | 'send_draft' | 'send', params: {...}, user_id: string }
+ * Gmail tool endpoint — server-verified auth, not client-supplied user_id.
  */
 export async function POST(request: Request) {
     try {
-        const { action, params, user_id } = await request.json();
-
-        if (!user_id) {
-            return NextResponse.json({ error: 'user_id required' }, { status: 400 });
-        }
+        const verified = await verifySession(request);
+        const { action, params } = await request.json();
+        const user_id = verified.userId;
 
         if (!action) {
             return NextResponse.json({ error: 'action required' }, { status: 400 });
