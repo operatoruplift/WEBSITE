@@ -75,11 +75,11 @@ export default function MemoryPage() {
     return (
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8">
-                <div className="max-w-[1400px] mx-auto space-y-8">
+                <div className="max-w-7xl mx-auto space-y-8">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <Brain size={16} className="text-[#E77630]" />
+                                <Brain size={16} className="text-[#F97316]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Knowledge Base</span>
                             </div>
                             <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Memory Bank</h1>
@@ -109,19 +109,19 @@ export default function MemoryPage() {
                                 </div>
                                 <div className="space-y-4">
                                     <input value={newTitle} onChange={e => setNewTitle(e.target.value)} placeholder="Title" aria-label="Knowledge title"
-                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
+                                        className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
                                     <input value={newSource} onChange={e => setNewSource(e.target.value)} placeholder="Source (URL, file path, or manual)" aria-label="Source"
-                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
+                                        className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
                                     <div className="grid grid-cols-2 gap-4">
                                         <select value={newType} onChange={e => setNewType(e.target.value as MemoryNode['type'])} aria-label="Type"
-                                            className="bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none">
+                                            className="bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none">
                                             <option value="document">Document</option>
                                             <option value="code">Code</option>
                                             <option value="url">URL</option>
                                             <option value="note">Note</option>
                                         </select>
                                         <input value={newTags} onChange={e => setNewTags(e.target.value)} placeholder="Tags (comma separated)" aria-label="Tags"
-                                            className="bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
+                                            className="bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary/50 focus:outline-none" />
                                     </div>
                                     <GlowButton onClick={addNode} className="w-full">Index Knowledge</GlowButton>
                                 </div>
@@ -131,8 +131,8 @@ export default function MemoryPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         {[
-                            { label: 'Memory Nodes', value: nodes.length, icon: Brain, color: 'text-[#E77630]' },
-                            { label: 'Vector Embeddings', value: totalVectors.toLocaleString(), icon: Sparkles, color: 'text-[#E77630]' },
+                            { label: 'Memory Nodes', value: nodes.length, icon: Brain, color: 'text-[#F97316]' },
+                            { label: 'Vector Embeddings', value: totalVectors.toLocaleString(), icon: Sparkles, color: 'text-[#F97316]' },
                             { label: 'Sources Indexed', value: nodes.length, icon: Link2, color: 'text-[#F59E0B]' },
                             { label: 'Tags', value: [...new Set(nodes.flatMap(n => n.tags))].length, icon: Tag, color: 'text-emerald-400' },
                         ].map(stat => {
@@ -140,7 +140,7 @@ export default function MemoryPage() {
                             return (
                                 <Card key={stat.label} variant="glass">
                                     <CardContent className="p-4 flex items-center gap-3">
-                                        <div className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center"><Icon size={16} className={stat.color} /></div>
+                                        <div className="w-9 h-9 rounded-lg bg-foreground/[0.04] border border-white/10 flex items-center justify-center"><Icon size={16} className={stat.color} /></div>
                                         <div><div className="text-xl font-bold text-white">{stat.value}</div><div className="text-[10px] text-gray-500 uppercase tracking-wider">{stat.label}</div></div>
                                     </CardContent>
                                 </Card>
@@ -152,7 +152,7 @@ export default function MemoryPage() {
                         <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
                         <input type="text" value={search} onChange={e => setSearch(e.target.value)}
                             placeholder="Search memory nodes, tags..." aria-label="Search memory nodes"
-                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:border-primary/50 focus:outline-none transition-colors" />
+                            className="w-full bg-foreground/[0.04] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:border-primary/50 focus:outline-none transition-colors" />
                     </div>
 
                     <div className="space-y-3">
@@ -162,11 +162,11 @@ export default function MemoryPage() {
                             const config = typeConfig[node.type];
                             const Icon = config.icon;
                             return (
-                                <Card key={node.id} variant="glass" className="card-animate group hover:border-white/10 transition-all" style={{ animationDelay: `${i * 60}ms` }}>
+                                <Card key={node.id} variant="glass" className="card-animate group hover:border-primary/30 transition-all" style={{ animationDelay: `${i * 60}ms` }}>
                                     <CardContent className="p-5">
                                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                             <div className="flex items-start gap-4 flex-1 min-w-0">
-                                                <div className={`w-10 h-10 rounded-xl ${config.bg} border border-white/5 flex items-center justify-center flex-shrink-0`}>
+                                                <div className={`w-10 h-10 rounded-xl ${config.bg} border border-foreground/10 flex items-center justify-center flex-shrink-0`}>
                                                     <Icon size={18} className={config.color} />
                                                 </div>
                                                 <div className="min-w-0">
@@ -174,7 +174,7 @@ export default function MemoryPage() {
                                                     <div className="text-xs text-gray-500 font-mono mb-2">{node.source} · {node.size}</div>
                                                     <div className="flex flex-wrap gap-1.5">
                                                         {node.tags.map(tag => (
-                                                            <Badge key={tag} variant="default" className="text-[9px] bg-white/5 border border-white/10 text-gray-400">{tag}</Badge>
+                                                            <Badge key={tag} variant="default" className="text-[9px] bg-foreground/[0.04] border border-white/10 text-gray-400">{tag}</Badge>
                                                         ))}
                                                     </div>
                                                 </div>
@@ -187,7 +187,7 @@ export default function MemoryPage() {
                                                 <div className="text-right">
                                                     <div className="flex items-center gap-1 text-[10px] text-gray-500"><Clock size={10} />{node.lastIndexed}</div>
                                                 </div>
-                                                <button onClick={() => deleteNode(node.id)} className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"><Trash2 size={14} /></button>
+                                                <button onClick={() => deleteNode(node.id)} className="p-2 rounded-lg bg-foreground/[0.04] text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"><Trash2 size={14} /></button>
                                             </div>
                                         </div>
                                     </CardContent>

@@ -75,13 +75,13 @@ export default function ProfilePage() {
                     </div>
 
                     <Card variant="glass" className="overflow-hidden">
-                        <div className="h-32 bg-gradient-to-r from-[#E77630]/20 via-[#E77630]/20 to-[#F59E0B]/20 relative">
+                        <div className="h-32 bg-gradient-to-r from-[#F97316]/20 via-[#F97316]/20 to-[#F59E0B]/20 relative">
                             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxIiBjeT0iMSIgcj0iMSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIvPjwvc3ZnPg==')] opacity-50" />
                         </div>
                         <CardContent className="p-6 -mt-16 relative">
                             <div className="flex flex-col md:flex-row md:items-end gap-6">
                                 <div className="relative">
-                                    <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#E77630] to-[#E77630] flex items-center justify-center text-3xl font-bold text-white shadow-2xl border-4 border-[#050508]">
+                                    <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#F97316] to-[#F97316] flex items-center justify-center text-3xl font-bold text-white shadow-2xl border-4 border-[#050508]">
                                         {user.name.charAt(0).toUpperCase()}
                                     </div>
                                     <button className="absolute -bottom-1 -right-1 w-7 h-7 bg-white/10 border border-white/20 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/20 transition-all">
@@ -92,9 +92,9 @@ export default function ProfilePage() {
                                     {editing ? (
                                         <div className="space-y-2">
                                             <input value={editName} onChange={e => setEditName(e.target.value)} aria-label="Name"
-                                                className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white text-lg font-bold focus:border-primary/50 focus:outline-none" />
+                                                className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-3 py-2 text-white text-lg font-bold focus:border-primary/50 focus:outline-none" />
                                             <input value={editEmail} onChange={e => setEditEmail(e.target.value)} aria-label="Email"
-                                                className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-gray-300 text-sm focus:border-primary/50 focus:outline-none" />
+                                                className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-3 py-2 text-gray-300 text-sm focus:border-primary/50 focus:outline-none" />
                                         </div>
                                     ) : (
                                         <>
@@ -109,10 +109,10 @@ export default function ProfilePage() {
                                 {editing ? (
                                     <div className="flex gap-2">
                                         <button onClick={saveEdit} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all text-sm"><Check size={14} /> Save</button>
-                                        <button onClick={() => setEditing(false)} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white transition-all text-sm"><X size={14} /></button>
+                                        <button onClick={() => setEditing(false)} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-foreground/[0.04] border border-white/10 text-gray-400 hover:text-white transition-all text-sm"><X size={14} /></button>
                                     </div>
                                 ) : (
-                                    <button onClick={startEdit} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all text-sm">
+                                    <button onClick={startEdit} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-foreground/[0.04] border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all text-sm">
                                         <Edit3 size={14} /> Edit Profile
                                     </button>
                                 )}
@@ -120,7 +120,7 @@ export default function ProfilePage() {
 
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
                                 {stats.map(stat => (
-                                    <div key={stat.label} className="text-center p-4 rounded-xl bg-white/5 border border-white/5">
+                                    <div key={stat.label} className="text-center p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10">
                                         <div className="text-2xl font-bold text-white">{stat.value}</div>
                                         <div className="text-[10px] text-gray-500 uppercase tracking-wider mt-1">{stat.label}</div>
                                     </div>
@@ -140,7 +140,7 @@ export default function ProfilePage() {
                             ].map(item => {
                                 const Icon = item.icon;
                                 return (
-                                    <div key={item.label} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
+                                    <div key={item.label} className="flex items-center justify-between py-3 border-b border-foreground/10 last:border-0">
                                         <div className="flex items-center gap-3">
                                             <Icon size={16} className="text-gray-500" />
                                             <span className="text-sm text-gray-400">{item.label}</span>

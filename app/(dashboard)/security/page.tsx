@@ -7,12 +7,13 @@ import { GlowButton } from '@/src/components/ui/GlowButton';
 import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
+import { AnimatedCard, NumberTicker, BorderBeam, StaggerChildren } from '@/src/components/effects/MagicUI';
 import { isEncryptionConfigured } from '@/lib/encryption';
 import { getAuditLog, getAuditStats, clearAuditLog, getOnChainRecord, publishMerkleRoot, type AuditEntry } from '@/lib/auditLog';
 
 const CATEGORY_META: Record<string, { label: string; color: string; icon: typeof Shield }> = {
-    calendar: { label: 'Calendar', color: 'text-[#E77630]', icon: Clock },
-    gmail: { label: 'Gmail', color: 'text-[#E77630]', icon: FileText },
+    calendar: { label: 'Calendar', color: 'text-[#F97316]', icon: Clock },
+    gmail: { label: 'Gmail', color: 'text-[#F97316]', icon: FileText },
     agent: { label: 'Agent', color: 'text-[#F59E0B]', icon: Activity },
     approval: { label: 'Approval', color: 'text-emerald-400', icon: ShieldCheck },
     encryption: { label: 'Encryption', color: 'text-emerald-400', icon: Lock },
@@ -72,7 +73,7 @@ export default function SecurityPage() {
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8 relative">
                 <div className="absolute top-0 right-0 w-[600px] h-[300px] bg-emerald-500/5 blur-[150px] rounded-full pointer-events-none" />
-                <div className="max-w-[1400px] mx-auto space-y-8 relative z-10">
+                <div className="max-w-7xl mx-auto space-y-8 relative z-10">
                     {/* Header */}
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fadeInUp">
                         <div>
@@ -98,24 +99,26 @@ export default function SecurityPage() {
                     {/* Stats */}
                     <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 animate-fadeInUp" style={{ animationDelay: '100ms' }}>
                         {[
-                            { label: 'Encryption', value: encConfigured ? 'AES-256-GCM' : 'Not Set', icon: Lock, color: encConfigured ? 'text-emerald-400' : 'text-amber-400', gradient: 'from-emerald-500/20 to-transparent' },
-                            { label: 'Key Derivation', value: encConfigured ? 'PBKDF2 100K' : '—', icon: Key, color: 'text-emerald-400', gradient: 'from-emerald-500/20 to-transparent' },
-                            { label: 'Total Actions', value: String(totalActions), icon: Activity, color: 'text-[#E77630]', gradient: 'from-[#E77630]/20 to-transparent' },
-                            { label: 'Approved', value: String(approvedCount), icon: ShieldCheck, color: 'text-emerald-400', gradient: 'from-emerald-500/20 to-transparent' },
-                            { label: 'Denied', value: String(deniedCount), icon: AlertTriangle, color: deniedCount > 0 ? 'text-red-400' : 'text-gray-500', gradient: deniedCount > 0 ? 'from-red-500/20 to-transparent' : 'from-gray-500/20 to-transparent' },
-                        ].map((stat, i) => {
+                            { label: 'Encryption', value: encConfigured ? 'AES-256-GCM' : 'Not Set', icon: Lock, color: encConfigured ? 'text-emerald-400' : 'text-amber-400', gradient: 'from-emerald-500/20 to-transparent', numeric: false },
+                            { label: 'Key Derivation', value: encConfigured ? 'PBKDF2 100K' : '—', icon: Key, color: 'text-emerald-400', gradient: 'from-emerald-500/20 to-transparent', numeric: false },
+                            { label: 'Total Actions', value: String(totalActions), icon: Activity, color: 'text-[#F97316]', gradient: 'from-[#F97316]/20 to-transparent', numeric: true, numVal: totalActions },
+                            { label: 'Approved', value: String(approvedCount), icon: ShieldCheck, color: 'text-emerald-400', gradient: 'from-emerald-500/20 to-transparent', numeric: true, numVal: approvedCount },
+                            { label: 'Denied', value: String(deniedCount), icon: AlertTriangle, color: deniedCount > 0 ? 'text-red-400' : 'text-gray-500', gradient: deniedCount > 0 ? 'from-red-500/20 to-transparent' : 'from-gray-500/20 to-transparent', numeric: true, numVal: deniedCount },
+                        ].map((stat) => {
                             const Icon = stat.icon;
                             return (
-                                <Card key={stat.label} variant="glass" className="p-5 overflow-hidden relative group border-white/5">
+                                <AnimatedCard key={stat.label} className="p-5 overflow-hidden" hoverGlow>
                                     <div className={`absolute -right-4 -top-4 w-32 h-32 bg-gradient-to-bl ${stat.gradient} blur-2xl opacity-50 group-hover:opacity-100 transition-opacity`} />
                                     <div className="relative z-10 flex flex-col items-center text-center h-full justify-center">
-                                        <div className="w-10 h-10 rounded-xl bg-black/40 border border-white/5 flex items-center justify-center mb-3">
+                                        <div className="w-10 h-10 rounded-xl bg-foreground/[0.04] border border-foreground/10 flex items-center justify-center mb-3">
                                             <Icon size={18} className={stat.color} />
                                         </div>
-                                        <p className="text-2xl font-bold text-white tracking-tight">{stat.value}</p>
+                                        <p className="text-2xl font-bold text-white tracking-tight">
+                                            {stat.numeric && stat.numVal ? <NumberTicker value={stat.numVal} durationMs={1000} /> : stat.value}
+                                        </p>
                                         <p className="text-[10px] font-mono uppercase tracking-wider text-gray-400 mt-1">{stat.label}</p>
                                     </div>
-                                </Card>
+                                </AnimatedCard>
                             );
                         })}
                     </div>
@@ -124,7 +127,7 @@ export default function SecurityPage() {
                         {/* Left column — encryption status + emergency controls */}
                         <div className="lg:col-span-4 space-y-6">
                             {/* Encryption Status */}
-                            <Card variant="glass" className="p-6 border-white/5 bg-black/40">
+                            <Card variant="glass" className="p-6 border-foreground/10 bg-foreground/[0.04]">
                                 <h3 className="text-xs font-mono text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                                     <Lock size={12} className="text-emerald-400" /> Encryption Status
                                 </h3>
@@ -137,7 +140,7 @@ export default function SecurityPage() {
                                         { label: 'IV', value: encConfigured ? '12-byte per operation' : 'Not active', active: encConfigured },
                                         { label: 'Integrity', value: 'AEAD authenticated', active: encConfigured },
                                     ].map(item => (
-                                        <div key={item.label} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                                        <div key={item.label} className="flex items-center justify-between p-3 rounded-xl bg-foreground/[0.03] border border-foreground/10">
                                             <span className="text-xs text-gray-400">{item.label}</span>
                                             <div className="flex items-center gap-2">
                                                 <span className="text-xs text-white font-mono">{item.value}</span>
@@ -160,7 +163,7 @@ export default function SecurityPage() {
                             </Card>
 
                             {/* Audit Summary */}
-                            <Card variant="glass" className="p-6 border-white/5 bg-black/40">
+                            <Card variant="glass" className="p-6 border-foreground/10 bg-foreground/[0.04]">
                                 <h3 className="text-xs font-mono text-gray-500 uppercase tracking-widest mb-4">Audit by Category</h3>
                                 <div className="grid grid-cols-2 gap-3">
                                     {Object.entries(CATEGORY_META).map(([key, meta]) => {
@@ -173,7 +176,7 @@ export default function SecurityPage() {
                                                 className={`p-3 rounded-xl text-center transition-all border ${
                                                     filter === key
                                                         ? 'bg-emerald-500/10 border-emerald-500/30'
-                                                        : 'bg-black/60 border-white/5 hover:border-white/20 hover:bg-white/5'
+                                                        : 'bg-foreground/[0.06] border-foreground/10 hover:border-primary/30 hover:bg-foreground/[0.06]'
                                                 }`}
                                             >
                                                 <Icon size={16} className={`mx-auto mb-1 ${filter === key ? 'text-emerald-400' : meta.color}`} />
@@ -186,8 +189,9 @@ export default function SecurityPage() {
                             </Card>
 
                             {/* On-Chain Audit Root */}
-                            <Card variant="glass" className="p-6 border-white/5 bg-black/40">
-                                <h3 className="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <Card variant="glass" className="p-6 border-foreground/10 bg-foreground/[0.04] group relative overflow-hidden">
+                                <BorderBeam size={180} duration={10} colorFrom="#34d399" colorTo="#10b981" />
+                                <h3 className="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-4 flex items-center gap-2 relative z-10">
                                     <Shield size={12} className="text-emerald-400" /> On-Chain Merkle Root
                                 </h3>
                                 {onChainRecord ? (
@@ -196,15 +200,15 @@ export default function SecurityPage() {
                                             <span className="text-xs text-gray-400">Status</span>
                                             <span className="text-xs font-bold text-emerald-400">Published to Solana Devnet</span>
                                         </div>
-                                        <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                                        <div className="flex items-center justify-between p-3 rounded-xl bg-foreground/[0.03] border border-foreground/10">
                                             <span className="text-xs text-gray-400">Actions anchored</span>
                                             <span className="text-xs text-white font-mono">{onChainRecord.actionCount}</span>
                                         </div>
-                                        <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                                        <div className="flex items-center justify-between p-3 rounded-xl bg-foreground/[0.03] border border-foreground/10">
                                             <span className="text-xs text-gray-400">Last published</span>
                                             <span className="text-xs text-white font-mono">{new Date(onChainRecord.publishedAt).toLocaleString()}</span>
                                         </div>
-                                        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                                        <div className="p-3 rounded-xl bg-foreground/[0.03] border border-foreground/10">
                                             <span className="text-xs text-gray-400 block mb-1">Merkle Root</span>
                                             <span className="text-[10px] text-white font-mono break-all">{onChainRecord.merkleRoot.slice(0, 32)}...</span>
                                         </div>
@@ -242,12 +246,12 @@ export default function SecurityPage() {
                             </Card>
 
                             {/* Emergency Controls */}
-                            <Card variant="glass" className="p-6 border-red-500/10 bg-black/40">
+                            <Card variant="glass" className="p-6 border-red-500/10 bg-foreground/[0.04]">
                                 <h3 className="text-xs font-mono text-red-400 uppercase tracking-widest mb-4">Emergency Controls</h3>
                                 <div className="space-y-3">
                                     <button
                                         onClick={handleClearLog}
-                                        className="w-full p-3 rounded-xl bg-white/[0.03] border border-white/5 hover:border-amber-500/30 hover:bg-amber-500/5 transition-all flex items-center justify-between"
+                                        className="w-full p-3 rounded-xl bg-foreground/[0.03] border border-foreground/10 hover:border-amber-500/30 hover:bg-amber-500/5 transition-all flex items-center justify-between"
                                     >
                                         <div className="flex items-center gap-2">
                                             <Trash2 size={14} className="text-amber-400" />
@@ -268,18 +272,18 @@ export default function SecurityPage() {
 
                         {/* Right column — live audit log */}
                         <div className="lg:col-span-8">
-                            <Card variant="glass" className="p-6 h-full border-emerald-500/10 flex flex-col relative overflow-hidden bg-black/60">
+                            <Card variant="glass" className="p-6 h-full border-emerald-500/10 flex flex-col relative overflow-hidden bg-foreground/[0.06]">
                                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent pointer-events-none" />
                                 <div className="flex items-center justify-between mb-6 relative z-10">
                                     <h3 className="text-sm font-bold text-white flex items-center gap-2">
                                         <Eye size={18} className="text-emerald-400" /> AUDIT TRAIL
                                     </h3>
                                     <div className="flex items-center gap-3">
-                                        <Badge variant="default" className="text-[10px] font-mono bg-black/60 border-white/10 text-gray-400 px-3 py-1">{filtered.length} ENTRIES</Badge>
+                                        <Badge variant="default" className="text-[10px] font-mono bg-foreground/[0.06] border-white/10 text-gray-400 px-3 py-1">{filtered.length} ENTRIES</Badge>
                                         <button onClick={refresh} className="text-[10px] font-mono text-gray-500 hover:text-white transition-colors">Refresh</button>
                                     </div>
                                 </div>
-                                <div className="flex-1 overflow-y-auto pr-2 space-y-2 relative z-10 scrollbar-none">
+                                <div className="flex-1 overflow-y-auto pr-2 relative z-10 scrollbar-none">
                                     {filtered.length === 0 ? (
                                         <div className="flex flex-col items-center justify-center py-20">
                                             <Shield size={48} className="text-gray-700 mb-4" />
@@ -287,16 +291,17 @@ export default function SecurityPage() {
                                             <p className="text-gray-600 text-xs mt-1">Actions will appear here when agents use Calendar or Gmail tools</p>
                                         </div>
                                     ) : (
-                                        filtered.map(entry => {
+                                        <StaggerChildren delayMs={40} className="space-y-2">
+                                        {filtered.map(entry => {
                                             const meta = CATEGORY_META[entry.category] || { label: entry.category, color: 'text-gray-400', icon: Activity };
                                             const Icon = meta.icon;
                                             return (
-                                                <div key={entry.id} className="p-4 rounded-xl bg-black/40 border border-white/5 hover:border-white/10 transition-all group">
+                                                <div key={entry.id} className="p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10 hover:border-primary/30 transition-all group">
                                                     <div className="flex items-start gap-3">
                                                         <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border ${
                                                             entry.approved === true ? 'bg-emerald-400/10 border-emerald-400/20' :
                                                             entry.approved === false ? 'bg-red-400/10 border-red-400/20' :
-                                                            'bg-white/5 border-white/10'
+                                                            'bg-foreground/[0.04] border-white/10'
                                                         }`}>
                                                             <Icon size={16} className={
                                                                 entry.approved === true ? 'text-emerald-400' :
@@ -310,11 +315,11 @@ export default function SecurityPage() {
                                                                 <span className={`text-[9px] font-mono tracking-widest uppercase px-1.5 py-0.5 rounded border ${
                                                                     entry.approved === true ? 'bg-emerald-400/10 border-emerald-400/20 text-emerald-400' :
                                                                     entry.approved === false ? 'bg-red-400/10 border-red-400/20 text-red-400' :
-                                                                    'bg-white/5 border-white/10 text-gray-400'
+                                                                    'bg-foreground/[0.04] border-white/10 text-gray-400'
                                                                 }`}>
                                                                     {entry.approved === true ? 'APPROVED' : entry.approved === false ? 'DENIED' : 'INFO'}
                                                                 </span>
-                                                                <span className={`text-[9px] font-mono ${meta.color} bg-white/5 px-1.5 py-0.5 rounded border border-white/5`}>{meta.label}</span>
+                                                                <span className={`text-[9px] font-mono ${meta.color} bg-foreground/[0.04] px-1.5 py-0.5 rounded border border-foreground/10`}>{meta.label}</span>
                                                             </div>
                                                             {entry.agentName && (
                                                                 <p className="text-[10px] text-gray-500 font-mono mb-1">Agent: {entry.agentName}</p>
@@ -327,7 +332,8 @@ export default function SecurityPage() {
                                                     </div>
                                                 </div>
                                             );
-                                        })
+                                        })}
+                                        </StaggerChildren>
                                     )}
                                 </div>
                             </Card>

@@ -13,7 +13,7 @@ interface Notification { id: string; type: string; title: string; message: strin
 const INITIAL_NOTIFICATIONS: Notification[] = [
     { id: '1', type: 'security', title: 'Blackwall: 3 threats blocked', message: 'Prompt injection attempts neutralized from 2 IPs', time: '5m ago', read: false, icon: Shield, color: 'text-red-400' },
     { id: '2', type: 'agent', title: 'CodePilot Pro updated', message: 'Version 2.4.1 available with TypeScript improvements', time: '1h ago', read: false, icon: Bot, color: 'text-[#F59E0B]' },
-    { id: '3', type: 'chat', title: 'New message from Founder Ops', message: 'Weekly summary report is ready for review', time: '2h ago', read: false, icon: MessageSquare, color: 'text-[#E77630]' },
+    { id: '3', type: 'chat', title: 'New message from Founder Ops', message: 'Weekly summary report is ready for review', time: '2h ago', read: false, icon: MessageSquare, color: 'text-[#F97316]' },
     { id: '4', type: 'workflow', title: 'Nightly sync completed', message: 'GitHub issue sync and embeddings updated successfully', time: '6h ago', read: true, icon: Workflow, color: 'text-emerald-400' },
     { id: '5', type: 'memory', title: 'Knowledge base indexed', message: '1,247 new documents processed and embedded', time: '1d ago', read: true, icon: Brain, color: 'text-primary' },
 ];
@@ -63,9 +63,9 @@ export default function NotificationsPage() {
                         ) : notifications.map(n => {
                             const Icon = n.icon;
                             return (
-                                <Card key={n.id} variant="glass" className={`group cursor-pointer transition-all ${!n.read ? 'border-primary/20 bg-primary/[0.03]' : 'border-white/5'}`} onClick={() => markRead(n.id)}>
+                                <Card key={n.id} variant="glass" className={`group cursor-pointer transition-all ${!n.read ? 'border-primary/20 bg-primary/[0.03]' : 'border-foreground/10'}`} onClick={() => markRead(n.id)}>
                                     <CardContent className="p-4 flex items-start gap-4">
-                                        <div className={`w-10 h-10 rounded-xl bg-black/40 border border-white/5 flex items-center justify-center shrink-0 ${n.color}`}><Icon size={18} /></div>
+                                        <div className={`w-10 h-10 rounded-xl bg-foreground/[0.04] border border-foreground/10 flex items-center justify-center shrink-0 ${n.color}`}><Icon size={18} /></div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-baseline justify-between mb-1">
                                                 <h3 className={`text-sm font-semibold truncate ${!n.read ? 'text-white' : 'text-gray-400'}`}>{n.title}</h3>

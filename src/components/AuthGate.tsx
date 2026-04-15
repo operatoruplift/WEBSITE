@@ -1,12 +1,19 @@
 "use client";
 
 import { useEffect, useState, useCallback } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Logo } from '@/src/components/Icons';
+import { isGatedRoute, isFreeRoute } from '@/lib/subscription';
+
+type SubTier = 'free' | 'pro' | 'enterprise';
 
 export function AuthGate({ children }: { children: React.ReactNode }) {
     const [checked, setChecked] = useState(false);
     const [hasAccess, setHasAccess] = useState(false);
+    const [subTier, setSubTier] = useState<SubTier>('free');
+    const pathname = usePathname();
+    const router = useRouter();
 
     const checkSession = useCallback(() => {
         const token = localStorage.getItem('token');
@@ -15,35 +22,73 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     }, []);
 
     useEffect(() => {
-        setHasAccess(checkSession());
-        setChecked(true);
+        const isAuthed = checkSession();
+        if (!isAuthed) {
+            setChecked(true);
+            setHasAccess(false);
+            return;
+        }
 
-        // Re-check if another tab logs out (storage event)
+        // Check subscription status server-side
+        const token = localStorage.getItem('token');
+        const cachedTier = localStorage.getItem('subscription_tier') as SubTier | null;
+
+        // Use cached tier immediately for fast render, then verify
+        if (cachedTier === 'pro' || cachedTier === 'enterprise') {
+            setHasAccess(true);
+            setSubTier(cachedTier);
+            setChecked(true);
+        }
+
+        fetch('/api/subscription', {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+        })
+            .then(r => r.json())
+            .then(data => {
+                const tier = (data.tier || 'free') as SubTier;
+                const active = data.active === true;
+
+                localStorage.setItem('subscription_tier', tier);
+                setSubTier(tier);
+
+                if (active) {
+                    setHasAccess(true);
+                } else if (isFreeRoute(pathname || '')) {
+                    // Free routes accessible without subscription
+                    setHasAccess(true);
+                } else if (isGatedRoute(pathname || '')) {
+                    // Gated route without subscription → paywall
+                    router.replace('/paywall');
+                    return;
+                } else {
+                    setHasAccess(true);
+                }
+
+                setChecked(true);
+            })
+            .catch(() => {
+                // API unreachable — allow access (dev mode / offline)
+                setHasAccess(true);
+                setChecked(true);
+            });
+
+        // Storage event listener
         const onStorage = (e: StorageEvent) => {
             if (e.key === 'token' || e.key === 'early_access') {
-                const stillValid = checkSession();
-                if (!stillValid) setHasAccess(false);
+                if (!checkSession()) setHasAccess(false);
             }
         };
         window.addEventListener('storage', onStorage);
 
-        // Periodic session check every 60s (catches Privy expiry)
-        const interval = setInterval(() => {
-            if (!checkSession()) setHasAccess(false);
-        }, 60_000);
-
-        return () => {
-            window.removeEventListener('storage', onStorage);
-            clearInterval(interval);
-        };
-    }, [checkSession]);
+        return () => window.removeEventListener('storage', onStorage);
+    }, [checkSession, pathname, router]);
 
     if (!checked) {
         return (
-            <div className="flex h-screen items-center justify-center" style={{ background: '#050508' }}>
+            <div className="flex h-screen items-center justify-center bg-[#0A0A0A]">
                 <div className="flex flex-col items-center gap-3">
-                    <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-                    <span className="text-xs font-mono text-gray-500">Loading...</span>
+                    <div className="w-8 h-8 border-2 border-[#F97316]/30 border-t-[#F97316] rounded-full animate-spin" />
+                    <span className="text-xs font-mono text-[#52525B]">Loading...</span>
                 </div>
             </div>
         );
@@ -51,17 +96,23 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 
     if (!hasAccess) {
         return (
-            <div className="flex h-screen items-center justify-center" style={{ background: '#050508' }}>
+            <div className="flex h-screen items-center justify-center bg-[#0A0A0A]">
                 <div className="flex flex-col items-center gap-4 max-w-md text-center px-6">
                     <Logo className="w-16 h-16 mb-2" />
                     <h1 className="text-2xl font-medium text-white">Private Beta</h1>
-                    <p className="text-gray-400 text-sm leading-relaxed">
-                        Join the waitlist for free, or pay 0.1 SOL for immediate access.
+                    <p className="text-[#A1A1AA] text-sm leading-relaxed">
+                        Get Pro for $19/mo or join the waitlist for free.
                     </p>
-                    <Link href="/login"
-                        className="mt-4 inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-primary/80 transition-colors shadow-[0_0_20px_rgba(231,118,48,0.3)]">
-                        Sign In
-                    </Link>
+                    <div className="flex gap-3 mt-4">
+                        <Link href="/paywall"
+                            className="inline-flex items-center bg-[#F97316] text-white px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-[#F97316]/80 transition-colors shadow-[0_0_20px_rgba(249,115,22,0.3)]">
+                            Get Access
+                        </Link>
+                        <Link href="/login"
+                            className="inline-flex items-center bg-[#FAFAFA]/5 text-white px-6 py-3 rounded-lg text-sm font-medium border border-[#222222] hover:bg-[#FAFAFA]/10 transition-colors">
+                            Sign In
+                        </Link>
+                    </div>
                 </div>
             </div>
         );

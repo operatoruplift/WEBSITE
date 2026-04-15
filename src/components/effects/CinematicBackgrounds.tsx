@@ -12,7 +12,7 @@ interface ParticleBackgroundProps {
     interactive?: boolean;
 }
 
-export function ParticleBackground({ particleCount = 80, colors = ['#E77630', '#F97316', '#FFEDD5', '#FFFFFF'], className = '', speed = 0.5 }: ParticleBackgroundProps) {
+export function ParticleBackground({ particleCount = 80, colors = ['#F97316', '#F97316', '#FFEDD5', '#FFFFFF'], className = '', speed = 0.5 }: ParticleBackgroundProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const particlesRef = useRef<Particle[]>([]);
     const animationRef = useRef<number>(0);

@@ -17,7 +17,7 @@ export function PrivyWrapper({ children }: { children: React.ReactNode }) {
             config={{
                 appearance: {
                     theme: 'dark',
-                    accentColor: '#E77630',
+                    accentColor: '#F97316',
                     logo: '/logo.svg',
                 },
                 loginMethods: ['google', 'github', 'wallet'],

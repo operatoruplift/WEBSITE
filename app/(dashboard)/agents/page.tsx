@@ -92,11 +92,11 @@ export default function AgentsPage() {
     return (
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8">
-                <div className="max-w-[1400px] mx-auto space-y-6">
+                <div className="max-w-7xl mx-auto space-y-6">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <Bot size={16} className="text-[#E77630]" />
+                                <Bot size={16} className="text-[#F97316]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Fleet</span>
                                 <span className="text-[8px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded border bg-amber-400/10 text-amber-400 border-amber-400/20">DEMO</span>
                             </div>
@@ -111,9 +111,9 @@ export default function AgentsPage() {
                     <div className="flex flex-col md:flex-row gap-3">
                         <div className="relative flex-1">
                             <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
-                            <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search agents..." aria-label="Search agents" className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-primary/50 focus:outline-none transition-colors" />
+                            <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search agents..." aria-label="Search agents" className="w-full bg-foreground/[0.04] border border-white/10 rounded-xl pl-11 pr-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-primary/50 focus:outline-none transition-colors" />
                         </div>
-                        <div className="flex gap-1 bg-white/5 border border-white/10 rounded-xl p-1">
+                        <div className="flex gap-1 bg-foreground/[0.04] border border-white/10 rounded-xl p-1">
                             {(['all', 'running', 'idle', 'error'] as const).map(f => (
                                 <button key={f} onClick={() => setFilter(f)} className={`px-3 py-1.5 rounded-lg text-xs font-mono capitalize transition-all ${filter === f ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-gray-300'}`}>{f}</button>
                             ))}
@@ -124,18 +124,18 @@ export default function AgentsPage() {
                         {filtered.map((agent, i) => {
                             const status = statusConfig[agent.status];
                             return (
-                                <Card key={agent.id} variant="glass" className="card-animate group hover:border-white/10 transition-all" style={{ animationDelay: `${i * 60}ms` }}>
+                                <Card key={agent.id} variant="glass" className="card-animate group hover:border-primary/30 transition-all" style={{ animationDelay: `${i * 60}ms` }}>
                                     <CardContent className="p-5">
                                         <div className="flex flex-col md:flex-row md:items-center gap-4">
                                             <div className="flex items-center gap-4 flex-1 min-w-0">
-                                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-[#E77630]/10 border border-white/5 flex items-center justify-center flex-shrink-0 relative">
+                                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-[#F97316]/10 border border-foreground/10 flex items-center justify-center flex-shrink-0 relative">
                                                     <Bot size={20} className="text-white" />
                                                     <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full ${status.bg} border-2 border-[#0a0a0f] ${status.pulse ? 'animate-pulse' : ''}`} />
                                                 </div>
                                                 <div className="min-w-0">
                                                     <div className="flex items-center gap-2 mb-0.5">
                                                         <Link href={`/agents/${agent.id}`} className="text-white font-semibold truncate hover:text-primary transition-colors">{agent.name}</Link>
-                                                        <Badge variant="default" className={`text-[9px] ${status.color} bg-white/5 border border-white/10`}>{status.label}</Badge>
+                                                        <Badge variant="default" className={`text-[9px] ${status.color} bg-foreground/[0.04] border border-white/10`}>{status.label}</Badge>
                                                         {agent.favorite && <Star size={12} className="text-amber-400 fill-amber-400" />}
                                                     </div>
                                                     <p className="text-sm text-gray-400 truncate">{agent.description}</p>
@@ -148,11 +148,11 @@ export default function AgentsPage() {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-2 flex-shrink-0">
-                                                <button onClick={() => toggleFavorite(agent.id)} aria-label={agent.favorite ? 'Remove from favorites' : 'Add to favorites'} className={`p-2 rounded-lg transition-colors ${agent.favorite ? 'bg-amber-400/10 text-amber-400' : 'bg-white/5 text-gray-500 hover:text-amber-400'}`}><Star size={14} /></button>
+                                                <button onClick={() => toggleFavorite(agent.id)} aria-label={agent.favorite ? 'Remove from favorites' : 'Add to favorites'} className={`p-2 rounded-lg transition-colors ${agent.favorite ? 'bg-amber-400/10 text-amber-400' : 'bg-foreground/[0.04] text-gray-500 hover:text-amber-400'}`}><Star size={14} /></button>
                                                 <button onClick={() => toggleAgent(agent.id)} aria-label={agent.status === 'running' ? 'Pause agent' : 'Start agent'} className={`p-2 rounded-lg transition-colors ${agent.status === 'running' ? 'bg-amber-400/10 text-amber-400 hover:bg-amber-400/20' : 'bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20'}`}>
                                                     {agent.status === 'running' ? <Pause size={14} /> : <Play size={14} />}
                                                 </button>
-                                                <Link href="/settings" className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-white hover:bg-white/10 transition-colors"><Settings size={14} /></Link>
+                                                <Link href="/settings" className="p-2 rounded-lg bg-foreground/[0.04] text-gray-500 hover:text-white hover:bg-white/10 transition-colors"><Settings size={14} /></Link>
                                             </div>
                                         </div>
                                     </CardContent>

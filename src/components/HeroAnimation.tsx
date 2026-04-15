@@ -33,7 +33,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     let labelText = "";
     let startTime = Date.now();
 
-    const PRIMARY = '#E77630';
+    const PRIMARY = '#F97316';
     const GREEN = 'rgba(34, 197, 94,';
 
     const resize = () => {

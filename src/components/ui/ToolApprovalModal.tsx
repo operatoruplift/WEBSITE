@@ -10,13 +10,15 @@ interface ToolApprovalModalProps {
     toolCall: ToolCall;
     agentName?: string;
     userId: string;
+    /** Price in USDC for this query. 0 = free. Default 0.001 */
+    queryPrice?: number;
     onResult: (result: ToolResult) => void;
     onDeny: () => void;
 }
 
 const TOOL_META: Record<string, { label: string; icon: typeof Calendar; color: string; risk: string }> = {
-    calendar: { label: 'Google Calendar', icon: Calendar, color: 'text-[#E77630]', risk: 'MEDIUM' },
-    gmail: { label: 'Gmail', icon: Mail, color: 'text-[#E77630]', risk: 'HIGH' },
+    calendar: { label: 'Google Calendar', icon: Calendar, color: 'text-[#F97316]', risk: 'MEDIUM' },
+    gmail: { label: 'Gmail', icon: Mail, color: 'text-[#F97316]', risk: 'HIGH' },
 };
 
 const ACTION_LABELS: Record<string, string> = {
@@ -29,14 +31,47 @@ const ACTION_LABELS: Record<string, string> = {
     send: 'Send email',
 };
 
-export function ToolApprovalModal({ toolCall, agentName, userId, onResult, onDeny }: ToolApprovalModalProps) {
+export function ToolApprovalModal({ toolCall, agentName, userId, queryPrice = 0, onResult, onDeny }: ToolApprovalModalProps) {
     const [isExecuting, setIsExecuting] = useState(false);
+    const [paymentStatus, setPaymentStatus] = useState<'idle' | 'paying' | 'paid' | 'failed'>('idle');
     const meta = TOOL_META[toolCall.tool] || { label: toolCall.tool, icon: Shield, color: 'text-gray-400', risk: 'UNKNOWN' };
     const Icon = meta.icon;
     const actionLabel = ACTION_LABELS[toolCall.action] || toolCall.action;
+    const isPaid = queryPrice > 0;
 
     const handleApprove = async () => {
         setIsExecuting(true);
+
+        // x402 payment gate: charge before execution if price > 0
+        if (isPaid && paymentStatus !== 'paid') {
+            setPaymentStatus('paying');
+            try {
+                const payRes = await fetch('/api/tools/x402', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'charge',
+                        params: {
+                            amount: queryPrice,
+                            currency: 'USDC',
+                            memo: `${toolCall.tool}.${toolCall.action} via ${agentName || 'agent'}`,
+                            userId,
+                        },
+                    }),
+                });
+                if (!payRes.ok) {
+                    setPaymentStatus('failed');
+                    setIsExecuting(false);
+                    return;
+                }
+                setPaymentStatus('paid');
+            } catch {
+                setPaymentStatus('failed');
+                setIsExecuting(false);
+                return;
+            }
+        }
+
         logAction(
             toolCall.tool === 'calendar' ? 'calendar' : 'gmail',
             `approved:${toolCall.action}`,
@@ -79,7 +114,7 @@ export function ToolApprovalModal({ toolCall, agentName, userId, onResult, onDen
                 {/* Header */}
                 <div className="px-6 pt-5 pb-4 border-b border-white/5 flex items-center gap-4">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
-                        meta.risk === 'HIGH' ? 'bg-orange-500/10 border-orange-500/30' : 'bg-[#E77630]/10 border-[#E77630]/30'
+                        meta.risk === 'HIGH' ? 'bg-orange-500/10 border-orange-500/30' : 'bg-[#F97316]/10 border-[#F97316]/30'
                     }`}>
                         <Icon size={22} className={meta.color} />
                     </div>
@@ -129,6 +164,25 @@ export function ToolApprovalModal({ toolCall, agentName, userId, onResult, onDen
                         </div>
                     )}
 
+                    {/* x402 payment cost */}
+                    {isPaid && (
+                        <div className="flex items-center justify-between p-4 rounded-xl bg-[#F97316]/5 border border-[#F97316]/20">
+                            <div>
+                                <div className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Query Cost</div>
+                                <div className="text-sm font-bold text-white">${queryPrice} USDC</div>
+                            </div>
+                            <div className="text-right">
+                                <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded border ${
+                                    paymentStatus === 'paid' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' :
+                                    paymentStatus === 'failed' ? 'bg-red-500/10 border-red-500/30 text-red-400' :
+                                    'bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]'
+                                }`}>
+                                    {paymentStatus === 'paid' ? 'PAID' : paymentStatus === 'failed' ? 'FAILED' : 'x402'}
+                                </span>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Warning for write actions */}
                     {(toolCall.action === 'create' || toolCall.action === 'send' || toolCall.action === 'send_draft') && (
                         <div className="flex items-start gap-3 p-3 rounded-lg bg-orange-500/5 border border-orange-500/15">
@@ -153,7 +207,7 @@ export function ToolApprovalModal({ toolCall, agentName, userId, onResult, onDen
                         onClick={handleApprove}
                         disabled={isExecuting}
                         className="flex-[2] h-10 rounded-xl flex items-center justify-center gap-2 text-white text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-60 shadow-[0_0_20px_rgba(231,118,48,0.2)]"
-                        style={{ background: 'linear-gradient(135deg, #E77630, #E77630)' }}
+                        style={{ background: 'linear-gradient(135deg, #F97316, #F97316)' }}
                     >
                         {isExecuting ? (
                             <><Loader2 size={14} className="animate-spin" /> Executing...</>

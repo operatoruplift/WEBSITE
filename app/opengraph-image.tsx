@@ -28,7 +28,7 @@ export default async function Image() {
             left: 0,
             right: 0,
             height: 4,
-            background: 'linear-gradient(to right, transparent, #E77630, transparent)',
+            background: 'linear-gradient(to right, transparent, #F97316, transparent)',
           }}
         />
 
@@ -46,7 +46,7 @@ export default async function Image() {
               width: 72,
               height: 72,
               borderRadius: 18,
-              background: '#E77630',
+              background: '#F97316',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -116,7 +116,7 @@ export default async function Image() {
                 backgroundColor: 'rgba(231, 118, 48, 0.06)',
               }}
             >
-              <div style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#E77630' }} />
+              <div style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#F97316' }} />
               <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: 13, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5 }}>
                 {label}
               </div>

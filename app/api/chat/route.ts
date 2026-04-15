@@ -30,12 +30,31 @@ export async function POST(request: Request) {
 
     const modelKey = (model || 'claude-sonnet-4-6').toLowerCase();
 
+    // Map model key to display name so each model identifies itself correctly
+    const MODEL_DISPLAY_NAMES: Record<string, string> = {
+      'claude-opus-4-6': 'Claude Opus 4.6 (Anthropic)',
+      'claude-sonnet-4-6': 'Claude Sonnet 4.6 (Anthropic)',
+      'claude-haiku-4-5': 'Claude Haiku 4.5 (Anthropic)',
+      'gpt-4.1': 'GPT-4.1 (OpenAI)',
+      'gpt-4.1-mini': 'GPT-4.1 Mini (OpenAI)',
+      'gpt-4o': 'GPT-4o (OpenAI)',
+      'gemini-2.5-pro': 'Gemini 2.5 Pro (Google)',
+      'gemini-2.5-flash': 'Gemini 2.5 Flash (Google)',
+      'grok-3': 'Grok 3 (xAI)',
+      'grok-3-mini': 'Grok 3 Mini (xAI)',
+      'deepseek-r1': 'DeepSeek R1 (DeepSeek)',
+      'deepseek-v3': 'DeepSeek V3 (DeepSeek)',
+    };
+    const modelDisplayName = MODEL_DISPLAY_NAMES[modelKey] || modelKey;
+
     // Build message array
     const messages: LLMMessage[] = [];
 
+    const defaultPrompt = `You are ${modelDisplayName}, running on the Operator Uplift platform. You are concise, accurate, and helpful. You can assist with coding, research, writing, analysis, and general questions. When showing code, use markdown code blocks with language tags. Never claim to be a different model than ${modelDisplayName}.`;
+
     messages.push({
       role: 'system',
-      content: systemPrompt || 'You are a helpful AI assistant on the Operator Uplift platform. You are concise, accurate, and helpful. You can assist with coding, research, writing, analysis, and general questions. When showing code, use markdown code blocks with language tags.',
+      content: systemPrompt ? `${systemPrompt}\n\nYou are ${modelDisplayName}. Never identify as a different model.` : defaultPrompt,
     });
 
     if (history && Array.isArray(history)) {

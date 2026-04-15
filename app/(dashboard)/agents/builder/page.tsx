@@ -12,7 +12,7 @@ import { useToast } from '@/src/components/ui/Toast';
 const TEMPLATES = [
     { id: 'general', name: 'General Assistant', icon: Sparkles, color: 'text-primary', desc: 'A versatile agent for everyday tasks', capabilities: ['Chat', 'Research', 'Writing'] },
     { id: 'code', name: 'Code Expert', icon: Code, color: 'text-emerald-400', desc: 'Specialized in code generation, review, and debugging', capabilities: ['Code Gen', 'Debug', 'Refactor'] },
-    { id: 'research', name: 'Research Agent', icon: Brain, color: 'text-[#E77630]', desc: 'Deep research across papers, docs, and the web', capabilities: ['Papers', 'Citations', 'Summarize'] },
+    { id: 'research', name: 'Research Agent', icon: Brain, color: 'text-[#F97316]', desc: 'Deep research across papers, docs, and the web', capabilities: ['Papers', 'Citations', 'Summarize'] },
     { id: 'writer', name: 'Content Writer', icon: FileText, color: 'text-[#F59E0B]', desc: 'Blog posts, docs, social media, and more', capabilities: ['Blog', 'Social', 'Docs'] },
     { id: 'security', name: 'Security Analyst', icon: Shield, color: 'text-red-400', desc: 'Threat detection, vulnerability scanning, compliance', capabilities: ['OWASP', 'Audit', 'Monitor'] },
     { id: 'web', name: 'Web Agent', icon: Globe, color: 'text-amber-400', desc: 'Browse, scrape, and interact with the web', capabilities: ['Browse', 'Scrape', 'API'] },
@@ -110,7 +110,7 @@ export default function AgentBuilderPage() {
         existing.push(agent);
         localStorage.setItem('custom-agents', JSON.stringify(existing));
         showToast(`Agent "${name}" deployed locally!`, 'success');
-        addNotification({ type: 'agent', title: `Agent "${name}" deployed`, message: `${model} agent with ${selectedTools.length} tools`, icon: 'bot', color: 'text-[#E77630]' });
+        addNotification({ type: 'agent', title: `Agent "${name}" deployed`, message: `${model} agent with ${selectedTools.length} tools`, icon: 'bot', color: 'text-[#F97316]' });
         setStep(0); setName(''); setDescription(''); setTemplate(''); setSystemPrompt('');
     };
 
@@ -121,7 +121,7 @@ export default function AgentBuilderPage() {
                     {/* Header */}
                     <div className="animate-fadeInUp">
                         <div className="flex items-center gap-3 mb-2">
-                            <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #E77630, #E77630)' }}>
+                            <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #F97316, #F97316)' }}>
                                 <Sparkles size={20} className="text-white" />
                             </div>
                             <Badge variant="primary" className="text-[10px] tracking-widest font-mono">WIZARD</Badge>
@@ -134,17 +134,17 @@ export default function AgentBuilderPage() {
                     <div className="flex items-center gap-2">
                         {steps.map((s, i) => (
                             <div key={s} className="flex items-center gap-2 flex-1">
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${i <= step ? 'bg-primary text-white shadow-[0_0_10px_rgba(231,118,48,0.4)]' : 'bg-white/5 text-gray-500 border border-white/10'}`}>
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${i <= step ? 'bg-primary text-white shadow-[0_0_10px_rgba(231,118,48,0.4)]' : 'bg-foreground/[0.04] text-gray-500 border border-white/10'}`}>
                                     {i < step ? <Check size={14} /> : i + 1}
                                 </div>
                                 <span className={`text-xs font-mono hidden sm:block ${i <= step ? 'text-white' : 'text-gray-600'}`}>{s}</span>
-                                {i < steps.length - 1 && <div className={`flex-1 h-px ${i < step ? 'bg-primary/50' : 'bg-white/5'}`} />}
+                                {i < steps.length - 1 && <div className={`flex-1 h-px ${i < step ? 'bg-primary/50' : 'bg-foreground/[0.04]'}`} />}
                             </div>
                         ))}
                     </div>
 
                     {/* Step content */}
-                    <Card variant="glass" className="p-8 border-white/5 bg-black/40 min-h-[400px]">
+                    <Card variant="glass" className="p-8 border-foreground/10 bg-foreground/[0.04] min-h-[400px]">
                         {step === 0 && (
                             <div className="space-y-6">
                                 <h2 className="text-lg font-medium text-white">Choose a template</h2>
@@ -153,13 +153,13 @@ export default function AgentBuilderPage() {
                                         const Icon = t.icon;
                                         return (
                                             <button key={t.id} onClick={() => { setTemplate(t.id); setName(t.name); setDescription(t.desc); }}
-                                                className={`p-5 rounded-xl border text-left transition-all ${template === t.id ? 'border-primary/50 bg-primary/10' : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/5'}`}>
+                                                className={`p-5 rounded-xl border text-left transition-all ${template === t.id ? 'border-primary/50 bg-primary/10' : 'border-foreground/10 bg-white/[0.02] hover:border-primary/30 hover:bg-foreground/[0.06]'}`}>
                                                 <div className="flex items-start gap-4">
-                                                    <div className={`w-10 h-10 rounded-lg bg-black/40 border border-white/10 flex items-center justify-center ${t.color}`}><Icon size={18} /></div>
+                                                    <div className={`w-10 h-10 rounded-lg bg-foreground/[0.04] border border-white/10 flex items-center justify-center ${t.color}`}><Icon size={18} /></div>
                                                     <div className="flex-1">
                                                         <p className="text-sm font-bold text-white">{t.name}</p>
                                                         <p className="text-xs text-gray-500 mt-1">{t.desc}</p>
-                                                        <div className="flex gap-1.5 mt-2">{t.capabilities.map(c => <span key={c} className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 border border-white/5 text-gray-400 font-mono">{c}</span>)}</div>
+                                                        <div className="flex gap-1.5 mt-2">{t.capabilities.map(c => <span key={c} className="text-[9px] px-1.5 py-0.5 rounded bg-foreground/[0.04] border border-foreground/10 text-gray-400 font-mono">{c}</span>)}</div>
                                                     </div>
                                                 </div>
                                             </button>
@@ -172,10 +172,10 @@ export default function AgentBuilderPage() {
                         {step === 1 && (
                             <div className="space-y-6">
                                 <h2 className="text-lg font-medium text-white">Configure your agent</h2>
-                                <div><label className="text-sm text-gray-400 block mb-2">Agent Name</label><input type="text" value={name} onChange={e => setName(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="My Agent" /></div>
-                                <div><label className="text-sm text-gray-400 block mb-2">Description</label><input type="text" value={description} onChange={e => setDescription(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="What does this agent do?" /></div>
-                                <div><label className="text-sm text-gray-400 block mb-2">System Prompt (optional)</label><textarea value={systemPrompt} onChange={e => setSystemPrompt(e.target.value)} rows={4} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none resize-none font-mono text-sm" placeholder="You are a helpful assistant that..." /></div>
-                                <div className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5">
+                                <div><label className="text-sm text-gray-400 block mb-2">Agent Name</label><input type="text" value={name} onChange={e => setName(e.target.value)} className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="My Agent" /></div>
+                                <div><label className="text-sm text-gray-400 block mb-2">Description</label><input type="text" value={description} onChange={e => setDescription(e.target.value)} className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="What does this agent do?" /></div>
+                                <div><label className="text-sm text-gray-400 block mb-2">System Prompt (optional)</label><textarea value={systemPrompt} onChange={e => setSystemPrompt(e.target.value)} rows={4} className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none resize-none font-mono text-sm" placeholder="You are a helpful assistant that..." /></div>
+                                <div className="flex items-center justify-between p-3 rounded-lg bg-foreground/[0.04] border border-foreground/10">
                                     <div>
                                         <p className="text-sm text-white font-medium">Verification Directives</p>
                                         <p className="text-[10px] text-gray-500 mt-0.5">Auto-verify results, re-read before editing, break tasks into phases</p>
@@ -200,7 +200,7 @@ export default function AgentBuilderPage() {
                                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                                 {catTools.map(tool => (
                                                     <button key={tool.id} onClick={() => toggleTool(tool.id)}
-                                                        className={`p-3 rounded-xl border text-left transition-all ${selectedTools.includes(tool.id) ? 'border-primary/50 bg-primary/10' : 'border-white/5 bg-white/[0.02] hover:border-white/20'}`}>
+                                                        className={`p-3 rounded-xl border text-left transition-all ${selectedTools.includes(tool.id) ? 'border-primary/50 bg-primary/10' : 'border-foreground/10 bg-white/[0.02] hover:border-primary/30'}`}>
                                                         <div className="flex items-center justify-between">
                                                             <p className="text-xs font-bold text-white">{tool.name}</p>
                                                             {selectedTools.includes(tool.id) && <Check size={10} className="text-primary" />}
@@ -222,7 +222,7 @@ export default function AgentBuilderPage() {
                                 <div className="space-y-3">
                                     {MODELS.map(m => (
                                         <button key={m.id} onClick={() => setModel(m.id)}
-                                            className={`w-full p-5 rounded-xl border text-left transition-all flex items-center justify-between ${model === m.id ? 'border-primary/50 bg-primary/10' : 'border-white/5 bg-white/[0.02] hover:border-white/20'}`}>
+                                            className={`w-full p-5 rounded-xl border text-left transition-all flex items-center justify-between ${model === m.id ? 'border-primary/50 bg-primary/10' : 'border-foreground/10 bg-white/[0.02] hover:border-primary/30'}`}>
                                             <div><p className="text-sm font-bold text-white">{m.name}</p><p className="text-xs text-gray-500 font-mono">{m.provider}</p></div>
                                             <div className="flex items-center gap-3">
                                                 <Badge variant={model === m.id ? 'primary' : 'default'} className="text-[9px] font-mono">{m.badge}</Badge>
@@ -237,17 +237,17 @@ export default function AgentBuilderPage() {
                         {step === 4 && (
                             <div className="space-y-6">
                                 <h2 className="text-lg font-medium text-white">Review & Deploy</h2>
-                                <div className="space-y-4 p-6 rounded-xl bg-white/[0.02] border border-white/5">
+                                <div className="space-y-4 p-6 rounded-xl bg-white/[0.02] border border-foreground/10">
                                     <div className="flex items-center gap-4">
-                                        {selectedTemplate && <div className={`w-12 h-12 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center ${selectedTemplate.color}`}><selectedTemplate.icon size={22} /></div>}
+                                        {selectedTemplate && <div className={`w-12 h-12 rounded-xl bg-foreground/[0.04] border border-white/10 flex items-center justify-center ${selectedTemplate.color}`}><selectedTemplate.icon size={22} /></div>}
                                         <div><p className="text-lg font-medium text-white">{name || 'Unnamed Agent'}</p><p className="text-xs text-gray-500">{description}</p></div>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
+                                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-foreground/10">
                                         <div><p className="text-[10px] text-gray-500 uppercase font-mono mb-1">Template</p><p className="text-sm text-white">{selectedTemplate?.name}</p></div>
                                         <div><p className="text-[10px] text-gray-500 uppercase font-mono mb-1">Model</p><p className="text-sm text-white">{MODELS.find(m => m.id === model)?.name}</p></div>
                                         <div className="col-span-2"><p className="text-[10px] text-gray-500 uppercase font-mono mb-1">Tools ({selectedTools.length})</p><p className="text-sm text-white">{selectedTools.length > 0 ? selectedTools.map(t => TOOLS.find(tool => tool.id === t)?.name).join(', ') : 'None'}</p></div>
                                     </div>
-                                    {systemPrompt && <div className="pt-4 border-t border-white/5"><p className="text-[10px] text-gray-500 uppercase font-mono mb-1">System Prompt</p><p className="text-xs text-gray-300 font-mono bg-black/40 p-3 rounded-lg border border-white/5">{systemPrompt}</p></div>}
+                                    {systemPrompt && <div className="pt-4 border-t border-foreground/10"><p className="text-[10px] text-gray-500 uppercase font-mono mb-1">System Prompt</p><p className="text-xs text-gray-300 font-mono bg-foreground/[0.04] p-3 rounded-lg border border-foreground/10">{systemPrompt}</p></div>}
                                 </div>
                             </div>
                         )}
