@@ -322,8 +322,20 @@ export default function ChatPage() {
                 });
 
                 if (!response.ok || !response.body) {
-                    // API error — fall back to demo
-                    const content = getFallbackResponse(userMessage.content);
+                    // API error — show the actual error, not generic "demo mode"
+                    let content: string;
+                    try {
+                        const errBody = await response.json();
+                        if (errBody.connectPrompt) {
+                            content = `**${activeModel.label}** is not available right now.\n\n${errBody.connectPrompt}\n\n*Error: ${errBody.error}*`;
+                        } else if (errBody.retryAfterSeconds) {
+                            content = `**Rate limit reached.** Try again in ${errBody.retryAfterSeconds} seconds.`;
+                        } else {
+                            content = `**Error from ${activeModel.label}:** ${errBody.error || 'Unknown error'}\n\nCheck your API key in [Settings](/settings).`;
+                        }
+                    } catch {
+                        content = getFallbackResponse(userMessage.content);
+                    }
                     setSessions(prev => prev.map(s => s.id === sessionId ? { ...s, messages: [...s.messages, { id: (Date.now() + 1).toString(), role: 'assistant', content, timestamp: new Date(), model: selectedModel }] } : s));
                     break;
                 }

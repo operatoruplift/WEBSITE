@@ -26,16 +26,16 @@ export function BorderBeam({
     return (
         <div
             style={{ '--size': `${size}px`, '--duration': `${duration}s`, '--color-from': colorFrom, '--color-to': colorTo } as React.CSSProperties}
-            className={`pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden ${className}`}
+            className={`pointer-events-none absolute inset-[-1px] rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden ${className}`}
         >
             <div
-                className="absolute inset-[-2px] rounded-[inherit]"
+                className="absolute inset-0 rounded-[inherit]"
                 style={{
                     background: `conic-gradient(from 0deg, transparent 0 330deg, ${colorFrom}, ${colorTo} 360deg)`,
                     animation: `spin ${duration}s linear infinite`,
                 }}
             />
-            <div className="absolute inset-[1px] rounded-[inherit] bg-[#0A0A0A]" />
+            <div className="absolute inset-[1px] rounded-[inherit] bg-[#111111]" />
         </div>
     );
 }
@@ -126,7 +126,7 @@ export function AnimatedCard({
     return (
         <motion.div
             whileHover={{ y: -2, transition: { duration: 0.2 } }}
-            className={`group relative rounded-lg border border-white/5 bg-[#0A0A0A] p-4 transition-colors hover:border-white/10 ${className}`}
+            className={`group relative rounded-xl border border-[#222222] bg-[#111111] p-4 transition-colors hover:border-[#333333] overflow-hidden ${className}`}
         >
             {hoverGlow && <BorderBeam />}
             <div className="relative z-10">{children}</div>
