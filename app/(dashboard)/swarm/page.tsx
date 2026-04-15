@@ -294,8 +294,8 @@ export default function SwarmPage() {
                         <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 animate-fadeInUp">
                             <Zap size={16} className="text-amber-400 shrink-0" />
                             <p className="text-sm text-gray-300 flex-1">
-                                <span className="text-amber-400 font-semibold">Demo mode</span> — swarm agents return placeholder responses until an API key is configured. Add your Anthropic API key in{' '}
-                                <a href="/settings" className="text-[#F97316] hover:underline font-medium">Settings → API Keys</a> to enable real multi-agent execution.
+                                <span className="text-amber-400 font-semibold">API key required</span> — swarm agents need an LLM provider key to execute. Add your Anthropic or OpenAI API key in{' '}
+                                <a href="/settings" className="text-[#F97316] hover:underline font-medium">Settings → API Keys</a> to run real multi-agent swarms.
                             </p>
                         </div>
                     )}

@@ -100,7 +100,7 @@ export default function WorkflowsPage() {
                 prevOutput = output;
                 setStepOutputs(prev => ({ ...prev, [id]: [...(prev[id] || []), `**${stepName}:** ${output}`] }));
             } catch {
-                const fallback = `[${stepName}] Completed. (Demo mode: connect API key for real execution)`;
+                const fallback = `[${stepName}] Error — check API keys in Settings.`;
                 prevOutput = fallback;
                 setStepOutputs(prev => ({ ...prev, [id]: [...(prev[id] || []), fallback] }));
             }
