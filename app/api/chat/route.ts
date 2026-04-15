@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { callLLM, type LLMMessage } from '@/lib/llm';
+import { callLLM, ProviderError, type LLMMessage } from '@/lib/llm';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -35,14 +35,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Message required' }, { status: 400 });
     }
 
-    // Check if we have an API key for the requested model
     const modelKey = (model || 'claude-sonnet-4-6').toLowerCase();
-    if (modelKey.startsWith('claude') && !process.env.ANTHROPIC_API_KEY) {
-      return NextResponse.json({ error: 'ANTHROPIC_API_KEY not configured', fallback: true }, { status: 503 });
-    }
-    if (modelKey.startsWith('gpt') && !process.env.OPENAI_API_KEY) {
-      return NextResponse.json({ error: 'OPENAI_API_KEY not configured', fallback: true }, { status: 503 });
-    }
 
     // Build message array
     const messages: LLMMessage[] = [];
@@ -73,6 +66,14 @@ export async function POST(request: Request) {
       },
     });
   } catch (err) {
+    if (err instanceof ProviderError) {
+      return NextResponse.json({
+        error: err.message,
+        envVar: err.envVar,
+        fallback: true,
+        connectPrompt: `Connect ${err.envVar.replace('_API_KEY', '').replace('_', ' ')} in Settings → API Keys`,
+      }, { status: 503 });
+    }
     const errorMessage = err instanceof Error ? err.message : 'Unknown error';
     return NextResponse.json({ error: errorMessage, fallback: true }, { status: 500 });
   }
