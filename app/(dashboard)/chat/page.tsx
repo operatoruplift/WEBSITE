@@ -9,7 +9,7 @@ import { useToast } from '@/src/components/ui/Toast';
 import { hasToolCalls, parseToolCalls, stripToolBlocks, formatToolResult, getToolSystemPrompt } from '@/lib/toolCalls';
 import type { ToolCall, ToolResult } from '@/lib/toolCalls';
 import { ToolApprovalModal } from '@/src/components/ui/ToolApprovalModal';
-import { runCouncil, shouldUseCouncil, type CouncilResult } from '@/lib/council';
+import { runCouncil, shouldUseCouncil, extractToolCallsFromText, type CouncilResult } from '@/lib/council';
 
 interface Message { id: string; role: 'user' | 'assistant'; content: string; timestamp: Date; model?: string; councilTranscript?: CouncilResult['transcript']; }
 interface ChatSession { id: string; title: string; messages: Message[]; createdAt: Date; model: string; }
@@ -209,14 +209,76 @@ export default function ChatPage() {
                         }
                     }
 
+                    // Show tool results
+                    const contentAfterTools = result.synthesis + toolResults;
                     setSessions(prev => prev.map(s => s.id === sessionId ? {
                         ...s,
                         messages: s.messages.map(m => m.id === councilMsgId ? {
                             ...m,
-                            content: result.synthesis + toolResults,
+                            content: contentAfterTools,
                             councilTranscript: result.transcript,
                         } : m),
                     } : s));
+
+                    // Continuation: feed tool results back to Chairman for follow-up
+                    // (e.g., after free_slots returns, Chairman presents slots + may create event)
+                    if (toolResults && !toolResults.includes('Tool Denied')) {
+                        try {
+                            const continuationRes = await fetch('/api/chat', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    message: `Tool results:\n${toolResults}\n\nContinue helping the user. Present the results clearly. If more actions are needed (create event, send email), emit the next tool call.`,
+                                    model: 'claude-sonnet-4-6',
+                                    history: [...(currentSession?.messages || []).map(m => ({ role: m.role, content: m.content })),
+                                        { role: 'assistant', content: result.synthesis },
+                                        { role: 'user', content: `Tool results: ${toolResults}` }],
+                                    systemPrompt: toolPrompt,
+                                }),
+                            });
+                            if (continuationRes.ok && continuationRes.body) {
+                                const reader = continuationRes.body.getReader();
+                                const decoder = new TextDecoder();
+                                let followUp = '';
+                                while (true) {
+                                    const { done, value } = await reader.read();
+                                    if (done) break;
+                                    followUp += decoder.decode(value, { stream: true });
+                                }
+                                if (followUp) {
+                                    // Check for more tool calls in the follow-up
+                                    const { cleanText: followClean, toolCalls: followCalls } = extractToolCallsFromText(followUp);
+
+                                    const followUpMsgId = `follow-${Date.now()}`;
+                                    setSessions(prev => prev.map(s => s.id === sessionId ? {
+                                        ...s,
+                                        messages: [...s.messages, { id: followUpMsgId, role: 'assistant' as const, content: followClean, timestamp: new Date(), model: 'LLM Council' }],
+                                    } : s));
+
+                                    // Execute any follow-up tool calls
+                                    if (followCalls && followCalls.length > 0) {
+                                        let moreResults = '';
+                                        for (const ftc of followCalls) {
+                                            const fCall: ToolCall = {
+                                                id: `tc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+                                                tool: ftc.tool as ToolCall['tool'],
+                                                action: ftc.action,
+                                                params: ftc.params,
+                                                rawBlock: JSON.stringify(ftc),
+                                            };
+                                            const fResult = await requestChatToolApproval(fCall);
+                                            if (fResult) moreResults += '\n\n' + formatToolResult(fResult);
+                                            else moreResults += `\n\n**Tool Denied** — ${ftc.tool}.${ftc.action}`;
+                                        }
+                                        setSessions(prev => prev.map(s => s.id === sessionId ? {
+                                            ...s,
+                                            messages: s.messages.map(m => m.id === followUpMsgId ? { ...m, content: followClean + moreResults } : m),
+                                        } : s));
+                                    }
+                                }
+                            }
+                        } catch { /* continuation is best-effort */ }
+                    }
                 }
             } catch {
                 const content = getFallbackResponse(userMessage.content);
