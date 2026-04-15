@@ -7,7 +7,7 @@ import { Bot, MessageSquare, Settings, LayoutDashboard, ChevronDown, Sparkles, S
 import { Logo } from '@/src/components/Icons';
 import { cn } from '@/lib/utils';
 
-interface NavItem { href: string; label: string; icon: React.ComponentType<{ size?: number; className?: string }>; gradient: string; }
+interface NavItem { href: string; label: string; icon: React.ComponentType<{ size?: number; className?: string }>; gradient: string; beta?: boolean; }
 interface NavSection { title: string; items: NavItem[]; }
 
 const NAV_SECTIONS: NavSection[] = [
@@ -25,7 +25,7 @@ const NAV_SECTIONS: NavSection[] = [
             { href: '/marketplace', label: 'Agent Store', icon: Store, gradient: 'from-orange-500/20 to-amber-500/10' },
             { href: '/agents/builder', label: 'Builder', icon: Sparkles, gradient: 'from-orange-400/20 to-yellow-500/10' },
             { href: '/workflows', label: 'Workflows', icon: GitBranch, gradient: 'from-amber-400/20 to-orange-500/10' },
-            { href: '/swarm', label: 'Swarm', icon: Network, gradient: 'from-orange-500/20 to-red-500/10' },
+            { href: '/swarm', label: 'Swarm', icon: Network, gradient: 'from-orange-500/20 to-red-500/10', beta: true },
             { href: '/memory', label: 'Memory Bank', icon: Brain, gradient: 'from-amber-500/20 to-orange-500/10' },
             { href: '/integrations', label: 'Integrations', icon: Plug, gradient: 'from-emerald-500/20 to-teal-500/10' },
         ],
@@ -51,6 +51,9 @@ function NavLink({ item, isActive }: { item: NavItem; isActive: boolean }) {
                 <Icon size={16} />
             </div>
             <span className="text-sm font-medium truncate">{item.label}</span>
+            {item.beta && (
+                <span className="ml-1 px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider rounded bg-amber-500/15 text-amber-300 border border-amber-500/20">Beta</span>
+            )}
             {isActive && <span className="absolute right-2 w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_6px_rgba(231,118,48,0.5)]" />}
         </Link>
     );

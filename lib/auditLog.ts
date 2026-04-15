@@ -99,18 +99,19 @@ export async function publishMerkleRoot(): Promise<OnChainRecord | null> {
     const entries = getAuditLog(MAX_ENTRIES);
     if (entries.length === 0) return null;
 
-    // Hash each entry
-    const hashes = entries.map(e => {
-        const data = `${e.id}:${e.timestamp}:${e.category}:${e.action}:${e.approved}`;
-        // Simple client-side SHA-256 (Web Crypto)
-        return Array.from(new TextEncoder().encode(data))
-            .reduce((hash, byte) => {
-                hash = ((hash << 5) - hash) + byte;
-                return hash & hash;
-            }, 0)
-            .toString(16)
-            .padStart(64, '0');
-    });
+    // Hash each entry with real SHA-256 via the Web Crypto API.
+    // Previous implementation used a non-cryptographic djb2 bit-shift hash
+    // which was not collision-resistant and undermined the tamper-evident claim.
+    const hashes = await Promise.all(
+        entries.map(async (e): Promise<string> => {
+            const data = `${e.id}:${e.timestamp}:${e.category}:${e.action}:${e.approved}`;
+            const bytes = new TextEncoder().encode(data);
+            const digest = await crypto.subtle.digest('SHA-256', bytes);
+            return Array.from(new Uint8Array(digest))
+                .map((b) => b.toString(16).padStart(2, '0'))
+                .join('');
+        }),
+    );
 
     const userId = (() => {
         try { return JSON.parse(localStorage.getItem('user') || '{}').id || 'anon'; } catch { return 'anon'; }

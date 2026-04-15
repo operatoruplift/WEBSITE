@@ -278,9 +278,10 @@ export default function SwarmPage() {
                             <div className="flex items-center gap-2 mb-2">
                                 <Network size={16} className="text-[#E77630]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Multi-Agent</span>
+                                <span className="px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider rounded bg-amber-500/15 text-amber-300 border border-amber-500/20">Beta</span>
                             </div>
                             <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Swarm Orchestration</h1>
-                            <p className="text-sm text-gray-400 mt-1">Design and run multi-agent swarms with different topologies</p>
+                            <p className="text-sm text-gray-400 mt-1">Design and run multi-agent swarms with different topologies. Swarm presets are curated; execution runs against your configured LLM providers.</p>
                         </div>
                         <GlowButton className="h-11 px-5" onClick={() => setShowCreate(true)}>
                             <Plus size={16} className="mr-2" /> New Swarm
