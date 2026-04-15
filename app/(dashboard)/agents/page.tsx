@@ -96,7 +96,7 @@ export default function AgentsPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <Bot size={16} className="text-[#E77630]" />
+                                <Bot size={16} className="text-[#F97316]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Fleet</span>
                                 <span className="text-[8px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded border bg-amber-400/10 text-amber-400 border-amber-400/20">DEMO</span>
                             </div>
@@ -128,7 +128,7 @@ export default function AgentsPage() {
                                     <CardContent className="p-5">
                                         <div className="flex flex-col md:flex-row md:items-center gap-4">
                                             <div className="flex items-center gap-4 flex-1 min-w-0">
-                                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-[#E77630]/10 border border-white/5 flex items-center justify-center flex-shrink-0 relative">
+                                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-[#F97316]/10 border border-white/5 flex items-center justify-center flex-shrink-0 relative">
                                                     <Bot size={20} className="text-white" />
                                                     <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full ${status.bg} border-2 border-[#0a0a0f] ${status.pulse ? 'animate-pulse' : ''}`} />
                                                 </div>

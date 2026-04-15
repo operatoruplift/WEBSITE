@@ -5,11 +5,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, MessageSquare, Store, Network, MoreHorizontal, Bot, Sparkles, GitBranch, Brain, Shield, BarChart3, User, Settings, Bell, X } from 'lucide-react';
 
-const mainNav = [
+const mainNav: Array<{ href: string; icon: typeof Home; label: string; beta?: boolean }> = [
     { href: '/app', icon: Home, label: 'Home' },
     { href: '/chat', icon: MessageSquare, label: 'Chat' },
     { href: '/marketplace', icon: Store, label: 'Agents' },
-    { href: '/swarm', icon: Network, label: 'Swarm' },
+    { href: '/swarm', icon: Network, label: 'Swarm', beta: true },
 ];
 
 const moreItems = [
@@ -72,8 +72,11 @@ export function MobileNav() {
                         return (
                             <Link key={item.href} href={item.href}
                                 className={`flex flex-col items-center gap-0.5 px-4 py-2 rounded-xl transition-all duration-200 min-w-[56px] active:scale-95 ${isActive ? 'text-primary' : 'text-gray-500'}`}>
-                                <div className={`p-1 rounded-lg transition-all duration-200 ${isActive ? 'bg-primary/15' : ''}`}>
+                                <div className={`relative p-1 rounded-lg transition-all duration-200 ${isActive ? 'bg-primary/15' : ''}`}>
                                     <Icon size={20} strokeWidth={isActive ? 2.5 : 1.5} />
+                                    {item.beta && (
+                                        <span className="absolute -top-1 -right-1 px-1 py-0 text-[7px] font-mono uppercase tracking-wider rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 leading-tight">β</span>
+                                    )}
                                 </div>
                                 <span className={`text-[9px] font-medium ${isActive ? 'text-primary' : 'text-gray-600'}`}>{item.label}</span>
                             </Link>

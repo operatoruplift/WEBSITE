@@ -15,7 +15,7 @@ interface Message { id: string; role: 'user' | 'assistant'; content: string; tim
 interface ChatSession { id: string; title: string; messages: Message[]; createdAt: Date; model: string; }
 
 const MODELS = [
-    { id: 'claude-opus-4-6', label: 'Claude Opus 4.6', provider: 'Anthropic', color: 'text-[#E77630]', badge: 'SMART' },
+    { id: 'claude-opus-4-6', label: 'Claude Opus 4.6', provider: 'Anthropic', color: 'text-[#F97316]', badge: 'SMART' },
     { id: 'gpt-4.1', label: 'GPT-4.1', provider: 'OpenAI', color: 'text-emerald-400', badge: 'FAST' },
     { id: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro', provider: 'Google', color: 'text-[#F59E0B]', badge: 'LONG CTX' },
     { id: 'deepseek-v3', label: 'DeepSeek V3', provider: 'DeepSeek', color: 'text-amber-400', badge: 'OPEN' },
@@ -30,7 +30,7 @@ const AGENTS = [
 
 const PROMPT_SUGGESTIONS = [
     { category: 'Code', icon: Code, color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20', prompts: ['Analyze my codebase for security issues', 'Write a REST API in TypeScript'] },
-    { category: 'Research', icon: Brain, color: 'text-[#E77630] bg-[#E77630]/10 border-[#E77630]/20', prompts: ['Summarize recent AI research papers', 'Compare top vector databases'] },
+    { category: 'Research', icon: Brain, color: 'text-[#F97316] bg-[#F97316]/10 border-[#F97316]/20', prompts: ['Summarize recent AI research papers', 'Compare top vector databases'] },
     { category: 'Write', icon: FileText, color: 'text-[#F59E0B] bg-[#F59E0B]/10 border-[#F59E0B]/20', prompts: ['Write a blog post about AI agents', 'Draft a technical README'] },
     { category: 'Analyze', icon: Zap, color: 'text-amber-400 bg-amber-400/10 border-amber-400/20', prompts: ['Build an AI agent swarm workflow', 'Generate documentation for this code'] },
 ];
@@ -47,7 +47,7 @@ function renderMarkdown(text: string): React.ReactNode {
             elements.push(
                 <div key={key} className="my-3 rounded-lg overflow-hidden border border-white/5 bg-black/40">
                     {codeLang && <div className="px-3 py-1.5 bg-white/5 border-b border-white/5 text-[10px] font-mono text-gray-500 uppercase tracking-widest">{codeLang}</div>}
-                    <pre className="p-3 overflow-x-auto text-xs text-[#E77630] font-mono leading-relaxed"><code>{codeLines.join('\n')}</code></pre>
+                    <pre className="p-3 overflow-x-auto text-xs text-[#F97316] font-mono leading-relaxed"><code>{codeLines.join('\n')}</code></pre>
                 </div>
             );
         }
@@ -71,7 +71,7 @@ function renderMarkdown(text: string): React.ReactNode {
         if (inCodeBlock) { codeLines.push(line); return; }
         if (line.startsWith('### ')) elements.push(<h3 key={i} className="text-base font-bold text-white mt-4 mb-1">{line.slice(4)}</h3>);
         else if (line.startsWith('## ')) elements.push(<h2 key={i} className="text-lg font-bold text-white mt-5 mb-2">{line.slice(3)}</h2>);
-        else if (line.startsWith('- ') || line.startsWith('* ')) elements.push(<div key={i} className="flex gap-2 text-[15px] leading-relaxed"><span className="text-[#E77630] mt-1.5">•</span><span dangerouslySetInnerHTML={{ __html: inlineMarkdown(line.slice(2)) }} /></div>);
+        else if (line.startsWith('- ') || line.startsWith('* ')) elements.push(<div key={i} className="flex gap-2 text-[15px] leading-relaxed"><span className="text-[#F97316] mt-1.5">•</span><span dangerouslySetInnerHTML={{ __html: inlineMarkdown(line.slice(2)) }} /></div>);
         else if (line.trim() === '') elements.push(<div key={i} className="h-2" />);
         else elements.push(<p key={i} className="text-[15px] leading-relaxed" dangerouslySetInnerHTML={{ __html: inlineMarkdown(line) }} />);
     });
@@ -424,17 +424,17 @@ export default function ChatPage() {
     return (
         <MobilePageWrapper>
             <div className="flex h-[calc(100vh-48px)] relative">
-                <div className="absolute top-0 right-0 w-[400px] h-[300px] bg-[#E77630]/5 blur-[120px] rounded-full pointer-events-none z-0" />
+                <div className="absolute top-0 right-0 w-[400px] h-[300px] bg-[#F97316]/5 blur-[120px] rounded-full pointer-events-none z-0" />
                 <aside className="hidden md:flex w-72 flex-col border-r border-white/5 bg-black/60 relative z-10 shrink-0">
                     <div className="p-4 border-b border-white/5 space-y-3">
-                        <GlowButton onClick={createNewSession} className="w-full justify-center bg-gradient-to-r from-[#E77630]/20 to-[#F59E0B]/20 border-[#E77630]/30 hover:from-[#E77630]/30 hover:to-[#F59E0B]/30 text-white h-10"><Plus size={16} className="mr-2" /> New Chat</GlowButton>
+                        <GlowButton onClick={createNewSession} className="w-full justify-center bg-gradient-to-r from-[#F97316]/20 to-[#F59E0B]/20 border-[#F97316]/30 hover:from-[#F97316]/30 hover:to-[#F59E0B]/30 text-white h-10"><Plus size={16} className="mr-2" /> New Chat</GlowButton>
                         <div className="relative"><Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" /><input value={sidebarSearch} onChange={e => setSidebarSearch(e.target.value)} placeholder="Search sessions..." aria-label="Search chat sessions" className="w-full bg-white/5 border border-white/5 rounded-xl pl-9 pr-3 py-2 text-xs text-gray-400 placeholder-gray-600 focus:outline-none focus:border-white/20 transition-all" /></div>
                     </div>
                     <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-none">
                         {filteredSessions.length === 0 ? <div className="text-center py-8"><MessageSquare size={24} className="text-gray-700 mx-auto mb-2" /><p className="text-xs text-gray-600">No sessions yet</p></div> :
                             filteredSessions.map(session => (
-                                <div key={session.id} className={`group flex items-start gap-2 p-3 rounded-xl cursor-pointer transition-all ${activeSessionId === session.id ? 'bg-[#E77630]/10 border border-[#E77630]/20' : 'hover:bg-white/5 border border-transparent'}`} onClick={() => setActiveSessionId(session.id)}>
-                                    <Bot size={14} className={`shrink-0 mt-0.5 ${activeSessionId === session.id ? 'text-[#E77630]' : 'text-gray-500'}`} />
+                                <div key={session.id} className={`group flex items-start gap-2 p-3 rounded-xl cursor-pointer transition-all ${activeSessionId === session.id ? 'bg-[#F97316]/10 border border-[#F97316]/20' : 'hover:bg-white/5 border border-transparent'}`} onClick={() => setActiveSessionId(session.id)}>
+                                    <Bot size={14} className={`shrink-0 mt-0.5 ${activeSessionId === session.id ? 'text-[#F97316]' : 'text-gray-500'}`} />
                                     <div className="flex-1 min-w-0"><p className={`text-sm truncate font-medium ${activeSessionId === session.id ? 'text-white' : 'text-gray-400'}`}>{session.title}</p><p className="text-[10px] text-gray-600 font-mono mt-0.5">{session.messages.length} msgs · {MODELS.find(m => m.id === session.model)?.label || 'Claude'}</p></div>
                                     <button onClick={e => { e.stopPropagation(); deleteSession(session.id); }} className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 text-gray-600 transition-all shrink-0"><Trash2 size={12} /></button>
                                 </div>
@@ -447,7 +447,7 @@ export default function ChatPage() {
                         <div className="flex items-center gap-3">
                             <div className="flex gap-1 p-1 bg-white/5 rounded-xl border border-white/5">
                                 {AGENTS.map(agent => { const Icon = agent.icon; return (
-                                    <button key={agent.id} onClick={() => setSelectedAgent(agent.id)} className={`px-2 sm:px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-widest flex items-center gap-1.5 transition-all ${selectedAgent === agent.id ? 'bg-[#E77630]/20 text-[#E77630] border border-[#E77630]/30' : 'text-gray-500 hover:text-white'}`}>
+                                    <button key={agent.id} onClick={() => setSelectedAgent(agent.id)} className={`px-2 sm:px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-widest flex items-center gap-1.5 transition-all ${selectedAgent === agent.id ? 'bg-[#F97316]/20 text-[#F97316] border border-[#F97316]/30' : 'text-gray-500 hover:text-white'}`}>
                                         <Icon size={10} /> <span className="hidden sm:inline">{agent.label.split(' ')[0]}</span>
                                     </button>
                                 ); })}
@@ -459,7 +459,7 @@ export default function ChatPage() {
                                 <Badge variant="default" className={`text-[8px] font-mono px-1.5 py-0 ${activeModel.color}`}>{activeModel.badge}</Badge>
                                 <ChevronDown size={14} className={`text-gray-500 transition-transform ${showModelPicker ? 'rotate-180' : ''}`} />
                             </button>
-                            {showModelPicker && <div className="absolute top-full right-0 mt-2 w-56 bg-[#0c0c0c] border border-white/5 rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-none" style={{ isolation: 'isolate' }}>
+                            {showModelPicker && <div className="absolute top-full right-0 mt-2 w-56 bg-surface border border-white/5 rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-none" style={{ isolation: 'isolate' }}>
                                 {MODELS.map(model => (
                                     <button key={model.id} onClick={() => { setSelectedModel(model.id); setShowModelPicker(false); }} className={`w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left ${selectedModel === model.id ? 'bg-white/5' : ''}`}>
                                         <div><p className={`text-sm font-bold ${model.color}`}>{model.label}</p><p className="text-[10px] text-gray-600 font-mono">{model.provider}</p></div>
@@ -500,7 +500,7 @@ export default function ChatPage() {
                                                     <button onClick={() => copyMessage(msg.content, msg.id)} className="opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-white/5 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">{copiedId === msg.id ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}{copiedId === msg.id ? 'Copied' : 'Copy'}</button>
                                                     {msg.councilTranscript && (
                                                         <button onClick={() => setExpandedCouncil(expandedCouncil === msg.id ? null : msg.id)} className="opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-white/5 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">
-                                                            <Brain size={12} className="text-[#E77630]" /> {expandedCouncil === msg.id ? 'Hide' : 'View'} Council
+                                                            <Brain size={12} className="text-[#F97316]" /> {expandedCouncil === msg.id ? 'Hide' : 'View'} Council
                                                         </button>
                                                     )}
                                                 </div>
@@ -512,7 +512,7 @@ export default function ChatPage() {
                                                     {msg.councilTranscript.map((agent) => (
                                                         <div key={agent.agentId} className="p-2 rounded bg-white/[0.03] border border-white/5">
                                                             <div className="flex items-center gap-2 mb-1">
-                                                                <span className="text-[10px] font-bold text-[#E77630]">{agent.agentName}</span>
+                                                                <span className="text-[10px] font-bold text-[#F97316]">{agent.agentName}</span>
                                                                 <span className="text-[9px] text-gray-600 font-mono">{agent.durationMs}ms</span>
                                                             </div>
                                                             <p className="text-xs text-gray-400 leading-relaxed">{agent.output}</p>
@@ -524,14 +524,14 @@ export default function ChatPage() {
                                         {msg.role === 'user' && <div className="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center shrink-0"><User size={16} className="text-white" /></div>}
                                     </div>
                                 ))}
-                                {isLoading && <div className="flex gap-4 animate-fadeInUp"><div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 bg-white/5">{councilProcessing ? <Brain size={16} className="text-[#E77630] animate-pulse" /> : <Bot size={16} className="text-gray-400" />}</div><div className="bg-white/5 border border-white/5 rounded-xl rounded-bl-md px-4 py-3"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#E77630] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{councilProcessing ? '5 agents debating...' : `${activeModel.label} is thinking...`}</span></div></div></div>}
+                                {isLoading && <div className="flex gap-4 animate-fadeInUp"><div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 bg-white/5">{councilProcessing ? <Brain size={16} className="text-[#F97316] animate-pulse" /> : <Bot size={16} className="text-gray-400" />}</div><div className="bg-white/5 border border-white/5 rounded-xl rounded-bl-md px-4 py-3"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#F97316] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{councilProcessing ? '5 agents debating...' : `${activeModel.label} is thinking...`}</span></div></div></div>}
                                 <div ref={messagesEndRef} />
                             </div>
                         )}
                     </div>
                     <div className="p-4 border-t border-white/5 bg-black/40 backdrop-blur-sm shrink-0">
                         <div className="max-w-4xl mx-auto">
-                            <div className="flex items-end gap-3 p-3 rounded-lg bg-white/5 border border-white/5 focus-within:border-[#E77630]/40 transition-all">
+                            <div className="flex items-end gap-3 p-3 rounded-lg bg-white/5 border border-white/5 focus-within:border-[#F97316]/40 transition-all">
                                 <button onClick={createNewSession} aria-label="New chat" className="p-2 rounded-xl text-gray-500 hover:text-white hover:bg-white/10 transition-all md:hidden shrink-0"><Plus size={20} /></button>
                                 {/* TODO: Agent selector — load installed agents from localStorage('installed-agents') + localStorage('custom-agents'),
                                    show a dropdown to pick an agent whose system prompt seeds the conversation.

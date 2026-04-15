@@ -9,11 +9,12 @@ import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
+import { AnimatedCard, BorderBeam, Spotlight, NumberTicker } from '@/src/components/effects/MagicUI';
 
 interface MarketplaceAgent { id: string; name: string; author: string; description: string; category: string; rating: number; reviews: number; installs: string; price: 'free' | 'pro' | 'enterprise'; tags: string[]; avatar: string; featured?: boolean; trending?: boolean; verified?: boolean; }
 
 const CATEGORIES = ['All', 'Coding', 'Research', 'Data', 'Security', 'Voice', 'Finance', 'Content', 'DevOps'];
-const priceColors: Record<string, string> = { free: 'text-green-400 bg-green-400/10 border border-green-400/20', pro: 'text-[#F59E0B] bg-[#F59E0B]/10 border border-[#F59E0B]/20', enterprise: 'text-[#E77630] bg-[#E77630]/10 border border-[#E77630]/20' };
+const priceColors: Record<string, string> = { free: 'text-green-400 bg-green-400/10 border border-green-400/20', pro: 'text-[#F59E0B] bg-[#F59E0B]/10 border border-[#F59E0B]/20', enterprise: 'text-[#F97316] bg-[#F97316]/10 border border-[#F97316]/20' };
 
 const fetchMarketplaceData = async (): Promise<{ agents: MarketplaceAgent[] }> => {
     try {
@@ -82,25 +83,25 @@ export default function MarketplacePage() {
     return (
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8 relative">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[#E77630]/10 blur-[120px] rounded-full pointer-events-none" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[#F97316]/10 blur-[120px] rounded-full pointer-events-none" />
                 <div className="max-w-[1400px] mx-auto space-y-8 relative z-10">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fadeInUp">
                         <div>
                             <div className="flex items-center gap-3 mb-2">
-                                <div className="w-10 h-10 rounded-xl flex items-center justify-center relative shadow-[0_0_20px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #F59E0B, #E77630)' }}><Store size={20} className="text-white" /></div>
-                                <Badge variant="default" className="bg-[#E77630]/10 text-[#E77630] border-[#E77630]/20 text-[10px] tracking-widest font-mono">v2.0 ORCHESTRATION</Badge>
+                                <div className="w-10 h-10 rounded-xl flex items-center justify-center relative shadow-[0_0_20px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #F59E0B, #F97316)' }}><Store size={20} className="text-white" /></div>
+                                <Badge variant="default" className="bg-[#F97316]/10 text-[#F97316] border-[#F97316]/20 text-[10px] tracking-widest font-mono">v2.0 ORCHESTRATION</Badge>
                                 <Badge variant="default" className="bg-amber-400/10 text-amber-400 border border-amber-400/20 text-[8px] font-mono tracking-widest">DEMO</Badge>
                             </div>
                             <h1 className="text-4xl lg:text-5xl font-medium tracking-tight text-white">Agent Marketplace</h1>
                             <p className="text-sm text-gray-400 mt-2 font-mono">Deploy pre-trained intelligences directly into your swarm architecture</p>
                         </div>
-                        <Link href="/agents/builder"><GlowButton className="h-11 px-6 bg-white/5 border border-white/10 hover:bg-white/10 group transition-all"><Sparkles size={16} className="mr-2 text-[#E77630]" /><span className="font-medium tracking-wide">Build Your Own</span></GlowButton></Link>
+                        <Link href="/agents/builder"><GlowButton className="h-11 px-6 bg-white/5 border border-white/10 hover:bg-white/10 group transition-all"><Sparkles size={16} className="mr-2 text-[#F97316]" /><span className="font-medium tracking-wide">Build Your Own</span></GlowButton></Link>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fadeInUp" style={{ animationDelay: '100ms' }}>
                         {[{ label: 'Available Agents', value: '2,400+', icon: Bot, gradient: 'from-[#F59E0B]/20 to-transparent', color: 'text-[#F59E0B]' },
                           { label: 'Total Installs', value: '1.2M', icon: Download, gradient: 'from-emerald-500/20 to-transparent', color: 'text-emerald-400' },
-                          { label: 'Active Developers', value: '8,200', icon: Users, gradient: 'from-[#E77630]/20 to-transparent', color: 'text-[#E77630]' },
-                          { label: 'Avg. Rating', value: '4.7', icon: Star, gradient: 'from-[#E77630]/20 to-transparent', color: 'text-[#E77630]' }
+                          { label: 'Active Developers', value: '8,200', icon: Users, gradient: 'from-[#F97316]/20 to-transparent', color: 'text-[#F97316]' },
+                          { label: 'Avg. Rating', value: '4.7', icon: Star, gradient: 'from-[#F97316]/20 to-transparent', color: 'text-[#F97316]' }
                         ].map(stat => { const Icon = stat.icon; return (
                             <Card key={stat.label} variant="glass" className="p-5 overflow-hidden relative group border-white/5">
                                 <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${stat.gradient} blur-2xl opacity-50 group-hover:opacity-100 transition-opacity`} />
@@ -110,7 +111,7 @@ export default function MarketplacePage() {
                     </div>
                     <div className="flex flex-col xl:flex-row gap-4 justify-between items-start xl:items-center bg-black/40 p-2 rounded-2xl border border-white/5 backdrop-blur-md animate-fadeInUp" style={{ animationDelay: '200ms' }}>
                         <div className="flex flex-1 w-full xl:w-auto overflow-x-auto gap-1 pb-2 xl:pb-0 scrollbar-none">
-                            {CATEGORIES.map(cat => <button key={cat} onClick={() => setCategory(cat)} className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wide whitespace-nowrap transition-all duration-300 ${category === cat ? 'bg-gradient-to-r from-[#E77630] to-[#F59E0B] text-white shadow-[0_0_15px_rgba(231,118,48,0.4)]' : 'bg-transparent text-gray-400 hover:text-white hover:bg-white/5'}`}>{cat}</button>)}
+                            {CATEGORIES.map(cat => <button key={cat} onClick={() => setCategory(cat)} className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wide whitespace-nowrap transition-all duration-300 ${category === cat ? 'bg-gradient-to-r from-[#F97316] to-[#F59E0B] text-white shadow-[0_0_15px_rgba(231,118,48,0.4)]' : 'bg-transparent text-gray-400 hover:text-white hover:bg-white/5'}`}>{cat}</button>)}
                         </div>
                         <div className="flex w-full xl:w-auto gap-2 shrink-0">
                             <div className="relative flex-1 xl:w-64"><Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" /><input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search agents..." aria-label="Search marketplace agents" className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:border-[#F59E0B]/50 focus:outline-none transition-all" /></div>
@@ -121,9 +122,10 @@ export default function MarketplacePage() {
                     {category === 'All' && !search && <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fadeInUp" style={{ animationDelay: '300ms' }}>
                         {isLoading ? Array(2).fill(0).map((_, i) => <div key={i} className="h-64 rounded-2xl bg-white/5 border border-white/5 animate-pulse" />) :
                             featuredAgents.slice(0, 2).map(agent => (
-                                <Card key={agent.id} variant="glass" className="relative overflow-hidden group border-white/10 hover:border-[#E77630]/30 transition-all duration-700 cursor-pointer">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-[#E77630]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                                    <div className="absolute top-0 right-0 px-4 py-1.5 bg-gradient-to-r from-[#E77630] to-[#E77630] text-white text-[10px] uppercase font-bold tracking-widest rounded-bl-xl shadow-lg flex items-center gap-1.5 z-20"><Crown size={12} /> TOP TIER</div>
+                                <Card key={agent.id} variant="glass" className="relative overflow-hidden group border-white/10 hover:border-[#F97316]/30 transition-all duration-700 cursor-pointer">
+                                    <BorderBeam size={250} duration={8} colorFrom="#F97316" colorTo="#F59E0B" />
+                                    <div className="absolute inset-0 bg-gradient-to-br from-[#F97316]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                                    <div className="absolute top-0 right-0 px-4 py-1.5 bg-gradient-to-r from-[#F97316] to-[#F97316] text-white text-[10px] uppercase font-bold tracking-widest rounded-bl-xl shadow-lg flex items-center gap-1.5 z-20"><Crown size={12} /> TOP TIER</div>
                                     <CardContent className="p-8 relative z-10 flex flex-col h-full justify-between">
                                         <div><div className="flex items-start gap-5"><div className="w-16 h-16 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center text-3xl shadow-xl group-hover:scale-110 transition-all duration-500">{agent.avatar}</div><div className="flex-1 mt-1"><div className="flex items-center gap-2 mb-1"><h3 className="text-xl font-medium text-white tracking-tight">{agent.name}</h3>{agent.verified && <Check size={14} className="text-[#F59E0B]" />}</div><p className="text-xs font-mono text-gray-500 uppercase tracking-wider">{agent.author}</p></div></div><p className="text-sm text-gray-300 mt-5 leading-relaxed">{agent.description}</p></div>
                                         <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
@@ -140,7 +142,7 @@ export default function MarketplacePage() {
                     <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 animate-fadeInUp relative z-10' : 'space-y-3 animate-fadeInUp relative z-10'} style={{ animationDelay: '400ms' }}>
                         {isLoading ? Array(8).fill(0).map((_, i) => <div key={i} className="h-48 rounded-2xl bg-white/5 border border-white/5 animate-pulse" />) :
                             filtered.filter(a => !(category === 'All' && !search && a.featured)).map(agent => (
-                                <Card key={agent.id} variant="glass" className="relative p-5 h-full flex flex-col hover:border-white/20 transition-all duration-500 bg-black/60 group-hover:bg-black/80 backdrop-blur-xl group cursor-pointer rounded-2xl overflow-hidden">
+                                <AnimatedCard key={agent.id} className="relative p-5 h-full flex flex-col hover:border-white/20 transition-all duration-500 bg-black/60 backdrop-blur-xl cursor-pointer rounded-2xl overflow-hidden" hoverGlow>
                                     <div className="flex items-start gap-4 mb-4">
                                         <div className="w-12 h-12 flex-shrink-0 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-2xl">{agent.avatar}</div>
                                         <div className="flex-1 min-w-0 pt-0.5"><div className="flex items-center gap-1.5 mb-1"><h3 className="text-base font-semibold text-white tracking-tight truncate group-hover:text-[#F59E0B] transition-colors">{agent.name}</h3>{agent.verified && <Check size={12} className="text-[#F59E0B] shrink-0" />}{agent.trending && <TrendingUp size={12} className="text-orange-400 shrink-0" />}</div><p className="text-[10px] font-mono text-gray-500 uppercase tracking-wider truncate">{agent.author}</p></div>
@@ -152,7 +154,7 @@ export default function MarketplacePage() {
                                             {installed.has(agent.id) ? <span className="flex items-center justify-center gap-1.5"><Check size={12} /> Installed</span> : 'Install'}
                                         </button>
                                     </div>
-                                </Card>
+                                </AnimatedCard>
                             ))
                         }
                     </div>

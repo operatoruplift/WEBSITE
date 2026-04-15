@@ -157,7 +157,7 @@ export default function AgentDetailPage() {
                     {/* Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
-                            { label: 'Sessions', value: agent.sessions.toLocaleString(), icon: MessageSquare, color: 'text-[#E77630]' },
+                            { label: 'Sessions', value: agent.sessions.toLocaleString(), icon: MessageSquare, color: 'text-[#F97316]' },
                             { label: 'Memory', value: agent.memoryUsage, icon: Brain, color: 'text-[#F59E0B]' },
                             { label: 'Model', value: agent.model.split(' ').pop(), icon: Zap, color: 'text-emerald-400' },
                             { label: 'Created', value: agent.createdAt, icon: Clock, color: 'text-gray-400' },
@@ -180,7 +180,7 @@ export default function AgentDetailPage() {
                             <Card variant="glass">
                                 <CardHeader className="border-b border-white/5 pb-4">
                                     <CardTitle className="flex items-center gap-2 text-sm font-mono text-gray-400 uppercase tracking-widest">
-                                        <Settings size={14} className="text-[#E77630]" /> Configuration
+                                        <Settings size={14} className="text-[#F97316]" /> Configuration
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-6 space-y-6">
@@ -239,7 +239,7 @@ export default function AgentDetailPage() {
                             <Card variant="glass">
                                 <CardHeader className="border-b border-white/5 pb-4">
                                     <CardTitle className="flex items-center gap-2 text-sm font-mono text-gray-400 uppercase tracking-widest">
-                                        <Activity size={14} className="text-[#E77630]" /> Activity
+                                        <Activity size={14} className="text-[#F97316]" /> Activity
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-0">

@@ -34,7 +34,7 @@ export function UserHeader() {
                 <Link href="/settings" className="p-2 rounded-lg text-gray-500 hover:bg-white/5 hover:text-white transition-all"><Settings size={16} /></Link>
                 <div className="relative ml-1">
                     <button onClick={() => setShowProfile(!showProfile)} className="flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-white/5 transition-all">
-                        <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ background: 'linear-gradient(135deg, #E77630, #E77630)' }}>U</div>
+                        <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ background: 'linear-gradient(135deg, #F97316, #F97316)' }}>U</div>
                         <ChevronDown size={12} className={`text-gray-500 transition-transform ${showProfile ? 'rotate-180' : ''}`} />
                     </button>
                     {showProfile && (

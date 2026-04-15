@@ -144,7 +144,7 @@ export default function IntegrationsPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <Plug size={16} className="text-[#E77630]" />
+                                <Plug size={16} className="text-[#F97316]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Connect</span>
                             </div>
                             <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Integrations</h1>

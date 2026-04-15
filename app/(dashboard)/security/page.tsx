@@ -7,12 +7,13 @@ import { GlowButton } from '@/src/components/ui/GlowButton';
 import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
+import { AnimatedCard, NumberTicker, BorderBeam, StaggerChildren } from '@/src/components/effects/MagicUI';
 import { isEncryptionConfigured } from '@/lib/encryption';
 import { getAuditLog, getAuditStats, clearAuditLog, getOnChainRecord, publishMerkleRoot, type AuditEntry } from '@/lib/auditLog';
 
 const CATEGORY_META: Record<string, { label: string; color: string; icon: typeof Shield }> = {
-    calendar: { label: 'Calendar', color: 'text-[#E77630]', icon: Clock },
-    gmail: { label: 'Gmail', color: 'text-[#E77630]', icon: FileText },
+    calendar: { label: 'Calendar', color: 'text-[#F97316]', icon: Clock },
+    gmail: { label: 'Gmail', color: 'text-[#F97316]', icon: FileText },
     agent: { label: 'Agent', color: 'text-[#F59E0B]', icon: Activity },
     approval: { label: 'Approval', color: 'text-emerald-400', icon: ShieldCheck },
     encryption: { label: 'Encryption', color: 'text-emerald-400', icon: Lock },
@@ -98,24 +99,26 @@ export default function SecurityPage() {
                     {/* Stats */}
                     <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 animate-fadeInUp" style={{ animationDelay: '100ms' }}>
                         {[
-                            { label: 'Encryption', value: encConfigured ? 'AES-256-GCM' : 'Not Set', icon: Lock, color: encConfigured ? 'text-emerald-400' : 'text-amber-400', gradient: 'from-emerald-500/20 to-transparent' },
-                            { label: 'Key Derivation', value: encConfigured ? 'PBKDF2 100K' : '—', icon: Key, color: 'text-emerald-400', gradient: 'from-emerald-500/20 to-transparent' },
-                            { label: 'Total Actions', value: String(totalActions), icon: Activity, color: 'text-[#E77630]', gradient: 'from-[#E77630]/20 to-transparent' },
-                            { label: 'Approved', value: String(approvedCount), icon: ShieldCheck, color: 'text-emerald-400', gradient: 'from-emerald-500/20 to-transparent' },
-                            { label: 'Denied', value: String(deniedCount), icon: AlertTriangle, color: deniedCount > 0 ? 'text-red-400' : 'text-gray-500', gradient: deniedCount > 0 ? 'from-red-500/20 to-transparent' : 'from-gray-500/20 to-transparent' },
-                        ].map((stat, i) => {
+                            { label: 'Encryption', value: encConfigured ? 'AES-256-GCM' : 'Not Set', icon: Lock, color: encConfigured ? 'text-emerald-400' : 'text-amber-400', gradient: 'from-emerald-500/20 to-transparent', numeric: false },
+                            { label: 'Key Derivation', value: encConfigured ? 'PBKDF2 100K' : '—', icon: Key, color: 'text-emerald-400', gradient: 'from-emerald-500/20 to-transparent', numeric: false },
+                            { label: 'Total Actions', value: String(totalActions), icon: Activity, color: 'text-[#F97316]', gradient: 'from-[#F97316]/20 to-transparent', numeric: true, numVal: totalActions },
+                            { label: 'Approved', value: String(approvedCount), icon: ShieldCheck, color: 'text-emerald-400', gradient: 'from-emerald-500/20 to-transparent', numeric: true, numVal: approvedCount },
+                            { label: 'Denied', value: String(deniedCount), icon: AlertTriangle, color: deniedCount > 0 ? 'text-red-400' : 'text-gray-500', gradient: deniedCount > 0 ? 'from-red-500/20 to-transparent' : 'from-gray-500/20 to-transparent', numeric: true, numVal: deniedCount },
+                        ].map((stat) => {
                             const Icon = stat.icon;
                             return (
-                                <Card key={stat.label} variant="glass" className="p-5 overflow-hidden relative group border-white/5">
+                                <AnimatedCard key={stat.label} className="p-5 overflow-hidden" hoverGlow>
                                     <div className={`absolute -right-4 -top-4 w-32 h-32 bg-gradient-to-bl ${stat.gradient} blur-2xl opacity-50 group-hover:opacity-100 transition-opacity`} />
                                     <div className="relative z-10 flex flex-col items-center text-center h-full justify-center">
                                         <div className="w-10 h-10 rounded-xl bg-black/40 border border-white/5 flex items-center justify-center mb-3">
                                             <Icon size={18} className={stat.color} />
                                         </div>
-                                        <p className="text-2xl font-bold text-white tracking-tight">{stat.value}</p>
+                                        <p className="text-2xl font-bold text-white tracking-tight">
+                                            {stat.numeric && stat.numVal ? <NumberTicker value={stat.numVal} durationMs={1000} /> : stat.value}
+                                        </p>
                                         <p className="text-[10px] font-mono uppercase tracking-wider text-gray-400 mt-1">{stat.label}</p>
                                     </div>
-                                </Card>
+                                </AnimatedCard>
                             );
                         })}
                     </div>
@@ -186,8 +189,9 @@ export default function SecurityPage() {
                             </Card>
 
                             {/* On-Chain Audit Root */}
-                            <Card variant="glass" className="p-6 border-white/5 bg-black/40">
-                                <h3 className="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <Card variant="glass" className="p-6 border-white/5 bg-black/40 group relative overflow-hidden">
+                                <BorderBeam size={180} duration={10} colorFrom="#34d399" colorTo="#10b981" />
+                                <h3 className="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-4 flex items-center gap-2 relative z-10">
                                     <Shield size={12} className="text-emerald-400" /> On-Chain Merkle Root
                                 </h3>
                                 {onChainRecord ? (
@@ -279,7 +283,7 @@ export default function SecurityPage() {
                                         <button onClick={refresh} className="text-[10px] font-mono text-gray-500 hover:text-white transition-colors">Refresh</button>
                                     </div>
                                 </div>
-                                <div className="flex-1 overflow-y-auto pr-2 space-y-2 relative z-10 scrollbar-none">
+                                <div className="flex-1 overflow-y-auto pr-2 relative z-10 scrollbar-none">
                                     {filtered.length === 0 ? (
                                         <div className="flex flex-col items-center justify-center py-20">
                                             <Shield size={48} className="text-gray-700 mb-4" />
@@ -287,7 +291,8 @@ export default function SecurityPage() {
                                             <p className="text-gray-600 text-xs mt-1">Actions will appear here when agents use Calendar or Gmail tools</p>
                                         </div>
                                     ) : (
-                                        filtered.map(entry => {
+                                        <StaggerChildren delayMs={40} className="space-y-2">
+                                        {filtered.map(entry => {
                                             const meta = CATEGORY_META[entry.category] || { label: entry.category, color: 'text-gray-400', icon: Activity };
                                             const Icon = meta.icon;
                                             return (
@@ -327,7 +332,8 @@ export default function SecurityPage() {
                                                     </div>
                                                 </div>
                                             );
-                                        })
+                                        })}
+                                        </StaggerChildren>
                                     )}
                                 </div>
                             </Card>

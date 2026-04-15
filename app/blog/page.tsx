@@ -18,7 +18,7 @@ interface BlogPost {
 
 const categoryColors: Record<string, string> = {
     update: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20',
-    engineering: 'text-[#E77630] bg-[#E77630]/10 border-[#E77630]/20',
+    engineering: 'text-[#F97316] bg-[#F97316]/10 border-[#F97316]/20',
     announcement: 'text-[#F59E0B] bg-[#F59E0B]/10 border-[#F59E0B]/20',
     guide: 'text-sky-400 bg-sky-400/10 border-sky-400/20',
 };

@@ -1,8 +1,12 @@
 -- Supabase migration: agents table
 -- Replaces the hardcoded DEMO_AGENTS in marketplace/page.tsx.
 -- Stores agent manifests (name, description, version, tools, permissions, price).
+--
+-- If the table already exists from an older migration, drop it first.
+-- The seeds below will re-populate it.
+DROP TABLE IF EXISTS agents CASCADE;
 
-CREATE TABLE IF NOT EXISTS agents (
+CREATE TABLE agents (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT NOT NULL,

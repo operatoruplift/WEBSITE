@@ -150,8 +150,8 @@ export default function LoginPage() {
         <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ background: '#050508', fontFamily: '"SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
             {/* Ambient glow — matches /repos/UI/ LoginScreen */}
             <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 rounded-full bg-[#E77630]/8 blur-[120px]" />
-                <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 rounded-full bg-[#E77630]/5 blur-[120px]" />
+                <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 rounded-full bg-[#F97316]/8 blur-[120px]" />
+                <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 rounded-full bg-[#F97316]/5 blur-[120px]" />
             </div>
 
             <div className="w-full max-w-md p-8 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl relative z-10 shadow-2xl">
@@ -212,11 +212,11 @@ export default function LoginPage() {
                             {/* Early Access (paid) */}
                             <button
                                 onClick={handleStartPayment}
-                                className="p-4 rounded-xl border border-[#E77630]/30 bg-[#E77630]/5 hover:border-[#E77630]/50 hover:bg-[#E77630]/10 text-left transition-all group"
+                                className="p-4 rounded-xl border border-[#F97316]/30 bg-[#F97316]/5 hover:border-[#F97316]/50 hover:bg-[#F97316]/10 text-left transition-all group"
                             >
                                 <div className="flex items-center gap-2 mb-2">
-                                    <Wallet size={14} className="text-[#E77630]" />
-                                    <Badge variant="default" className="text-[8px] font-mono bg-[#E77630]/10 border-[#E77630]/20 text-[#E77630]">0.1 SOL</Badge>
+                                    <Wallet size={14} className="text-[#F97316]" />
+                                    <Badge variant="default" className="text-[8px] font-mono bg-[#F97316]/10 border-[#F97316]/20 text-[#F97316]">0.1 SOL</Badge>
                                 </div>
                                 <h3 className="text-sm font-semibold text-white mb-1">Early Access</h3>
                                 <p className="text-[10px] text-gray-500 leading-relaxed">Pay once, skip the wait. Immediate dashboard access.</p>
@@ -258,7 +258,7 @@ export default function LoginPage() {
                         <h2 className="text-xl font-bold text-white mb-2">You&apos;re on the list</h2>
                         <p className="text-gray-400 text-sm mb-1">We&apos;ll notify <span className="text-white">{email}</span> when your spot opens.</p>
                         <p className="text-gray-500 text-xs mt-4">Or skip the wait:</p>
-                        <button onClick={handleStartPayment} className="mt-2 text-sm text-[#E77630] hover:text-[#E77630]/80 transition-colors font-medium">
+                        <button onClick={handleStartPayment} className="mt-2 text-sm text-[#F97316] hover:text-[#F97316]/80 transition-colors font-medium">
                             Pay 0.1 SOL for immediate access &rarr;
                         </button>
                     </div>
@@ -268,7 +268,7 @@ export default function LoginPage() {
                 {view === 'pay-pending' && (
                     <div className="space-y-5">
                         <div className="text-center">
-                            <Badge variant="default" className="bg-[#E77630]/10 border-[#E77630]/20 text-[#E77630] text-[10px] font-mono tracking-widest mb-4 inline-flex items-center gap-1">
+                            <Badge variant="default" className="bg-[#F97316]/10 border-[#F97316]/20 text-[#F97316] text-[10px] font-mono tracking-widest mb-4 inline-flex items-center gap-1">
                                 <Wallet size={10} /> SOLANA PAY
                             </Badge>
                             <h2 className="text-xl font-bold text-white">Send {getEarlyAccessPriceSol()} SOL</h2>
@@ -290,7 +290,7 @@ export default function LoginPage() {
                                 target="_blank"
                                 rel="noreferrer"
                                 className="w-full flex items-center justify-center gap-2 h-11 rounded-xl text-white text-sm font-bold uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(231,118,48,0.2)]"
-                                style={{ background: '#E77630' }}
+                                style={{ background: '#F97316' }}
                             >
                                 <ExternalLink size={14} /> Open in Phantom
                             </a>

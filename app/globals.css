@@ -1,29 +1,47 @@
-@import url('https://fonts.cdnfonts.com/css/sf-pro-display');
 @import "tailwindcss";
-/* Put CSS variables at the top so they're available at runtime */
 
+/* ── Design tokens — mirrored from repos/UI (uplift.exe) ── */
 @theme{
-  --color-primary: #E77630;
-  --color-muted: #9ca3af;
-  --color-background: #050508;
-  --color-card: #0c0c0c;
-  --color-border: rgba(255, 255, 255, 0.05);
+  --color-primary: #F97316;
+  --color-primary-foreground: #FFFFFF;
+  --color-foreground: #FAFAFA;
+  --color-background: #0A0A0A;
+  --color-surface: #111111;
+  --color-surface-elevated: #1A1A1A;
+  --color-card: #111111;
+  --color-muted: #A1A1AA;
+  --color-muted-foreground: #A1A1AA;
+  --color-border: #222222;
+  --color-border-visible: #333333;
+  --color-ring: #F97316;
+  --color-destructive: #EF4444;
+  --color-success: #22C55E;
+  --color-warning: #EAB308;
+  --color-info: #3B82F6;
+  --radius: 0.625rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.875rem;
 }
-/* your existing @layer base, components, utilities ... */
+
 @layer base {
-  /* reset, body, selection, scrollbar etc */
   * { margin:0; padding:0; }
   html { scroll-behavior: auto; }
   body {
     background: var(--color-background);
-    color: white;
+    color: var(--color-foreground);
     overflow-x: hidden;
-    font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--font-geist-sans, 'SF Pro Display'), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: var(--font-geist-mono, 'SF Mono'), ui-monospace, SFMono-Regular, Menlo, monospace;
   }
 
   ::selection {
-    background: rgba(231, 118, 48, 0.4);
-    color: white;
+    background-color: var(--color-foreground);
+    color: #000;
   }
 }
 
@@ -370,7 +388,7 @@
 }
 
 .gradient-text-animated {
-  background: linear-gradient(90deg, #ffffff, #E77630, #F59E0B, #ffffff);
+  background: linear-gradient(90deg, #ffffff, #F97316, #F97316, #ffffff);
   background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -419,6 +437,18 @@
 /* Shimmer - loading/skeleton shimmer effect */
 @keyframes shimmer {
   0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* MagicUI BorderBeam spin + shimmer-sweep */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
   100% { transform: translateX(100%); }
 }
 

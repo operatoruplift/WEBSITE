@@ -118,7 +118,7 @@ export default function AnalyticsPage() {
                         <Card variant="glass" className="card-animate" style={{ animationDelay: '400ms' }}>
                             <CardHeader className="border-b border-white/5 pb-4">
                                 <CardTitle className="flex items-center gap-2 text-sm text-gray-300 font-mono uppercase tracking-widest">
-                                    <TrendingUp size={14} className="text-[#E77630]" /> Top Agents
+                                    <TrendingUp size={14} className="text-[#F97316]" /> Top Agents
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="p-4">
@@ -136,7 +136,7 @@ export default function AnalyticsPage() {
                                                 </div>
                                             </div>
                                             <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-                                                <div className="h-full bg-gradient-to-r from-[#E77630] to-[#E77630] rounded-full transition-all duration-700" style={{ width: `${agent.bar}%` }} />
+                                                <div className="h-full bg-gradient-to-r from-[#F97316] to-[#F97316] rounded-full transition-all duration-700" style={{ width: `${agent.bar}%` }} />
                                             </div>
                                         </div>
                                     ))}

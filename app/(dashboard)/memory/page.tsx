@@ -79,7 +79,7 @@ export default function MemoryPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <Brain size={16} className="text-[#E77630]" />
+                                <Brain size={16} className="text-[#F97316]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Knowledge Base</span>
                             </div>
                             <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Memory Bank</h1>
@@ -131,8 +131,8 @@ export default function MemoryPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         {[
-                            { label: 'Memory Nodes', value: nodes.length, icon: Brain, color: 'text-[#E77630]' },
-                            { label: 'Vector Embeddings', value: totalVectors.toLocaleString(), icon: Sparkles, color: 'text-[#E77630]' },
+                            { label: 'Memory Nodes', value: nodes.length, icon: Brain, color: 'text-[#F97316]' },
+                            { label: 'Vector Embeddings', value: totalVectors.toLocaleString(), icon: Sparkles, color: 'text-[#F97316]' },
                             { label: 'Sources Indexed', value: nodes.length, icon: Link2, color: 'text-[#F59E0B]' },
                             { label: 'Tags', value: [...new Set(nodes.flatMap(n => n.tags))].length, icon: Tag, color: 'text-emerald-400' },
                         ].map(stat => {

@@ -12,7 +12,7 @@ import { useToast } from '@/src/components/ui/Toast';
 const TEMPLATES = [
     { id: 'general', name: 'General Assistant', icon: Sparkles, color: 'text-primary', desc: 'A versatile agent for everyday tasks', capabilities: ['Chat', 'Research', 'Writing'] },
     { id: 'code', name: 'Code Expert', icon: Code, color: 'text-emerald-400', desc: 'Specialized in code generation, review, and debugging', capabilities: ['Code Gen', 'Debug', 'Refactor'] },
-    { id: 'research', name: 'Research Agent', icon: Brain, color: 'text-[#E77630]', desc: 'Deep research across papers, docs, and the web', capabilities: ['Papers', 'Citations', 'Summarize'] },
+    { id: 'research', name: 'Research Agent', icon: Brain, color: 'text-[#F97316]', desc: 'Deep research across papers, docs, and the web', capabilities: ['Papers', 'Citations', 'Summarize'] },
     { id: 'writer', name: 'Content Writer', icon: FileText, color: 'text-[#F59E0B]', desc: 'Blog posts, docs, social media, and more', capabilities: ['Blog', 'Social', 'Docs'] },
     { id: 'security', name: 'Security Analyst', icon: Shield, color: 'text-red-400', desc: 'Threat detection, vulnerability scanning, compliance', capabilities: ['OWASP', 'Audit', 'Monitor'] },
     { id: 'web', name: 'Web Agent', icon: Globe, color: 'text-amber-400', desc: 'Browse, scrape, and interact with the web', capabilities: ['Browse', 'Scrape', 'API'] },
@@ -110,7 +110,7 @@ export default function AgentBuilderPage() {
         existing.push(agent);
         localStorage.setItem('custom-agents', JSON.stringify(existing));
         showToast(`Agent "${name}" deployed locally!`, 'success');
-        addNotification({ type: 'agent', title: `Agent "${name}" deployed`, message: `${model} agent with ${selectedTools.length} tools`, icon: 'bot', color: 'text-[#E77630]' });
+        addNotification({ type: 'agent', title: `Agent "${name}" deployed`, message: `${model} agent with ${selectedTools.length} tools`, icon: 'bot', color: 'text-[#F97316]' });
         setStep(0); setName(''); setDescription(''); setTemplate(''); setSystemPrompt('');
     };
 
@@ -121,7 +121,7 @@ export default function AgentBuilderPage() {
                     {/* Header */}
                     <div className="animate-fadeInUp">
                         <div className="flex items-center gap-3 mb-2">
-                            <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #E77630, #E77630)' }}>
+                            <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(231,118,48,0.3)]" style={{ background: 'linear-gradient(135deg, #F97316, #F97316)' }}>
                                 <Sparkles size={20} className="text-white" />
                             </div>
                             <Badge variant="primary" className="text-[10px] tracking-widest font-mono">WIZARD</Badge>

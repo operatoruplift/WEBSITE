@@ -147,7 +147,7 @@ export default function WorkflowsPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <GitBranch size={16} className="text-[#E77630]" />
+                                <GitBranch size={16} className="text-[#F97316]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Automation</span>
                             </div>
                             <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Workflows</h1>
@@ -187,8 +187,8 @@ export default function WorkflowsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {[
                             { label: 'Active Workflows', value: workflows.filter(w => w.status === 'active').length, icon: Play, color: 'text-emerald-400' },
-                            { label: 'Total Runs', value: workflows.reduce((sum, w) => sum + w.runs, 0).toLocaleString(), icon: Zap, color: 'text-[#E77630]' },
-                            { label: 'Total Steps', value: workflows.reduce((sum, w) => sum + w.steps, 0), icon: GitBranch, color: 'text-[#E77630]' },
+                            { label: 'Total Runs', value: workflows.reduce((sum, w) => sum + w.runs, 0).toLocaleString(), icon: Zap, color: 'text-[#F97316]' },
+                            { label: 'Total Steps', value: workflows.reduce((sum, w) => sum + w.steps, 0), icon: GitBranch, color: 'text-[#F97316]' },
                         ].map(stat => {
                             const Icon = stat.icon;
                             return (
@@ -231,7 +231,7 @@ export default function WorkflowsPage() {
                                             </div>
                                             <div className="flex items-center gap-2 flex-shrink-0">
                                                 <button onClick={() => runWorkflow(wf.id)} disabled={runningId === wf.id || !!runningId}
-                                                    className={`px-3 py-2 rounded-lg text-xs font-bold transition-colors ${runningId === wf.id ? 'bg-[#E77630]/20 text-[#E77630] cursor-wait' : 'bg-[#E77630]/10 text-[#E77630] hover:bg-[#E77630]/20'}`}>
+                                                    className={`px-3 py-2 rounded-lg text-xs font-bold transition-colors ${runningId === wf.id ? 'bg-[#F97316]/20 text-[#F97316] cursor-wait' : 'bg-[#F97316]/10 text-[#F97316] hover:bg-[#F97316]/20'}`}>
                                                     {runningId === wf.id ? `${runProgress}%` : <><Zap size={12} className="inline mr-1" />Run</>}
                                                 </button>
                                                 {(wf.status === 'active' || wf.status === 'paused') && (
@@ -247,7 +247,7 @@ export default function WorkflowsPage() {
                                             {(runningId === wf.id || (stepOutputs[wf.id] && stepOutputs[wf.id].length > 0)) && (
                                                 <div className="w-full mt-3 space-y-2">
                                                     {runningId === wf.id && (
-                                                        <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden"><div className="h-full bg-[#E77630] rounded-full transition-all duration-500" style={{ width: `${runProgress}%` }} /></div>
+                                                        <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden"><div className="h-full bg-[#F97316] rounded-full transition-all duration-500" style={{ width: `${runProgress}%` }} /></div>
                                                     )}
                                                     {stepOutputs[wf.id]?.map((output, i) => (
                                                         <div key={i} className="text-xs text-gray-400 font-mono p-2 bg-black/30 rounded-lg border border-white/5 leading-relaxed">

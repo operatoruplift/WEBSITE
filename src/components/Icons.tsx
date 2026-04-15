@@ -44,19 +44,19 @@ export const Logo = ({ className = "text-white" }: { className?: string }) => (
     <path d="M379.51 145.403C379.09 148.723 376.19 151.203 372.87 151.603L261.43 165.903C260.1 166.603 259 167.703 258.28 169.013L243.66 195.733C240.7 201.193 232.85 201.193 229.84 195.733L215.24 169.013C214.52 167.703 213.42 166.603 212.11 165.903L98.9198 151.603C95.5998 151.203 92.7198 148.723 92.2998 145.423C92.1898 144.723 92.1898 144.023 92.2998 143.323C92.7198 140.003 95.5998 137.543 98.9198 137.143L212.11 122.843C213.42 122.123 214.52 121.043 215.24 119.713L229.84 93.013C232.84 87.553 240.69 87.553 243.66 93.013L258.28 119.713C259 121.043 260.1 122.123 261.43 122.843L372.87 137.143C376.19 137.523 379.09 140.003 379.51 143.323C379.59 144.023 379.59 144.723 379.51 145.393V145.403Z" fill="url(#paint3_linear_243_2)"/>
     <defs>
       <linearGradient id="paint0_linear_243_2" x1="92.2098" y1="144.372" x2="379.57" y2="144.372" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#E77630"/>
+        <stop stopColor="#F97316"/>
         <stop offset="1" stopColor="#F1AD83"/>
       </linearGradient>
       <linearGradient id="paint1_linear_243_2" x1="0" y1="254.863" x2="471.78" y2="254.863" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#E77630"/>
+        <stop stopColor="#F97316"/>
         <stop offset="1" stopColor="#F1AD83"/>
       </linearGradient>
       <linearGradient id="paint2_linear_243_2" x1="92.2098" y1="144.373" x2="379.57" y2="144.373" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#E77630"/>
+        <stop stopColor="#F97316"/>
         <stop offset="1" stopColor="#F1AD83"/>
       </linearGradient>
       <linearGradient id="paint3_linear_243_2" x1="92.2098" y1="144.373" x2="379.57" y2="144.373" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#E77630"/>
+        <stop stopColor="#F97316"/>
         <stop offset="1" stopColor="#F1AD83"/>
       </linearGradient>
     </defs>
@@ -71,19 +71,19 @@ export const UpliftLogo = ({ className = "w-16 h-16" }: { className?: string }) 
     <path d="M379.51 145.403C379.09 148.723 376.19 151.203 372.87 151.603L261.43 165.903C260.1 166.603 259 167.703 258.28 169.013L243.66 195.733C240.7 201.193 232.85 201.193 229.84 195.733L215.24 169.013C214.52 167.703 213.42 166.603 212.11 165.903L98.9198 151.603C95.5998 151.203 92.7198 148.723 92.2998 145.423C92.1898 144.723 92.1898 144.023 92.2998 143.323C92.7198 140.003 95.5998 137.543 98.9198 137.143L212.11 122.843C213.42 122.123 214.52 121.043 215.24 119.713L229.84 93.013C232.84 87.553 240.69 87.553 243.66 93.013L258.28 119.713C259 121.043 260.1 122.123 261.43 122.843L372.87 137.143C376.19 137.523 379.09 140.003 379.51 143.323C379.59 144.023 379.59 144.723 379.51 145.393V145.403Z" fill="url(#paint3_linear_243_2_large)"/>
     <defs>
       <linearGradient id="paint0_linear_243_2_large" x1="92.2098" y1="144.372" x2="379.57" y2="144.372" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#E77630"/>
+        <stop stopColor="#F97316"/>
         <stop offset="1" stopColor="#F1AD83"/>
       </linearGradient>
       <linearGradient id="paint1_linear_243_2_large" x1="0" y1="254.863" x2="471.78" y2="254.863" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#E77630"/>
+        <stop stopColor="#F97316"/>
         <stop offset="1" stopColor="#F1AD83"/>
       </linearGradient>
       <linearGradient id="paint2_linear_243_2_large" x1="92.2098" y1="144.373" x2="379.57" y2="144.373" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#E77630"/>
+        <stop stopColor="#F97316"/>
         <stop offset="1" stopColor="#F1AD83"/>
       </linearGradient>
       <linearGradient id="paint3_linear_243_2_large" x1="92.2098" y1="144.373" x2="379.57" y2="144.373" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#E77630"/>
+        <stop stopColor="#F97316"/>
         <stop offset="1" stopColor="#F1AD83"/>
       </linearGradient>
     </defs>

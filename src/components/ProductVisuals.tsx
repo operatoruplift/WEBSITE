@@ -45,13 +45,13 @@ export const SandboxVisual = () => {
       const bY = (h - bSize) / 2;
       ctx.clearRect(0, 0, w, h);
 
-      ctx.strokeStyle = '#E77630';
+      ctx.strokeStyle = '#F97316';
       ctx.lineWidth = 1.5;
       ctx.setLineDash([8, 4]);
       ctx.strokeRect(bX, bY, bSize, bSize);
       ctx.setLineDash([]);
 
-      ctx.fillStyle = '#E77630';
+      ctx.fillStyle = '#F97316';
       ctx.font = '10px monospace';
       ctx.textAlign = 'center';
       ctx.fillText('ISOLATED_PROCESS', w/2, bY - 10);

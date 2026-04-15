@@ -10,6 +10,7 @@ import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
+import { AnimatedCard, BorderBeam, StaggerChildren } from '@/src/components/effects/MagicUI';
 
 interface SwarmAgent {
     id: string;
@@ -86,7 +87,7 @@ const PRESET_SWARMS: SwarmConfig[] = [
 const topologyLabels: Record<string, { label: string; color: string; desc: string }> = {
     sequential: { label: 'Sequential', color: 'text-emerald-400', desc: 'A → B → C' },
     parallel: { label: 'Parallel', color: 'text-[#F59E0B]', desc: 'A | B | C → D' },
-    hierarchical: { label: 'Hierarchical', color: 'text-[#E77630]', desc: 'A → [B, C]' },
+    hierarchical: { label: 'Hierarchical', color: 'text-[#F97316]', desc: 'A → [B, C]' },
     debate: { label: 'Debate', color: 'text-red-400', desc: 'A ⟷ B → Judge' },
     council: { label: 'Council', color: 'text-amber-400', desc: '5 argue → review → chairman' },
 };
@@ -261,7 +262,7 @@ export default function SwarmPage() {
     const statusIcon = (status: string) => {
         switch (status) {
             case 'thinking': return <div className="w-2 h-2 rounded-full bg-[#F59E0B] animate-pulse" />;
-            case 'executing': return <div className="w-2 h-2 rounded-full bg-[#E77630] animate-ping" />;
+            case 'executing': return <div className="w-2 h-2 rounded-full bg-[#F97316] animate-ping" />;
             case 'done': return <div className="w-2 h-2 rounded-full bg-emerald-400" />;
             case 'error': return <div className="w-2 h-2 rounded-full bg-red-400" />;
             default: return <div className="w-2 h-2 rounded-full bg-gray-600" />;
@@ -276,7 +277,7 @@ export default function SwarmPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <Network size={16} className="text-[#E77630]" />
+                                <Network size={16} className="text-[#F97316]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Multi-Agent</span>
                                 <span className="px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider rounded bg-amber-500/15 text-amber-300 border border-amber-500/20">Beta</span>
                             </div>
@@ -294,7 +295,7 @@ export default function SwarmPage() {
                             <Zap size={16} className="text-amber-400 shrink-0" />
                             <p className="text-sm text-gray-300 flex-1">
                                 <span className="text-amber-400 font-semibold">Demo mode</span> — swarm agents return placeholder responses until an API key is configured. Add your Anthropic API key in{' '}
-                                <a href="/settings" className="text-[#E77630] hover:underline font-medium">Settings → API Keys</a> to enable real multi-agent execution.
+                                <a href="/settings" className="text-[#F97316] hover:underline font-medium">Settings → API Keys</a> to enable real multi-agent execution.
                             </p>
                         </div>
                     )}
@@ -328,19 +329,19 @@ export default function SwarmPage() {
                     {/* Stats */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         {[
-                            { label: 'Total Swarms', value: swarms.length, icon: Network, color: 'text-[#E77630]' },
+                            { label: 'Total Swarms', value: swarms.length, icon: Network, color: 'text-[#F97316]' },
                             { label: 'Total Agents', value: swarms.reduce((sum, s) => sum + s.agents.length, 0), icon: Bot, color: 'text-[#F59E0B]' },
                             { label: 'Total Runs', value: swarms.reduce((sum, s) => sum + s.runs, 0), icon: Zap, color: 'text-emerald-400' },
-                            { label: 'Topologies', value: new Set(swarms.map(s => s.topology)).size, icon: Settings, color: 'text-[#E77630]' },
+                            { label: 'Topologies', value: new Set(swarms.map(s => s.topology)).size, icon: Settings, color: 'text-[#F97316]' },
                         ].map(stat => {
                             const Icon = stat.icon;
                             return (
-                                <Card key={stat.label} variant="glass" className="group">
-                                    <CardContent className="p-5 flex items-center gap-4">
+                                <AnimatedCard key={stat.label} className="" hoverGlow>
+                                    <div className="p-5 flex items-center gap-4 relative z-10">
                                         <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center"><Icon size={18} className={stat.color} /></div>
                                         <div><div className="text-2xl font-bold text-white">{stat.value}</div><div className="text-xs text-gray-500">{stat.label}</div></div>
-                                    </CardContent>
-                                </Card>
+                                    </div>
+                                </AnimatedCard>
                             );
                         })}
                     </div>
@@ -348,32 +349,34 @@ export default function SwarmPage() {
                     {/* Swarm List + Detail View */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {/* List */}
-                        <div className="space-y-3">
+                        <StaggerChildren delayMs={80} className="space-y-3">
                             {swarms.map(swarm => {
                                 const topo = topologyLabels[swarm.topology];
                                 const isActive = activeSwarmId === swarm.id;
                                 return (
-                                    <Card key={swarm.id} variant="glass"
-                                        className={`cursor-pointer transition-all ${isActive ? 'border-primary/30 bg-primary/5' : 'hover:border-white/10'}`}
-                                        onClick={() => setActiveSwarmId(swarm.id)}>
-                                        <CardContent className="p-4">
-                                            <div className="flex items-start justify-between mb-2">
-                                                <h3 className="text-sm font-semibold text-white truncate">{swarm.name}</h3>
-                                                <Badge variant="default" className={`text-[9px] ${topo.color}`}>{topo.label}</Badge>
+                                    <div key={swarm.id} className="group relative" onClick={() => setActiveSwarmId(swarm.id)}>
+                                        <AnimatedCard
+                                            className={`cursor-pointer transition-all ${isActive ? 'border-primary/30 bg-primary/5' : ''}`}
+                                            hoverGlow={isActive}>
+                                            <div className="p-4 relative z-10">
+                                                <div className="flex items-start justify-between mb-2">
+                                                    <h3 className="text-sm font-semibold text-white truncate">{swarm.name}</h3>
+                                                    <Badge variant="default" className={`text-[9px] ${topo.color}`}>{topo.label}</Badge>
+                                                </div>
+                                                <p className="text-xs text-gray-500 truncate mb-3">{swarm.description}</p>
+                                                <div className="flex items-center gap-3 text-[10px] font-mono text-gray-600">
+                                                    <span>{swarm.agents.length} agents</span>
+                                                    <span>{swarm.runs} runs</span>
+                                                    <span className={swarm.status === 'running' ? 'text-[#F97316]' : swarm.status === 'complete' ? 'text-emerald-400' : 'text-gray-600'}>
+                                                        {swarm.status}
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <p className="text-xs text-gray-500 truncate mb-3">{swarm.description}</p>
-                                            <div className="flex items-center gap-3 text-[10px] font-mono text-gray-600">
-                                                <span>{swarm.agents.length} agents</span>
-                                                <span>{swarm.runs} runs</span>
-                                                <span className={swarm.status === 'running' ? 'text-[#E77630]' : swarm.status === 'complete' ? 'text-emerald-400' : 'text-gray-600'}>
-                                                    {swarm.status}
-                                                </span>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
+                                        </AnimatedCard>
+                                    </div>
                                 );
                             })}
-                        </div>
+                        </StaggerChildren>
 
                         {/* Detail */}
                         <div className="lg:col-span-2">
@@ -416,12 +419,12 @@ export default function SwarmPage() {
                                                             <div className="flex flex-col items-center gap-1">
                                                                 <div className={`w-10 h-10 rounded-xl border flex items-center justify-center ${
                                                                     agent.status === 'done' ? 'bg-emerald-400/10 border-emerald-400/30' :
-                                                                    agent.status === 'thinking' || agent.status === 'executing' ? 'bg-[#E77630]/10 border-[#E77630]/30' :
+                                                                    agent.status === 'thinking' || agent.status === 'executing' ? 'bg-[#F97316]/10 border-[#F97316]/30' :
                                                                     'bg-white/5 border-white/5'
                                                                 }`}>
                                                                     <Icon size={18} className={
                                                                         agent.status === 'done' ? 'text-emerald-400' :
-                                                                        agent.status === 'thinking' || agent.status === 'executing' ? 'text-[#E77630]' :
+                                                                        agent.status === 'thinking' || agent.status === 'executing' ? 'text-[#F97316]' :
                                                                         'text-gray-500'
                                                                     } />
                                                                 </div>

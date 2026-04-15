@@ -15,8 +15,8 @@ interface ToolApprovalModalProps {
 }
 
 const TOOL_META: Record<string, { label: string; icon: typeof Calendar; color: string; risk: string }> = {
-    calendar: { label: 'Google Calendar', icon: Calendar, color: 'text-[#E77630]', risk: 'MEDIUM' },
-    gmail: { label: 'Gmail', icon: Mail, color: 'text-[#E77630]', risk: 'HIGH' },
+    calendar: { label: 'Google Calendar', icon: Calendar, color: 'text-[#F97316]', risk: 'MEDIUM' },
+    gmail: { label: 'Gmail', icon: Mail, color: 'text-[#F97316]', risk: 'HIGH' },
 };
 
 const ACTION_LABELS: Record<string, string> = {
@@ -79,7 +79,7 @@ export function ToolApprovalModal({ toolCall, agentName, userId, onResult, onDen
                 {/* Header */}
                 <div className="px-6 pt-5 pb-4 border-b border-white/5 flex items-center gap-4">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
-                        meta.risk === 'HIGH' ? 'bg-orange-500/10 border-orange-500/30' : 'bg-[#E77630]/10 border-[#E77630]/30'
+                        meta.risk === 'HIGH' ? 'bg-orange-500/10 border-orange-500/30' : 'bg-[#F97316]/10 border-[#F97316]/30'
                     }`}>
                         <Icon size={22} className={meta.color} />
                     </div>
@@ -153,7 +153,7 @@ export function ToolApprovalModal({ toolCall, agentName, userId, onResult, onDen
                         onClick={handleApprove}
                         disabled={isExecuting}
                         className="flex-[2] h-10 rounded-xl flex items-center justify-center gap-2 text-white text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-60 shadow-[0_0_20px_rgba(231,118,48,0.2)]"
-                        style={{ background: 'linear-gradient(135deg, #E77630, #E77630)' }}
+                        style={{ background: 'linear-gradient(135deg, #F97316, #F97316)' }}
                     >
                         {isExecuting ? (
                             <><Loader2 size={14} className="animate-spin" /> Executing...</>
