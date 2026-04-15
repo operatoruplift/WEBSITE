@@ -23,7 +23,8 @@ export interface ToolResult {
     error?: string;
 }
 
-const TOOL_USE_REGEX = /<tool_use>\s*([\s\S]*?)\s*<\/tool_use>/g;
+// Match <tool_use> blocks — also handles cases where LLM wraps in backticks or code fences
+const TOOL_USE_REGEX = /(?:```\w*\n?)?<tool_use>\s*([\s\S]*?)\s*<\/tool_use>(?:\n?```)?/g;
 
 /** Extract tool-call blocks from LLM output text. */
 export function parseToolCalls(text: string): ToolCall[] {
@@ -48,17 +49,40 @@ export function parseToolCalls(text: string): ToolCall[] {
         }
     }
 
+    // Fallback: if no <tool_use> blocks found, try matching raw JSON tool objects
+    // (LLM sometimes drops the XML tags and outputs bare JSON)
+    if (calls.length === 0) {
+        const jsonRegex = /\{\s*"tool"\s*:\s*"(calendar|gmail|x402)"\s*,\s*"action"\s*:\s*"[^"]+"\s*,\s*"params"\s*:\s*\{[^}]*\}\s*\}/g;
+        let jsonMatch: RegExpExecArray | null;
+        while ((jsonMatch = jsonRegex.exec(text)) !== null) {
+            try {
+                const parsed = JSON.parse(jsonMatch[0]);
+                if (parsed.tool && parsed.action) {
+                    calls.push({
+                        id: `tc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+                        tool: parsed.tool,
+                        action: parsed.action,
+                        params: parsed.params || {},
+                        rawBlock: jsonMatch[0],
+                    });
+                }
+            } catch {}
+        }
+    }
+
     return calls;
 }
 
 /** Remove tool-call blocks from the display text. */
 export function stripToolBlocks(text: string): string {
-    return text.replace(/<tool_use>[\s\S]*?<\/tool_use>/g, '').trim();
+    return text
+        .replace(/(?:```\w*\n?)?<tool_use>[\s\S]*?<\/tool_use>(?:\n?```)?/g, '')
+        .trim();
 }
 
 /** Check if a response contains any tool-call blocks. */
 export function hasToolCalls(text: string): boolean {
-    return /<tool_use>/.test(text);
+    return /<tool_use>/.test(text) || /\{"tool"\s*:\s*"(calendar|gmail|x402)"/.test(text);
 }
 
 /** Execute a single approved tool call against the backend. */
