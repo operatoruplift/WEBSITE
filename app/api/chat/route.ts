@@ -1,32 +1,25 @@
 import { NextResponse } from 'next/server';
 import { callLLM, ProviderError, type LLMMessage } from '@/lib/llm';
+import { checkRateLimit } from '@/lib/rateLimit';
+import { getOptionalUser } from '@/lib/auth';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 
-// Simple in-memory rate limiter (resets on deploy/restart)
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT = 50; // max requests per window
-const RATE_WINDOW = 60 * 60 * 1000; // 1 hour
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
-    return true;
-  }
-  if (entry.count >= RATE_LIMIT) return false;
-  entry.count++;
-  return true;
-}
-
 export async function POST(request: Request) {
   try {
-    // Rate limit by IP
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-    if (!checkRateLimit(ip)) {
-      return NextResponse.json({ error: 'Rate limit exceeded. Try again in an hour.', fallback: true }, { status: 429 });
+    // Rate limit by verified user ID (falls back to IP if no session)
+    const user = await getOptionalUser(request);
+    const rateLimitKey = user?.userId || request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    const rl = await checkRateLimit(rateLimitKey, 'free'); // TODO: check user tier from Supabase for 'pro'
+    if (!rl.allowed) {
+      const res = NextResponse.json({
+        error: `Rate limit exceeded (${rl.remaining} remaining). Try again in ${rl.retryAfterSeconds}s.`,
+        fallback: true,
+        retryAfterSeconds: rl.retryAfterSeconds,
+      }, { status: 429 });
+      res.headers.set('Retry-After', String(rl.retryAfterSeconds));
+      return res;
     }
 
     const { message, model, history, systemPrompt } = await request.json();
