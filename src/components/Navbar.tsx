@@ -30,12 +30,12 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-3 lg:space-x-4">
-          <div className="hidden lg:flex items-center space-x-6 xl:space-x-8 mr-4">
+          <div className="hidden lg:flex items-center gap-8 mr-6">
             {navItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href || `/#${item.targetId}`}
-                className="group flex items-center text-xs font-bold text-muted hover:text-white transition-colors tracking-wide"
+                className="group flex items-center text-xs font-bold text-muted hover:text-white transition-colors tracking-[0.15em] px-1"
               >
                 {item.name}
                 {item.name === 'PRODUCT' && (
@@ -47,7 +47,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
               href="https://help.operatoruplift.com"
               target="_blank"
               rel="noreferrer"
-              className="group flex items-center text-xs font-bold text-muted hover:text-white transition-colors tracking-wide"
+              className="group flex items-center text-xs font-bold text-muted hover:text-white transition-colors tracking-[0.15em] px-1"
             >
               DOCS
             </a>
