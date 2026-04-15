@@ -1,11 +1,11 @@
 // Operator Uplift Memory Engine
-// Inspired by Claude Code's 3-layer memory architecture
-// Index → Topic Files → Raw Data (never read, only searched)
+// 3-layer architecture: Supabase (source of truth) → localStorage (cache) → Search
+// Cross-device, cross-session persistence via Supabase.
 
 export interface MemoryEntry {
   id: string;
   name: string;
-  description: string; // one-line, used for relevance matching
+  description: string;
   type: 'user' | 'feedback' | 'project' | 'reference' | 'agent';
   content: string;
   tags: string[];
@@ -21,43 +21,110 @@ export interface MemoryIndex {
   lastConsolidated: string;
 }
 
-const MEMORY_INDEX_KEY = 'ou-memory-index';
-const MEMORY_ENTRIES_KEY = 'ou-memory-entries';
-const MAX_INDEX_ENTRIES = 200; // matches Claude Code's 200-line cap
+const MEMORY_CACHE_KEY = 'ou-memory-cache';
+const MAX_INDEX_ENTRIES = 200;
 
-// --- Layer 1: Index (always loaded) ---
-
-export function getMemoryIndex(): MemoryIndex {
+function getUserId(): string {
   try {
-    const raw = localStorage.getItem(MEMORY_INDEX_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch { /* fresh start */ }
-  return { version: 1, entries: [], lastConsolidated: new Date().toISOString() };
+    const u = localStorage.getItem('user');
+    if (u) return JSON.parse(u).id || 'anon';
+  } catch {}
+  return 'anon';
 }
 
-function saveMemoryIndex(index: MemoryIndex): void {
-  // Enforce cap: truncate if over MAX_INDEX_ENTRIES
-  if (index.entries.length > MAX_INDEX_ENTRIES) {
-    index.entries = index.entries.slice(0, MAX_INDEX_ENTRIES);
-  }
-  localStorage.setItem(MEMORY_INDEX_KEY, JSON.stringify(index));
-}
+// ── Cache layer (localStorage for instant reads) ──
 
-// --- Layer 2: Topic Files (on-demand) ---
-
-export function getAllEntries(): MemoryEntry[] {
+function getCachedEntries(): MemoryEntry[] {
   try {
-    const raw = localStorage.getItem(MEMORY_ENTRIES_KEY);
+    const raw = localStorage.getItem(MEMORY_CACHE_KEY);
     if (raw) return JSON.parse(raw);
-  } catch { /* fresh start */ }
+  } catch {}
   return [];
 }
 
-function saveAllEntries(entries: MemoryEntry[]): void {
-  localStorage.setItem(MEMORY_ENTRIES_KEY, JSON.stringify(entries));
+function setCachedEntries(entries: MemoryEntry[]): void {
+  try {
+    localStorage.setItem(MEMORY_CACHE_KEY, JSON.stringify(entries.slice(0, MAX_INDEX_ENTRIES)));
+  } catch {}
 }
 
-// --- CRUD Operations ---
+// ── Supabase layer (source of truth) ──
+
+async function fetchFromSupabase(search?: string): Promise<MemoryEntry[]> {
+  const userId = getUserId();
+  const params = new URLSearchParams({ user_id: userId });
+  if (search) params.set('search', search);
+
+  try {
+    const res = await fetch(`/api/memory/entries?${params}`);
+    if (!res.ok) return getCachedEntries();
+    const data = await res.json();
+    const entries: MemoryEntry[] = (data.entries || []).map((e: any) => ({
+      id: e.id,
+      name: e.name,
+      description: e.description,
+      type: e.type,
+      content: e.content,
+      tags: e.tags || [],
+      createdAt: e.created_at || e.createdAt,
+      updatedAt: e.updated_at || e.updatedAt,
+      accessCount: e.access_count || e.accessCount || 0,
+      lastAccessed: e.last_accessed || e.lastAccessed,
+    }));
+    setCachedEntries(entries);
+    return entries;
+  } catch {
+    return getCachedEntries();
+  }
+}
+
+async function saveToSupabase(entry: MemoryEntry): Promise<void> {
+  try {
+    await fetch('/api/memory/entries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: getUserId(),
+        id: entry.id,
+        name: entry.name,
+        description: entry.description,
+        type: entry.type,
+        content: entry.content,
+        tags: entry.tags,
+      }),
+    });
+  } catch {}
+}
+
+async function deleteFromSupabase(id: string): Promise<void> {
+  try {
+    await fetch('/api/memory/entries', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: getUserId(), id }),
+    });
+  } catch {}
+}
+
+// ── Public API ──
+
+export function getMemoryIndex(): MemoryIndex {
+  const entries = getCachedEntries();
+  return {
+    version: 1,
+    entries: entries.map(e => ({ id: e.id, name: e.name, description: e.description, type: e.type })),
+    lastConsolidated: new Date().toISOString(),
+  };
+}
+
+export function getAllEntries(): MemoryEntry[] {
+  return getCachedEntries();
+}
+
+/** Sync cache with Supabase. Call on page load. */
+export async function syncMemory(): Promise<MemoryEntry[]> {
+  return fetchFromSupabase();
+}
 
 export function addMemory(entry: Omit<MemoryEntry, 'id' | 'createdAt' | 'updatedAt' | 'accessCount' | 'lastAccessed'>): MemoryEntry {
   const now = new Date().toISOString();
@@ -70,105 +137,72 @@ export function addMemory(entry: Omit<MemoryEntry, 'id' | 'createdAt' | 'updated
     lastAccessed: now,
   };
 
-  // Step 1: Write to topic files
-  const entries = getAllEntries();
-  entries.push(newEntry);
-  saveAllEntries(entries);
-
-  // Step 2: Update index (pointer only)
-  const index = getMemoryIndex();
-  index.entries.push({
-    id: newEntry.id,
-    name: newEntry.name,
-    description: newEntry.description,
-    type: newEntry.type,
-  });
-  saveMemoryIndex(index);
+  const entries = getCachedEntries();
+  entries.unshift(newEntry);
+  setCachedEntries(entries);
+  saveToSupabase(newEntry);
 
   return newEntry;
 }
 
 export function getMemory(id: string): MemoryEntry | null {
-  const entries = getAllEntries();
+  const entries = getCachedEntries();
   const entry = entries.find(e => e.id === id);
   if (entry) {
-    // Track access
     entry.accessCount++;
     entry.lastAccessed = new Date().toISOString();
-    saveAllEntries(entries);
+    setCachedEntries(entries);
   }
   return entry || null;
 }
 
 export function updateMemory(id: string, updates: Partial<Pick<MemoryEntry, 'name' | 'description' | 'content' | 'tags' | 'type'>>): MemoryEntry | null {
-  const entries = getAllEntries();
+  const entries = getCachedEntries();
   const idx = entries.findIndex(e => e.id === id);
   if (idx === -1) return null;
 
   entries[idx] = { ...entries[idx], ...updates, updatedAt: new Date().toISOString() };
-  saveAllEntries(entries);
-
-  // Update index too
-  const index = getMemoryIndex();
-  const indexEntry = index.entries.find(e => e.id === id);
-  if (indexEntry) {
-    if (updates.name) indexEntry.name = updates.name;
-    if (updates.description) indexEntry.description = updates.description;
-    if (updates.type) indexEntry.type = updates.type;
-    saveMemoryIndex(index);
-  }
+  setCachedEntries(entries);
+  saveToSupabase(entries[idx]);
 
   return entries[idx];
 }
 
 export function deleteMemory(id: string): boolean {
-  const entries = getAllEntries();
+  const entries = getCachedEntries();
   const filtered = entries.filter(e => e.id !== id);
   if (filtered.length === entries.length) return false;
-  saveAllEntries(filtered);
-
-  // Remove from index
-  const index = getMemoryIndex();
-  index.entries = index.entries.filter(e => e.id !== id);
-  saveMemoryIndex(index);
+  setCachedEntries(filtered);
+  deleteFromSupabase(id);
 
   return true;
 }
 
-// --- Layer 3: Search (grep-like, never read full data) ---
-
 export function searchMemory(query: string): MemoryEntry[] {
-  const entries = getAllEntries();
+  const entries = getCachedEntries();
   const lower = query.toLowerCase();
   return entries.filter(e =>
     e.name.toLowerCase().includes(lower) ||
     e.description.toLowerCase().includes(lower) ||
     e.content.toLowerCase().includes(lower) ||
     e.tags.some(t => t.toLowerCase().includes(lower))
-  ).sort((a, b) => b.accessCount - a.accessCount); // most accessed first
+  ).sort((a, b) => b.accessCount - a.accessCount);
 }
 
-// --- Memory Consolidation (background self-healing) ---
-
 export function consolidateMemory(): { merged: number; removed: number } {
-  const entries = getAllEntries();
+  const entries = getCachedEntries();
   let merged = 0;
   let removed = 0;
 
-  // 1. Remove duplicates (same name + type)
   const seen = new Map<string, MemoryEntry>();
   const deduped: MemoryEntry[] = [];
   for (const entry of entries) {
     const key = `${entry.type}:${entry.name.toLowerCase()}`;
     if (seen.has(key)) {
-      // Merge: keep the one with more content, combine tags
       const existing = seen.get(key)!;
-      if (entry.content.length > existing.content.length) {
-        existing.content = entry.content;
-      }
+      if (entry.content.length > existing.content.length) existing.content = entry.content;
       existing.tags = [...new Set([...existing.tags, ...entry.tags])];
       existing.accessCount += entry.accessCount;
-      existing.updatedAt = new Date().toISOString();
       merged++;
     } else {
       seen.set(key, entry);
@@ -176,58 +210,35 @@ export function consolidateMemory(): { merged: number; removed: number } {
     }
   }
 
-  // 2. Remove stale entries (not accessed in 30 days, low access count)
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const active = deduped.filter(e => {
     if (e.lastAccessed > thirtyDaysAgo) return true;
-    if (e.accessCount > 5) return true; // keep frequently accessed even if stale
+    if (e.accessCount > 5) return true;
     removed++;
     return false;
   });
 
-  // 3. Save cleaned data
-  saveAllEntries(active);
-
-  // 4. Rebuild index from entries
-  const index = getMemoryIndex();
-  index.entries = active.map(e => ({
-    id: e.id,
-    name: e.name,
-    description: e.description,
-    type: e.type,
-  }));
-  index.lastConsolidated = new Date().toISOString();
-  saveMemoryIndex(index);
-
+  setCachedEntries(active);
   return { merged, removed };
 }
 
-// --- Context Builder (for LLM system prompts) ---
-
 export function buildMemoryContext(query?: string): string {
-  const index = getMemoryIndex();
-  if (index.entries.length === 0) return '';
+  const entries = getCachedEntries();
+  if (entries.length === 0) return '';
 
   let relevant: MemoryEntry[];
   if (query) {
     relevant = searchMemory(query).slice(0, 10);
   } else {
-    // Get most recently accessed
-    relevant = getAllEntries()
+    relevant = [...entries]
       .sort((a, b) => new Date(b.lastAccessed).getTime() - new Date(a.lastAccessed).getTime())
       .slice(0, 10);
   }
 
   if (relevant.length === 0) return '';
-
-  const lines = relevant.map(e =>
-    `[${e.type}] ${e.name}: ${e.description}`
-  );
-
+  const lines = relevant.map(e => `[${e.type}] ${e.name}: ${e.description}`);
   return `\n\n--- Memory Context ---\n${lines.join('\n')}\n--- End Memory ---`;
 }
-
-// --- Memory Types (matching Claude Code's types) ---
 
 export const MEMORY_TYPES = [
   { id: 'user', label: 'User', description: 'Information about the user (role, preferences, knowledge)' },
