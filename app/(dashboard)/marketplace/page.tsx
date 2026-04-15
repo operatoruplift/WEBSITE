@@ -15,30 +15,34 @@ interface MarketplaceAgent { id: string; name: string; author: string; descripti
 const CATEGORIES = ['All', 'Coding', 'Research', 'Data', 'Security', 'Voice', 'Finance', 'Content', 'DevOps'];
 const priceColors: Record<string, string> = { free: 'text-green-400 bg-green-400/10 border border-green-400/20', pro: 'text-[#F59E0B] bg-[#F59E0B]/10 border border-[#F59E0B]/20', enterprise: 'text-[#E77630] bg-[#E77630]/10 border border-[#E77630]/20' };
 
-const fetchMarketplaceData = async () => new Promise<{ agents: MarketplaceAgent[] }>(resolve => {
-    setTimeout(() => resolve({ agents: [
-        { id: 'a1', name: 'CodePilot Pro', author: 'Swarm Labs', description: 'Full-stack code generation, debugging, and refactoring agent. Supports 15+ languages with context-aware completions.', category: 'Coding', rating: 4.9, reviews: 2840, installs: '52K', price: 'pro', tags: ['code', 'debug'], avatar: '💻', featured: true, verified: true },
-        { id: 'a2', name: 'ResearchBot 3.0', author: 'DeepMind Collective', description: 'Multi-source academic research agent. Ingests papers, extracts citations, and generates literature reviews.', category: 'Research', rating: 4.8, reviews: 1650, installs: '38K', price: 'free', tags: ['research'], avatar: '📚', trending: true, verified: true },
-        { id: 'a3', name: 'DataForge', author: 'Analytics AI', description: 'ETL pipeline builder and data analysis agent. Connects to 20+ databases.', category: 'Data', rating: 4.7, reviews: 980, installs: '21K', price: 'pro', tags: ['data'], avatar: '📊', verified: true },
-        { id: 'a4', name: 'Blackwall Guard', author: 'Swarm Security', description: 'Enterprise API security agent with real-time threat detection and prompt injection blocking.', category: 'Security', rating: 4.9, reviews: 3200, installs: '67K', price: 'enterprise', tags: ['security'], avatar: '🛡️', featured: true, verified: true },
-        { id: 'a5', name: 'VocalSynth', author: 'Voice Corp', description: 'Multi-provider voice agent supporting OpenAI TTS, ElevenLabs, and Groq STT.', category: 'Voice', rating: 4.6, reviews: 720, installs: '15K', price: 'free', tags: ['voice'], avatar: '🎙️', trending: true },
-        { id: 'a6', name: 'TreasuryBot', author: 'FinanceAI', description: 'Autonomous treasury management agent. Tracks wallets and optimizes yield strategies.', category: 'Finance', rating: 4.5, reviews: 540, installs: '8.2K', price: 'pro', tags: ['finance'], avatar: '💰' },
-        { id: 'a7', name: 'ContentEngine', author: 'Creative Labs', description: 'Multi-format content creation agent. Blog posts, social media, newsletters, and video scripts.', category: 'Content', rating: 4.4, reviews: 1100, installs: '29K', price: 'free', tags: ['content'], avatar: '✍️', trending: true },
-        { id: 'a8', name: 'K8s Commander', author: 'CloudOps AI', description: 'Kubernetes cluster management agent. Deploy, scale, monitor, and auto-heal.', category: 'DevOps', rating: 4.8, reviews: 890, installs: '18K', price: 'enterprise', tags: ['k8s'], avatar: '⚙️', verified: true },
-        { id: 'a9', name: 'BugHunter', author: 'QA Swarm', description: 'Automated testing and bug detection. Generates test suites and runs regression tests.', category: 'Coding', rating: 4.7, reviews: 1340, installs: '24K', price: 'pro', tags: ['testing'], avatar: '🐛', verified: true },
-        { id: 'a10', name: 'LegalReview', author: 'LawTech AI', description: 'Contract analysis and legal compliance agent. Reviews documents and flags risks.', category: 'Content', rating: 4.5, reviews: 780, installs: '13K', price: 'enterprise', tags: ['legal'], avatar: '⚖️', verified: true },
-        { id: 'a11', name: 'EmailTriage', author: 'InboxAI', description: 'Automated email classification, priority scoring, and draft replies. Integrates with Gmail and Outlook.', category: 'Content', rating: 4.6, reviews: 2100, installs: '41K', price: 'free', tags: ['email', 'automation'], avatar: '📧', trending: true, verified: true },
-        { id: 'a12', name: 'GitAgent', author: 'DevFlow', description: 'Autonomous PR reviewer, issue triager, and release note generator. Works with GitHub and GitLab.', category: 'Coding', rating: 4.8, reviews: 1890, installs: '35K', price: 'pro', tags: ['git', 'ci-cd'], avatar: '🔀', featured: true, verified: true },
-        { id: 'a13', name: 'MeetingSynth', author: 'CalAI', description: 'Records, transcribes, and summarizes meetings. Extracts action items and follows up automatically.', category: 'Content', rating: 4.7, reviews: 3400, installs: '58K', price: 'pro', tags: ['meetings', 'transcription'], avatar: '🎯', trending: true, verified: true },
-        { id: 'a14', name: 'SQLWizard', author: 'QueryLab', description: 'Natural language to SQL agent. Connects to PostgreSQL, MySQL, BigQuery. Explains query plans.', category: 'Data', rating: 4.8, reviews: 1560, installs: '27K', price: 'free', tags: ['sql', 'database'], avatar: '🗄️', verified: true },
-        { id: 'a15', name: 'SlackOps', author: 'ChatOps Inc', description: 'Slack-native operations agent. Run deployments, check status, triage alerts — all from Slack.', category: 'DevOps', rating: 4.5, reviews: 920, installs: '16K', price: 'pro', tags: ['slack', 'chatops'], avatar: '💬', verified: true },
-        { id: 'a16', name: 'DesignReview', author: 'PixelAI', description: 'Automated UI/UX review agent. Checks accessibility, consistency, and design system compliance.', category: 'Content', rating: 4.4, reviews: 680, installs: '11K', price: 'free', tags: ['design', 'a11y'], avatar: '🎨' },
-        { id: 'a17', name: 'CostGuard', author: 'CloudCost AI', description: 'Cloud cost optimization agent. Monitors AWS/GCP/Azure spend and recommends savings.', category: 'DevOps', rating: 4.7, reviews: 1240, installs: '22K', price: 'enterprise', tags: ['cloud', 'cost'], avatar: '☁️', verified: true },
-        { id: 'a18', name: 'LeadScorer', author: 'SalesAI', description: 'Autonomous lead scoring and enrichment. Integrates with CRM, scrapes LinkedIn, predicts conversion.', category: 'Finance', rating: 4.6, reviews: 1780, installs: '31K', price: 'pro', tags: ['sales', 'crm'], avatar: '🎯', trending: true, verified: true },
-        { id: 'a19', name: 'DocWriter', author: 'TechDocs AI', description: 'Auto-generates API docs, README files, and technical specs from codebases. Supports OpenAPI.', category: 'Coding', rating: 4.7, reviews: 2200, installs: '44K', price: 'free', tags: ['docs', 'api'], avatar: '📄', featured: true, verified: true },
-        { id: 'a20', name: 'ComplianceBot', author: 'RegTech', description: 'SOC2, GDPR, HIPAA compliance monitoring agent. Continuous audit trail and policy enforcement.', category: 'Security', rating: 4.8, reviews: 890, installs: '14K', price: 'enterprise', tags: ['compliance', 'audit'], avatar: '📋', verified: true },
-    ]}), 800);
-});
+const fetchMarketplaceData = async (): Promise<{ agents: MarketplaceAgent[] }> => {
+    try {
+        const res = await fetch('/api/agents');
+        if (!res.ok) return { agents: [] };
+        const data = await res.json();
+        // Map Supabase fields to the component's interface
+        return {
+            agents: (data.agents || []).map((a: any) => ({
+                id: a.id,
+                name: a.name,
+                author: a.author,
+                description: a.description,
+                category: a.category,
+                rating: Number(a.rating) || 0,
+                reviews: 0,
+                installs: String(a.installs || 0),
+                price: a.price || 'free',
+                tags: a.tags || [],
+                avatar: a.avatar || '🤖',
+                featured: a.featured,
+                trending: a.trending,
+                verified: a.verified,
+            })),
+        };
+    } catch {
+        return { agents: [] };
+    }
+};
 
 export default function MarketplacePage() {
     const [search, setSearch] = useState('');
