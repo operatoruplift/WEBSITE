@@ -2,26 +2,73 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Check, Zap, Shield, Crown, ArrowRight, Download } from 'lucide-react';
+import { Check, Zap, Shield, Crown, ArrowRight, Download, Building2 } from 'lucide-react';
 import { FadeIn } from '@/src/components/Animators';
 
-const PRO_FEATURES = [
-    'LLM Council — 5 agents debate every decision',
-    'Google Calendar + Gmail tool execution',
-    'On-chain Merkle audit trail (Solana devnet)',
-    '6 LLM providers (Claude, GPT, Gemini, Grok, DeepSeek, Ollama)',
-    'Morning briefing cron job',
-    'x402 per-query agent payments',
-    'Encrypted memory engine',
-    'Priority support',
-];
-
-const FREE_FEATURES = [
-    'Browse Agent Marketplace',
-    'Self-hosted desktop app (3.9 MB DMG)',
-    'Bring your own API keys',
-    'Full source code (open-source)',
-    'Community support',
+const TIERS = [
+    {
+        name: 'Self-Hosted',
+        price: 'Free',
+        period: 'forever',
+        description: 'Run Operator Uplift on your own machine',
+        icon: Shield,
+        highlight: false,
+        features: [
+            'Browse Agent Marketplace',
+            'Desktop app (3.9 MB DMG)',
+            'Bring your own API keys',
+            'Full source code (open-source)',
+            'Community support',
+        ],
+        cta: 'Download DMG',
+        ctaLink: '/store',
+        ctaIcon: Download,
+        ctaStyle: 'bg-[#FAFAFA]/5 hover:bg-[#FAFAFA]/10 border border-[#222222] text-white',
+    },
+    {
+        name: 'Pro',
+        price: '$19',
+        period: '/month',
+        description: 'Full agent orchestration with cloud features',
+        icon: Zap,
+        highlight: true,
+        features: [
+            'LLM Council — 5 agents debate every decision',
+            'Google Calendar + Gmail tool execution',
+            'On-chain Merkle audit trail (Solana)',
+            '6 LLM providers (Claude, GPT, Gemini, Grok, DeepSeek, Ollama)',
+            'Morning briefing cron job',
+            'x402 per-query agent payments',
+            'Encrypted memory engine',
+            'Priority support',
+        ],
+        cta: 'Get Pro Access',
+        ctaLink: '/paywall',
+        ctaIcon: ArrowRight,
+        ctaStyle: 'bg-[#F97316] hover:bg-[#F97316]/90 text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]',
+    },
+    {
+        name: 'Enterprise',
+        price: 'Custom',
+        period: '',
+        description: 'On-prem deployment with dedicated support',
+        icon: Building2,
+        highlight: false,
+        features: [
+            'Everything in Pro',
+            'On-premise deployment',
+            'Custom LLM integrations',
+            'HIPAA + SOC 2 compliance pack',
+            'SSO / SAML authentication',
+            'Dedicated account manager',
+            'SLA with 99.9% uptime',
+            'Custom agent development',
+        ],
+        cta: 'Contact Sales',
+        ctaLink: '/contact',
+        ctaIcon: ArrowRight,
+        ctaStyle: 'bg-[#FAFAFA]/5 hover:bg-[#FAFAFA]/10 border border-[#222222] text-white',
+    },
 ];
 
 const Pricing: React.FC = () => {
@@ -35,73 +82,68 @@ const Pricing: React.FC = () => {
                             <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">Pricing</span>
                             <span className="h-px w-16 bg-[#F97316]/40" />
                         </div>
-                        <h2 className="text-3xl md:text-4xl font-medium text-white mb-4 tracking-tight">
+                        <h2 className="text-3xl md:text-4xl font-medium text-[#FAFAFA] mb-4 tracking-tight">
                             Simple, transparent pricing
                         </h2>
-                        <p className="text-[#A1A1AA] max-w-lg mx-auto">
-                            Pay with USDC via Solana Pay. Cancel anytime.
+                        <p className="text-[#A1A1AA] max-w-lg mx-auto text-center">
+                            Start free. Pay with USDC via Solana Pay. Cancel anytime.
                         </p>
                     </div>
                 </FadeIn>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-                    {/* Pro */}
-                    <FadeIn delay={100}>
-                        <div className="relative rounded-2xl border-2 border-[#F97316]/40 bg-[#111111] p-8 h-full flex flex-col">
-                            <div className="absolute top-0 right-0 px-4 py-1.5 bg-[#F97316] text-white text-[10px] font-bold uppercase tracking-widest rounded-bl-xl flex items-center gap-1.5">
-                                <Crown size={12} /> Early Access
-                            </div>
-                            <div className="flex items-center gap-3 mb-5">
-                                <div className="w-10 h-10 rounded-xl bg-[#F97316]/15 border border-[#F97316]/30 flex items-center justify-center">
-                                    <Zap size={20} className="text-[#F97316]" />
-                                </div>
-                                <h3 className="text-xl font-semibold text-white">Pro</h3>
-                            </div>
-                            <div className="mb-6">
-                                <span className="text-4xl font-bold text-white">$19</span>
-                                <span className="text-sm text-[#A1A1AA]">/month</span>
-                                <span className="ml-2 text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]">USDC</span>
-                            </div>
-                            <ul className="space-y-2.5 mb-8 flex-1">
-                                {PRO_FEATURES.map(f => (
-                                    <li key={f} className="flex items-start gap-2 text-sm text-[#FAFAFA]">
-                                        <Check size={14} className="text-[#F97316] mt-0.5 shrink-0" /> {f}
-                                    </li>
-                                ))}
-                            </ul>
-                            <Link href="/paywall"
-                                className="w-full h-12 rounded-xl bg-[#F97316] hover:bg-[#F97316]/90 text-white font-bold uppercase tracking-widest text-sm transition-all flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(249,115,22,0.3)]">
-                                Get Pro Access <ArrowRight size={14} />
-                            </Link>
-                        </div>
-                    </FadeIn>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {TIERS.map((tier, i) => {
+                        const Icon = tier.icon;
+                        const CtaIcon = tier.ctaIcon;
+                        return (
+                            <FadeIn key={tier.name} delay={i * 100}>
+                                <div className={`relative rounded-2xl p-8 h-full flex flex-col ${
+                                    tier.highlight
+                                        ? 'border-2 border-[#F97316]/40 bg-[#111111]'
+                                        : 'border border-[#222222] bg-[#111111]'
+                                }`}>
+                                    {tier.highlight && (
+                                        <div className="absolute top-0 right-0 px-4 py-1.5 bg-[#F97316] text-white text-[10px] font-bold uppercase tracking-widest rounded-bl-xl flex items-center gap-1.5">
+                                            <Crown size={12} /> Recommended
+                                        </div>
+                                    )}
 
-                    {/* Free / Self-hosted */}
-                    <FadeIn delay={250}>
-                        <div className="rounded-2xl border border-[#222222] bg-[#111111] p-8 h-full flex flex-col">
-                            <div className="flex items-center gap-3 mb-5">
-                                <div className="w-10 h-10 rounded-xl bg-[#FAFAFA]/5 border border-[#222222] flex items-center justify-center">
-                                    <Shield size={20} className="text-[#A1A1AA]" />
+                                    <div className="flex items-center gap-3 mb-5">
+                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                                            tier.highlight
+                                                ? 'bg-[#F97316]/15 border border-[#F97316]/30'
+                                                : 'bg-[#FAFAFA]/5 border border-[#222222]'
+                                        }`}>
+                                            <Icon size={20} className={tier.highlight ? 'text-[#F97316]' : 'text-[#A1A1AA]'} />
+                                        </div>
+                                        <h3 className="text-xl font-semibold text-[#FAFAFA]">{tier.name}</h3>
+                                    </div>
+
+                                    <div className="mb-2">
+                                        <span className="text-4xl font-bold text-[#FAFAFA]">{tier.price}</span>
+                                        {tier.period && <span className="text-sm text-[#A1A1AA]">{tier.period}</span>}
+                                        {tier.name === 'Pro' && (
+                                            <span className="ml-2 text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]">USDC</span>
+                                        )}
+                                    </div>
+                                    <p className="text-sm text-[#A1A1AA] mb-6">{tier.description}</p>
+
+                                    <ul className="space-y-2.5 mb-8 flex-1">
+                                        {tier.features.map(f => (
+                                            <li key={f} className="flex items-start gap-2 text-sm text-[#FAFAFA]/80">
+                                                <Check size={14} className={`mt-0.5 shrink-0 ${tier.highlight ? 'text-[#F97316]' : 'text-[#A1A1AA]'}`} /> {f}
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                    <Link href={tier.ctaLink}
+                                        className={`w-full h-12 rounded-xl font-bold uppercase tracking-widest text-sm transition-all flex items-center justify-center gap-2 ${tier.ctaStyle}`}>
+                                        {tier.cta} <CtaIcon size={14} />
+                                    </Link>
                                 </div>
-                                <h3 className="text-xl font-semibold text-white">Self-Hosted</h3>
-                            </div>
-                            <div className="mb-6">
-                                <span className="text-4xl font-bold text-white">Free</span>
-                                <span className="text-sm text-[#A1A1AA]"> forever</span>
-                            </div>
-                            <ul className="space-y-2.5 mb-8 flex-1">
-                                {FREE_FEATURES.map(f => (
-                                    <li key={f} className="flex items-start gap-2 text-sm text-[#A1A1AA]">
-                                        <Check size={14} className="text-[#A1A1AA] mt-0.5 shrink-0" /> {f}
-                                    </li>
-                                ))}
-                            </ul>
-                            <Link href="/store"
-                                className="w-full h-12 rounded-xl bg-[#FAFAFA]/5 hover:bg-[#FAFAFA]/10 border border-[#222222] text-white font-bold uppercase tracking-widest text-sm transition-all flex items-center justify-center gap-2">
-                                <Download size={14} /> Download DMG
-                            </Link>
-                        </div>
-                    </FadeIn>
+                            </FadeIn>
+                        );
+                    })}
                 </div>
             </div>
         </section>

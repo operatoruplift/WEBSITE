@@ -24,7 +24,7 @@ const items = [
 
 const Compliance: React.FC = () => {
   return (
-    <section className="w-full bg-[#08080c] px-6 md:px-12 flex justify-center">
+    <section className="w-full bg-[#0A0A0A] px-6 md:px-12 flex justify-center">
       <div className="w-full max-w-[1200px] py-20">
         <div className="text-center mb-12">
           <FadeIn>
@@ -34,10 +34,10 @@ const Compliance: React.FC = () => {
               <span className="h-px w-16 bg-emerald-400/40" />
             </div>
           </FadeIn>
-          <h2 className="text-3xl md:text-4xl font-medium text-white mb-4 tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-medium text-[#FAFAFA] mb-4 tracking-tight">
             Built for Compliance
           </h2>
-          <p className="text-gray-400 max-w-lg mx-auto">
+          <p className="text-[#A1A1AA] max-w-lg mx-auto">
             Enterprise-grade privacy and security, built into every layer.
           </p>
         </div>
@@ -47,12 +47,12 @@ const Compliance: React.FC = () => {
             const Icon = item.icon;
             return (
               <FadeIn key={item.title} delay={i * 100}>
-                <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] text-center h-full">
+                <div className="p-6 rounded-2xl border border-[#222222] bg-[#111111] text-center h-full hover:border-emerald-400/30 transition-all">
                   <div className="w-12 h-12 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center mx-auto mb-4">
                     <Icon size={24} className="text-emerald-400" />
                   </div>
-                  <h3 className="text-lg font-medium text-white mb-2">{item.title}</h3>
-                  <p className="text-sm text-gray-400 leading-relaxed">{item.description}</p>
+                  <h3 className="text-lg font-medium text-[#FAFAFA] mb-2">{item.title}</h3>
+                  <p className="text-sm text-[#A1A1AA] leading-relaxed">{item.description}</p>
                 </div>
               </FadeIn>
             );

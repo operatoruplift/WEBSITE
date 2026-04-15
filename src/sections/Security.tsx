@@ -27,7 +27,7 @@ const Security: React.FC = () => {
         <div className="absolute -bottom-[1px] -left-[1px] w-4 h-4 border-b border-l border-white/30 rounded-bl-lg"></div>
         <div className="absolute -bottom-[1px] -right-[1px] w-4 h-4 border-b border-r border-white/30 rounded-br-lg"></div>
         
-        <div className="flex-1 w-full bg-[#0c0c0c] rounded-xl border border-white/5 overflow-hidden flex flex-col relative group hover:border-white/10 transition-colors duration-500">
+        <div className="flex-1 w-full bg-[#111111] rounded-xl border border-white/5 overflow-hidden flex flex-col relative group hover:border-white/10 transition-colors duration-500">
             {children}
         </div>
     </div>
