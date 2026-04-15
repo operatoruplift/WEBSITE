@@ -19,6 +19,7 @@ CREATE TABLE agents (
     tools TEXT[] DEFAULT '{}',   -- Tool IDs from the builder (calendar, gmail, web-search, etc.)
     permissions TEXT[] DEFAULT '{}',  -- Required permissions
     price TEXT DEFAULT 'free',   -- 'free', 'pro', 'enterprise'
+    query_price NUMERIC(10,6) DEFAULT 0.001,  -- x402 per-query cost in USDC
     avatar TEXT DEFAULT '',      -- Emoji or URL
     tags TEXT[] DEFAULT '{}',
     rating NUMERIC(3,2) DEFAULT 0,

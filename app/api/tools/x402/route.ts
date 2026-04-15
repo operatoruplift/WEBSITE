@@ -47,6 +47,36 @@ export async function POST(request: Request) {
             return NextResponse.json({ action: 'fetch', status: res.status, data });
         }
 
+        if (action === 'charge') {
+            // x402 per-query charge — records the payment intent.
+            // In production this would trigger a Solana Pay USDC transfer.
+            // For devnet/demo, we log and approve immediately.
+            const { amount, currency, memo, userId: chargeUserId } = params || {};
+            if (!amount || amount <= 0) {
+                return NextResponse.json({ error: 'amount required' }, { status: 400 });
+            }
+
+            // TODO: In production, build a Solana Pay transfer URL for USDC
+            // and wait for on-chain confirmation before returning success.
+            // For now, log the charge and return success (devnet mode).
+            const chargeRecord = {
+                amount,
+                currency: currency || 'USDC',
+                memo: memo || 'x402 query charge',
+                userId: chargeUserId,
+                timestamp: new Date().toISOString(),
+                status: 'approved', // devnet: auto-approve
+                tx_signature: `x402-devnet-${Date.now()}`,
+            };
+
+            console.log('[x402/charge]', chargeRecord);
+
+            return NextResponse.json({
+                action: 'charge',
+                ...chargeRecord,
+            });
+        }
+
         if (action === 'retry_with_proof') {
             const { url, tx_signature, method, headers: reqHeaders, body } = params || {};
             if (!url || !tx_signature) {
