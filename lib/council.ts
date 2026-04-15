@@ -20,10 +20,77 @@ export interface CouncilAgent {
     model: string;
 }
 
+export interface ExtractedToolCall {
+    tool: string;
+    action: string;
+    params: Record<string, unknown>;
+}
+
 export interface CouncilResult {
-    synthesis: string;         // The Chairman's final response (what the user sees)
-    transcript: AgentOutput[]; // Full debate log (accessible via toggle)
+    synthesis: string;                   // Clean text (tool JSON stripped)
+    toolCalls: ExtractedToolCall[];      // Parsed tool calls from Chairman
+    transcript: AgentOutput[];           // Full debate log
     durationMs: number;
+}
+
+/**
+ * Aggressively extract tool calls from Chairman output.
+ * Strips all markdown, code fences, XML wrappers, and finds any JSON
+ * substring that looks like {"tool": "...", "action": "...", "params": {...}}.
+ * Returns the clean text and extracted tool calls separately.
+ */
+function extractToolCallsFromText(text: string): { cleanText: string; toolCalls: ExtractedToolCall[] } {
+    const toolCalls: ExtractedToolCall[] = [];
+
+    // Step 1: Try to find <tool_use> blocks (any variant)
+    let cleaned = text;
+    const xmlPattern = /(?:```\w*\n?)?<tool_use>\s*([\s\S]*?)\s*<\/tool_use>(?:\n?```)?/g;
+    let xmlMatch: RegExpExecArray | null;
+    while ((xmlMatch = xmlPattern.exec(text)) !== null) {
+        try {
+            const parsed = JSON.parse(xmlMatch[1]);
+            if (parsed.tool && parsed.action) {
+                toolCalls.push({ tool: parsed.tool, action: parsed.action, params: parsed.params || {} });
+                cleaned = cleaned.replace(xmlMatch[0], '');
+            }
+        } catch {}
+    }
+
+    // Step 2: If nothing found, try bare JSON objects
+    if (toolCalls.length === 0) {
+        // Match any JSON that has "tool" and "action" keys
+        const jsonPattern = /\{[^{}]*"tool"\s*:\s*"(calendar|gmail|x402)"[^{}]*"action"\s*:\s*"[^"]*"[^{}]*\}/g;
+        let jsonMatch: RegExpExecArray | null;
+        while ((jsonMatch = jsonPattern.exec(text)) !== null) {
+            try {
+                const parsed = JSON.parse(jsonMatch[0]);
+                if (parsed.tool && parsed.action) {
+                    toolCalls.push({ tool: parsed.tool, action: parsed.action, params: parsed.params || {} });
+                    cleaned = cleaned.replace(jsonMatch[0], '');
+                }
+            } catch {}
+        }
+    }
+
+    // Step 3: If still nothing, try stripping ALL markdown formatting first and re-scan
+    if (toolCalls.length === 0) {
+        const stripped = text
+            .replace(/```[\s\S]*?```/g, (match) => {
+                // Check inside code blocks for tool JSON
+                const inner = match.replace(/```\w*\n?/g, '').replace(/\n?```/g, '');
+                try {
+                    const parsed = JSON.parse(inner.trim());
+                    if (parsed.tool && parsed.action) {
+                        toolCalls.push({ tool: parsed.tool, action: parsed.action, params: parsed.params || {} });
+                        return ''; // Remove this code block from output
+                    }
+                } catch {}
+                return match;
+            });
+        if (toolCalls.length > 0) cleaned = stripped;
+    }
+
+    return { cleanText: cleaned.replace(/\n{3,}/g, '\n\n').trim(), toolCalls };
 }
 
 export interface AgentOutput {
@@ -38,25 +105,25 @@ export const COUNCIL_AGENTS: CouncilAgent[] = [
         id: 'contrarian',
         name: 'Contrarian',
         model: 'claude-sonnet-4-6',
-        systemPrompt: `You are the Contrarian. Your job is to find what will fail. Challenge every assumption. Point out risks, blind spots, and overconfidence. You are skeptical by nature — if something sounds too good to be true, it is. Never agree with the consensus unless forced to by overwhelming evidence. Be specific about what could go wrong. 2-3 sentences max.`,
+        systemPrompt: `You are the Contrarian. Your job is to reason and debate — find what will fail. Challenge every assumption. Point out risks, blind spots, and overconfidence. Be specific about what could go wrong. 2-3 sentences max. You do NOT call tools or take actions. The Chairman handles all execution.`,
     },
     {
         id: 'first-principles',
         name: 'First Principles',
         model: 'claude-sonnet-4-6',
-        systemPrompt: `You are the First Principles thinker. Strip away all assumptions and reframe the problem from scratch. Ask: what is fundamentally true here? What would we do if we started from zero? Ignore conventions and existing solutions — reason from the ground up. Your answers should make people reconsider their framing. 2-3 sentences max.`,
+        systemPrompt: `You are the First Principles thinker. Your job is to reason and debate — strip away all assumptions and reframe from scratch. What is fundamentally true? What would we do if starting from zero? 2-3 sentences max. You do NOT call tools or take actions. The Chairman handles all execution.`,
     },
     {
         id: 'expansionist',
         name: 'Expansionist',
         model: 'claude-sonnet-4-6',
-        systemPrompt: `You are the Expansionist. Find the upside everyone missed. What opportunities are being ignored? What's the 10x version of this idea? You see possibilities where others see constraints. Think bigger, think adjacent markets, think second-order effects. Your job is to stretch the vision. 2-3 sentences max.`,
+        systemPrompt: `You are the Expansionist. Your job is to reason and debate — find the upside everyone missed. What opportunities are being ignored? Think bigger, think second-order effects. 2-3 sentences max. You do NOT call tools or take actions. The Chairman handles all execution.`,
     },
     {
         id: 'outsider',
         name: 'Outsider',
         model: 'claude-sonnet-4-6',
-        systemPrompt: `You are the Outsider. You have zero context on this space and that's your superpower. What does someone with fresh eyes see? Point out the obvious thing insiders are blind to. Question jargon. Challenge complexity. If you can't understand something in 10 seconds, it's probably too complicated. 2-3 sentences max.`,
+        systemPrompt: `You are the Outsider. Your job is to reason and debate — fresh eyes, zero context. Point out the obvious thing insiders are blind to. Question jargon and complexity. 2-3 sentences max. You do NOT call tools or take actions. The Chairman handles all execution.`,
     },
     {
         id: 'chairman',
@@ -161,15 +228,19 @@ export async function runCouncil(
         synthesis = 'The Council was unable to synthesize a response. Please try again.';
     }
 
+    // Extract tool calls from Chairman's raw output — user never sees the JSON
+    const { cleanText, toolCalls: extractedCalls } = extractToolCallsFromText(synthesis);
+
     const chairmanOutput: AgentOutput = {
         agentId: 'chairman',
         agentName: 'Chairman',
-        output: synthesis,
+        output: cleanText, // Clean text only, no tool JSON
         durationMs: Date.now() - chairStart,
     };
 
     return {
-        synthesis,
+        synthesis: cleanText,  // User sees clean text only
+        toolCalls: extractedCalls,  // Passed to tool execution pipeline
         transcript: [...advisorResults, chairmanOutput],
         durationMs: Date.now() - start,
     };
