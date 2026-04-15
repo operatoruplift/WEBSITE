@@ -14,6 +14,8 @@ import GoingLocal from '@/src/sections/GoingLocal';
 import CloudVsLocal from '@/src/sections/CloudVsLocal';
 import Comparison from '@/src/sections/Comparison';
 import Compliance from '@/src/sections/Compliance';
+import UseCases from '@/src/sections/UseCases';
+import Pricing from '@/src/sections/Pricing';
 import SocialProof from '@/src/sections/SocialProof';
 import FAQ from '@/src/sections/FAQ';
 import BuildWithUs from '@/src/sections/BuildWithUs';
@@ -33,9 +35,11 @@ export default function Home() {
       <CloudVsLocal />
       <Comparison />
       <Compliance />
+      <UseCases />
       <DeveloperDocs />
       <TractionBar />
       <SocialProof />
+      <Pricing />
       <DemoPreview />
       <FAQ />
       <BuildWithUs />
