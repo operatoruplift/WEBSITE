@@ -170,7 +170,7 @@ export default function ChatPage() {
                 const history = (currentSession?.messages || []).map(m => ({ role: m.role, content: m.content }));
                 const result = await runCouncil(userMessage.content, history, toolPrompt);
 
-                // Update message with Chairman's synthesis + attach transcript
+                // Update message with clean synthesis (tool JSON already stripped by council.ts)
                 setSessions(prev => prev.map(s => s.id === sessionId ? {
                     ...s,
                     messages: s.messages.map(m => m.id === councilMsgId ? {
@@ -180,26 +180,32 @@ export default function ChatPage() {
                     } : m),
                 } : s));
 
-                // Check if Chairman's synthesis contains tool calls
-                if (hasToolCalls(result.synthesis)) {
-                    const calls = parseToolCalls(result.synthesis);
-                    const cleanContent = stripToolBlocks(result.synthesis);
-
+                // Execute any tool calls the Chairman decided on
+                // (extracted by council.ts, not parsed from the text the user sees)
+                if (result.toolCalls.length > 0) {
                     setSessions(prev => prev.map(s => s.id === sessionId ? {
                         ...s,
                         messages: s.messages.map(m => m.id === councilMsgId ? {
                             ...m,
-                            content: cleanContent + '\n\n*Executing tool...*',
+                            content: result.synthesis + '\n\n*Executing tool...*',
                         } : m),
                     } : s));
 
                     let toolResults = '';
-                    for (const call of calls) {
+                    for (const tc of result.toolCalls) {
+                        // Convert ExtractedToolCall to ToolCall format for the approval modal
+                        const call: ToolCall = {
+                            id: `tc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+                            tool: tc.tool as ToolCall['tool'],
+                            action: tc.action,
+                            params: tc.params,
+                            rawBlock: JSON.stringify(tc),
+                        };
                         const toolResult = await requestChatToolApproval(call);
                         if (toolResult) {
                             toolResults += '\n\n' + formatToolResult(toolResult);
                         } else {
-                            toolResults += `\n\n**Tool Denied** — ${call.tool}.${call.action} was not approved.`;
+                            toolResults += `\n\n**Tool Denied** — ${tc.tool}.${tc.action} was not approved.`;
                         }
                     }
 
@@ -207,7 +213,7 @@ export default function ChatPage() {
                         ...s,
                         messages: s.messages.map(m => m.id === councilMsgId ? {
                             ...m,
-                            content: cleanContent + toolResults,
+                            content: result.synthesis + toolResults,
                             councilTranscript: result.transcript,
                         } : m),
                     } : s));

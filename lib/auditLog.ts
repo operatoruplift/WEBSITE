@@ -123,7 +123,11 @@ export async function publishMerkleRoot(): Promise<OnChainRecord | null> {
             body: JSON.stringify({ user_id: userId, action_hashes: hashes }),
         });
 
-        if (!res.ok) return null;
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            console.error('[audit] publish failed:', res.status, errData);
+            return null;
+        }
         const data = await res.json();
 
         if (data.success) {
