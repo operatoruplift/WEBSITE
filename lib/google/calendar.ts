@@ -46,6 +46,7 @@ export async function listEvents(
         singleEvents: true,
         orderBy: 'startTime',
         maxResults,
+        timeZone: 'Asia/Kuala_Lumpur',
     });
 
     return (res.data.items ?? []).map(toEvent);
@@ -63,28 +64,34 @@ export async function findFreeSlots(
     const auth = await getAuthenticatedClient(userId);
     const cal = google.calendar({ version: 'v3', auth });
 
-    // Use the client's local date if provided, otherwise fall back to server time.
-    // This ensures "tomorrow" in MYT (UTC+8) resolves correctly even when the
-    // server is in a different timezone.
+    // All date math uses MYT (UTC+8) to match the user's timezone.
+    // On Vercel (UTC server), we offset by +8 hours explicitly.
+    const MYT_OFFSET_MS = 8 * 60 * 60 * 1000;
+
+    // Get "now" in MYT
+    const nowUTC = Date.now();
+    const nowMYT = new Date(nowUTC + MYT_OFFSET_MS);
+
+    // Base date: use client's local date if provided, otherwise MYT "today"
     let baseDate: Date;
     if (localDate && /^\d{4}-\d{2}-\d{2}$/.test(localDate)) {
-        // Parse as local midnight in the date string
         const [y, m, d] = localDate.split('-').map(Number);
-        baseDate = new Date(y, m - 1, d, 9, 0, 0, 0);
+        // 9 AM MYT = 1 AM UTC
+        baseDate = new Date(Date.UTC(y, m - 1, d, 1, 0, 0, 0));
     } else {
-        baseDate = new Date();
+        // Today in MYT, 9 AM MYT
+        baseDate = new Date(Date.UTC(
+            nowMYT.getUTCFullYear(), nowMYT.getUTCMonth(), nowMYT.getUTCDate(),
+            1, 0, 0, 0 // 1 AM UTC = 9 AM MYT
+        ));
     }
 
-    // Apply start offset (0 = today, 1 = tomorrow, etc.)
-    const searchStart = new Date(baseDate);
-    if (startDayOffset > 0) {
-        searchStart.setDate(searchStart.getDate() + startDayOffset);
-        searchStart.setHours(9, 0, 0, 0);
-    }
-    // If search start is in the past (e.g., offset=0 but it's already 5 PM), use now
-    const now = new Date();
-    if (searchStart.getTime() < now.getTime()) {
-        searchStart.setTime(now.getTime());
+    // Apply start offset (0 = today, 1 = tomorrow in MYT)
+    const searchStart = new Date(baseDate.getTime() + startDayOffset * 86400_000);
+
+    // If search start is in the past, use now
+    if (searchStart.getTime() < nowUTC) {
+        searchStart.setTime(nowUTC);
     }
     const until = new Date(searchStart.getTime() + daysAhead * 86400_000);
 
@@ -92,6 +99,7 @@ export async function findFreeSlots(
         requestBody: {
             timeMin: searchStart.toISOString(),
             timeMax: until.toISOString(),
+            timeZone: 'Asia/Kuala_Lumpur',
             items: [{ id: 'primary' }],
         },
     });
@@ -101,18 +109,24 @@ export async function findFreeSlots(
         end: new Date(b.end!).getTime(),
     }));
 
-    // Build free windows between busy blocks, within 9am–6pm local time
+    // Build free windows between busy blocks, within 9am–6pm MYT
     const slots: FreeSlot[] = [];
     const durationMs = durationMin * 60_000;
 
     for (let day = 0; day < daysAhead && slots.length < maxSlots; day++) {
-        const dayStart = new Date(searchStart);
-        dayStart.setDate(dayStart.getDate() + day);
-        dayStart.setHours(9, 0, 0, 0);
-        if (dayStart.getTime() < now.getTime()) dayStart.setTime(now.getTime());
+        // 9 AM MYT = 1 AM UTC for each day
+        const baseDayUTC = new Date(searchStart.getTime() + day * 86400_000);
+        const dayStart = new Date(Date.UTC(
+            baseDayUTC.getUTCFullYear(), baseDayUTC.getUTCMonth(), baseDayUTC.getUTCDate(),
+            1, 0, 0, 0 // 1 AM UTC = 9 AM MYT
+        ));
+        if (dayStart.getTime() < nowUTC) dayStart.setTime(nowUTC);
 
-        const dayEnd = new Date(dayStart);
-        dayEnd.setHours(18, 0, 0, 0);
+        // 6 PM MYT = 10 AM UTC
+        const dayEnd = new Date(Date.UTC(
+            baseDayUTC.getUTCFullYear(), baseDayUTC.getUTCMonth(), baseDayUTC.getUTCDate(),
+            10, 0, 0, 0 // 10 AM UTC = 6 PM MYT
+        ));
 
         let cursor = dayStart.getTime();
         // Round up to next 15-min boundary
@@ -160,8 +174,8 @@ export async function createEvent(
             summary: event.summary,
             description: event.description,
             location: event.location,
-            start: { dateTime: event.start },
-            end: { dateTime: event.end },
+            start: { dateTime: event.start, timeZone: 'Asia/Kuala_Lumpur' },
+            end: { dateTime: event.end, timeZone: 'Asia/Kuala_Lumpur' },
             attendees: event.attendees?.map((email) => ({ email })),
         },
     });
