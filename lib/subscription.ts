@@ -15,6 +15,11 @@ export interface SubscriptionStatus {
 const FREE_STATUS: SubscriptionStatus = { tier: 'free', active: false, expiresAt: null };
 
 export async function checkSubscription(userId: string): Promise<SubscriptionStatus> {
+    // Bypass paywall in dev/staging — set NEXT_PUBLIC_PAYWALL_BYPASS=1
+    if (process.env.NEXT_PUBLIC_PAYWALL_BYPASS === '1') {
+        return { tier: 'pro', active: true, expiresAt: null };
+    }
+
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
