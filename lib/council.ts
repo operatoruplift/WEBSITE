@@ -39,7 +39,7 @@ export interface CouncilResult {
  * substring that looks like {"tool": "...", "action": "...", "params": {...}}.
  * Returns the clean text and extracted tool calls separately.
  */
-function extractToolCallsFromText(text: string): { cleanText: string; toolCalls: ExtractedToolCall[] } {
+export function extractToolCallsFromText(text: string): { cleanText: string; toolCalls: ExtractedToolCall[] } {
     const toolCalls: ExtractedToolCall[] = [];
 
     // Step 1: Try to find <tool_use> blocks (any variant)
@@ -146,8 +146,18 @@ RULES:
 ];
 
 /**
- * Run the full Council debate. Returns the Chairman's synthesis + transcript.
- * Calls /api/chat for each agent. Advisors run in parallel, Chairman runs last.
+ * Run the full Council debate. Returns the Chairman's synthesis + extracted tool calls.
+ *
+ * Architecture:
+ * 1. 4 advisors run in PARALLEL (reasoning only, no tool access)
+ * 2. Chairman runs AFTER all advisors complete (has tool access via toolPrompt)
+ * 3. Chairman's output is parsed — tool calls are extracted, not shown to user
+ * 4. Caller (chat page) passes extracted tool calls to the SAME tool execution
+ *    pipeline used by direct chat, with the SAME user_id from localStorage
+ *    → same Supabase token lookup → same Google OAuth tokens
+ *
+ * Auth context is shared through Supabase, keyed by user_id (Privy DID).
+ * The Council is a reasoning layer ON TOP of the existing executor, not parallel.
  */
 export async function runCouncil(
     userMessage: string,
