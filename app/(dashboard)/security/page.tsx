@@ -8,7 +8,7 @@ import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
 import { isEncryptionConfigured } from '@/lib/encryption';
-import { getAuditLog, getAuditStats, clearAuditLog, type AuditEntry } from '@/lib/auditLog';
+import { getAuditLog, getAuditStats, clearAuditLog, getOnChainRecord, publishMerkleRoot, type AuditEntry } from '@/lib/auditLog';
 
 const CATEGORY_META: Record<string, { label: string; color: string; icon: typeof Shield }> = {
     calendar: { label: 'Calendar', color: 'text-[#E77630]', icon: Clock },
@@ -26,10 +26,14 @@ export default function SecurityPage() {
     const [filter, setFilter] = useState<string>('all');
     const { showToast } = useToast();
 
+    const [onChainRecord, setOnChainRecord] = useState<ReturnType<typeof getOnChainRecord>>(null);
+    const [publishing, setPublishing] = useState(false);
+
     useEffect(() => {
         setEncConfigured(isEncryptionConfigured());
         setAuditLog(getAuditLog(100));
         setAuditStats(getAuditStats());
+        setOnChainRecord(getOnChainRecord());
     }, []);
 
     const refresh = () => {
@@ -179,6 +183,62 @@ export default function SecurityPage() {
                                         );
                                     })}
                                 </div>
+                            </Card>
+
+                            {/* On-Chain Audit Root */}
+                            <Card variant="glass" className="p-6 border-white/5 bg-black/40">
+                                <h3 className="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                    <Shield size={12} className="text-emerald-400" /> On-Chain Merkle Root
+                                </h3>
+                                {onChainRecord ? (
+                                    <div className="space-y-3">
+                                        <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-400/5 border border-emerald-400/20">
+                                            <span className="text-xs text-gray-400">Status</span>
+                                            <span className="text-xs font-bold text-emerald-400">Published to Solana Devnet</span>
+                                        </div>
+                                        <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                                            <span className="text-xs text-gray-400">Actions anchored</span>
+                                            <span className="text-xs text-white font-mono">{onChainRecord.actionCount}</span>
+                                        </div>
+                                        <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                                            <span className="text-xs text-gray-400">Last published</span>
+                                            <span className="text-xs text-white font-mono">{new Date(onChainRecord.publishedAt).toLocaleString()}</span>
+                                        </div>
+                                        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                                            <span className="text-xs text-gray-400 block mb-1">Merkle Root</span>
+                                            <span className="text-[10px] text-white font-mono break-all">{onChainRecord.merkleRoot.slice(0, 32)}...</span>
+                                        </div>
+                                        <a
+                                            href={onChainRecord.explorerUrl}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="w-full flex items-center justify-center gap-2 h-9 rounded-lg bg-emerald-400/10 border border-emerald-400/20 text-emerald-400 text-xs font-bold uppercase tracking-widest hover:bg-emerald-400/20 transition-all"
+                                        >
+                                            <Eye size={12} /> View on Solana Explorer
+                                        </a>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-3">
+                                        <p className="text-xs text-gray-500">No audit root published yet. Roots are auto-published every 5 agent actions, or you can publish manually.</p>
+                                        <button
+                                            onClick={async () => {
+                                                setPublishing(true);
+                                                const result = await publishMerkleRoot();
+                                                if (result) {
+                                                    setOnChainRecord(result);
+                                                    showToast('Merkle root published to Solana devnet!', 'success');
+                                                } else {
+                                                    showToast('No actions to publish or API unavailable', 'warning');
+                                                }
+                                                setPublishing(false);
+                                            }}
+                                            disabled={publishing || totalActions === 0}
+                                            className="w-full h-9 rounded-lg flex items-center justify-center gap-2 bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest hover:bg-primary/20 transition-all disabled:opacity-40"
+                                        >
+                                            {publishing ? 'Publishing...' : 'Publish Root Now'}
+                                        </button>
+                                    </div>
+                                )}
                             </Card>
 
                             {/* Emergency Controls */}

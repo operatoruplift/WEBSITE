@@ -54,12 +54,92 @@ export function logAction(
         const existing: AuditEntry[] = raw ? JSON.parse(raw) : [];
         const updated = [entry, ...existing].slice(0, MAX_ENTRIES);
         localStorage.setItem(AUDIT_KEY, JSON.stringify(updated));
+
+        // Auto-publish Merkle root every 5 actions
+        const unpublished = getUnpublishedCount();
+        if (unpublished >= 5) {
+            publishMerkleRoot().catch(() => {}); // Fire and forget
+        }
     } catch {
-        // localStorage full or unavailable — log to console as fallback
         console.warn('[audit-log] failed to persist:', entry);
     }
 
     return entry;
+}
+
+const LAST_PUBLISH_KEY = 'ou-audit-last-publish-index';
+const ON_CHAIN_KEY = 'ou-audit-on-chain';
+
+interface OnChainRecord {
+    merkleRoot: string;
+    txSignature: string;
+    explorerUrl: string;
+    actionCount: number;
+    publishedAt: string;
+}
+
+/** Get the count of actions since last on-chain publish. */
+function getUnpublishedCount(): number {
+    const lastIndex = parseInt(localStorage.getItem(LAST_PUBLISH_KEY) || '0', 10);
+    const entries = getAuditLog(MAX_ENTRIES);
+    return entries.length - lastIndex;
+}
+
+/** Get the latest on-chain record. */
+export function getOnChainRecord(): OnChainRecord | null {
+    try {
+        const raw = localStorage.getItem(ON_CHAIN_KEY);
+        if (raw) return JSON.parse(raw);
+    } catch {}
+    return null;
+}
+
+/** Publish the current audit log as a Merkle root on Solana devnet. */
+export async function publishMerkleRoot(): Promise<OnChainRecord | null> {
+    const entries = getAuditLog(MAX_ENTRIES);
+    if (entries.length === 0) return null;
+
+    // Hash each entry
+    const hashes = entries.map(e => {
+        const data = `${e.id}:${e.timestamp}:${e.category}:${e.action}:${e.approved}`;
+        // Simple client-side SHA-256 (Web Crypto)
+        return Array.from(new TextEncoder().encode(data))
+            .reduce((hash, byte) => {
+                hash = ((hash << 5) - hash) + byte;
+                return hash & hash;
+            }, 0)
+            .toString(16)
+            .padStart(64, '0');
+    });
+
+    const userId = (() => {
+        try { return JSON.parse(localStorage.getItem('user') || '{}').id || 'anon'; } catch { return 'anon'; }
+    })();
+
+    try {
+        const res = await fetch('/api/audit/publish-root', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, action_hashes: hashes }),
+        });
+
+        if (!res.ok) return null;
+        const data = await res.json();
+
+        if (data.success) {
+            const record: OnChainRecord = {
+                merkleRoot: data.merkle_root,
+                txSignature: data.tx_signature,
+                explorerUrl: data.explorer_url,
+                actionCount: data.action_count,
+                publishedAt: new Date().toISOString(),
+            };
+            localStorage.setItem(ON_CHAIN_KEY, JSON.stringify(record));
+            localStorage.setItem(LAST_PUBLISH_KEY, String(entries.length));
+            return record;
+        }
+    } catch {}
+    return null;
 }
 
 /** Clear the entire audit log. */
