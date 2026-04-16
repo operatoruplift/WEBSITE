@@ -3,6 +3,7 @@
 import React from 'react';
 import { Shield, Globe, Eye } from 'lucide-react';
 import { FadeIn } from '@/src/components/Animators';
+import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
 
 const items = [
@@ -25,36 +26,34 @@ const items = [
 
 const Compliance: React.FC = () => {
     return (
-        <section className="w-full bg-[#0A0A0A] px-6 md:px-12 flex justify-center">
-            <div className="w-full max-w-[1200px] py-20">
-                <SectionHeader
-                    eyebrow="Compliance"
-                    title="Built for Compliance"
-                    description="Privacy and security built into the architecture — not bolted on."
-                />
+        <Section>
+            <SectionHeader
+                eyebrow="Compliance"
+                title="Built for Compliance"
+                description="Privacy and security built into the architecture — not bolted on."
+            />
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {items.map((item, i) => {
-                        const Icon = item.icon;
-                        return (
-                            <FadeIn key={item.title} delay={i * 100}>
-                                <div className="p-6 rounded-2xl border border-[#222222] bg-[#111111] text-center h-full hover:border-[#F97316]/30 transition-colors">
-                                    <div className="w-12 h-12 rounded-xl bg-[#FAFAFA]/5 border border-[#222222] flex items-center justify-center mx-auto mb-4">
-                                        <Icon size={22} className="text-[#A1A1AA]" />
-                                    </div>
-                                    <h3 className="text-lg font-medium text-[#FAFAFA] mb-2">{item.title}</h3>
-                                    <p className="text-sm text-[#A1A1AA] leading-relaxed">{item.description}</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch">
+                {items.map((item, i) => {
+                    const Icon = item.icon;
+                    return (
+                        <FadeIn key={item.title} delay={i * 100}>
+                            <div className="p-6 rounded-2xl border border-[#222222] bg-[#111111] text-center h-full hover:border-[#F97316]/30 transition-colors flex flex-col items-center">
+                                <div className="w-12 h-12 rounded-xl bg-[#FAFAFA]/5 border border-[#222222] flex items-center justify-center mb-4">
+                                    <Icon size={22} className="text-[#A1A1AA]" />
                                 </div>
-                            </FadeIn>
-                        );
-                    })}
-                </div>
-
-                <p className="text-center text-[11px] text-[#52525B] mt-8">
-                    Beta software. Compliance certifications (HIPAA / SOC 2 / GDPR) are architectural commitments — not formal audits. Full audit on the roadmap.
-                </p>
+                                <h3 className="text-lg font-medium text-[#FAFAFA] mb-2">{item.title}</h3>
+                                <p className="text-sm text-[#A1A1AA] leading-relaxed">{item.description}</p>
+                            </div>
+                        </FadeIn>
+                    );
+                })}
             </div>
-        </section>
+
+            <p className="text-[11px] text-[#52525B] max-w-lg">
+                Beta software. Compliance certifications (HIPAA / SOC 2 / GDPR) are architectural commitments — not formal audits. Full audit on the roadmap.
+            </p>
+        </Section>
     );
 };
 
