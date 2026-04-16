@@ -1,17 +1,17 @@
 "use client";
 
 import { useState } from 'react';
-import { Shield, Calendar, Mail, Check, X, Loader2, AlertTriangle } from 'lucide-react';
+import { Shield, Calendar, Mail, Check, X, Loader2, AlertTriangle, Coins } from 'lucide-react';
 import type { ToolCall, ToolResult } from '@/lib/toolCalls';
-import { executeToolCall, formatToolResult } from '@/lib/toolCalls';
+import { executeToolCall } from '@/lib/toolCalls';
 import { logAction } from '@/lib/auditLog';
+import { getToolPrice } from '@/lib/x402/pricing';
 
 interface ToolApprovalModalProps {
     toolCall: ToolCall;
     agentName?: string;
+    agentId?: string | null;
     userId: string;
-    /** Price in USDC for this query. 0 = free. Default 0.001 */
-    queryPrice?: number;
     onResult: (result: ToolResult) => void;
     onDeny: () => void;
 }
@@ -31,46 +31,29 @@ const ACTION_LABELS: Record<string, string> = {
     send: 'Send email',
 };
 
-export function ToolApprovalModal({ toolCall, agentName, userId, queryPrice = 0, onResult, onDeny }: ToolApprovalModalProps) {
+export function ToolApprovalModal({
+    toolCall,
+    agentName,
+    agentId,
+    userId,
+    onResult,
+    onDeny,
+}: ToolApprovalModalProps) {
     const [isExecuting, setIsExecuting] = useState(false);
-    const [paymentStatus, setPaymentStatus] = useState<'idle' | 'paying' | 'paid' | 'failed'>('idle');
+    const [phase, setPhase] = useState<'idle' | 'requesting' | 'paying' | 'executing' | 'done' | 'failed'>('idle');
+
     const meta = TOOL_META[toolCall.tool] || { label: toolCall.tool, icon: Shield, color: 'text-gray-400', risk: 'UNKNOWN' };
     const Icon = meta.icon;
     const actionLabel = ACTION_LABELS[toolCall.action] || toolCall.action;
-    const isPaid = queryPrice > 0;
+
+    // Price comes from the central server/client pricing config — no per-agent
+    // lookup. Gated actions: calendar.create, gmail.draft/send/send_draft.
+    const price = getToolPrice(toolCall.tool, toolCall.action);
+    const isPaid = price !== null;
 
     const handleApprove = async () => {
         setIsExecuting(true);
-
-        // x402 payment gate: charge before execution if price > 0
-        if (isPaid && paymentStatus !== 'paid') {
-            setPaymentStatus('paying');
-            try {
-                const payRes = await fetch('/api/tools/x402', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'charge',
-                        params: {
-                            amount: queryPrice,
-                            currency: 'USDC',
-                            memo: `${toolCall.tool}.${toolCall.action} via ${agentName || 'agent'}`,
-                            userId,
-                        },
-                    }),
-                });
-                if (!payRes.ok) {
-                    setPaymentStatus('failed');
-                    setIsExecuting(false);
-                    return;
-                }
-                setPaymentStatus('paid');
-            } catch {
-                setPaymentStatus('failed');
-                setIsExecuting(false);
-                return;
-            }
-        }
+        setPhase(isPaid ? 'requesting' : 'executing');
 
         logAction(
             toolCall.tool === 'calendar' ? 'calendar' : 'gmail',
@@ -80,7 +63,9 @@ export function ToolApprovalModal({ toolCall, agentName, userId, queryPrice = 0,
             true,
         );
 
-        const result = await executeToolCall(toolCall, userId);
+        // executeToolCall handles the 402 → pay → retry flow internally.
+        // We just observe the phase based on the result.
+        const result = await executeToolCall(toolCall, userId, { agentId });
 
         logAction(
             toolCall.tool === 'calendar' ? 'calendar' : 'gmail',
@@ -90,6 +75,7 @@ export function ToolApprovalModal({ toolCall, agentName, userId, queryPrice = 0,
             result.success,
         );
 
+        setPhase(result.success ? 'done' : 'failed');
         setIsExecuting(false);
         onResult(result);
     };
@@ -105,13 +91,11 @@ export function ToolApprovalModal({ toolCall, agentName, userId, queryPrice = 0,
         onDeny();
     };
 
-    // Build a human-readable summary of what the tool wants to do
     const paramSummary = buildParamSummary(toolCall);
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-            <div className="w-full max-w-lg rounded-2xl bg-[#0c0c0c] border border-white/10 shadow-2xl overflow-hidden animate-fadeInUp">
-                {/* Header */}
+            <div className="w-full max-w-lg rounded-2xl bg-[#0c0c0c] border border-white/10 shadow-2xl overflow-hidden">
                 <div className="px-6 pt-5 pb-4 border-b border-white/5 flex items-center gap-4">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
                         meta.risk === 'HIGH' ? 'bg-orange-500/10 border-orange-500/30' : 'bg-[#F97316]/10 border-[#F97316]/30'
@@ -133,9 +117,7 @@ export function ToolApprovalModal({ toolCall, agentName, userId, queryPrice = 0,
                     </div>
                 </div>
 
-                {/* Body */}
                 <div className="px-6 py-5 space-y-4">
-                    {/* What it wants to do */}
                     <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5">
                         <div className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">Action</div>
                         <div className="flex items-center gap-3">
@@ -149,7 +131,6 @@ export function ToolApprovalModal({ toolCall, agentName, userId, queryPrice = 0,
                         </div>
                     </div>
 
-                    {/* Parameters */}
                     {paramSummary.length > 0 && (
                         <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5">
                             <div className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">Details</div>
@@ -164,26 +145,25 @@ export function ToolApprovalModal({ toolCall, agentName, userId, queryPrice = 0,
                         </div>
                     )}
 
-                    {/* x402 payment cost */}
-                    {isPaid && (
+                    {/* x402 price block — only on gated actions */}
+                    {isPaid && price && (
                         <div className="flex items-center justify-between p-4 rounded-xl bg-[#F97316]/5 border border-[#F97316]/20">
-                            <div>
-                                <div className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Query Cost</div>
-                                <div className="text-sm font-bold text-white">${queryPrice} USDC</div>
+                            <div className="flex items-center gap-2">
+                                <Coins size={14} className="text-[#F97316]" />
+                                <div>
+                                    <div className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-0.5">Cost</div>
+                                    <div className="text-sm font-bold text-white">
+                                        ${price.amount} {price.currency}
+                                    </div>
+                                    <div className="text-[10px] text-gray-500 mt-0.5">on {price.chain}</div>
+                                </div>
                             </div>
-                            <div className="text-right">
-                                <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded border ${
-                                    paymentStatus === 'paid' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' :
-                                    paymentStatus === 'failed' ? 'bg-red-500/10 border-red-500/30 text-red-400' :
-                                    'bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]'
-                                }`}>
-                                    {paymentStatus === 'paid' ? 'PAID' : paymentStatus === 'failed' ? 'FAILED' : 'x402'}
-                                </span>
-                            </div>
+                            <span className="text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded border bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]">
+                                x402
+                            </span>
                         </div>
                     )}
 
-                    {/* Warning for write actions */}
                     {(toolCall.action === 'create' || toolCall.action === 'send' || toolCall.action === 'send_draft') && (
                         <div className="flex items-start gap-3 p-3 rounded-lg bg-orange-500/5 border border-orange-500/15">
                             <AlertTriangle size={14} className="text-orange-400 mt-0.5 shrink-0" />
@@ -192,9 +172,21 @@ export function ToolApprovalModal({ toolCall, agentName, userId, queryPrice = 0,
                             </p>
                         </div>
                     )}
+
+                    {/* Phase indicator during execution */}
+                    {isExecuting && (
+                        <div className="flex items-center gap-2 p-3 rounded-lg bg-white/[0.03] border border-white/5">
+                            <Loader2 size={14} className="animate-spin text-[#F97316]" />
+                            <span className="text-xs text-gray-300">
+                                {phase === 'requesting' && 'Requesting invoice…'}
+                                {phase === 'paying' && 'Paying invoice on devnet…'}
+                                {phase === 'executing' && 'Executing tool…'}
+                                {phase === 'idle' && 'Preparing…'}
+                            </span>
+                        </div>
+                    )}
                 </div>
 
-                {/* Actions */}
                 <div className="px-6 py-4 border-t border-white/5 flex items-center gap-3 bg-white/[0.02]">
                     <button
                         onClick={handleDeny}
@@ -209,7 +201,9 @@ export function ToolApprovalModal({ toolCall, agentName, userId, queryPrice = 0,
                         className="flex-[2] h-10 rounded-xl flex items-center justify-center gap-2 bg-[#F97316] hover:bg-[#F97316]/90 text-white text-xs font-bold uppercase tracking-widest transition-colors disabled:opacity-60"
                     >
                         {isExecuting ? (
-                            <><Loader2 size={14} className="animate-spin" /> Executing...</>
+                            <><Loader2 size={14} className="animate-spin" /> Executing…</>
+                        ) : isPaid ? (
+                            <><Check size={14} /> Pay &amp; Allow Once</>
                         ) : (
                             <><Check size={14} /> Allow Once</>
                         )}

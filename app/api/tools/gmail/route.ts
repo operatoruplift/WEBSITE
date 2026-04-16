@@ -1,18 +1,24 @@
 import { NextResponse } from 'next/server';
 import { listMessages, readMessage, createDraft, sendDraft, sendEmail } from '@/lib/google/gmail';
 import { isGoogleConnected } from '@/lib/google/oauth';
-import { verifySession, AuthError } from '@/lib/auth';
+import { verifySession } from '@/lib/auth';
+import { x402Gate } from '@/lib/x402/middleware';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
 
 /**
  * Gmail tool endpoint — server-verified auth, not client-supplied user_id.
+ *
+ * Gated actions (require X-Payment-Proof header, $0.01 USDC each on devnet):
+ *   draft, send_draft, send
+ * Free actions:
+ *   list, read
  */
 export async function POST(request: Request) {
     try {
         const verified = await verifySession(request);
-        const { action, params } = await request.json();
+        const { action, params, agent_id } = await request.json();
         const user_id = verified.userId;
 
         if (!action) {
@@ -30,6 +36,10 @@ export async function POST(request: Request) {
                 { status: 403 },
             );
         }
+
+        // x402 gate — returns 402 on first call to gated actions, 'paid' on retry with proof
+        const gate = await x402Gate({ request, tool: 'gmail', action, params, user_id });
+        if (gate.type === '402') return gate.response;
 
         switch (action) {
             case 'list': {
@@ -63,7 +73,11 @@ export async function POST(request: Request) {
                     cc: params.cc,
                     bcc: params.bcc,
                 });
-                return NextResponse.json({ action: 'draft', draft });
+                const payload: { action: string; draft: unknown; receipt?: unknown } = { action: 'draft', draft };
+                if (gate.type === 'paid') {
+                    payload.receipt = await gate.createReceipt(draft, { agent_id });
+                }
+                return NextResponse.json(payload);
             }
 
             case 'send_draft': {
@@ -71,7 +85,11 @@ export async function POST(request: Request) {
                     return NextResponse.json({ error: 'draft_id required' }, { status: 400 });
                 }
                 const result = await sendDraft(user_id, params.draft_id);
-                return NextResponse.json({ action: 'send_draft', result });
+                const payload: { action: string; result: unknown; receipt?: unknown } = { action: 'send_draft', result };
+                if (gate.type === 'paid') {
+                    payload.receipt = await gate.createReceipt(result, { agent_id });
+                }
+                return NextResponse.json(payload);
             }
 
             case 'send': {
@@ -88,7 +106,11 @@ export async function POST(request: Request) {
                     cc: params.cc,
                     bcc: params.bcc,
                 });
-                return NextResponse.json({ action: 'send', result });
+                const payload: { action: string; result: unknown; receipt?: unknown } = { action: 'send', result };
+                if (gate.type === 'paid') {
+                    payload.receipt = await gate.createReceipt(result, { agent_id });
+                }
+                return NextResponse.json(payload);
             }
 
             default:
