@@ -1,6 +1,7 @@
 "use client";
 
 import { PrivyProvider } from '@privy-io/react-auth';
+import { PrivyTokenSync } from './PrivyTokenSync';
 
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || '';
 
@@ -37,6 +38,7 @@ export function PrivyWrapper({ children }: { children: React.ReactNode }) {
                 ],
             }}
         >
+            <PrivyTokenSync />
             {children}
         </PrivyProvider>
     );

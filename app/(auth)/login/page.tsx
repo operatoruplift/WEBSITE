@@ -21,7 +21,7 @@ export default function LoginPage() {
     const [error, setError] = useState('');
     const router = useRouter();
 
-    const { ready, authenticated, user } = usePrivy();
+    const { ready, authenticated, user, getAccessToken } = usePrivy();
     const { login } = useLogin({
         onComplete: () => {
             // After Privy auth, check access tier
@@ -37,11 +37,21 @@ export default function LoginPage() {
     }, [ready, authenticated]);
 
     const checkAccess = useCallback(async () => {
+        // Read ?returnTo= for post-login redirect (defaults to /chat).
+        // Only allow same-origin paths to prevent open-redirect.
+        const params = typeof window !== 'undefined'
+            ? new URLSearchParams(window.location.search)
+            : new URLSearchParams();
+        const rawReturnTo = params.get('returnTo') || '/chat';
+        const returnTo = rawReturnTo.startsWith('/') && !rawReturnTo.startsWith('//')
+            ? rawReturnTo
+            : '/chat';
+
         // Check if user already has local access
         const token = localStorage.getItem('token');
         const earlyAccess = localStorage.getItem('early_access');
         if (token || earlyAccess === 'granted') {
-            router.push('/chat');
+            router.push(returnTo);
             return;
         }
 
@@ -64,18 +74,36 @@ export default function LoginPage() {
                 } catch { /* non-blocking */ }
             }
 
-            // Grant session access for any authenticated user
-            localStorage.setItem('token', 'privy-session');
+            // Grant session access for any authenticated user.
+            // CRITICAL: store the real Privy JWT here — NOT a placeholder string.
+            // Downstream API calls (/api/subscription, /api/tools/*, etc.) send
+            // this as `Authorization: Bearer <token>` and the server verifies it
+            // with PrivyClient.verifyAuthToken(). A placeholder string would
+            // throw "Invalid Compact JWS" because jose requires three dot-
+            // separated base64url segments.
+            try {
+                const accessToken = await getAccessToken();
+                if (accessToken) {
+                    localStorage.setItem('token', accessToken);
+                } else {
+                    console.error('[login] getAccessToken returned null — Privy session not ready');
+                    localStorage.removeItem('token');
+                }
+            } catch (err) {
+                console.error('[login] failed to fetch Privy access token:', err);
+                localStorage.removeItem('token');
+            }
+
             localStorage.setItem('user', JSON.stringify({
                 name: userName,
                 email: userEmail,
                 plan: localStorage.getItem('early_access') === 'granted' ? 'Early Access' : 'Beta',
                 id: user.id,
             }));
-            router.push('/chat');
+            router.push(returnTo);
             return;
         }
-    }, [authenticated, user, router]);
+    }, [authenticated, user, router, getAccessToken]);
 
     const handleWaitlist = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -126,7 +154,13 @@ export default function LoginPage() {
             const data = await res.json();
             if (data.verified) {
                 localStorage.setItem('early_access', 'granted');
-                localStorage.setItem('token', 'privy-session');
+                // Real Privy JWT (see checkAccess() above for the rationale).
+                try {
+                    const accessToken = await getAccessToken();
+                    if (accessToken) localStorage.setItem('token', accessToken);
+                } catch (err) {
+                    console.error('[verify-payment] getAccessToken failed:', err);
+                }
                 localStorage.setItem('user', JSON.stringify({
                     name: user?.google?.name || user?.github?.username || 'Commander',
                     email: user?.google?.email || user?.email?.address || email,

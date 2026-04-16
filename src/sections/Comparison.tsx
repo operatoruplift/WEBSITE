@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { FadeIn } from '@/src/components/Animators';
+import { OpenAILogo, AnthropicLogo, GoogleLogo, XAILogo } from '@/src/components/ProviderLogos';
+import { Logo as UpliftLogo } from '@/src/components/Icons';
 
 const features = [
   { name: 'Runs on your device', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
@@ -18,12 +20,19 @@ const features = [
   { name: 'Enterprise compliance (HIPAA/SOC2/GDPR)', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
 ];
 
-const platforms = [
-  { key: 'uplift', name: 'Operator Uplift', highlight: true },
-  { key: 'chatgpt', name: 'ChatGPT' },
-  { key: 'claude', name: 'Claude' },
-  { key: 'gemini', name: 'Gemini' },
-  { key: 'grok', name: 'Grok' },
+/** Logo component renders at the same fixed size so mobile doesn't wrap
+    or overlap. Alt text is the brand name for a11y. */
+const platforms: Array<{
+  key: string;
+  name: string;
+  highlight?: boolean;
+  Logo: React.FC<{ className?: string }>;
+}> = [
+  { key: 'uplift', name: 'Operator Uplift', highlight: true, Logo: UpliftLogo },
+  { key: 'chatgpt', name: 'ChatGPT', Logo: OpenAILogo },
+  { key: 'claude', name: 'Claude', Logo: AnthropicLogo },
+  { key: 'gemini', name: 'Gemini', Logo: GoogleLogo },
+  { key: 'grok', name: 'Grok', Logo: XAILogo },
 ];
 
 const Comparison: React.FC = () => {
@@ -58,15 +67,33 @@ const Comparison: React.FC = () => {
         <FadeIn delay={200} className="w-full block">
           <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
             <div className="max-w-[900px] mx-auto rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm">
-              <table className="w-full text-sm table-fixed">
+              <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-white/10">
-                    <th className="text-left p-4 text-gray-500 font-mono text-xs uppercase tracking-wider w-[35%]">Feature</th>
-                    {platforms.map(p => (
-                      <th key={p.key} className={`p-4 text-center font-mono text-[10px] uppercase tracking-wider whitespace-nowrap ${p.highlight ? 'text-primary bg-primary/5' : 'text-gray-500'}`}>
-                        {p.name}
-                      </th>
-                    ))}
+                    <th className="text-left p-3 sm:p-4 text-gray-500 font-mono text-[10px] sm:text-xs uppercase tracking-wider min-w-[140px] sm:w-[35%]">Feature</th>
+                    {platforms.map(p => {
+                      const PlatformLogo = p.Logo;
+                      return (
+                        <th
+                          key={p.key}
+                          className={`p-3 sm:p-4 text-center font-mono text-[10px] uppercase tracking-wider ${
+                            p.highlight ? 'text-primary bg-primary/5' : 'text-gray-500'
+                          }`}
+                          aria-label={p.name}
+                        >
+                          {/* Mobile: logo only (fixed w-5 h-5, centered).
+                              md+: logo + name side-by-side, no wrap. */}
+                          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5">
+                            <PlatformLogo
+                              className={`w-5 h-5 shrink-0 ${p.highlight ? 'text-primary' : 'text-gray-400'}`}
+                            />
+                            <span className="hidden md:inline whitespace-nowrap">{p.name}</span>
+                            {/* Screen readers only — mobile shows logo visually but keeps the name for accessibility */}
+                            <span className="sr-only md:hidden">{p.name}</span>
+                          </div>
+                        </th>
+                      );
+                    })}
                   </tr>
                 </thead>
                 <tbody>
