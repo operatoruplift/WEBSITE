@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { listEvents, findFreeSlots, createEvent } from '@/lib/google/calendar';
 import { isGoogleConnected } from '@/lib/google/oauth';
-import { verifySession, AuthError } from '@/lib/auth';
+import { verifySession } from '@/lib/auth';
+import { x402Gate } from '@/lib/x402/middleware';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -11,20 +12,23 @@ export const maxDuration = 30;
  * when an agent emits a calendar tool call.
  *
  * POST /api/tools/calendar
- * Body: { action: 'list' | 'free_slots' | 'create', params: {...}, user_id: string }
+ * Body: { action: 'list' | 'free_slots' | 'create', params: {...} }
+ *
+ * Gated actions (requires X-Payment-Proof header):
+ *   create — charges $0.01 USDC on Solana devnet
+ * Free actions:
+ *   list, free_slots
  */
 export async function POST(request: Request) {
     try {
-        // Verify auth — use the verified Privy user ID, not client-supplied user_id
         const verified = await verifySession(request);
-        const { action, params } = await request.json();
-        const user_id = verified.userId; // Server-verified, not spoofable
+        const { action, params, agent_id } = await request.json();
+        const user_id = verified.userId;
 
         if (!action) {
             return NextResponse.json({ error: 'action required' }, { status: 400 });
         }
 
-        // Check if user has connected Google
         const connected = await isGoogleConnected(user_id);
         if (!connected) {
             return NextResponse.json(
@@ -36,6 +40,10 @@ export async function POST(request: Request) {
                 { status: 403 },
             );
         }
+
+        // x402 gate — returns 402 on first call, 'paid' on retry with proof
+        const gate = await x402Gate({ request, tool: 'calendar', action, params, user_id });
+        if (gate.type === '402') return gate.response;
 
         switch (action) {
             case 'list': {
@@ -74,7 +82,11 @@ export async function POST(request: Request) {
                     location: params.location,
                     attendees: params.attendees,
                 });
-                return NextResponse.json({ action: 'create', event });
+                const payload: { action: string; event: unknown; receipt?: unknown } = { action: 'create', event };
+                if (gate.type === 'paid') {
+                    payload.receipt = await gate.createReceipt(event, { agent_id });
+                }
+                return NextResponse.json(payload);
             }
 
             default:

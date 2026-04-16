@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Shield, ShieldCheck, Lock, Key, FileText, Clock, Trash2, Download, AlertTriangle, Eye, Activity } from 'lucide-react';
+import { Shield, ShieldCheck, Lock, Key, FileText, Clock, Trash2, Download, AlertTriangle, Eye, Activity, Receipt, Copy, Check } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Card';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { Badge } from '@/src/components/ui/Badge';
@@ -10,6 +10,24 @@ import { useToast } from '@/src/components/ui/Toast';
 import { AnimatedCard, NumberTicker, BorderBeam, StaggerChildren } from '@/src/components/effects/MagicUI';
 import { isEncryptionConfigured } from '@/lib/encryption';
 import { getAuditLog, getAuditStats, clearAuditLog, getOnChainRecord, publishMerkleRoot, type AuditEntry } from '@/lib/auditLog';
+
+/** Row shape returned from /api/receipts (matches tool_receipts table). */
+interface SignedReceiptRow {
+    receipt_reference: string;
+    user_id: string;
+    agent_id: string | null;
+    tool: string;
+    action: string;
+    params_hash: string;
+    result_hash: string;
+    invoice_reference: string;
+    amount_usdc: number;
+    chain: string;
+    payment_tx: string;
+    signature: string;
+    public_key: string;
+    created_at: string;
+}
 
 const CATEGORY_META: Record<string, { label: string; color: string; icon: typeof Shield }> = {
     calendar: { label: 'Calendar', color: 'text-[#F97316]', icon: Clock },
@@ -119,6 +137,44 @@ export default function SecurityPage() {
     const approvedCount = auditLog.filter(e => e.approved === true).length;
     const deniedCount = auditLog.filter(e => e.approved === false).length;
 
+    // Signed receipts — paid tool executions
+    const [receipts, setReceipts] = useState<SignedReceiptRow[]>([]);
+    const [copiedReceipt, setCopiedReceipt] = useState<string | null>(null);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        fetch('/api/receipts?limit=20', {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+        })
+            .then(r => r.json())
+            .then(d => Array.isArray(d.receipts) ? setReceipts(d.receipts as SignedReceiptRow[]) : setReceipts([]))
+            .catch(() => setReceipts([]));
+    }, []);
+
+    const copyReceipt = async (r: SignedReceiptRow) => {
+        const payload = {
+            receipt: {
+                receipt_reference: r.receipt_reference,
+                timestamp: r.created_at,
+                user_id: r.user_id,
+                agent_id: r.agent_id,
+                tool: r.tool,
+                action: r.action,
+                params_hash: r.params_hash,
+                result_hash: r.result_hash,
+                invoice_reference: r.invoice_reference,
+                amount_usdc: r.amount_usdc,
+                chain: r.chain,
+                payment_tx: r.payment_tx,
+            },
+            signature: r.signature,
+            public_key: r.public_key,
+        };
+        await navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
+        setCopiedReceipt(r.receipt_reference);
+        setTimeout(() => setCopiedReceipt(null), 1500);
+    };
+
     return (
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8 relative">
@@ -171,6 +227,54 @@ export default function SecurityPage() {
                             );
                         })}
                     </div>
+
+                    {/* Signed Receipts — x402 payment artifacts */}
+                    <Card variant="glass" className="p-6 border-foreground/10 bg-foreground/[0.04]">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                                <Receipt size={12} className="text-[#F97316]" /> Signed Receipts
+                                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded border bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]">x402</span>
+                            </h3>
+                            <a href="/api/receipts/public-key" target="_blank" rel="noopener"
+                               className="text-[10px] font-mono text-gray-500 hover:text-[#F97316] underline decoration-dotted">
+                                Public Key
+                            </a>
+                        </div>
+                        {receipts.length === 0 ? (
+                            <p className="text-xs text-gray-500 py-6 text-center">
+                                No signed receipts yet. Approve a paid action on <a href="/chat" className="text-[#F97316] hover:underline">Chat</a> — Calendar create or Gmail draft/send — and the signed receipt will appear here.
+                            </p>
+                        ) : (
+                            <div className="space-y-2">
+                                {receipts.map(r => (
+                                    <div key={r.receipt_reference} className="p-3 rounded-xl bg-foreground/[0.03] border border-foreground/10 hover:border-foreground/20 transition-colors">
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex flex-wrap items-center gap-2 mb-1">
+                                                    <span className="text-sm font-semibold text-white">{r.tool}.{r.action}</span>
+                                                    <span className="text-[9px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded border bg-emerald-400/10 border-emerald-400/30 text-emerald-400">
+                                                        ${r.amount_usdc} {r.chain}
+                                                    </span>
+                                                </div>
+                                                <p className="text-[10px] text-gray-600 font-mono">
+                                                    {new Date(r.created_at).toLocaleString()} · {r.receipt_reference}
+                                                </p>
+                                                <p className="text-[10px] text-gray-500 font-mono mt-1 truncate">
+                                                    tx: {r.payment_tx}
+                                                </p>
+                                            </div>
+                                            <button
+                                                onClick={() => copyReceipt(r)}
+                                                className="shrink-0 px-3 h-8 rounded-lg bg-foreground/[0.04] hover:bg-foreground/[0.08] border border-foreground/10 text-[10px] font-bold uppercase tracking-widest text-gray-300 flex items-center gap-1.5"
+                                            >
+                                                {copiedReceipt === r.receipt_reference ? <><Check size={10} /> Copied</> : <><Copy size={10} /> Copy JSON</>}
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </Card>
 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6" style={{ animationDelay: '200ms' }}>
                         {/* Left column — encryption status + emergency controls */}

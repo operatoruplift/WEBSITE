@@ -85,10 +85,17 @@ export function hasToolCalls(text: string): boolean {
     return /<tool_use>/.test(text) || /\{"tool"\s*:\s*"(calendar|gmail|x402)"/.test(text);
 }
 
-/** Execute a single approved tool call against the backend. */
+/**
+ * Execute a single approved tool call against the backend.
+ *
+ * Supports the x402 payment flow: if the endpoint returns 402, we hit
+ * `/api/tools/x402/pay` with the `invoice_reference`, then retry the
+ * same request with `X-Payment-Proof` header. Retries once on 402.
+ */
 export async function executeToolCall(
     call: ToolCall,
     userId: string,
+    opts: { agentId?: string | null } = {},
 ): Promise<ToolResult> {
     const endpoint = call.tool === 'calendar'
         ? '/api/tools/calendar'
@@ -96,24 +103,74 @@ export async function executeToolCall(
             ? '/api/tools/gmail'
             : '/api/tools/x402';
 
+    const authToken = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    const authHeader: Record<string, string> = authToken ? { Authorization: `Bearer ${authToken}` } : {};
+
     try {
         // Auto-inject the client's local date for calendar calls so timezone
         // offsets (e.g., "tomorrow" in MYT UTC+8) resolve correctly server-side
-        const enrichedParams = { ...call.params };
+        const enrichedParams: Record<string, unknown> = { ...call.params };
         if (call.tool === 'calendar' && !enrichedParams.local_date) {
             const d = new Date();
             enrichedParams.local_date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         }
 
-        const res = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                action: call.action,
-                params: enrichedParams,
-                user_id: userId,
-            }),
+        const body = JSON.stringify({
+            action: call.action,
+            params: enrichedParams,
+            user_id: userId,
+            agent_id: opts.agentId ?? null,
         });
+
+        // First attempt — no payment proof
+        let res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...authHeader },
+            body,
+        });
+
+        // x402 flow: pay invoice, retry once
+        if (res.status === 402) {
+            const invoiceData = await res.clone().json().catch(() => ({}));
+            const invoiceRef: string | undefined = invoiceData.invoice_reference;
+            if (!invoiceRef) {
+                return {
+                    toolCallId: call.id,
+                    tool: call.tool,
+                    action: call.action,
+                    success: false,
+                    error: 'Payment required but no invoice reference returned',
+                };
+            }
+
+            // Pay the invoice (devnet: simulated; production: on-chain tx)
+            const payRes = await fetch('/api/tools/x402/pay', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeader },
+                body: JSON.stringify({ invoice_reference: invoiceRef }),
+            });
+            if (!payRes.ok) {
+                const payErr = await payRes.json().catch(() => ({}));
+                return {
+                    toolCallId: call.id,
+                    tool: call.tool,
+                    action: call.action,
+                    success: false,
+                    error: `Payment failed: ${payErr.error || payRes.status}`,
+                };
+            }
+
+            // Retry with proof
+            res = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Payment-Proof': invoiceRef,
+                    ...authHeader,
+                },
+                body,
+            });
+        }
 
         const data = await res.json();
 
