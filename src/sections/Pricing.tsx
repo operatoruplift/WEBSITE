@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Check, Zap, Shield, Crown, ArrowRight, Download, Building2 } from 'lucide-react';
 import { FadeIn } from '@/src/components/Animators';
+import { SectionHeader } from '@/src/components/SectionHeader';
 
 const TIERS = [
     {
@@ -75,21 +76,11 @@ const Pricing: React.FC = () => {
     return (
         <section id="pricing" className="w-full bg-[#0A0A0A] px-6 md:px-12 flex justify-center">
             <div className="w-full max-w-[1200px] py-20">
-                <FadeIn>
-                    <div className="text-center mb-12">
-                        <div className="inline-flex items-center gap-3 mb-4">
-                            <span className="h-px w-16 bg-[#F97316]/40" />
-                            <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">Pricing</span>
-                            <span className="h-px w-16 bg-[#F97316]/40" />
-                        </div>
-                        <h2 className="text-3xl md:text-4xl font-medium text-[#FAFAFA] mb-4 tracking-tight">
-                            Simple, transparent pricing
-                        </h2>
-                        <p className="text-[#A1A1AA] max-w-lg mx-auto text-center">
-                            Start free. Pay with USDC via Solana Pay. Cancel anytime.
-                        </p>
-                    </div>
-                </FadeIn>
+                <SectionHeader
+                    eyebrow="Pricing"
+                    title="Simple, transparent pricing"
+                    description="Start free. Pay with USDC via Solana Pay. Cancel anytime."
+                />
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {TIERS.map((tier, i) => {

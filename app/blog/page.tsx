@@ -25,6 +25,47 @@ const categoryColors: Record<string, string> = {
 
 export const posts: BlogPost[] = [
     {
+        id: 'governed-approvals',
+        title: 'Governed Approvals: Why Every Agent Action Needs a Human',
+        excerpt: 'The single biggest difference between a helpful agent and a dangerous one is a human in the loop at the right moment. Here is how we designed the approval flow.',
+        date: 'April 16, 2026',
+        readTime: '4 min read',
+        category: 'engineering',
+        featured: true,
+    },
+    {
+        id: 'audit-trail',
+        title: 'How the On-Chain Audit Trail Works',
+        excerpt: 'Every agent action is SHA-256 hashed and the Merkle root is published to a Solana devnet program every N actions. Here is the exact pipeline.',
+        date: 'April 16, 2026',
+        readTime: '5 min read',
+        category: 'engineering',
+    },
+    {
+        id: 'local-first-threat-model',
+        title: 'Our Threat Model for Local-First AI',
+        excerpt: 'What we protect against, what we do not, and why we made each trade-off. The honest version.',
+        date: 'April 15, 2026',
+        readTime: '5 min read',
+        category: 'engineering',
+    },
+    {
+        id: 'wedge-lawyer-accountant-therapist',
+        title: 'The Three Professions Who Can Not Afford a Data Leak',
+        excerpt: 'Lawyers, accountants, therapists. Every one of them has a confidentiality obligation that cloud AI breaks by default. This is our wedge.',
+        date: 'April 15, 2026',
+        readTime: '4 min read',
+        category: 'guide',
+    },
+    {
+        id: 'why-solana-for-audit-roots',
+        title: 'Why Solana for Audit Roots',
+        excerpt: 'Not every blockchain is a good audit layer. Solana happens to fit the three constraints: fast finality, cheap writes, verifiable publicly. Here is the math.',
+        date: 'April 14, 2026',
+        readTime: '4 min read',
+        category: 'engineering',
+    },
+    {
         id: 'why-i-built-an-ai-os',
         title: 'Why I Built an AI OS Instead of Pivoting',
         excerpt: 'Balaji told me to pivot. He looked at what I was building and said: you\'re competing with Perplexity, OpenAI, Anthropic, and Google. Solo founder. No funding. Walk away. I didn\'t.',

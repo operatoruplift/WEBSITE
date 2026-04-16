@@ -25,6 +25,30 @@ function getPrivyClient(): PrivyClient {
 export interface VerifiedUser {
     userId: string;   // Privy DID (did:privy:...)
     walletAddress?: string;
+    email?: string;
+}
+
+/**
+ * Fetch the user's primary email from Privy (linked Google/email accounts).
+ * Cached per-request via the PrivyClient; returns null if not found or
+ * Privy is not configured.
+ */
+export async function getUserEmail(userId: string): Promise<string | null> {
+    if (!process.env.PRIVY_APP_SECRET) return null;
+    try {
+        const client = getPrivyClient();
+        const user = await client.getUser(userId);
+        // Privy users have linked accounts; email can come from email or google
+        type LinkedAccount = { type?: string; address?: string; email?: string };
+        const accounts = (user?.linkedAccounts || []) as LinkedAccount[];
+        const emailAccount = accounts.find(a => a.type === 'email');
+        if (emailAccount?.address) return emailAccount.address;
+        const googleAccount = accounts.find(a => a.type === 'google_oauth');
+        if (googleAccount?.email) return googleAccount.email;
+        return null;
+    } catch {
+        return null;
+    }
 }
 
 /**

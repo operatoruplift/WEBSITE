@@ -1,43 +1,123 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Shield, Zap, Check, ArrowRight, Sparkles, Lock, Crown } from 'lucide-react';
+import { Shield, Zap, Check, ArrowRight, Crown, Lock, Copy, ExternalLink, AlertTriangle } from 'lucide-react';
 import { Logo } from '@/src/components/Icons';
+
+type PayState = 'idle' | 'creating_invoice' | 'awaiting_payment' | 'confirming' | 'active' | 'failed';
+
+interface Invoice {
+    invoice_reference: string;
+    amount_usdc: number;
+    recipient: string;
+    memo: string;
+}
 
 export default function PaywallPage() {
     const router = useRouter();
-    const [isProcessing, setIsProcessing] = useState(false);
+    const [payState, setPayState] = useState<PayState>('idle');
+    const [invoice, setInvoice] = useState<Invoice | null>(null);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [copied, setCopied] = useState(false);
     const [waitlistEmail, setWaitlistEmail] = useState('');
     const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
+    const [simulatorVisible, setSimulatorVisible] = useState(false);
 
-    const handleSolanaPay = async () => {
-        setIsProcessing(true);
+    // Show the dev simulator only if the env flag is set (exposed via public env var)
+    useEffect(() => {
+        setSimulatorVisible(process.env.NEXT_PUBLIC_PAYMENT_SIMULATOR === '1');
+    }, []);
 
-        // Build Solana Pay USDC transfer
-        // For devnet/demo: simulate payment and activate subscription
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    const authHeaders: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const createInvoice = async () => {
+        setPayState('creating_invoice');
+        setErrorMsg(null);
         try {
-            const token = localStorage.getItem('token');
             const res = await fetch('/api/subscription', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-                },
-                body: JSON.stringify({
-                    tx_signature: `sub-devnet-${Date.now()}`,
-                }),
+                headers: { 'Content-Type': 'application/json', ...authHeaders },
+                body: JSON.stringify({ action: 'create_invoice' }),
             });
-
-            if (res.ok) {
-                localStorage.setItem('subscription_tier', 'pro');
-                router.push('/chat');
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({ error: 'unknown' }));
+                setErrorMsg(err.error || `Failed (${res.status})`);
+                setPayState('failed');
+                return;
             }
-        } catch {
-            // fallback
+            const data = await res.json();
+            setInvoice({
+                invoice_reference: data.invoice_reference,
+                amount_usdc: data.amount_usdc,
+                recipient: data.recipient,
+                memo: data.memo,
+            });
+            setPayState('awaiting_payment');
+
+            // Start polling for payment confirmation
+            pollForPayment();
+        } catch (err) {
+            setErrorMsg(err instanceof Error ? err.message : 'Network error');
+            setPayState('failed');
         }
-        setIsProcessing(false);
+    };
+
+    const pollForPayment = async () => {
+        // Poll every 4s for up to 5 min — in production this would verify the
+        // on-chain tx via Solana Pay + reference. For devnet we just check the
+        // subscription status (which flips to active when POST /subscription
+        // with tx_signature is called).
+        let attempts = 0;
+        const MAX_ATTEMPTS = 75; // 5 min @ 4s
+        const poll = async () => {
+            attempts++;
+            try {
+                const res = await fetch('/api/subscription', { headers: authHeaders });
+                const data = await res.json();
+                if (data.active) {
+                    localStorage.setItem('subscription_tier', 'pro');
+                    setPayState('active');
+                    setTimeout(() => router.push('/chat'), 1500);
+                    return;
+                }
+            } catch { /* keep polling */ }
+            if (attempts < MAX_ATTEMPTS) setTimeout(poll, 4000);
+        };
+        setTimeout(poll, 4000);
+    };
+
+    const runDevSimulator = async () => {
+        setPayState('confirming');
+        setErrorMsg(null);
+        try {
+            const res = await fetch('/api/subscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeaders },
+                body: JSON.stringify({ action: 'dev_simulate' }),
+            });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({ error: 'unknown' }));
+                setErrorMsg(err.error || `Simulator disabled (${res.status})`);
+                setPayState('failed');
+                return;
+            }
+            localStorage.setItem('subscription_tier', 'pro');
+            setPayState('active');
+            setTimeout(() => router.push('/chat'), 1000);
+        } catch (err) {
+            setErrorMsg(err instanceof Error ? err.message : 'Simulator error');
+            setPayState('failed');
+        }
+    };
+
+    const copyAddress = async () => {
+        if (!invoice) return;
+        await navigator.clipboard.writeText(invoice.recipient);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
     };
 
     const handleWaitlist = async () => {
@@ -48,26 +128,21 @@ export default function PaywallPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: waitlistEmail }),
             });
-            setWaitlistSubmitted(true);
-        } catch {
-            setWaitlistSubmitted(true);
-        }
+        } catch { /* best effort */ }
+        setWaitlistSubmitted(true);
     };
 
     const PRO_FEATURES = [
         'LLM Council — 5 agents debate every decision',
         'Google Calendar + Gmail tool execution',
-        'On-chain Merkle audit trail (Solana)',
-        'All 6 LLM providers (Claude, GPT, Gemini, Grok, DeepSeek, Ollama)',
-        'x402 per-query agent payments',
-        'Morning briefing cron job',
+        'On-chain Merkle audit trail (Solana devnet)',
+        'All 6 LLM providers',
         'Priority support',
     ];
-
     const FREE_FEATURES = [
         'Browse the Agent Marketplace',
-        'View agent capabilities and reviews',
         'Self-hosted desktop app (Tauri DMG)',
+        'Bring your own API keys',
     ];
 
     return (
@@ -78,11 +153,10 @@ export default function PaywallPage() {
                     <Logo className="w-12 h-12 mx-auto mb-4" />
                     <h1 className="text-3xl font-semibold text-white tracking-tight">Choose Your Plan</h1>
                     <p className="text-sm text-[#A1A1AA] mt-2 max-w-md mx-auto">
-                        Operator Uplift is in early access. Get Pro for the full AI agent experience, or join the waitlist for free.
+                        Operator Uplift is in early access. Get Pro for the full experience, or join the waitlist.
                     </p>
                 </div>
 
-                {/* Plans */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     {/* Pro Plan */}
                     <div className="relative rounded-2xl border-2 border-[#F97316]/40 bg-[#111111] p-8 overflow-hidden">
@@ -102,10 +176,10 @@ export default function PaywallPage() {
                         <div className="mb-6">
                             <span className="text-4xl font-bold text-white">$19</span>
                             <span className="text-sm text-[#A1A1AA]">/month</span>
-                            <span className="ml-2 text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]">USDC via Solana Pay</span>
+                            <span className="ml-2 text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]">USDC</span>
                         </div>
 
-                        <ul className="space-y-3 mb-8">
+                        <ul className="space-y-3 mb-6">
                             {PRO_FEATURES.map(f => (
                                 <li key={f} className="flex items-start gap-2.5 text-sm text-[#FAFAFA]">
                                     <Check size={14} className="text-[#F97316] mt-0.5 shrink-0" />
@@ -114,17 +188,85 @@ export default function PaywallPage() {
                             ))}
                         </ul>
 
-                        <button
-                            onClick={handleSolanaPay}
-                            disabled={isProcessing}
-                            className="w-full h-12 rounded-xl bg-[#F97316] hover:bg-[#F97316]/90 text-white font-bold uppercase tracking-widest text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(249,115,22,0.3)]"
-                        >
-                            {isProcessing ? (
-                                <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Processing...</>
-                            ) : (
-                                <><Sparkles size={16} /> Pay $19 USDC</>
-                            )}
-                        </button>
+                        {/* Payment state UI */}
+                        {payState === 'idle' && (
+                            <button
+                                onClick={createInvoice}
+                                className="w-full h-12 rounded-xl bg-[#F97316] hover:bg-[#F97316]/90 text-white font-bold uppercase tracking-widest text-sm transition-colors flex items-center justify-center gap-2"
+                            >
+                                Pay $19 USDC <ArrowRight size={14} />
+                            </button>
+                        )}
+
+                        {payState === 'creating_invoice' && (
+                            <div className="w-full h-12 rounded-xl bg-[#FAFAFA]/5 border border-[#222222] text-[#A1A1AA] text-sm flex items-center justify-center gap-2">
+                                <div className="w-4 h-4 border-2 border-[#F97316]/30 border-t-[#F97316] rounded-full animate-spin" />
+                                Creating invoice...
+                            </div>
+                        )}
+
+                        {payState === 'awaiting_payment' && invoice && (
+                            <div className="space-y-3">
+                                <div className="p-4 rounded-xl bg-[#F97316]/5 border border-[#F97316]/30">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <div className="w-2 h-2 rounded-full bg-[#F97316] animate-pulse" />
+                                        <span className="text-xs font-bold uppercase tracking-widest text-[#F97316]">Awaiting Payment</span>
+                                    </div>
+                                    <p className="text-[11px] text-[#A1A1AA] mb-3">
+                                        Send <span className="font-mono text-white">{invoice.amount_usdc} USDC</span> to:
+                                    </p>
+                                    <div className="flex items-center gap-2 p-2 rounded-lg bg-[#0A0A0A] border border-[#222222] mb-2">
+                                        <code className="text-[10px] text-white font-mono flex-1 truncate">{invoice.recipient}</code>
+                                        <button onClick={copyAddress} className="text-[#A1A1AA] hover:text-white" aria-label="Copy address">
+                                            {copied ? <Check size={14} className="text-[#F97316]" /> : <Copy size={14} />}
+                                        </button>
+                                    </div>
+                                    <p className="text-[10px] text-[#52525B] font-mono">Ref: {invoice.invoice_reference}</p>
+                                </div>
+                                <p className="text-[11px] text-[#A1A1AA] text-center">Polling for payment every 4s — this page will auto-redirect when confirmed.</p>
+                            </div>
+                        )}
+
+                        {payState === 'confirming' && (
+                            <div className="w-full h-12 rounded-xl bg-[#FAFAFA]/5 border border-[#222222] text-[#A1A1AA] text-sm flex items-center justify-center gap-2">
+                                <div className="w-4 h-4 border-2 border-[#F97316]/30 border-t-[#F97316] rounded-full animate-spin" />
+                                Confirming...
+                            </div>
+                        )}
+
+                        {payState === 'active' && (
+                            <div className="w-full h-12 rounded-xl bg-[#F97316]/10 border border-[#F97316]/30 text-[#F97316] font-bold uppercase tracking-widest text-sm flex items-center justify-center gap-2">
+                                <Check size={16} /> Active — redirecting to /chat
+                            </div>
+                        )}
+
+                        {payState === 'failed' && (
+                            <div className="space-y-2">
+                                <div className="p-3 rounded-xl bg-red-500/5 border border-red-500/20 flex items-start gap-2">
+                                    <AlertTriangle size={14} className="text-red-400 mt-0.5 shrink-0" />
+                                    <p className="text-xs text-red-300">{errorMsg || 'Payment failed'}</p>
+                                </div>
+                                <button
+                                    onClick={() => { setPayState('idle'); setErrorMsg(null); }}
+                                    className="w-full h-10 rounded-xl bg-[#FAFAFA]/5 hover:bg-[#FAFAFA]/10 border border-[#222222] text-white text-sm font-medium transition-colors"
+                                >
+                                    Try again
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Dev simulator — only when NEXT_PUBLIC_PAYMENT_SIMULATOR=1 */}
+                        {simulatorVisible && payState !== 'active' && (
+                            <div className="mt-4 pt-4 border-t border-dashed border-[#222222]">
+                                <button
+                                    onClick={runDevSimulator}
+                                    className="w-full h-9 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[11px] font-bold uppercase tracking-widest hover:bg-amber-500/20 transition-colors flex items-center justify-center gap-2"
+                                >
+                                    <AlertTriangle size={12} /> Dev Simulator — Skip Payment
+                                </button>
+                                <p className="text-[10px] text-[#52525B] mt-2 text-center">Staging only. Logs an audit entry. Disabled in production.</p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Free / Waitlist */}
@@ -138,17 +280,14 @@ export default function PaywallPage() {
                                 <p className="text-xs text-[#A1A1AA]">Marketplace access + waitlist</p>
                             </div>
                         </div>
-
                         <div className="mb-6">
                             <span className="text-4xl font-bold text-white">$0</span>
                             <span className="text-sm text-[#A1A1AA]">/forever</span>
                         </div>
-
-                        <ul className="space-y-3 mb-8">
+                        <ul className="space-y-3 mb-6">
                             {FREE_FEATURES.map(f => (
                                 <li key={f} className="flex items-start gap-2.5 text-sm text-[#A1A1AA]">
-                                    <Check size={14} className="text-[#A1A1AA] mt-0.5 shrink-0" />
-                                    {f}
+                                    <Check size={14} className="text-[#A1A1AA] mt-0.5 shrink-0" /> {f}
                                 </li>
                             ))}
                             <li className="flex items-start gap-2.5 text-sm text-[#52525B]">
@@ -158,7 +297,7 @@ export default function PaywallPage() {
                         </ul>
 
                         {waitlistSubmitted ? (
-                            <div className="w-full h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold uppercase tracking-widest text-sm flex items-center justify-center gap-2">
+                            <div className="w-full h-12 rounded-xl bg-[#F97316]/10 border border-[#F97316]/30 text-[#F97316] font-bold uppercase tracking-widest text-sm flex items-center justify-center gap-2">
                                 <Check size={16} /> You&apos;re on the list
                             </div>
                         ) : (
@@ -168,11 +307,11 @@ export default function PaywallPage() {
                                     value={waitlistEmail}
                                     onChange={e => setWaitlistEmail(e.target.value)}
                                     placeholder="your@email.com"
-                                    className="w-full h-12 rounded-xl bg-[#0A0A0A] border border-[#222222] px-4 text-sm text-white placeholder-[#52525B] focus:border-[#F97316]/50 focus:outline-none transition-all"
+                                    className="w-full h-12 rounded-xl bg-[#0A0A0A] border border-[#222222] px-4 text-sm text-white placeholder-[#52525B] focus:border-[#F97316]/50 focus:outline-none transition-colors"
                                 />
                                 <button
                                     onClick={handleWaitlist}
-                                    className="w-full h-12 rounded-xl bg-[#FAFAFA]/5 hover:bg-[#FAFAFA]/10 border border-[#222222] text-white font-bold uppercase tracking-widest text-sm transition-all flex items-center justify-center gap-2"
+                                    className="w-full h-12 rounded-xl bg-[#FAFAFA]/5 hover:bg-[#FAFAFA]/10 border border-[#222222] text-white font-bold uppercase tracking-widest text-sm transition-colors flex items-center justify-center gap-2"
                                 >
                                     Join Waitlist <ArrowRight size={14} />
                                 </button>
@@ -181,7 +320,6 @@ export default function PaywallPage() {
                     </div>
                 </div>
 
-                {/* Browse free */}
                 <div className="text-center">
                     <Link href="/marketplace" className="text-sm text-[#A1A1AA] hover:text-white transition-colors">
                         Or browse the Agent Marketplace for free →

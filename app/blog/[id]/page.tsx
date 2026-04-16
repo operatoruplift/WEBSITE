@@ -9,6 +9,67 @@ import { posts } from '../page';
 
 function getArticleContent(id: string) {
     const content: Record<string, React.ReactNode> = {
+        'governed-approvals': (
+            <div className="space-y-6">
+                <p className="text-lg">The single biggest difference between a helpful agent and a dangerous one is a human in the loop at the right moment.</p>
+                <p>Most agent products fail in one of two directions. Either they ask for approval on everything, which makes them slower than doing the task yourself. Or they ask for nothing, which turns every LLM hallucination into a real-world action your inbox will hate you for.</p>
+                <p>Operator Uplift takes a third path. The agent is free to read, reason, and plan. It is not free to act until a human confirms. Reads like &quot;list my calendar events for tomorrow&quot; run without asking. Writes like &quot;send this email&quot; or &quot;create this calendar event&quot; pop an approval modal with the exact payload, risk level, and one-click allow-or-deny.</p>
+                <p>The modal shows: the tool being called (Calendar, Gmail, etc), the action (create event, send draft), the risk level (MEDIUM for calendar writes, HIGH for gmail sends), every parameter the agent is about to send (who, what, when), and a single primary CTA. No buried toggles, no checkboxes, no fine print. Either you approve this specific action once, or you deny it.</p>
+                <p>Every approval is logged. The audit log is hashed and the Merkle root is published to Solana devnet. If the agent acts, there is proof that a human said yes.</p>
+                <p>This is the opposite of how most SaaS approval flows work. You do not get to say &quot;always allow this agent to send email&quot; because a future prompt injection could turn that blanket permission into an exfiltration vector. Every action stands on its own.</p>
+                <p>It is slower. On purpose. The slowness is the feature.</p>
+            </div>
+        ),
+        'audit-trail': (
+            <div className="space-y-6">
+                <p className="text-lg">Every agent action in Operator Uplift is hashed, logged, and eventually published on-chain. Here is the exact pipeline.</p>
+                <p><strong>Step 1 &mdash; SHA-256 hash on the client.</strong> When an agent emits a tool_use block and the user approves it, we compute a SHA-256 digest of the action payload using the Web Crypto API. The hash covers: tool name, action, params, user ID, timestamp, outcome. This is the &quot;leaf&quot; of the audit tree.</p>
+                <p><strong>Step 2 &mdash; Dual write.</strong> The leaf hash plus the full action details are written to two places: localStorage for fast client-side lookup, and a server-side Supabase table (audit_entries) via an authenticated POST. Supabase is the source of truth. localStorage is a cache.</p>
+                <p><strong>Step 3 &mdash; Merkle root every N actions.</strong> On every 5th action, the server computes a Merkle root over all leaf hashes since the last publication. This collapses an arbitrary number of actions into a single 32-byte commitment.</p>
+                <p><strong>Step 4 &mdash; Publish on-chain.</strong> The Merkle root is passed to the Anchor publish_root instruction on our program (deployed to Solana devnet, program ID LeHntjrypUvoedo4DHdBXUNyC2gKxnRH7wzp2UE2w1P). The server wallet signs the tx. The tx signature is stored in the audit_roots Supabase table.</p>
+                <p><strong>Step 5 &mdash; Verify anywhere.</strong> To prove any single action was logged at time T, you fetch the leaf from Supabase, reconstruct the Merkle proof, and check the root matches what is on-chain. The on-chain commitment makes it impossible for us to quietly rewrite history.</p>
+                <p>The devnet deployment is the research-grade version. Mainnet is on the roadmap once the program is audited.</p>
+            </div>
+        ),
+        'local-first-threat-model': (
+            <div className="space-y-6">
+                <p className="text-lg">Every privacy product has a threat model. Most of them hide it. Here is ours, stated honestly.</p>
+                <p><strong>What we protect against:</strong></p>
+                <p>(1) Cloud-side data retention. When an agent reads your calendar or drafts an email, the raw content stays on your machine or passes through our server only as transient inference. We do not store agent conversations, attachments, or the output of tool calls in a persistent cloud database.</p>
+                <p>(2) Silent action. Every write happens behind an approval modal. A compromised LLM cannot send an email without you clicking Allow.</p>
+                <p>(3) Tampered audit history. The on-chain Merkle root means we cannot delete or rewrite what your agent did without it being detectable.</p>
+                <p>(4) Credential leaks from the client. API keys live encrypted in your browser via AES-256-GCM. Even a stolen laptop with the disk unlocked requires your passphrase to use them.</p>
+                <p><strong>What we do NOT protect against (yet):</strong></p>
+                <p>(1) Compromised LLM provider. If Anthropic or OpenAI is breached, and they decide to log your prompts, we cannot stop that. Use Ollama if you need full local inference.</p>
+                <p>(2) Malicious browser extensions. An extension with content-script access can read anything the page can read, including your approvals modal. This is an operating-system-level problem we inherit.</p>
+                <p>(3) Social engineering of the human. If you click Allow on every prompt without reading, we cannot save you. The approval modal is a chance to think, not a guaranteed safeguard.</p>
+                <p>(4) Nation-state adversaries. We are a beta product. Assume a sophisticated adversary can find a flaw in our stack. For anything requiring genuine state-adversary defense, use the self-hosted Tauri build on an air-gapped machine.</p>
+                <p>The point of publishing the threat model is not to claim perfection. It is to give you enough information to decide whether our guarantees match your threat profile.</p>
+            </div>
+        ),
+        'wedge-lawyer-accountant-therapist': (
+            <div className="space-y-6">
+                <p className="text-lg">Lawyers, accountants, therapists. Three professions, one shared problem: every one of them has a statutory confidentiality obligation that cloud AI breaks by default.</p>
+                <p>When a lawyer drafts a brief in ChatGPT, the client&apos;s name, the case details, and the legal theory enter OpenAI&apos;s servers. The ABA has guidance saying that is probably a waiver of attorney-client privilege in most jurisdictions. Most lawyers do not realize this. The ones who do have stopped using cloud AI.</p>
+                <p>Accountants face the same wall. Tax documents, bank reconciliations, payroll, client financials. Any of it going into a third-party LLM is a potential SOC 2 finding and a definite IRS Circular 230 problem if the information is ever subpoenaed from the model provider.</p>
+                <p>Therapists are the cleanest case. HIPAA is explicit. Patient session notes cannot sit in a system the provider has access to without a Business Associate Agreement. No major LLM provider will sign a BAA for individual practitioners.</p>
+                <p>This is our wedge. Not &quot;AI is cool.&quot; Not &quot;productivity.&quot; The question &quot;how do I use AI without breaking my professional license.&quot;</p>
+                <p>Operator Uplift answers it three ways. First, agents run with encrypted local memory &mdash; session notes, draft briefs, and financial records never touch a third-party cloud unless you explicitly send them. Second, every tool action requires approval &mdash; the agent can not silently forward a client email to an outside service. Third, the audit trail is on-chain &mdash; when the bar or the IRS asks &quot;what did your AI do,&quot; you have a cryptographic record.</p>
+                <p>The three professions are our wedge because they share three traits: high hourly rate (they can pay $19/mo without thinking), strict confidentiality obligation (they need what we built), and a peer network (they tell each other about tools that work). One referral per customer is our growth loop.</p>
+            </div>
+        ),
+        'why-solana-for-audit-roots': (
+            <div className="space-y-6">
+                <p className="text-lg">Not every blockchain is a good audit layer. We looked at several. Solana fits.</p>
+                <p>An audit-root blockchain has three constraints. <strong>Finality has to be fast</strong> because the user is waiting for the action to be provable. <strong>Writes have to be cheap</strong> because we are committing a 40-byte payload every N actions, not moving tokens. <strong>Verifiability has to be public</strong> because the whole point is that anyone &mdash; not just us &mdash; can audit the history.</p>
+                <p><strong>Solana finality is 400 ms.</strong> Bitcoin is 60 minutes. Ethereum is 12&ndash;15 minutes plus congestion. Neither is acceptable if the user is watching the approval modal. Solana&apos;s 400ms means the audit commitment lands before they have clicked away.</p>
+                <p><strong>Solana writes are ~$0.00025.</strong> Ethereum L1 is $1&ndash;$20 per write. L2 rollups are $0.01&ndash;$0.10 and add a settlement delay. At our commit cadence (every 5 actions), Solana writes cost ~$0.00005 per audited action. At that price we never pass the cost to the user.</p>
+                <p><strong>Solana verifiability is public.</strong> Every tx signature we publish can be checked by anyone on solana.fm, Solscan, or a self-run RPC node. You do not have to trust us or Solana Labs. The bytes are public.</p>
+                <p>We evaluated Ethereum L2s (Base, Arbitrum). The cost math works, but the 1&ndash;2 minute wait for full finality through the bridge adds friction that is not worth the arguably-better institutional reputation of Ethereum.</p>
+                <p>We evaluated Celestia for data availability. The DA layer is excellent, but we do not need data availability &mdash; we need a commitment register. Posting the Merkle root to a single Solana account is cheaper and simpler.</p>
+                <p>The choice of Solana is not a crypto culture statement. It is an engineering match for the constraints.</p>
+            </div>
+        ),
         'why-i-built-an-ai-os': (
             <div className="space-y-6">
                 <p className="text-lg">Balaji told me to pivot.</p>
