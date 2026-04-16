@@ -32,14 +32,64 @@ export default function SecurityPage() {
 
     useEffect(() => {
         setEncConfigured(isEncryptionConfigured());
+        // Render local cache immediately
         setAuditLog(getAuditLog(100));
         setAuditStats(getAuditStats());
         setOnChainRecord(getOnChainRecord());
+
+        // Then fetch server-authoritative entries from Supabase
+        // and merge — newer server entries override the local cache.
+        const token = localStorage.getItem('token');
+        fetch('/api/audit/log?limit=100', {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+        })
+            .then(r => r.json())
+            .then(data => {
+                if (data?.entries && Array.isArray(data.entries)) {
+                    const serverEntries: AuditEntry[] = data.entries.map((e: { id: string; created_at: string; category: string; action: string; details?: string; agent_name?: string; approved?: boolean }) => ({
+                        id: e.id,
+                        timestamp: e.created_at,
+                        category: e.category as AuditEntry['category'],
+                        action: e.action,
+                        details: e.details || '',
+                        agentName: e.agent_name,
+                        approved: e.approved,
+                    }));
+                    setAuditLog(serverEntries);
+                    // Rebuild stats from server data
+                    const stats: Record<string, number> = {};
+                    for (const entry of serverEntries) {
+                        stats[entry.category] = (stats[entry.category] || 0) + 1;
+                    }
+                    setAuditStats(stats);
+                }
+            })
+            .catch(() => { /* stay on local cache */ });
     }, []);
 
     const refresh = () => {
         setAuditLog(getAuditLog(100));
         setAuditStats(getAuditStats());
+        const token = localStorage.getItem('token');
+        fetch('/api/audit/log?limit=100', {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+        })
+            .then(r => r.json())
+            .then(data => {
+                if (data?.entries && Array.isArray(data.entries)) {
+                    const serverEntries: AuditEntry[] = data.entries.map((e: { id: string; created_at: string; category: string; action: string; details?: string; agent_name?: string; approved?: boolean }) => ({
+                        id: e.id,
+                        timestamp: e.created_at,
+                        category: e.category as AuditEntry['category'],
+                        action: e.action,
+                        details: e.details || '',
+                        agentName: e.agent_name,
+                        approved: e.approved,
+                    }));
+                    setAuditLog(serverEntries);
+                }
+            })
+            .catch(() => {});
     };
 
     const handleClearLog = () => {

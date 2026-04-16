@@ -206,8 +206,7 @@ export function ToolApprovalModal({ toolCall, agentName, userId, queryPrice = 0,
                     <button
                         onClick={handleApprove}
                         disabled={isExecuting}
-                        className="flex-[2] h-10 rounded-xl flex items-center justify-center gap-2 text-white text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-60 shadow-[0_0_20px_rgba(231,118,48,0.2)]"
-                        style={{ background: 'linear-gradient(135deg, #F97316, #F97316)' }}
+                        className="flex-[2] h-10 rounded-xl flex items-center justify-center gap-2 bg-[#F97316] hover:bg-[#F97316]/90 text-white text-xs font-bold uppercase tracking-widest transition-colors disabled:opacity-60"
                     >
                         {isExecuting ? (
                             <><Loader2 size={14} className="animate-spin" /> Executing...</>
