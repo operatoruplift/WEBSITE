@@ -22,15 +22,20 @@ interface DockItem {
 }
 
 const DOCK_ITEMS: DockItem[] = [
-    { href: '/app', label: 'Recent', icon: Sparkles },
-    { href: '/chat', label: 'Uplift', icon: MessageSquare },
-    { href: '/marketplace', label: 'Hub', icon: LayoutGrid },
-    { href: '/swarm', label: 'Swarm', icon: Activity },
-    { href: '/security', label: 'Security', icon: Shield },
+    { href: '/chat', label: 'Chat', icon: MessageSquare },
+    { href: '/marketplace', label: 'Agents', icon: LayoutGrid },
     { href: '/memory', label: 'Memory', icon: ScrollText },
-    { href: '/integrations', label: 'Workspace', icon: Puzzle },
+    { href: '/security', label: 'Security', icon: Shield },
     { href: '/settings', label: 'Settings', icon: Settings },
     { href: '/profile', label: 'Profile', icon: User },
+];
+
+// Swarm, Workspace, Recent are advanced — shown only when
+// localStorage.getItem('advanced_mode') === '1'
+const ADVANCED_DOCK_ITEMS: DockItem[] = [
+    { href: '/app', label: 'Recent', icon: Sparkles },
+    { href: '/swarm', label: 'Swarm', icon: Activity },
+    { href: '/integrations', label: 'Workspace', icon: Puzzle },
 ];
 
 function DockIcon({ item, isActive }: { item: DockItem; isActive: boolean }) {
@@ -65,24 +70,35 @@ function DockIcon({ item, isActive }: { item: DockItem; isActive: boolean }) {
 
 export function CockpitSidebar() {
     const pathname = usePathname();
+    const [advancedMode, setAdvancedMode] = useState(false);
+
+    // Read advanced mode flag from localStorage on mount and poll for changes
+    // (cheap — only runs client-side and it's a single read)
+    useState(() => {
+        if (typeof window !== 'undefined') {
+            setAdvancedMode(localStorage.getItem('advanced_mode') === '1');
+        }
+    });
 
     const isActive = (href: string) => {
         if (href === '/app') return pathname === '/app';
         return pathname?.startsWith(href) ?? false;
     };
 
+    const items = advancedMode ? [...DOCK_ITEMS, ...ADVANCED_DOCK_ITEMS] : DOCK_ITEMS;
+
     return (
-        <aside className="w-14 flex-shrink-0 flex flex-col h-full relative z-20 border-r border-[#FAFAFA]/5 bg-[#0A0A0A]/50 backdrop-blur-sm hidden md:flex">
+        <aside className="w-14 flex-shrink-0 flex flex-col h-full relative z-20 border-r border-[#FAFAFA]/5 bg-[#0A0A0A]/50 hidden md:flex">
             {/* Logo at top */}
             <div className="flex items-center justify-center py-4">
-                <Link href="/" aria-label="Home">
+                <Link href="/chat" aria-label="Home">
                     <Logo className="w-7 h-7" />
                 </Link>
             </div>
 
             {/* Dock icons */}
             <nav className="flex-1 flex flex-col items-center gap-1.5 px-2 pt-2 overflow-y-auto">
-                {DOCK_ITEMS.map(item => (
+                {items.map(item => (
                     <DockIcon key={item.href} item={item} isActive={isActive(item.href)} />
                 ))}
             </nav>

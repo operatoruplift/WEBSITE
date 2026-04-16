@@ -129,7 +129,7 @@ export default function AgentDetailPage() {
             <div className="min-h-screen p-6 lg:p-8">
                 <div className="max-w-[1200px] mx-auto space-y-8">
                     {/* Header */}
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fadeInUp">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                             <Link href="/agents" className="p-2 rounded-lg bg-foreground/[0.04] text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
                                 <ArrowLeft size={18} />
@@ -138,7 +138,7 @@ export default function AgentDetailPage() {
                                 <div className="flex items-center gap-3 mb-1">
                                     <h1 className="text-2xl lg:text-3xl font-medium tracking-tight text-white">{agent.name}</h1>
                                     <Badge variant="default" className={`text-[10px] border ${statusColors[agent.status]}`}>
-                                        {agent.status === 'running' && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse mr-1.5 inline-block" />}
+                                        {agent.status === 'running' && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 inline-block" />}
                                         {agent.status.toUpperCase()}
                                     </Badge>
                                 </div>
@@ -158,7 +158,7 @@ export default function AgentDetailPage() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
                             { label: 'Sessions', value: agent.sessions.toLocaleString(), icon: MessageSquare, color: 'text-[#F97316]' },
-                            { label: 'Memory', value: agent.memoryUsage, icon: Brain, color: 'text-[#F59E0B]' },
+                            { label: 'Memory', value: agent.memoryUsage, icon: Brain, color: 'text-[#F97316]' },
                             { label: 'Model', value: agent.model.split(' ').pop(), icon: Zap, color: 'text-emerald-400' },
                             { label: 'Created', value: agent.createdAt, icon: Clock, color: 'text-gray-400' },
                         ].map(stat => {

@@ -59,10 +59,10 @@ export default function AnalyticsPage() {
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8">
                 <div className="max-w-7xl mx-auto space-y-8">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <BarChart3 size={16} className="text-[#F59E0B]" />
+                                <BarChart3 size={16} className="text-[#F97316]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Insights</span>
                                 <span className="text-[8px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded border bg-amber-400/10 text-amber-400 border-amber-400/20">DEMO</span>
                             </div>
@@ -83,7 +83,7 @@ export default function AnalyticsPage() {
                                 <Card key={m.label} variant="glass" className="card-animate" style={{ animationDelay: `${i * 80}ms` }}>
                                     <CardContent className="p-5">
                                         <div className="flex justify-between items-start mb-4">
-                                            <div className="w-10 h-10 rounded-xl bg-foreground/[0.04] border border-white/10 flex items-center justify-center"><Icon size={18} className="text-[#F59E0B]" /></div>
+                                            <div className="w-10 h-10 rounded-xl bg-foreground/[0.04] border border-white/10 flex items-center justify-center"><Icon size={18} className="text-[#F97316]" /></div>
                                             <div className={`flex items-center gap-1 text-xs font-mono ${m.positive ? 'text-emerald-400' : 'text-red-400'}`}>
                                                 {m.positive ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}{m.change}
                                             </div>
@@ -97,17 +97,17 @@ export default function AnalyticsPage() {
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <Card variant="glass" className="lg:col-span-2 card-animate" style={{ animationDelay: '300ms' }}>
+                        <Card variant="glass" className="lg:col-span-2" style={{ animationDelay: '300ms' }}>
                             <CardHeader className="border-b border-foreground/10 pb-4">
                                 <CardTitle className="flex items-center gap-2 text-sm text-gray-300 font-mono uppercase tracking-widest">
-                                    <Activity size={14} className="text-[#F59E0B]" /> {chartLabel}
+                                    <Activity size={14} className="text-[#F97316]" /> {chartLabel}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="p-6">
                                 <div className="flex items-end gap-1 h-40">
                                     {chartData.map((d, i) => (
                                         <div key={`${timeRange}-${i}`} className="flex-1 flex flex-col items-center gap-1 group">
-                                            <div className="w-full rounded-t transition-all duration-300 group-hover:bg-[#F59E0B] bg-[#F59E0B]/40" style={{ height: `${d.value}%` }} />
+                                            <div className="w-full rounded-t transition-all duration-300 group-hover:bg-[#F97316] bg-[#F97316]/40" style={{ height: `${d.value}%` }} />
                                             {showLabel(i) && <span className="text-[8px] text-gray-600 font-mono">{d.label}</span>}
                                         </div>
                                     ))}

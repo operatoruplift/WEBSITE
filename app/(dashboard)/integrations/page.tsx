@@ -141,7 +141,7 @@ export default function IntegrationsPage() {
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8">
                 <div className="max-w-7xl mx-auto space-y-8">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <Plug size={16} className="text-[#F97316]" />

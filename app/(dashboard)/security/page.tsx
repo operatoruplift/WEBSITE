@@ -14,7 +14,7 @@ import { getAuditLog, getAuditStats, clearAuditLog, getOnChainRecord, publishMer
 const CATEGORY_META: Record<string, { label: string; color: string; icon: typeof Shield }> = {
     calendar: { label: 'Calendar', color: 'text-[#F97316]', icon: Clock },
     gmail: { label: 'Gmail', color: 'text-[#F97316]', icon: FileText },
-    agent: { label: 'Agent', color: 'text-[#F59E0B]', icon: Activity },
+    agent: { label: 'Agent', color: 'text-[#F97316]', icon: Activity },
     approval: { label: 'Approval', color: 'text-emerald-400', icon: ShieldCheck },
     encryption: { label: 'Encryption', color: 'text-emerald-400', icon: Lock },
     auth: { label: 'Auth', color: 'text-blue-400', icon: Key },
@@ -72,10 +72,9 @@ export default function SecurityPage() {
     return (
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8 relative">
-                <div className="absolute top-0 right-0 w-[600px] h-[300px] bg-emerald-500/5 blur-[150px] rounded-full pointer-events-none" />
                 <div className="max-w-7xl mx-auto space-y-8 relative z-10">
                     {/* Header */}
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fadeInUp">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div>
                             <div className="flex items-center gap-3 mb-2">
                                 <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.2)] bg-gradient-to-br from-emerald-500 to-emerald-900 border border-emerald-500/50">
@@ -97,7 +96,7 @@ export default function SecurityPage() {
                     </div>
 
                     {/* Stats */}
-                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 animate-fadeInUp" style={{ animationDelay: '100ms' }}>
+                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-4" style={{ animationDelay: '100ms' }}>
                         {[
                             { label: 'Encryption', value: encConfigured ? 'AES-256-GCM' : 'Not Set', icon: Lock, color: encConfigured ? 'text-emerald-400' : 'text-amber-400', gradient: 'from-emerald-500/20 to-transparent', numeric: false },
                             { label: 'Key Derivation', value: encConfigured ? 'PBKDF2 100K' : '—', icon: Key, color: 'text-emerald-400', gradient: 'from-emerald-500/20 to-transparent', numeric: false },
@@ -123,7 +122,7 @@ export default function SecurityPage() {
                         })}
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-fadeInUp" style={{ animationDelay: '200ms' }}>
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6" style={{ animationDelay: '200ms' }}>
                         {/* Left column — encryption status + emergency controls */}
                         <div className="lg:col-span-4 space-y-6">
                             {/* Encryption Status */}

@@ -154,7 +154,7 @@ export default function OnboardingPage() {
                 ))}
             </div>
 
-            <div className="relative z-10 w-full max-w-2xl animate-fadeInUp">
+            <div className="relative z-10 w-full max-w-2xl">
                 {steps[step]}
             </div>
         </div>

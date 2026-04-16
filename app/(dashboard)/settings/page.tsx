@@ -109,6 +109,7 @@ export default function SettingsPage() {
         { id: 'security', label: 'Security', icon: Shield },
         { id: 'api', label: 'API Keys', icon: Key },
         { id: 'data', label: 'Data & Storage', icon: Database },
+        { id: 'advanced', label: 'Advanced', icon: Settings },
     ];
 
     const Toggle = ({ value, onChange }: { value: boolean; onChange: (v: boolean) => void }) => (
@@ -225,6 +226,7 @@ export default function SettingsPage() {
                                         <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20"><div className="flex items-center justify-between"><div><p className="text-sm text-red-400 font-medium">Delete All Data</p><p className="text-xs text-gray-500 mt-1">Clear all local storage data</p></div><GlowButton variant="outline" size="sm" className="border-red-500/50 text-red-400 hover:bg-red-500/10" onClick={handleDeleteAccount}>Delete</GlowButton></div></div>
                                     </div>
                                 )}
+                                {activeTab === 'advanced' && <AdvancedSettings showToast={showToast} />}
                                 <div className="mt-8 pt-6 border-t border-foreground/10 flex justify-end">
                                     <GlowButton onClick={handleSave} className="px-6">{saved ? <><Check size={16} className="mr-2" /> Saved</> : <><Save size={16} className="mr-2" /> Save Changes</>}</GlowButton>
                                 </div>
@@ -257,6 +259,47 @@ function PasswordChangeForm({ showToast }: { showToast: (msg: string, type: 'suc
             <div><label htmlFor="new-pw" className="text-sm text-gray-400 block mb-2">New Password</label><input id="new-pw" type="password" value={newPw} onChange={e => setNewPw(e.target.value)} className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="••••••••" aria-label="New password" /></div>
             <div><label htmlFor="confirm-pw" className="text-sm text-gray-400 block mb-2">Confirm Password</label><input id="confirm-pw" type="password" value={confirm} onChange={e => setConfirm(e.target.value)} className="w-full bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary/50 focus:outline-none" placeholder="••••••••" aria-label="Confirm password" /></div>
             <button onClick={handleSubmit} className="px-4 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary text-sm hover:bg-primary/20 transition-colors">Update Password</button>
+        </div>
+    );
+}
+
+function AdvancedSettings({ showToast }: { showToast: (msg: string, type: 'success' | 'info' | 'warning' | 'error') => void }) {
+    const [advancedMode, setAdvancedMode] = useState(false);
+
+    useEffect(() => {
+        setAdvancedMode(localStorage.getItem('advanced_mode') === '1');
+    }, []);
+
+    const toggleAdvanced = () => {
+        const next = !advancedMode;
+        setAdvancedMode(next);
+        localStorage.setItem('advanced_mode', next ? '1' : '0');
+        showToast(next ? 'Advanced mode enabled' : 'Advanced mode disabled', 'success');
+        // Reload to show/hide advanced dock items
+        setTimeout(() => window.location.reload(), 400);
+    };
+
+    return (
+        <div className="space-y-6">
+            <h2 className="text-lg font-medium text-white">Advanced</h2>
+            <p className="text-sm text-gray-400">
+                Power-user features for building and running multi-agent swarms. Hidden by default to keep the interface simple.
+            </p>
+            <div className="p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <p className="text-sm text-white">Advanced mode</p>
+                        <p className="text-xs text-gray-500 mt-1">Show Swarm, Recent, and Workspace tabs in the sidebar</p>
+                    </div>
+                    <button
+                        onClick={toggleAdvanced}
+                        className={`w-11 h-6 rounded-full flex items-center p-0.5 transition-colors ${advancedMode ? 'bg-primary/40 justify-end' : 'bg-foreground/10 justify-start'}`}
+                        aria-label="Toggle advanced mode"
+                    >
+                        <div className={`w-5 h-5 rounded-full transition-colors ${advancedMode ? 'bg-primary' : 'bg-foreground/40'}`} />
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }

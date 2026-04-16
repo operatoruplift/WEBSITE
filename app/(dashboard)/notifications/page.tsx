@@ -12,7 +12,7 @@ interface Notification { id: string; type: string; title: string; message: strin
 
 const INITIAL_NOTIFICATIONS: Notification[] = [
     { id: '1', type: 'security', title: 'Blackwall: 3 threats blocked', message: 'Prompt injection attempts neutralized from 2 IPs', time: '5m ago', read: false, icon: Shield, color: 'text-red-400' },
-    { id: '2', type: 'agent', title: 'CodePilot Pro updated', message: 'Version 2.4.1 available with TypeScript improvements', time: '1h ago', read: false, icon: Bot, color: 'text-[#F59E0B]' },
+    { id: '2', type: 'agent', title: 'CodePilot Pro updated', message: 'Version 2.4.1 available with TypeScript improvements', time: '1h ago', read: false, icon: Bot, color: 'text-[#F97316]' },
     { id: '3', type: 'chat', title: 'New message from Founder Ops', message: 'Weekly summary report is ready for review', time: '2h ago', read: false, icon: MessageSquare, color: 'text-[#F97316]' },
     { id: '4', type: 'workflow', title: 'Nightly sync completed', message: 'GitHub issue sync and embeddings updated successfully', time: '6h ago', read: true, icon: Workflow, color: 'text-emerald-400' },
     { id: '5', type: 'memory', title: 'Knowledge base indexed', message: '1,247 new documents processed and embedded', time: '1d ago', read: true, icon: Brain, color: 'text-primary' },
@@ -47,7 +47,7 @@ export default function NotificationsPage() {
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8">
                 <div className="max-w-[800px] mx-auto space-y-8">
-                    <div className="flex items-center justify-between animate-fadeInUp">
+                    <div className="flex items-center justify-between">
                         <div>
                             <div className="flex items-center gap-3 mb-2">
                                 <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-sky-500 to-blue-700 border border-sky-500/50"><Bell size={20} className="text-white" /></div>
@@ -74,7 +74,7 @@ export default function NotificationsPage() {
                                             <p className="text-xs text-gray-500 truncate">{n.message}</p>
                                         </div>
                                         <div className="flex items-center gap-2 shrink-0">
-                                            {!n.read && <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
+                                            {!n.read && <span className="w-2 h-2 rounded-full bg-primary" />}
                                             <button onClick={e => { e.stopPropagation(); deleteNotification(n.id); }} className="opacity-0 group-hover:opacity-100 p-1 text-gray-600 hover:text-red-400 transition-all"><Trash2 size={14} /></button>
                                         </div>
                                     </CardContent>

@@ -86,7 +86,7 @@ const PRESET_SWARMS: SwarmConfig[] = [
 
 const topologyLabels: Record<string, { label: string; color: string; desc: string }> = {
     sequential: { label: 'Sequential', color: 'text-emerald-400', desc: 'A → B → C' },
-    parallel: { label: 'Parallel', color: 'text-[#F59E0B]', desc: 'A | B | C → D' },
+    parallel: { label: 'Parallel', color: 'text-[#F97316]', desc: 'A | B | C → D' },
     hierarchical: { label: 'Hierarchical', color: 'text-[#F97316]', desc: 'A → [B, C]' },
     debate: { label: 'Debate', color: 'text-red-400', desc: 'A ⟷ B → Judge' },
     council: { label: 'Council', color: 'text-amber-400', desc: '5 argue → review → chairman' },
@@ -261,7 +261,7 @@ export default function SwarmPage() {
 
     const statusIcon = (status: string) => {
         switch (status) {
-            case 'thinking': return <div className="w-2 h-2 rounded-full bg-[#F59E0B] animate-pulse" />;
+            case 'thinking': return <div className="w-2 h-2 rounded-full bg-[#F97316]" />;
             case 'executing': return <div className="w-2 h-2 rounded-full bg-[#F97316] animate-ping" />;
             case 'done': return <div className="w-2 h-2 rounded-full bg-emerald-400" />;
             case 'error': return <div className="w-2 h-2 rounded-full bg-red-400" />;
@@ -274,7 +274,7 @@ export default function SwarmPage() {
             <div className="min-h-screen p-6 lg:p-8">
                 <div className="max-w-7xl mx-auto space-y-8">
                     {/* Header */}
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <Network size={16} className="text-[#F97316]" />
@@ -291,7 +291,7 @@ export default function SwarmPage() {
 
                     {/* API key banner — always visible, dismissed when a real response comes back */}
                     {swarms.every(s => s.runs === 0) && (
-                        <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 animate-fadeInUp">
+                        <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20">
                             <Zap size={16} className="text-amber-400 shrink-0" />
                             <p className="text-sm text-gray-300 flex-1">
                                 <span className="text-amber-400 font-semibold">API key required</span> — swarm agents need an LLM provider key to execute. Add your Anthropic or OpenAI API key in{' '}
@@ -330,7 +330,7 @@ export default function SwarmPage() {
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         {[
                             { label: 'Total Swarms', value: swarms.length, icon: Network, color: 'text-[#F97316]' },
-                            { label: 'Total Agents', value: swarms.reduce((sum, s) => sum + s.agents.length, 0), icon: Bot, color: 'text-[#F59E0B]' },
+                            { label: 'Total Agents', value: swarms.reduce((sum, s) => sum + s.agents.length, 0), icon: Bot, color: 'text-[#F97316]' },
                             { label: 'Total Runs', value: swarms.reduce((sum, s) => sum + s.runs, 0), icon: Zap, color: 'text-emerald-400' },
                             { label: 'Topologies', value: new Set(swarms.map(s => s.topology)).size, icon: Settings, color: 'text-[#F97316]' },
                         ].map(stat => {
@@ -394,7 +394,7 @@ export default function SwarmPage() {
                                                 )}
                                                 <GlowButton size="sm" onClick={() => runSwarm(activeSwarm.id)}
                                                     disabled={activeSwarm.status === 'running'}>
-                                                    {activeSwarm.status === 'running' ? <><Zap size={14} className="mr-1 animate-pulse" /> Running...</> : <><Play size={14} className="mr-1" /> Run Swarm</>}
+                                                    {activeSwarm.status === 'running' ? <><Zap size={14} className="mr-1" /> Running...</> : <><Play size={14} className="mr-1" /> Run Swarm</>}
                                                 </GlowButton>
                                             </div>
                                         </CardTitle>

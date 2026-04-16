@@ -76,7 +76,7 @@ export default function MemoryPage() {
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8">
                 <div className="max-w-7xl mx-auto space-y-8">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <Brain size={16} className="text-[#F97316]" />
@@ -133,7 +133,7 @@ export default function MemoryPage() {
                         {[
                             { label: 'Memory Nodes', value: nodes.length, icon: Brain, color: 'text-[#F97316]' },
                             { label: 'Vector Embeddings', value: totalVectors.toLocaleString(), icon: Sparkles, color: 'text-[#F97316]' },
-                            { label: 'Sources Indexed', value: nodes.length, icon: Link2, color: 'text-[#F59E0B]' },
+                            { label: 'Sources Indexed', value: nodes.length, icon: Link2, color: 'text-[#F97316]' },
                             { label: 'Tags', value: [...new Set(nodes.flatMap(n => n.tags))].length, icon: Tag, color: 'text-emerald-400' },
                         ].map(stat => {
                             const Icon = stat.icon;
@@ -162,7 +162,7 @@ export default function MemoryPage() {
                             const config = typeConfig[node.type];
                             const Icon = config.icon;
                             return (
-                                <Card key={node.id} variant="glass" className="card-animate group hover:border-primary/30 transition-all" style={{ animationDelay: `${i * 60}ms` }}>
+                                <Card key={node.id} variant="glass" className="group hover:border-primary/30 transition-all" style={{ animationDelay: `${i * 60}ms` }}>
                                     <CardContent className="p-5">
                                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                             <div className="flex items-start gap-4 flex-1 min-w-0">
