@@ -4,6 +4,7 @@ import React from 'react';
 import { Scale, Calculator, Heart, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { FadeIn } from '@/src/components/Animators';
+import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
 
 const USE_CASES = [
@@ -32,45 +33,41 @@ const USE_CASES = [
 
 const UseCases: React.FC = () => {
     return (
-        <section className="w-full bg-[#0A0A0A] px-6 md:px-12 flex justify-center">
-            <div className="w-full max-w-[1200px] py-20">
-                <SectionHeader
-                    eyebrow="Who It's For"
-                    title="Built for professionals who can't afford data leaks"
-                    description="Every industry has confidential data. Operator Uplift keeps it local."
-                />
+        <Section>
+            <SectionHeader
+                eyebrow="Who It's For"
+                title="Built for professionals who can't afford data leaks"
+                description="Every industry has confidential data. Operator Uplift keeps it local."
+            />
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {USE_CASES.map((uc, i) => {
-                        const Icon = uc.icon;
-                        return (
-                            <FadeIn key={uc.role} delay={i * 150}>
-                                <div className="rounded-2xl border border-[#222222] bg-[#111111] p-8 h-full flex flex-col hover:border-[#F97316]/30 transition-all">
-                                    <div className="w-12 h-12 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center mb-5">
-                                        <Icon size={22} className="text-[#F97316]" />
-                                    </div>
-                                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#F97316] mb-2">{uc.role}</span>
-                                    <h3 className="text-lg font-semibold text-white mb-3">{uc.headline}</h3>
-                                    <p className="text-sm text-[#A1A1AA] leading-relaxed flex-1">{uc.description}</p>
-                                    <div className="mt-6 pt-4 border-t border-[#222222] flex items-center justify-between">
-                                        <span className="text-xs font-mono text-[#F97316]">{uc.stat}</span>
-                                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch">
+                {USE_CASES.map((uc, i) => {
+                    const Icon = uc.icon;
+                    return (
+                        <FadeIn key={uc.role} delay={i * 150}>
+                            <div className="rounded-2xl border border-[#222222] bg-[#111111] p-8 h-full flex flex-col text-left hover:border-[#F97316]/30 transition-colors">
+                                <div className="w-12 h-12 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center mb-5">
+                                    <Icon size={22} className="text-[#F97316]" />
                                 </div>
-                            </FadeIn>
-                        );
-                    })}
-                </div>
-
-                <FadeIn delay={500}>
-                    <div className="text-center mt-10">
-                        <Link href="/paywall"
-                            className="inline-flex items-center bg-[#F97316] text-white px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-[#F97316]/80 transition-colors shadow-[0_0_20px_rgba(249,115,22,0.3)]">
-                            Start Your Free Trial <ArrowRight size={16} className="ml-2" />
-                        </Link>
-                    </div>
-                </FadeIn>
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-[#F97316] mb-2">{uc.role}</span>
+                                <h3 className="text-lg font-semibold text-white mb-3">{uc.headline}</h3>
+                                <p className="text-sm text-[#A1A1AA] leading-relaxed flex-1">{uc.description}</p>
+                                <div className="mt-6 pt-4 border-t border-[#222222] flex items-center justify-between">
+                                    <span className="text-xs font-mono text-[#F97316]">{uc.stat}</span>
+                                </div>
+                            </div>
+                        </FadeIn>
+                    );
+                })}
             </div>
-        </section>
+
+            <FadeIn delay={500}>
+                <Link href="/paywall"
+                    className="inline-flex items-center bg-[#F97316] text-white px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-[#F97316]/90 transition-colors">
+                    Start Your Free Trial <ArrowRight size={16} className="ml-2" />
+                </Link>
+            </FadeIn>
+        </Section>
     );
 };
 
