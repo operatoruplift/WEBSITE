@@ -11,7 +11,7 @@ import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
 import { AnimatedCard, BorderBeam, Spotlight, NumberTicker } from '@/src/components/effects/MagicUI';
 
-interface MarketplaceAgent { id: string; name: string; author: string; description: string; category: string; rating: number; reviews: number; installs: string; price: 'free' | 'pro' | 'enterprise'; tags: string[]; avatar: string; featured?: boolean; trending?: boolean; verified?: boolean; }
+interface MarketplaceAgent { id: string; name: string; author: string; description: string; category: string; rating: number; reviews: number; installs: string; price: 'free' | 'pro' | 'enterprise'; tags: string[]; avatar: string; featured?: boolean; trending?: boolean; verified?: boolean; status?: 'stable' | 'llm_only' | 'beta'; }
 
 const CATEGORIES = ['All', 'Coding', 'Research', 'Data', 'Security', 'Voice', 'Finance', 'Content', 'DevOps'];
 const priceColors: Record<string, string> = { free: 'text-green-400 bg-green-400/10 border border-green-400/20', pro: 'text-[#F97316] bg-[#F97316]/10 border border-[#F97316]/20', enterprise: 'text-[#F97316] bg-[#F97316]/10 border border-[#F97316]/20' };
@@ -38,6 +38,7 @@ const fetchMarketplaceData = async (): Promise<{ agents: MarketplaceAgent[] }> =
                 featured: a.featured,
                 trending: a.trending,
                 verified: a.verified,
+                status: a.status || 'stable',
             })),
         };
     } catch {
@@ -146,7 +147,17 @@ export default function MarketplacePage() {
                                         <div className="w-12 h-12 flex-shrink-0 rounded-xl bg-foreground/[0.04] border border-white/10 flex items-center justify-center text-2xl">{agent.avatar}</div>
                                         <div className="flex-1 min-w-0 pt-0.5"><div className="flex items-center gap-1.5 mb-1"><h3 className="text-base font-semibold text-white tracking-tight truncate group-hover:text-[#F97316] transition-colors">{agent.name}</h3>{agent.verified && <Check size={12} className="text-[#F97316] shrink-0" />}{agent.trending && <TrendingUp size={12} className="text-orange-400 shrink-0" />}</div><p className="text-[10px] font-mono text-gray-500 uppercase tracking-wider truncate">{agent.author}</p></div>
                                     </div>
-                                    <p className="text-xs text-gray-400 leading-relaxed mb-6 line-clamp-3 flex-1 group-hover:text-gray-300 transition-colors">{agent.description}</p>
+                                    <p className="text-xs text-gray-400 leading-relaxed mb-3 line-clamp-3 flex-1 group-hover:text-gray-300 transition-colors">{agent.description}</p>
+                                    {agent.status === 'llm_only' && (
+                                        <div className="mb-3 text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded border bg-[#FAFAFA]/5 border-[#222222] text-[#A1A1AA] inline-flex items-center gap-1.5 self-start">
+                                            LLM only &middot; no external tools
+                                        </div>
+                                    )}
+                                    {agent.status === 'beta' && (
+                                        <div className="mb-3 text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded border bg-amber-500/10 border-amber-500/30 text-amber-400 inline-flex items-center gap-1.5 self-start">
+                                            Beta
+                                        </div>
+                                    )}
                                     <div className="mt-auto">
                                         <div className="flex items-center justify-between mb-3 text-[10px] font-mono border-t border-foreground/10 pt-3"><div className="flex items-center gap-3"><span className="text-yellow-400 flex items-center gap-1"><Star size={10} className="fill-yellow-400" /> {agent.rating}</span><span className="text-gray-500 flex items-center gap-1"><Download size={10} /> {agent.installs}</span></div><span className={`px-2 py-0.5 rounded uppercase tracking-widest ${priceColors[agent.price]}`}>{agent.price}</span></div>
                                         <button onClick={() => installAgent(agent.id, agent.name)} className={`w-full py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${installed.has(agent.id) ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-foreground/[0.04] text-gray-400 border border-foreground/10 hover:bg-primary/10 hover:text-primary hover:border-primary/20'}`}>
