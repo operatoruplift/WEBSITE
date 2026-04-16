@@ -16,6 +16,10 @@ const PUBLIC_ROUTES = [
     '/api/providers',
     '/api/cron/',
     '/api/auth/',
+    // Google OAuth callback is called by Google itself — no Privy token
+    // available. Security is enforced by the signed `state` param
+    // (lib/google/oauth-state.ts).
+    '/api/integrations/google/callback',
 ];
 
 export function middleware(request: NextRequest) {

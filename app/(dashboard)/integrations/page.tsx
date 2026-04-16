@@ -95,15 +95,32 @@ export default function IntegrationsPage() {
         if (typeof window === 'undefined') return;
         if (callbackHandled.current) return;
         const params = new URLSearchParams(window.location.search);
+
+        // Always clear the short-lived privy-token cookie we set before the
+        // redirect — we only need it during the OAuth flow.
+        const clearPrivyCookie = () => {
+            document.cookie = `privy-token=; Path=/; Max-Age=0; SameSite=Lax`;
+        };
+
         if (params.get('google') === 'connected') {
             callbackHandled.current = true;
+            clearPrivyCookie();
             setGoogleConnected(true);
             setConnectedIds(prev => { const next = new Set(prev); next.add('gmail'); next.add('gcal'); return next; });
             showToast('Google Calendar + Gmail connected!', 'success');
             window.history.replaceState({}, '', '/integrations');
         } else if (params.get('error')) {
             callbackHandled.current = true;
-            showToast(`Google connection failed: ${params.get('error')}`, 'error');
+            clearPrivyCookie();
+            const err = params.get('error') || 'unknown';
+            // Clean up known error codes into human language
+            const humanized =
+                err === 'not_authenticated' ? 'Your session expired during the Google redirect. Please try again.' :
+                err === 'invalid_state' ? 'Security check failed — please start the Google connection again.' :
+                err === 'missing_code_or_state' ? 'Google did not return a valid response. Please try again.' :
+                err === 'access_denied' ? 'You declined the Google consent prompt.' :
+                `Google connection failed: ${err}`;
+            showToast(humanized, 'error');
             window.history.replaceState({}, '', '/integrations');
         }
     }, [showToast]);
@@ -120,7 +137,20 @@ export default function IntegrationsPage() {
                 window.location.href = '/login';
                 return;
             }
-            window.location.href = `/api/integrations/google/connect?user_id=${encodeURIComponent(userId)}`;
+            // The Google connect endpoint is a top-level browser navigation,
+            // so the Authorization header isn't sent. We write the Privy JWT
+            // into a short-lived `privy-token` cookie BEFORE navigating so
+            // the middleware + route handler can verify it.
+            //
+            // SameSite=Lax so it survives the round-trip via Google (Google
+            // redirects back to /callback via a GET — Lax allows this).
+            // Secure set when on HTTPS. Max-Age 5 minutes — only needs to
+            // live for the duration of the OAuth flow.
+            if (typeof document !== 'undefined') {
+                const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+                document.cookie = `privy-token=${token}; Path=/; Max-Age=300; SameSite=Lax${secure}`;
+            }
+            window.location.href = '/api/integrations/google/connect';
             return;
         }
 
