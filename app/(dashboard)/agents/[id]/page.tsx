@@ -3,12 +3,110 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Bot, ArrowLeft, Play, Pause, Trash2, Star, Settings, MessageSquare, Clock, Zap, Brain, Shield, Save, Activity } from 'lucide-react';
+import { Bot, ArrowLeft, Play, Pause, Trash2, Star, Settings, MessageSquare, Clock, Zap, Brain, Shield, Save, Activity, FileJson, KeyRound, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
+
+/**
+ * Map a display agent name/id to its published registration slug.
+ * Only Calendar and Gmail have /agents/{slug}.json right now.
+ */
+function getRegistrationSlug(agent: { id: string; name: string; tools?: string[] }): string | null {
+    const id = agent.id.toLowerCase();
+    const name = agent.name.toLowerCase();
+    if (id.includes('calendar') || name.includes('calendar')) return 'calendar';
+    if (id.includes('gmail') || name.includes('gmail') || name.includes('email')) return 'gmail';
+    if (agent.tools?.some(t => t.toLowerCase() === 'calendar')) return 'calendar';
+    if (agent.tools?.some(t => t.toLowerCase() === 'gmail')) return 'gmail';
+    return null;
+}
+
+/**
+ * Verify panel — shown only on agents that have a registration
+ * document. Links to the ERC-8004-style manifest and the receipt
+ * public key so a judge can verify both without leaving this page.
+ */
+function VerifyPanel({ slug }: { slug: string }) {
+    const [checksum, setChecksum] = useState<string | null>(null);
+    const [pubkey, setPubkey] = useState<string | null>(null);
+
+    useEffect(() => {
+        // Fetch registration to display checksum
+        fetch(`/agents/${slug}.json`)
+            .then(r => r.ok ? r.json() : null)
+            .then((d: { checksum?: string } | null) => setChecksum(d?.checksum || null))
+            .catch(() => setChecksum(null));
+
+        fetch('/api/receipts/public-key')
+            .then(r => r.ok ? r.json() : null)
+            .then((d: { public_key_base64?: string } | null) => setPubkey(d?.public_key_base64 || null))
+            .catch(() => setPubkey(null));
+    }, [slug]);
+
+    return (
+        <Card variant="glass" className="border-[#F97316]/20">
+            <CardHeader className="border-b border-foreground/10 pb-4">
+                <CardTitle className="flex items-center gap-2 text-sm font-mono text-[#F97316] uppercase tracking-widest">
+                    <CheckCircle2 size={14} /> Verify Agent
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-3">
+                <p className="text-xs text-gray-400 leading-relaxed">
+                    This agent publishes an ERC-8004-style registration document and signs every paid action with an ed25519 key. Both are independently verifiable.
+                </p>
+
+                <a
+                    href={`/agents/${slug}.json`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-3 p-3 rounded-xl bg-foreground/[0.03] border border-foreground/10 hover:border-[#F97316]/30 transition-colors"
+                >
+                    <FileJson size={16} className="text-[#F97316] mt-0.5 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                        <div className="text-sm font-semibold text-white flex items-center gap-1.5">
+                            Agent manifest <ExternalLink size={11} className="text-[#52525B]" />
+                        </div>
+                        <div className="text-[11px] text-gray-500 font-mono truncate">/agents/{slug}.json</div>
+                        {checksum && (
+                            <div className="text-[10px] text-[#52525B] font-mono mt-1.5 break-all">
+                                sha256: <span className="text-[#A1A1AA]">{checksum.slice(0, 32)}…</span>
+                            </div>
+                        )}
+                    </div>
+                </a>
+
+                <a
+                    href="/api/receipts/public-key"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-3 p-3 rounded-xl bg-foreground/[0.03] border border-foreground/10 hover:border-[#F97316]/30 transition-colors"
+                >
+                    <KeyRound size={16} className="text-[#F97316] mt-0.5 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                        <div className="text-sm font-semibold text-white flex items-center gap-1.5">
+                            Receipt public key <ExternalLink size={11} className="text-[#52525B]" />
+                        </div>
+                        <div className="text-[11px] text-gray-500 font-mono truncate">/api/receipts/public-key</div>
+                        {pubkey && (
+                            <div className="text-[10px] text-[#52525B] font-mono mt-1.5 break-all">
+                                ed25519: <span className="text-[#A1A1AA]">{pubkey.slice(0, 32)}…</span>
+                            </div>
+                        )}
+                    </div>
+                </a>
+
+                <p className="text-[10px] text-[#52525B] leading-relaxed">
+                    Verify a receipt: take the signed JSON from{' '}
+                    <Link href="/security" className="text-[#F97316] hover:underline">Security</Link>
+                    , canonicalize the <code className="text-[#A1A1AA]">receipt</code> field, and ed25519-verify against the public key.
+                </p>
+            </CardContent>
+        </Card>
+    );
+}
 
 interface AgentConfig {
     id: string;
@@ -218,6 +316,12 @@ export default function AgentDetailPage() {
                                     </div>
                                 </CardContent>
                             </Card>
+
+                            {/* Verify panel — only for agents with a published registration doc */}
+                            {(() => {
+                                const slug = getRegistrationSlug(agent);
+                                return slug ? <VerifyPanel slug={slug} /> : null;
+                            })()}
 
                             {/* Chat shortcut */}
                             <Card variant="glass" className="group cursor-pointer hover:border-primary/20 transition-all" onClick={() => router.push('/chat')}>
