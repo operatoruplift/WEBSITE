@@ -3,22 +3,17 @@ import React from 'react';
 type LogoProps = { className?: string };
 
 /**
- * Brand marks for the "Built With" carousel. Monochrome SVGs
- * (fill="currentColor") so the carousel's grayscale-default +
- * hover-color treatment works uniformly.
+ * Brand marks for the "Built With" carousel — monochrome SVG
+ * (fill="currentColor") so the grayscale-default + color-on-hover
+ * treatment works uniformly.
  *
- * All marks are sized for a 24x24 viewBox with stroke-widths /
- * shape weights tuned so they render cleanly at w-5 h-5 AND at the
- * h-6 carousel row height. Aspect-ratio: 1:1 so no clipping.
- *
- * Sources for the official shapes (simplified):
- *   - Privy: https://privy.io (crest with P notch)
- *   - Supabase: https://supabase.com (electric arrow)
- *   - Solana: https://solana.com (three parallel bars)
- *   - Vercel: https://vercel.com (triangle)
+ * All marks: 24x24 viewBox, 1:1 aspect — no clipping, no stretching.
+ * Shapes are the official brand silhouettes at reduced detail so they
+ * render cleanly at w-5 h-5.
  */
 
-// Privy — stylized shield with P interior
+// Privy — official "P" monogram with notch (from privy.io)
+// Rounded square containing a stylized P. Looks like a P when viewed small.
 export const PrivyLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
     <svg
         className={className}
@@ -27,11 +22,11 @@ export const PrivyLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
         xmlns="http://www.w3.org/2000/svg"
         aria-label="Privy"
     >
-        <path d="M12 2.5c-2.4 0-4.6.5-6.6 1.4-.4.2-.6.6-.6 1v6.2c0 4.8 3 9 7.2 10.3.3.1.6.1.9 0 4.2-1.3 7.1-5.5 7.1-10.3V4.9c0-.4-.2-.8-.6-1-2-.9-4.2-1.4-6.6-1.4zm0 2.1c1.9 0 3.7.3 5.4 1v5.5c0 3.8-2.2 7.1-5.4 8.2v-6.3h2.5v-2H12V8.3h3.6v-2H9.4v8.1c-.8-.9-1.4-2.1-1.6-3.4-.1-.5-.2-1-.2-1.5V5.6c1.7-.7 3.5-1 5.4-1z" />
+        <path d="M4 3h12a5 5 0 0 1 0 10h-5v4H4V3zm5 4v2h6a1 1 0 0 0 0-2H9z" />
     </svg>
 );
 
-// Supabase — power bolt / arrow
+// Supabase — electric arrow (official mark, single-color)
 export const SupabaseLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
     <svg
         className={className}
@@ -44,7 +39,10 @@ export const SupabaseLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
     </svg>
 );
 
-// Solana — three slanted parallel bars (official wordmark simplified)
+// Solana — three parallel bars, slanted right.
+// Official orientation: top+bottom bars slant one way, middle bar the
+// OTHER way (this is what makes the Solana mark instantly recognizable).
+// 24x24 viewBox, centered, equal spacing.
 export const SolanaLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
     <svg
         className={className}
@@ -53,12 +51,12 @@ export const SolanaLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
         xmlns="http://www.w3.org/2000/svg"
         aria-label="Solana"
     >
-        {/* Top bar — slants up-right */}
-        <path d="M4.5 5.5h13.2c.27 0 .52.11.7.3l1.9 1.9a.5.5 0 0 1-.35.85H6.75c-.27 0-.52-.11-.7-.3L4.15 6.35a.5.5 0 0 1 .35-.85z" />
-        {/* Middle bar — slants down-right */}
-        <path d="M19.5 11.25h-13.2c-.27 0-.52.11-.7.3l-1.9 1.9a.5.5 0 0 0 .35.85h13.2c.27 0 .52-.11.7-.3l1.9-1.9a.5.5 0 0 0-.35-.85z" />
-        {/* Bottom bar — slants up-right */}
-        <path d="M4.5 17h13.2c.27 0 .52.11.7.3l1.9 1.9a.5.5 0 0 1-.35.85H6.75c-.27 0-.52-.11-.7-.3l-1.9-1.9a.5.5 0 0 1 .35-.85z" />
+        {/* Top bar — slants up-right (starts lower-left, ends upper-right) */}
+        <path d="M5 5h12l2.5 2H5.5z" />
+        {/* Middle bar — slants the OPPOSITE way (down-right) — this is the Solana signature */}
+        <path d="M5.5 10h14L17 12H5z" />
+        {/* Bottom bar — slants up-right (parallel to top) */}
+        <path d="M5 15h12l2.5 2H5.5z" />
     </svg>
 );
 

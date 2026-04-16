@@ -88,14 +88,18 @@ const Pricing: React.FC = () => {
                         const CtaIcon = tier.ctaIcon;
                         return (
                             <FadeIn key={tier.name} delay={i * 100}>
-                                <div className={`relative rounded-2xl p-8 h-full flex flex-col ${
+                                {/* overflow-hidden on the card prevents the badge from escaping
+                                    the rounded container on any breakpoint. The badge itself
+                                    also uses safe padding that fits inside even the narrowest
+                                    mobile card (375px). */}
+                                <div className={`relative overflow-hidden rounded-2xl p-8 h-full flex flex-col ${
                                     tier.highlight
                                         ? 'border-2 border-[#F97316]/40 bg-[#111111]'
                                         : 'border border-[#222222] bg-[#111111]'
                                 }`}>
                                     {tier.highlight && (
-                                        <div className="absolute top-0 right-0 px-4 py-1.5 bg-[#F97316] text-white text-[10px] font-bold uppercase tracking-widest rounded-bl-xl flex items-center gap-1.5">
-                                            <Crown size={12} /> Recommended
+                                        <div className="absolute top-0 right-0 px-3 py-1 bg-[#F97316] text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-widest rounded-bl-lg flex items-center gap-1 max-w-[70%] truncate">
+                                            <Crown size={11} className="shrink-0" /> <span className="truncate">Recommended</span>
                                         </div>
                                     )}
 

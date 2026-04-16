@@ -24,7 +24,22 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
     try {
-        const verified = await verifySession(request);
+        let verified;
+        try {
+            verified = await verifySession(request);
+        } catch (authErr) {
+            const code = authErr instanceof Error ? authErr.message : 'token_invalid';
+            return NextResponse.json({
+                error: code,
+                reason: 'auth_failed',
+                recovery: 'reauth',
+                message: code === 'token_expired'
+                    ? 'Your session expired. Please re-login.'
+                    : code.startsWith('malformed_token')
+                        ? 'Your auth token is invalid. Please re-login.'
+                        : 'Authentication failed. Please re-login.',
+            }, { status: 401 });
+        }
         const body = await request.json();
         const { action, tx_signature, invoice_reference } = body;
 

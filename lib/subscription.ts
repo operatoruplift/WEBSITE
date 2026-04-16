@@ -21,13 +21,21 @@ export interface SubscriptionStatus {
 const FREE_STATUS: SubscriptionStatus = { tier: 'free', active: false, expiresAt: null, reason: 'no_active_subscription', source: 'supabase_none' };
 
 /**
- * Emails allowed to bypass the paywall (comma-separated in PAYWALL_BYPASS_EMAILS).
- * Works at runtime — no build-time caching. Safe in production if the env var
- * is only set on staging / for specific accounts.
+ * Emails / userIds allowed to bypass the paywall.
+ * Both work at runtime (no build-time caching).
+ *
+ * PAYWALL_BYPASS_EMAILS — comma-separated email list (lowercased match)
+ * PAYWALL_BYPASS_USER_IDS — comma-separated Privy DIDs (preferred; stable
+ *   even if the user changes their email)
  */
 function bypassEmails(): string[] {
     const raw = process.env.PAYWALL_BYPASS_EMAILS || '';
     return raw.split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
+}
+
+function bypassUserIds(): string[] {
+    const raw = process.env.PAYWALL_BYPASS_USER_IDS || '';
+    return raw.split(',').map(s => s.trim()).filter(Boolean);
 }
 
 export function isBypassAllEnabled(): boolean {
@@ -40,13 +48,23 @@ export function isEmailBypassed(email: string | null | undefined): boolean {
     return allowed.includes(email.toLowerCase());
 }
 
+export function isUserIdBypassed(userId: string | null | undefined): boolean {
+    if (!userId) return false;
+    return bypassUserIds().includes(userId);
+}
+
 export async function checkSubscription(userId: string, email?: string): Promise<SubscriptionStatus> {
     // 1. Global bypass (staging/dev) — evaluated at request time
     if (isBypassAllEnabled()) {
         return { tier: 'pro', active: true, expiresAt: null, source: 'bypass_all' };
     }
 
-    // 2. Per-email bypass (specific testers/admins)
+    // 2. Per-userId bypass (preferred — stable across email changes)
+    if (isUserIdBypassed(userId)) {
+        return { tier: 'pro', active: true, expiresAt: null, source: 'bypass_email' };
+    }
+
+    // 3. Per-email bypass
     if (email && isEmailBypassed(email)) {
         return { tier: 'pro', active: true, expiresAt: null, source: 'bypass_email' };
     }

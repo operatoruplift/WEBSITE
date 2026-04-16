@@ -39,8 +39,8 @@ const Compliance: React.FC = () => {
                     return (
                         <FadeIn key={item.title} delay={i * 100}>
                             <div className="p-6 rounded-2xl border border-[#222222] bg-[#111111] text-center h-full hover:border-[#F97316]/30 transition-colors flex flex-col items-center">
-                                <div className="w-12 h-12 rounded-xl bg-[#FAFAFA]/5 border border-[#222222] flex items-center justify-center mb-4">
-                                    <Icon size={22} className="text-[#A1A1AA]" />
+                                <div className="w-12 h-12 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center mb-4">
+                                    <Icon size={22} className="text-[#F97316]" />
                                 </div>
                                 <h3 className="text-lg font-medium text-[#FAFAFA] mb-2">{item.title}</h3>
                                 <p className="text-sm text-[#A1A1AA] leading-relaxed">{item.description}</p>

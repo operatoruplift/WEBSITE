@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Shield, Zap, Check, ArrowRight, Crown, Lock, Copy, ExternalLink, AlertTriangle } from 'lucide-react';
 import { Logo } from '@/src/components/Icons';
 
-type PayState = 'idle' | 'creating_invoice' | 'awaiting_payment' | 'confirming' | 'active' | 'failed';
+type PayState = 'idle' | 'creating_invoice' | 'awaiting_payment' | 'confirming' | 'active' | 'failed' | 'reauth_required';
 
 interface Invoice {
     invoice_reference: string;
@@ -44,7 +44,14 @@ export default function PaywallPage() {
             });
             if (!res.ok) {
                 const err = await res.json().catch(() => ({ error: 'unknown' }));
-                setErrorMsg(err.error || `Failed (${res.status})`);
+                // 401 with recovery: reauth → show a clean re-login CTA,
+                // don't leave the user staring at "Invalid Compact JWS"
+                if (res.status === 401 && (err.recovery === 'reauth' || err.reason === 'auth_failed')) {
+                    setErrorMsg(err.message || 'Your session is invalid. Please re-login.');
+                    setPayState('reauth_required');
+                    return;
+                }
+                setErrorMsg(err.message || err.error || `Failed (${res.status})`);
                 setPayState('failed');
                 return;
             }
@@ -251,6 +258,29 @@ export default function PaywallPage() {
                                     className="w-full h-10 rounded-xl bg-[#FAFAFA]/5 hover:bg-[#FAFAFA]/10 border border-[#222222] text-white text-sm font-medium transition-colors"
                                 >
                                     Try again
+                                </button>
+                            </div>
+                        )}
+
+                        {payState === 'reauth_required' && (
+                            <div className="space-y-3">
+                                <div className="p-3 rounded-xl bg-amber-500/5 border border-amber-500/30 flex items-start gap-2">
+                                    <AlertTriangle size={14} className="text-amber-400 mt-0.5 shrink-0" />
+                                    <div>
+                                        <p className="text-xs text-amber-300 font-semibold">Auth token invalid</p>
+                                        <p className="text-[11px] text-[#A1A1AA] mt-0.5">{errorMsg || 'Please re-login.'}</p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        // Clear stale token and send user to login
+                                        localStorage.removeItem('token');
+                                        localStorage.removeItem('user');
+                                        router.push('/login?returnTo=/paywall');
+                                    }}
+                                    className="w-full h-11 rounded-xl bg-[#F97316] hover:bg-[#F97316]/90 text-white text-sm font-bold uppercase tracking-widest transition-colors"
+                                >
+                                    Re-login
                                 </button>
                             </div>
                         )}
