@@ -3,39 +3,75 @@ import React from 'react';
 type LogoProps = { className?: string };
 
 /**
- * Brand marks for the infrastructure stack shown in the "Built With"
- * carousel. Each is a simplified SVG — official marks at simplified
- * weights to render cleanly at w-5 h-5 and degrade to grayscale.
+ * Brand marks for the "Built With" carousel. Monochrome SVGs
+ * (fill="currentColor") so the carousel's grayscale-default +
+ * hover-color treatment works uniformly.
  *
- * These are deliberately monochrome (fill="currentColor") so the
- * carousel's default grayscale + hover-color treatment works.
+ * All marks are sized for a 24x24 viewBox with stroke-widths /
+ * shape weights tuned so they render cleanly at w-5 h-5 AND at the
+ * h-6 carousel row height. Aspect-ratio: 1:1 so no clipping.
+ *
+ * Sources for the official shapes (simplified):
+ *   - Privy: https://privy.io (crest with P notch)
+ *   - Supabase: https://supabase.com (electric arrow)
+ *   - Solana: https://solana.com (three parallel bars)
+ *   - Vercel: https://vercel.com (triangle)
  */
 
-// Privy — stylized P
+// Privy — stylized shield with P interior
 export const PrivyLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-        <path d="M5 3h7.5a5.5 5.5 0 0 1 0 11H8v7H5V3zm3 3v5h4.5a2.5 2.5 0 0 0 0-5H8z" />
+    <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Privy"
+    >
+        <path d="M12 2.5c-2.4 0-4.6.5-6.6 1.4-.4.2-.6.6-.6 1v6.2c0 4.8 3 9 7.2 10.3.3.1.6.1.9 0 4.2-1.3 7.1-5.5 7.1-10.3V4.9c0-.4-.2-.8-.6-1-2-.9-4.2-1.4-6.6-1.4zm0 2.1c1.9 0 3.7.3 5.4 1v5.5c0 3.8-2.2 7.1-5.4 8.2v-6.3h2.5v-2H12V8.3h3.6v-2H9.4v8.1c-.8-.9-1.4-2.1-1.6-3.4-.1-.5-.2-1-.2-1.5V5.6c1.7-.7 3.5-1 5.4-1z" />
     </svg>
 );
 
-// Supabase — two-tone arrow (rendered as single fill)
+// Supabase — power bolt / arrow
 export const SupabaseLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-        <path d="M13.3 1.8c.6-.7 1.8-.3 1.8.7v8.4h7.4c1 0 1.5 1.1.9 1.8l-8.6 10c-.6.7-1.8.3-1.8-.7v-8.4H1.6c-1 0-1.5-1.1-.9-1.8l12.6-10z" />
+    <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Supabase"
+    >
+        <path d="M13.976 1.805a1.05 1.05 0 0 1 1.847.66v8.07h7.054c.875 0 1.337 1.034.765 1.695l-8.8 10.155a1.05 1.05 0 0 1-1.847-.66v-8.07H5.942c-.874 0-1.337-1.034-.764-1.695l8.798-10.155z" />
     </svg>
 );
 
-// Solana — three parallel slanted bars
+// Solana — three slanted parallel bars (official wordmark simplified)
 export const SolanaLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-        <path d="M5 6.5h14l-2 2.5H3l2-2.5zm0 4.3h14l-2 2.5H3l2-2.5zm0 4.3h14l-2 2.5H3l2-2.5z" />
+    <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Solana"
+    >
+        {/* Top bar — slants up-right */}
+        <path d="M4.5 5.5h13.2c.27 0 .52.11.7.3l1.9 1.9a.5.5 0 0 1-.35.85H6.75c-.27 0-.52-.11-.7-.3L4.15 6.35a.5.5 0 0 1 .35-.85z" />
+        {/* Middle bar — slants down-right */}
+        <path d="M19.5 11.25h-13.2c-.27 0-.52.11-.7.3l-1.9 1.9a.5.5 0 0 0 .35.85h13.2c.27 0 .52-.11.7-.3l1.9-1.9a.5.5 0 0 0-.35-.85z" />
+        {/* Bottom bar — slants up-right */}
+        <path d="M4.5 17h13.2c.27 0 .52.11.7.3l1.9 1.9a.5.5 0 0 1-.35.85H6.75c-.27 0-.52-.11-.7-.3l-1.9-1.9a.5.5 0 0 1 .35-.85z" />
     </svg>
 );
 
-// Vercel — triangle
+// Vercel — equilateral triangle mark
 export const VercelLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 3l10 17H2L12 3z" />
+    <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Vercel"
+    >
+        <path d="M12 2 22.7 20.5H1.3L12 2z" />
     </svg>
 );
 
