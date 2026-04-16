@@ -71,8 +71,8 @@ const Hero: React.FC = () => {
           {/* CTAs */}
           <FadeIn delay={800}>
             <div className="flex flex-col sm:flex-row items-start gap-3 mb-8">
-              <Link href="/login"
-                className="inline-flex items-center px-6 py-3 bg-primary text-white font-bold text-sm rounded-lg hover:bg-primary/80 transition-all shadow-[0_0_20px_rgba(231,118,48,0.3)] hover:shadow-[0_0_30px_rgba(231,118,48,0.5)] uppercase tracking-wide">
+              <Link href="/paywall"
+                className="inline-flex items-center px-6 py-3 bg-primary text-white font-bold text-sm rounded-lg hover:bg-primary/90 transition-colors uppercase tracking-wide">
                 Get Early Access
                 <svg className="ml-2 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
               </Link>

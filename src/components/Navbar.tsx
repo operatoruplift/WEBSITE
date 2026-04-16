@@ -53,29 +53,31 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
             </a>
           </div>
           
-          <a 
-            href="https://github.com/operatoruplift/" 
-            target="_blank" 
-            rel="noreferrer"
-            className="flex items-center space-x-2 text-xs font-bold bg-white/5 text-white border border-white/10 px-3 py-2 rounded-sm hover:bg-white/10 transition-all uppercase tracking-wide"
-          >
-            <GitHubIcon className="w-4 h-4" />
-            <span className="hidden xl:inline">Open Source</span>
-          </a>
-          
-          <Link
-            href="/login"
-            className="text-xs font-bold bg-primary text-white px-3 lg:px-4 py-2 rounded-sm hover:bg-primary/80 transition-colors uppercase tracking-wide whitespace-nowrap shadow-[0_0_12px_rgba(231,118,48,0.3)]"
-          >
-            Get Early Access
-          </Link>
+          <div className="flex items-center gap-3">
+            <a
+              href="https://github.com/operatoruplift/"
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 h-9 px-3 text-xs font-bold bg-white/5 text-white border border-white/10 rounded-sm hover:bg-white/10 transition-colors uppercase tracking-wide"
+            >
+              <GitHubIcon className="w-4 h-4" />
+              <span className="hidden xl:inline">Open Source</span>
+            </a>
 
-          <Link
-            href="/contact"
-            className="text-xs font-bold bg-white/10 text-white border border-white/10 px-3 lg:px-4 py-2 rounded-sm hover:bg-white/20 transition-all uppercase tracking-wide whitespace-nowrap"
-          >
-            Contact
-          </Link>
+            <Link
+              href="/paywall"
+              className="inline-flex items-center h-9 px-4 text-xs font-bold bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors uppercase tracking-wide whitespace-nowrap"
+            >
+              Get Early Access
+            </Link>
+
+            <Link
+              href="/contact"
+              className="inline-flex items-center h-9 px-4 text-xs font-bold bg-white/10 text-white border border-white/10 rounded-sm hover:bg-white/20 transition-colors uppercase tracking-wide whitespace-nowrap"
+            >
+              Contact
+            </Link>
+          </div>
         </div>
 
         {/* Mobile Menu Button */}

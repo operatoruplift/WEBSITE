@@ -3,64 +3,59 @@
 import React from 'react';
 import { Shield, Globe, Eye } from 'lucide-react';
 import { FadeIn } from '@/src/components/Animators';
+import { SectionHeader } from '@/src/components/SectionHeader';
 
 const items = [
-  {
-    icon: Shield,
-    title: 'HIPAA Ready',
-    description: 'Your agents process sensitive data inside your firewall. Nothing leaves your environment.',
-  },
-  {
-    icon: Globe,
-    title: 'GDPR Compliant',
-    description: 'All data stays in your jurisdiction. No cross-border transfers. Full right to erasure.',
-  },
-  {
-    icon: Eye,
-    title: 'SOC 2 Ready',
-    description: 'Open-source runtime means anyone can audit exactly how your data is handled.',
-  },
+    {
+        icon: Shield,
+        title: 'HIPAA Ready',
+        description: 'Architecture supports HIPAA requirements — data stays in your environment, agents run in isolated sandboxes, every action is logged.',
+    },
+    {
+        icon: Globe,
+        title: 'GDPR Compliant',
+        description: 'All data stays in your jurisdiction. No cross-border transfers. Full right to erasure via local data wipe.',
+    },
+    {
+        icon: Eye,
+        title: 'Auditable by Design',
+        description: 'Open-source runtime. Every agent action is hashed, logged, and anchored to a Merkle root on Solana devnet.',
+    },
 ];
 
 const Compliance: React.FC = () => {
-  return (
-    <section className="w-full bg-[#0A0A0A] px-6 md:px-12 flex justify-center">
-      <div className="w-full max-w-[1200px] py-20">
-        <div className="text-center mb-12">
-          <FadeIn>
-            <div className="inline-flex items-center gap-3 mb-6">
-              <span className="h-px w-16 bg-emerald-400/40" />
-              <span className="text-xs font-bold tracking-[0.25em] text-emerald-400 uppercase">Compliance</span>
-              <span className="h-px w-16 bg-emerald-400/40" />
-            </div>
-          </FadeIn>
-          <h2 className="text-3xl md:text-4xl font-medium text-[#FAFAFA] mb-4 tracking-tight">
-            Built for Compliance
-          </h2>
-          <p className="text-[#A1A1AA] max-w-lg mx-auto">
-            Enterprise-grade privacy and security, built into every layer.
-          </p>
-        </div>
+    return (
+        <section className="w-full bg-[#0A0A0A] px-6 md:px-12 flex justify-center">
+            <div className="w-full max-w-[1200px] py-20">
+                <SectionHeader
+                    eyebrow="Compliance"
+                    title="Built for Compliance"
+                    description="Privacy and security built into the architecture — not bolted on."
+                />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {items.map((item, i) => {
-            const Icon = item.icon;
-            return (
-              <FadeIn key={item.title} delay={i * 100}>
-                <div className="p-6 rounded-2xl border border-[#222222] bg-[#111111] text-center h-full hover:border-emerald-400/30 transition-all">
-                  <div className="w-12 h-12 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center mx-auto mb-4">
-                    <Icon size={24} className="text-emerald-400" />
-                  </div>
-                  <h3 className="text-lg font-medium text-[#FAFAFA] mb-2">{item.title}</h3>
-                  <p className="text-sm text-[#A1A1AA] leading-relaxed">{item.description}</p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {items.map((item, i) => {
+                        const Icon = item.icon;
+                        return (
+                            <FadeIn key={item.title} delay={i * 100}>
+                                <div className="p-6 rounded-2xl border border-[#222222] bg-[#111111] text-center h-full hover:border-[#F97316]/30 transition-colors">
+                                    <div className="w-12 h-12 rounded-xl bg-[#FAFAFA]/5 border border-[#222222] flex items-center justify-center mx-auto mb-4">
+                                        <Icon size={22} className="text-[#A1A1AA]" />
+                                    </div>
+                                    <h3 className="text-lg font-medium text-[#FAFAFA] mb-2">{item.title}</h3>
+                                    <p className="text-sm text-[#A1A1AA] leading-relaxed">{item.description}</p>
+                                </div>
+                            </FadeIn>
+                        );
+                    })}
                 </div>
-              </FadeIn>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
+
+                <p className="text-center text-[11px] text-[#52525B] mt-8">
+                    Beta software. Compliance certifications (HIPAA / SOC 2 / GDPR) are architectural commitments — not formal audits. Full audit on the roadmap.
+                </p>
+            </div>
+        </section>
+    );
 };
 
 export default Compliance;
