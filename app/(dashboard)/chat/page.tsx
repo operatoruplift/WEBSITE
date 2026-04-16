@@ -17,7 +17,7 @@ interface ChatSession { id: string; title: string; messages: Message[]; createdA
 const MODELS = [
     { id: 'claude-opus-4-6', label: 'Claude Opus 4.6', provider: 'Anthropic', color: 'text-[#F97316]', badge: 'SMART' },
     { id: 'gpt-4.1', label: 'GPT-4.1', provider: 'OpenAI', color: 'text-emerald-400', badge: 'FAST' },
-    { id: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro', provider: 'Google', color: 'text-[#F59E0B]', badge: 'LONG CTX' },
+    { id: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro', provider: 'Google', color: 'text-[#F97316]', badge: 'LONG CTX' },
     { id: 'deepseek-v3', label: 'DeepSeek V3', provider: 'DeepSeek', color: 'text-amber-400', badge: 'OPEN' },
     { id: 'grok-3', label: 'Grok 3', provider: 'xAI', color: 'text-red-400', badge: 'REASON' },
 ];
@@ -31,7 +31,7 @@ const AGENTS = [
 const PROMPT_SUGGESTIONS = [
     { category: 'Code', icon: Code, color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20', prompts: ['Analyze my codebase for security issues', 'Write a REST API in TypeScript'] },
     { category: 'Research', icon: Brain, color: 'text-[#F97316] bg-[#F97316]/10 border-[#F97316]/20', prompts: ['Summarize recent AI research papers', 'Compare top vector databases'] },
-    { category: 'Write', icon: FileText, color: 'text-[#F59E0B] bg-[#F59E0B]/10 border-[#F59E0B]/20', prompts: ['Write a blog post about AI agents', 'Draft a technical README'] },
+    { category: 'Write', icon: FileText, color: 'text-[#F97316] bg-[#F97316]/10 border-[#F97316]/20', prompts: ['Write a blog post about AI agents', 'Draft a technical README'] },
     { category: 'Analyze', icon: Zap, color: 'text-amber-400 bg-amber-400/10 border-amber-400/20', prompts: ['Build an AI agent swarm workflow', 'Generate documentation for this code'] },
 ];
 
@@ -423,10 +423,9 @@ export default function ChatPage() {
     return (
         <MobilePageWrapper>
             <div className="flex h-[calc(100vh-48px)] relative">
-                <div className="absolute top-0 right-0 w-[400px] h-[300px] bg-[#F97316]/5 blur-[120px] rounded-full pointer-events-none z-0" />
                 <aside className="hidden md:flex w-72 flex-col border-r border-foreground/10 bg-foreground/[0.06] relative z-10 shrink-0">
                     <div className="p-4 border-b border-foreground/10 space-y-3">
-                        <GlowButton onClick={createNewSession} className="w-full justify-center bg-gradient-to-r from-[#F97316]/20 to-[#F59E0B]/20 border-[#F97316]/30 hover:from-[#F97316]/30 hover:to-[#F59E0B]/30 text-white h-10"><Plus size={16} className="mr-2" /> New Chat</GlowButton>
+                        <GlowButton onClick={createNewSession} className="w-full justify-center bg-gradient-to-r from-[#F97316]/20 to-[#F97316]/20 border-[#F97316]/30 hover:from-[#F97316]/30 hover:to-[#F97316]/30 text-white h-10"><Plus size={16} className="mr-2" /> New Chat</GlowButton>
                         <div className="relative"><Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" /><input value={sidebarSearch} onChange={e => setSidebarSearch(e.target.value)} placeholder="Search sessions..." aria-label="Search chat sessions" className="w-full bg-foreground/[0.04] border border-foreground/10 rounded-xl pl-9 pr-3 py-2 text-xs text-gray-400 placeholder-gray-600 focus:outline-none focus:border-white/20 transition-all" /></div>
                     </div>
                     <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-none">
@@ -487,7 +486,7 @@ export default function ChatPage() {
                         ) : (
                             <div className="p-4 md:p-8 space-y-8 max-w-4xl mx-auto">
                                 {activeSession.messages.map((msg, index) => (
-                                    <div key={msg.id} className={`flex gap-4 animate-fadeInUp ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`} style={{ animationDelay: `${Math.min(index * 30, 300)}ms` }}>
+                                    <div key={msg.id} className={`flex gap-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`} style={{ animationDelay: `${Math.min(index * 30, 300)}ms` }}>
                                         {msg.role === 'assistant' && <div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 bg-foreground/[0.04]"><Bot size={16} className="text-gray-400" /></div>}
                                         <div className={`group relative max-w-[80%] md:max-w-[72%] ${msg.role === 'user' ? 'order-first' : ''}`}>
                                             {msg.role === 'assistant' && msg.model && <p className="text-[10px] font-mono text-gray-600 mb-1 ml-1">{MODELS.find(m => m.id === msg.model)?.label || msg.model}</p>}
@@ -523,7 +522,7 @@ export default function ChatPage() {
                                         {msg.role === 'user' && <div className="h-8 w-8 rounded-full bg-foreground/[0.04] flex items-center justify-center shrink-0"><User size={16} className="text-white" /></div>}
                                     </div>
                                 ))}
-                                {isLoading && <div className="flex gap-4 animate-fadeInUp"><div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 bg-foreground/[0.04]">{councilProcessing ? <Brain size={16} className="text-[#F97316] animate-pulse" /> : <Bot size={16} className="text-gray-400" />}</div><div className="bg-foreground/[0.04] border border-foreground/10 rounded-xl rounded-bl-md px-4 py-3"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#F97316] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{councilProcessing ? '5 agents debating...' : `${activeModel.label} is thinking...`}</span></div></div></div>}
+                                {isLoading && <div className="flex gap-4"><div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 bg-foreground/[0.04]">{councilProcessing ? <Brain size={16} className="text-[#F97316]" /> : <Bot size={16} className="text-gray-400" />}</div><div className="bg-foreground/[0.04] border border-foreground/10 rounded-xl rounded-bl-md px-4 py-3"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#F97316] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{councilProcessing ? '5 agents debating...' : `${activeModel.label} is thinking...`}</span></div></div></div>}
                                 <div ref={messagesEndRef} />
                             </div>
                         )}
@@ -540,7 +539,7 @@ export default function ChatPage() {
                                     className="flex-1 bg-transparent text-white placeholder-gray-600 focus:outline-none resize-none text-[15px] leading-relaxed min-h-[40px] max-h-40" style={{ height: 'auto' }}
                                     onInput={e => { const t = e.currentTarget; t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight, 160) + 'px'; }} />
                                 <button onClick={() => showToast('Voice input coming soon', 'info')} aria-label="Voice input" className="p-2 rounded-xl text-gray-600 hover:text-gray-400 hover:bg-foreground/[0.06] transition-all shrink-0"><Mic size={18} /></button>
-                                <button onClick={handleSend} disabled={!input.trim() || isLoading} className="w-10 h-10 rounded-xl flex items-center justify-center transition-all shrink-0 disabled:opacity-40 disabled:cursor-not-allowed bg-primary hover:bg-primary/90 shadow-[0_0_15px_rgba(231,118,48,0.3)]">
+                                <button onClick={handleSend} disabled={!input.trim() || isLoading} className="w-10 h-10 rounded-xl flex items-center justify-center transition-all shrink-0 disabled:opacity-40 disabled:cursor-not-allowed bg-primary hover:bg-primary/90">
                                     {isLoading ? <Loader2 size={18} className="animate-spin text-white" /> : <Send size={18} className="text-white" />}
                                 </button>
                             </div>

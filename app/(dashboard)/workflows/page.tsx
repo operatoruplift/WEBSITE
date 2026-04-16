@@ -144,7 +144,7 @@ export default function WorkflowsPage() {
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8">
                 <div className="max-w-7xl mx-auto space-y-8">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <GitBranch size={16} className="text-[#F97316]" />
@@ -208,7 +208,7 @@ export default function WorkflowsPage() {
                         ) : workflows.map((wf, i) => {
                             const status = statusConfig[wf.status];
                             return (
-                                <Card key={wf.id} variant="glass" className="card-animate group hover:border-primary/30 transition-all" style={{ animationDelay: `${i * 80}ms` }}>
+                                <Card key={wf.id} variant="glass" className="group hover:border-primary/30 transition-all" style={{ animationDelay: `${i * 80}ms` }}>
                                     <CardContent className="p-5">
                                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                             <div className="flex items-start gap-4 flex-1 min-w-0">

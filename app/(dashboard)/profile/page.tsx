@@ -75,7 +75,7 @@ export default function ProfilePage() {
                     </div>
 
                     <Card variant="glass" className="overflow-hidden">
-                        <div className="h-32 bg-gradient-to-r from-[#F97316]/20 via-[#F97316]/20 to-[#F59E0B]/20 relative">
+                        <div className="h-32 bg-gradient-to-r from-[#F97316]/20 via-[#F97316]/20 to-[#F97316]/20 relative">
                             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxIiBjeT0iMSIgcj0iMSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIvPjwvc3ZnPg==')] opacity-50" />
                         </div>
                         <CardContent className="p-6 -mt-16 relative">

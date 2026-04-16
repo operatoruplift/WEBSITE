@@ -35,14 +35,14 @@ const fetchDashboardData = async () => {
         setTimeout(() => {
             resolve({
                 stats: [
-                    { id: '1', label: 'Active Agents', value: String(agentCount || 14), change: agentCount ? `${agentCount} installed` : '+3 this week', positive: true, icon: Bot, gradient: 'from-[#F59E0B]/20 to-[#F97316]/10' },
+                    { id: '1', label: 'Active Agents', value: String(agentCount || 14), change: agentCount ? `${agentCount} installed` : '+3 this week', positive: true, icon: Bot, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
                     { id: '2', label: 'Chat Sessions', value: String(chatCount || 8), change: chatCount ? 'Local storage' : 'Stable', positive: true, icon: Workflow, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
-                    { id: '3', label: 'Memory Bank Nodes', value: '12.4K', change: '+2.1K today', positive: true, icon: Brain, gradient: 'from-[#F97316]/20 to-[#F59E0B]/10' },
+                    { id: '3', label: 'Memory Bank Nodes', value: '12.4K', change: '+2.1K today', positive: true, icon: Brain, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
                     { id: '4', label: 'Security Threats Blocked', value: '47', change: '-12% vs yesterday', positive: true, icon: Shield, gradient: 'from-emerald-500/20 to-teal-500/10' },
                 ],
                 activity: [
                     { id: '101', type: 'security', title: 'Blackwall Blocked SQLi', description: 'Agent prompt injection attempt neutralised', time: '2m ago', icon: Shield, color: 'text-emerald-400' },
-                    { id: '102', type: 'agent', title: 'DeepRepo Orchestration', description: 'Recursive codebase scan completed on 3 repos', time: '14m ago', icon: Bot, color: 'text-[#F59E0B]' },
+                    { id: '102', type: 'agent', title: 'DeepRepo Orchestration', description: 'Recursive codebase scan completed on 3 repos', time: '14m ago', icon: Bot, color: 'text-[#F97316]' },
                     { id: '103', type: 'workflow', title: 'Nightly Sync Executed', description: 'GitHub issue sync and embeddings update', time: '1h ago', icon: Workflow, color: 'text-[#F97316]' },
                     { id: '104', type: 'memory', title: 'Knowledge Indexed', description: 'Zo.computer rules loaded to agent memory', time: '4h ago', icon: Brain, color: 'text-[#F97316]' },
                     { id: '105', type: 'chat', title: 'Founder Ops Briefing', description: 'Weekly roundup synthesized', time: '5h ago', icon: MessageSquare, color: 'text-gray-400' },
@@ -59,12 +59,12 @@ const fetchDashboardData = async () => {
 };
 
 const QUICK_ACTIONS = [
-    { label: 'Chat', href: '/chat', icon: MessageSquare, text: 'text-[#F59E0B]', bg: 'bg-[#F59E0B]/10' },
-    { label: 'Agent Store', href: '/marketplace', icon: Bot, text: 'text-[#F97316]', bg: 'bg-[#F97316]/10' },
-    { label: 'Builder', href: '/agents/builder', icon: Sparkles, text: 'text-[#F97316]', bg: 'bg-[#F97316]/10' },
-    { label: 'Swarm', href: '/swarm', icon: Network, text: 'text-[#F97316]', bg: 'bg-[#F97316]/10' },
-    { label: 'Blackwall', href: '/security', icon: Shield, text: 'text-rose-400', bg: 'bg-rose-400/10' },
-    { label: 'Settings', href: '/settings', icon: Code, text: 'text-emerald-400', bg: 'bg-emerald-400/10' },
+    { label: 'Chat', href: '/chat', icon: MessageSquare, text: 'text-foreground/70', bg: 'bg-foreground/[0.04]' },
+    { label: 'Agents', href: '/marketplace', icon: Bot, text: 'text-foreground/70', bg: 'bg-foreground/[0.04]' },
+    { label: 'Builder', href: '/agents/builder', icon: Sparkles, text: 'text-foreground/70', bg: 'bg-foreground/[0.04]' },
+    { label: 'Memory', href: '/memory', icon: Brain, text: 'text-foreground/70', bg: 'bg-foreground/[0.04]' },
+    { label: 'Security', href: '/security', icon: Shield, text: 'text-foreground/70', bg: 'bg-foreground/[0.04]' },
+    { label: 'Settings', href: '/settings', icon: Code, text: 'text-foreground/70', bg: 'bg-foreground/[0.04]' },
 ];
 
 export default function DashboardPage() {
@@ -102,18 +102,18 @@ export default function DashboardPage() {
         <MobilePageWrapper>
             <div className="min-h-screen p-6 lg:p-8">
                 <div className="max-w-7xl mx-auto space-y-8">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fadeInUp">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div className="relative z-10">
                             <div className="flex items-center gap-3 mb-2">
-                                <div className="w-10 h-10 rounded-xl flex items-center justify-center relative shadow-[0_0_20px_rgba(231,118,48,0.3)]">
+                                <div className="w-10 h-10 rounded-xl flex items-center justify-center relative">
                                     <Logo className="w-10 h-10" />
                                 </div>
                                 <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2 py-1 rounded-md text-[10px] uppercase tracking-widest font-mono flex items-center gap-1.5 backdrop-blur-md">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Uplift Core Online
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Uplift Core Online
                                 </div>
                             </div>
                             <h1 className="text-4xl lg:text-5xl font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-400">Good {greeting}, Commander.</h1>
-                            <p className="text-sm text-gray-400 mt-2 font-mono flex items-center gap-2"><Activity size={12} className="text-[#F59E0B]" /> Systems optimized. Monitoring {isLoading ? '...' : activity.length} critical events.</p>
+                            <p className="text-sm text-gray-400 mt-2 font-mono flex items-center gap-2"><Activity size={12} className="text-[#F97316]" /> Systems optimized. Monitoring {isLoading ? '...' : activity.length} critical events.</p>
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="text-right">
@@ -128,18 +128,18 @@ export default function DashboardPage() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
-                        {isLoading ? Array(4).fill(0).map((_, i) => <div key={i} className="h-32 rounded-2xl bg-foreground/[0.04] border border-foreground/10 animate-pulse" />) :
+                        {isLoading ? Array(4).fill(0).map((_, i) => <div key={i} className="h-32 rounded-2xl bg-foreground/[0.04] border border-foreground/10" />) :
                             stats.map((stat, i) => {
                                 const Icon = stat.icon;
                                 const numericValue = parseInt(stat.value.replace(/[^0-9]/g, ''), 10);
                                 const isNumeric = !isNaN(numericValue) && numericValue > 0;
                                 const suffix = stat.value.includes('K') ? 'K' : stat.value.includes('+') ? '+' : '';
                                 return (
-                                    <AnimatedCard key={stat.id} className="card-animate cursor-pointer" hoverGlow>
+                                    <AnimatedCard key={stat.id} className="cursor-pointer" hoverGlow>
                                         <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-[inherit]`} />
                                         <div className="relative z-10 p-5">
                                             <div className="flex justify-between items-start mb-4">
-                                                <div className="w-10 h-10 rounded-xl bg-foreground/[0.04] border border-foreground/10 flex items-center justify-center backdrop-blur-md group-hover:scale-110 group-hover:border-primary/30 transition-all duration-500"><Icon size={18} className="text-white" /></div>
+                                                <div className="w-10 h-10 rounded-xl bg-foreground/[0.04] border border-foreground/10 flex items-center justify-center backdrop-blur-md group- group-hover:border-primary/30 transition-all duration-500"><Icon size={18} className="text-white" /></div>
                                                 <Badge variant="default" className="bg-foreground/[0.04] border border-white/10 text-emerald-400 text-[10px] font-mono backdrop-blur-md">{stat.change}</Badge>
                                             </div>
                                             <div className="space-y-1">
@@ -164,7 +164,7 @@ export default function DashboardPage() {
                                         <Link key={action.label} href={action.href}>
                                             <Spotlight className="rounded-xl" fill={action.text.includes('rose') ? '#f43f5e' : action.text.includes('emerald') ? '#34d399' : '#F97316'}>
                                                 <div className="relative p-4 rounded-xl border border-foreground/10 bg-black/20 hover:bg-foreground/[0.06] transition-all duration-300 overflow-hidden flex items-center gap-3 cursor-pointer">
-                                                    <div className={`w-10 h-10 rounded-lg ${action.bg} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300`}><Icon size={18} className={action.text} /></div>
+                                                    <div className={`w-10 h-10 rounded-lg ${action.bg} flex items-center justify-center flex-shrink-0 group- transition-transform duration-300`}><Icon size={18} className={action.text} /></div>
                                                     <span className="text-sm font-medium text-gray-300 hover:text-white transition-colors">{action.label}</span>
                                                 </div>
                                             </Spotlight>
@@ -198,16 +198,16 @@ export default function DashboardPage() {
                             </Card>
                         </div>
                         <div className="space-y-6">
-                            <Card variant="glass" className="card-animate border-[#F59E0B]/20" style={{ animationDelay: '500ms', background: 'radial-gradient(circle at top right, rgba(0,212,255,0.05), transparent 70%)' }}>
+                            <Card variant="glass" className="border-[#F97316]/20" style={{ animationDelay: '500ms', background: 'radial-gradient(circle at top right, rgba(0,212,255,0.05), transparent 70%)' }}>
                                 <CardHeader className="pb-2"><CardTitle className="flex items-center justify-between text-xs font-mono text-gray-400 uppercase tracking-widest"><span className="flex items-center gap-2"><ServerIcon /> Core Infrastructure</span><span className="text-[8px] font-bold tracking-widest px-1.5 py-0.5 rounded border bg-amber-400/10 text-amber-400 border-amber-400/20 normal-case">DEMO</span></CardTitle></CardHeader>
                                 <CardContent>
-                                    {isLoading ? <div className="space-y-3">{[1,2,3,4].map(i => <div key={i} className="h-6 bg-foreground/[0.04] rounded animate-pulse" />)}</div> :
+                                    {isLoading ? <div className="space-y-3">{[1,2,3,4].map(i => <div key={i} className="h-6 bg-foreground/[0.04] rounded" />)}</div> :
                                         <div className="space-y-4 pt-2">
                                             {health.map((h, i) => (
                                                 <div key={i} className="flex items-center justify-between group">
                                                     <span className="text-xs text-gray-300 font-medium group-hover:text-white transition-colors">{h.label}</span>
                                                     <div className="flex items-center gap-2 bg-foreground/[0.04] border border-foreground/10 px-2 py-1 rounded-md backdrop-blur-sm">
-                                                        <span className={`w-1.5 h-1.5 rounded-full ${h.color} animate-pulse shadow-[0_0_8px_currentColor]`} />
+                                                        <span className={`w-1.5 h-1.5 rounded-full ${h.color} shadow-[0_0_8px_currentColor]`} />
                                                         <span className="text-[10px] font-mono text-gray-400">{h.status}</span>
                                                     </div>
                                                 </div>
@@ -220,8 +220,8 @@ export default function DashboardPage() {
                                     }
                                 </CardContent>
                             </Card>
-                            <Card variant="glass" className="card-animate group overflow-hidden" style={{ animationDelay: '600ms' }}>
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-amber-500/20 to-transparent blur-2xl" />
+                            <Card variant="glass" className="group overflow-hidden" style={{ animationDelay: '600ms' }}>
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#F97316]/20 to-transparent blur-2xl" />
                                 <CardContent className="p-6 relative z-10">
                                     <div className="flex items-center justify-between mb-4">
                                         <div className="flex items-center gap-2 text-xs font-mono text-gray-400 uppercase tracking-widest">

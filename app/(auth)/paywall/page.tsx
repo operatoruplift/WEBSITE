@@ -32,7 +32,7 @@ export default function PaywallPage() {
 
             if (res.ok) {
                 localStorage.setItem('subscription_tier', 'pro');
-                router.push('/app');
+                router.push('/chat');
             }
         } catch {
             // fallback

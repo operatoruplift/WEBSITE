@@ -1,7 +1,7 @@
 export default function DashboardLoading() {
     return (
         <div className="min-h-screen p-6 lg:p-8" style={{ background: '#050508' }}>
-            <div className="max-w-7xl mx-auto space-y-8 animate-pulse">
+            <div className="max-w-7xl mx-auto space-y-8">
                 {/* Header skeleton */}
                 <div className="flex items-end justify-between">
                     <div>
