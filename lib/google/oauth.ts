@@ -23,14 +23,24 @@ function getOAuth2Client() {
     );
 }
 
-/** Build the Google consent URL. `state` carries the user ID through the redirect. */
-export function getConsentUrl(userId: string): string {
+/**
+ * Build the Google consent URL.
+ *
+ * `state` should be an HMAC-signed token (from lib/google/oauth-state.ts)
+ * that binds the user id into a short-lived tamper-proof blob. The
+ * callback verifies this before exchanging the auth code.
+ *
+ * For backwards compatibility with the old (userId-as-state) call sites
+ * during deploy, we accept any string — callers are responsible for
+ * passing a signed state.
+ */
+export function getConsentUrl(signedState: string): string {
     const client = getOAuth2Client();
     return client.generateAuthUrl({
         access_type: 'offline',
         prompt: 'consent',
         scope: SCOPES,
-        state: userId,
+        state: signedState,
     });
 }
 
