@@ -123,6 +123,11 @@ const CONTENT: Record<string, React.ReactNode> = {
                 <li>Web search (via server-held Serper or Brave key).</li>
                 <li>Web fetch (reads any public URL, strips scripts and returns readable text).</li>
                 <li>Notes, tasks, reminders — stored in Supabase per user.</li>
+                <li>Tokens API (<code>tokens.search</code>, <code>tokens.price</code>, <code>tokens.risk</code>, <code>tokens.markets</code>) — Solana market + risk data via <code>api.tokens.xyz/v1</code>, server-held key.</li>
+            </ul>
+            <h2>Tier 2 tools (server-configured)</h2>
+            <ul>
+                <li><strong>iMessage</strong> via the Photon adapter — set <code>PHOTON_API_KEY</code> + <code>PHOTON_PROJECT_ID</code>, optionally <code>PHOTON_API_BASE</code> and <code>PHOTON_SEND_PATH</code> to point at your provider (default: LoopMessage). The route 503s honestly if not configured.</li>
             </ul>
             <h2>Post-May-15 (registered, coming soon)</h2>
             <p>Slack, Linear, Jira, Notion, GitHub, Drive, Stripe checkout, SMS. All listed in the tool registry as <code>comingSoon: true</code> so they appear in the picker with Approve disabled until we ship them.</p>

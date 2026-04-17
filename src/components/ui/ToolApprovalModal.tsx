@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { Shield, Calendar, Mail, Bell, Globe, NotebookPen, ListTodo, Check, X, Loader2, AlertTriangle, Coins, Sparkles } from 'lucide-react';
+import { Shield, Calendar, Mail, Bell, Globe, NotebookPen, ListTodo, Check, X, Loader2, AlertTriangle, Coins, Sparkles, MessageCircle } from 'lucide-react';
 import type { ToolCall, ToolResult } from '@/lib/toolCalls';
 import { executeToolCall, executeMock } from '@/lib/toolCalls';
 import { logAction } from '@/lib/auditLog';
@@ -25,6 +25,8 @@ const TOOL_META: Record<string, { label: string; icon: typeof Calendar; color: s
     web: { label: 'Web', icon: Globe, color: 'text-[#F97316]', risk: 'LOW' },
     notes: { label: 'Notes', icon: NotebookPen, color: 'text-[#F97316]', risk: 'LOW' },
     tasks: { label: 'Tasks', icon: ListTodo, color: 'text-[#F97316]', risk: 'LOW' },
+    tokens: { label: 'Tokens API', icon: Coins, color: 'text-[#F97316]', risk: 'LOW' },
+    imessage: { label: 'iMessage (Photon)', icon: MessageCircle, color: 'text-[#F97316]', risk: 'HIGH' },
 };
 
 const ACTION_LABELS: Record<string, string> = {

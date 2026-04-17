@@ -199,6 +199,46 @@ export const DEMO_TOOL_MOCKS: Record<string, Record<string, unknown>> = {
         scheduled: true,
         message: 'Nudge scheduled (simulated). Sign in to make it real.',
     },
+    'tokens.search': {
+        simulated: true,
+        query: 'demo',
+        results: [
+            { assetId: 'solana', symbol: 'SOL', name: 'Solana', category: 'crypto' },
+            { assetId: 'usdc', symbol: 'USDC', name: 'USD Coin', category: 'stablecoin' },
+        ],
+    },
+    'tokens.price': {
+        simulated: true,
+        assetId: 'solana',
+        interval: '1h',
+        candles: [
+            { t: Date.now() - 3 * 3600_000, o: 148.2, h: 149.8, l: 147.5, c: 149.0, v: 1200000 },
+            { t: Date.now() - 2 * 3600_000, o: 149.0, h: 150.5, l: 148.7, c: 150.1, v: 1400000 },
+            { t: Date.now() - 1 * 3600_000, o: 150.1, h: 151.2, l: 149.9, c: 150.6, v: 1100000 },
+        ],
+    },
+    'tokens.risk': {
+        simulated: true,
+        mint: 'Demo1111111111111111111111111111111111111111',
+        score: 72,
+        grade: 'B',
+        label: 'Low risk (simulated)',
+    },
+    'tokens.markets': {
+        simulated: true,
+        assetId: 'solana',
+        mint: 'So11111111111111111111111111111111111111112',
+        markets: [
+            { dex: 'Jupiter', pair: 'SOL/USDC', liquidity_usd: 45_200_000 },
+            { dex: 'Orca', pair: 'SOL/USDC', liquidity_usd: 22_800_000 },
+        ],
+    },
+    'imessage.send': {
+        simulated: true,
+        messageId: 'demo-imsg-0000000000',
+        provider: 'simulated-photon',
+        message: 'iMessage queued (simulated). Sign in + connect Photon to send for real.',
+    },
 };
 
 function isoTodayAt(hour: number, minute: number): string {
