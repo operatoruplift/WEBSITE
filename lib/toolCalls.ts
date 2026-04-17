@@ -14,7 +14,9 @@ export type ToolKind =
     | 'reminders'
     | 'notes'
     | 'tasks'
-    | 'web';
+    | 'web'
+    | 'tokens'
+    | 'imessage';
 
 export interface ToolCall {
     id: string;
@@ -64,7 +66,7 @@ export function parseToolCalls(text: string): ToolCall[] {
     // Fallback: if no <tool_use> blocks found, try matching raw JSON tool objects
     // (LLM sometimes drops the XML tags and outputs bare JSON)
     if (calls.length === 0) {
-        const jsonRegex = /\{\s*"tool"\s*:\s*"(calendar|gmail|x402|reminders|notes|tasks|web)"\s*,\s*"action"\s*:\s*"[^"]+"\s*,\s*"params"\s*:\s*\{[^}]*\}\s*\}/g;
+        const jsonRegex = /\{\s*"tool"\s*:\s*"(calendar|gmail|x402|reminders|notes|tasks|web|tokens|imessage)"\s*,\s*"action"\s*:\s*"[^"]+"\s*,\s*"params"\s*:\s*\{[^}]*\}\s*\}/g;
         let jsonMatch: RegExpExecArray | null;
         while ((jsonMatch = jsonRegex.exec(text)) !== null) {
             try {
@@ -94,7 +96,7 @@ export function stripToolBlocks(text: string): string {
 
 /** Check if a response contains any tool-call blocks. */
 export function hasToolCalls(text: string): boolean {
-    return /<tool_use>/.test(text) || /\{"tool"\s*:\s*"(calendar|gmail|x402|reminders|notes|tasks|web)"/.test(text);
+    return /<tool_use>/.test(text) || /\{"tool"\s*:\s*"(calendar|gmail|x402|reminders|notes|tasks|web|tokens|imessage)"/.test(text);
 }
 
 /**
@@ -138,21 +140,21 @@ export async function executeToolCall(
     userId: string,
     opts: { agentId?: string | null } = {},
 ): Promise<ToolResult> {
-    const endpoint = call.tool === 'calendar'
-        ? '/api/tools/calendar'
-        : call.tool === 'gmail'
-            ? '/api/tools/gmail'
-            : call.tool === 'x402'
-                ? '/api/tools/x402'
-                : call.tool === 'reminders'
-                    ? '/api/tools/reminders'
-                    : call.tool === 'notes'
-                        ? '/api/tools/notes'
-                        : call.tool === 'tasks'
-                            ? '/api/tools/tasks'
-                            : call.tool === 'web'
-                                ? '/api/tools/web'
-                                : `/api/tools/${call.tool}`;
+    // Route every known tool to its handler. Unknown tools fall through
+    // to /api/tools/<tool> so the registry can add entries without a
+    // code change in this switch.
+    const endpointByTool: Record<string, string> = {
+        calendar: '/api/tools/calendar',
+        gmail: '/api/tools/gmail',
+        x402: '/api/tools/x402',
+        reminders: '/api/tools/reminders',
+        notes: '/api/tools/notes',
+        tasks: '/api/tools/tasks',
+        web: '/api/tools/web',
+        tokens: '/api/tools/tokens',
+        imessage: '/api/tools/imessage',
+    };
+    const endpoint = endpointByTool[call.tool as string] ?? `/api/tools/${call.tool}`;
 
     const authToken = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     const authHeader: Record<string, string> = authToken ? { Authorization: `Bearer ${authToken}` } : {};
@@ -333,6 +335,39 @@ export function formatToolResult(result: ToolResult): string {
         return `${simulatedTag}**Reminder scheduled** — ${data.message ?? 'Nudge queued for tomorrow.'}`;
     }
 
+    // Tokens API — market + price + risk
+    if (result.tool === 'tokens' && result.action === 'search' && Array.isArray(data.results)) {
+        const hits = data.results as { assetId?: string; symbol?: string; name?: string }[];
+        if (hits.length === 0) return `${simulatedTag}**Tokens:** no matches.`;
+        const lines = hits.slice(0, 6).map(h => `- **${h.symbol ?? h.assetId}** — ${h.name ?? h.assetId}`);
+        return `${simulatedTag}**Token search (${hits.length}):**\n${lines.join('\n')}`;
+    }
+    if (result.tool === 'tokens' && result.action === 'price' && Array.isArray(data.candles)) {
+        const candles = data.candles as { c: number; t: number }[];
+        const last = candles[candles.length - 1];
+        const first = candles[0];
+        const change = first && last ? ((last.c - first.c) / first.c) * 100 : 0;
+        const arrow = change >= 0 ? '▲' : '▼';
+        return `${simulatedTag}**${data.assetId} price (${data.interval ?? '1h'}):** $${last?.c?.toFixed(2) ?? '—'} ${arrow} ${change.toFixed(2)}% (${candles.length} candles).`;
+    }
+    if (result.tool === 'tokens' && result.action === 'risk') {
+        return `${simulatedTag}**Risk score:** ${data.grade ?? '—'} (${data.score ?? '—'}/100) — ${data.label ?? 'no label'}.`;
+    }
+    if (result.tool === 'tokens' && result.action === 'markets' && Array.isArray(data.markets)) {
+        const mkts = data.markets as { dex?: string; pair?: string; liquidity_usd?: number }[];
+        if (mkts.length === 0) return `${simulatedTag}**Markets:** none found.`;
+        const lines = mkts.slice(0, 5).map(m =>
+            `- ${m.dex ?? 'DEX'} · ${m.pair ?? '?/?'}${m.liquidity_usd ? ` · $${(m.liquidity_usd / 1_000_000).toFixed(2)}M liq` : ''}`,
+        );
+        return `${simulatedTag}**DEX markets (${mkts.length}):**\n${lines.join('\n')}`;
+    }
+
+    // iMessage (via Photon adapter)
+    if (result.tool === 'imessage' && result.action === 'send') {
+        const sent = (data.sent ?? data) as { messageId?: string; provider?: string };
+        return `${simulatedTag}**iMessage sent** (id: \`${(sent.messageId ?? '—').slice(0, 10)}...\`).`;
+    }
+
     // Generic fallback
     return `${simulatedTag}**${result.tool}.${result.action}** completed:\n\`\`\`json\n${JSON.stringify(data, null, 2).slice(0, 500)}\n\`\`\``;
 }
@@ -373,6 +408,34 @@ You have access to the user's Google Calendar and Gmail. When you need to take a
 </tool_use>
 
 When the user asks for an HTML-formatted / professional / presentable email, populate BOTH the "body" field (short plain-text fallback for clients that strip HTML) and the "html" field (the full styled message). Do NOT put raw HTML tags in "body" alone — that sends the tags as literal text.
+
+### Tokens (Solana market + price + risk data)
+
+<tool_use>
+{"tool": "tokens", "action": "search", "params": {"query": "sol"}}
+</tool_use>
+
+<tool_use>
+{"tool": "tokens", "action": "price", "params": {"assetId": "solana", "interval": "1h"}}
+</tool_use>
+
+<tool_use>
+{"tool": "tokens", "action": "risk", "params": {"mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"}}
+</tool_use>
+
+<tool_use>
+{"tool": "tokens", "action": "markets", "params": {"assetId": "solana", "mint": "So11111111111111111111111111111111111111112"}}
+</tool_use>
+
+Use tokens.search first when the user mentions a token by name/symbol; feed the resulting assetId into tokens.price or tokens.markets. Use tokens.risk when the user asks whether a mint is safe.
+
+### iMessage (via Photon)
+
+<tool_use>
+{"tool": "imessage", "action": "send", "params": {"to": "+15551234567", "text": "Plain-text fallback", "subject": "Optional"}}
+</tool_use>
+
+Only emit this when the user explicitly asks to text someone. The recipient should be an E.164 phone number or the user's known iMessage alias. Never auto-bundle a text with an email — ask the user which channel they want.
 
 ## Behavioral Rules
 
