@@ -11,7 +11,7 @@ import type { ToolCall, ToolResult } from '@/lib/toolCalls';
 import { ToolApprovalModal } from '@/src/components/ui/ToolApprovalModal';
 import { runCouncil, shouldUseCouncil, extractToolCallsFromText, type CouncilResult } from '@/lib/council';
 
-interface Message { id: string; role: 'user' | 'assistant'; content: string; timestamp: Date; model?: string; councilTranscript?: CouncilResult['transcript']; }
+interface Message { id: string; role: 'user' | 'assistant'; content: string; timestamp: Date; model?: string; councilTranscript?: CouncilResult['transcript']; requestId?: string; }
 interface ChatSession { id: string; title: string; messages: Message[]; createdAt: Date; model: string; }
 
 interface Capabilities {
@@ -438,7 +438,7 @@ export default function ChatPage() {
                     } catch {
                         content = `**${activeModel.label}** didn't respond. Try again in a moment, or switch to another model.${trailer}`;
                     }
-                    setSessions(prev => prev.map(s => s.id === sessionId ? { ...s, messages: [...s.messages, { id: (Date.now() + 1).toString(), role: 'assistant', content, timestamp: new Date(), model: selectedModel }] } : s));
+                    setSessions(prev => prev.map(s => s.id === sessionId ? { ...s, messages: [...s.messages, { id: (Date.now() + 1).toString(), role: 'assistant', content, timestamp: new Date(), model: selectedModel, requestId: requestId || undefined }] } : s));
                     break;
                 }
 
@@ -640,6 +640,16 @@ export default function ChatPage() {
                                             {msg.role === 'assistant' && (
                                                 <div className="flex items-center gap-2 mt-1">
                                                     <button onClick={() => copyMessage(msg.content, msg.id)} className="opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-foreground/10 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">{copiedId === msg.id ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}{copiedId === msg.id ? 'Copied' : 'Copy'}</button>
+                                                    {msg.requestId && (
+                                                        <button
+                                                            onClick={() => copyMessage(msg.requestId!, `${msg.id}-reqid`)}
+                                                            title={`Copy ${msg.requestId}`}
+                                                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-[#F97316]/30 text-[#F97316] hover:bg-[#F97316]/10 transition-all text-[10px] font-mono shadow-xl"
+                                                        >
+                                                            {copiedId === `${msg.id}-reqid` ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                                                            {copiedId === `${msg.id}-reqid` ? 'Copied' : 'Copy Request ID'}
+                                                        </button>
+                                                    )}
                                                     {msg.councilTranscript && (
                                                         <button onClick={() => setExpandedCouncil(expandedCouncil === msg.id ? null : msg.id)} className="opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-foreground/10 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">
                                                             <Brain size={12} className="text-[#F97316]" /> {expandedCouncil === msg.id ? 'Hide' : 'View'} Council
