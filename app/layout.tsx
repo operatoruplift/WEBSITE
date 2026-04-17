@@ -36,6 +36,9 @@ export const metadata: Metadata = {
     apple: "/logo.svg",
   },
   manifest: "/manifest.json",
+  other: {
+    "base:app_id": "69e244243bb010cd08cfdb7f",
+  },
 };
 
 import Script from "next/script";
