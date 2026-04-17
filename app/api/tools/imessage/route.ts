@@ -67,7 +67,7 @@ export async function POST(request: Request) {
 
     if (!result.ok) {
         return NextResponse.json(
-            { error: result.reason, message: result.message },
+            { error: result.reason, message: result.message, providerStatus: result.providerStatus },
             { status: result.reason === 'not_configured' ? 503 : 502 },
         );
     }
@@ -77,6 +77,7 @@ export async function POST(request: Request) {
         sent: {
             messageId: result.messageId,
             provider: result.provider,
+            platform: result.platform,
             submittedAt: result.submittedAt,
         },
     });
