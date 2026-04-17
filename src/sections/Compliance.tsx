@@ -10,7 +10,7 @@ const items = [
     {
         icon: Shield,
         title: 'HIPAA Ready',
-        description: 'Architecture supports HIPAA requirements — data stays in your environment, agents run in isolated sandboxes, every action is logged.',
+        description: 'Architecture supports HIPAA requirements. Data stays in your environment, agents run in isolated sandboxes, every action is logged.',
     },
     {
         icon: Globe,
@@ -30,7 +30,7 @@ const Compliance: React.FC = () => {
             <SectionHeader
                 eyebrow="Compliance"
                 title="Built for Compliance"
-                description="Privacy and security built into the architecture — not bolted on."
+                description="Privacy and security built into the architecture, not bolted on."
             />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch">
@@ -51,7 +51,7 @@ const Compliance: React.FC = () => {
             </div>
 
             <p className="text-[11px] text-[#52525B] max-w-lg">
-                Beta software. Compliance certifications (HIPAA / SOC 2 / GDPR) are architectural commitments — not formal audits. Full audit on the roadmap.
+                Beta software. Compliance certifications (HIPAA / SOC 2 / GDPR) are architectural commitments, not formal audits. Full audit on the roadmap.
             </p>
         </Section>
     );

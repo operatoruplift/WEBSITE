@@ -153,7 +153,20 @@ export default function PaywallPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-6">
+        <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-6 relative">
+            {/*
+              Paywall is for NEW users / signups. Existing users should always
+              have a direct path back to /login. The top-right link plus the
+              footer link below give two visible escape hatches.
+            */}
+            <Link
+                href="/login?returnTo=/chat"
+                className="absolute top-6 right-6 inline-flex items-center gap-1.5 text-sm text-[#A1A1AA] hover:text-white transition-colors"
+                aria-label="Sign in to an existing account"
+            >
+                Sign in <ArrowRight size={14} />
+            </Link>
+
             <div className="max-w-4xl w-full">
                 {/* Header */}
                 <div className="text-center mb-12">
@@ -161,6 +174,12 @@ export default function PaywallPage() {
                     <h1 className="text-3xl font-semibold text-white tracking-tight">Choose Your Plan</h1>
                     <p className="text-sm text-[#A1A1AA] mt-2 max-w-md mx-auto">
                         Operator Uplift is in early access. Get Pro for the full experience, or join the waitlist.
+                    </p>
+                    <p className="text-xs text-[#52525B] mt-3">
+                        Already have an account?{' '}
+                        <Link href="/login?returnTo=/chat" className="text-[#F97316] hover:underline font-medium">
+                            Sign in here
+                        </Link>
                     </p>
                 </div>
 

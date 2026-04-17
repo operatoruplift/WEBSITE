@@ -35,7 +35,7 @@ const TIERS = [
         icon: Zap,
         highlight: true,
         features: [
-            'LLM Council — 5 agents debate every decision',
+            'LLM Council: 5 agents debate every decision',
             'Google Calendar + Gmail tool execution',
             'On-chain Merkle audit trail (Solana)',
             '6 LLM providers (Claude, GPT, Gemini, Grok, DeepSeek, Ollama)',

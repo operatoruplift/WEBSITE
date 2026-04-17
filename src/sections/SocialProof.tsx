@@ -29,7 +29,7 @@ const SocialProof: React.FC = () => {
             <SectionHeader
                 eyebrow="Why Trust This?"
                 title="Built with tools we trust"
-                description="Operator Uplift is built on infrastructure chosen for security, reliability, and speed — not marketing."
+                description="Operator Uplift is built on infrastructure chosen for security, reliability, and speed. Not marketing."
             />
 
             {/* Carousel — matches the Hero/TrustedBy marquee pattern */}
