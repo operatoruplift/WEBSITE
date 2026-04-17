@@ -33,7 +33,7 @@ Legend:
 | `web.search` | Simulated (canned SERP) | Real — Serper/Brave, server-held key. |
 | `web.fetch` | Simulated (canned snippet) | Real — direct fetch, HTML strip, 8 KB cap. |
 | `tokens.search/price/risk/markets` | Simulated (canned SERP + candles + score) | Real — Tokens API (`api.tokens.xyz/v1`) with server-held `TOKENS_API_KEY`. |
-| `imessage.send` | Simulated (`simulated-photon` messageId) | Real — Photon adapter (`lib/photon/adapter.ts`) calls provider at `PHOTON_API_BASE` (defaults to LoopMessage) using `PHOTON_API_KEY` + `PHOTON_PROJECT_ID`. |
+| `imessage.send` | Simulated (`simulated-photon` messageId) | Real — Photon gRPC SDK (`@photon-ai/advanced-imessage`) via `PHOTON_ADDRESS` (or derived from `PHOTON_PROJECT_ID`) + `PHOTON_TOKEN` (or `PHOTON_API_KEY`). TLS gRPC to `<instance>.imsg.photon.codes:443`. |
 | `slack.*`, `linear.*`, `jira.*`, `notion.*`, `github.*`, `drive.*`, `stripe.*`, `comms.*` | Stub | Registered in `lib/tools/registry.ts` as `comingSoon: true`. Approve disabled. Never executes. |
 
 ## Receipts + audit trail

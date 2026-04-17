@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.82.0",
+    "@photon-ai/advanced-imessage": "^0.4.3",
     "@privy-io/react-auth": "^3.21.0",
     "@privy-io/server-auth": "^1.32.5",
     "@solana/pay": "^0.2.6",
