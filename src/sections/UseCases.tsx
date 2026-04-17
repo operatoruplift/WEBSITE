@@ -1,33 +1,46 @@
 'use client';
 
 import React from 'react';
-import { Scale, Calculator, Heart, ArrowRight } from 'lucide-react';
+import { Sun, Inbox, Bell, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { FadeIn } from '@/src/components/Animators';
 import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
 
-const USE_CASES = [
+/**
+ * Consumer-first vignettes matching the three May 14 demo beats.
+ *
+ * The previous version of this section pitched enterprise verticals
+ * (lawyers, accountants, therapists) without a concrete workflow or
+ * before/after. Per the Demo Day copy rule, anything pitched at that
+ * audience must ship a real workflow + before/after, or get cut. For
+ * this release we cut it — every card below maps to a concrete chat
+ * prompt you can run on /chat right now.
+ */
+const BEATS = [
     {
-        icon: Scale,
-        role: 'Lawyers',
-        headline: 'Your AI paralegal that never leaks client data',
-        description: 'Draft briefs, review contracts, and schedule depositions — all encrypted on your device. Attorney-client privilege stays intact because nothing touches the cloud.',
-        stat: '4.2 hrs/week saved',
+        icon: Sun,
+        tag: 'Daily Briefing',
+        headline: 'Start every day with your calendar, handled.',
+        before: 'Before: you wake up, scroll 3 apps, and realise your 9am has no agenda.',
+        after: 'After: at 8am a pinned message hits your chat — "3 events today, your 2pm has no agenda, want me to draft one?"',
+        prompt: '"What\u2019s on my calendar today and what should I worry about?"',
     },
     {
-        icon: Calculator,
-        role: 'Accountants',
-        headline: 'Audit-ready AI that runs inside your firewall',
-        description: 'Reconcile books, prepare tax documents, and schedule client meetings. Every action is logged to an on-chain audit trail. SOC 2 compliant by architecture.',
-        stat: '60% faster prep',
+        icon: Inbox,
+        tag: 'Inbox Triage',
+        headline: 'Your inbox, drafted. You approve every send.',
+        before: 'Before: 3 emails sitting in your head all morning because you haven\u2019t decided how to reply.',
+        after: 'After: three drafts line up on screen. Approve each to send, deny to discard. Nothing leaves Gmail without your click.',
+        prompt: '"Draft replies to these 3 emails, ask me before sending."',
     },
     {
-        icon: Heart,
-        role: 'Therapists',
-        headline: 'HIPAA-compliant scheduling and note-taking',
-        description: 'Manage your calendar, draft session notes, and send appointment reminders — with AES-256 encryption and zero cloud storage. Patient data never leaves your machine.',
-        stat: 'HIPAA ready',
+        icon: Bell,
+        tag: 'Reminders That Pull You Back',
+        headline: 'iMessage-style nudges for the morning that matters.',
+        before: 'Before: another AI you forget about by lunchtime.',
+        after: 'After: weather at 7:55, your calendar at 8:00, one weird fun thing (horoscope) at 8:05. You come back tomorrow.',
+        prompt: '"Turn this into iMessage-style nudges for tomorrow morning."',
     },
 ];
 
@@ -35,25 +48,28 @@ const UseCases: React.FC = () => {
     return (
         <Section>
             <SectionHeader
-                eyebrow="Who It's For"
-                title="Built for professionals who can't afford data leaks"
-                description="Every industry has confidential data. Operator Uplift keeps it local."
+                eyebrow="Try It Today"
+                title="Three things it does well — before you sign in."
+                description="Open /chat, paste one of these, and watch every action wait for your Approve click."
             />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch">
-                {USE_CASES.map((uc, i) => {
-                    const Icon = uc.icon;
+                {BEATS.map((beat, i) => {
+                    const Icon = beat.icon;
                     return (
-                        <FadeIn key={uc.role} delay={i * 150}>
+                        <FadeIn key={beat.tag} delay={i * 150}>
                             <div className="rounded-2xl border border-[#222222] bg-[#111111] p-8 h-full flex flex-col text-left hover:border-[#F97316]/30 transition-colors">
                                 <div className="w-12 h-12 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center mb-5">
                                     <Icon size={22} className="text-[#F97316]" />
                                 </div>
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-[#F97316] mb-2">{uc.role}</span>
-                                <h3 className="text-lg font-semibold text-white mb-3">{uc.headline}</h3>
-                                <p className="text-sm text-[#A1A1AA] leading-relaxed flex-1">{uc.description}</p>
-                                <div className="mt-6 pt-4 border-t border-[#222222] flex items-center justify-between">
-                                    <span className="text-xs font-mono text-[#F97316]">{uc.stat}</span>
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-[#F97316] mb-2">{beat.tag}</span>
+                                <h3 className="text-lg font-semibold text-white mb-3">{beat.headline}</h3>
+                                <div className="space-y-2 text-sm text-[#A1A1AA] leading-relaxed flex-1">
+                                    <p>{beat.before}</p>
+                                    <p className="text-white">{beat.after}</p>
+                                </div>
+                                <div className="mt-6 pt-4 border-t border-[#222222]">
+                                    <span className="text-xs font-mono text-[#F97316]">{beat.prompt}</span>
                                 </div>
                             </div>
                         </FadeIn>
@@ -62,9 +78,9 @@ const UseCases: React.FC = () => {
             </div>
 
             <FadeIn delay={500}>
-                <Link href="/paywall"
+                <Link href="/chat"
                     className="inline-flex items-center bg-[#F97316] text-white px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-[#F97316]/90 transition-colors">
-                    Start Your Free Trial <ArrowRight size={16} className="ml-2" />
+                    Try It Live <ArrowRight size={16} className="ml-2" />
                 </Link>
             </FadeIn>
         </Section>

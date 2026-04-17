@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from 'react';
-import { Shield, Calendar, Mail, Check, X, Loader2, AlertTriangle, Coins } from 'lucide-react';
+import { Shield, Calendar, Mail, Bell, Globe, NotebookPen, ListTodo, Check, X, Loader2, AlertTriangle, Coins, Sparkles } from 'lucide-react';
 import type { ToolCall, ToolResult } from '@/lib/toolCalls';
-import { executeToolCall } from '@/lib/toolCalls';
+import { executeToolCall, executeMock } from '@/lib/toolCalls';
 import { logAction } from '@/lib/auditLog';
 import { getToolPrice } from '@/lib/x402/pricing';
 
@@ -12,6 +12,8 @@ interface ToolApprovalModalProps {
     agentName?: string;
     agentId?: string | null;
     userId: string;
+    /** When true, approvals route to executeMock (no side-effects, no receipt). */
+    demoMode?: boolean;
     onResult: (result: ToolResult) => void;
     onDeny: () => void;
 }
@@ -19,6 +21,10 @@ interface ToolApprovalModalProps {
 const TOOL_META: Record<string, { label: string; icon: typeof Calendar; color: string; risk: string }> = {
     calendar: { label: 'Google Calendar', icon: Calendar, color: 'text-[#F97316]', risk: 'MEDIUM' },
     gmail: { label: 'Gmail', icon: Mail, color: 'text-[#F97316]', risk: 'HIGH' },
+    reminders: { label: 'Reminders', icon: Bell, color: 'text-[#F97316]', risk: 'LOW' },
+    web: { label: 'Web', icon: Globe, color: 'text-[#F97316]', risk: 'LOW' },
+    notes: { label: 'Notes', icon: NotebookPen, color: 'text-[#F97316]', risk: 'LOW' },
+    tasks: { label: 'Tasks', icon: ListTodo, color: 'text-[#F97316]', risk: 'LOW' },
 };
 
 const ACTION_LABELS: Record<string, string> = {
@@ -36,6 +42,7 @@ export function ToolApprovalModal({
     agentName,
     agentId,
     userId,
+    demoMode = false,
     onResult,
     onDeny,
 }: ToolApprovalModalProps) {
@@ -49,28 +56,33 @@ export function ToolApprovalModal({
     // Price comes from the central server/client pricing config — no per-agent
     // lookup. Gated actions: calendar.create, gmail.draft/send/send_draft.
     const price = getToolPrice(toolCall.tool, toolCall.action);
-    const isPaid = price !== null;
+    // Demo mode never incurs a payment — the mock result is free.
+    const isPaid = !demoMode && price !== null;
+
+    const auditTool = toolCall.tool === 'calendar' ? 'calendar' : toolCall.tool === 'gmail' ? 'gmail' : 'calendar';
 
     const handleApprove = async () => {
         setIsExecuting(true);
         setPhase(isPaid ? 'requesting' : 'executing');
 
         logAction(
-            toolCall.tool === 'calendar' ? 'calendar' : 'gmail',
-            `approved:${toolCall.action}`,
+            auditTool,
+            `approved:${toolCall.action}${demoMode ? ':simulated' : ''}`,
             JSON.stringify(toolCall.params).slice(0, 200),
             agentName,
             true,
         );
 
-        // executeToolCall handles the 402 → pay → retry flow internally.
-        // We just observe the phase based on the result.
-        const result = await executeToolCall(toolCall, userId, { agentId });
+        // Demo mode: never call the real backend. No side-effect, no receipt.
+        // Real mode: executeToolCall handles the 402 → pay → retry flow.
+        const result = demoMode
+            ? await executeMock(toolCall)
+            : await executeToolCall(toolCall, userId, { agentId });
 
         logAction(
-            toolCall.tool === 'calendar' ? 'calendar' : 'gmail',
-            `executed:${toolCall.action}`,
-            result.success ? 'success' : `error: ${result.error}`,
+            auditTool,
+            `executed:${toolCall.action}${result.simulated ? ':simulated' : ''}`,
+            result.success ? (result.simulated ? 'simulated' : 'success') : `error: ${result.error}`,
             agentName,
             result.success,
         );
@@ -103,16 +115,24 @@ export function ToolApprovalModal({
                         <Icon size={22} className={meta.color} />
                     </div>
                     <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
+                        <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                             <h3 className="text-base font-semibold text-white">Tool Permission Request</h3>
-                            <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border ${
-                                meta.risk === 'HIGH'
-                                    ? 'bg-orange-500/10 border-orange-500/30 text-orange-400'
-                                    : 'bg-amber-500/10 border-amber-500/30 text-amber-400'
-                            }`}>{meta.risk}</span>
+                            {demoMode ? (
+                                <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border bg-white/5 border-white/15 text-gray-400">
+                                    <Sparkles size={10} /> Simulated
+                                </span>
+                            ) : (
+                                <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border ${
+                                    meta.risk === 'HIGH'
+                                        ? 'bg-orange-500/10 border-orange-500/30 text-orange-400'
+                                        : 'bg-amber-500/10 border-amber-500/30 text-amber-400'
+                                }`}>{meta.risk}</span>
+                            )}
                         </div>
                         <p className="text-xs text-gray-500">
-                            {agentName ? `Agent "${agentName}" requests access` : 'An agent requests access'}
+                            {demoMode
+                                ? 'Demo — Approve runs a simulated call. No real side-effect. No receipt.'
+                                : (agentName ? `Agent "${agentName}" requests access` : 'An agent requests access')}
                         </p>
                     </div>
                 </div>
@@ -164,7 +184,21 @@ export function ToolApprovalModal({
                         </div>
                     )}
 
-                    {(toolCall.action === 'create' || toolCall.action === 'send' || toolCall.action === 'send_draft') && (
+                    {demoMode && (
+                        <div className="flex items-start gap-3 p-3 rounded-lg bg-white/[0.03] border border-white/10">
+                            <Sparkles size={14} className="text-gray-400 mt-0.5 shrink-0" />
+                            <p className="text-[11px] text-gray-400 leading-relaxed">
+                                You&rsquo;re on the demo. Approve returns a simulated result labelled <strong className="text-gray-200">Simulated</strong>. Nothing gets created, sent, or charged.
+                                {' '}
+                                <a href="/integrations" className="underline hover:text-white">Connect Google</a>
+                                {' or '}
+                                <a href="/settings" className="underline hover:text-white">add an API key</a>
+                                {' to run this for real.'}
+                            </p>
+                        </div>
+                    )}
+
+                    {!demoMode && (toolCall.action === 'create' || toolCall.action === 'send' || toolCall.action === 'send_draft') && (
                         <div className="flex items-start gap-3 p-3 rounded-lg bg-orange-500/5 border border-orange-500/15">
                             <AlertTriangle size={14} className="text-orange-400 mt-0.5 shrink-0" />
                             <p className="text-[11px] text-gray-400 leading-relaxed">
@@ -202,6 +236,8 @@ export function ToolApprovalModal({
                     >
                         {isExecuting ? (
                             <><Loader2 size={14} className="animate-spin" /> Executing…</>
+                        ) : demoMode ? (
+                            <><Check size={14} /> Approve (Simulated)</>
                         ) : isPaid ? (
                             <><Check size={14} /> Pay &amp; Allow Once</>
                         ) : (

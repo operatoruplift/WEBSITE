@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Mail, Calendar, Shield, Key, LogOut, Edit3, Camera, X, Check } from 'lucide-react';
+import { Mail, Calendar, Shield, Key, LogOut, Edit3, Camera, X, Check, Bell, Globe, Sparkles, BadgeCheck } from 'lucide-react';
 import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
@@ -64,6 +64,65 @@ export default function ProfilePage() {
         localStorage.removeItem('user');
         window.location.href = '/login';
     };
+
+    // ── Daily briefing opt-in ──
+    const [briefingEnabled, setBriefingEnabled] = useState(false);
+    const [briefingLoaded, setBriefingLoaded] = useState(false);
+    const [briefingSaving, setBriefingSaving] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) { setBriefingLoaded(true); return; }
+        fetch('/api/profile/briefing', { headers: { Authorization: `Bearer ${token}` } })
+            .then(r => r.ok ? r.json() : null)
+            .then((data: { enabled: boolean } | null) => {
+                if (data) setBriefingEnabled(Boolean(data.enabled));
+            })
+            .catch(() => { /* non-fatal */ })
+            .finally(() => setBriefingLoaded(true));
+    }, []);
+
+    const toggleBriefing = async () => {
+        if (briefingSaving) return;
+        const next = !briefingEnabled;
+        setBriefingEnabled(next);
+        setBriefingSaving(true);
+        try {
+            const token = localStorage.getItem('token');
+            await fetch('/api/profile/briefing', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+                body: JSON.stringify({ enabled: next }),
+            });
+        } catch {
+            // Revert on failure
+            setBriefingEnabled(!next);
+        } finally {
+            setBriefingSaving(false);
+        }
+    };
+
+    // ── SNS identity resolution ──
+    interface SnsSnapshot {
+        name: string;
+        owner: string | null;
+        records: { type: string; value: string }[];
+        verified: boolean;
+        simulated?: boolean;
+        error?: string;
+    }
+    const [sns, setSns] = useState<SnsSnapshot | null>(null);
+    const [snsLoaded, setSnsLoaded] = useState(false);
+
+    useEffect(() => {
+        // Profile must never throw on cold load — even if the SNS proxy
+        // is down, we render a graceful fallback with error text.
+        fetch('/api/sns/resolve?name=operatoruplift.sol', { cache: 'no-store' })
+            .then(r => r.ok ? r.json() : null)
+            .then((data: SnsSnapshot | null) => setSns(data))
+            .catch(() => setSns({ name: 'operatoruplift.sol', owner: null, records: [], verified: false, error: 'lookup_failed' }))
+            .finally(() => setSnsLoaded(true));
+    }, []);
 
     return (
         <MobilePageWrapper>
@@ -149,6 +208,106 @@ export default function ProfilePage() {
                                     </div>
                                 );
                             })}
+                        </CardContent>
+                    </Card>
+
+                    <Card variant="glass">
+                        <CardContent className="p-6 space-y-4">
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-sm font-mono text-gray-400 uppercase tracking-widest">Identity</h3>
+                                {sns?.simulated && (
+                                    <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border bg-white/5 border-white/15 text-gray-400">
+                                        <Sparkles size={10} /> Simulated
+                                    </span>
+                                )}
+                            </div>
+                            {!snsLoaded ? (
+                                <p className="text-xs text-gray-500">Resolving .sol identity&hellip;</p>
+                            ) : sns?.error ? (
+                                <p className="text-xs text-gray-500">
+                                    SNS lookup unavailable right now. Your identity still works from your Privy session.
+                                </p>
+                            ) : (
+                                <div className="space-y-3">
+                                    <div className="flex items-center justify-between gap-3 py-2 border-b border-foreground/10">
+                                        <div className="flex items-center gap-3">
+                                            <Globe size={16} className="text-gray-500" />
+                                            <div>
+                                                <p className="text-sm text-white font-medium">{sns?.name}</p>
+                                                <p className="text-[10px] text-gray-500 mt-0.5">
+                                                    {sns?.simulated
+                                                        ? 'Demo — sign in + verify to show your real .sol'
+                                                        : sns?.owner ? `Owner ${sns.owner.slice(0, 6)}...${sns.owner.slice(-4)}` : 'No owner on record'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        {sns?.verified && (
+                                            <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border bg-emerald-500/10 border-emerald-500/30 text-emerald-400">
+                                                <BadgeCheck size={10} /> Verified
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="flex items-center justify-between gap-3 py-2">
+                                        <div className="flex items-center gap-3">
+                                            <Globe size={16} className="text-gray-500" />
+                                            <div>
+                                                <p className="text-sm text-white font-medium">{sns?.name}.site</p>
+                                                <p className="text-[10px] text-gray-500 mt-0.5">
+                                                    Browser alias for your .sol — opens in any modern browser.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <a
+                                            href={`https://${sns?.name}.site`}
+                                            target="_blank"
+                                            rel="noreferrer noopener"
+                                            className="text-[10px] font-mono text-gray-500 hover:text-white"
+                                        >
+                                            Open &rarr;
+                                        </a>
+                                    </div>
+                                    {sns?.records && sns.records.length > 0 && (
+                                        <div className="space-y-1.5 pt-1">
+                                            {sns.records.map(r => (
+                                                <div key={r.type} className="flex items-center justify-between text-xs">
+                                                    <span className="text-gray-500 uppercase tracking-wider text-[10px]">{r.type}</span>
+                                                    <span className="text-gray-300 font-mono truncate ml-4 max-w-[60%]">{r.value}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    <Card variant="glass">
+                        <CardContent className="p-6 space-y-4">
+                            <h3 className="text-sm font-mono text-gray-400 uppercase tracking-widest">Preferences</h3>
+                            <div className="flex items-start justify-between gap-4 py-2">
+                                <div className="flex items-start gap-3">
+                                    <Bell size={16} className="text-gray-500 mt-0.5 shrink-0" />
+                                    <div>
+                                        <div className="text-sm text-white">Daily briefing at 8am</div>
+                                        <div className="text-xs text-gray-500 mt-0.5 max-w-md">
+                                            Pin a short summary of today&rsquo;s calendar to the top of your chat every morning. Requires Google connected. Off by default.
+                                        </div>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={toggleBriefing}
+                                    disabled={!briefingLoaded || briefingSaving}
+                                    role="switch"
+                                    aria-checked={briefingEnabled}
+                                    className={`shrink-0 inline-flex items-center w-11 h-6 rounded-full border transition-all ${
+                                        briefingEnabled
+                                            ? 'bg-primary/40 border-primary/60 justify-end'
+                                            : 'bg-foreground/[0.04] border-white/10 justify-start'
+                                    } px-0.5 disabled:opacity-50`}
+                                >
+                                    <span className={`w-5 h-5 rounded-full ${briefingEnabled ? 'bg-primary' : 'bg-gray-500'}`} />
+                                </button>
+                            </div>
                         </CardContent>
                     </Card>
 

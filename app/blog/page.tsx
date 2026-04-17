@@ -25,13 +25,21 @@ const categoryColors: Record<string, string> = {
 
 export const posts: BlogPost[] = [
     {
+        id: 'balaji-pivot-advice',
+        title: 'Balaji told me to pivot. I didn\u2019t. Here\u2019s why.',
+        excerpt: 'He looked at what I was building and said walk away. I disagreed on the diagnosis, agreed on the wedge critique, and changed three things because of him. What I actually kept and what I actually cut.',
+        date: 'April 17, 2026',
+        readTime: '4 min read',
+        category: 'announcement',
+        featured: true,
+    },
+    {
         id: 'governed-approvals',
         title: 'Governed Approvals: Why Every Agent Action Needs a Human',
         excerpt: 'The single biggest difference between a helpful agent and a dangerous one is a human in the loop at the right moment. Here is how we designed the approval flow.',
         date: 'April 16, 2026',
         readTime: '4 min read',
         category: 'engineering',
-        featured: true,
     },
     {
         id: 'audit-trail',
@@ -68,11 +76,10 @@ export const posts: BlogPost[] = [
     {
         id: 'why-i-built-an-ai-os',
         title: 'Why I Built an AI OS Instead of Pivoting',
-        excerpt: 'Balaji told me to pivot. He looked at what I was building and said: you\'re competing with Perplexity, OpenAI, Anthropic, and Google. Solo founder. No funding. Walk away. I didn\'t.',
+        excerpt: 'The earlier version of the Balaji post — on why the OS-layer framing won over the "build a better ChatGPT" critique. See the April 17 post for the specific breakdown.',
         date: 'April 6, 2026',
         readTime: '5 min read',
         category: 'announcement',
-        featured: true,
     },
     {
         id: 'what-93-percent-retention-looks-like',

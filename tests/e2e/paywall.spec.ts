@@ -16,13 +16,12 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('Paywall', () => {
-    test('blocks unauthenticated access to /chat', async ({ page }) => {
-        // Visit /chat without any auth token — AuthGate should redirect
-        await page.goto('/chat');
+    test('blocks unauthenticated access to gated routes', async ({ page }) => {
+        // /chat is intentionally reachable in Demo mode — do NOT assert a redirect.
+        // A genuinely gated route like /security must still gate.
+        await page.goto('/security');
 
-        // Wait for either the paywall or the "Private Beta" gate (both mean access blocked)
         await page.waitForURL(/\/(paywall|login)/, { timeout: 10_000 }).catch(() => {
-            // If no redirect, at least verify the Private Beta gate rendered
             return expect(page.getByText(/private beta/i)).toBeVisible({ timeout: 5_000 });
         });
     });

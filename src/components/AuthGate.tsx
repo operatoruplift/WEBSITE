@@ -8,12 +8,26 @@ import { isGatedRoute, isFreeRoute } from '@/lib/subscription';
 
 type SubTier = 'free' | 'pro' | 'enterprise';
 
+/**
+ * Routes reachable without auth. Anonymous visitors see these in Demo mode
+ * (simulated tool calls, canned chat responses, no Supabase writes). The
+ * page itself is responsible for fetching /api/capabilities and rendering
+ * the correct Demo/Real badge.
+ */
+const AUTH_OPTIONAL_ROUTES = ['/chat'];
+
+function isAuthOptional(pathname: string | null): boolean {
+    if (!pathname) return false;
+    return AUTH_OPTIONAL_ROUTES.some(r => pathname === r || pathname.startsWith(r + '/'));
+}
+
 export function AuthGate({ children }: { children: React.ReactNode }) {
     const [checked, setChecked] = useState(false);
     const [hasAccess, setHasAccess] = useState(false);
     const [subTier, setSubTier] = useState<SubTier>('free');
     const pathname = usePathname();
     const router = useRouter();
+    const authOptional = isAuthOptional(pathname);
 
     const checkSession = useCallback(() => {
         const token = localStorage.getItem('token');
@@ -22,6 +36,15 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     }, []);
 
     useEffect(() => {
+        // Auth-optional routes (e.g., /chat) render in Demo mode when
+        // unauthenticated. Skip the gate entirely — the page decides
+        // what to show based on /api/capabilities.
+        if (authOptional) {
+            setChecked(true);
+            setHasAccess(true);
+            return;
+        }
+
         const isAuthed = checkSession();
         if (!isAuthed) {
             setChecked(true);
@@ -81,7 +104,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
         window.addEventListener('storage', onStorage);
 
         return () => window.removeEventListener('storage', onStorage);
-    }, [checkSession, pathname, router]);
+    }, [authOptional, checkSession, pathname, router]);
 
     if (!checked) {
         return (
