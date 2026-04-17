@@ -74,10 +74,11 @@ Legend:
 
 | Surface | State | Notes |
 |---|---|---|
-| `lib/magicblock/adapter.ts` | Stub | Refuses every submit with `stub_not_configured`. |
-| `NEXT_PUBLIC_MAGICBLOCK_ENABLED=1` | Stub (still) | Flag alone does not activate the adapter. UI surface still reads "Inactive". |
-| Receipt metadata `executed_via: 'magicblock'` | Never in this release | Only appears when the adapter is replaced with a real implementation. |
-| `/demo/hackathon` MagicBlock card | Real (the card) | The card is real and accurate. The status it reports is honestly "Inactive". |
+| `lib/magicblock/adapter.ts` | Real | Returns a configured `Connection` bound to a MagicBlock ER validator endpoint when the flag is on. Falls back to plain devnet otherwise. |
+| `NEXT_PUBLIC_MAGICBLOCK_ENABLED=1` | Real | Flag + `MAGICBLOCK_CLUSTER` (devnet/mainnet) + `MAGICBLOCK_REGION` (us/eu/as/tee) route x402 settlements through the matching ER endpoint (e.g. `https://devnet-us.magicblock.app`). |
+| Receipt metadata `executed_via: 'magicblock'` | Real | `/api/tools/x402/pay` includes `executed_via` + `rpc_url` in its success response when the ER route is taken. |
+| `lib/magicblock/payments.ts` (Private Payments API client) | Real client, Stub usage | Typed client for `payments.magicblock.app`. Exposes health/balance/transfer/deposit helpers. Not yet wired into any tool — set `MAGICBLOCK_PAYMENTS_ENABLED=1` + token to use it for SPL flows post-May-15. |
+| `/demo/hackathon` MagicBlock card | Real | Card reads whatever `magicBlockSurfaceStatus()` reports, which now honestly swings between Active/Inactive based on the flag. |
 
 ## Marketing + content
 

@@ -1,109 +1,124 @@
 /**
- * MagicBlock adapter — feature-flagged, stub-only for May 14.
+ * MagicBlock adapter — Ephemeral Rollup (ER) integration.
  *
- * MagicBlock is an ephemeral rollup for Solana that can settle
- * transactions faster than mainnet for short-lived interactive
- * workloads. Ideal for our tool-call receipts if we ever need sub-
- * second finality.
+ * MagicBlock runs public ER validators that speak regular Solana
+ * JSON-RPC. Point a `Connection` at one of them and every ix you
+ * submit settles inside the rollup within ~10 ms with zero fee,
+ * then commits to mainnet/devnet asynchronously. Docs:
+ *   https://docs.magicblock.gg/pages/overview/products
  *
- * For now: we ship the adapter interface + an always-inactive stub
- * so the code path exists and can be validated in tests. We do NOT
- * claim MagicBlock is live on the hackathon surface — see
- * /demo/hackathon's MagicBlock card which explicitly renders this as
- * inactive until the env flag is set AND the stub is replaced with a
- * real implementation.
+ * This module gives callers (notably /api/tools/x402/pay) a way to
+ * submit a transaction via an ER validator instead of raw devnet.
+ * When the flag is off we just expose the ability to tell callers
+ * "use the default devnet path" so the receipt can still record
+ * `executed_via: 'solana-devnet'`.
  *
- * Gate:
- *   MAGICBLOCK_ENABLED=1   — flips the UI label from "Inactive" to
- *                            "Active". Does NOT magically make a real
- *                            adapter exist. If set without a real
- *                            implementation, the adapter still refuses
- *                            to submit — we never fake a receipt.
+ * Env:
+ *   NEXT_PUBLIC_MAGICBLOCK_ENABLED — turn on ER routing (0/1).
+ *   MAGICBLOCK_CLUSTER             — 'devnet' (default) | 'mainnet'.
+ *   MAGICBLOCK_REGION              — 'us' (default) | 'eu' | 'as' | 'tee'.
+ *   MAGICBLOCK_RPC                 — full override. If set, used verbatim
+ *                                    instead of the region/cluster pair.
  */
 
-export interface MagicBlockSubmitRequest {
-    receiptHash: string;
-    payloadBytes: Uint8Array;
-}
+import { Connection } from '@solana/web3.js';
 
-export interface MagicBlockSubmitResult {
-    ok: true;
-    rollupTx: string;
-    submittedAt: number;
-    /** Always present so receipt metadata stores `executed_via = 'magicblock'` or `'solana-devnet'`. */
-    executedVia: 'magicblock' | 'solana-devnet';
-}
+/** MagicBlock published RPC endpoints. Source: docs.magicblock.gg/pages/overview/products */
+const ER_ENDPOINTS = {
+    devnet: {
+        us: 'https://devnet-us.magicblock.app',
+        eu: 'https://devnet-eu.magicblock.app',
+        as: 'https://devnet-as.magicblock.app',
+        tee: 'https://devnet-tee.magicblock.app',
+    },
+    mainnet: {
+        us: 'https://us.magicblock.app',
+        eu: 'https://eu.magicblock.app',
+        as: 'https://as.magicblock.app',
+        tee: 'https://mainnet-tee.magicblock.app',
+    },
+} as const;
 
-export interface MagicBlockSubmitError {
-    ok: false;
-    reason: 'disabled' | 'stub_not_configured' | 'network_error';
-    message: string;
-}
+export type MagicBlockCluster = 'devnet' | 'mainnet';
+export type MagicBlockRegion = 'us' | 'eu' | 'as' | 'tee';
 
 export interface MagicBlockAdapter {
-    /** True when the env flag is set AND the adapter is a real implementation. */
     isActive(): boolean;
-    submit(req: MagicBlockSubmitRequest): Promise<MagicBlockSubmitResult | MagicBlockSubmitError>;
+    getRpcUrl(): string | null;
+    /**
+     * Return a configured @solana/web3.js Connection bound to the ER
+     * validator. Null when the adapter isn't active.
+     */
+    connection(): Connection | null;
+    /** What the receipt should record under `executed_via`. */
+    executedVia(): 'magicblock' | 'solana-devnet';
 }
 
-/**
- * Stub adapter. Refuses every submit with reason=stub_not_configured
- * even when MAGICBLOCK_ENABLED=1, so we never pretend to have written
- * to an ephemeral rollup that we haven't wired up.
- *
- * Replace this with a real MagicBlock SDK call to flip `isActive` to
- * true and make `submit` return `{ ok: true, executedVia: 'magicblock' }`.
- */
-const stubAdapter: MagicBlockAdapter = {
+function resolveCluster(): MagicBlockCluster {
+    const v = process.env.MAGICBLOCK_CLUSTER?.toLowerCase();
+    return v === 'mainnet' ? 'mainnet' : 'devnet';
+}
+
+function resolveRegion(): MagicBlockRegion {
+    const v = process.env.MAGICBLOCK_REGION?.toLowerCase();
+    if (v === 'eu' || v === 'as' || v === 'tee' || v === 'us') return v;
+    return 'us';
+}
+
+function resolveRpc(): string | null {
+    const override = process.env.MAGICBLOCK_RPC?.trim();
+    if (override) return override;
+    if (process.env.NEXT_PUBLIC_MAGICBLOCK_ENABLED !== '1') return null;
+    const cluster = resolveCluster();
+    const region = resolveRegion();
+    return ER_ENDPOINTS[cluster][region];
+}
+
+const adapter: MagicBlockAdapter = {
     isActive(): boolean {
-        return false;
+        return resolveRpc() !== null;
     },
-    async submit(): Promise<MagicBlockSubmitError> {
-        return {
-            ok: false,
-            reason: 'stub_not_configured',
-            message: 'MagicBlock adapter is a stub. Replace lib/magicblock/adapter.ts with a real implementation before flipping MAGICBLOCK_ENABLED in prod.',
-        };
+    getRpcUrl(): string | null {
+        return resolveRpc();
+    },
+    connection(): Connection | null {
+        const url = resolveRpc();
+        if (!url) return null;
+        return new Connection(url, 'confirmed');
+    },
+    executedVia(): 'magicblock' | 'solana-devnet' {
+        return resolveRpc() ? 'magicblock' : 'solana-devnet';
     },
 };
 
 export function getMagicBlockAdapter(): MagicBlockAdapter {
-    // When you ship a real adapter, branch on `process.env.MAGICBLOCK_ENABLED`
-    // and return the real implementation. Today, regardless of the flag,
-    // we return the stub so receipts never record a fake rollup tx.
-    return stubAdapter;
+    return adapter;
 }
 
 /**
- * Helper used by /demo/hackathon to render an honest status pill.
- * Returns `inactive` unless both the flag is set AND the adapter
- * reports itself active. Never returns `active` for the stub.
+ * Surface status for /demo/hackathon + Truth Table. Honest labels
+ * only — if the flag is off, we report Inactive even with the
+ * validator list known.
  */
 export function magicBlockSurfaceStatus(): {
     label: string;
     active: boolean;
     reason: string;
+    rpcUrl: string | null;
 } {
-    const flag = process.env.NEXT_PUBLIC_MAGICBLOCK_ENABLED === '1';
-    const adapter = getMagicBlockAdapter();
-    const active = flag && adapter.isActive();
-    if (active) {
+    const url = resolveRpc();
+    if (url) {
         return {
             label: 'Active',
             active: true,
-            reason: 'Ephemeral rollup adapter wired and enabled.',
-        };
-    }
-    if (flag) {
-        return {
-            label: 'Inactive',
-            active: false,
-            reason: 'Flag is on but adapter is still the stub — receipts fall back to Solana devnet.',
+            reason: `Ephemeral Rollup routing enabled at ${url}. Receipts record executed_via: 'magicblock'.`,
+            rpcUrl: url,
         };
     }
     return {
         label: 'Inactive',
         active: false,
-        reason: 'Ephemeral rollup adapter shipped but not enabled. Receipts continue to land on Solana devnet.',
+        reason: 'NEXT_PUBLIC_MAGICBLOCK_ENABLED != 1. Set the flag + MAGICBLOCK_CLUSTER (devnet|mainnet) + MAGICBLOCK_REGION (us|eu|as|tee) to route x402 settlements through a MagicBlock ER validator. Receipts will keep recording executed_via: solana-devnet until then.',
+        rpcUrl: null,
     };
 }
