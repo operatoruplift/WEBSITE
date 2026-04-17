@@ -48,7 +48,7 @@ Legend:
 | Surface | State | Notes |
 |---|---|---|
 | x402 gate on `calendar.create` / `gmail.send/draft` | Real | 402 → invoice → `/api/tools/x402/pay` → retry with `X-Payment-Proof`. |
-| x402 settlement | Real (devnet simulated tx) | Devnet sim tx on purpose; mainnet post-May-15. |
+| x402 settlement | Real | Server wallet signs a tiny lamport transfer on Solana devnet; real signature, verifiable at `explorer.solana.com/tx/<sig>?cluster=devnet`. Requires `SOLANA_DEPLOY_WALLET_KEY` set and funded. Mainnet post-May-15. |
 | MCPay compatibility | Real | Flow matches the MCPay spec. |
 
 ## Retention loop
