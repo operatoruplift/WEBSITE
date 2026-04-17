@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import {
-    Sparkles, MessageSquare, LayoutGrid, Activity, Shield,
-    ScrollText, Puzzle, User, Settings, LogOut,
+    MessageSquare, Activity, Puzzle, Shield, User, LogOut,
 } from 'lucide-react';
 import { Logo } from '@/src/components/Icons';
 import { cn } from '@/lib/utils';
@@ -13,6 +12,10 @@ import { cn } from '@/lib/utils';
 /**
  * Narrow icon dock — matches the uplift.exe Electron app layout.
  * w-14 fixed, icon-only with hover tooltip appearing to the right.
+ *
+ * Demo surfaces (hidden from nav, routes still mounted for re-enable post-May 15):
+ *   /app, /memory, /analytics, /workflows, /onboarding, /agents, /marketplace, /settings
+ * Nav shows only surfaces with real backend execution for the May 14 demo.
  */
 
 interface DockItem {
@@ -21,21 +24,12 @@ interface DockItem {
     icon: React.ComponentType<{ size?: number; className?: string }>;
 }
 
-const DOCK_ITEMS: DockItem[] = [
+const NAV_ITEMS: DockItem[] = [
     { href: '/chat', label: 'Chat', icon: MessageSquare },
-    { href: '/marketplace', label: 'Agents', icon: LayoutGrid },
-    { href: '/memory', label: 'Memory', icon: ScrollText },
-    { href: '/security', label: 'Security', icon: Shield },
-    { href: '/settings', label: 'Settings', icon: Settings },
-    { href: '/profile', label: 'Profile', icon: User },
-];
-
-// Swarm, Workspace, Recent are advanced — shown only when
-// localStorage.getItem('advanced_mode') === '1'
-const ADVANCED_DOCK_ITEMS: DockItem[] = [
-    { href: '/app', label: 'Recent', icon: Sparkles },
     { href: '/swarm', label: 'Swarm', icon: Activity },
-    { href: '/integrations', label: 'Workspace', icon: Puzzle },
+    { href: '/integrations', label: 'Integrations', icon: Puzzle },
+    { href: '/security', label: 'Security', icon: Shield },
+    { href: '/profile', label: 'Profile', icon: User },
 ];
 
 function DockIcon({ item, isActive }: { item: DockItem; isActive: boolean }) {
@@ -70,22 +64,8 @@ function DockIcon({ item, isActive }: { item: DockItem; isActive: boolean }) {
 
 export function CockpitSidebar() {
     const pathname = usePathname();
-    const [advancedMode, setAdvancedMode] = useState(false);
 
-    // Read advanced mode flag from localStorage on mount and poll for changes
-    // (cheap — only runs client-side and it's a single read)
-    useState(() => {
-        if (typeof window !== 'undefined') {
-            setAdvancedMode(localStorage.getItem('advanced_mode') === '1');
-        }
-    });
-
-    const isActive = (href: string) => {
-        if (href === '/app') return pathname === '/app';
-        return pathname?.startsWith(href) ?? false;
-    };
-
-    const items = advancedMode ? [...DOCK_ITEMS, ...ADVANCED_DOCK_ITEMS] : DOCK_ITEMS;
+    const isActive = (href: string) => pathname?.startsWith(href) ?? false;
 
     return (
         <aside className="w-14 flex-shrink-0 flex flex-col h-full relative z-20 border-r border-[#FAFAFA]/5 bg-[#0A0A0A]/50 hidden md:flex">
@@ -98,7 +78,7 @@ export function CockpitSidebar() {
 
             {/* Dock icons */}
             <nav className="flex-1 flex flex-col items-center gap-1.5 px-2 pt-2 overflow-y-auto">
-                {items.map(item => (
+                {NAV_ITEMS.map(item => (
                     <DockIcon key={item.href} item={item} isActive={isActive(item.href)} />
                 ))}
             </nav>

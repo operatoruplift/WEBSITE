@@ -6,9 +6,19 @@
  * This module extracts them, presents them for approval, and executes.
  */
 
+/** Tools known to the chat runtime. Unknown tools fall through to generic handling. */
+export type ToolKind =
+    | 'calendar'
+    | 'gmail'
+    | 'x402'
+    | 'reminders'
+    | 'notes'
+    | 'tasks'
+    | 'web';
+
 export interface ToolCall {
     id: string;
-    tool: 'calendar' | 'gmail' | 'x402';
+    tool: ToolKind;
     action: string;
     params: Record<string, unknown>;
     rawBlock: string;
@@ -21,6 +31,8 @@ export interface ToolResult {
     success: boolean;
     data?: unknown;
     error?: string;
+    /** True when the result came from a Demo-mode mock (executeMock). */
+    simulated?: boolean;
 }
 
 // Match <tool_use> blocks — also handles cases where LLM wraps in backticks or code fences
@@ -52,7 +64,7 @@ export function parseToolCalls(text: string): ToolCall[] {
     // Fallback: if no <tool_use> blocks found, try matching raw JSON tool objects
     // (LLM sometimes drops the XML tags and outputs bare JSON)
     if (calls.length === 0) {
-        const jsonRegex = /\{\s*"tool"\s*:\s*"(calendar|gmail|x402)"\s*,\s*"action"\s*:\s*"[^"]+"\s*,\s*"params"\s*:\s*\{[^}]*\}\s*\}/g;
+        const jsonRegex = /\{\s*"tool"\s*:\s*"(calendar|gmail|x402|reminders|notes|tasks|web)"\s*,\s*"action"\s*:\s*"[^"]+"\s*,\s*"params"\s*:\s*\{[^}]*\}\s*\}/g;
         let jsonMatch: RegExpExecArray | null;
         while ((jsonMatch = jsonRegex.exec(text)) !== null) {
             try {
@@ -82,7 +94,36 @@ export function stripToolBlocks(text: string): string {
 
 /** Check if a response contains any tool-call blocks. */
 export function hasToolCalls(text: string): boolean {
-    return /<tool_use>/.test(text) || /\{"tool"\s*:\s*"(calendar|gmail|x402)"/.test(text);
+    return /<tool_use>/.test(text) || /\{"tool"\s*:\s*"(calendar|gmail|x402|reminders|notes|tasks|web)"/.test(text);
+}
+
+/**
+ * Execute a tool call in Demo mode — returns a deterministic Simulated result.
+ *
+ * Never hits any external API. Never writes to Supabase. Never produces a
+ * receipt. Safe to call from anonymous visitors and from authenticated
+ * users who have no capability_real. The result carries `simulated: true`
+ * so downstream renderers can show the gray Simulated chip.
+ */
+export async function executeMock(call: ToolCall): Promise<ToolResult> {
+    // Lazy import avoids pulling the canned-replies module into the real
+    // tool-execution path when not needed.
+    const { DEMO_TOOL_MOCKS } = await import('@/lib/cannedReplies');
+    const key = `${call.tool}.${call.action}`;
+    const mock = DEMO_TOOL_MOCKS[key] ?? { simulated: true, message: 'Done (simulated).' };
+
+    // Small latency so the Approve → result transition feels like a real
+    // round-trip instead of an instant flicker.
+    await new Promise(r => setTimeout(r, 400));
+
+    return {
+        toolCallId: call.id,
+        tool: call.tool,
+        action: call.action,
+        success: true,
+        data: mock,
+        simulated: true,
+    };
 }
 
 /**
@@ -101,7 +142,17 @@ export async function executeToolCall(
         ? '/api/tools/calendar'
         : call.tool === 'gmail'
             ? '/api/tools/gmail'
-            : '/api/tools/x402';
+            : call.tool === 'x402'
+                ? '/api/tools/x402'
+                : call.tool === 'reminders'
+                    ? '/api/tools/reminders'
+                    : call.tool === 'notes'
+                        ? '/api/tools/notes'
+                        : call.tool === 'tasks'
+                            ? '/api/tools/tasks'
+                            : call.tool === 'web'
+                                ? '/api/tools/web'
+                                : `/api/tools/${call.tool}`;
 
     const authToken = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     const authHeader: Record<string, string> = authToken ? { Authorization: `Bearer ${authToken}` } : {};
@@ -226,8 +277,12 @@ export function formatToolResult(result: ToolResult): string {
         return `**Tool Error** (${result.tool}.${result.action}): ${result.error}`;
     }
 
+    // Demo-mode: prefix every rendered result with a Simulated tag so the
+    // viewer never confuses a mock call with a real side-effect.
+    const simulatedTag = result.simulated ? '*(Simulated — sign in to make it real)*\n\n' : '';
+
     const data = result.data as Record<string, unknown> | undefined;
-    if (!data) return `**${result.tool}.${result.action}** — completed.`;
+    if (!data) return `${simulatedTag}**${result.tool}.${result.action}** — completed.`;
 
     // Calendar results
     if (result.tool === 'calendar' && result.action === 'free_slots' && Array.isArray(data.slots)) {
@@ -236,45 +291,50 @@ export function formatToolResult(result: ToolResult): string {
             const start = new Date(s.start);
             return `${i + 1}. **${start.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}** at ${start.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} (${s.durationMinutes}min)`;
         });
-        return `**Calendar — Free Slots Found:**\n${lines.join('\n')}`;
+        return `${simulatedTag}**Calendar — Free Slots Found:**\n${lines.join('\n')}`;
     }
 
     if (result.tool === 'calendar' && result.action === 'create' && data.event) {
         const evt = data.event as { summary: string; start: string; htmlLink?: string };
         const start = new Date(evt.start);
-        return `**Calendar Event Created:** "${evt.summary}" on ${start.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })} at ${start.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}${evt.htmlLink ? ` — [View](${evt.htmlLink})` : ''}`;
+        return `${simulatedTag}**Calendar Event Created:** "${evt.summary}" on ${start.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })} at ${start.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}${evt.htmlLink ? ` — [View](${evt.htmlLink})` : ''}`;
     }
 
     if (result.tool === 'calendar' && result.action === 'list' && Array.isArray(data.events)) {
         const events = data.events as { summary: string; start: string }[];
-        if (events.length === 0) return '**Calendar:** No upcoming events found.';
+        if (events.length === 0) return `${simulatedTag}**Calendar:** No upcoming events found.`;
         const lines = events.slice(0, 5).map(e => {
             const d = new Date(e.start);
             return `- ${d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} ${d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} — ${e.summary}`;
         });
-        return `**Upcoming Events (${events.length}):**\n${lines.join('\n')}`;
+        return `${simulatedTag}**Upcoming Events (${events.length}):**\n${lines.join('\n')}`;
     }
 
     // Gmail results
     if (result.tool === 'gmail' && result.action === 'draft' && data.draft) {
         const draft = data.draft as { draftId: string };
-        return `**Gmail Draft Created** (ID: \`${draft.draftId.slice(0, 8)}...\`). Ready to send on approval.`;
+        return `${simulatedTag}**Gmail Draft Created** (ID: \`${draft.draftId.slice(0, 8)}...\`). Ready to send on approval.`;
     }
 
     if (result.tool === 'gmail' && (result.action === 'send' || result.action === 'send_draft') && data.result) {
         const r = data.result as { messageId: string };
-        return `**Email Sent** (Message ID: \`${r.messageId.slice(0, 8)}...\`). Delivered to recipient.`;
+        return `${simulatedTag}**Email Sent** (Message ID: \`${r.messageId.slice(0, 8)}...\`). Delivered to recipient.`;
     }
 
     if (result.tool === 'gmail' && result.action === 'list' && Array.isArray(data.messages)) {
         const msgs = data.messages as { from: string; subject: string; date: string }[];
-        if (msgs.length === 0) return '**Gmail:** No messages found.';
+        if (msgs.length === 0) return `${simulatedTag}**Gmail:** No messages found.`;
         const lines = msgs.slice(0, 5).map(m => `- **${m.subject}** from ${m.from.split('<')[0].trim()}`);
-        return `**Recent Emails (${msgs.length}):**\n${lines.join('\n')}`;
+        return `${simulatedTag}**Recent Emails (${msgs.length}):**\n${lines.join('\n')}`;
+    }
+
+    // Reminders — the 3rd demo beat
+    if (result.tool === 'reminders' && result.action === 'schedule') {
+        return `${simulatedTag}**Reminder scheduled** — ${data.message ?? 'Nudge queued for tomorrow.'}`;
     }
 
     // Generic fallback
-    return `**${result.tool}.${result.action}** completed:\n\`\`\`json\n${JSON.stringify(data, null, 2).slice(0, 500)}\n\`\`\``;
+    return `${simulatedTag}**${result.tool}.${result.action}** completed:\n\`\`\`json\n${JSON.stringify(data, null, 2).slice(0, 500)}\n\`\`\``;
 }
 
 /**

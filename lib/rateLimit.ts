@@ -15,12 +15,13 @@ import { Redis } from '@upstash/redis';
 
 let ratelimitFree: Ratelimit | null = null;
 let ratelimitPro: Ratelimit | null = null;
+let ratelimitDemo: Ratelimit | null = null;
 
 // In-memory fallback (resets on deploy/restart)
 const memoryBuckets = new Map<string, { count: number; resetAt: number }>();
 
 function getUpstashLimiters() {
-    if (ratelimitFree) return { free: ratelimitFree, pro: ratelimitPro! };
+    if (ratelimitFree) return { free: ratelimitFree, pro: ratelimitPro!, demo: ratelimitDemo! };
 
     const url = process.env.UPSTASH_REDIS_REST_URL;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -41,7 +42,16 @@ function getUpstashLimiters() {
         prefix: 'rl:pro',
     });
 
-    return { free: ratelimitFree, pro: ratelimitPro };
+    // Demo tier = anonymous (and logged-in-no-caps) visitors on /chat.
+    // 10/hr/IP is enough for the judge demo without letting the canned
+    // stream be spammed.
+    ratelimitDemo = new Ratelimit({
+        redis,
+        limiter: Ratelimit.slidingWindow(10, '1 h'),
+        prefix: 'rl:demo',
+    });
+
+    return { free: ratelimitFree, pro: ratelimitPro, demo: ratelimitDemo };
 }
 
 export interface RateLimitResult {
@@ -51,20 +61,20 @@ export interface RateLimitResult {
 }
 
 /**
- * Check rate limit for a user.
- * @param userId - Verified Privy user ID
- * @param tier - 'free' or 'pro' (default: 'free')
+ * Check rate limit for a user or IP.
+ * @param key    — verified Privy user ID (free/pro) or IP (demo)
+ * @param tier   — 'demo' | 'free' | 'pro' (default: 'free')
  */
 export async function checkRateLimit(
-    userId: string,
-    tier: 'free' | 'pro' = 'free',
+    key: string,
+    tier: 'demo' | 'free' | 'pro' = 'free',
 ): Promise<RateLimitResult> {
     const limiters = getUpstashLimiters();
 
     if (limiters) {
         // Upstash rate limiting (persistent, distributed)
-        const limiter = tier === 'pro' ? limiters.pro : limiters.free;
-        const result = await limiter.limit(userId);
+        const limiter = tier === 'pro' ? limiters.pro : tier === 'demo' ? limiters.demo : limiters.free;
+        const result = await limiter.limit(key);
         return {
             allowed: result.success,
             remaining: result.remaining,
@@ -73,14 +83,15 @@ export async function checkRateLimit(
     }
 
     // In-memory fallback
-    const maxReqs = tier === 'pro' ? 600 : 60;
+    const maxReqs = tier === 'pro' ? 600 : tier === 'demo' ? 10 : 60;
     const windowMs = 3600_000; // 1 hour
     const now = Date.now();
-    const key = `${tier}:${userId}`;
-    const entry = memoryBuckets.get(key);
+    const userId = key;
+    const memKey = `${tier}:${userId}`;
+    const entry = memoryBuckets.get(memKey);
 
     if (!entry || now > entry.resetAt) {
-        memoryBuckets.set(key, { count: 1, resetAt: now + windowMs });
+        memoryBuckets.set(memKey, { count: 1, resetAt: now + windowMs });
         return { allowed: true, remaining: maxReqs - 1, retryAfterSeconds: 0 };
     }
 

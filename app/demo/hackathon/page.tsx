@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
-import { ExternalLink, Check, FileJson, KeyRound, Receipt, ArrowRight, Coins } from 'lucide-react';
+import { ExternalLink, Check, FileJson, KeyRound, Receipt, ArrowRight, Coins, Zap } from 'lucide-react';
+import { magicBlockSurfaceStatus } from '@/lib/magicblock/adapter';
 
 /**
  * /demo/hackathon
@@ -151,6 +152,9 @@ export default function HackathonDemoPage() {
                         </ol>
                     </div>
 
+                    {/* MagicBlock — honestly labeled adapter card */}
+                    <MagicBlockCard />
+
                     {/* What's verifiable */}
                     <div className="rounded-2xl border border-[#222222] bg-[#111111] p-6 md:p-8 mb-10">
                         <div className="flex items-center gap-2 mb-5">
@@ -253,6 +257,39 @@ const VERIFIABLE: Array<{ claim: string; how: string }> = [
         how: 'Every execution stands alone. The approval modal has no "remember this agent" checkbox by design.',
     },
 ];
+
+function MagicBlockCard() {
+    // Status is read at render time from NEXT_PUBLIC_MAGICBLOCK_ENABLED.
+    // The adapter itself is a stub (see lib/magicblock/adapter.ts), so
+    // this card never falsely claims "Active" — it tells you the flag
+    // state and the reason. Judges can read the source for the stub.
+    const status = magicBlockSurfaceStatus();
+    const pillClass = status.active
+        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+        : 'bg-white/5 border-white/15 text-gray-400';
+    return (
+        <div className="rounded-2xl border border-[#222222] bg-[#111111] p-6 md:p-8 mb-10">
+            <div className="flex items-center gap-2 mb-5">
+                <Zap size={16} className="text-[#F97316]" />
+                <span className="text-xs font-mono uppercase tracking-widest text-[#F97316]">MagicBlock adapter</span>
+                <span className={`ml-auto inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border ${pillClass}`}>
+                    {status.label}
+                </span>
+            </div>
+            <p className="text-sm text-[#A1A1AA] leading-relaxed mb-4">
+                MagicBlock can settle receipts on an ephemeral rollup for faster
+                finality than mainnet. Our adapter interface is shipped at{' '}
+                <code className="text-[#F97316] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222] text-[11px]">lib/magicblock/adapter.ts</code>
+                {' '}and is feature-flagged behind{' '}
+                <code className="text-[#F97316] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222] text-[11px]">NEXT_PUBLIC_MAGICBLOCK_ENABLED</code>
+                .
+            </p>
+            <p className="text-xs text-[#A1A1AA] leading-relaxed">
+                <strong className="text-white">Honest status:</strong> {status.reason} No receipt produced by this codebase claims <code className="text-[#F97316] bg-[#0A0A0A] px-1 py-0.5 rounded border border-[#222222] text-[11px]">executed_via: magicblock</code> unless the stub is replaced with a real implementation AND the flag is set.
+            </p>
+        </div>
+    );
+}
 
 function VerifyCard({
     icon: Icon,

@@ -68,17 +68,18 @@ const Hero: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/50 pointer-events-none"></div>
           </div>
 
-          {/* CTAs */}
+          {/* CTAs — consumer-first: drop judges straight into /chat with
+              no login wall. Real-mode sign-in sits behind the secondary CTA. */}
           <FadeIn delay={800}>
             <div className="flex flex-col sm:flex-row items-start gap-3 mb-8">
-              <Link href="/paywall"
+              <Link href="/chat"
                 className="inline-flex items-center px-6 py-3 bg-primary text-white font-bold text-sm rounded-lg hover:bg-primary/90 transition-colors uppercase tracking-wide">
-                Get Early Access
+                Try It Live — No Signup
                 <svg className="ml-2 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
               </Link>
-              <Link href="/product"
+              <Link href="/paywall"
                 className="inline-flex items-center px-6 py-3 bg-white/5 text-white font-bold text-sm rounded-lg border border-white/10 hover:bg-white/10 transition-all uppercase tracking-wide">
-                Explore Product
+                Sign In To Make It Real
               </Link>
             </div>
             <DownloadWidget data={data} />

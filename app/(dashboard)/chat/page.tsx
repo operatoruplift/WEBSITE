@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Bot, User, Send, Plus, Trash2, Copy, Check, Loader2, Sparkles, Zap, ChevronDown, Mic, Paperclip, Search, Code, FileText, Brain, Globe, MessageSquare } from 'lucide-react';
+import { Bot, User, Send, Plus, Trash2, Copy, Check, Loader2, Sparkles, Zap, ChevronDown, Mic, Paperclip, Search, Code, FileText, Brain, Globe, MessageSquare, Pin, X as XIcon } from 'lucide-react';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
@@ -13,6 +13,20 @@ import { runCouncil, shouldUseCouncil, extractToolCallsFromText, type CouncilRes
 
 interface Message { id: string; role: 'user' | 'assistant'; content: string; timestamp: Date; model?: string; councilTranscript?: CouncilResult['transcript']; }
 interface ChatSession { id: string; title: string; messages: Message[]; createdAt: Date; model: string; }
+
+interface Capabilities {
+    capability_google: boolean;
+    capability_key: boolean;
+    capability_real: boolean;
+    authenticated: boolean;
+}
+
+const DEMO_CAPABILITIES: Capabilities = {
+    capability_google: false,
+    capability_key: false,
+    capability_real: false,
+    authenticated: false,
+};
 
 const MODELS = [
     { id: 'claude-opus-4-6', label: 'Claude Opus 4.6', provider: 'Anthropic', color: 'text-[#F97316]', badge: 'SMART' },
@@ -91,6 +105,35 @@ function inlineMarkdown(text: string): string {
     return safe.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>').replace(/`(.+?)`/g, '<code class="px-1.5 py-0.5 rounded bg-foreground/[0.06] text-green-300 font-mono text-[13px] border border-foreground/10">$1</code>');
 }
 
+function CapabilityBadge({ capabilities, loaded }: { capabilities: Capabilities; loaded: boolean }) {
+    if (!loaded) {
+        return (
+            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest bg-white/5 border border-white/10 text-gray-500">
+                <span className="w-1.5 h-1.5 rounded-full bg-gray-500" /> Loading
+            </span>
+        );
+    }
+    if (capabilities.capability_real) {
+        const subLabel = capabilities.capability_google ? 'Google' : 'API key';
+        return (
+            <span
+                title={`Real execution enabled (${subLabel})`}
+                className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
+            >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Real · {subLabel}
+            </span>
+        );
+    }
+    return (
+        <span
+            title="Demo mode — every reply and tool action is simulated"
+            className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest bg-[#F97316]/10 border border-[#F97316]/30 text-[#F97316]"
+        >
+            <span className="w-1.5 h-1.5 rounded-full bg-[#F97316]" /> Demo · Simulated
+        </span>
+    );
+}
+
 export default function ChatPage() {
     const [sessions, setSessions] = useState<ChatSession[]>([]);
     const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
@@ -105,6 +148,10 @@ export default function ChatPage() {
     const toolCallResolveRef = useRef<((result: ToolResult | null) => void) | null>(null);
     const [councilProcessing, setCouncilProcessing] = useState(false);
     const [expandedCouncil, setExpandedCouncil] = useState<string | null>(null); // message ID to show transcript
+    const [capabilities, setCapabilities] = useState<Capabilities>(DEMO_CAPABILITIES);
+    const [capsLoaded, setCapsLoaded] = useState(false);
+    const [demoBannerDismissed, setDemoBannerDismissed] = useState(false);
+    const [pinned, setPinned] = useState<{ id: string; type: string; title?: string; body?: string; pinned_until?: string }[]>([]);
 
     const getChatUserId = (): string => {
         try { const u = localStorage.getItem('user'); if (u) return JSON.parse(u).id || 'demo-user'; } catch {} return 'demo-user';
@@ -121,6 +168,46 @@ export default function ChatPage() {
     const { showToast } = useToast();
     const activeSession = sessions.find(s => s.id === activeSessionId);
     const activeModel = MODELS.find(m => m.id === selectedModel) || MODELS[0];
+
+    // Fetch capability state on mount so the Demo/Real badge renders correctly
+    // and tool approvals know whether to route to executeMock or executeToolCall.
+    useEffect(() => {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+        fetch('/api/capabilities', {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+            cache: 'no-store',
+        })
+            .then(r => r.json())
+            .then((data: Capabilities) => setCapabilities(data))
+            .catch(() => setCapabilities(DEMO_CAPABILITIES))
+            .finally(() => setCapsLoaded(true));
+
+        // Pinned daily briefing — only fetched when authenticated. The
+        // /api/notifications/pinned route returns rows from the
+        // `notifications` table whose pinned_until > now(). Demo users
+        // never get one because they can't opt in from Profile.
+        if (token) {
+            fetch('/api/notifications/pinned', {
+                headers: { Authorization: `Bearer ${token}` },
+                cache: 'no-store',
+            })
+                .then(r => r.ok ? r.json() : { pinned: [] })
+                .then((data: { pinned: typeof pinned }) => setPinned(data.pinned ?? []))
+                .catch(() => { /* non-fatal */ });
+        }
+    }, []);
+
+    const dismissPinned = async (id: string) => {
+        setPinned(prev => prev.filter(p => p.id !== id));
+        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+        if (!token) return;
+        try {
+            await fetch(`/api/notifications/pinned?id=${encodeURIComponent(id)}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${token}` },
+            });
+        } catch { /* non-fatal */ }
+    };
 
     useEffect(() => {
         const saved = localStorage.getItem('chat-sessions-v2');
@@ -443,6 +530,7 @@ export default function ChatPage() {
                 <main className="flex-1 flex flex-col min-w-0 relative z-10">
                     <div className="flex items-center justify-between px-4 py-3 border-b border-foreground/10 bg-foreground/[0.04] backdrop-blur-sm shrink-0 sticky top-0 z-50">
                         <div className="flex items-center gap-3">
+                            <CapabilityBadge capabilities={capabilities} loaded={capsLoaded} />
                             <div className="flex gap-1 p-1 bg-foreground/[0.04] rounded-xl border border-foreground/10">
                                 {AGENTS.map(agent => { const Icon = agent.icon; return (
                                     <button key={agent.id} onClick={() => setSelectedAgent(agent.id)} className={`px-2 sm:px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-widest flex items-center gap-1.5 transition-all ${selectedAgent === agent.id ? 'bg-[#F97316]/20 text-[#F97316] border border-[#F97316]/30' : 'text-gray-500 hover:text-white'}`}>
@@ -467,6 +555,48 @@ export default function ChatPage() {
                             </div>}
                         </div>
                     </div>
+                    {capsLoaded && !capabilities.capability_real && !demoBannerDismissed && (
+                        <div className="px-4 py-2 border-b border-[#F97316]/20 bg-[#F97316]/5 flex items-center gap-3 shrink-0">
+                            <Sparkles size={14} className="text-[#F97316] shrink-0" />
+                            <p className="text-xs text-[#F97316] flex-1">
+                                {capabilities.authenticated
+                                    ? 'You\'re signed in but no Google or API key is connected — every reply is simulated.'
+                                    : 'Anonymous demo — every reply and tool action is simulated.'}
+                                {' '}
+                                <a href="/integrations" className="underline hover:text-white">Connect Google</a>
+                                {' or '}
+                                <a href="/settings" className="underline hover:text-white">add an API key</a>
+                                {' to make it real.'}
+                            </p>
+                            <button
+                                onClick={() => setDemoBannerDismissed(true)}
+                                aria-label="Dismiss demo banner"
+                                className="p-1 rounded text-[#F97316]/60 hover:text-[#F97316] hover:bg-[#F97316]/10"
+                            >
+                                <XIcon size={14} />
+                            </button>
+                        </div>
+                    )}
+                    {pinned.length > 0 && (
+                        <div className="px-4 py-2 border-b border-emerald-500/20 bg-emerald-500/5 shrink-0 space-y-2">
+                            {pinned.map(row => (
+                                <div key={row.id} className="flex items-start gap-3">
+                                    <Pin size={14} className="text-emerald-400 shrink-0 mt-0.5" />
+                                    <div className="flex-1 min-w-0">
+                                        {row.title && <p className="text-xs font-semibold text-emerald-300">{row.title}</p>}
+                                        {row.body && <p className="text-xs text-emerald-100/80 leading-relaxed">{row.body}</p>}
+                                    </div>
+                                    <button
+                                        onClick={() => dismissPinned(row.id)}
+                                        aria-label="Dismiss pinned message"
+                                        className="p-1 rounded text-emerald-300/60 hover:text-emerald-300 hover:bg-emerald-500/10"
+                                    >
+                                        <XIcon size={14} />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                     <div className="flex-1 overflow-y-auto scrollbar-none" onClick={() => setShowModelPicker(false)}>
                         {!activeSession || activeSession.messages.length === 0 ? (
                             <div className="h-full flex flex-col items-center justify-center p-8">
@@ -554,6 +684,7 @@ export default function ChatPage() {
                 <ToolApprovalModal
                     toolCall={pendingToolCall}
                     userId={getChatUserId()}
+                    demoMode={!capabilities.capability_real}
                     onResult={(result) => {
                         setPendingToolCall(null);
                         toolCallResolveRef.current?.(result);

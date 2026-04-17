@@ -49,10 +49,10 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
     ],
   },
   hero: {
-    visionTag: "VISION",
-    headline: "AI That Runs on Your Terms.",
-    subhead: "One Platform. Every Agent. Your Infrastructure.",
-    description: "Deploy AI agents that run on your infrastructure, not someone else's cloud. Local-first, encrypted, compliant. Built for teams that can't afford to leak data.",
+    visionTag: "PERSONAL AI OPERATOR",
+    headline: "AI That Runs Your Day, On Your Terms.",
+    subhead: "A personal AI operator for email and calendar. Every action waits for your Approve click. Every real action leaves a signed receipt.",
+    description: "Ask for a daily briefing, triage your inbox, schedule meetings — all through one chat. Nothing sends or books without your OK. Try the live demo before you sign in.",
     contractAddress: "",
     contractLabel: "",
     downloads: {

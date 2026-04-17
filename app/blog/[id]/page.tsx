@@ -9,6 +9,37 @@ import { posts } from '../page';
 
 function getArticleContent(id: string) {
     const content: Record<string, React.ReactNode> = {
+        'balaji-pivot-advice': (
+            <div className="space-y-6">
+                <p className="text-lg">Balaji looked at what I was building and told me to walk away.</p>
+                <p>This is specific, so I&apos;ll be specific. I showed him Operator Uplift in March: a local-first AI operator with approval-gated tool calls and on-chain audit receipts. He gave three pieces of advice, back to back, in the order he gave them.</p>
+                <p><strong>One.</strong> &quot;You&apos;re competing with Perplexity, OpenAI, Anthropic, and Google. Solo founder, no funding, walk away.&quot;</p>
+                <p><strong>Two.</strong> &quot;If you stay, your wedge isn&apos;t privacy. It&apos;s a professional class that has a confidentiality obligation and no product that respects it. Lawyers. Accountants. Therapists.&quot;</p>
+                <p><strong>Three.</strong> &quot;Whatever you ship, ship it on-chain. You&apos;re on Solana. Use Solana.&quot;</p>
+                <p>I disagreed on point one. I agreed on point two. I was already doing point three. Here&apos;s the honest breakdown of what I kept, what I changed, and what stayed the same.</p>
+
+                <h2>What I disagreed with</h2>
+                <p>I am not competing with Perplexity or ChatGPT. Those products are vertical search and assistant chat, respectively. Operator Uplift is an OS layer: the thing that runs underneath an assistant to give it approval-gated tool access, signed receipts, and local memory. The LLM is a dependency, not the product.</p>
+                <p>If you frame it as &quot;build a better ChatGPT,&quot; I should walk away. A solo founder can&apos;t beat a $100B company on model quality or inference latency. But I&apos;m not trying to. I&apos;m trying to build the trust and permissions layer they&apos;ll all eventually need.</p>
+                <p>That argument either holds up or it doesn&apos;t. Balaji wasn&apos;t convinced in March. That&apos;s fair. I&apos;m building to be convincing by the Colosseum demo day on May 14.</p>
+
+                <h2>What I agreed with and changed</h2>
+                <p>He was right about the wedge. I had been pitching &quot;local AI is better for privacy&quot; as a general-purpose message. That&apos;s a weak pitch because privacy-in-general is everybody&apos;s number three concern. But privacy <em>as a statutory obligation</em> is somebody&apos;s number one concern, every single day, on pain of losing their professional license.</p>
+                <p>So I cut the general privacy copy and rewrote the wedge around three professions: lawyers, accountants, therapists. The blog post on that reasoning is still up. Whether that wedge holds or needs to be retooled for consumers will be tested publicly after May 14.</p>
+                <p>I also took his on-chain advice to its logical end. Every tool action on Operator Uplift now produces an ed25519-signed receipt. Every five receipts, the Merkle root is published via our Anchor <code>publish_root</code> program on Solana devnet. The receipts and the public key are independently verifiable. Judges can export a receipt and check the signature with the key from <code>/api/receipts/public-key</code> without trusting me.</p>
+
+                <h2>What I changed that he didn&apos;t ask for</h2>
+                <p>Three things changed independently of his advice, worth noting because they followed the same diagnostic.</p>
+                <p><strong>Consumer-first onboarding.</strong> A professional-only wedge is too narrow for a Demo Day audience. So <code>/chat</code> is now reachable with zero signup in explicit Demo mode, with every action labeled simulated, and Real mode unlocks only when you have Google connected or an API key. That way the consumer demo and the professional product share the same UI but never fake the receipt layer.</p>
+                <p><strong>Explicit capability states.</strong> The codebase now carries <code>capability_google</code>, <code>capability_key</code>, and <code>capability_real</code> as first-class server-side flags. No path produces a receipt without <code>capability_real === true</code>. No path claims real execution unless the tool actually ran.</p>
+                <p><strong>Stub adapters labeled honestly.</strong> MagicBlock was on the shortlist for a faster settlement layer. We shipped the adapter interface but flagged it clearly as <em>Inactive</em> on the hackathon page because the real gateway isn&apos;t wired. No fake claims.</p>
+
+                <h2>What I kept that he would have cut</h2>
+                <p>I kept the OS-layer framing. I kept going solo. I kept Operator Uplift as the name. I kept the plan to ship a Tauri desktop wrapper that can run local Ollama. None of those are market-tested yet. They&apos;ll be tested on May 14 and in the thirty days after.</p>
+                <p>I write this honestly because Balaji&apos;s critique was honest. If it turns out he was right and I&apos;m wrong, this post gets an addendum. If it turns out the wedge is narrower than professions and the real answer is consumer, the product is already built to pivot there without a rewrite. That part is deliberate.</p>
+                <p>The takeaway isn&apos;t &quot;listen to smart people.&quot; The takeaway is: listen, write down exactly what they said, separate the parts you believe from the parts you don&apos;t, and change the things that deserve to change. Then ship.</p>
+            </div>
+        ),
         'governed-approvals': (
             <div className="space-y-6">
                 <p className="text-lg">The single biggest difference between a helpful agent and a dangerous one is a human in the loop at the right moment.</p>
@@ -168,7 +199,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
         <div className="w-full bg-background min-h-screen">
             <Navbar currentPage="blog" />
 
-            <article className="pt-32 pb-24 px-6 md:px-12 max-w-[800px] mx-auto">
+            <article className="pt-32 pb-24 px-6 md:px-12 max-w-[720px] mx-auto">
                 <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-colors mb-8">
                     <ArrowLeft size={14} /> Back to blog
                 </Link>
@@ -179,7 +210,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
                     </span>
                 </div>
 
-                <h1 className="text-3xl md:text-4xl font-medium text-white mb-6 tracking-tight leading-tight">
+                <h1 className="text-3xl md:text-[2.5rem] font-medium text-white mb-6 tracking-tight leading-[1.12]">
                     {post.title}
                 </h1>
 
@@ -189,7 +220,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
                     <span className="flex items-center gap-1"><Tag size={12} /> {post.category}</span>
                 </div>
 
-                <div className="prose-invert max-w-none text-gray-300 leading-relaxed">
+                <div className="blog-content max-w-none text-[#D4D4D8] text-[17px] leading-[1.75]">
                     {getArticleContent(id)}
                 </div>
 
