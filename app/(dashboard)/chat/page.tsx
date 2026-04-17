@@ -419,19 +419,24 @@ export default function ChatPage() {
                 });
 
                 if (!response.ok || !response.body) {
-                    // API error — show the actual error, not generic "demo mode"
+                    // API error — show a calm, actionable message. Include
+                    // the request ID so support can trace it.
                     let content: string;
+                    const requestId = response.headers.get('x-request-id') || '';
+                    const trailer = requestId ? `\n\n*Reference: \`${requestId}\`*` : '';
                     try {
                         const errBody = await response.json();
                         if (errBody.connectPrompt) {
-                            content = `**${activeModel.label}** is not available right now.\n\n${errBody.connectPrompt}\n\n*Error: ${errBody.error}*`;
+                            content = `**${activeModel.label}** is not available right now.\n\n${errBody.connectPrompt}\n\n*${errBody.error}*${trailer}`;
                         } else if (errBody.retryAfterSeconds) {
-                            content = `**Rate limit reached.** Try again in ${errBody.retryAfterSeconds} seconds.`;
+                            content = `**Rate limit reached.** Try again in ${errBody.retryAfterSeconds} seconds.${trailer}`;
+                        } else if (errBody.retryable) {
+                            content = `**${activeModel.label} is temporarily unavailable.** ${errBody.error}${trailer}`;
                         } else {
-                            content = `**Error from ${activeModel.label}:** ${errBody.error || 'Unknown error'}\n\nCheck your API key in [Settings](/settings).`;
+                            content = `**${activeModel.label}:** ${errBody.error || 'Something went wrong on our side.'} Try again or switch models in the selector above.${trailer}`;
                         }
                     } catch {
-                        content = `**${activeModel.label}** returned an error. Check your API key in [Settings](/settings).`;
+                        content = `**${activeModel.label}** didn't respond. Try again in a moment, or switch to another model.${trailer}`;
                     }
                     setSessions(prev => prev.map(s => s.id === sessionId ? { ...s, messages: [...s.messages, { id: (Date.now() + 1).toString(), role: 'assistant', content, timestamp: new Date(), model: selectedModel }] } : s));
                     break;

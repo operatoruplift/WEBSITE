@@ -6,8 +6,63 @@ export interface LLMMessage {
   content: string;
 }
 
-/** Route to the correct LLM provider based on model name */
-export async function callLLM(model: string, messages: LLMMessage[]): Promise<ReadableStream> {
+export interface CallLLMOptions {
+  /** Opaque identifier for tracing — passed through to structured logs. */
+  requestId?: string;
+  /** Internal: current retry attempt (1-based). Callers should not set this. */
+  attempt?: number;
+}
+
+const MAX_ATTEMPTS = 3;
+const BACKOFF_MS = [0, 500, 1500];
+
+function isRetryableError(err: unknown): boolean {
+  // Missing-key errors are terminal — no amount of retrying fixes config.
+  if (err instanceof ProviderError) return false;
+  if (!(err instanceof Error)) return true;
+  const name = err.name;
+  if (name === 'AbortError' || name === 'TimeoutError') return true;
+  const msg = err.message || '';
+  // SDK-reported status codes ride on the message.
+  if (/\b(429|500|502|503|504|522|524)\b/.test(msg)) return true;
+  if (/ECONN|ETIMEDOUT|EAI_AGAIN|fetch failed|network/i.test(msg)) return true;
+  return false;
+}
+
+function logCall(event: 'attempt' | 'success' | 'failed' | 'giveup', payload: Record<string, unknown>) {
+  // One-line structured log so Vercel / Datadog can parse it.
+  console.log(JSON.stringify({ at: 'llm', event, ts: new Date().toISOString(), ...payload }));
+}
+
+/**
+ * Public entry — retries transient failures with exponential backoff.
+ * On terminal errors (missing key, malformed request) the error is
+ * surfaced immediately so the caller can show a specific fix message.
+ */
+export async function callLLM(model: string, messages: LLMMessage[], opts?: CallLLMOptions): Promise<ReadableStream> {
+  const attempt = opts?.attempt ?? 1;
+  const requestId = opts?.requestId;
+  const started = Date.now();
+  logCall('attempt', { requestId, model, attempt });
+  try {
+    const stream = await callLLMOnce(model, messages);
+    logCall('success', { requestId, model, attempt, elapsedMs: Date.now() - started });
+    return stream;
+  } catch (err) {
+    const elapsedMs = Date.now() - started;
+    const errSummary = err instanceof Error ? `${err.name}: ${err.message}`.slice(0, 240) : String(err).slice(0, 240);
+    logCall('failed', { requestId, model, attempt, elapsedMs, error: errSummary });
+    if (!isRetryableError(err) || attempt >= MAX_ATTEMPTS) {
+      logCall('giveup', { requestId, model, attempts: attempt, error: errSummary });
+      throw err;
+    }
+    await new Promise(resolve => setTimeout(resolve, BACKOFF_MS[attempt]));
+    return callLLM(model, messages, { ...opts, attempt: attempt + 1 });
+  }
+}
+
+/** Single-shot provider dispatch. Kept private so retry logic can wrap it. */
+async function callLLMOnce(model: string, messages: LLMMessage[]): Promise<ReadableStream> {
   const systemMessage = messages.find(m => m.role === 'system')?.content;
   const chatMessages = messages.filter(m => m.role !== 'system');
 
@@ -158,8 +213,9 @@ export async function callLLM(model: string, messages: LLMMessage[]): Promise<Re
     });
   }
 
-  // Fallback: use Claude Sonnet
-  return callLLM('claude-sonnet-4-6', messages);
+  // Fallback: use Claude Sonnet. Dispatch via callLLMOnce so the retry
+  // wrapper that called us doesn't nest a second retry budget.
+  return callLLMOnce('claude-sonnet-4-6', messages);
 }
 
 /** Map friendly model names to actual API model IDs */

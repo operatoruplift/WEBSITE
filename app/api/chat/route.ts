@@ -14,7 +14,14 @@ function getClientIp(request: Request): string {
     return real?.trim() || 'unknown';
 }
 
+function newRequestId(): string {
+    // crypto.randomUUID() is available in the Node 18+ runtime used here.
+    return `req_${crypto.randomUUID()}`;
+}
+
 export async function POST(request: Request) {
+    const requestId = request.headers.get('x-request-id') || newRequestId();
+    const startedAt = new Date().toISOString();
     try {
         const caps = await getCapabilities(request);
 
@@ -110,25 +117,37 @@ export async function POST(request: Request) {
 
         messages.push({ role: 'user', content: message });
 
-        const stream = await callLLM(modelKey, messages);
+        const stream = await callLLM(modelKey, messages, { requestId });
 
         return new Response(stream, {
             headers: {
                 'Content-Type': 'text/plain; charset=utf-8',
                 'Transfer-Encoding': 'chunked',
                 'Cache-Control': 'no-cache',
+                'X-Request-Id': requestId,
             },
         });
     } catch (err) {
         if (err instanceof ProviderError) {
+            console.log(JSON.stringify({ at: 'chat', event: 'provider-missing', requestId, startedAt, envVar: err.envVar }));
             return NextResponse.json({
                 error: err.message,
                 envVar: err.envVar,
                 fallback: true,
                 connectPrompt: `Connect ${err.envVar.replace('_API_KEY', '').replace('_', ' ')} in Settings → API Keys`,
-            }, { status: 503 });
+                requestId,
+                timestamp: startedAt,
+            }, { status: 503, headers: { 'X-Request-Id': requestId } });
         }
         const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-        return NextResponse.json({ error: errorMessage, fallback: true }, { status: 500 });
+        console.log(JSON.stringify({ at: 'chat', event: 'unhandled', requestId, startedAt, error: errorMessage.slice(0, 240) }));
+        return NextResponse.json({
+            error: 'The model is temporarily unavailable. Try again in a moment, or switch to another model from the selector.',
+            detail: errorMessage,
+            fallback: true,
+            requestId,
+            timestamp: startedAt,
+            retryable: true,
+        }, { status: 503, headers: { 'X-Request-Id': requestId } });
     }
 }
