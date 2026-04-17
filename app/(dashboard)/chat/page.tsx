@@ -42,11 +42,20 @@ const AGENTS = [
     { id: 'research', label: 'Research Agent', icon: Brain },
 ];
 
+/**
+ * Consumer-first prompt suggestions (May 14 positioning).
+ *
+ * The three demo beats — daily briefing, inbox triage, reminders vibe —
+ * lead. These are the first things a cold visitor sees on /chat and each
+ * maps to a real workflow the product can actually run (approval modal,
+ * Google tool, or Tier 1 tool in demo mode). Dev-focused prompts demoted
+ * to the bottom so they don't steal the first impression.
+ */
 const PROMPT_SUGGESTIONS = [
-    { category: 'Code', icon: Code, color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20', prompts: ['Analyze my codebase for security issues', 'Write a REST API in TypeScript'] },
-    { category: 'Research', icon: Brain, color: 'text-[#F97316] bg-[#F97316]/10 border-[#F97316]/20', prompts: ['Summarize recent AI research papers', 'Compare top vector databases'] },
-    { category: 'Write', icon: FileText, color: 'text-[#F97316] bg-[#F97316]/10 border-[#F97316]/20', prompts: ['Write a blog post about AI agents', 'Draft a technical README'] },
-    { category: 'Analyze', icon: Zap, color: 'text-amber-400 bg-amber-400/10 border-amber-400/20', prompts: ['Build an AI agent swarm workflow', 'Generate documentation for this code'] },
+    { category: 'Briefing', icon: Sparkles, color: 'text-[#F97316] bg-[#F97316]/10 border-[#F97316]/20', prompts: ['What\u2019s on my calendar today and what should I worry about?', 'Summarize my day in 3 bullets'] },
+    { category: 'Inbox', icon: MessageSquare, color: 'text-[#F97316] bg-[#F97316]/10 border-[#F97316]/20', prompts: ['Draft replies to my last 3 emails, ask me before sending', 'Which emails need a reply today?'] },
+    { category: 'Reminders', icon: Pin, color: 'text-[#F97316] bg-[#F97316]/10 border-[#F97316]/20', prompts: ['Turn tomorrow morning into iMessage-style nudges: weather, calendar, one fun thing', 'Remind me to follow up with Alex next Tuesday'] },
+    { category: 'Dev', icon: Code, color: 'text-gray-400 bg-foreground/[0.04] border-foreground/10', prompts: ['Analyze my codebase for security issues', 'Summarize recent AI research papers'] },
 ];
 
 function renderMarkdown(text: string): React.ReactNode {

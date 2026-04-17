@@ -23,7 +23,7 @@ const BEATS = [
         tag: 'Daily Briefing',
         headline: 'Start every day with your calendar, handled.',
         before: 'Before: you wake up, scroll 3 apps, and realise your 9am has no agenda.',
-        after: 'After: at 8am a pinned message hits your chat — "3 events today, your 2pm has no agenda, want me to draft one?"',
+        after: 'After: at 8am a pinned message hits your chat. "3 events today, your 2pm has no agenda, want me to draft one?"',
         prompt: '"What\u2019s on my calendar today and what should I worry about?"',
     },
     {
@@ -49,7 +49,7 @@ const UseCases: React.FC = () => {
         <Section>
             <SectionHeader
                 eyebrow="Try It Today"
-                title="Three things it does well — before you sign in."
+                title="Three things it does well, before you sign in."
                 description="Open /chat, paste one of these, and watch every action wait for your Approve click."
             />
 
