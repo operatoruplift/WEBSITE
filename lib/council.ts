@@ -159,6 +159,37 @@ RULES:
  * Auth context is shared through Supabase, keyed by user_id (Privy DID).
  * The Council is a reasoning layer ON TOP of the existing executor, not parallel.
  */
+/**
+ * Read `localStorage.token` (the Privy session JWT). Client-side only;
+ * returns null during SSR. Passing this to /api/chat lets the server
+ * resolve `capability_real` — without it, every council request lands
+ * in the demo/canned branch and the debate collapses to mock responses.
+ */
+function getAuthHeaders(): Record<string, string> {
+    if (typeof window === 'undefined') return { 'Content-Type': 'application/json' };
+    const token = localStorage.getItem('token');
+    return token
+        ? { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+        : { 'Content-Type': 'application/json' };
+}
+
+/**
+ * Surface the actual /api/chat error to the council transcript instead
+ * of a generic "API unavailable". Reasons the user cares about:
+ *  - ANTHROPIC_API_KEY missing in prod env
+ *  - rate limit exceeded (429)
+ *  - demo-mode rate cap (10/hr/IP)
+ *  - provider 503 / 5xx
+ */
+async function describeChatError(res: Response): Promise<string> {
+    try {
+        const body = await res.json();
+        if (body?.connectPrompt) return body.connectPrompt;
+        if (body?.error) return String(body.error);
+    } catch {}
+    return `HTTP ${res.status}`;
+}
+
 export async function runCouncil(
     userMessage: string,
     history: { role: string; content: string }[],
@@ -172,10 +203,11 @@ export async function runCouncil(
     const advisorResults = await Promise.all(
         advisors.map(async (agent): Promise<AgentOutput> => {
             const agentStart = Date.now();
+            let failureReason = 'API unavailable';
             try {
                 const res = await fetch('/api/chat', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({
                         message: userMessage,
                         model: agent.model,
@@ -194,11 +226,14 @@ export async function runCouncil(
                     }
                     return { agentId: agent.id, agentName: agent.name, output, durationMs: Date.now() - agentStart };
                 }
-            } catch { /* fallback below */ }
+                failureReason = await describeChatError(res);
+            } catch (err) {
+                failureReason = err instanceof Error ? err.message : 'network error';
+            }
             return {
                 agentId: agent.id,
                 agentName: agent.name,
-                output: `[${agent.name}] Unable to process — API unavailable.`,
+                output: `[${agent.name}] Unable to process — ${failureReason}.`,
                 durationMs: Date.now() - agentStart,
             };
         })
@@ -214,10 +249,11 @@ export async function runCouncil(
     // Run Chairman with all advisor outputs as context
     const chairStart = Date.now();
     let synthesis = '';
+    let chairmanError: string | null = null;
     try {
         const res = await fetch('/api/chat', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify({
                 message: `Synthesize the advisor perspectives above and respond to the user. If they asked for an action, do it now.`,
                 model: chairman.model,
@@ -233,9 +269,17 @@ export async function runCouncil(
                 if (done) break;
                 synthesis += decoder.decode(value, { stream: true });
             }
+        } else {
+            chairmanError = await describeChatError(res);
         }
-    } catch {
-        synthesis = 'The Council was unable to synthesize a response. Please try again.';
+    } catch (err) {
+        chairmanError = err instanceof Error ? err.message : 'network error';
+    }
+
+    if (!synthesis) {
+        synthesis = chairmanError
+            ? `The Council could not complete the request — ${chairmanError}. If you are on production, confirm that ANTHROPIC_API_KEY (or your chosen provider key) is set in Vercel env. You can also add your own key under Settings → API Keys.`
+            : 'The Council was unable to synthesize a response. Please try again.';
     }
 
     // Extract tool calls from Chairman's raw output — user never sees the JSON

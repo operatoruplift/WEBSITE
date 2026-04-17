@@ -40,7 +40,6 @@ export const posts: BlogPost[] = [
         date: 'April 16, 2026',
         readTime: '4 min read',
         category: 'engineering',
-        featured: true,
     },
     {
         id: 'audit-trail',
