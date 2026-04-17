@@ -70,6 +70,7 @@ export async function POST(request: Request) {
                     to: params.to,
                     subject: params.subject,
                     body: params.body,
+                    html: params.html,
                     cc: params.cc,
                     bcc: params.bcc,
                 });
@@ -103,6 +104,7 @@ export async function POST(request: Request) {
                     to: params.to,
                     subject: params.subject,
                     body: params.body,
+                    html: params.html,
                     cc: params.cc,
                     bcc: params.bcc,
                 });

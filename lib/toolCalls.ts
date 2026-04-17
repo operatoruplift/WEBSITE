@@ -365,12 +365,14 @@ You have access to the user's Google Calendar and Gmail. When you need to take a
 </tool_use>
 
 <tool_use>
-{"tool": "gmail", "action": "draft", "params": {"to": "recipient@example.com", "subject": "Subject", "body": "Email body text"}}
+{"tool": "gmail", "action": "draft", "params": {"to": "recipient@example.com", "subject": "Subject", "body": "Plain-text fallback", "html": "<p>Optional HTML body. Include this when the user asks for a formatted/HTML email.</p>"}}
 </tool_use>
 
 <tool_use>
-{"tool": "gmail", "action": "send", "params": {"to": "recipient@example.com", "subject": "Subject", "body": "Email body text"}}
+{"tool": "gmail", "action": "send", "params": {"to": "recipient@example.com", "subject": "Subject", "body": "Plain-text fallback", "html": "<p>Optional HTML body.</p>"}}
 </tool_use>
+
+When the user asks for an HTML-formatted / professional / presentable email, populate BOTH the "body" field (short plain-text fallback for clients that strip HTML) and the "html" field (the full styled message). Do NOT put raw HTML tags in "body" alone — that sends the tags as literal text.
 
 ## Behavioral Rules
 
