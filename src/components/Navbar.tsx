@@ -43,14 +43,15 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
                 )}
               </a>
             ))}
-            <a
-              href="https://help.operatoruplift.com"
-              target="_blank"
-              rel="noreferrer"
+            {/* Use the in-repo /docs GitBook-style site (P9) over the
+                legacy help.operatoruplift.com subdomain. Keeps nav flow
+                on-site and docs content in sync with shipped behavior. */}
+            <Link
+              href="/docs"
               className="group flex items-center text-xs font-bold text-muted hover:text-white transition-colors tracking-[0.15em] px-1"
             >
               DOCS
-            </a>
+            </Link>
           </div>
           
           <div className="flex items-center gap-3">
@@ -108,14 +109,13 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
               {item.name}
             </a>
           ))}
-          <a
-            href="https://help.operatoruplift.com"
-            target="_blank"
-            rel="noreferrer"
+          <Link
+            href="/docs"
+            onClick={() => setMobileMenuOpen(false)}
             className="text-lg font-bold text-white hover:text-primary transition-colors tracking-wide"
           >
             DOCS
-          </a>
+          </Link>
           
           <div className="w-full h-px bg-white/10 my-4" />
           

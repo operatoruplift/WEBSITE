@@ -6,6 +6,7 @@ import { ArrowLeft, Calendar, Clock, Tag } from 'lucide-react';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 import { posts } from '../page';
+import { BlogToc } from './BlogToc';
 
 function getArticleContent(id: string) {
     const content: Record<string, React.ReactNode> = {
@@ -223,6 +224,12 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
                 <div className="blog-content max-w-none text-[#D4D4D8] text-[17px] leading-[1.75]">
                     {getArticleContent(id)}
                 </div>
+
+                {/* Client-side TOC. Scans .blog-content for h2 after mount
+                    and only renders at xl breakpoint. Hidden entirely if
+                    the post has fewer than two h2s — no visual clutter. */}
+                <BlogToc />
+
 
                 {/* CTA */}
                 <div className="mt-16 p-8 rounded-2xl border border-white/10 bg-white/[0.02] text-center">

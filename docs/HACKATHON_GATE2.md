@@ -185,3 +185,60 @@ Deferred to future work (explicitly not claiming):
       one request cannot be replayed for a different one
 - [x] Invoice expiry: 10 minutes
 - [x] `pnpm build` passes
+
+---
+
+## Addendum: MagicBlock ephemeral rollup
+
+**Status**: opt-in. Disabled unless `NEXT_PUBLIC_MAGICBLOCK_ENABLED=1`
+is set on the server. When disabled, the x402 payment path resolves
+against plain Solana devnet as described above. No change.
+
+**What it is**: MagicBlock runs ephemeral rollups (ERs) that settle
+back to Solana mainnet/devnet. Writes land in milliseconds on the
+ER, then periodically commit to L1. For per-action receipts this is
+the difference between a 400 ms UX and a 4 s UX when the network is
+congested.
+
+**How it's wired in this repo**:
+- `lib/magicblock/adapter.ts` — opt-in RPC client factory.
+  When the flag is off, callers fall back to the default
+  `@solana/web3.js` connection. No runtime dependency.
+- `lib/magicblock/payments.ts` — the only call site. It's used by
+  `/api/tools/x402/pay` so the devnet payment confirmation can
+  route through a MagicBlock region (`MAGICBLOCK_REGION=us|eu|…`)
+  when the flag is active.
+- Receipts include `executed_via: "magicblock" | "solana-devnet"`
+  so judges can verify which path actually ran.
+
+**Trust rule**: if `NEXT_PUBLIC_MAGICBLOCK_ENABLED=0` (the default),
+no receipt ever carries `executed_via: magicblock`. We never claim a
+rollup settlement we didn't perform. Flipping the flag on without
+setting a valid `MAGICBLOCK_RPC_URL` falls back to plain devnet and
+logs the downgrade via `/api/debug/solana-wallet`.
+
+**Future work (not shipped)**:
+- Mainnet commit of ephemeral rollup state
+- ER session lifecycle (open/close) on a per-user basis
+- Per-action latency telemetry surfaced in `/security`
+
+---
+
+## Addendum: SNS (Solana Name Service)
+
+**Status**: read-only, live on master. Cached 10 min at the edge.
+
+- Resolver: `lib/sns.ts` hits the public Bonfida proxy so the app
+  bundle stays lean (no `@bonfida/spl-name-service` runtime dep).
+- Endpoint: `GET /api/sns/resolve?name=operatoruplift.sol` returns
+  `{ name, owner, records, verified, cachedAt, simulated? }`.
+- UI: Profile page shows an Identity card with the owner + Twitter
+  / URL / GitHub records. Verified badge only when resolved owner
+  matches `SNS_EXPECTED_OWNER` env. Without the env set, badge
+  never shows.
+- Demo mode: `capability_real === false` returns a mock with
+  `simulated: true` so the card never throws.
+
+**Trust rule**: Verified badge is strictly server-side. Client can't
+forge it. If RPC is down, the card renders "Lookup failed" instead
+of a false positive.
