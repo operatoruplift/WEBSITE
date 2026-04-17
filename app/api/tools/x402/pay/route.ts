@@ -4,6 +4,7 @@ import {
 } from '@solana/web3.js';
 import { verifySession } from '@/lib/auth';
 import { getInvoice, markInvoicePaid } from '@/lib/x402/invoices';
+import { getMagicBlockAdapter } from '@/lib/magicblock/adapter';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -11,40 +12,54 @@ export const maxDuration = 30;
 const DEVNET_RPC = process.env.SOLANA_DEVNET_RPC || 'https://api.devnet.solana.com';
 
 /**
- * Submit a real devnet SOL transfer and return the confirmed tx
- * signature. We use a tiny amount (0.00001 SOL = 10,000 lamports) so
- * the server wallet barely spends anything per invoice while the
- * signature still lands on the public devnet ledger and can be
- * verified on Solscan / explorer.solana.com.
+ * Submit a real transfer and return the confirmed tx signature. By
+ * default we settle on Solana devnet via the standard RPC. When
+ * NEXT_PUBLIC_MAGICBLOCK_ENABLED=1 we route through the configured
+ * MagicBlock Ephemeral Rollup validator instead — same JSON-RPC
+ * surface, ~10 ms confirms, zero fee, eventually committed back to
+ * devnet/mainnet.
  *
- * Why SOL instead of USDC on devnet:
- *  - Devnet USDC requires SPL token accounts on both ends; extra ix
- *    complexity for a payment that only needs to be *provable*.
- *  - SOL lamport transfers are one System Program ix and confirm in
- *    ~400 ms. Good enough to show a real tx on Demo Day.
+ * Amount stays tiny (0.00001 SOL = 10,000 lamports) so a funded
+ * devnet/ER wallet survives thousands of invoices.
  *
- * Returns the real signature on success, throws on failure so the
- * caller can decide whether to mark the invoice paid.
+ * Throws on failure with a specific message — the caller maps that
+ * into a 503 response body so ops can act.
  */
-async function submitDevnetTransfer(recipient: PublicKey): Promise<string> {
+async function submitTransfer(recipient: PublicKey): Promise<{ signature: string; executedVia: 'magicblock' | 'solana-devnet'; rpcUrl: string }> {
     const walletKey = process.env.SOLANA_DEPLOY_WALLET_KEY;
     if (!walletKey) {
-        throw new Error('SOLANA_DEPLOY_WALLET_KEY not set — cannot submit real devnet tx');
+        throw new Error('SOLANA_DEPLOY_WALLET_KEY not set — cannot submit real tx. Add the keypair JSON array to Vercel env.');
     }
     let payer: Keypair;
     try {
         payer = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(walletKey)));
-    } catch {
-        throw new Error('Invalid SOLANA_DEPLOY_WALLET_KEY format');
+    } catch (err) {
+        throw new Error(`Invalid SOLANA_DEPLOY_WALLET_KEY format — expected a JSON array of 64 bytes (from \`solana-keygen\`). Parse error: ${err instanceof Error ? err.message : String(err)}`);
     }
 
-    const connection = new Connection(DEVNET_RPC, 'confirmed');
+    const mb = getMagicBlockAdapter();
+    const connection = mb.connection() ?? new Connection(DEVNET_RPC, 'confirmed');
+    const executedVia = mb.executedVia();
+    const rpcUrl = mb.getRpcUrl() ?? DEVNET_RPC;
+
+    // Balance pre-flight — fail with a specific reason instead of a
+    // cryptic "Transaction simulation failed" when the wallet is empty.
+    try {
+        const balance = await connection.getBalance(payer.publicKey, 'confirmed');
+        const required = Math.floor(0.00001 * LAMPORTS_PER_SOL) + 5_000; // transfer + ~5k lamport fee
+        if (balance < required) {
+            throw new Error(`Server wallet ${payer.publicKey.toBase58()} is underfunded on ${rpcUrl} — balance ${balance} lamports, need ≥ ${required}. Airdrop: \`solana airdrop 2 ${payer.publicKey.toBase58()} --url devnet\``);
+        }
+    } catch (err) {
+        // getBalance failures (bad RPC, network) bubble up with a useful message.
+        if (err instanceof Error && err.message.startsWith('Server wallet')) throw err;
+        throw new Error(`Cannot reach Solana RPC at ${rpcUrl}: ${err instanceof Error ? err.message : String(err)}`);
+    }
+
     const tx = new Transaction().add(
         SystemProgram.transfer({
             fromPubkey: payer.publicKey,
             toPubkey: recipient,
-            // 0.00001 SOL — small enough that a funded devnet wallet
-            // survives thousands of invoices. Still a real tx.
             lamports: Math.floor(0.00001 * LAMPORTS_PER_SOL),
         }),
     );
@@ -55,7 +70,7 @@ async function submitDevnetTransfer(recipient: PublicKey): Promise<string> {
 
     const signature = await connection.sendRawTransaction(tx.serialize());
     await connection.confirmTransaction(signature, 'confirmed');
-    return signature;
+    return { signature, executedVia, rpcUrl };
 }
 
 /**
@@ -114,9 +129,11 @@ export async function POST(request: Request) {
         }
 
         // Prefer a client-supplied signature (real wallet sign), fall back
-        // to server-signed devnet transfer. Either way it's a real tx.
+        // to server-signed transfer. Either way it's a real tx.
         let sig: string;
         let submittedVia: 'client' | 'server';
+        let executedVia: 'magicblock' | 'solana-devnet' = 'solana-devnet';
+        let rpcUrl = DEVNET_RPC;
         if (tx_signature) {
             sig = String(tx_signature);
             submittedVia = 'client';
@@ -126,18 +143,25 @@ export async function POST(request: Request) {
                     process.env.NEXT_PUBLIC_TREASURY_WALLET
                     || 'UpL1ft11111111111111111111111111111111111111',
                 );
-                sig = await submitDevnetTransfer(treasury);
+                const submit = await submitTransfer(treasury);
+                sig = submit.signature;
+                executedVia = submit.executedVia;
+                rpcUrl = submit.rpcUrl;
                 submittedVia = 'server';
             } catch (err) {
+                // Signal to ops why the payment never landed. The body
+                // below carries the *real* error so the UI can surface
+                // it to the developer instead of a generic bucket.
                 const msg = err instanceof Error ? err.message : 'devnet_submit_failed';
-                // Signal to ops why the payment never landed. Keep
-                // invoice unpaid so a retry can succeed once the env
-                // is fixed — no silent "simulated" fallback anymore.
                 return NextResponse.json(
                     {
                         error: 'devnet_submit_failed',
                         reason: msg,
-                        action_required: 'Set SOLANA_DEPLOY_WALLET_KEY in Vercel env and fund the wallet on devnet: `solana airdrop 2 <pubkey> --url devnet`.',
+                        action_required: /underfunded/i.test(msg)
+                            ? 'Airdrop the server wallet on devnet: solana airdrop 2 <pubkey> --url devnet'
+                            : /SOLANA_DEPLOY_WALLET_KEY/i.test(msg)
+                                ? 'Set SOLANA_DEPLOY_WALLET_KEY in Vercel env (JSON array keypair from `solana-keygen`).'
+                                : 'Check /api/debug/solana-wallet for full diagnostics.',
                     },
                     { status: 503 },
                 );
@@ -156,6 +180,8 @@ export async function POST(request: Request) {
             chain: invoice.chain,
             amount: invoice.amount_usdc,
             submitted_via: submittedVia,
+            executed_via: executedVia,
+            rpc_url: rpcUrl,
             explorer_url: `https://explorer.solana.com/tx/${sig}?cluster=devnet`,
         });
     } catch (err) {

@@ -209,7 +209,15 @@ export async function executeToolCall(
                     tool: call.tool,
                     action: call.action,
                     success: false,
-                    error: `Payment failed: ${payErr.error || payRes.status}`,
+                    // Surface the *reason* + *action_required* fields from
+                    // /api/tools/x402/pay so the user sees something like
+                    // "Payment failed: devnet_submit_failed — Server wallet
+                    // <pubkey> is underfunded" instead of the bucket code.
+                    error: [
+                        `Payment failed: ${payErr.error || payRes.status}`,
+                        payErr.reason ? `— ${payErr.reason}` : null,
+                        payErr.action_required ? `(${payErr.action_required})` : null,
+                    ].filter(Boolean).join(' '),
                 };
             }
 
