@@ -30,6 +30,9 @@ const PUBLIC_ROUTES = [
     '/api/sns/resolve',
     // /api/health is expected to be probeable by uptime checks without auth
     '/api/health',
+    // Inbound webhooks from external services (Photon Spectrum, etc.)
+    // have their own signature-based auth. Privy tokens don't apply.
+    '/api/webhooks/',
 ];
 
 export function middleware(request: NextRequest) {
