@@ -33,6 +33,11 @@ const PUBLIC_ROUTES = [
     // Inbound webhooks from external services (Photon Spectrum, etc.)
     // have their own signature-based auth. Privy tokens don't apply.
     '/api/webhooks/',
+    // Admin diagnostic endpoints. Each handler enforces ADMIN_DEBUG_KEY
+    // via X-Admin-Key header or ?admin_key=... — the middleware would
+    // 401 before the handler got a chance, since curl calls don't have
+    // a Privy session token.
+    '/api/debug/',
 ];
 
 export function middleware(request: NextRequest) {
