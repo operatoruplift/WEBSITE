@@ -45,3 +45,4 @@ claude-session.jsonl
 codex-session.jsonl
 prediction-market-landscape.html
 operator-uplift-landscape.html
+.claude/rules/project-overrides.md
