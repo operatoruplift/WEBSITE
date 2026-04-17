@@ -20,6 +20,7 @@ export default function PaywallPage() {
     const [payState, setPayState] = useState<PayState>('idle');
     const [invoice, setInvoice] = useState<Invoice | null>(null);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [errorRequestId, setErrorRequestId] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
     const [waitlistEmail, setWaitlistEmail] = useState('');
     const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
@@ -36,6 +37,7 @@ export default function PaywallPage() {
     const createInvoice = async () => {
         setPayState('creating_invoice');
         setErrorMsg(null);
+        setErrorRequestId(null);
         try {
             const res = await fetch('/api/subscription', {
                 method: 'POST',
@@ -44,6 +46,8 @@ export default function PaywallPage() {
             });
             if (!res.ok) {
                 const err = await res.json().catch(() => ({ error: 'unknown' }));
+                const rid: string | null = err.requestId || res.headers.get('x-request-id') || null;
+                setErrorRequestId(rid);
                 // 401 with recovery: reauth → show a clean re-login CTA,
                 // don't leave the user staring at "Invalid Compact JWS"
                 if (res.status === 401 && (err.recovery === 'reauth' || err.reason === 'auth_failed')) {
@@ -51,7 +55,7 @@ export default function PaywallPage() {
                     setPayState('reauth_required');
                     return;
                 }
-                setErrorMsg(err.message || err.error || `Failed (${res.status})`);
+                setErrorMsg(err.message || err.error || `We couldn\u2019t reach the payment service. Try again in a moment.`);
                 setPayState('failed');
                 return;
             }
@@ -270,10 +274,23 @@ export default function PaywallPage() {
                             <div className="space-y-2">
                                 <div className="p-3 rounded-xl bg-red-500/5 border border-red-500/20 flex items-start gap-2">
                                     <AlertTriangle size={14} className="text-red-400 mt-0.5 shrink-0" />
-                                    <p className="text-xs text-red-300">{errorMsg || 'Payment failed'}</p>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-xs text-red-300">{errorMsg || 'Payment failed'}</p>
+                                        {errorRequestId && (
+                                            <div className="mt-1.5 flex items-center gap-2">
+                                                <p className="text-[10px] font-mono text-red-300/60 truncate">Ref: {errorRequestId}</p>
+                                                <button
+                                                    onClick={() => { try { navigator.clipboard.writeText(errorRequestId); } catch { /* noop */ } }}
+                                                    className="text-[9px] font-mono uppercase tracking-wider text-red-300/80 hover:text-red-200 px-1.5 py-0.5 rounded border border-red-500/20 hover:border-red-500/40 transition-colors"
+                                                >
+                                                    Copy
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                                 <button
-                                    onClick={() => { setPayState('idle'); setErrorMsg(null); }}
+                                    onClick={() => { setPayState('idle'); setErrorMsg(null); setErrorRequestId(null); }}
                                     className="w-full h-10 rounded-xl bg-[#FAFAFA]/5 hover:bg-[#FAFAFA]/10 border border-[#222222] text-white text-sm font-medium transition-colors"
                                 >
                                     Try again
@@ -285,9 +302,20 @@ export default function PaywallPage() {
                             <div className="space-y-3">
                                 <div className="p-3 rounded-xl bg-amber-500/5 border border-amber-500/30 flex items-start gap-2">
                                     <AlertTriangle size={14} className="text-amber-400 mt-0.5 shrink-0" />
-                                    <div>
-                                        <p className="text-xs text-amber-300 font-semibold">Auth token invalid</p>
-                                        <p className="text-[11px] text-[#A1A1AA] mt-0.5">{errorMsg || 'Please re-login.'}</p>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-xs text-amber-300 font-semibold">Session expired</p>
+                                        <p className="text-[11px] text-[#A1A1AA] mt-0.5">{errorMsg || 'Please re-login to continue.'}</p>
+                                        {errorRequestId && (
+                                            <div className="mt-1.5 flex items-center gap-2">
+                                                <p className="text-[10px] font-mono text-[#A1A1AA]/70 truncate">Ref: {errorRequestId}</p>
+                                                <button
+                                                    onClick={() => { try { navigator.clipboard.writeText(errorRequestId); } catch { /* noop */ } }}
+                                                    className="text-[9px] font-mono uppercase tracking-wider text-amber-300/80 hover:text-amber-200 px-1.5 py-0.5 rounded border border-amber-500/20 hover:border-amber-500/40 transition-colors"
+                                                >
+                                                    Copy
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <button

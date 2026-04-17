@@ -63,15 +63,20 @@ const Comparison: React.FC = () => {
           </p>
         </div>
 
-        {/* Table - scrollable on mobile */}
+        {/* Table - scrollable on mobile with a right-edge fade so the
+            last column visibly "hints" more content, instead of looking
+            like it's been cut off by the viewport. */}
         <FadeIn delay={200} className="w-full block">
-          <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
-            <div className="max-w-[900px] mx-auto rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-white/10">
-                    <th className="text-left p-3 sm:p-4 text-gray-500 font-mono text-[10px] sm:text-xs uppercase tracking-wider min-w-[140px] sm:w-[35%]">Feature</th>
-                    {platforms.map(p => {
+          <div className="relative -mx-6 px-6 md:mx-0 md:px-0">
+            {/* Right-side fade — visible on mobile only, signals horizontal scroll */}
+            <div className="pointer-events-none absolute top-0 right-0 w-8 h-full bg-gradient-to-l from-[#0A0A0A] to-transparent z-10 md:hidden" />
+            <div className="overflow-x-auto">
+              <div className="max-w-[900px] mx-auto rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-white/10">
+                      <th className="text-left p-2.5 sm:p-4 text-gray-500 font-mono text-[10px] sm:text-xs uppercase tracking-wider min-w-[120px] sm:w-[35%]">Feature</th>
+                      {platforms.map(p => {
                       const PlatformLogo = p.Logo;
                       return (
                         <th
@@ -99,11 +104,11 @@ const Comparison: React.FC = () => {
                 <tbody>
                   {features.map((f, i) => (
                     <tr key={f.name} className={`border-b border-white/5 ${i % 2 === 0 ? 'bg-white/[0.01]' : ''}`}>
-                      <td className="p-4 text-gray-300 font-medium text-xs">{f.name}</td>
+                      <td className="p-2.5 sm:p-4 text-gray-300 font-medium text-[11px] sm:text-xs">{f.name}</td>
                       {platforms.map(p => {
                         const val = f[p.key as keyof typeof f] as boolean;
                         return (
-                          <td key={p.key} className={`p-4 text-center ${p.highlight ? 'bg-primary/5' : ''}`}>
+                          <td key={p.key} className={`p-2.5 sm:p-4 text-center ${p.highlight ? 'bg-primary/5' : ''}`}>
                             {val ? (
                               <span className="text-emerald-400">&#10003;</span>
                             ) : (
@@ -116,6 +121,7 @@ const Comparison: React.FC = () => {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           </div>
           <p className="text-[10px] text-gray-600 text-center mt-4 font-mono">
