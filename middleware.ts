@@ -20,6 +20,16 @@ const PUBLIC_ROUTES = [
     // available. Security is enforced by the signed `state` param
     // (lib/google/oauth-state.ts).
     '/api/integrations/google/callback',
+    // Demo-mode surfaces: anonymous /chat hits these three. Each route
+    // MUST internally call getCapabilities() (lib/capabilities.ts) and
+    // branch into a simulated response when capability_real is false —
+    // no side effect, no receipt, no Supabase write. Do not whitelist
+    // routes that can produce side effects.
+    '/api/chat',
+    '/api/capabilities',
+    '/api/sns/resolve',
+    // /api/health is expected to be probeable by uptime checks without auth
+    '/api/health',
 ];
 
 export function middleware(request: NextRequest) {
