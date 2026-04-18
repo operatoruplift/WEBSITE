@@ -172,8 +172,9 @@ export default function SwarmPage() {
             if (msg.includes('not configured') || msg.includes('API_KEY')) {
                 return `[${agent.name}] ⚠️ API key missing — add it in [Settings → API Keys](/settings). Error: ${msg}`;
             }
-            // For other errors, show the real error (not a mock)
-            return `[${agent.name}] Error: ${msg}. Check your API key and try again.`;
+            // For other errors, surface the real error without blaming
+            // the user's key (that branch is handled above).
+            return `[${agent.name}] ${agent.model} didn\u2019t respond. Try again, or swap to a different model. Detail: ${msg}`;
         }
     };
 

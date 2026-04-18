@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { verifySession, getUserEmail } from '@/lib/auth';
 import { checkSubscription } from '@/lib/subscription';
+import { classifyError, envelope } from '@/lib/errorTaxonomy';
 
 export const runtime = 'nodejs';
 
@@ -48,9 +49,11 @@ export async function GET(request: Request) {
     } catch (err) {
         const msg = err instanceof Error ? err.message : 'Auth required';
         const jws = jwsHeaderDebug(request);
-        console.log(JSON.stringify({ at: 'subscription', event: 'auth-failed', route: 'GET /api/subscription', requestId, ts: startedAt, reason: msg, jws }));
+        const errorClass = classifyError(err);
+        console.log(JSON.stringify({ at: 'subscription', event: 'auth-failed', route: 'GET /api/subscription', requestId, ts: startedAt, errorClass, reason: msg.slice(0, 120), jws }));
+        const body = envelope(errorClass, msg, requestId, startedAt);
         return NextResponse.json(
-            { tier: 'free', active: false, error: msg, reason: 'auth_failed', requestId, timestamp: startedAt },
+            { tier: 'free', active: false, ...body },
             { status: 401, headers: { 'X-Request-Id': requestId } },
         );
     }
@@ -66,20 +69,13 @@ export async function POST(request: Request) {
         } catch (authErr) {
             const code = authErr instanceof Error ? authErr.message : 'token_invalid';
             const jws = jwsHeaderDebug(request);
+            const errorClass = classifyError(authErr);
             // JWS header is safe to log (alg/typ/kid) — never log payload or signature.
-            console.log(JSON.stringify({ at: 'subscription', event: 'auth-failed', route: 'POST /api/subscription', requestId, ts: startedAt, reason: code, jws }));
-            return NextResponse.json({
-                error: code,
-                reason: 'auth_failed',
-                recovery: 'reauth',
-                requestId,
-                timestamp: startedAt,
-                message: code === 'token_expired'
-                    ? 'Your session expired. Please re-login.'
-                    : code.startsWith('malformed_token') || /invalid compact jws/i.test(code)
-                        ? 'Your session token is invalid. Please re-login to continue.'
-                        : 'Authentication failed. Please re-login to continue.',
-            }, { status: 401, headers: { 'X-Request-Id': requestId } });
+            console.log(JSON.stringify({ at: 'subscription', event: 'auth-failed', route: 'POST /api/subscription', requestId, ts: startedAt, errorClass, reason: code.slice(0, 120), jws }));
+            return NextResponse.json(
+                envelope(errorClass, code, requestId, startedAt),
+                { status: 401, headers: { 'X-Request-Id': requestId } },
+            );
         }
         const body = await request.json();
         const { action, tx_signature, invoice_reference } = body;
@@ -189,16 +185,11 @@ export async function POST(request: Request) {
         });
     } catch (err) {
         const msg = err instanceof Error ? err.message : 'Unknown error';
-        console.log(JSON.stringify({ at: 'subscription', event: 'unhandled', route: 'POST /api/subscription', requestId, ts: startedAt, error: msg.slice(0, 240) }));
+        const errorClass = classifyError(err);
+        console.log(JSON.stringify({ at: 'subscription', event: 'unhandled', route: 'POST /api/subscription', requestId, ts: startedAt, errorClass, error: msg.slice(0, 240) }));
         return NextResponse.json(
-            {
-                error: 'Payment request failed. Try again in a moment — your card / wallet was not charged.',
-                detail: msg,
-                requestId,
-                timestamp: startedAt,
-                retryable: true,
-            },
-            { status: 500, headers: { 'X-Request-Id': requestId } },
+            envelope(errorClass, msg, requestId, startedAt),
+            { status: errorClass === 'provider_unavailable' ? 503 : 500, headers: { 'X-Request-Id': requestId } },
         );
     }
 }

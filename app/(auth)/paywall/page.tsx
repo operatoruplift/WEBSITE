@@ -48,14 +48,21 @@ export default function PaywallPage() {
                 const err = await res.json().catch(() => ({ error: 'unknown' }));
                 const rid: string | null = err.requestId || res.headers.get('x-request-id') || null;
                 setErrorRequestId(rid);
-                // 401 with recovery: reauth → show a clean re-login CTA,
-                // don't leave the user staring at "Invalid Compact JWS"
-                if (res.status === 401 && (err.recovery === 'reauth' || err.reason === 'auth_failed')) {
-                    setErrorMsg(err.message || 'Your session is invalid. Please re-login.');
+                if (rid) {
+                    try { localStorage.setItem('lastRequestId', rid); } catch { /* noop */ }
+                }
+                // 401 with recovery: reauth → clean re-login CTA that
+                // preserves returnTo so the user lands back on /paywall.
+                if (res.status === 401 && (err.recovery === 'reauth' || err.reason === 'auth_failed' || err.errorClass)) {
+                    const msg = err.message ? `${err.message} ${err.nextAction || ''}`.trim() : 'Your session is invalid. Please re-login.';
+                    setErrorMsg(msg);
                     setPayState('reauth_required');
                     return;
                 }
-                setErrorMsg(err.message || err.error || `We couldn\u2019t reach the payment service. Try again in a moment.`);
+                const friendly = err.message
+                    ? `${err.message} ${err.nextAction || ''}`.trim()
+                    : err.error || `We couldn\u2019t reach the payment service. Try again in a moment.`;
+                setErrorMsg(friendly);
                 setPayState('failed');
                 return;
             }
@@ -91,7 +98,8 @@ export default function PaywallPage() {
                 if (data.active) {
                     localStorage.setItem('subscription_tier', 'pro');
                     setPayState('active');
-                    setTimeout(() => router.push('/chat'), 1500);
+                    // ?subscribed=1 triggers the "Real Mode ready" toast on /chat
+                    setTimeout(() => router.push('/chat?subscribed=1'), 1500);
                     return;
                 }
             } catch { /* keep polling */ }
@@ -117,7 +125,7 @@ export default function PaywallPage() {
             }
             localStorage.setItem('subscription_tier', 'pro');
             setPayState('active');
-            setTimeout(() => router.push('/chat'), 1000);
+            setTimeout(() => router.push('/chat?subscribed=1'), 1000);
         } catch (err) {
             setErrorMsg(err instanceof Error ? err.message : 'Simulator error');
             setPayState('failed');
@@ -203,11 +211,15 @@ export default function PaywallPage() {
                             </div>
                         </div>
 
-                        <div className="mb-6">
+                        <div className="mb-3">
                             <span className="text-4xl font-bold text-white">$19</span>
                             <span className="text-sm text-[#A1A1AA]">/month</span>
                             <span className="ml-2 text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]">USDC</span>
                         </div>
+                        {/* Conversion clarifier — what changes after paying */}
+                        <p className="text-xs text-[#A1A1AA] mb-6 leading-relaxed">
+                            Unlocks <span className="text-white font-medium">Real Mode</span>: write actions execute on your accounts and each produces a signed receipt.
+                        </p>
 
                         <ul className="space-y-3 mb-6">
                             {PRO_FEATURES.map(f => (
