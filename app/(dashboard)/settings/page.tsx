@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Settings, User, Bell, Palette, Shield, Key, Database, Save, Check, Copy, RefreshCw } from 'lucide-react';
+import { Settings, User, Bell, Palette, Shield, Key, Database, Save, Check, Copy, RefreshCw, Activity } from 'lucide-react';
 import { Card } from '@/src/components/ui/Card';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
@@ -109,6 +109,7 @@ export default function SettingsPage() {
         { id: 'security', label: 'Security', icon: Shield },
         { id: 'api', label: 'API Keys', icon: Key },
         { id: 'data', label: 'Data & Storage', icon: Database },
+        { id: 'diagnostics', label: 'Diagnostics', icon: Activity },
         { id: 'advanced', label: 'Advanced', icon: Settings },
     ];
 
@@ -226,6 +227,7 @@ export default function SettingsPage() {
                                         <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20"><div className="flex items-center justify-between"><div><p className="text-sm text-red-400 font-medium">Delete All Data</p><p className="text-xs text-gray-500 mt-1">Clear all local storage data</p></div><GlowButton variant="outline" size="sm" className="border-red-500/50 text-red-400 hover:bg-red-500/10" onClick={handleDeleteAccount}>Delete</GlowButton></div></div>
                                     </div>
                                 )}
+                                {activeTab === 'diagnostics' && <DiagnosticsPanel showToast={showToast} />}
                                 {activeTab === 'advanced' && <AdvancedSettings showToast={showToast} />}
                                 <div className="mt-8 pt-6 border-t border-foreground/10 flex justify-end">
                                     <GlowButton onClick={handleSave} className="px-6">{saved ? <><Check size={16} className="mr-2" /> Saved</> : <><Save size={16} className="mr-2" /> Save Changes</>}</GlowButton>
@@ -263,7 +265,134 @@ function PasswordChangeForm({ showToast }: { showToast: (msg: string, type: 'suc
     );
 }
 
-function AdvancedSettings({ showToast }: { showToast: (msg: string, type: 'success' | 'info' | 'warning' | 'error') => void }) {
+type ShowToast = (msg: string, type: 'success' | 'info' | 'warning' | 'error') => void;
+
+/**
+ * Diagnostics panel — lets a user (or support) see the connection and
+ * capability state behind Real Mode without leaving /settings. Read-only.
+ *
+ * Surfaces:
+ *   - capability_real / capability_google / capability_key
+ *   - authenticated flag
+ *   - lastRequestId written by /chat + /paywall on any failure
+ *
+ * Copy of the last requestId is one click — the reference support
+ * asks for when something breaks.
+ */
+function DiagnosticsPanel({ showToast }: { showToast: ShowToast }) {
+    const [caps, setCaps] = useState<{ capability_real: boolean; capability_google: boolean; capability_key: boolean; authenticated: boolean } | null>(null);
+    const [lastRequestId, setLastRequestId] = useState<string>('');
+    const [loading, setLoading] = useState(true);
+
+    const refresh = async () => {
+        setLoading(true);
+        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+        try {
+            const res = await fetch('/api/capabilities', {
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
+                cache: 'no-store',
+            });
+            const data = await res.json();
+            setCaps({
+                capability_real: !!data.capability_real,
+                capability_google: !!data.capability_google,
+                capability_key: !!data.capability_key,
+                authenticated: !!data.authenticated,
+            });
+        } catch {
+            setCaps({ capability_real: false, capability_google: false, capability_key: false, authenticated: false });
+        }
+        try { setLastRequestId(localStorage.getItem('lastRequestId') || ''); } catch { setLastRequestId(''); }
+        setLoading(false);
+    };
+
+    useEffect(() => { refresh(); }, []);
+
+    const copyRef = async () => {
+        if (!lastRequestId) return;
+        try { await navigator.clipboard.writeText(lastRequestId); showToast('Reference ID copied', 'success'); }
+        catch { showToast('Could not access clipboard', 'warning'); }
+    };
+
+    const Row = ({ label, value, hint }: { label: string; value: React.ReactNode; hint?: string }) => (
+        <div className="flex items-center justify-between py-3 border-b border-foreground/5 last:border-b-0">
+            <div>
+                <p className="text-sm text-white">{label}</p>
+                {hint ? <p className="text-[11px] text-gray-500 mt-0.5">{hint}</p> : null}
+            </div>
+            <div className="text-xs font-mono text-gray-300">{value}</div>
+        </div>
+    );
+
+    const Pill = ({ ok, onLabel, offLabel }: { ok: boolean; onLabel: string; offLabel: string }) => (
+        <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-widest ${ok ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-gray-500/15 text-gray-400 border border-white/10'}`}>
+            {ok ? onLabel : offLabel}
+        </span>
+    );
+
+    return (
+        <div className="space-y-6">
+            <div className="flex items-center justify-between">
+                <h2 className="text-lg font-medium text-white">Diagnostics</h2>
+                <button
+                    onClick={refresh}
+                    disabled={loading}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-mono uppercase tracking-wider text-gray-400 hover:text-white bg-foreground/[0.04] hover:bg-foreground/[0.08] border border-foreground/10 transition-all"
+                >
+                    <RefreshCw size={12} className={loading ? 'animate-spin' : ''} /> Refresh
+                </button>
+            </div>
+
+            <div className="p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-2">Mode</p>
+                <Row
+                    label="Real Mode"
+                    hint="Write actions + signed receipts. Off = Demo (simulated, no writes)."
+                    value={<Pill ok={!!caps?.capability_real} onLabel="On" offLabel="Demo" />}
+                />
+                <Row
+                    label="Authenticated"
+                    hint="Signed in with a verified Privy session."
+                    value={<Pill ok={!!caps?.authenticated} onLabel="Yes" offLabel="No" />}
+                />
+            </div>
+
+            <div className="p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-2">Connected providers</p>
+                <Row
+                    label="Google (Calendar + Gmail)"
+                    hint="OAuth row in user_integrations with a refresh token."
+                    value={<Pill ok={!!caps?.capability_google} onLabel="Connected" offLabel="Not connected" />}
+                />
+                <Row
+                    label="LLM provider key"
+                    hint="Server env or a BYO key has been supplied."
+                    value={<Pill ok={!!caps?.capability_key} onLabel="Available" offLabel="Missing" />}
+                />
+            </div>
+
+            <div className="p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-2">Support</p>
+                <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                        <p className="text-sm text-white">Last request ID</p>
+                        <p className="text-[11px] text-gray-500 mt-0.5">Most recent reference from /chat or /paywall — paste when contacting support.</p>
+                        <p className="mt-2 text-[11px] font-mono text-gray-300 truncate">{lastRequestId || <span className="text-gray-500">No failures captured yet.</span>}</p>
+                    </div>
+                    <button
+                        onClick={copyRef}
+                        disabled={!lastRequestId}
+                        className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-mono uppercase tracking-wider text-gray-300 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed bg-foreground/[0.04] hover:bg-foreground/[0.08] border border-foreground/10 transition-all"
+                    >
+                        <Copy size={12} /> Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function AdvancedSettings({ showToast }: { showToast: ShowToast }) {
     const [advancedMode, setAdvancedMode] = useState(false);
 
     useEffect(() => {

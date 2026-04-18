@@ -223,6 +223,21 @@ export default function ChatPage() {
         if (saved) { try { const parsed = JSON.parse(saved); setSessions(parsed.map((s: ChatSession & { createdAt: string; messages: (Message & { timestamp: string })[] }) => ({ ...s, createdAt: new Date(s.createdAt), messages: s.messages.map((m) => ({ ...m, timestamp: new Date(m.timestamp) })) }))); if (parsed.length > 0) setActiveSessionId(parsed[0].id); } catch {} }
     }, []);
 
+    // Post-payment greeting. Paywall redirects here with ?subscribed=1
+    // on successful invoice confirmation (or dev_simulate). Show the
+    // toast once, then strip the param from the URL so a refresh
+    // doesn't re-fire it.
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('subscribed') !== '1') return;
+        showToast('Subscription active. Real Mode ready.', 'success');
+        params.delete('subscribed');
+        const search = params.toString();
+        const url = window.location.pathname + (search ? `?${search}` : '') + window.location.hash;
+        window.history.replaceState({}, '', url);
+    }, [showToast]);
+
     useEffect(() => { if (sessions.length > 0) localStorage.setItem('chat-sessions-v2', JSON.stringify(sessions)); }, [sessions]);
     useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [activeSession?.messages]);
 
@@ -423,6 +438,9 @@ export default function ChatPage() {
                     // the request ID so support can trace it.
                     let content: string;
                     const requestId = response.headers.get('x-request-id') || '';
+                    if (requestId) {
+                        try { localStorage.setItem('lastRequestId', requestId); } catch { /* noop */ }
+                    }
                     const trailer = requestId ? `\n\n*Reference: \`${requestId}\`*` : '';
                     try {
                         const errBody = await response.json();
