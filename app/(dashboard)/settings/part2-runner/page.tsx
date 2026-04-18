@@ -50,7 +50,7 @@ interface Receipt {
     request_id?: string | null;
 }
 
-function authHeader() {
+function authHeader(): Record<string, string> {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     return token ? { Authorization: `Bearer ${token}` } : {};
 }
