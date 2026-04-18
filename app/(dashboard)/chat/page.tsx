@@ -393,7 +393,7 @@ export default function ChatPage() {
                 }
             } catch (councilErr) {
                 const errMsg = councilErr instanceof Error ? councilErr.message : 'Council error';
-                const content = `**LLM Council error:** ${errMsg}\n\nCheck your API keys in [Settings](/settings).`;
+                const content = `**LLM Council is temporarily unavailable.** Try again in a moment, or switch to a single model from the selector above.\n\n*Detail: ${errMsg}*`;
                 setSessions(prev => prev.map(s => s.id === sessionId ? {
                     ...s,
                     messages: s.messages.map(m => m.id === councilMsgId ? { ...m, content } : m),
@@ -451,7 +451,7 @@ export default function ChatPage() {
                         } else if (errBody.retryable) {
                             content = `**${activeModel.label} is temporarily unavailable.** ${errBody.error}${trailer}`;
                         } else {
-                            content = `**${activeModel.label}:** ${errBody.error || 'Something went wrong on our side.'} Try again or switch models in the selector above.${trailer}`;
+                            content = `**${activeModel.label}** didn\u2019t respond. Try again, or switch to another model from the selector above.${trailer}`;
                         }
                     } catch {
                         content = `**${activeModel.label}** didn't respond. Try again in a moment, or switch to another model.${trailer}`;
