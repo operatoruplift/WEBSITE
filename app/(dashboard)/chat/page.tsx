@@ -500,24 +500,37 @@ export default function ChatPage() {
                     messages: s.messages.map(m => m.id === assistantId ? { ...m, content: cleanContent + '\n\n*Executing tool...*' } : m),
                 } : s));
 
-                // Execute each tool call with approval
+                // Execute each tool call with approval. Capture the first
+                // failing result's requestId so the assistant message
+                // carries it (Copy Request ID button renders only on
+                // messages with msg.requestId set).
                 let toolResults = '';
                 let anyDenied = false;
+                let firstFailureRequestId: string | undefined;
                 for (const call of calls) {
                     const result = await requestChatToolApproval(call);
                     if (result) {
                         toolResults += '\n\n' + formatToolResult(result);
+                        if (!result.success && !firstFailureRequestId && result.requestId) {
+                            firstFailureRequestId = result.requestId;
+                        }
                     } else {
                         toolResults += `\n\n**Tool Denied** — ${call.tool}.${call.action} was not approved.`;
                         anyDenied = true;
                     }
                 }
+                if (firstFailureRequestId) {
+                    try { localStorage.setItem('lastRequestId', firstFailureRequestId); } catch { /* noop */ }
+                }
 
-                // Update the message with clean text + tool results
+                // Update the message with clean text + tool results.
+                // Attach requestId so the Copy Request ID button renders.
                 const messageWithResults = cleanContent + toolResults;
                 setSessions(prev => prev.map(s => s.id === sessionId ? {
                     ...s,
-                    messages: s.messages.map(m => m.id === assistantId ? { ...m, content: messageWithResults } : m),
+                    messages: s.messages.map(m => m.id === assistantId
+                        ? { ...m, content: messageWithResults, requestId: firstFailureRequestId || m.requestId }
+                        : m),
                 } : s));
 
                 // Add to history so the next LLM call sees the tool results

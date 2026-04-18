@@ -5,6 +5,7 @@ import {
 import { verifySession } from '@/lib/auth';
 import { getInvoice, markInvoicePaid } from '@/lib/x402/invoices';
 import { getMagicBlockAdapter } from '@/lib/magicblock/adapter';
+import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -97,23 +98,51 @@ async function submitTransfer(recipient: PublicKey): Promise<{ signature: string
  * we trust that instead of submitting our own.
  */
 export async function POST(request: Request) {
+    const meta = withRequestMeta(request, 'tools.x402.pay');
     try {
-        const verified = await verifySession(request);
+        let verified;
+        try {
+            verified = await verifySession(request);
+        } catch (authErr) {
+            return errorResponse(authErr, meta, { httpHint: 401 });
+        }
         const { invoice_reference, tx_signature } = await request.json();
 
         if (!invoice_reference) {
-            return NextResponse.json({ error: 'invoice_reference required' }, { status: 400 });
+            return validationError(
+                'Payment confirmation needs an `invoice_reference`.',
+                'Re-open the invoice to fetch a fresh reference and retry.',
+                meta,
+            );
         }
 
         const invoice = await getInvoice(invoice_reference);
         if (!invoice) {
-            return NextResponse.json({ error: 'invoice_not_found' }, { status: 404 });
+            return NextResponse.json({
+                error: 'invoice_not_found',
+                errorClass: 'unknown',
+                reason: 'invoice_not_found',
+                recovery: 'retry',
+                requestId: meta.requestId,
+                timestamp: meta.startedAt,
+                message: 'We couldn\u2019t find that invoice.',
+                nextAction: 'Open a new invoice from the paywall and retry.',
+            }, { status: 404, headers: meta.headers });
         }
         if (invoice.user_id !== verified.userId) {
-            return NextResponse.json({ error: 'forbidden' }, { status: 403 });
+            return NextResponse.json({
+                error: 'forbidden',
+                errorClass: 'reauth_required',
+                reason: 'invoice_user_mismatch',
+                recovery: 'reauth',
+                requestId: meta.requestId,
+                timestamp: meta.startedAt,
+                message: 'That invoice belongs to a different account.',
+                nextAction: 'Sign in with the account that created the invoice, or open a new one.',
+            }, { status: 403, headers: meta.headers });
         }
         if (invoice.status === 'paid' || invoice.status === 'consumed') {
-            // Idempotent — return success so retries don't fail
+            // Idempotent — return success so retries don't fail.
             return NextResponse.json({
                 status: invoice.status,
                 invoice_reference: invoice.invoice_reference,
@@ -122,10 +151,19 @@ export async function POST(request: Request) {
                 explorer_url: invoice.tx_signature
                     ? `https://explorer.solana.com/tx/${invoice.tx_signature}?cluster=devnet`
                     : undefined,
-            });
+            }, { headers: meta.headers });
         }
         if (new Date(invoice.expires_at) < new Date()) {
-            return NextResponse.json({ error: 'invoice_expired' }, { status: 410 });
+            return NextResponse.json({
+                error: 'invoice_expired',
+                errorClass: 'unknown',
+                reason: 'invoice_expired',
+                recovery: 'retry',
+                requestId: meta.requestId,
+                timestamp: meta.startedAt,
+                message: 'This invoice has expired.',
+                nextAction: 'Open a new invoice from the paywall and retry.',
+            }, { status: 410, headers: meta.headers });
         }
 
         // Prefer a client-supplied signature (real wallet sign), fall back
@@ -150,27 +188,48 @@ export async function POST(request: Request) {
                 submittedVia = 'server';
             } catch (err) {
                 // Signal to ops why the payment never landed. The body
-                // below carries the *real* error so the UI can surface
-                // it to the developer instead of a generic bucket.
+                // below carries the *real* error for ops via the log, but
+                // the UI reads `message` / `nextAction` which are calm.
                 const msg = err instanceof Error ? err.message : 'devnet_submit_failed';
+                const opsHint = /underfunded/i.test(msg)
+                    ? 'Airdrop the server wallet on devnet: solana airdrop 2 <pubkey> --url devnet'
+                    : /SOLANA_DEPLOY_WALLET_KEY/i.test(msg)
+                        ? 'Set SOLANA_DEPLOY_WALLET_KEY in Vercel env (JSON array keypair from `solana-keygen`).'
+                        : 'Check /api/debug/solana-wallet for full diagnostics.';
+                console.log(JSON.stringify({
+                    at: meta.route, event: 'devnet_submit_failed', requestId: meta.requestId, ts: meta.startedAt, reason: msg.slice(0, 240),
+                }));
                 return NextResponse.json(
                     {
                         error: 'devnet_submit_failed',
-                        reason: msg,
-                        action_required: /underfunded/i.test(msg)
-                            ? 'Airdrop the server wallet on devnet: solana airdrop 2 <pubkey> --url devnet'
-                            : /SOLANA_DEPLOY_WALLET_KEY/i.test(msg)
-                                ? 'Set SOLANA_DEPLOY_WALLET_KEY in Vercel env (JSON array keypair from `solana-keygen`).'
-                                : 'Check /api/debug/solana-wallet for full diagnostics.',
+                        errorClass: 'provider_unavailable',
+                        reason: 'devnet_submit_failed',
+                        recovery: 'retry',
+                        requestId: meta.requestId,
+                        timestamp: meta.startedAt,
+                        message: 'Couldn\u2019t settle the payment on Solana devnet.',
+                        nextAction: 'Try again in a moment. If it keeps failing, your wallet wasn\u2019t charged — contact support with the reference below.',
+                        // Ops-only details — hidden in the UI's default render, used by support.
+                        details: { opsHint, detail: msg.slice(0, 240) },
                     },
-                    { status: 503 },
+                    { status: 503, headers: meta.headers },
                 );
             }
         }
 
         const ok = await markInvoicePaid(invoice_reference, sig);
         if (!ok) {
-            return NextResponse.json({ error: 'mark_paid_failed' }, { status: 500 });
+            console.log(JSON.stringify({ at: meta.route, event: 'mark_paid_failed', requestId: meta.requestId, ts: meta.startedAt, invoice_reference }));
+            return NextResponse.json({
+                error: 'mark_paid_failed',
+                errorClass: 'unknown',
+                reason: 'mark_paid_failed',
+                recovery: 'retry',
+                requestId: meta.requestId,
+                timestamp: meta.startedAt,
+                message: 'The payment landed but we couldn\u2019t record it.',
+                nextAction: 'Try again — if the problem persists, contact support with the reference below.',
+            }, { status: 500, headers: meta.headers });
         }
 
         return NextResponse.json({
@@ -183,10 +242,9 @@ export async function POST(request: Request) {
             executed_via: executedVia,
             rpc_url: rpcUrl,
             explorer_url: `https://explorer.solana.com/tx/${sig}?cluster=devnet`,
-        });
+        }, { headers: meta.headers });
     } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Unknown error';
-        return NextResponse.json({ error: msg }, { status: 500 });
+        return errorResponse(err, meta);
     }
 }
 

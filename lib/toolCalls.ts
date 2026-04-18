@@ -35,6 +35,10 @@ export interface ToolResult {
     error?: string;
     /** True when the result came from a Demo-mode mock (executeMock). */
     simulated?: boolean;
+    /** Propagated from the tool route's X-Request-Id header or envelope. */
+    requestId?: string;
+    /** Envelope `nextAction` so the chat UI can render a concrete next step. */
+    nextAction?: string;
 }
 
 // Match <tool_use> blocks — also handles cases where LLM wraps in backticks or code fences
@@ -204,18 +208,19 @@ export async function executeToolCall(
             });
             if (!payRes.ok) {
                 const payErr = await payRes.json().catch(() => ({}));
+                const payRequestId: string | undefined = payErr.requestId || payRes.headers.get('x-request-id') || undefined;
                 return {
                     toolCallId: call.id,
                     tool: call.tool,
                     action: call.action,
                     success: false,
-                    // Surface the *reason* + *action_required* fields from
-                    // /api/tools/x402/pay so the user sees something like
-                    // "Payment failed: devnet_submit_failed — Server wallet
-                    // <pubkey> is underfunded" instead of the bucket code.
+                    requestId: payRequestId,
+                    nextAction: payErr.nextAction,
+                    // Prefer the envelope's calm `message` / `nextAction` over raw
+                    // bucket codes. Fall back to the old shape for older deploys.
                     error: [
-                        `Payment failed: ${payErr.error || payRes.status}`,
-                        payErr.reason ? `— ${payErr.reason}` : null,
+                        payErr.message || `Payment failed: ${payErr.error || payRes.status}`,
+                        payErr.reason && !payErr.message ? `— ${payErr.reason}` : null,
                         payErr.action_required ? `(${payErr.action_required})` : null,
                     ].filter(Boolean).join(' '),
                 };
@@ -234,6 +239,7 @@ export async function executeToolCall(
         }
 
         const data = await res.json();
+        const requestId: string | undefined = data.requestId || res.headers.get('x-request-id') || undefined;
 
         if (!res.ok) {
             return {
@@ -241,7 +247,12 @@ export async function executeToolCall(
                 tool: call.tool,
                 action: call.action,
                 success: false,
-                error: humanizeToolError(data.error, call.tool, res.status),
+                requestId,
+                nextAction: data.nextAction,
+                // Prefer the envelope's `message` (calm) over the raw `error`
+                // bucket code. Fall back to the legacy humanizer when older
+                // deploys return the ad-hoc shape.
+                error: data.message || humanizeToolError(data.error, call.tool, res.status),
             };
         }
 
@@ -251,6 +262,7 @@ export async function executeToolCall(
             action: call.action,
             success: true,
             data,
+            requestId,
         };
     } catch (err) {
         return {
@@ -284,7 +296,12 @@ function humanizeToolError(rawError: string | undefined, tool: string, status: n
 /** Format a tool result as markdown for display in chat / swarm output. */
 export function formatToolResult(result: ToolResult): string {
     if (!result.success) {
-        return `**Tool Error** (${result.tool}.${result.action}): ${result.error}`;
+        // Calm-copy trailer: `result.nextAction` is surfaced inline and the
+        // Ref appears as inline code. The chat UI's Copy Request ID button
+        // picks up the requestId from the message metadata, not this string.
+        const nextActionLine = result.nextAction ? ` ${result.nextAction}` : '';
+        const refLine = result.requestId ? ` *Ref:* \`${result.requestId}\`` : '';
+        return `**${result.tool}.${result.action} didn\u2019t complete.** ${result.error}${nextActionLine}${refLine}`.trim();
     }
 
     // Demo-mode: prefix every rendered result with a Simulated tag so the
