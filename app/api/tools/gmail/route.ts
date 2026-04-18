@@ -3,6 +3,7 @@ import { listMessages, readMessage, createDraft, sendDraft, sendEmail } from '@/
 import { isGoogleConnected } from '@/lib/google/oauth';
 import { verifySession } from '@/lib/auth';
 import { x402Gate } from '@/lib/x402/middleware';
+import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -14,32 +15,64 @@ export const maxDuration = 30;
  *   draft, send_draft, send
  * Free actions:
  *   list, read
+ *
+ * Every error response follows the shared envelope
+ * ({ errorClass, message, nextAction, requestId, timestamp, details? })
+ * and every response carries X-Request-Id so the chat UI can render a
+ * calm copy + Ref + Copy button. x402 + receipt semantics are unchanged.
  */
 export async function POST(request: Request) {
+    const meta = withRequestMeta(request, 'tools.gmail');
     try {
-        const verified = await verifySession(request);
+        let verified;
+        try {
+            verified = await verifySession(request);
+        } catch (authErr) {
+            return errorResponse(authErr, meta, { httpHint: 401 });
+        }
+
         const { action, params, agent_id } = await request.json();
         const user_id = verified.userId;
 
         if (!action) {
-            return NextResponse.json({ error: 'action required' }, { status: 400 });
+            return validationError(
+                'Tool call is missing the `action` field.',
+                'Re-send with one of: list, read, draft, send_draft, send.',
+                meta,
+            );
         }
 
         const connected = await isGoogleConnected(user_id);
         if (!connected) {
+            console.log(JSON.stringify({
+                at: meta.route, event: 'google_not_connected', requestId: meta.requestId, ts: meta.startedAt,
+            }));
             return NextResponse.json(
                 {
                     error: 'google_not_connected',
-                    message: 'Gmail not connected. Go to Integrations to connect.',
+                    errorClass: 'reauth_required',
+                    reason: 'google_not_connected',
+                    recovery: 'reauth',
+                    requestId: meta.requestId,
+                    timestamp: meta.startedAt,
+                    message: 'Gmail is not connected to this account.',
+                    nextAction: 'Go to Integrations and connect Google to use Gmail tools.',
                     requires_action: 'connect_google',
                 },
-                { status: 403 },
+                { status: 403, headers: meta.headers },
             );
         }
 
-        // x402 gate — returns 402 on first call to gated actions, 'paid' on retry with proof
+        // x402 gate — returns 402 on first call to gated actions, 'paid' on retry with proof.
+        // x402 semantics unchanged; we only standardize the UI surface on failures.
         const gate = await x402Gate({ request, tool: 'gmail', action, params, user_id });
-        if (gate.type === '402') return gate.response;
+        if (gate.type === '402') {
+            // Pass through the x402 response body but guarantee X-Request-Id
+            // is propagated so the chat UI has a reference for the challenge.
+            const res = gate.response as NextResponse;
+            res.headers.set('X-Request-Id', meta.requestId);
+            return res;
+        }
 
         switch (action) {
             case 'list': {
@@ -48,22 +81,24 @@ export async function POST(request: Request) {
                     params?.query ?? 'in:inbox',
                     params?.max_results ?? 20,
                 );
-                return NextResponse.json({ action: 'list', messages });
+                return NextResponse.json({ action: 'list', messages }, { headers: meta.headers });
             }
 
             case 'read': {
                 if (!params?.message_id) {
-                    return NextResponse.json({ error: 'message_id required' }, { status: 400 });
+                    return validationError('A `message_id` is required to read an email.', 'Supply a valid Gmail message ID.', meta);
                 }
                 const message = await readMessage(user_id, params.message_id);
-                return NextResponse.json({ action: 'read', message });
+                return NextResponse.json({ action: 'read', message }, { headers: meta.headers });
             }
 
             case 'draft': {
                 if (!params?.to || !params?.subject || !params?.body) {
-                    return NextResponse.json(
-                        { error: 'to, subject, and body required for draft' },
-                        { status: 400 },
+                    return validationError(
+                        'Drafting an email needs `to`, `subject`, and `body`.',
+                        'Ask the assistant to fill in the missing fields, then retry.',
+                        meta,
+                        { missing: ['to', 'subject', 'body'].filter(f => !params?.[f]) },
                     );
                 }
                 const draft = await createDraft(user_id, {
@@ -78,26 +113,28 @@ export async function POST(request: Request) {
                 if (gate.type === 'paid') {
                     payload.receipt = await gate.createReceipt(draft, { agent_id });
                 }
-                return NextResponse.json(payload);
+                return NextResponse.json(payload, { headers: meta.headers });
             }
 
             case 'send_draft': {
                 if (!params?.draft_id) {
-                    return NextResponse.json({ error: 'draft_id required' }, { status: 400 });
+                    return validationError('Sending a draft needs a `draft_id`.', 'Draft the email first, then retry with the returned id.', meta);
                 }
                 const result = await sendDraft(user_id, params.draft_id);
                 const payload: { action: string; result: unknown; receipt?: unknown } = { action: 'send_draft', result };
                 if (gate.type === 'paid') {
                     payload.receipt = await gate.createReceipt(result, { agent_id });
                 }
-                return NextResponse.json(payload);
+                return NextResponse.json(payload, { headers: meta.headers });
             }
 
             case 'send': {
                 if (!params?.to || !params?.subject || !params?.body) {
-                    return NextResponse.json(
-                        { error: 'to, subject, and body required for send' },
-                        { status: 400 },
+                    return validationError(
+                        'Sending an email needs `to`, `subject`, and `body`.',
+                        'Ask the assistant to fill in the missing fields, then retry.',
+                        meta,
+                        { missing: ['to', 'subject', 'body'].filter(f => !params?.[f]) },
                     );
                 }
                 const result = await sendEmail(user_id, {
@@ -112,18 +149,17 @@ export async function POST(request: Request) {
                 if (gate.type === 'paid') {
                     payload.receipt = await gate.createReceipt(result, { agent_id });
                 }
-                return NextResponse.json(payload);
+                return NextResponse.json(payload, { headers: meta.headers });
             }
 
             default:
-                return NextResponse.json(
-                    { error: `Unknown action: ${action}. Supported: list, read, draft, send_draft, send` },
-                    { status: 400 },
+                return validationError(
+                    `Unknown gmail action: ${action}.`,
+                    'Supported actions: list, read, draft, send_draft, send.',
+                    meta,
                 );
         }
     } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Unknown error';
-        console.error('[tools/gmail]', msg);
-        return NextResponse.json({ error: msg }, { status: 500 });
+        return errorResponse(err, meta);
     }
 }
