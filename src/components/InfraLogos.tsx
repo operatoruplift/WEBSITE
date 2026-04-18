@@ -12,17 +12,22 @@ type LogoProps = { className?: string };
  * render cleanly at w-5 h-5.
  */
 
-// Privy — official "P" monogram with notch (from privy.io)
-// Rounded square containing a stylized P. Looks like a P when viewed small.
+// Privy — clean capital P monogram with a round counter.
+// At w-5 h-5 the previous mark read as a blob; the new path is a
+// proper closed-outline "P": vertical stem, rounded bowl, empty
+// interior. Renders cleanly at small sizes and in monochrome.
 export const PrivyLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
     <svg
         className={className}
         viewBox="0 0 24 24"
         fill="currentColor"
+        fillRule="evenodd"
+        clipRule="evenodd"
         xmlns="http://www.w3.org/2000/svg"
         aria-label="Privy"
     >
-        <path d="M4 3h12a5 5 0 0 1 0 10h-5v4H4V3zm5 4v2h6a1 1 0 0 0 0-2H9z" />
+        {/* Outer P silhouette */}
+        <path d="M4 3h10a6 6 0 0 1 0 12h-5v6H4V3zm5 4v4h5a2 2 0 0 0 0-4H9z" />
     </svg>
 );
 
@@ -39,9 +44,11 @@ export const SupabaseLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
     </svg>
 );
 
-// Solana — three parallel bars, slanted right.
-// Official orientation: top+bottom bars slant one way, middle bar the
-// OTHER way (this is what makes the Solana mark instantly recognizable).
+// Solana — three parallel slanted bars, all tilting the same way.
+// Brand mark at reduced detail: each bar is a parallelogram whose
+// left edge is at the sheared x=sheared position, mirroring the
+// official mark where the three horizontal stripes share one skew
+// angle (they are not opposing — that was a previous mistake).
 // 24x24 viewBox, centered, equal spacing.
 export const SolanaLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
     <svg
@@ -51,12 +58,12 @@ export const SolanaLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
         xmlns="http://www.w3.org/2000/svg"
         aria-label="Solana"
     >
-        {/* Top bar — slants up-right (starts lower-left, ends upper-right) */}
-        <path d="M5 5h12l2.5 2H5.5z" />
-        {/* Middle bar — slants the OPPOSITE way (down-right) — this is the Solana signature */}
-        <path d="M5.5 10h14L17 12H5z" />
-        {/* Bottom bar — slants up-right (parallel to top) */}
-        <path d="M5 15h12l2.5 2H5.5z" />
+        {/* Top bar — parallelogram sheared to the right */}
+        <path d="M7 5h12l-2 2.5H5z" />
+        {/* Middle bar — same shear direction as top */}
+        <path d="M7 10.25h12l-2 2.5H5z" />
+        {/* Bottom bar — same shear direction as top */}
+        <path d="M7 15.5h12l-2 2.5H5z" />
     </svg>
 );
 

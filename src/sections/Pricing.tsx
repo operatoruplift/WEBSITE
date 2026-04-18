@@ -98,8 +98,13 @@ const Pricing: React.FC = () => {
                                         : 'border border-[#222222] bg-[#111111]'
                                 }`}>
                                     {tier.highlight && (
-                                        <div className="absolute top-0 right-0 px-3 py-1 bg-[#F97316] text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-widest rounded-bl-lg flex items-center gap-1 max-w-[70%] truncate">
-                                            <Crown size={11} className="shrink-0" /> <span className="truncate">Recommended</span>
+                                        // Pill-shaped, floated inset from the card's rounded corner.
+                                        // Earlier implementation used a tab glued to the corner that
+                                        // visually clashed with the card's rounded-2xl + orange border
+                                        // on mobile. Keeping it inside with a short label ("POPULAR")
+                                        // + crown icon fits every breakpoint down to 320px.
+                                        <div className="absolute top-3 right-3 z-10 px-2.5 py-1 bg-[#F97316] text-white text-[9px] font-bold uppercase tracking-wider rounded-full flex items-center gap-1 shadow-[0_2px_8px_rgba(249,115,22,0.35)]">
+                                            <Crown size={10} className="shrink-0" /> <span>Recommended</span>
                                         </div>
                                     )}
 

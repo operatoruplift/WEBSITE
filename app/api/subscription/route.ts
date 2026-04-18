@@ -5,40 +5,81 @@ import { checkSubscription } from '@/lib/subscription';
 
 export const runtime = 'nodejs';
 
+function newRequestId(): string {
+    return `req_${crypto.randomUUID()}`;
+}
+
+/**
+ * Extract the JOSE header fields from a compact JWS without verifying.
+ * Used only for logging — we never log payload or signature. Returns null
+ * if the token isn't even shaped like `a.b.c`.
+ */
+function jwsHeaderDebug(request: Request): { alg?: string; typ?: string; kid?: string; tokenLength: number; tokenPrefix: string } | null {
+    const authz = request.headers.get('authorization') || '';
+    const m = authz.match(/^Bearer\s+(.+)$/i);
+    if (!m) return null;
+    const token = m[1];
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+        return { tokenLength: token.length, tokenPrefix: token.slice(0, 12) + '...' };
+    }
+    try {
+        const headerJson = Buffer.from(parts[0], 'base64url').toString('utf8');
+        const h = JSON.parse(headerJson) as { alg?: string; typ?: string; kid?: string };
+        return { alg: h.alg, typ: h.typ, kid: h.kid, tokenLength: token.length, tokenPrefix: token.slice(0, 12) + '...' };
+    } catch {
+        return { tokenLength: token.length, tokenPrefix: token.slice(0, 12) + '...' };
+    }
+}
+
 /**
  * GET /api/subscription — check current user's subscription status.
  * POST /api/subscription — create a pending subscription (status=pending) or
  *    activate one (status=active) after Solana Pay confirmation.
  */
 export async function GET(request: Request) {
+    const requestId = request.headers.get('x-request-id') || newRequestId();
+    const startedAt = new Date().toISOString();
     try {
         const verified = await verifySession(request);
         const email = await getUserEmail(verified.userId);
         const status = await checkSubscription(verified.userId, email || undefined);
-        return NextResponse.json(status);
+        return NextResponse.json(status, { headers: { 'X-Request-Id': requestId } });
     } catch (err) {
         const msg = err instanceof Error ? err.message : 'Auth required';
-        return NextResponse.json({ tier: 'free', active: false, error: msg, reason: 'auth_failed' }, { status: 401 });
+        const jws = jwsHeaderDebug(request);
+        console.log(JSON.stringify({ at: 'subscription', event: 'auth-failed', route: 'GET /api/subscription', requestId, ts: startedAt, reason: msg, jws }));
+        return NextResponse.json(
+            { tier: 'free', active: false, error: msg, reason: 'auth_failed', requestId, timestamp: startedAt },
+            { status: 401, headers: { 'X-Request-Id': requestId } },
+        );
     }
 }
 
 export async function POST(request: Request) {
+    const requestId = request.headers.get('x-request-id') || newRequestId();
+    const startedAt = new Date().toISOString();
     try {
         let verified;
         try {
             verified = await verifySession(request);
         } catch (authErr) {
             const code = authErr instanceof Error ? authErr.message : 'token_invalid';
+            const jws = jwsHeaderDebug(request);
+            // JWS header is safe to log (alg/typ/kid) — never log payload or signature.
+            console.log(JSON.stringify({ at: 'subscription', event: 'auth-failed', route: 'POST /api/subscription', requestId, ts: startedAt, reason: code, jws }));
             return NextResponse.json({
                 error: code,
                 reason: 'auth_failed',
                 recovery: 'reauth',
+                requestId,
+                timestamp: startedAt,
                 message: code === 'token_expired'
                     ? 'Your session expired. Please re-login.'
-                    : code.startsWith('malformed_token')
-                        ? 'Your auth token is invalid. Please re-login.'
-                        : 'Authentication failed. Please re-login.',
-            }, { status: 401 });
+                    : code.startsWith('malformed_token') || /invalid compact jws/i.test(code)
+                        ? 'Your session token is invalid. Please re-login to continue.'
+                        : 'Authentication failed. Please re-login to continue.',
+            }, { status: 401, headers: { 'X-Request-Id': requestId } });
         }
         const body = await request.json();
         const { action, tx_signature, invoice_reference } = body;
@@ -148,6 +189,16 @@ export async function POST(request: Request) {
         });
     } catch (err) {
         const msg = err instanceof Error ? err.message : 'Unknown error';
-        return NextResponse.json({ error: msg }, { status: 500 });
+        console.log(JSON.stringify({ at: 'subscription', event: 'unhandled', route: 'POST /api/subscription', requestId, ts: startedAt, error: msg.slice(0, 240) }));
+        return NextResponse.json(
+            {
+                error: 'Payment request failed. Try again in a moment — your card / wallet was not charged.',
+                detail: msg,
+                requestId,
+                timestamp: startedAt,
+                retryable: true,
+            },
+            { status: 500, headers: { 'X-Request-Id': requestId } },
+        );
     }
 }
