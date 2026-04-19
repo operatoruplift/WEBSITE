@@ -50,7 +50,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
   },
   hero: {
     visionTag: "PERSONAL AI OPERATOR",
-    headline: "AI That Runs On Your Terms.",
+    headline: "AI for your calendar and inbox. That you control.",
     subhead: "A personal AI operator for email and calendar. Every action waits for your Approve click. Every real action leaves a signed receipt.",
     description: "Ask for a daily briefing, triage your inbox, schedule meetings, all through one chat. Nothing sends or books without your OK. Try the live demo before you sign in.",
     contractAddress: "",
