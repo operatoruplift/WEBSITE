@@ -50,9 +50,23 @@ interface Receipt {
     request_id?: string | null;
 }
 
-function authHeader(): Record<string, string> {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+function readToken(): string | null {
+    return typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+}
+
+/**
+ * Returns a headers object that fetch() accepts directly — always
+ * Record<string, string>, never a union. Callers pass the token so the
+ * call site shows intent and avoids a surprise window read.
+ */
+function authHeaders(token: string | null): Record<string, string> {
     return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+function authHeadersWithContentType(token: string | null): Record<string, string> {
+    return token
+        ? { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+        : { 'Content-Type': 'application/json' };
 }
 
 function Pill({ chip, label }: { chip: Chip; label: string }) {
@@ -134,7 +148,7 @@ export default function Part2RunnerPage() {
 
     useEffect(() => {
         fetch('/api/whoami', {
-            headers: { ...authHeader() },
+            headers: authHeaders(readToken()),
             cache: 'no-store',
         })
             .then(r => r.ok ? r.json() : Promise.reject(r.status))
@@ -152,7 +166,7 @@ export default function Part2RunnerPage() {
 
     const runCheckAuthAndGoogle = async () => {
         setCapsChecked(false);
-        const res = await fetch('/api/capabilities', { headers: { ...authHeader() }, cache: 'no-store' });
+        const res = await fetch('/api/capabilities', { headers: authHeaders(readToken()), cache: 'no-store' });
         const rid = res.headers.get('x-request-id');
         if (rid) {
             setCapsRequestId(rid);
@@ -176,7 +190,7 @@ export default function Part2RunnerPage() {
         setSubChip('running');
         setSubDetail('');
         try {
-            const res = await fetch('/api/subscription', { headers: { ...authHeader() }, cache: 'no-store' });
+            const res = await fetch('/api/subscription', { headers: authHeaders(readToken()), cache: 'no-store' });
             const rid = res.headers.get('x-request-id');
             if (rid) setSubRequestId(rid);
             const data = await res.json();
@@ -202,7 +216,7 @@ export default function Part2RunnerPage() {
         // No subjects, no snippets, no bodies enter the UI.
         const res = await fetch('/api/tools/gmail', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', ...authHeader() },
+            headers: authHeadersWithContentType(readToken()),
             body: JSON.stringify({ action: 'list', params: { query: 'in:inbox', max_results: 25 } }),
         });
         if (!res.ok) {
@@ -279,7 +293,7 @@ export default function Part2RunnerPage() {
 
     const refreshReceipts = async () => {
         try {
-            const res = await fetch('/api/receipts', { headers: { ...authHeader() }, cache: 'no-store' });
+            const res = await fetch('/api/receipts', { headers: authHeaders(readToken()), cache: 'no-store' });
             if (!res.ok) return;
             const data = await res.json();
             const list: Receipt[] = Array.isArray(data.receipts) ? data.receipts.slice(0, 5) : [];
