@@ -55,6 +55,11 @@ export function ToolApprovalModal({
     const Icon = meta.icon;
     const actionLabel = ACTION_LABELS[toolCall.action] || toolCall.action;
 
+    // Plain-language "what will happen" + "what data is accessed" per action.
+    // Lives next to the parameter summary so the user reads the intent
+    // before the details. No behavior change — copy only.
+    const narrative = buildNarrative(toolCall, meta.label, demoMode);
+
     // Price comes from the central server/client pricing config — no per-agent
     // lookup. Gated actions: calendar.create, gmail.draft/send/send_draft.
     const price = getToolPrice(toolCall.tool, toolCall.action);
@@ -124,11 +129,16 @@ export function ToolApprovalModal({
                                     <Sparkles size={10} /> Simulated
                                 </span>
                             ) : (
-                                <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border ${
-                                    meta.risk === 'HIGH'
-                                        ? 'bg-orange-500/10 border-orange-500/30 text-orange-400'
-                                        : 'bg-amber-500/10 border-amber-500/30 text-amber-400'
-                                }`}>{meta.risk}</span>
+                                <>
+                                    <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border bg-emerald-500/10 border-emerald-500/30 text-emerald-400">
+                                        <span className="w-1 h-1 rounded-full bg-emerald-400" /> Real
+                                    </span>
+                                    <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border ${
+                                        meta.risk === 'HIGH'
+                                            ? 'bg-orange-500/10 border-orange-500/30 text-orange-400'
+                                            : 'bg-amber-500/10 border-amber-500/30 text-amber-400'
+                                    }`}>{meta.risk}</span>
+                                </>
                             )}
                         </div>
                         <p className="text-xs text-gray-500">
@@ -151,6 +161,17 @@ export function ToolApprovalModal({
                                 <div className="text-xs text-gray-400 mt-0.5">{toolCall.tool}.{toolCall.action}</div>
                             </div>
                         </div>
+                        {/* Plain-language intent: what will happen + what data */}
+                        <ul className="mt-3 space-y-1.5 pl-1">
+                            <li className="flex items-start gap-2 text-xs text-gray-300">
+                                <span className="text-emerald-400 mt-0.5">▸</span>
+                                <span><span className="text-gray-500">Will:</span> {narrative.willHappen}</span>
+                            </li>
+                            <li className="flex items-start gap-2 text-xs text-gray-300">
+                                <span className="text-emerald-400 mt-0.5">▸</span>
+                                <span><span className="text-gray-500">Data:</span> {narrative.dataAccessed}</span>
+                            </li>
+                        </ul>
                     </div>
 
                     {paramSummary.length > 0 && (
@@ -250,6 +271,77 @@ export function ToolApprovalModal({
             </div>
         </div>
     );
+}
+
+/**
+ * Plain-language intent lines shown above the raw parameter summary.
+ * Two bullets:
+ *   willHappen — the concrete observable effect (or "simulated ..." in demo)
+ *   dataAccessed — exactly which OAuth scope / local data gets read
+ * Both strings are safe to render verbatim — no user input is interpolated
+ * unsanitized (dates/ids only via String()).
+ */
+function buildNarrative(call: ToolCall, toolLabel: string, demo: boolean): { willHappen: string; dataAccessed: string } {
+    const p = call.params;
+    const demoPrefix = demo ? 'Simulated: ' : '';
+    const to = p.to ? String(p.to) : '';
+    const when = p.start ? new Date(String(p.start)).toLocaleString() : '';
+
+    if (call.tool === 'gmail') {
+        switch (call.action) {
+            case 'list':
+                return {
+                    willHappen: `${demoPrefix}List recent messages in your inbox.`,
+                    dataAccessed: 'gmail.readonly scope · message metadata only (sender, subject, snippet).',
+                };
+            case 'read':
+                return {
+                    willHappen: `${demoPrefix}Read one specific message.`,
+                    dataAccessed: 'gmail.readonly scope · this message\u2019s subject and body.',
+                };
+            case 'draft':
+                return {
+                    willHappen: `${demoPrefix}Save a draft to ${to || 'the recipient'} in your Gmail drafts. Nothing is sent.`,
+                    dataAccessed: 'gmail.compose scope · write-only. The draft you see here is the draft that gets saved.',
+                };
+            case 'send':
+                return {
+                    willHappen: `${demoPrefix}Send an email to ${to || 'the recipient'}. This cannot be undone from Operator Uplift.`,
+                    dataAccessed: 'gmail.compose + gmail.send scope · the body you see here is what gets delivered.',
+                };
+            case 'send_draft':
+                return {
+                    willHappen: `${demoPrefix}Send an existing draft from your Gmail. This cannot be undone.`,
+                    dataAccessed: 'gmail.send scope · the draft as you saved it.',
+                };
+            default: break;
+        }
+    }
+    if (call.tool === 'calendar') {
+        switch (call.action) {
+            case 'list':
+                return {
+                    willHappen: `${demoPrefix}List events on your calendar for the selected window.`,
+                    dataAccessed: 'calendar.events.readonly scope · event titles + times, no attendee emails unless you asked.',
+                };
+            case 'free_slots':
+                return {
+                    willHappen: `${demoPrefix}Scan your calendar and suggest open time slots.`,
+                    dataAccessed: 'calendar.events.readonly scope · busy/free windows only.',
+                };
+            case 'create':
+                return {
+                    willHappen: `${demoPrefix}Create a real event${when ? ` at ${when}` : ''} on your primary Google Calendar.`,
+                    dataAccessed: 'calendar.events scope · the exact title, time, and attendees shown below.',
+                };
+            default: break;
+        }
+    }
+    // Fallback — deterministic and honest about what we don't know.
+    return {
+        willHappen: `${demoPrefix}Run ${toolLabel} ${call.action}.`,
+        dataAccessed: 'Scope and fields shown in the Details section below.',
+    };
 }
 
 function buildParamSummary(call: ToolCall): { label: string; value: string }[] {

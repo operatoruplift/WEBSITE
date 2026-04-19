@@ -109,7 +109,7 @@ export default function SettingsPage() {
         { id: 'security', label: 'Security', icon: Shield },
         { id: 'api', label: 'API Keys', icon: Key },
         { id: 'data', label: 'Data & Storage', icon: Database },
-        { id: 'diagnostics', label: 'Diagnostics', icon: Activity },
+        { id: 'diagnostics', label: 'Status', icon: Activity },
         { id: 'advanced', label: 'Advanced', icon: Settings },
     ];
 
@@ -333,7 +333,10 @@ function DiagnosticsPanel({ showToast }: { showToast: ShowToast }) {
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <h2 className="text-lg font-medium text-white">Diagnostics</h2>
+                <div>
+                    <h2 className="text-lg font-medium text-white">Status</h2>
+                    <p className="text-[11px] text-gray-500 mt-0.5">Real Mode, connected accounts, and your last reference ID for support.</p>
+                </div>
                 <button
                     onClick={refresh}
                     disabled={loading}
@@ -358,7 +361,7 @@ function DiagnosticsPanel({ showToast }: { showToast: ShowToast }) {
             </div>
 
             <div className="p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10">
-                <p className="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-2">Connected providers</p>
+                <p className="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-2">Connected accounts</p>
                 <Row
                     label="Google (Calendar + Gmail)"
                     hint="OAuth row in user_integrations with a refresh token."
