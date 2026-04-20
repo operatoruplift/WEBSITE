@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/supabase-server';
 import { generateEmbedding } from '@/lib/llm';
+import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export async function GET(request: Request) {
+  const meta = withRequestMeta(request, 'memory.list');
   try {
     const { supabase } = await requireAuth(request);
     const { data, error } = await supabase
@@ -10,20 +12,30 @@ export async function GET(request: Request) {
       .select('id, title, type, source, tags, size_bytes, chunk_count, created_at, updated_at')
       .order('created_at', { ascending: false });
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json(data);
-  } catch {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (error) return errorResponse(new Error(error.message), meta, { httpHint: 500 });
+    return NextResponse.json(data, { headers: meta.headers });
+  } catch (err) {
+    return errorResponse(err, meta, { httpHint: 401 });
   }
 }
 
 export async function POST(request: Request) {
+  const meta = withRequestMeta(request, 'memory.create');
   try {
-    const { user, supabase } = await requireAuth(request);
+    let user, supabase;
+    try {
+      ({ user, supabase } = await requireAuth(request));
+    } catch (authErr) {
+      return errorResponse(authErr, meta, { httpHint: 401 });
+    }
     const { title, type, content, tags, source } = await request.json();
 
     if (!title || !content) {
-      return NextResponse.json({ error: 'Title and content required' }, { status: 400 });
+      return validationError(
+        'A memory entry needs both a title and content.',
+        'Fill both fields and retry.',
+        meta,
+      );
     }
 
     // Chunk content into ~500 token pieces
@@ -54,7 +66,7 @@ export async function POST(request: Request) {
       .select()
       .single();
 
-    if (nodeError) return NextResponse.json({ error: nodeError.message }, { status: 500 });
+    if (nodeError) return errorResponse(new Error(nodeError.message), meta, { httpHint: 500 });
 
     // Insert chunks with embeddings
     if (chunks.length > 0) {
@@ -69,10 +81,9 @@ export async function POST(request: Request) {
       await supabase.from('memory_chunks').insert(chunkRows);
     }
 
-    return NextResponse.json(node, { status: 201 });
+    return NextResponse.json(node, { status: 201, headers: meta.headers });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : 'Internal error';
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return errorResponse(err, meta);
   }
 }
 

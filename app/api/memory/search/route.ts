@@ -1,18 +1,33 @@
 import { NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/supabase-server';
 import { generateEmbedding } from '@/lib/llm';
+import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export async function POST(request: Request) {
+  const meta = withRequestMeta(request, 'memory.search');
   try {
-    const { supabase } = await requireAuth(request);
+    let supabase;
+    try {
+      ({ supabase } = await requireAuth(request));
+    } catch (authErr) {
+      return errorResponse(authErr, meta, { httpHint: 401 });
+    }
     const { query, limit = 5 } = await request.json();
 
     if (!query) {
-      return NextResponse.json({ error: 'Query required' }, { status: 400 });
+      return validationError(
+        'A memory search needs a `query` string.',
+        'Include a query and retry.',
+        meta,
+      );
     }
 
     if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json({ error: 'Embeddings not configured' }, { status: 503 });
+      return errorResponse(
+        new Error('Embeddings not configured (OPENAI_API_KEY missing).'),
+        meta,
+        { errorClass: 'provider_unavailable', httpHint: 503 },
+      );
     }
 
     // Embed the query
@@ -32,11 +47,11 @@ export async function POST(request: Request) {
         .select('content, chunk_index, node_id')
         .ilike('content', `%${query}%`)
         .limit(limit);
-      return NextResponse.json(textResults || []);
+      return NextResponse.json(textResults || [], { headers: meta.headers });
     }
 
-    return NextResponse.json(data);
-  } catch {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json(data, { headers: meta.headers });
+  } catch (err) {
+    return errorResponse(err, meta);
   }
 }
