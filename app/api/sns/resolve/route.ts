@@ -27,7 +27,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(payload, {
         headers: {
-            // SNS is cheap but the Bonfida proxy can flake — allow the
+            // SNS is cheap but the Bonfida proxy can flake, allow the
             // CDN to cache for a minute so cold loads don't stampede.
             'Cache-Control': 'public, max-age=60, s-maxage=60',
         },

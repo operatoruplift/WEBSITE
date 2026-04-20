@@ -7,7 +7,7 @@ const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || '';
 
 export function PrivyWrapper({ children }: { children: React.ReactNode }) {
     if (!PRIVY_APP_ID) {
-        // Privy not configured — pass through without auth wrapper
+        // Privy not configured, pass through without auth wrapper
         // This allows the app to run in development without a Privy account
         return <>{children}</>;
     }

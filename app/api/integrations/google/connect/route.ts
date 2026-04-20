@@ -14,7 +14,7 @@ export const runtime = 'nodejs';
  *      (when the client uses `fetch()` with the token header)
  *
  *   2. privy-token cookie
- *      (when the browser does a top-level navigation — localStorage
+ *      (when the browser does a top-level navigation, localStorage
  *      tokens aren't sent, but cookies are. We set this cookie on
  *      the client BEFORE redirecting here via the startGoogleOAuth
  *      helper, so the middleware + this route can read it.)
@@ -23,14 +23,14 @@ export const runtime = 'nodejs';
  * parameter sent to Google. The callback verifies the signature
  * before trusting the userId.
  *
- * Query param `user_id` is IGNORED — we never trust a client-supplied
+ * Query param `user_id` is IGNORED, we never trust a client-supplied
  * userId for this flow. Forgery prevention.
  */
 export async function GET(request: Request) {
     try {
         if (!process.env.GOOGLE_OAUTH_CLIENT_ID || !process.env.GOOGLE_OAUTH_CLIENT_SECRET) {
             return NextResponse.json(
-                { error: 'Google OAuth not configured — set GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET' },
+                { error: 'Google OAuth not configured, set GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET' },
                 { status: 503 },
             );
         }
@@ -45,7 +45,7 @@ export async function GET(request: Request) {
         } catch (err) {
             const msg = err instanceof Error ? err.message : 'auth_failed';
             // Redirect back to integrations with a friendly error so the
-            // user doesn't see a bare JSON 401 — they're in a browser
+            // user doesn't see a bare JSON 401, they're in a browser
             // navigation, not a fetch.
             const redirect = new URL('/integrations', request.url);
             redirect.searchParams.set('error', 'not_authenticated');

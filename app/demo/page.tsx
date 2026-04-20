@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Check, RotateCcw, Sparkles } from 'lucide-react';
 
 // Illustrative transaction signature shown in the walkthrough demo.
-// Not a real on-chain tx — real audit-trail publishes are linked from /security.
+// Not a real on-chain tx, real audit-trail publishes are linked from /security.
 const EXAMPLE_TX = '4sGjMW1sUnHzSxGspuhSqn4JmAx8Q5Y7InAzAi4QyJNRQiuRcoKdAm7qPHLM6kb6sPAR7YXq';
 
 export default function DemoPage() {

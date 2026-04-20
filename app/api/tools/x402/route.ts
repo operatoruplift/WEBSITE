@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export const runtime = 'nodejs';
 
 /**
- * x402 tool endpoint — proxy for premium API calls that may require payment.
+ * x402 tool endpoint, proxy for premium API calls that may require payment.
  *
  * When an agent emits a tool_use block with tool: "x402", this route:
  * 1. Fetches the target URL
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
         }
 
         if (action === 'charge') {
-            // x402 per-query charge — records the payment intent.
+            // x402 per-query charge, records the payment intent.
             // In production this would trigger a Solana Pay USDC transfer.
             // For devnet/demo, we log and approve immediately.
             const { amount, currency, memo, userId: chargeUserId } = params || {};

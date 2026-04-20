@@ -12,22 +12,22 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.operatoruplift.com"),
-  title: "Operator Uplift — Your AI Operating System",
-  description: "Multi-agent orchestration with on-device encryption. Run AI agents that use your calendar, email, and on-chain tools — governed by you, not a cloud.",
+  title: "Operator Uplift, Your AI Operating System",
+  description: "Multi-agent orchestration with on-device encryption. Run AI agents that use your calendar, email, and on-chain tools, governed by you, not a cloud.",
   keywords: ["AI agents", "agent orchestration", "local-first AI", "Solana AI", "encrypted agents", "multi-agent swarm", "AI OS", "agent marketplace", "on-device AI"],
   openGraph: {
     title: "Operator Uplift",
-    description: "Multi-agent orchestration with on-device encryption. Calendar, email, and on-chain tools — governed by you.",
+    description: "Multi-agent orchestration with on-device encryption. Calendar, email, and on-chain tools, governed by you.",
     url: "https://www.operatoruplift.com",
     siteName: "Operator Uplift",
     locale: "en_US",
     type: "website",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Operator Uplift — Your AI Operating System" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Operator Uplift, Your AI Operating System" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Operator Uplift",
-    description: "Multi-agent orchestration with on-device encryption. Calendar, email, and on-chain tools — governed by you.",
+    description: "Multi-agent orchestration with on-device encryption. Calendar, email, and on-chain tools, governed by you.",
     creator: "@OperatorUplift",
     images: ["/opengraph-image"],
   },
@@ -93,7 +93,7 @@ export default function RootLayout({
                   "name": "Operator Uplift",
                   "applicationCategory": "DeveloperApplication",
                   "operatingSystem": "Windows, macOS, Linux",
-                  "description": "Local-first AI agent platform with secure, private memory. Build, deploy, and monetize autonomous agents — no cloud required.",
+                  "description": "Local-first AI agent platform with secure, private memory. Build, deploy, and monetize autonomous agents, no cloud required.",
                   "offers": {
                     "@type": "Offer",
                     "price": "0",

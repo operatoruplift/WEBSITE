@@ -268,7 +268,7 @@ function PasswordChangeForm({ showToast }: { showToast: (msg: string, type: 'suc
 type ShowToast = (msg: string, type: 'success' | 'info' | 'warning' | 'error') => void;
 
 /**
- * Diagnostics panel — lets a user (or support) see the connection and
+ * Diagnostics panel, lets a user (or support) see the connection and
  * capability state behind Real Mode without leaving /settings. Read-only.
  *
  * Surfaces:
@@ -276,7 +276,7 @@ type ShowToast = (msg: string, type: 'success' | 'info' | 'warning' | 'error') =
  *   - authenticated flag
  *   - lastRequestId written by /chat + /paywall on any failure
  *
- * Copy of the last requestId is one click — the reference support
+ * Copy of the last requestId is one click, the reference support
  * asks for when something breaks.
  */
 function DiagnosticsPanel({ showToast }: { showToast: ShowToast }) {
@@ -379,7 +379,7 @@ function DiagnosticsPanel({ showToast }: { showToast: ShowToast }) {
                 <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
                         <p className="text-sm text-white">Last request ID</p>
-                        <p className="text-[11px] text-gray-500 mt-0.5">Most recent reference from /chat or /paywall — paste when contacting support.</p>
+                        <p className="text-[11px] text-gray-500 mt-0.5">Most recent reference from /chat or /paywall, paste when contacting support.</p>
                         <p className="mt-2 text-[11px] font-mono text-gray-300 truncate">{lastRequestId || <span className="text-gray-500">No failures captured yet.</span>}</p>
                     </div>
                     <button

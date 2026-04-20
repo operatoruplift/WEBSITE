@@ -12,7 +12,7 @@
  *   3. Reminders vibe ("iMessage-style nudges: weather, calendar, horoscope")
  *
  * Anything else returns a short nudge toward one of the beats. Do not
- * add canned replies for unrelated prompts — they leak surface area we
+ * add canned replies for unrelated prompts, they leak surface area we
  * cannot deliver on in the real product.
  */
 
@@ -53,9 +53,9 @@ export function getCannedReply(userMessage: string): CannedReply {
             beat,
             text: `Here's what's on your calendar today:
 
-- **9:00 AM** — Standup with Engineering (30 min)
-- **11:30 AM** — 1:1 with Sarah (45 min)
-- **2:00 PM** — Product sync — *no agenda attached*
+- **9:00 AM**, Standup with Engineering (30 min)
+- **11:30 AM**, 1:1 with Sarah (45 min)
+- **2:00 PM**, Product sync, *no agenda attached*
 
 Your 2 PM product sync has no agenda. Want me to draft one and send it to the attendees?
 
@@ -68,22 +68,22 @@ Your 2 PM product sync has no agenda. Want me to draft one and send it to the at
     if (beat === 'inbox') {
         return {
             beat,
-            text: `Three emails need a reply. I've drafted each — approve to send, or deny to discard.
+            text: `Three emails need a reply. I've drafted each, approve to send, or deny to discard.
 
-1. **Jane Chen** — "Re: design review Thursday"
-2. **Ops team** — "Weekly expense report"
-3. **Alex (recruiter)** — "Follow-up on intro call"
+1. **Jane Chen**, "Re: design review Thursday"
+2. **Ops team**, "Weekly expense report"
+3. **Alex (recruiter)**, "Follow-up on intro call"
 
 <tool_use>
-{"tool": "gmail", "action": "draft", "params": {"to": "jane@example.com", "subject": "Re: Design review Thursday", "body": "Thursday at 2pm works — I'll bring the updated mocks. — M", "simulated": true}}
+{"tool": "gmail", "action": "draft", "params": {"to": "jane@example.com", "subject": "Re: Design review Thursday", "body": "Thursday at 2pm works, I'll bring the updated mocks., M", "simulated": true}}
 </tool_use>
 
 <tool_use>
-{"tool": "gmail", "action": "draft", "params": {"to": "ops@example.com", "subject": "Re: Weekly expense report", "body": "Attached. Totals match the October reconciliation. — M", "simulated": true}}
+{"tool": "gmail", "action": "draft", "params": {"to": "ops@example.com", "subject": "Re: Weekly expense report", "body": "Attached. Totals match the October reconciliation., M", "simulated": true}}
 </tool_use>
 
 <tool_use>
-{"tool": "gmail", "action": "draft", "params": {"to": "alex@recruitfirm.example", "subject": "Re: Follow-up on intro call", "body": "Appreciate the note. Passing for now but let's stay in touch. — M", "simulated": true}}
+{"tool": "gmail", "action": "draft", "params": {"to": "alex@recruitfirm.example", "subject": "Re: Follow-up on intro call", "body": "Appreciate the note. Passing for now but let's stay in touch., M", "simulated": true}}
 </tool_use>`,
         };
     }
@@ -91,11 +91,11 @@ Your 2 PM product sync has no agenda. Want me to draft one and send it to the at
     if (beat === 'reminders') {
         return {
             beat,
-            text: `Ok — three iMessage-style nudges scheduled for tomorrow morning. Approve each one to set.
+            text: `Ok, three iMessage-style nudges scheduled for tomorrow morning. Approve each one to set.
 
-- **7:55 AM** — Weather for Kuala Lumpur
-- **8:00 AM** — Today's calendar summary
-- **8:05 AM** — One weird fun thing (horoscope)
+- **7:55 AM**, Weather for Kuala Lumpur
+- **8:00 AM**, Today's calendar summary
+- **8:05 AM**, One weird fun thing (horoscope)
 
 <tool_use>
 {"tool": "reminders", "action": "schedule", "params": {"kind": "weather", "time": "07:55", "location": "auto", "simulated": true}}
@@ -113,11 +113,11 @@ Your 2 PM product sync has no agenda. Want me to draft one and send it to the at
 
     return {
         beat: 'fallback',
-        text: `You're on the demo — I'm simulated responses only. Try one of these:
+        text: `Every reply here is simulated. Try one of these:
 
-- **"What's on my calendar today?"** — daily briefing
-- **"Draft replies to my inbox"** — email triage
-- **"Set iMessage-style reminders for tomorrow morning"** — daily nudges
+- **"What's on my calendar today?"**, daily briefing
+- **"Draft replies to my inbox"**, email triage
+- **"Set iMessage-style reminders for tomorrow morning"**, daily nudges
 
 Sign in with Google or add an API key to make it real.`,
     };
@@ -126,7 +126,7 @@ Sign in with Google or add an API key to make it real.`,
 /**
  * Wrap a canned reply as a ReadableStream so /api/chat can return it
  * in the same shape as a live LLM stream. Chunks are emitted in small
- * pieces to mimic streaming latency — feels real without burning API
+ * pieces to mimic streaming latency, feels real without burning API
  * budget.
  */
 export function cannedReplyToStream(text: string): ReadableStream {

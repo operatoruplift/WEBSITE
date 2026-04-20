@@ -28,7 +28,7 @@ export function PrivyTokenSync() {
         if (!ready) return;
 
         if (!authenticated) {
-            // Sign-out — ensure stale token is cleared
+            // Sign-out, ensure stale token is cleared
             const existing = localStorage.getItem('token');
             // Only clear if it looks like a JWT (three dot-separated segments)
             // so we don't trample other pages' session state unexpectedly

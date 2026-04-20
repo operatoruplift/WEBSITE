@@ -57,13 +57,13 @@ export function ToolApprovalModal({
 
     // Plain-language "what will happen" + "what data is accessed" per action.
     // Lives next to the parameter summary so the user reads the intent
-    // before the details. No behavior change — copy only.
+    // before the details. No behavior change, copy only.
     const narrative = buildNarrative(toolCall, meta.label, demoMode);
 
-    // Price comes from the central server/client pricing config — no per-agent
+    // Price comes from the central server/client pricing config, no per-agent
     // lookup. Gated actions: calendar.create, gmail.draft/send/send_draft.
     const price = getToolPrice(toolCall.tool, toolCall.action);
-    // Demo mode never incurs a payment — the mock result is free.
+    // Demo mode never incurs a payment, the mock result is free.
     const isPaid = !demoMode && price !== null;
 
     const auditTool = toolCall.tool === 'calendar' ? 'calendar' : toolCall.tool === 'gmail' ? 'gmail' : 'calendar';
@@ -143,7 +143,7 @@ export function ToolApprovalModal({
                         </div>
                         <p className="text-xs text-gray-500">
                             {demoMode
-                                ? 'Demo — Approve runs a simulated call. No real side-effect. No receipt.'
+                                ? 'Simulated. Approve runs a simulated call. No real side-effect. No receipt.'
                                 : (agentName ? `Agent "${agentName}" requests access` : 'An agent requests access')}
                         </p>
                     </div>
@@ -156,7 +156,7 @@ export function ToolApprovalModal({
                             <Icon size={16} className={meta.color} />
                             <div>
                                 <div className="text-sm font-semibold text-white">
-                                    {meta.label} — {actionLabel}
+                                    {meta.label}, {actionLabel}
                                 </div>
                                 <div className="text-xs text-gray-400 mt-0.5">{toolCall.tool}.{toolCall.action}</div>
                             </div>
@@ -188,7 +188,7 @@ export function ToolApprovalModal({
                         </div>
                     )}
 
-                    {/* x402 price block — only on gated actions */}
+                    {/* x402 price block, only on gated actions */}
                     {isPaid && price && (
                         <div className="flex items-center justify-between p-4 rounded-xl bg-[#F97316]/5 border border-[#F97316]/20">
                             <div className="flex items-center gap-2">
@@ -211,7 +211,7 @@ export function ToolApprovalModal({
                         <div className="flex items-start gap-3 p-3 rounded-lg bg-white/[0.03] border border-white/10">
                             <Sparkles size={14} className="text-gray-400 mt-0.5 shrink-0" />
                             <p className="text-[11px] text-gray-400 leading-relaxed">
-                                You&rsquo;re on the demo. Approve returns a simulated result labelled <strong className="text-gray-200">Simulated</strong>. Nothing gets created, sent, or charged.
+                                This run is simulated. Approve returns a result labelled <strong className="text-gray-200">Simulated</strong>. Nothing gets created, sent, or charged.
                                 {' '}
                                 <a href="/integrations" className="underline hover:text-white">Connect Google</a>
                                 {' or '}
@@ -276,9 +276,9 @@ export function ToolApprovalModal({
 /**
  * Plain-language intent lines shown above the raw parameter summary.
  * Two bullets:
- *   willHappen — the concrete observable effect (or "simulated ..." in demo)
- *   dataAccessed — exactly which OAuth scope / local data gets read
- * Both strings are safe to render verbatim — no user input is interpolated
+ *   willHappen, the concrete observable effect (or "simulated ..." in demo)
+ *   dataAccessed, exactly which OAuth scope / local data gets read
+ * Both strings are safe to render verbatim, no user input is interpolated
  * unsanitized (dates/ids only via String()).
  */
 function buildNarrative(call: ToolCall, toolLabel: string, demo: boolean): { willHappen: string; dataAccessed: string } {
@@ -337,7 +337,7 @@ function buildNarrative(call: ToolCall, toolLabel: string, demo: boolean): { wil
             default: break;
         }
     }
-    // Fallback — deterministic and honest about what we don't know.
+    // Fallback, deterministic and honest about what we don't know.
     return {
         willHappen: `${demoPrefix}Run ${toolLabel} ${call.action}.`,
         dataAccessed: 'Scope and fields shown in the Details section below.',

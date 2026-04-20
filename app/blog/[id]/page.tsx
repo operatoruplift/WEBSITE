@@ -227,7 +227,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
 
                 {/* Client-side TOC. Scans .blog-content for h2 after mount
                     and only renders at xl breakpoint. Hidden entirely if
-                    the post has fewer than two h2s — no visual clutter. */}
+                    the post has fewer than two h2s, no visual clutter. */}
                 <BlogToc />
 
 

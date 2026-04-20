@@ -8,9 +8,9 @@ interface Params { params: Promise<{ slug: string }> }
 export async function generateMetadata({ params }: Params) {
     const { slug } = await params;
     const doc = findDoc(slug);
-    if (!doc) return { title: 'Docs — Operator Uplift' };
+    if (!doc) return { title: 'Docs, Operator Uplift' };
     return {
-        title: `${doc.title} — Operator Uplift Docs`,
+        title: `${doc.title}, Operator Uplift Docs`,
         description: doc.summary,
     };
 }

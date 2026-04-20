@@ -5,7 +5,7 @@ import { verifySession } from '@/lib/auth';
 export const runtime = 'nodejs';
 
 /**
- * GET /api/receipts — returns all signed receipts for the current user.
+ * GET /api/receipts, returns all signed receipts for the current user.
  * Newest first, up to ?limit= (default 50).
  */
 export async function GET(request: Request) {

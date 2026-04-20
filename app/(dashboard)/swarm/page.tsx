@@ -156,7 +156,7 @@ export default function SwarmPage() {
                             const formatted = formatToolResult(result);
                             fullResult += `\n\n${formatted}`;
                         } else {
-                            fullResult += `\n\n**Tool Denied** — ${call.tool}.${call.action} was not approved.`;
+                            fullResult += `\n\n**Tool Denied**, ${call.tool}.${call.action} was not approved.`;
                         }
                     }
 
@@ -165,12 +165,12 @@ export default function SwarmPage() {
 
                 if (output) return output;
             }
-            return `[${agent.name}] No response from ${agent.model}. The API may be unavailable — check Settings.`;
+            return `[${agent.name}] No response from ${agent.model}. The API may be unavailable, check Settings.`;
         } catch (err) {
             const msg = err instanceof Error ? err.message : 'unknown error';
             // If the error mentions a missing API key, show a connect prompt
             if (msg.includes('not configured') || msg.includes('API_KEY')) {
-                return `[${agent.name}] ⚠️ API key missing — add it in [Settings → API Keys](/settings). Error: ${msg}`;
+                return `[${agent.name}] ⚠️ API key missing, add it in [Settings → API Keys](/settings). Error: ${msg}`;
             }
             // For other errors, surface the real error without blaming
             // the user's key (that branch is handled above).
@@ -290,12 +290,12 @@ export default function SwarmPage() {
                         </GlowButton>
                     </div>
 
-                    {/* API key banner — always visible, dismissed when a real response comes back */}
+                    {/* API key banner, always visible, dismissed when a real response comes back */}
                     {swarms.every(s => s.runs === 0) && (
                         <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20">
                             <Zap size={16} className="text-amber-400 shrink-0" />
                             <p className="text-sm text-gray-300 flex-1">
-                                <span className="text-amber-400 font-semibold">API key required</span> — swarm agents need an LLM provider key to execute. Add your Anthropic or OpenAI API key in{' '}
+                                <span className="text-amber-400 font-semibold">API key required</span>, swarm agents need an LLM provider key to execute. Add your Anthropic or OpenAI API key in{' '}
                                 <a href="/settings" className="text-[#F97316] hover:underline font-medium">Settings → API Keys</a> to run real multi-agent swarms.
                             </p>
                         </div>

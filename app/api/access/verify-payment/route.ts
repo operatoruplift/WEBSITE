@@ -45,7 +45,7 @@ export async function POST(request: Request) {
 
         if (dbError) {
             console.error('[verify-payment] Supabase error:', dbError);
-            // Payment confirmed but DB write failed — still grant access
+            // Payment confirmed but DB write failed, still grant access
             // The on-chain record is the source of truth
         }
 

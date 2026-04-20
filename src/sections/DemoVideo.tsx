@@ -8,7 +8,7 @@ import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
 
 /**
- * 60-second demo video — recorded on PROD with the Playwright harness
+ * 60-second demo video, recorded on PROD with the Playwright harness
  * running the three consumer beats (Briefing, Inbox, Reminders). The
  * landing hero's secondary CTA anchors here.
  *
@@ -31,7 +31,7 @@ export function DemoVideo() {
             <SectionHeader
                 eyebrow="60 Seconds"
                 title="See the three real demo beats"
-                description="Briefing, inbox triage, morning nudges. Recorded end-to-end against prod. Every tool call in this clip is labeled SIMULATED — the real versions run after you sign in."
+                description="Briefing, inbox triage, morning nudges. Recorded end-to-end against prod. Every tool call in this clip is labeled SIMULATED, the real versions run after you sign in."
             />
 
             <FadeIn>

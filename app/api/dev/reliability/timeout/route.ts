@@ -16,7 +16,7 @@ function newRequestId(): string {
  * hangs. Sleeps `delayMs` (default 6000) then returns HTTP 504 with the
  * standard {requestId, timestamp, message, nextAction} shape.
  *
- * Gated identically to /api/debug/subscription and /api/whoami — the
+ * Gated identically to /api/debug/subscription and /api/whoami, the
  * caller must be a bypass-listed email / userId, or pass X-Debug-Key.
  */
 export async function POST(request: Request) {
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
             error: 'provider_timeout',
             errorClass: 'provider_unavailable',
             message: 'Simulated upstream timeout.',
-            nextAction: 'Try again in a moment — this is a harness check, not a real outage.',
+            nextAction: 'Try again in a moment, this is a harness check, not a real outage.',
             requestId,
             timestamp: startedAt,
             delayMs,

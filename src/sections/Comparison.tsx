@@ -68,7 +68,7 @@ const Comparison: React.FC = () => {
             like it's been cut off by the viewport. */}
         <FadeIn delay={200} className="w-full block">
           <div className="relative -mx-6 px-6 md:mx-0 md:px-0">
-            {/* Right-side fade — visible on mobile only, signals horizontal scroll */}
+            {/* Right-side fade, visible on mobile only, signals horizontal scroll */}
             <div className="pointer-events-none absolute top-0 right-0 w-8 h-full bg-gradient-to-l from-[#0A0A0A] to-transparent z-10 md:hidden" />
             <div className="overflow-x-auto">
               <div className="max-w-[900px] mx-auto rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm">
@@ -93,7 +93,7 @@ const Comparison: React.FC = () => {
                               className={`w-5 h-5 shrink-0 ${p.highlight ? 'text-primary' : 'text-gray-400'}`}
                             />
                             <span className="hidden md:inline whitespace-nowrap">{p.name}</span>
-                            {/* Screen readers only — mobile shows logo visually but keeps the name for accessibility */}
+                            {/* Screen readers only, mobile shows logo visually but keeps the name for accessibility */}
                             <span className="sr-only md:hidden">{p.name}</span>
                           </div>
                         </th>
