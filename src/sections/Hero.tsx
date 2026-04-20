@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import HeroAnimation from '@/src/components/HeroAnimation';
 import DownloadWidget from '@/src/components/DownloadWidget';
+import { DownloadCTA } from '@/src/components/DownloadCTA';
 import TrustedBy from '@/src/components/TrustedBy';
 import AddressDisplay from '@/src/components/AddressDisplay';
 import { APP_CONTENT } from '@/src/services/dataService';
@@ -84,9 +85,12 @@ const Hero: React.FC = () => {
                 Watch 60s demo
               </a>
             </div>
-            <p className="text-[11px] text-gray-500 mb-8 max-w-md">
+            <p className="text-[11px] text-gray-500 mb-4 max-w-md">
               Prefer to poke around first? <Link href="/chat" className="text-gray-300 hover:text-white underline underline-offset-4 decoration-dotted">Try the demo</Link> — no signup, everything simulated.
             </p>
+            <div className="mb-8">
+              <DownloadCTA />
+            </div>
             <DownloadWidget data={data} />
           </FadeIn>
 
