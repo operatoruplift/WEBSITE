@@ -13,7 +13,7 @@ const Hero: React.FC = () => {
   return (
     <div className="relative min-h-screen w-full bg-background overflow-hidden selection:bg-primary/30 selection:text-white flex flex-col aurora-hero">
       
-      {/* Background Visualization Layer - Desktop Only — covers full viewport */}
+      {/* Background Visualization Layer - Desktop Only, covers full viewport */}
       <div className="hidden lg:block absolute inset-0 z-0 pointer-events-none opacity-70">
         <HeroAnimation className="w-full h-full" />
         {/* Left fade so text remains readable */}
@@ -68,7 +68,7 @@ const Hero: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/50 pointer-events-none"></div>
           </div>
 
-          {/* CTAs — one primary, one secondary per the 5-second test.
+          {/* CTAs, one primary, one secondary per the 5-second test.
               Primary drives Real Mode conversion (Google connect).
               Secondary gives a zero-friction "see it first" via the 60s demo video. */}
           <FadeIn delay={800}>
@@ -85,7 +85,7 @@ const Hero: React.FC = () => {
               </a>
             </div>
             <p className="text-[11px] text-gray-500 mb-8 max-w-md">
-              Prefer to poke around first? <Link href="/chat" className="text-gray-300 hover:text-white underline underline-offset-4 decoration-dotted">Try the demo</Link> — no signup, everything simulated.
+              Prefer to poke around first? <Link href="/chat" className="text-gray-300 hover:text-white underline underline-offset-4 decoration-dotted">Try the demo</Link>, no signup, everything simulated.
             </p>
             <DownloadWidget data={data} />
           </FadeIn>

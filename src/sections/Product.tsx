@@ -38,7 +38,7 @@ const Product: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Auto-advance on a fixed timer when in view — resets when timerKey changes (user scrolls)
+  // Auto-advance on a fixed timer when in view, resets when timerKey changes (user scrolls)
   useEffect(() => {
     if (!isInView) return;
     const timer = setInterval(() => {
@@ -79,7 +79,7 @@ const Product: React.FC = () => {
       if (delta < 0 && idx === 0) return;
       if (delta > 0 && idx === features.length - 1) return;
 
-      // Block page scroll — we handle feature advancement
+      // Block page scroll, we handle feature advancement
       e.preventDefault();
 
       const now = Date.now();
@@ -163,7 +163,7 @@ const Product: React.FC = () => {
 
             {/* Bottom: Progress Navigation List */}
             <div className="mt-auto mb-8 lg:mb-12 relative pl-4 pt-4">
-              {/* Track line — height calculated from item count and spacing */}
+              {/* Track line, height calculated from item count and spacing */}
               <div className="absolute left-[7px] w-[2px] bg-white/10 z-0 rounded-full" style={{ top: '20px', height: `${(features.length - 1) * 28}px` }}></div>
               <div
                 className="absolute left-[7px] w-[2px] bg-primary z-0 rounded-full transition-all duration-500 ease-out"
@@ -225,7 +225,7 @@ const Product: React.FC = () => {
                           style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
                         </div>
 
-                        {/* Only mount the active visual — remounts on index change to restart animation */}
+                        {/* Only mount the active visual, remounts on index change to restart animation */}
                         <div key={`visual-${activeIndex}`} className="absolute inset-0 flex items-center justify-center animate-fade-in">
                           {renderVisual(activeIndex)}
                         </div>

@@ -35,7 +35,7 @@ export default function SignupPage() {
                 localStorage.setItem('user', JSON.stringify({ name: name || 'Commander', email, plan: 'Pro' }));
                 router.push('/chat');
             } else {
-                // Email confirmation required — show success state
+                // Email confirmation required, show success state
                 setConfirmationSent(true);
             }
         } catch {

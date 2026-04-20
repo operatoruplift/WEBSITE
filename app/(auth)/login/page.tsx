@@ -55,7 +55,7 @@ export default function LoginPage() {
             return;
         }
 
-        // Any Privy-authenticated user gets access — store session and redirect
+        // Any Privy-authenticated user gets access, store session and redirect
         if (authenticated && user) {
             const userName = user.google?.name || user.github?.username || 'Commander';
             const userEmail = user.google?.email || user.email?.address || '';
@@ -75,7 +75,7 @@ export default function LoginPage() {
             }
 
             // Grant session access for any authenticated user.
-            // CRITICAL: store the real Privy JWT here — NOT a placeholder string.
+            // CRITICAL: store the real Privy JWT here, NOT a placeholder string.
             // Downstream API calls (/api/subscription, /api/tools/*, etc.) send
             // this as `Authorization: Bearer <token>` and the server verifies it
             // with PrivyClient.verifyAuthToken(). A placeholder string would
@@ -86,7 +86,7 @@ export default function LoginPage() {
                 if (accessToken) {
                     localStorage.setItem('token', accessToken);
                 } else {
-                    console.error('[login] getAccessToken returned null — Privy session not ready');
+                    console.error('[login] getAccessToken returned null, Privy session not ready');
                     localStorage.removeItem('token');
                 }
             } catch (err) {
@@ -117,7 +117,7 @@ export default function LoginPage() {
             });
             if (res.ok) setView('waitlist-success');
         } catch {
-            setView('waitlist-success'); // optimistic — email is queued
+            setView('waitlist-success'); // optimistic, email is queued
         }
         setIsLoading(false);
     };
@@ -182,19 +182,19 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ background: '#050508', fontFamily: '"SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
-            {/* Ambient glow — matches /repos/UI/ LoginScreen */}
+            {/* Ambient glow, matches /repos/UI/ LoginScreen */}
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 rounded-full bg-[#F97316]/8 blur-[120px]" />
                 <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 rounded-full bg-[#F97316]/5 blur-[120px]" />
             </div>
 
             <div className="w-full max-w-md p-8 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl relative z-10 shadow-2xl">
-                {/* Logo — icon only, no text label */}
+                {/* Logo, icon only, no text label */}
                 <div className="text-center mb-8">
                     <Logo className="w-14 h-14 mx-auto" />
                 </div>
 
-                {/* Gate view — choose waitlist or pay */}
+                {/* Gate view, choose waitlist or pay */}
                 {view === 'gate' && (
                     <div className="space-y-6">
                         {/* Privy social login buttons */}
@@ -351,7 +351,7 @@ export default function LoginPage() {
                         )}
 
                         <GlowButton onClick={handleVerifyPayment} className="w-full" disabled={isLoading}>
-                            {isLoading ? <><Loader2 size={14} className="mr-2 animate-spin" /> Verifying...</> : <><CheckCircle2 size={14} className="mr-2" /> I&apos;ve Paid — Verify</>}
+                            {isLoading ? <><Loader2 size={14} className="mr-2 animate-spin" /> Verifying...</> : <><CheckCircle2 size={14} className="mr-2" /> I&apos;ve Paid, Verify</>}
                         </GlowButton>
 
                         <button onClick={() => setView('gate')} className="w-full text-center text-xs text-gray-600 hover:text-white transition-colors">&larr; Back</button>

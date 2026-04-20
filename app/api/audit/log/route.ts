@@ -12,7 +12,7 @@ function getSupabase() {
 }
 
 /**
- * POST /api/audit/log — server-side audit entry write.
+ * POST /api/audit/log, server-side audit entry write.
  * Tamper-proof: the server writes the entry, not the client.
  * Body: { category, action, details, agent_name?, approved? }
  */
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
         const { error } = await supabase.from('audit_entries').insert(entry);
         if (error) {
             console.error('[audit/log]', error.message);
-            // Non-blocking — don't fail the user's action if audit write fails
+            // Non-blocking, don't fail the user's action if audit write fails
         }
 
         return NextResponse.json({ entry });
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 }
 
 /**
- * GET /api/audit/log — read audit entries for the authenticated user.
+ * GET /api/audit/log, read audit entries for the authenticated user.
  */
 export async function GET(request: Request) {
     try {

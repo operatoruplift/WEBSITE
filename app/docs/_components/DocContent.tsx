@@ -1,7 +1,7 @@
 import React from 'react';
 
 /**
- * Doc content map — one TSX block per slug in lib/docs/sections.ts.
+ * Doc content map, one TSX block per slug in lib/docs/sections.ts.
  *
  * Keep content honest. Every claim here must correspond to shipped
  * behaviour. Verification commands and file paths should be real.
@@ -15,7 +15,7 @@ const CONTENT: Record<string, React.ReactNode> = {
             <ol>
                 <li>Open <a href="/chat">/chat</a>. No signup required.</li>
                 <li>Type one of: <em>&quot;What&apos;s on my calendar today?&quot;</em>, <em>&quot;Draft replies to these 3 emails&quot;</em>, or <em>&quot;Schedule an iMessage nudge for tomorrow morning.&quot;</em></li>
-                <li>The Approve modal shows. Click Approve — you&apos;ll see a Simulated chip on the result. No real email was sent.</li>
+                <li>The Approve modal shows. Click Approve, you&apos;ll see a Simulated chip on the result. No real email was sent.</li>
                 <li>Want real execution? Sign in with Google at <a href="/integrations">/integrations</a>. The orange Demo pill turns green and says Real.</li>
             </ol>
             <h2>What ships today</h2>
@@ -58,7 +58,7 @@ const CONTENT: Record<string, React.ReactNode> = {
             <ul>
                 <li>The tool and action being called.</li>
                 <li>A risk pill: LOW, MEDIUM, HIGH. Gmail sends are always HIGH.</li>
-                <li>Every parameter the agent wants to send — recipient, subject, body, event time, attendees.</li>
+                <li>Every parameter the agent wants to send, recipient, subject, body, event time, attendees.</li>
                 <li>In Real mode with a paid tool: a Cost block showing the USDC amount and the chain.</li>
                 <li>In Demo mode: a gray Simulated chip and footer text explaining nothing will actually run.</li>
             </ul>
@@ -98,8 +98,8 @@ const CONTENT: Record<string, React.ReactNode> = {
             <p className="lead">x402 is an HTTP payment standard. A server can answer <code>402 Payment Required</code> with an invoice; the client pays, then retries with proof. We use it for paid tool calls.</p>
             <h2>Flow</h2>
             <ol>
-                <li><code>POST /api/tools/calendar</code> — server returns <code>402</code> with <code>invoice_reference</code> and pay endpoint.</li>
-                <li><code>POST /api/tools/x402/pay</code> with that reference — devnet simulates the on-chain transfer and marks the invoice paid.</li>
+                <li><code>POST /api/tools/calendar</code>, server returns <code>402</code> with <code>invoice_reference</code> and pay endpoint.</li>
+                <li><code>POST /api/tools/x402/pay</code> with that reference, devnet simulates the on-chain transfer and marks the invoice paid.</li>
                 <li>Client retries the original request with <code>X-Payment-Proof</code> header.</li>
                 <li>Server validates the proof and executes the tool. Receipt lands in <a href="/security">/security</a>.</li>
             </ol>
@@ -114,16 +114,16 @@ const CONTENT: Record<string, React.ReactNode> = {
             <p className="lead">What you can connect today. What&apos;s coming next.</p>
             <h2>Shipped</h2>
             <ul>
-                <li><strong>Google Calendar</strong> — list events, find free slots, create events.</li>
-                <li><strong>Gmail</strong> — list messages, draft replies, send on approval.</li>
+                <li><strong>Google Calendar</strong>, list events, find free slots, create events.</li>
+                <li><strong>Gmail</strong>, list messages, draft replies, send on approval.</li>
             </ul>
             <p>Connect both at <a href="/integrations">/integrations</a>. We store the refresh token in <code>user_integrations</code> on Supabase; the service-role key never leaves the server.</p>
             <h2>Tier 1 tools (no connection needed)</h2>
             <ul>
                 <li>Web search (via server-held Serper or Brave key).</li>
                 <li>Web fetch (reads any public URL, strips scripts and returns readable text).</li>
-                <li>Notes, tasks, reminders — stored in Supabase per user.</li>
-                <li>Tokens API (<code>tokens.search</code>, <code>tokens.price</code>, <code>tokens.risk</code>, <code>tokens.markets</code>) — Solana market + risk data via <code>api.tokens.xyz/v1</code>, server-held key.</li>
+                <li>Notes, tasks, reminders, stored in Supabase per user.</li>
+                <li>Tokens API (<code>tokens.search</code>, <code>tokens.price</code>, <code>tokens.risk</code>, <code>tokens.markets</code>), Solana market + risk data via <code>api.tokens.xyz/v1</code>, server-held key.</li>
             </ul>
             <h2>Tier 2 tools (server-configured)</h2>
             <ul>

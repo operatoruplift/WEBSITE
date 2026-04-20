@@ -152,7 +152,7 @@ export default function HackathonDemoPage() {
                         </ol>
                     </div>
 
-                    {/* MagicBlock — honestly labeled adapter card */}
+                    {/* MagicBlock, honestly labeled adapter card */}
                     <MagicBlockCard />
 
                     {/* What's verifiable */}
@@ -201,7 +201,7 @@ export default function HackathonDemoPage() {
 const STEPS: Array<{ title: string; description: string; network?: string }> = [
     {
         title: 'Agent proposes an action',
-        description: 'An agent in chat emits a <tool_use> block — e.g. calendar.create with {summary, start, end, attendees}.',
+        description: 'An agent in chat emits a <tool_use> block, e.g. calendar.create with {summary, start, end, attendees}.',
     },
     {
         title: 'User approves in the modal',
@@ -230,7 +230,7 @@ const DEMO_CLICKS = [
     'Go to <a href="/chat" class="text-[#F97316] hover:underline">/chat</a>',
     'Type: <code class="text-[#F97316] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">Schedule a 30-min meeting tomorrow at 3 PM called "Loops House demo"</code>',
     'Click <strong>Pay &amp; Allow Once</strong> in the approval modal',
-    'Open the Network tab — observe 402, then /pay, then 200 with receipt',
+    'Open the Network tab, observe 402, then /pay, then 200 with receipt',
     'Go to <a href="/security" class="text-[#F97316] hover:underline">/security</a> and click <strong>Copy JSON</strong> on the new receipt',
     'Verify the signature with the public key from <a href="/api/receipts/public-key" class="text-[#F97316] hover:underline">/api/receipts/public-key</a>',
 ];
@@ -261,7 +261,7 @@ const VERIFIABLE: Array<{ claim: string; how: string }> = [
 function MagicBlockCard() {
     // Status is read at render time from NEXT_PUBLIC_MAGICBLOCK_ENABLED.
     // The adapter itself is a stub (see lib/magicblock/adapter.ts), so
-    // this card never falsely claims "Active" — it tells you the flag
+    // this card never falsely claims "Active", it tells you the flag
     // state and the reason. Judges can read the source for the stub.
     const status = magicBlockSurfaceStatus();
     const pillClass = status.active

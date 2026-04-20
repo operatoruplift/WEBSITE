@@ -9,7 +9,7 @@ export const runtime = 'nodejs';
 export const maxDuration = 30;
 
 /**
- * Gmail tool endpoint — server-verified auth, not client-supplied user_id.
+ * Gmail tool endpoint, server-verified auth, not client-supplied user_id.
  *
  * Gated actions (require X-Payment-Proof header, $0.01 USDC each on devnet):
  *   draft, send_draft, send
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
             );
         }
 
-        // x402 gate — returns 402 on first call to gated actions, 'paid' on retry with proof.
+        // x402 gate, returns 402 on first call to gated actions, 'paid' on retry with proof.
         // x402 semantics unchanged; we only standardize the UI surface on failures.
         const gate = await x402Gate({ request, tool: 'gmail', action, params, user_id });
         if (gate.type === '402') {

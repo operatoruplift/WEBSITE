@@ -9,12 +9,12 @@ export const runtime = 'nodejs';
 export const maxDuration = 30;
 
 /**
- * Calendar tool endpoint — called by the chat / swarm tool runner.
+ * Calendar tool endpoint, called by the chat / swarm tool runner.
  *
  * Body: { action: 'list' | 'free_slots' | 'create', params: {...} }
  *
  * Gated actions (require X-Payment-Proof header):
- *   create — $0.01 USDC on Solana devnet
+ *   create, $0.01 USDC on Solana devnet
  * Free actions:
  *   list, free_slots
  *
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
             );
         }
 
-        // x402 gate — unchanged semantics. Only the response envelope is
+        // x402 gate, unchanged semantics. Only the response envelope is
         // standardized, not the gating logic.
         const gate = await x402Gate({ request, tool: 'calendar', action, params, user_id });
         if (gate.type === '402') {

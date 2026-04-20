@@ -78,7 +78,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
       ctx.restore();
     };
 
-    // Draw the chat window — progress controls how many messages appear
+    // Draw the chat window, progress controls how many messages appear
     // showComplete: if true, show final response instead of typing dots
     // respondProgress: 0-1 for the RESPOND phase progress bar animation
     const drawChat = (cx: number, cy: number, progress: number, showComplete: boolean, respondProgress?: number) => {
@@ -109,7 +109,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
       // Online dot
       ctx.fillStyle = `${GREEN}0.7)`; ctx.beginPath(); ctx.arc(w/2-14, -h/2+14, 2.5, 0, Math.PI*2); ctx.fill();
 
-      // Messages — tighter spacing (32px between bubbles)
+      // Messages, tighter spacing (32px between bubbles)
       const t = Math.min(6, progress * 8);
       const fs = isMobile ? 7 : 9;
       const gap = 32;

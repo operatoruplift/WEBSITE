@@ -9,7 +9,7 @@ import { SectionHeader } from '@/src/components/SectionHeader';
 import { BuiltWithCarousel } from '@/src/components/BuiltWithCarousel';
 
 /**
- * "Built With" + "What's Shipped" — every bullet is verifiable in the
+ * "Built With" + "What's Shipped", every bullet is verifiable in the
  * codebase or from public infrastructure. Anything we couldn't verify
  * publicly has been moved to /press-kit (email gated).
  */
@@ -32,10 +32,10 @@ const SocialProof: React.FC = () => {
                 description="Operator Uplift is built on infrastructure chosen for security, reliability, and speed. Not marketing."
             />
 
-            {/* Carousel — matches the Hero/TrustedBy marquee pattern */}
+            {/* Carousel, matches the Hero/TrustedBy marquee pattern */}
             <BuiltWithCarousel />
 
-            {/* What's Shipped — verifiable */}
+            {/* What's Shipped, verifiable */}
             <div className="w-full">
                 <p className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase mb-6 text-center">
                     What&apos;s Shipped

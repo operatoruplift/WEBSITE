@@ -14,7 +14,7 @@ import { SectionHeader } from '@/src/components/SectionHeader';
  * (lawyers, accountants, therapists) without a concrete workflow or
  * before/after. Per the Demo Day copy rule, anything pitched at that
  * audience must ship a real workflow + before/after, or get cut. For
- * this release we cut it — every card below maps to a concrete chat
+ * this release we cut it, every card below maps to a concrete chat
  * prompt you can run on /chat right now.
  */
 const BEATS = [

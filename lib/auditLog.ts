@@ -56,24 +56,31 @@ export function logAction(
         const updated = [entry, ...existing].slice(0, MAX_ENTRIES);
         localStorage.setItem(AUDIT_KEY, JSON.stringify(updated));
 
-        // Write to server-side Supabase (tamper-proof, cross-device)
-        // Fire-and-forget — don't block the UI on the audit write
-        fetch('/api/audit/log', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                category: entry.category,
-                action: entry.action,
-                details: entry.details,
-                agent_name: entry.agentName,
-                approved: entry.approved,
-            }),
-        }).catch(() => {}); // Server write is best-effort from client
+        // Server writes require an auth token. Anonymous / simulated-mode
+        // users stay fully client-side, so we never hit /api/audit/*
+        // (keeps the simulated-mode "zero /api/* calls" contract).
+        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+        if (token) {
+            fetch('/api/audit/log', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    category: entry.category,
+                    action: entry.action,
+                    details: entry.details,
+                    agent_name: entry.agentName,
+                    approved: entry.approved,
+                }),
+            }).catch(() => {}); // Server write is best-effort from client
 
-        // Auto-publish Merkle root every 5 actions
-        const unpublished = getUnpublishedCount();
-        if (unpublished >= 5) {
-            publishMerkleRoot().catch(() => {});
+            // Auto-publish Merkle root every 5 actions (auth-only)
+            const unpublished = getUnpublishedCount();
+            if (unpublished >= 5) {
+                publishMerkleRoot().catch(() => {});
+            }
         }
     } catch {
         console.warn('[audit-log] failed to persist:', entry);

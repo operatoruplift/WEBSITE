@@ -16,7 +16,7 @@ import { isDecUiEnabled } from '@/lib/flags';
  *     {children}
  *   </PageContainer>
  *
- * When the flag is off, this renders children in a plain div —
+ * When the flag is off, this renders children in a plain div,
  * existing pages keep their current spacing.
  */
 export function PageContainer({
@@ -27,7 +27,7 @@ export function PageContainer({
     className?: string;
 }) {
     if (!isDecUiEnabled()) {
-        // Pass-through — no layout injection when flag is off
+        // Pass-through, no layout injection when flag is off
         return <>{children}</>;
     }
 

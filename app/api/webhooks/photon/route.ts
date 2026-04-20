@@ -17,7 +17,7 @@ export const maxDuration = 15;
  *   https://www.operatoruplift.com/api/webhooks/photon
  *
  * Security:
- *   PHOTON_WEBHOOK_SECRET — if set, this route verifies one of the
+ *   PHOTON_WEBHOOK_SECRET, if set, this route verifies one of the
  *   common signature headers Spectrum may send
  *   (X-Photon-Signature | X-Spectrum-Signature). Without it the
  *   route accepts any POST, which is fine for the demo but not
@@ -31,11 +31,11 @@ export const maxDuration = 15;
  *      agent loop can pick it up. Safe to run even if the table
  *      doesn't exist (falls through to 200 + { logged: false } so
  *      Spectrum doesn't keep retrying).
- *   4. Always return 200 unless the signature actually fails —
+ *   4. Always return 200 unless the signature actually fails,
  *      webhook providers aggressively retry on 5xx.
  *
  * NOTE: This route is allowlisted in middleware.ts because Spectrum
- * doesn't know about Privy — inbound webhooks are unauthenticated
+ * doesn't know about Privy, inbound webhooks are unauthenticated
  * HTTP POSTs. Security comes from the signature check above.
  */
 
@@ -102,7 +102,7 @@ export async function POST(request: Request) {
 
     const supabase = getSupabase();
     if (!supabase) {
-        // No Supabase — accept-and-log so Spectrum stops retrying.
+        // No Supabase, accept-and-log so Spectrum stops retrying.
         console.info('[photon webhook]', { eventType, platform, sender, textLen: text.length });
         return NextResponse.json({ ok: true, logged: false });
     }
@@ -129,7 +129,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, logged: true });
 }
 
-/** Health probe — Spectrum dashboards often GET the webhook URL to check liveness. */
+/** Health probe, Spectrum dashboards often GET the webhook URL to check liveness. */
 export async function GET() {
     return NextResponse.json({ ok: true, route: 'photon_webhook' });
 }

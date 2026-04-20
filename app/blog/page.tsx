@@ -76,7 +76,7 @@ export const posts: BlogPost[] = [
     {
         id: 'why-i-built-an-ai-os',
         title: 'Why I Built an AI OS Instead of Pivoting',
-        excerpt: 'The earlier version of the Balaji post — on why the OS-layer framing won over the "build a better ChatGPT" critique. See the April 17 post for the specific breakdown.',
+        excerpt: 'The earlier version of the Balaji post, on why the OS-layer framing won over the "build a better ChatGPT" critique. See the April 17 post for the specific breakdown.',
         date: 'April 6, 2026',
         readTime: '5 min read',
         category: 'announcement',

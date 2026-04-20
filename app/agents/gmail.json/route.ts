@@ -8,7 +8,7 @@ export const dynamic = 'force-static';
  * GET /agents/gmail.json
  *
  * ERC-8004-style agent registration document for the Gmail agent.
- * Public — anyone can fetch and verify the checksum.
+ * Public, anyone can fetch and verify the checksum.
  */
 export async function GET() {
     return NextResponse.json(GMAIL_AGENT, {

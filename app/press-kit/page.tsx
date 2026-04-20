@@ -7,7 +7,7 @@ import Footer from '@/src/components/Footer';
 import { ArrowRight, Check, Mail } from 'lucide-react';
 
 /**
- * Press Kit — gated by a simple email capture. Anything we can't verify
+ * Press Kit, gated by a simple email capture. Anything we can't verify
  * publicly (former media mentions, follower badges, etc.) lives here and
  * is sent on request.
  */

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Logo } from '@/src/components/Icons';
 
 /**
- * Dec-style topbar — h-8 strip matching the Electron WindowNavbar.
+ * Dec-style topbar, h-8 strip matching the Electron WindowNavbar.
  * Only rendered when NEXT_PUBLIC_DEC_UI=1.
  *
  * Reference: docs/DEC_DMG_SNAPSHOT/nav-flow.md + screens/chat.md
@@ -20,7 +20,7 @@ export function DecTopbar() {
                         Operator Uplift
                     </span>
                 </Link>
-                {/* StatusChip-equivalent — live indicator */}
+                {/* StatusChip-equivalent, live indicator */}
                 <span className="inline-flex items-center gap-1 ml-1 px-1.5 py-0.5 rounded border border-emerald-500/30 bg-emerald-500/10 text-[9px] font-semibold uppercase tracking-wider text-emerald-500">
                     <span className="w-1 h-1 rounded-full bg-emerald-500" />
                     Live

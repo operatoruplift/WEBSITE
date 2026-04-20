@@ -7,7 +7,7 @@ import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
 
 /**
- * "What becomes real after login" — three trust blocks that answer the
+ * "What becomes real after login", three trust blocks that answer the
  * three questions a cold visitor has in their first five seconds:
  *   1. What does it actually do?
  *   2. How do I stay in control?
@@ -34,7 +34,7 @@ const BLOCKS = [
         icon: FileSignature,
         eyebrow: '03 · Receipted',
         title: 'Every real action leaves a signed receipt',
-        body: 'ed25519-signed, hashed, and anchored to a Merkle root on Solana devnet. You can audit every draft sent and every event created — the signature proves Operator Uplift can\u2019t rewrite history.',
+        body: 'ed25519-signed, hashed, and anchored to a Merkle root on Solana devnet. You can audit every draft sent and every event created, the signature proves Operator Uplift can\u2019t rewrite history.',
     },
 ];
 
@@ -44,7 +44,7 @@ export function WhatBecomesReal() {
             <SectionHeader
                 eyebrow="After You Sign In"
                 title="What becomes real after login"
-                description="The demo on /chat is simulated. Sign in + connect Google and three things switch on — each designed so you stay in control."
+                description="The demo on /chat is simulated. Sign in + connect Google and three things switch on, each designed so you stay in control."
             />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 w-full items-stretch">
