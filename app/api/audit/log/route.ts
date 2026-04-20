@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { verifySession, getOptionalUser } from '@/lib/auth';
+import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 
@@ -17,12 +18,23 @@ function getSupabase() {
  * Body: { category, action, details, agent_name?, approved? }
  */
 export async function POST(request: Request) {
+    const meta = withRequestMeta(request, 'audit.log.write');
     try {
-        const verified = await verifySession(request);
+        let verified;
+        try {
+            verified = await verifySession(request);
+        } catch (authErr) {
+            return errorResponse(authErr, meta, { httpHint: 401 });
+        }
         const { category, action, details, agent_name, approved } = await request.json();
 
         if (!category || !action) {
-            return NextResponse.json({ error: 'category and action required' }, { status: 400 });
+            return validationError(
+                'Audit write needs `category` and `action`.',
+                'Include both and retry.',
+                meta,
+                { missing: ['category', 'action'].filter(f => !({ category, action } as Record<string, unknown>)[f]) },
+            );
         }
 
         const supabase = getSupabase();
@@ -39,16 +51,16 @@ export async function POST(request: Request) {
 
         const { error } = await supabase.from('audit_entries').insert(entry);
         if (error) {
-            console.error('[audit/log]', error.message);
+            console.log(JSON.stringify({
+                at: meta.route, event: 'insert-failed', requestId: meta.requestId, ts: meta.startedAt,
+                reason: error.message.slice(0, 240),
+            }));
             // Non-blocking — don't fail the user's action if audit write fails
         }
 
-        return NextResponse.json({ entry });
+        return NextResponse.json({ entry, requestId: meta.requestId, timestamp: meta.startedAt }, { headers: meta.headers });
     } catch (err) {
-        if (err instanceof Error && err.name === 'AuthError') {
-            return NextResponse.json({ error: err.message }, { status: 401 });
-        }
-        return NextResponse.json({ error: err instanceof Error ? err.message : 'Unknown' }, { status: 500 });
+        return errorResponse(err, meta);
     }
 }
 
@@ -56,11 +68,12 @@ export async function POST(request: Request) {
  * GET /api/audit/log — read audit entries for the authenticated user.
  */
 export async function GET(request: Request) {
+    const meta = withRequestMeta(request, 'audit.log.list');
     try {
         const user = await getOptionalUser(request);
         const url = new URL(request.url);
         const userId = user?.userId || url.searchParams.get('user_id');
-        if (!userId) return NextResponse.json({ entries: [] });
+        if (!userId) return NextResponse.json({ entries: [] }, { headers: meta.headers });
 
         const limit = parseInt(url.searchParams.get('limit') || '100', 10);
         const supabase = getSupabase();
@@ -72,9 +85,9 @@ export async function GET(request: Request) {
             .order('created_at', { ascending: false })
             .limit(limit);
 
-        if (error) return NextResponse.json({ entries: [], error: error.message });
-        return NextResponse.json({ entries: data || [] });
-    } catch {
-        return NextResponse.json({ entries: [] });
+        if (error) return errorResponse(new Error(error.message), meta, { httpHint: 500 });
+        return NextResponse.json({ entries: data || [] }, { headers: meta.headers });
+    } catch (err) {
+        return errorResponse(err, meta);
     }
 }
