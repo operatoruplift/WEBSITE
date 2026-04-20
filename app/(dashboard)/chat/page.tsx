@@ -9,6 +9,7 @@ import { useToast } from '@/src/components/ui/Toast';
 import { hasToolCalls, parseToolCalls, stripToolBlocks, formatToolResult, getToolSystemPrompt, extractToolCallsFromText } from '@/lib/toolCalls';
 import type { ToolCall, ToolResult } from '@/lib/toolCalls';
 import { ToolApprovalModal } from '@/src/components/ui/ToolApprovalModal';
+import { findAgent } from '@/config/agents';
 
 interface Message { id: string; role: 'user' | 'assistant'; content: string; timestamp: Date; model?: string; requestId?: string; }
 interface ChatSession { id: string; title: string; messages: Message[]; createdAt: Date; model: string; }
@@ -230,6 +231,25 @@ export default function ChatPage() {
         if (params.get('subscribed') !== '1') return;
         showToast('Subscription active. Real Mode ready.', 'success');
         params.delete('subscribed');
+        const search = params.toString();
+        const url = window.location.pathname + (search ? `?${search}` : '') + window.location.hash;
+        window.history.replaceState({}, '', url);
+    }, [showToast]);
+
+    // Agent deep-link. /agents → `Try in Chat` card passes ?agent=<id>&prompt=<text>.
+    // We pre-fill the textarea and toast the agent name. The params are
+    // stripped after read so a refresh doesn't re-seed.
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const params = new URLSearchParams(window.location.search);
+        const agentId = params.get('agent');
+        const prompt = params.get('prompt');
+        if (!agentId && !prompt) return;
+        const agent = agentId ? findAgent(agentId) : undefined;
+        if (prompt) setInput(prompt);
+        if (agent) showToast(`${agent.name} ready. Edit the prompt or send as-is.`, 'info');
+        params.delete('agent');
+        params.delete('prompt');
         const search = params.toString();
         const url = window.location.pathname + (search ? `?${search}` : '') + window.location.hash;
         window.history.replaceState({}, '', url);
