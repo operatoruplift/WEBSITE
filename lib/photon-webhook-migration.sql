@@ -26,8 +26,20 @@ create table if not exists public.inbound_messages (
     raw jsonb,
     received_at timestamptz not null default now(),
     processed_at timestamptz,
-    reply_message_id text
+    reply_message_id text,
+    -- W1A-imessage-1: idempotency + 5s ack fallback bookkeeping.
+    -- provider_message_id is the id we read from the webhook payload
+    -- (body.message_id | body.id | body.event_id | content hash
+    -- fallback). Unique per (provider, provider_message_id) so a
+    -- retried webhook POST is a no-op on insert.
+    provider_message_id text,
+    acked_at timestamptz
 );
+
+-- Idempotent insert guard. Retries from Spectrum hit the same row.
+create unique index if not exists inbound_messages_provider_msgid_idx
+    on public.inbound_messages (provider, provider_message_id)
+    where provider_message_id is not null;
 
 create index if not exists inbound_messages_provider_unprocessed_idx
     on public.inbound_messages (provider, received_at desc)
