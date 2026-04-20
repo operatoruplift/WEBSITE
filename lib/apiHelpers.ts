@@ -24,6 +24,7 @@
  */
 import { NextResponse } from 'next/server';
 import { classifyError, envelope, type ErrorClass } from './errorTaxonomy';
+import { redact } from './safeLog';
 
 export interface RequestMeta {
     requestId: string;
@@ -85,6 +86,11 @@ export function errorResponse(
         ...(opts?.details ? { details: opts.details } : {}),
     };
 
+    // Log via redact(): `detail` may contain a Bearer token or cookie
+    // string echoed back from an upstream error message. `details.opsHint`
+    // is usually a plain diagnostic string but we redact defensively.
+    const safeDetail = typeof redact(detail) === 'string' ? redact(detail) as string : detail.slice(0, 240);
+    const safeExtra = opts?.details ? redact(opts.details) : undefined;
     console.log(JSON.stringify({
         at: meta.route,
         event: 'error',
@@ -92,8 +98,8 @@ export function errorResponse(
         requestId: meta.requestId,
         errorClass,
         httpStatus,
-        detail: detail.slice(0, 240),
-        ...(opts?.details ? { extra: opts.details } : {}),
+        detail: typeof safeDetail === 'string' ? safeDetail.slice(0, 240) : String(safeDetail).slice(0, 240),
+        ...(safeExtra ? { extra: safeExtra } : {}),
     }));
 
     return NextResponse.json(body, {
