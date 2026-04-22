@@ -10,7 +10,8 @@
     "lint": "eslint",
     "copy-check": "node scripts/copy-check.mjs",
     "capability-check": "node scripts/capability-check.mjs",
-    "trust-gate": "node scripts/trust-gate.mjs"
+    "trust-gate": "node scripts/trust-gate.mjs",
+    "check": "node scripts/check.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.82.0",
