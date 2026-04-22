@@ -8,20 +8,27 @@ import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
 
 /**
- * 60-second demo video — recorded on PROD with the Playwright harness
+ * 90-second demo video, recorded on PROD with the Playwright harness
  * running the three consumer beats (Briefing, Inbox, Reminders). The
- * landing hero's secondary CTA anchors here.
+ * landing hero's secondary CTA + the Navbar DEMO item both anchor
+ * here via `#demo-video`, so this section is the single source of
+ * truth for "watch the demo."
  *
  * Kept off the critical-render path: the <video> has preload="none"
  * and the poster jpg (70 KB) stands in until the user clicks. LCP
- * stays on the hero copy, not on a 721 KB mp4 fetch.
+ * stays on the hero copy, not on the mp4 fetch.
+ *
+ * Graceful fallback: if the mp4 fails to load (network error, decoder
+ * missing on an old browser), the poster + Play button stay visible
+ * and a small text prompt tells the user the video could not load.
  */
 export function DemoVideo() {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [started, setStarted] = useState(false);
+    const [failed, setFailed] = useState(false);
 
     const start = () => {
-        if (!videoRef.current) return;
+        if (!videoRef.current || failed) return;
         videoRef.current.play().catch(() => {/* autoplay blocked is fine */});
         setStarted(true);
     };
@@ -29,25 +36,26 @@ export function DemoVideo() {
     return (
         <Section id="demo-video">
             <SectionHeader
-                eyebrow="60 Seconds"
+                eyebrow="90 Seconds"
                 title="See the three real demo beats"
-                description="Briefing, inbox triage, morning nudges. Recorded end-to-end against prod. Every tool call in this clip is labeled SIMULATED — the real versions run after you sign in."
+                description="Briefing, inbox triage, morning nudges. Recorded end-to-end against prod. Every tool call in this clip is labeled SIMULATED, the real versions run after you sign in."
             />
 
             <FadeIn>
                 <div className="w-full max-w-[960px] mx-auto relative rounded-2xl overflow-hidden border border-white/10 bg-[#0A0A0A] aspect-[16/9]">
                     <video
                         ref={videoRef}
-                        src="/demo/three-beats.mp4"
-                        poster="/demo/three-beats-poster.jpg"
+                        src="/demo/operator-uplift-demo.mp4"
+                        poster="/demo/operator-uplift-demo-poster.jpg"
                         preload="none"
                         controls={started}
                         playsInline
                         onPlay={() => setStarted(true)}
+                        onError={() => setFailed(true)}
                         className="w-full h-full object-cover"
-                        aria-label="60 second Operator Uplift demo"
+                        aria-label="90 second Operator Uplift demo"
                     />
-                    {!started && (
+                    {!started && !failed && (
                         <button
                             onClick={start}
                             className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/20 transition-colors group"
@@ -58,12 +66,22 @@ export function DemoVideo() {
                             </span>
                         </button>
                     )}
+                    {failed && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/60 px-6">
+                            <p className="text-sm text-[#A1A1AA] font-mono text-center">
+                                The demo video could not load. Refresh, or
+                                {' '}
+                                <Link href="/chat" className="underline hover:text-white">try the simulated chat</Link>
+                                {' '}instead.
+                            </p>
+                        </div>
+                    )}
                 </div>
             </FadeIn>
 
             <div className="flex flex-col items-center gap-3 pt-4">
                 <p className="text-xs text-[#A1A1AA] font-mono text-center max-w-md">
-                    60.3s · recorded on prod · every tool call has `simulated: true` in the payload
+                    90s · recorded on prod · every tool call has `simulated: true` in the payload
                 </p>
                 <Link
                     href="/login?returnTo=/integrations"
