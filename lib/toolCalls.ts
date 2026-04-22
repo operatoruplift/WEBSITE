@@ -104,6 +104,93 @@ export function hasToolCalls(text: string): boolean {
 }
 
 /**
+ * Minimal shape for extracted tool calls. Matches ToolCall's public
+ * surface (tool + action + params) without the runtime-only id + rawBlock.
+ * Used when we want to know "did the LLM emit a tool call and what was
+ * it?" without committing to a specific ToolCall.id format.
+ */
+export interface ExtractedToolCall {
+    tool: string;
+    action: string;
+    params: Record<string, unknown>;
+}
+
+/**
+ * Aggressively extract tool_use blocks from a mixed text+JSON response.
+ *
+ * Falls back through three matching strategies:
+ *   1. Regular <tool_use>{...}</tool_use> blocks (any markdown wrapping)
+ *   2. Bare JSON objects with tool+action keys for known tool names
+ *   3. JSON objects inside fenced code blocks
+ *
+ * Returns both the cleaned text (with tool blocks removed) + the
+ * extracted calls. The caller can render cleanText to the user and
+ * route the calls through the approval modal.
+ *
+ * Moved here from lib/council.ts. Lives alongside parseToolCalls +
+ * stripToolBlocks since both operate on the same text.
+ */
+export function extractToolCallsFromText(text: string): {
+    cleanText: string;
+    toolCalls: ExtractedToolCall[];
+} {
+    const toolCalls: ExtractedToolCall[] = [];
+    let cleaned = text;
+
+    // Step 1: <tool_use> blocks with any wrapping
+    const xmlPattern = /(?:```\w*\n?)?<tool_use>\s*([\s\S]*?)\s*<\/tool_use>(?:\n?```)?/g;
+    let xmlMatch: RegExpExecArray | null;
+    while ((xmlMatch = xmlPattern.exec(text)) !== null) {
+        try {
+            const parsed = JSON.parse(xmlMatch[1]);
+            if (parsed.tool && parsed.action) {
+                toolCalls.push({ tool: parsed.tool, action: parsed.action, params: parsed.params || {} });
+                cleaned = cleaned.replace(xmlMatch[0], '');
+            }
+        } catch {
+            // malformed JSON inside tool_use; fall through
+        }
+    }
+
+    // Step 2: bare JSON objects with tool+action for known tools
+    if (toolCalls.length === 0) {
+        const jsonPattern = /\{[^{}]*"tool"\s*:\s*"(calendar|gmail|x402|reminders|notes|tasks|web|tokens|imessage)"[^{}]*"action"\s*:\s*"[^"]*"[^{}]*\}/g;
+        let jsonMatch: RegExpExecArray | null;
+        while ((jsonMatch = jsonPattern.exec(text)) !== null) {
+            try {
+                const parsed = JSON.parse(jsonMatch[0]);
+                if (parsed.tool && parsed.action) {
+                    toolCalls.push({ tool: parsed.tool, action: parsed.action, params: parsed.params || {} });
+                    cleaned = cleaned.replace(jsonMatch[0], '');
+                }
+            } catch {
+                // bare JSON parse failure; fall through
+            }
+        }
+    }
+
+    // Step 3: JSON inside fenced code blocks
+    if (toolCalls.length === 0) {
+        const stripped = text.replace(/```[\s\S]*?```/g, (match) => {
+            const inner = match.replace(/```\w*\n?/g, '').replace(/\n?```/g, '');
+            try {
+                const parsed = JSON.parse(inner.trim());
+                if (parsed.tool && parsed.action) {
+                    toolCalls.push({ tool: parsed.tool, action: parsed.action, params: parsed.params || {} });
+                    return '';
+                }
+            } catch {
+                // fenced block isn't JSON; leave it
+            }
+            return match;
+        });
+        if (toolCalls.length > 0) cleaned = stripped;
+    }
+
+    return { cleanText: cleaned.replace(/\n{3,}/g, '\n\n').trim(), toolCalls };
+}
+
+/**
  * Execute a tool call in Demo mode — returns a deterministic Simulated result.
  *
  * Never hits any external API. Never writes to Supabase. Never produces a
