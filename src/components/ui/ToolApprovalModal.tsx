@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from 'react';
-import { Shield, Calendar, Mail, Bell, Globe, NotebookPen, ListTodo, Check, X, Loader2, AlertTriangle, Coins, Sparkles, MessageCircle } from 'lucide-react';
+import { Shield, Calendar, Mail, Bell, Globe, NotebookPen, ListTodo, Check, X, Loader2, AlertTriangle, Coins, Sparkles, MessageCircle, HelpCircle } from 'lucide-react';
 import type { ToolCall, ToolResult } from '@/lib/toolCalls';
 import { executeToolCall, executeMock } from '@/lib/toolCalls';
 import { logAction } from '@/lib/auditLog';
 import { getToolPrice } from '@/lib/x402/pricing';
+import { classifyToolAction, isKnownAction } from '@/lib/toolSafety';
 
 interface ToolApprovalModalProps {
     toolCall: ToolCall;
@@ -50,10 +51,21 @@ export function ToolApprovalModal({
 }: ToolApprovalModalProps) {
     const [isExecuting, setIsExecuting] = useState(false);
     const [phase, setPhase] = useState<'idle' | 'requesting' | 'paying' | 'executing' | 'done' | 'failed'>('idle');
+    // Explicit-confirm gate for RISKY/UNKNOWN actions. SAFE actions skip the
+    // checkbox entirely. Stronger confirmation state per docs/research/TOOL_SAFETY.md.
+    const [confirmed, setConfirmed] = useState(false);
 
     const meta = TOOL_META[toolCall.tool] || { label: toolCall.tool, icon: Shield, color: 'text-gray-400', risk: 'UNKNOWN' };
     const Icon = meta.icon;
     const actionLabel = ACTION_LABELS[toolCall.action] || toolCall.action;
+
+    // Fail-closed classification: unknown tool/action → 'RISKY'.
+    // known === false means the action isn't in the map at all (e.g. mysteryTool
+    // or a typo) — the UI adds a "not classified yet" notice on top of the
+    // normal RISKY treatment.
+    const safety = classifyToolAction({ toolName: toolCall.tool, operation: toolCall.action });
+    const known = isKnownAction({ toolName: toolCall.tool, operation: toolCall.action });
+    const isRisky = safety === 'RISKY';
 
     // Plain-language "what will happen" + "what data is accessed" per action.
     // Lives next to the parameter summary so the user reads the intent
@@ -221,6 +233,17 @@ export function ToolApprovalModal({
                         </div>
                     )}
 
+                    {/* UNKNOWN branch: toolName/action not in the safety map.
+                         Classified RISKY by fail-closed default. See docs/research/TOOL_SAFETY.md. */}
+                    {!known && (
+                        <div className="flex items-start gap-3 p-3 rounded-lg bg-orange-500/5 border border-orange-500/15">
+                            <HelpCircle size={14} className="text-orange-400 mt-0.5 shrink-0" />
+                            <p className="text-[11px] text-gray-400 leading-relaxed">
+                                This action is not classified yet. Treating as risky. We don&rsquo;t recognize <span className="font-mono text-gray-300">{toolCall.tool}.{toolCall.action}</span>, so we&rsquo;re showing the stronger confirmation to be safe.
+                            </p>
+                        </div>
+                    )}
+
                     {!demoMode && (toolCall.action === 'create' || toolCall.action === 'send' || toolCall.action === 'send_draft') && (
                         <div className="flex items-start gap-3 p-3 rounded-lg bg-orange-500/5 border border-orange-500/15">
                             <AlertTriangle size={14} className="text-orange-400 mt-0.5 shrink-0" />
@@ -228,6 +251,21 @@ export function ToolApprovalModal({
                                 This action will {toolCall.action === 'create' ? 'create a real calendar event' : 'send a real email'} on your connected Google account. This cannot be undone from within Operator Uplift.
                             </p>
                         </div>
+                    )}
+
+                    {/* Explicit-confirm gate for RISKY/UNKNOWN. SAFE actions skip this. */}
+                    {isRisky && !isExecuting && (
+                        <label className="flex items-start gap-2 p-3 rounded-lg bg-white/[0.02] border border-white/5 cursor-pointer select-none hover:bg-white/[0.04] transition-colors">
+                            <input
+                                type="checkbox"
+                                checked={confirmed}
+                                onChange={(e) => setConfirmed(e.target.checked)}
+                                className="mt-0.5 accent-[#F97316]"
+                            />
+                            <span className="text-[11px] text-gray-300 leading-relaxed">
+                                I understand this action has real side effects and may not be reversible.
+                            </span>
+                        </label>
                     )}
 
                     {/* Phase indicator during execution */}
@@ -254,8 +292,9 @@ export function ToolApprovalModal({
                     </button>
                     <button
                         onClick={handleApprove}
-                        disabled={isExecuting}
-                        className="flex-[2] h-10 rounded-xl flex items-center justify-center gap-2 bg-[#F97316] hover:bg-[#F97316]/90 text-white text-xs font-bold uppercase tracking-widest transition-colors disabled:opacity-60"
+                        disabled={isExecuting || (isRisky && !confirmed)}
+                        className="flex-[2] h-10 rounded-xl flex items-center justify-center gap-2 bg-[#F97316] hover:bg-[#F97316]/90 text-white text-xs font-bold uppercase tracking-widest transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                        title={isRisky && !confirmed ? 'Check the confirmation box to continue.' : undefined}
                     >
                         {isExecuting ? (
                             <><Loader2 size={14} className="animate-spin" /> Executing…</>
