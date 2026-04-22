@@ -107,3 +107,68 @@ export class MagicBlockPaymentsClient {
 export function paymentsEnabled(): boolean {
     return process.env.MAGICBLOCK_PAYMENTS_ENABLED === '1' && Boolean(process.env.MAGICBLOCK_PAYMENTS_TOKEN);
 }
+
+/**
+ * Client-result shape shared by every MagicBlockPaymentsClient method.
+ * Re-exported so route handlers can type against it without importing
+ * the class.
+ */
+export type MagicBlockResult = { ok: boolean; status?: number; body?: unknown };
+
+/**
+ * Predicate: the result is an "adapter not configured" signal (no
+ * token present). Use this to fork a route's response into the
+ * Pattern-10 "honest-status" 503 branch vs. a "provider returned an
+ * error" branch.
+ *
+ * @see docs/research/PATTERNS.md #10
+ */
+export function isNotConfiguredError(result: MagicBlockResult): boolean {
+    if (result.ok) return false;
+    const body = result.body as { error?: unknown } | null | undefined;
+    const msg = typeof body?.error === 'string' ? body.error : '';
+    return /not configured/i.test(msg);
+}
+
+/**
+ * Envelope body for the honest-status 503 response. Pair with
+ * NextResponse.json(..., { status: 503, headers: meta.headers }) from
+ * your route handler.
+ *
+ * Kept decoupled from next/server so this module stays usable from
+ * edge runtimes and from tests without pulling in NextResponse.
+ *
+ * @example
+ *   if (isNotConfiguredError(result)) {
+ *     return NextResponse.json(
+ *       notConfiguredEnvelope(meta),
+ *       { status: 503, headers: meta.headers },
+ *     );
+ *   }
+ */
+export function notConfiguredEnvelope(meta: {
+    requestId: string;
+    startedAt: string;
+}): {
+    error: 'magicblock_not_configured';
+    errorClass: 'provider_unavailable';
+    reason: 'magicblock_not_configured';
+    recovery: 'retry';
+    requestId: string;
+    timestamp: string;
+    message: string;
+    nextAction: string;
+    action_required: string;
+} {
+    return {
+        error: 'magicblock_not_configured',
+        errorClass: 'provider_unavailable',
+        reason: 'magicblock_not_configured',
+        recovery: 'retry',
+        requestId: meta.requestId,
+        timestamp: meta.startedAt,
+        message: 'MagicBlock payments aren\u2019t configured yet.',
+        nextAction: 'Connect the MagicBlock console or try again after the env var lands.',
+        action_required: 'Set MAGICBLOCK_PAYMENTS_TOKEN in Vercel env (and optionally MAGICBLOCK_PAYMENTS_BASE to override the host).',
+    };
+}
