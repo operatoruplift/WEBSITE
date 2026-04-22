@@ -6,12 +6,12 @@ import { withRequestMeta, errorResponse } from '@/lib/apiHelpers';
 export const runtime = 'nodejs';
 
 /**
- * GET /api/receipts — returns all signed receipts for the current user.
+ * GET /api/receipts, returns all signed receipts for the current user.
  * Newest first, up to ?limit= (default 50).
  *
  * Wraps every response in the shared envelope so callers get a
  * consistent `X-Request-Id` header and `requestId` in the JSON body.
- * Receipt signing / ed25519 logic is untouched — only observability.
+ * Receipt signing / ed25519 logic is untouched, only observability.
  */
 export async function GET(request: Request) {
     const meta = withRequestMeta(request, 'receipts.list');

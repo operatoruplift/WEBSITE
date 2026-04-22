@@ -8,7 +8,7 @@ export const dynamic = 'force-static';
  * GET /agents/calendar.json
  *
  * ERC-8004-style agent registration document for the Calendar agent.
- * Public — anyone can fetch and verify the checksum.
+ * Public, anyone can fetch and verify the checksum.
  */
 export async function GET() {
     return NextResponse.json(CALENDAR_AGENT, {

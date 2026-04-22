@@ -48,7 +48,7 @@ const INTEGRATIONS: Integration[] = [
 
     // Data & Storage
     { id: 'postgres', name: 'PostgreSQL', description: 'Query databases, generate reports, manage schemas', category: 'Data', icon: Database, status: 'available', howItWorks: 'Agent generates and executes SQL queries via secure database connection.' },
-    { id: 'supabase', name: 'Supabase', description: 'Database CRUD, auth management, storage', category: 'Data', icon: Database, status: 'connected', howItWorks: 'Already connected — powers the Operator Uplift backend.' },
+    { id: 'supabase', name: 'Supabase', description: 'Database CRUD, auth management, storage', category: 'Data', icon: Database, status: 'connected', howItWorks: 'Already connected, powers the Operator Uplift backend.' },
     { id: 'notion', name: 'Notion', description: 'Read and write pages, databases, and wikis', category: 'Data', icon: FileText, status: 'available', howItWorks: 'Agent uses Notion API to read/write pages and query databases.' },
     { id: 'gdrive', name: 'Google Drive', description: 'File management, document creation, sharing', category: 'Data', icon: FileText, status: 'available', howItWorks: 'Agent uses Google Drive API to manage files and folders.' },
 
@@ -57,7 +57,7 @@ const INTEGRATIONS: Integration[] = [
     { id: 'todoist', name: 'Todoist', description: 'Task management, project organization, reminders', category: 'Productivity', icon: Check, status: 'available', howItWorks: 'Agent uses Todoist REST API to manage tasks and projects.' },
 
     // Web & APIs
-    { id: 'web_search', name: 'Web Search', description: 'Search the internet, scrape pages, extract data', category: 'Web', icon: Globe, status: 'connected', howItWorks: 'Built-in capability — agents can search and browse the web.' },
+    { id: 'web_search', name: 'Web Search', description: 'Search the internet, scrape pages, extract data', category: 'Web', icon: Globe, status: 'connected', howItWorks: 'Built-in capability, agents can search and browse the web.' },
     { id: 'rest_api', name: 'Custom REST API', description: 'Connect to any REST API with custom endpoints', category: 'Web', icon: Globe, status: 'available', howItWorks: 'Configure custom API endpoints as agent tools.' },
     { id: 'webhooks', name: 'Webhooks', description: 'Receive and send webhooks for event-driven automation', category: 'Web', icon: Zap, status: 'available', howItWorks: 'Set up webhook endpoints that trigger agent workflows.' },
 
@@ -97,7 +97,7 @@ export default function IntegrationsPage() {
         const params = new URLSearchParams(window.location.search);
 
         // Always clear the short-lived privy-token cookie we set before the
-        // redirect — we only need it during the OAuth flow.
+        // redirect, we only need it during the OAuth flow.
         const clearPrivyCookie = () => {
             document.cookie = `privy-token=; Path=/; Max-Age=0; SameSite=Lax`;
         };
@@ -116,7 +116,7 @@ export default function IntegrationsPage() {
             // Clean up known error codes into human language
             const humanized =
                 err === 'not_authenticated' ? 'Your session expired during the Google redirect. Please try again.' :
-                err === 'invalid_state' ? 'Security check failed — please start the Google connection again.' :
+                err === 'invalid_state' ? 'Security check failed, please start the Google connection again.' :
                 err === 'missing_code_or_state' ? 'Google did not return a valid response. Please try again.' :
                 err === 'access_denied' ? 'You declined the Google consent prompt.' :
                 `Google connection failed: ${err}`;
@@ -143,8 +143,8 @@ export default function IntegrationsPage() {
             // the middleware + route handler can verify it.
             //
             // SameSite=Lax so it survives the round-trip via Google (Google
-            // redirects back to /callback via a GET — Lax allows this).
-            // Secure set when on HTTPS. Max-Age 5 minutes — only needs to
+            // redirects back to /callback via a GET, Lax allows this).
+            // Secure set when on HTTPS. Max-Age 5 minutes, only needs to
             // live for the duration of the OAuth flow.
             if (typeof document !== 'undefined') {
                 const secure = window.location.protocol === 'https:' ? '; Secure' : '';

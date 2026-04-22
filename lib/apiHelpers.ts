@@ -69,7 +69,7 @@ export function statusFor(errorClass: ErrorClass, httpHint?: number): number {
  * auto-classify) or an explicit errorClass override when the caller
  * knows better (e.g. a 400 input_invalid).
  *
- * `httpHint` wins over taxonomy defaults — a 400 input_invalid stays
+ * `httpHint` wins over taxonomy defaults, a 400 input_invalid stays
  * 400 even though classifyError would map it to `unknown`.
  */
 export function errorResponse(
@@ -109,7 +109,7 @@ export function errorResponse(
 }
 
 /**
- * Convenience for input-validation 400s — keeps a stable shape for the UI
+ * Convenience for input-validation 400s, keeps a stable shape for the UI
  * (message + nextAction + requestId) without funneling through the taxonomy.
  */
 export function validationError(

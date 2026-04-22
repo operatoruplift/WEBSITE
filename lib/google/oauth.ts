@@ -1,7 +1,7 @@
 /**
  * Google OAuth 2.0 helpers.
  *
- * Server-only — reads credentials from process.env at call time.
+ * Server-only, reads credentials from process.env at call time.
  * Refresh tokens are stored encrypted in Supabase `user_integrations`.
  */
 import { google } from 'googleapis';
@@ -31,7 +31,7 @@ function getOAuth2Client() {
  * callback verifies this before exchanging the auth code.
  *
  * For backwards compatibility with the old (userId-as-state) call sites
- * during deploy, we accept any string — callers are responsible for
+ * during deploy, we accept any string, callers are responsible for
  * passing a signed state.
  */
 export function getConsentUrl(signedState: string): string {
@@ -50,7 +50,7 @@ export async function exchangeCode(code: string, userId: string): Promise<void> 
     const { tokens } = await client.getToken(code);
 
     if (!tokens.refresh_token) {
-        throw new Error('No refresh token returned — user may need to re-consent with prompt=consent');
+        throw new Error('No refresh token returned, user may need to re-consent with prompt=consent');
     }
 
     const supabase = getSupabaseAdmin();
@@ -81,7 +81,7 @@ export async function getAuthenticatedClient(userId: string) {
         .single();
 
     if (error || !data?.refresh_token) {
-        throw new Error('Google not connected — user must complete OAuth first');
+        throw new Error('Google not connected, user must complete OAuth first');
     }
 
     const client = getOAuth2Client();

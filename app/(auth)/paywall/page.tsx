@@ -84,7 +84,7 @@ export default function PaywallPage() {
     };
 
     const pollForPayment = async () => {
-        // Poll every 4s for up to 5 min — in production this would verify the
+        // Poll every 4s for up to 5 min, in production this would verify the
         // on-chain tx via Solana Pay + reference. For devnet we just check the
         // subscription status (which flips to active when POST /subscription
         // with tx_signature is called).
@@ -152,7 +152,7 @@ export default function PaywallPage() {
     };
 
     const PRO_FEATURES = [
-        'LLM Council — 5 agents debate every decision',
+        'LLM Council, 5 agents debate every decision',
         'Google Calendar + Gmail tool execution',
         'On-chain Merkle audit trail (Solana devnet)',
         'All 6 LLM providers',
@@ -216,7 +216,7 @@ export default function PaywallPage() {
                             <span className="text-sm text-[#A1A1AA]">/month</span>
                             <span className="ml-2 text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]">USDC</span>
                         </div>
-                        {/* Conversion clarifier — what changes after paying */}
+                        {/* Conversion clarifier, what changes after paying */}
                         <p className="text-xs text-[#A1A1AA] mb-6 leading-relaxed">
                             Unlocks <span className="text-white font-medium">Real Mode</span>: write actions execute on your accounts and each produces a signed receipt.
                         </p>
@@ -265,7 +265,7 @@ export default function PaywallPage() {
                                     </div>
                                     <p className="text-[10px] text-[#52525B] font-mono">Ref: {invoice.invoice_reference}</p>
                                 </div>
-                                <p className="text-[11px] text-[#A1A1AA] text-center">Polling for payment every 4s — this page will auto-redirect when confirmed.</p>
+                                <p className="text-[11px] text-[#A1A1AA] text-center">Polling for payment every 4s, this page will auto-redirect when confirmed.</p>
                             </div>
                         )}
 
@@ -278,7 +278,7 @@ export default function PaywallPage() {
 
                         {payState === 'active' && (
                             <div className="w-full h-12 rounded-xl bg-[#F97316]/10 border border-[#F97316]/30 text-[#F97316] font-bold uppercase tracking-widest text-sm flex items-center justify-center gap-2">
-                                <Check size={16} /> Active — redirecting to /chat
+                                <Check size={16} /> Active, redirecting to /chat
                             </div>
                         )}
 
@@ -344,14 +344,14 @@ export default function PaywallPage() {
                             </div>
                         )}
 
-                        {/* Dev simulator — only when NEXT_PUBLIC_PAYMENT_SIMULATOR=1 */}
+                        {/* Dev simulator, only when NEXT_PUBLIC_PAYMENT_SIMULATOR=1 */}
                         {simulatorVisible && payState !== 'active' && (
                             <div className="mt-4 pt-4 border-t border-dashed border-[#222222]">
                                 <button
                                     onClick={runDevSimulator}
                                     className="w-full h-9 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[11px] font-bold uppercase tracking-widest hover:bg-amber-500/20 transition-colors flex items-center justify-center gap-2"
                                 >
-                                    <AlertTriangle size={12} /> Dev Simulator — Skip Payment
+                                    <AlertTriangle size={12} /> Dev Simulator, Skip Payment
                                 </button>
                                 <p className="text-[10px] text-[#52525B] mt-2 text-center">Staging only. Logs an audit entry. Disabled in production.</p>
                             </div>
@@ -381,7 +381,7 @@ export default function PaywallPage() {
                             ))}
                             <li className="flex items-start gap-2.5 text-sm text-[#52525B]">
                                 <Lock size={14} className="mt-0.5 shrink-0" />
-                                Chat, Swarm, Security — Pro only
+                                Chat, Swarm, Security, Pro only
                             </li>
                         </ul>
 

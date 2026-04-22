@@ -1,4 +1,4 @@
-// x402 payment bridge — barrel export
+// x402 payment bridge, barrel export
 export {
     x402Fetch,
     retryWithProof,

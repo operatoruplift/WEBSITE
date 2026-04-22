@@ -1,17 +1,17 @@
 /**
- * Signed receipts — the verifiable artifact for every paid tool call.
+ * Signed receipts, the verifiable artifact for every paid tool call.
  *
  * Each receipt is ed25519-signed over its canonical JSON form.
  * The public key is exposed at /api/receipts/public-key so anyone
  * can verify a receipt independently.
  *
  * Keys:
- *   RECEIPT_SIGNING_PRIVATE_KEY  — PEM-encoded ed25519 private key (server env)
- *   RECEIPT_SIGNING_PUBLIC_KEY   — PEM-encoded ed25519 public key (server env)
+ *   RECEIPT_SIGNING_PRIVATE_KEY , PEM-encoded ed25519 private key (server env)
+ *   RECEIPT_SIGNING_PUBLIC_KEY  , PEM-encoded ed25519 public key (server env)
  *
  * For hackathon demo: if the env vars are not set, we auto-generate
  * a keypair on cold start (persisted in memory for the lifetime of
- * the serverless instance — consistent within a single session).
+ * the serverless instance, consistent within a single session).
  */
 import crypto, { type KeyObject } from 'crypto';
 import { createClient } from '@supabase/supabase-js';
@@ -40,7 +40,7 @@ function loadOrGenerateKeypair(): { privateKey: KeyObject; publicKey: KeyObject 
     const { privateKey, publicKey } = crypto.generateKeyPairSync('ed25519');
     cachedPrivate = privateKey;
     cachedPublic = publicKey;
-    console.info('[receipts] auto-generated ed25519 keypair (env not set). Hackathon demo only — set RECEIPT_SIGNING_* for production.');
+    console.info('[receipts] auto-generated ed25519 keypair (env not set). Hackathon demo only, set RECEIPT_SIGNING_* for production.');
     return { privateKey, publicKey };
 }
 
@@ -142,7 +142,7 @@ export function getPublicKeyBase64(): string {
         .toString('base64');
 }
 
-/** Verify a signed receipt — for the /demo page and judges. */
+/** Verify a signed receipt, for the /demo page and judges. */
 export function verifyReceipt(signed: SignedReceipt): boolean {
     try {
         const canonical = canonicalJson(signed.receipt);

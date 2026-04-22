@@ -62,13 +62,13 @@ const ProductPage: React.FC = () => {
         </FadeIn>
       </div>
 
-      {/* Feature Sections — same visuals as landing page */}
+      {/* Feature Sections, same visuals as landing page */}
       <div className="w-full max-w-[1200px] space-y-32">
         {features.map((feature, idx) => (
           <FadeIn key={feature.id} delay={idx * 100}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
 
-              {/* Visual — alternating sides */}
+              {/* Visual, alternating sides */}
               <div className={`w-full ${idx % 2 === 1 ? 'lg:order-2' : 'lg:order-1'}`}>
                 <div className="relative p-2 rounded-2xl border border-dashed border-white/10 bg-white/[0.01]">
                   <div className="absolute -top-[1px] -left-[1px] w-4 h-4 border-t border-l border-white/30 rounded-tl-lg" />

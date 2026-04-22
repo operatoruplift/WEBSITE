@@ -3,12 +3,12 @@ import { DocContent } from './_components/DocContent';
 import { DOC_SECTIONS } from '@/lib/docs/sections';
 
 export const metadata = {
-    title: 'Docs — Operator Uplift',
+    title: 'Docs, Operator Uplift',
     description: 'Getting started, demo mode vs real mode, approvals, receipts, x402, integrations, troubleshooting.',
 };
 
 /**
- * /docs landing — defaults to the first section (Getting started).
+ * /docs landing, defaults to the first section (Getting started).
  * No redirect; the landing shows the same layout a slug page does so
  * the sidebar doesn't flicker on first visit.
  */

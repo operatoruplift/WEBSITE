@@ -12,7 +12,7 @@ function newRequestId(): string {
 
 /**
  * Extract the JOSE header fields from a compact JWS without verifying.
- * Used only for logging — we never log payload or signature. Returns null
+ * Used only for logging, we never log payload or signature. Returns null
  * if the token isn't even shaped like `a.b.c`.
  */
 function jwsHeaderDebug(request: Request): { alg?: string; typ?: string; kid?: string; tokenLength: number; tokenPrefix: string } | null {
@@ -34,8 +34,8 @@ function jwsHeaderDebug(request: Request): { alg?: string; typ?: string; kid?: s
 }
 
 /**
- * GET /api/subscription — check current user's subscription status.
- * POST /api/subscription — create a pending subscription (status=pending) or
+ * GET /api/subscription, check current user's subscription status.
+ * POST /api/subscription, create a pending subscription (status=pending) or
  *    activate one (status=active) after Solana Pay confirmation.
  */
 export async function GET(request: Request) {
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
             const code = authErr instanceof Error ? authErr.message : 'token_invalid';
             const jws = jwsHeaderDebug(request);
             const errorClass = classifyError(authErr);
-            // JWS header is safe to log (alg/typ/kid) — never log payload or signature.
+            // JWS header is safe to log (alg/typ/kid), never log payload or signature.
             console.log(JSON.stringify({ at: 'subscription', event: 'auth-failed', route: 'POST /api/subscription', requestId, ts: startedAt, errorClass, reason: code.slice(0, 120), jws }));
             return NextResponse.json(
                 envelope(errorClass, code, requestId, startedAt),
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
         }
         const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false } });
 
-        // action=create_invoice — generate a pending subscription + Solana Pay reference
+        // action=create_invoice, generate a pending subscription + Solana Pay reference
         if (action === 'create_invoice') {
             // Generate a unique reference for this payment (used in Solana Pay URL)
             const ref = `inv-${verified.userId.slice(-8)}-${Date.now()}`;
@@ -111,11 +111,11 @@ export async function POST(request: Request) {
                 invoice_reference: ref,
                 amount_usdc: 19.00,
                 recipient: process.env.NEXT_PUBLIC_TREASURY_WALLET || 'UpL1ft11111111111111111111111111111111111111',
-                memo: `Operator Uplift Pro — ${verified.userId.slice(-8)}`,
+                memo: `Operator Uplift Pro, ${verified.userId.slice(-8)}`,
             });
         }
 
-        // action=dev_simulate — staging-only bypass that marks subscription active without a real tx
+        // action=dev_simulate, staging-only bypass that marks subscription active without a real tx
         if (action === 'dev_simulate') {
             if (process.env.NODE_ENV === 'production' && process.env.PAYMENT_SIMULATOR_ENABLED !== '1') {
                 return NextResponse.json({ error: 'Dev simulator disabled in production' }, { status: 403 });
@@ -135,7 +135,7 @@ export async function POST(request: Request) {
                 updated_at: now.toISOString(),
             }, { onConflict: 'user_id' });
 
-            // Log a prominent audit entry — simulators must leave a trail
+            // Log a prominent audit entry, simulators must leave a trail
             await supabase.from('audit_entries').insert({
                 user_id: verified.userId,
                 category: 'billing',
@@ -143,7 +143,7 @@ export async function POST(request: Request) {
                 details: `Pro activated via dev simulator (no charge). tx_signature=${simulatedTx}`,
                 approved: true,
                 created_at: now.toISOString(),
-            }).then(() => {}, () => {}); // best-effort — audit_entries table may not exist
+            }).then(() => {}, () => {}); // best-effort, audit_entries table may not exist
 
             return NextResponse.json({
                 tier: 'pro',
@@ -154,7 +154,7 @@ export async function POST(request: Request) {
             });
         }
 
-        // action=confirm (default, legacy) — confirm a real Solana Pay tx
+        // action=confirm (default, legacy), confirm a real Solana Pay tx
         if (!tx_signature) {
             return NextResponse.json({ error: 'tx_signature required' }, { status: 400 });
         }

@@ -1,5 +1,5 @@
 /**
- * Gmail integration — server-side helpers.
+ * Gmail integration, server-side helpers.
  *
  * Functions for listing, reading, drafting, and sending emails.
  * Auth is handled transparently via lib/google/oauth.ts.
@@ -180,7 +180,7 @@ async function getFromAddress(gmail: ReturnType<typeof google.gmail>): Promise<s
 
 /**
  * Detect whether a body string contains HTML markup. Keeps the
- * heuristic loose on purpose — the LLM's "professional clean HTML"
+ * heuristic loose on purpose, the LLM's "professional clean HTML"
  * output usually has <html>, <body>, <p>, or <div>, and we'd rather
  * false-positive into multipart/alternative than false-negative into
  * a plain-text send that shows raw tags.
@@ -246,7 +246,7 @@ function buildRawEmail(email: {
 
     let message: string;
     if (htmlPart) {
-        // multipart/alternative — clients render the HTML part when they
+        // multipart/alternative, clients render the HTML part when they
         // can, fall back to the text part otherwise. Spec-compliant
         // boundary with double newlines between parts.
         const boundary = `ou-mail-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;

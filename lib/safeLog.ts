@@ -1,12 +1,12 @@
 /**
- * safeLog — structured logger with default redaction of sensitive keys.
+ * safeLog, structured logger with default redaction of sensitive keys.
  *
  * Use this instead of raw `console.log/warn/error` whenever the payload
  * could carry user-controlled or auth-sensitive fields. Preserves the
  * existing observability contract (one-line JSON, `requestId` kept
  * intact) while stripping tokens, cookies, API keys, and similar.
  *
- * Scope: this helper does NOT replace every console call — small fixed
+ * Scope: this helper does NOT replace every console call, small fixed
  * strings and numeric metrics are fine as plain `console.log`. It
  * replaces the call sites that pass request headers, error details, or
  * any object that could include auth material.
@@ -55,7 +55,7 @@ export function redact(value: unknown, depth = 0): unknown {
         }
         return out;
     }
-    // Functions, symbols — don't log them at all.
+    // Functions, symbols, don't log them at all.
     return '[UNSUPPORTED]';
 }
 
@@ -70,11 +70,11 @@ function redactString(s: string): string {
 }
 
 export interface SafeLogFields {
-    /** Route / module name — e.g. "subscription", "tools.gmail". Required. */
+    /** Route / module name, e.g. "subscription", "tools.gmail". Required. */
     at: string;
-    /** Event name — e.g. "auth-failed", "rate-limited". Required. */
+    /** Event name, e.g. "auth-failed", "rate-limited". Required. */
     event: string;
-    /** Request ID — pass through unredacted so support can grep. */
+    /** Request ID, pass through unredacted so support can grep. */
     requestId?: string;
     /** Anything else. Will be deep-redacted. */
     [key: string]: unknown;

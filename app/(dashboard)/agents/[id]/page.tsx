@@ -25,7 +25,7 @@ function getRegistrationSlug(agent: { id: string; name: string; tools?: string[]
 }
 
 /**
- * Verify panel — shown only on agents that have a registration
+ * Verify panel, shown only on agents that have a registration
  * document. Links to the ERC-8004-style manifest and the receipt
  * public key so a judge can verify both without leaving this page.
  */
@@ -133,7 +133,7 @@ const ACTIVITY_LOG = [
     { time: '2m ago', event: 'Completed task: "Refactor auth middleware"', type: 'success' },
     { time: '15m ago', event: 'Started code analysis on 3 repos', type: 'info' },
     { time: '1h ago', event: 'Memory indexed: 847 new embeddings', type: 'info' },
-    { time: '3h ago', event: 'Session timeout — auto-paused', type: 'warning' },
+    { time: '3h ago', event: 'Session timeout, auto-paused', type: 'warning' },
     { time: '1d ago', event: 'Deployed from Agent Builder', type: 'success' },
 ];
 
@@ -317,7 +317,7 @@ export default function AgentDetailPage() {
                                 </CardContent>
                             </Card>
 
-                            {/* Verify panel — only for agents with a published registration doc */}
+                            {/* Verify panel, only for agents with a published registration doc */}
                             {(() => {
                                 const slug = getRegistrationSlug(agent);
                                 return slug ? <VerifyPanel slug={slug} /> : null;

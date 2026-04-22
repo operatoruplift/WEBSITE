@@ -2,7 +2,7 @@
  * Lightweight reachability probe for each LLM provider.
  *
  * We intentionally hit low-cost "list models" style endpoints (or `/models`
- * on the OpenAI-compatible providers). Failures are silent — a provider is
+ * on the OpenAI-compatible providers). Failures are silent, a provider is
  * either `ok:true` with a latency in ms, or `ok:false` with a short reason.
  * Never throws. Never logs secrets. Never spends tokens.
  *

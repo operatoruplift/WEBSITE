@@ -1,6 +1,6 @@
 /**
  * AES-256-GCM encryption for browser localStorage
- * Uses Web Crypto API (crypto.subtle) — works in all modern browsers
+ * Uses Web Crypto API (crypto.subtle), works in all modern browsers
  *
  * Data is encrypted before storing and decrypted when reading.
  * The encryption key is derived from the user's session token using PBKDF2.

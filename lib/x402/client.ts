@@ -1,5 +1,5 @@
 /**
- * x402 Payment Client — Bridge for bucharest.
+ * x402 Payment Client, Bridge for bucharest.
  *
  * Wraps fetch() to handle HTTP 402 responses from premium MCP tool APIs.
  * When a tool returns 402 with an X-Payment-Required header, this client

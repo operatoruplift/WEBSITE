@@ -15,7 +15,7 @@ const AUDIT_PROGRAM_ID = new PublicKey('LeHntjrypUvoedo4DHdBXUNyC2gKxnRH7wzp2UE2
 const DEVNET_RPC = process.env.SOLANA_DEVNET_RPC || 'https://api.devnet.solana.com';
 
 // Anchor instruction discriminators (first 8 bytes of sha256("global:<instruction_name>"))
-// These are stable for a given program — they don't change unless the instruction name changes.
+// These are stable for a given program, they don't change unless the instruction name changes.
 const DISCRIMINATOR_INITIALIZE = Buffer.from(
     crypto.createHash('sha256').update('global:initialize').digest().subarray(0, 8)
 );
@@ -119,7 +119,7 @@ export async function POST(request: Request) {
         const tx = new Transaction();
 
         if (needsInit) {
-            // First publish for this authority — initialize the PDA
+            // First publish for this authority, initialize the PDA
             tx.add(buildInitializeIx(payer.publicKey, auditTrailPDA));
         }
 

@@ -26,7 +26,7 @@ export async function GET(request: Request) {
         const debugKey = request.headers.get('x-debug-key');
         const adminKey = process.env.DEBUG_ADMIN_KEY;
 
-        // Extract token for diagnostic only — we never log or return the token itself
+        // Extract token for diagnostic only, we never log or return the token itself
         const rawToken =
             request.headers.get('x-privy-token') ||
             request.headers.get('authorization')?.replace('Bearer ', '') ||
@@ -46,7 +46,7 @@ export async function GET(request: Request) {
             authError = err instanceof Error ? err.message : 'auth failed';
         }
 
-        // appUserEmail — what the client put in localStorage.user (if passed
+        // appUserEmail, what the client put in localStorage.user (if passed
         // via a custom header for debugging). We don't trust it for auth but
         // surfacing it helps debug "why doesn't bypass work for my Google email".
         const appUserEmail = request.headers.get('x-app-user-email');
@@ -62,7 +62,7 @@ export async function GET(request: Request) {
                     error: 'unauthorized',
                     hint: 'Must be authenticated as a bypass-listed user (by email or userId), OR provide X-Debug-Key matching DEBUG_ADMIN_KEY.',
                     // Tell the caller what was tried (but not why it failed in
-                    // full detail — no token leakage)
+                    // full detail, no token leakage)
                     token_shape_ok: jwsDiag.shape_ok,
                     auth_error: authError,
                 },

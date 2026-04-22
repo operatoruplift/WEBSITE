@@ -1,14 +1,14 @@
 /**
- * Capability gating — the routing primitive for the May 14 demo.
+ * Capability gating, the routing primitive for the May 14 demo.
  *
  * Every /api/* route that can produce a side-effect (tool execution,
  * receipt, Supabase write) must check `capability_real` before acting.
  *
  * Three booleans resolved server-side per request:
- *   capability_google — authenticated AND Google OAuth row in user_integrations
- *   capability_key    — authenticated AND an LLM provider key is available
+ *   capability_google, authenticated AND Google OAuth row in user_integrations
+ *   capability_key   , authenticated AND an LLM provider key is available
  *                       (server env key OR user-supplied BYOK when implemented)
- *   capability_real   — capability_google || capability_key
+ *   capability_real  , capability_google || capability_key
  *
  * The user-visible UI collapses this to two states: Demo (any not-real
  * case) or Real. Do not surface the individual flags to users.
@@ -46,7 +46,7 @@ function getSupabaseAdmin() {
 
 /**
  * Check whether a user has a Google OAuth row in user_integrations.
- * Returns false on any failure — the safe default is Demo mode.
+ * Returns false on any failure, the safe default is Demo mode.
  */
 async function hasGoogleIntegration(userId: string): Promise<boolean> {
     const supabase = getSupabaseAdmin();
@@ -66,7 +66,7 @@ async function hasGoogleIntegration(userId: string): Promise<boolean> {
 
 /**
  * Resolve capabilities for the current request.
- * Never throws — on any failure returns all-false (safe Demo default).
+ * Never throws, on any failure returns all-false (safe Demo default).
  */
 export async function getCapabilities(request: Request): Promise<Capabilities> {
     const demo: Capabilities = {

@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * MagicUI — Simplified.
+ * MagicUI, Simplified.
  *
  * The previous "wow effect" versions (BorderBeam rotating gradient,
  * Spotlight cursor-tracking glow, shimmer-sweep buttons, hover-lift
@@ -12,12 +12,12 @@
  */
 import React from 'react';
 
-/* BorderBeam — no-op. Kept as named export for backwards compatibility. */
+/* BorderBeam, no-op. Kept as named export for backwards compatibility. */
 export function BorderBeam(_props: Record<string, unknown>) {
     return null;
 }
 
-/* Spotlight — plain passthrough. No cursor tracking, no glow. */
+/* Spotlight, plain passthrough. No cursor tracking, no glow. */
 export function Spotlight({
     children,
     className = '',
@@ -29,7 +29,7 @@ export function Spotlight({
     return <div className={className}>{children}</div>;
 }
 
-/* ShimmerButton — plain button, no sweep. */
+/* ShimmerButton, plain button, no sweep. */
 export function ShimmerButton({
     children,
     className = '',
@@ -53,7 +53,7 @@ export function ShimmerButton({
     );
 }
 
-/* AnimatedCard — plain card with subtle hover border only. No lift, no beam. */
+/* AnimatedCard, plain card with subtle hover border only. No lift, no beam. */
 export function AnimatedCard({
     children,
     className = '',
@@ -69,7 +69,7 @@ export function AnimatedCard({
     );
 }
 
-/* NumberTicker — static number. No count-up animation. */
+/* NumberTicker, static number. No count-up animation. */
 export function NumberTicker({
     value,
     decimals = 0,
@@ -91,7 +91,7 @@ export function NumberTicker({
     );
 }
 
-/* StaggerChildren — plain container. No sequential fade-in. */
+/* StaggerChildren, plain container. No sequential fade-in. */
 export function StaggerChildren({
     children,
     className = '',

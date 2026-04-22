@@ -79,7 +79,7 @@ export async function POST(request: Request) {
             }
             const text = await res.text();
             // Strip scripts/styles, keep the text body. Real implementation
-            // should use @mozilla/readability — this is the minimal version
+            // should use @mozilla/readability, this is the minimal version
             // that works for the demo beats.
             const stripped = text
                 .replace(/<script[\s\S]*?<\/script>/gi, '')

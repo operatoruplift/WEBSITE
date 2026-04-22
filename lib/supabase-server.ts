@@ -27,7 +27,7 @@ export function getTokenFromRequest(request: Request): string | null {
   return null;
 }
 
-/** Auth guard — returns user or throws */
+/** Auth guard, returns user or throws */
 export async function requireAuth(request: Request) {
   const token = getTokenFromRequest(request);
   if (!token) throw new Error('Unauthorized');

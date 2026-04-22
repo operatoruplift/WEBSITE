@@ -1,5 +1,5 @@
 /**
- * Photon Spectrum adapter — HTTP + webhook model.
+ * Photon Spectrum adapter, HTTP + webhook model.
  *
  * Spectrum is Photon's consumer dashboard for connecting an agent to
  * iMessage, Telegram, WhatsApp, X, Discord, Instagram. It uses a
@@ -9,14 +9,14 @@
  * imessage (the gRPC kit); do not confuse them.
  *
  * Env:
- *   PHOTON_PROJECT_ID — UUID from the Spectrum Settings tab.
- *   PHOTON_API_KEY    — Secret Key from the Spectrum Settings tab.
- *   PHOTON_API_BASE   — (optional) root URL. Default https://api.photon.codes
- *   PHOTON_SEND_PATH  — (optional) the send endpoint path.
+ *   PHOTON_PROJECT_ID, UUID from the Spectrum Settings tab.
+ *   PHOTON_API_KEY   , Secret Key from the Spectrum Settings tab.
+ *   PHOTON_API_BASE  , (optional) root URL. Default https://api.photon.codes
+ *   PHOTON_SEND_PATH , (optional) the send endpoint path.
  *                       Default /v1/spectrum/messages. The real path
  *                       lives in the Spectrum Settings or API tab;
  *                       flip this env var without a code change.
- *   PHOTON_WEBHOOK_SECRET — (optional) value Spectrum sends in the
+ *   PHOTON_WEBHOOK_SECRET, (optional) value Spectrum sends in the
  *                       X-Photon-Signature header so we can verify
  *                       inbound webhook posts. See
  *                       app/api/webhooks/photon/route.ts.
@@ -170,7 +170,7 @@ export function photonStatus(): {
     }
     return {
         active: false,
-        reason: 'PHOTON_PROJECT_ID + PHOTON_API_KEY not both set — iMessage sends return 503.',
+        reason: 'PHOTON_PROJECT_ID + PHOTON_API_KEY not both set, iMessage sends return 503.',
         base,
         path,
         projectId,

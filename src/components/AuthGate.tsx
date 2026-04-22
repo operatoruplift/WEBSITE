@@ -37,7 +37,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         // Auth-optional routes (e.g., /chat) render in Demo mode when
-        // unauthenticated. Skip the gate entirely — the page decides
+        // unauthenticated. Skip the gate entirely, the page decides
         // what to show based on /api/capabilities.
         if (authOptional) {
             setChecked(true);
@@ -90,7 +90,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
                 setChecked(true);
             })
             .catch(() => {
-                // API unreachable — allow access (dev mode / offline)
+                // API unreachable, allow access (dev mode / offline)
                 setHasAccess(true);
                 setChecked(true);
             });

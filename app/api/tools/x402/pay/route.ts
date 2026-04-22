@@ -16,26 +16,26 @@ const DEVNET_RPC = process.env.SOLANA_DEVNET_RPC || 'https://api.devnet.solana.c
  * Submit a real transfer and return the confirmed tx signature. By
  * default we settle on Solana devnet via the standard RPC. When
  * NEXT_PUBLIC_MAGICBLOCK_ENABLED=1 we route through the configured
- * MagicBlock Ephemeral Rollup validator instead — same JSON-RPC
+ * MagicBlock Ephemeral Rollup validator instead, same JSON-RPC
  * surface, ~10 ms confirms, zero fee, eventually committed back to
  * devnet/mainnet.
  *
  * Amount stays tiny (0.00001 SOL = 10,000 lamports) so a funded
  * devnet/ER wallet survives thousands of invoices.
  *
- * Throws on failure with a specific message — the caller maps that
+ * Throws on failure with a specific message, the caller maps that
  * into a 503 response body so ops can act.
  */
 async function submitTransfer(recipient: PublicKey): Promise<{ signature: string; executedVia: 'magicblock' | 'solana-devnet'; rpcUrl: string }> {
     const walletKey = process.env.SOLANA_DEPLOY_WALLET_KEY;
     if (!walletKey) {
-        throw new Error('SOLANA_DEPLOY_WALLET_KEY not set — cannot submit real tx. Add the keypair JSON array to Vercel env.');
+        throw new Error('SOLANA_DEPLOY_WALLET_KEY not set, cannot submit real tx. Add the keypair JSON array to Vercel env.');
     }
     let payer: Keypair;
     try {
         payer = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(walletKey)));
     } catch (err) {
-        throw new Error(`Invalid SOLANA_DEPLOY_WALLET_KEY format — expected a JSON array of 64 bytes (from \`solana-keygen\`). Parse error: ${err instanceof Error ? err.message : String(err)}`);
+        throw new Error(`Invalid SOLANA_DEPLOY_WALLET_KEY format, expected a JSON array of 64 bytes (from \`solana-keygen\`). Parse error: ${err instanceof Error ? err.message : String(err)}`);
     }
 
     const mb = getMagicBlockAdapter();
@@ -43,13 +43,13 @@ async function submitTransfer(recipient: PublicKey): Promise<{ signature: string
     const executedVia = mb.executedVia();
     const rpcUrl = mb.getRpcUrl() ?? DEVNET_RPC;
 
-    // Balance pre-flight — fail with a specific reason instead of a
+    // Balance pre-flight, fail with a specific reason instead of a
     // cryptic "Transaction simulation failed" when the wallet is empty.
     try {
         const balance = await connection.getBalance(payer.publicKey, 'confirmed');
         const required = Math.floor(0.00001 * LAMPORTS_PER_SOL) + 5_000; // transfer + ~5k lamport fee
         if (balance < required) {
-            throw new Error(`Server wallet ${payer.publicKey.toBase58()} is underfunded on ${rpcUrl} — balance ${balance} lamports, need ≥ ${required}. Airdrop: \`solana airdrop 2 ${payer.publicKey.toBase58()} --url devnet\``);
+            throw new Error(`Server wallet ${payer.publicKey.toBase58()} is underfunded on ${rpcUrl}, balance ${balance} lamports, need ≥ ${required}. Airdrop: \`solana airdrop 2 ${payer.publicKey.toBase58()} --url devnet\``);
         }
     } catch (err) {
         // getBalance failures (bad RPC, network) bubble up with a useful message.
@@ -84,7 +84,7 @@ async function submitTransfer(recipient: PublicKey): Promise<{ signature: string
  *   1. Client already got a 402 from the gated tool route.
  *   2. Client POSTs the invoice_reference here.
  *   3. Server submits a tiny real transfer on Solana devnet to the
- *      treasury wallet — producing a public tx signature verifiable
+ *      treasury wallet, producing a public tx signature verifiable
  *      on explorer.solana.com?cluster=devnet.
  *   4. Server marks the invoice paid with the real signature.
  *   5. Client retries the original tool call with X-Payment-Proof.
@@ -93,7 +93,7 @@ async function submitTransfer(recipient: PublicKey): Promise<{ signature: string
  * tx, we surface the error to the caller rather than silently fall
  * back to a synthetic signature. No more `devnet_sim_...` fakes.
  *
- * Accepts an optional `tx_signature` in the body — if the client
+ * Accepts an optional `tx_signature` in the body, if the client
  * already signed and submitted the tx themselves (e.g. from Phantom),
  * we trust that instead of submitting our own.
  */
@@ -142,7 +142,7 @@ export async function POST(request: Request) {
             }, { status: 403, headers: meta.headers });
         }
         if (invoice.status === 'paid' || invoice.status === 'consumed') {
-            // Idempotent — return success so retries don't fail.
+            // Idempotent, return success so retries don't fail.
             return NextResponse.json({
                 status: invoice.status,
                 invoice_reference: invoice.invoice_reference,
@@ -208,8 +208,8 @@ export async function POST(request: Request) {
                         requestId: meta.requestId,
                         timestamp: meta.startedAt,
                         message: 'Couldn\u2019t settle the payment on Solana devnet.',
-                        nextAction: 'Try again in a moment. If it keeps failing, your wallet wasn\u2019t charged — contact support with the reference below.',
-                        // Ops-only details — hidden in the UI's default render, used by support.
+                        nextAction: 'Try again in a moment. If it keeps failing, your wallet wasn\u2019t charged, contact support with the reference below.',
+                        // Ops-only details, hidden in the UI's default render, used by support.
                         details: { opsHint, detail: msg.slice(0, 240) },
                     },
                     { status: 503, headers: meta.headers },
@@ -228,7 +228,7 @@ export async function POST(request: Request) {
                 requestId: meta.requestId,
                 timestamp: meta.startedAt,
                 message: 'The payment landed but we couldn\u2019t record it.',
-                nextAction: 'Try again — if the problem persists, contact support with the reference below.',
+                nextAction: 'Try again, if the problem persists, contact support with the reference below.',
             }, { status: 500, headers: meta.headers });
         }
 

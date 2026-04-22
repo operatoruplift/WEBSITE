@@ -4,7 +4,7 @@
  * Call verifySession(request) at the top of any API route that needs auth.
  * Returns the verified user ID (Privy DID) or throws.
  *
- * The middleware.ts already checks that a token exists — this does the
+ * The middleware.ts already checks that a token exists, this does the
  * full cryptographic verification via Privy's server SDK.
  */
 import { PrivyClient } from '@privy-io/server-auth';
@@ -16,7 +16,7 @@ function getPrivyClient(): PrivyClient {
     const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
     const appSecret = process.env.PRIVY_APP_SECRET;
     if (!appId || !appSecret) {
-        throw new AuthError('Privy not configured — set NEXT_PUBLIC_PRIVY_APP_ID and PRIVY_APP_SECRET');
+        throw new AuthError('Privy not configured, set NEXT_PUBLIC_PRIVY_APP_ID and PRIVY_APP_SECRET');
     }
     privyClient = new PrivyClient(appId, appSecret);
     return privyClient;
@@ -61,7 +61,7 @@ export async function getUserEmail(userId: string): Promise<string | null> {
 }
 
 /**
- * Shape-check a compact JWS — must be three dot-separated base64url
+ * Shape-check a compact JWS, must be three dot-separated base64url
  * segments. Anything else will throw "Invalid Compact JWS" when jose
  * tries to parse it. Catching this early lets us give a clean error.
  */
@@ -138,11 +138,11 @@ export async function verifySession(request: Request): Promise<VerifiedUser> {
         return { userId: 'dev-user' };
     }
 
-    // Shape-check before handing to Privy — gives us cleaner error codes
+    // Shape-check before handing to Privy, gives us cleaner error codes
     // and avoids "Invalid Compact JWS" surfacing to the client
     const diag = diagnoseJws(token);
     if (!diag.shape_ok) {
-        // Never log the full token — only length + shape diagnostics
+        // Never log the full token, only length + shape diagnostics
         console.warn('[auth.verifySession] malformed JWS:', {
             length: diag.length,
             segments: diag.segments,
@@ -181,7 +181,7 @@ export async function verifySession(request: Request): Promise<VerifiedUser> {
 }
 
 /**
- * Quick check — does the request have auth? Returns userId or null (no throw).
+ * Quick check, does the request have auth? Returns userId or null (no throw).
  * Use this for routes that should work with or without auth (degraded mode).
  */
 export async function getOptionalUser(request: Request): Promise<VerifiedUser | null> {

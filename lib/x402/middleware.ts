@@ -37,9 +37,9 @@ import { createAndStoreReceipt, type SignedReceipt } from './receipts';
 /**
  * Result of checking the x402 gate for a request.
  *
- *   'free' — action is not gated, caller just executes
- *   '402'  — first call with no proof; caller returns this response
- *   'paid' — valid proof attached; caller executes, then calls createReceipt()
+ *   'free', action is not gated, caller just executes
+ *   '402' , first call with no proof; caller returns this response
+ *   'paid', valid proof attached; caller executes, then calls createReceipt()
  */
 export type GateResult =
     | { type: 'free' }
@@ -60,7 +60,7 @@ export async function x402Gate(args: {
 }): Promise<GateResult> {
     const price = getToolPrice(args.tool, args.action);
     if (!price) {
-        // Free action — no gate
+        // Free action, no gate
         return { type: 'free' };
     }
 
@@ -114,7 +114,7 @@ export async function x402Gate(args: {
         };
     }
 
-    // No proof — mint an invoice and return 402
+    // No proof, mint an invoice and return 402
     const invoice = await createInvoice({
         user_id: args.user_id,
         tool: args.tool,

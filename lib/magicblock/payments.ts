@@ -19,9 +19,9 @@
  * client exposes a small typed surface and a generic `call()` escape
  * hatch for routes we don't yet model. Configure via env:
  *
- *   MAGICBLOCK_PAYMENTS_BASE   — default https://payments.magicblock.app
- *   MAGICBLOCK_PAYMENTS_TOKEN  — bearer auth from the MagicBlock console
- *   MAGICBLOCK_PAYMENTS_ENABLED — 0/1 flag so the adapter stays honest
+ *   MAGICBLOCK_PAYMENTS_BASE  , default https://payments.magicblock.app
+ *   MAGICBLOCK_PAYMENTS_TOKEN , bearer auth from the MagicBlock console
+ *   MAGICBLOCK_PAYMENTS_ENABLED, 0/1 flag so the adapter stays honest
  *                                 when we haven't finished wiring it
  */
 

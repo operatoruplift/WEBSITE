@@ -115,7 +115,7 @@ export default function ProfilePage() {
     const [snsLoaded, setSnsLoaded] = useState(false);
 
     useEffect(() => {
-        // Profile must never throw on cold load — even if the SNS proxy
+        // Profile must never throw on cold load, even if the SNS proxy
         // is down, we render a graceful fallback with error text.
         fetch('/api/sns/resolve?name=operatoruplift.sol', { cache: 'no-store' })
             .then(r => r.ok ? r.json() : null)
@@ -236,7 +236,7 @@ export default function ProfilePage() {
                                                 <p className="text-sm text-white font-medium">{sns?.name}</p>
                                                 <p className="text-[10px] text-gray-500 mt-0.5">
                                                     {sns?.simulated
-                                                        ? 'Demo — sign in + verify to show your real .sol'
+                                                        ? 'Demo, sign in + verify to show your real .sol'
                                                         : sns?.owner ? `Owner ${sns.owner.slice(0, 6)}...${sns.owner.slice(-4)}` : 'No owner on record'}
                                                 </p>
                                             </div>
@@ -253,7 +253,7 @@ export default function ProfilePage() {
                                             <div>
                                                 <p className="text-sm text-white font-medium">{sns?.name}.site</p>
                                                 <p className="text-[10px] text-gray-500 mt-0.5">
-                                                    Browser alias for your .sol — opens in any modern browser.
+                                                    Browser alias for your .sol, opens in any modern browser.
                                                 </p>
                                             </div>
                                         </div>

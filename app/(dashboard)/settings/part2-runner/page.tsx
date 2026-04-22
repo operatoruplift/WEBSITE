@@ -8,14 +8,14 @@ import {
 import { executeToolCall, type ToolCall, type ToolResult } from '@/lib/toolCalls';
 
 /**
- * Part 2 Runner — admin-gated manual test harness for the Real-Mode
+ * Part 2 Runner, admin-gated manual test harness for the Real-Mode
  * happy path. Every step is human-gated: no step runs unless the user
  * clicks its button. Server calls hit the same internal routes /chat
  * uses (via executeToolCall); no parallel codepath.
  *
  * Admin gate: client pre-flights GET /api/whoami. The page renders
  * only when bypass.session_email_on_allowlist is true. Non-admins
- * see a clean "Admin-only" notice — no controls rendered.
+ * see a clean "Admin-only" notice, no controls rendered.
  *
  * What this is NOT:
  *   - Not an auto-login, not a wallet auto-sign. The human signs the
@@ -55,7 +55,7 @@ function readToken(): string | null {
 }
 
 /**
- * Returns a headers object that fetch() accepts directly — always
+ * Returns a headers object that fetch() accepts directly, always
  * Record<string, string>, never a union. Callers pass the token so the
  * call site shows intent and avoids a surprise window read.
  */
@@ -108,27 +108,27 @@ export default function Part2RunnerPage() {
     const [adminStatus, setAdminStatus] = useState<'loading' | 'admin' | 'not-admin' | 'unauthenticated'>('loading');
     const [adminEmail, setAdminEmail] = useState<string | null>(null);
 
-    // Step 1 — Signed in
+    // Step 1, Signed in
     const [caps, setCaps] = useState<Capabilities | null>(null);
     const [capsChecked, setCapsChecked] = useState(false);
     const [capsRequestId, setCapsRequestId] = useState<string | null>(null);
 
-    // Step 3 — Subscription
+    // Step 3, Subscription
     const [sub, setSub] = useState<{ active: boolean; tier?: string; expiresAt?: string | null } | null>(null);
     const [subRequestId, setSubRequestId] = useState<string | null>(null);
     const [subChip, setSubChip] = useState<Chip>('pending');
     const [subDetail, setSubDetail] = useState<string>('');
 
-    // Step 4 — Gmail draft
+    // Step 4, Gmail draft
     const [senderChoice, setSenderChoice] = useState('');
     const [recentSenders, setRecentSenders] = useState<string[]>([]);
     const [loadingSenders, setLoadingSenders] = useState(false);
-    const [draftSubject, setDraftSubject] = useState('Operator Uplift — test draft');
-    const [draftBody, setDraftBody] = useState('This is a Part 2 runner test draft. Safe to delete.\n\n— Operator Uplift');
+    const [draftSubject, setDraftSubject] = useState('Operator Uplift, test draft');
+    const [draftBody, setDraftBody] = useState('This is a Part 2 runner test draft. Safe to delete.\n\n, Operator Uplift');
     const [draftChip, setDraftChip] = useState<Chip>('pending');
     const [draftResult, setDraftResult] = useState<ToolResult | null>(null);
 
-    // Step 5 — Calendar create
+    // Step 5, Calendar create
     const defaultTomorrow = () => {
         const d = new Date();
         d.setDate(d.getDate() + 1);
@@ -339,7 +339,7 @@ export default function Part2RunnerPage() {
                     </p>
                 </header>
 
-                {/* Step 1 — Signed in */}
+                {/* Step 1, Signed in */}
                 <section className="p-5 rounded-2xl border border-white/10 bg-foreground/[0.04]">
                     <div className="flex items-center justify-between mb-2">
                         <h2 className="text-base font-medium text-white">1 · Signed in</h2>
@@ -357,7 +357,7 @@ export default function Part2RunnerPage() {
                     <RefLine requestId={capsRequestId} />
                 </section>
 
-                {/* Step 2 — Google connected */}
+                {/* Step 2, Google connected */}
                 <section className="p-5 rounded-2xl border border-white/10 bg-foreground/[0.04]">
                     <div className="flex items-center justify-between mb-2">
                         <h2 className="text-base font-medium text-white">2 · Google connected</h2>
@@ -379,15 +379,14 @@ export default function Part2RunnerPage() {
                     ) : null}
                 </section>
 
-                {/* Step 3 — Subscription */}
+                {/* Step 3, Subscription */}
                 <section className="p-5 rounded-2xl border border-white/10 bg-foreground/[0.04]">
                     <div className="flex items-center justify-between mb-2">
                         <h2 className="text-base font-medium text-white">3 · Subscription ($19 USDC)</h2>
                         <Pill chip={subChip} label={subChip} />
                     </div>
                     <p className="text-sm text-gray-400 mb-3">
-                        Confirms your /api/subscription GET returns {'{'}active: true{'}'}. Pay via /paywall first —
-                        that flow is human-gated (Phantom signs).
+                        Confirms your /api/subscription GET returns {'{'}active: true{'}'}. Pay via /paywall first ,                         that flow is human-gated (Phantom signs).
                     </p>
                     <div className="flex items-center gap-2">
                         <button
@@ -411,7 +410,7 @@ export default function Part2RunnerPage() {
                     <RefLine requestId={subRequestId} />
                 </section>
 
-                {/* Step 4 — Gmail draft */}
+                {/* Step 4, Gmail draft */}
                 <section className="p-5 rounded-2xl border border-white/10 bg-foreground/[0.04]">
                     <div className="flex items-center justify-between mb-2">
                         <h2 className="text-base font-medium text-white">4 · Gmail draft</h2>
@@ -419,7 +418,7 @@ export default function Part2RunnerPage() {
                     </div>
                     <p className="text-sm text-gray-400 mb-3">
                         Creates a real draft in your Gmail inbox via /api/tools/gmail.draft. x402-gated ($0.01 USDC).
-                        No inbox content is shown — we only read the `from` addresses off gmail.list to populate recent senders.
+                        No inbox content is shown, we only read the `from` addresses off gmail.list to populate recent senders.
                     </p>
                     <div className="space-y-3">
                         <div>
@@ -482,7 +481,7 @@ export default function Part2RunnerPage() {
                     </div>
                 </section>
 
-                {/* Step 5 — Calendar create */}
+                {/* Step 5, Calendar create */}
                 <section className="p-5 rounded-2xl border border-white/10 bg-foreground/[0.04]">
                     <div className="flex items-center justify-between mb-2">
                         <h2 className="text-base font-medium text-white">5 · Calendar event</h2>
@@ -561,7 +560,7 @@ export default function Part2RunnerPage() {
                                         <span className="text-gray-500">{r.created_at ? new Date(r.created_at).toLocaleString() : ''}</span>
                                     </div>
                                     <div className="mt-1 text-[10px] font-mono text-gray-500 truncate">
-                                        sig {r.signature?.slice(0, 16) ?? '—'}…  hash {r.payload_hash?.slice(0, 16) ?? '—'}…
+                                        sig {r.signature?.slice(0, 16) ?? ','}…  hash {r.payload_hash?.slice(0, 16) ?? ','}…
                                     </div>
                                 </li>
                             ))}
@@ -584,7 +583,7 @@ function ResultPanel({ result }: { result: ToolResult }) {
             <div className="flex items-center gap-2 mb-1">
                 {ok ? <CheckCircle2 size={14} className="text-emerald-400" /> : <XCircle size={14} className="text-red-400" />}
                 <span className={`font-mono ${ok ? 'text-emerald-300' : 'text-red-300'}`}>
-                    {result.tool}.{result.action} — {ok ? 'executed' : 'failed'}
+                    {result.tool}.{result.action}, {ok ? 'executed' : 'failed'}
                 </span>
             </div>
             {!ok && result.error ? (
