@@ -3,7 +3,7 @@
  *
  * Stored in localStorage. When encryption is configured, entries are
  * encrypted at rest via lib/encryption.ts. Used by the Security page and
- * the Council Decides demo flow to show cryptographic proof of actions.
+ * the Security page to show cryptographic proof of actions.
  */
 
 export interface AuditEntry {

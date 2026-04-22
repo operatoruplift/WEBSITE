@@ -26,7 +26,7 @@ const faqs = [
   },
   {
     q: 'What are agents and swarms?',
-    a: 'Agents are AI assistants specialized for tasks like code review, research, or data analysis. Swarms are multi-agent teams that collaborate: sequential pipelines, parallel execution, debate topologies, or LLM councils where 5 agents argue and a chairman synthesizes.',
+    a: 'Agents are AI assistants specialized for tasks like code review, research, or data analysis. Swarms are multi-agent teams that collaborate via sequential pipelines, parallel execution, or debate topologies. The default chat flow uses one model per message so you see exactly what ran.',
   },
   {
     q: 'How does pricing work?',

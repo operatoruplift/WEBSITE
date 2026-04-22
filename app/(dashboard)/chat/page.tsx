@@ -6,12 +6,11 @@ import { GlowButton } from '@/src/components/ui/GlowButton';
 import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
-import { hasToolCalls, parseToolCalls, stripToolBlocks, formatToolResult, getToolSystemPrompt } from '@/lib/toolCalls';
+import { hasToolCalls, parseToolCalls, stripToolBlocks, formatToolResult, getToolSystemPrompt, extractToolCallsFromText } from '@/lib/toolCalls';
 import type { ToolCall, ToolResult } from '@/lib/toolCalls';
 import { ToolApprovalModal } from '@/src/components/ui/ToolApprovalModal';
-import { runCouncil, shouldUseCouncil, extractToolCallsFromText, type CouncilResult } from '@/lib/council';
 
-interface Message { id: string; role: 'user' | 'assistant'; content: string; timestamp: Date; model?: string; councilTranscript?: CouncilResult['transcript']; requestId?: string; }
+interface Message { id: string; role: 'user' | 'assistant'; content: string; timestamp: Date; model?: string; requestId?: string; }
 interface ChatSession { id: string; title: string; messages: Message[]; createdAt: Date; model: string; }
 
 interface Capabilities {
@@ -155,8 +154,6 @@ export default function ChatPage() {
     const [sidebarSearch, setSidebarSearch] = useState('');
     const [pendingToolCall, setPendingToolCall] = useState<ToolCall | null>(null);
     const toolCallResolveRef = useRef<((result: ToolResult | null) => void) | null>(null);
-    const [councilProcessing, setCouncilProcessing] = useState(false);
-    const [expandedCouncil, setExpandedCouncil] = useState<string | null>(null); // message ID to show transcript
     const [capabilities, setCapabilities] = useState<Capabilities>(DEMO_CAPABILITIES);
     const [capsLoaded, setCapsLoaded] = useState(false);
     const [demoBannerDismissed, setDemoBannerDismissed] = useState(false);
@@ -266,146 +263,13 @@ export default function ChatPage() {
         const toolPrompt = getToolSystemPrompt();
         const baseSystemPrompt = `You are a helpful AI assistant on the Operator Uplift platform. You are concise, accurate, and helpful.${memoryContext}${toolPrompt}`;
 
-        // ── Council routing: route substantive messages through 5-agent debate ──
-        if (shouldUseCouncil(userMessage.content)) {
-            setCouncilProcessing(true);
-            const councilMsgId = `council-${Date.now()}`;
-
-            // Show "Council processing..." placeholder
-            setSessions(prev => prev.map(s => s.id === sessionId ? {
-                ...s,
-                messages: [...s.messages, { id: councilMsgId, role: 'assistant' as const, content: '*Council processing — 5 agents debating...*', timestamp: new Date(), model: 'LLM Council' }],
-            } : s));
-
-            try {
-                const history = (currentSession?.messages || []).map(m => ({ role: m.role, content: m.content }));
-                const result = await runCouncil(userMessage.content, history, toolPrompt);
-
-                // Update message with clean synthesis (tool JSON already stripped by council.ts)
-                setSessions(prev => prev.map(s => s.id === sessionId ? {
-                    ...s,
-                    messages: s.messages.map(m => m.id === councilMsgId ? {
-                        ...m,
-                        content: result.synthesis,
-                        councilTranscript: result.transcript,
-                    } : m),
-                } : s));
-
-                // Execute any tool calls the Chairman decided on
-                // (extracted by council.ts, not parsed from the text the user sees)
-                if (result.toolCalls.length > 0) {
-                    setSessions(prev => prev.map(s => s.id === sessionId ? {
-                        ...s,
-                        messages: s.messages.map(m => m.id === councilMsgId ? {
-                            ...m,
-                            content: result.synthesis + '\n\n*Executing tool...*',
-                        } : m),
-                    } : s));
-
-                    let toolResults = '';
-                    for (const tc of result.toolCalls) {
-                        // Convert ExtractedToolCall to ToolCall format for the approval modal
-                        const call: ToolCall = {
-                            id: `tc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-                            tool: tc.tool as ToolCall['tool'],
-                            action: tc.action,
-                            params: tc.params,
-                            rawBlock: JSON.stringify(tc),
-                        };
-                        const toolResult = await requestChatToolApproval(call);
-                        if (toolResult) {
-                            toolResults += '\n\n' + formatToolResult(toolResult);
-                        } else {
-                            toolResults += `\n\n**Tool Denied** — ${tc.tool}.${tc.action} was not approved.`;
-                        }
-                    }
-
-                    // Show tool results
-                    const contentAfterTools = result.synthesis + toolResults;
-                    setSessions(prev => prev.map(s => s.id === sessionId ? {
-                        ...s,
-                        messages: s.messages.map(m => m.id === councilMsgId ? {
-                            ...m,
-                            content: contentAfterTools,
-                            councilTranscript: result.transcript,
-                        } : m),
-                    } : s));
-
-                    // Continuation: feed tool results back to Chairman for follow-up
-                    // (e.g., after free_slots returns, Chairman presents slots + may create event)
-                    if (toolResults && !toolResults.includes('Tool Denied')) {
-                        try {
-                            const continuationRes = await fetch('/api/chat', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    message: `Tool results:\n${toolResults}\n\nContinue helping the user. Present the results clearly. If more actions are needed (create event, send email), emit the next tool call.`,
-                                    model: 'claude-sonnet-4-6',
-                                    history: [...(currentSession?.messages || []).map(m => ({ role: m.role, content: m.content })),
-                                        { role: 'assistant', content: result.synthesis },
-                                        { role: 'user', content: `Tool results: ${toolResults}` }],
-                                    systemPrompt: toolPrompt,
-                                }),
-                            });
-                            if (continuationRes.ok && continuationRes.body) {
-                                const reader = continuationRes.body.getReader();
-                                const decoder = new TextDecoder();
-                                let followUp = '';
-                                while (true) {
-                                    const { done, value } = await reader.read();
-                                    if (done) break;
-                                    followUp += decoder.decode(value, { stream: true });
-                                }
-                                if (followUp) {
-                                    // Check for more tool calls in the follow-up
-                                    const { cleanText: followClean, toolCalls: followCalls } = extractToolCallsFromText(followUp);
-
-                                    const followUpMsgId = `follow-${Date.now()}`;
-                                    setSessions(prev => prev.map(s => s.id === sessionId ? {
-                                        ...s,
-                                        messages: [...s.messages, { id: followUpMsgId, role: 'assistant' as const, content: followClean, timestamp: new Date(), model: 'LLM Council' }],
-                                    } : s));
-
-                                    // Execute any follow-up tool calls
-                                    if (followCalls && followCalls.length > 0) {
-                                        let moreResults = '';
-                                        for (const ftc of followCalls) {
-                                            const fCall: ToolCall = {
-                                                id: `tc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-                                                tool: ftc.tool as ToolCall['tool'],
-                                                action: ftc.action,
-                                                params: ftc.params,
-                                                rawBlock: JSON.stringify(ftc),
-                                            };
-                                            const fResult = await requestChatToolApproval(fCall);
-                                            if (fResult) moreResults += '\n\n' + formatToolResult(fResult);
-                                            else moreResults += `\n\n**Tool Denied** — ${ftc.tool}.${ftc.action}`;
-                                        }
-                                        setSessions(prev => prev.map(s => s.id === sessionId ? {
-                                            ...s,
-                                            messages: s.messages.map(m => m.id === followUpMsgId ? { ...m, content: followClean + moreResults } : m),
-                                        } : s));
-                                    }
-                                }
-                            }
-                        } catch { /* continuation is best-effort */ }
-                    }
-                }
-            } catch (councilErr) {
-                const errMsg = councilErr instanceof Error ? councilErr.message : 'Council error';
-                const content = `**LLM Council is temporarily unavailable.** Try again in a moment, or switch to a single model from the selector above.\n\n*Detail: ${errMsg}*`;
-                setSessions(prev => prev.map(s => s.id === sessionId ? {
-                    ...s,
-                    messages: s.messages.map(m => m.id === councilMsgId ? { ...m, content } : m),
-                } : s));
-            } finally {
-                setCouncilProcessing(false);
-                setIsLoading(false);
-            }
-            return; // Council handled this message — skip the direct LLM path
-        }
-
-        // ── Direct LLM path (short messages, greetings, follow-ups) ──
+        // Single deterministic execution flow (W1A-honesty-1). Every
+        // message goes through one LLM call with the selected model.
+        // Tool calls the model emits are routed through the approval
+        // modal as before. No multi-persona debate, no fabricated
+        // "Chairman" branding, no fake request IDs. If a tool call
+        // fails, the failure is surfaced once, verbatim from the
+        // envelope, with requestId.
 
         // Tool-call continuation loop: keeps calling the LLM until it returns a
         // final response with no <tool_use> blocks. Max 6 iterations to prevent
@@ -515,7 +379,7 @@ export default function ChatPage() {
                             firstFailureRequestId = result.requestId;
                         }
                     } else {
-                        toolResults += `\n\n**Tool Denied** — ${call.tool}.${call.action} was not approved.`;
+                        toolResults += `\n\n**Tool denied.** ${call.tool}.${call.action} was not approved.`;
                         anyDenied = true;
                     }
                 }
@@ -681,33 +545,13 @@ export default function ChatPage() {
                                                             {copiedId === `${msg.id}-reqid` ? 'Copied' : 'Copy Request ID'}
                                                         </button>
                                                     )}
-                                                    {msg.councilTranscript && (
-                                                        <button onClick={() => setExpandedCouncil(expandedCouncil === msg.id ? null : msg.id)} className="opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/80 border border-foreground/10 text-gray-400 hover:text-white transition-all text-[10px] font-mono shadow-xl">
-                                                            <Brain size={12} className="text-[#F97316]" /> {expandedCouncil === msg.id ? 'Hide' : 'View'} Council
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            )}
-                                            {/* Council reasoning transcript */}
-                                            {msg.councilTranscript && expandedCouncil === msg.id && (
-                                                <div className="mt-3 p-3 rounded-lg bg-foreground/[0.04] border border-foreground/10 space-y-2">
-                                                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">Council Debate Transcript</p>
-                                                    {msg.councilTranscript.map((agent) => (
-                                                        <div key={agent.agentId} className="p-2 rounded bg-foreground/[0.03] border border-foreground/10">
-                                                            <div className="flex items-center gap-2 mb-1">
-                                                                <span className="text-[10px] font-bold text-[#F97316]">{agent.agentName}</span>
-                                                                <span className="text-[9px] text-gray-600 font-mono">{agent.durationMs}ms</span>
-                                                            </div>
-                                                            <p className="text-xs text-gray-400 leading-relaxed">{agent.output}</p>
-                                                        </div>
-                                                    ))}
                                                 </div>
                                             )}
                                         </div>
                                         {msg.role === 'user' && <div className="h-8 w-8 rounded-full bg-foreground/[0.04] flex items-center justify-center shrink-0"><User size={16} className="text-white" /></div>}
                                     </div>
                                 ))}
-                                {isLoading && <div className="flex gap-4"><div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 bg-foreground/[0.04]">{councilProcessing ? <Brain size={16} className="text-[#F97316]" /> : <Bot size={16} className="text-gray-400" />}</div><div className="bg-foreground/[0.04] border border-foreground/10 rounded-xl rounded-bl-md px-4 py-3"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#F97316] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{councilProcessing ? '5 agents debating...' : `${activeModel.label} is thinking...`}</span></div></div></div>}
+                                {isLoading && <div className="flex gap-4"><div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 bg-foreground/[0.04]"><Bot size={16} className="text-gray-400" /></div><div className="bg-foreground/[0.04] border border-foreground/10 rounded-xl rounded-bl-md px-4 py-3"><div className="flex items-center gap-2"><div className="flex gap-1">{[0,150,300].map(delay => <span key={delay} className="w-2 h-2 rounded-full bg-[#F97316] animate-bounce" style={{ animationDelay: `${delay}ms` }} />)}</div><span className="text-[10px] font-mono text-gray-600">{`${activeModel.label} is thinking...`}</span></div></div></div>}
                                 <div ref={messagesEndRef} />
                             </div>
                         )}
