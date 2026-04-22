@@ -1,9 +1,9 @@
 /**
- * SNS (Solana Name Service) resolver — server-side.
+ * SNS (Solana Name Service) resolver, server-side.
  *
  * Resolves `.sol` domains (and `.sol.site` browser aliases) via the
  * Bonfida SNS proxy. We deliberately use the public proxy instead of
- * pulling `@bonfida/spl-name-service` into the bundle — the proxy is
+ * pulling `@bonfida/spl-name-service` into the bundle, the proxy is
  * cached by Bonfida, so this one external call per domain per 10 min
  * is cheaper than shipping the SDK's crypto deps.
  *
@@ -77,7 +77,7 @@ async function fetchOwner(domain: string): Promise<string | null> {
 
 /**
  * Resolve a `.sol` name. Returns a cached entry when one exists and is
- * under TTL. Never throws — on any network failure returns the shape
+ * under TTL. Never throws, on any network failure returns the shape
  * with `error` set, so the caller can render a gentle fallback.
  */
 export async function resolveSolDomain(rawName: string): Promise<SnsResolution> {

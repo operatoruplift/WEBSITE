@@ -1,5 +1,5 @@
 /**
- * MagicBlock adapter — Ephemeral Rollup (ER) integration.
+ * MagicBlock adapter, Ephemeral Rollup (ER) integration.
  *
  * MagicBlock runs public ER validators that speak regular Solana
  * JSON-RPC. Point a `Connection` at one of them and every ix you
@@ -14,10 +14,10 @@
  * `executed_via: 'solana-devnet'`.
  *
  * Env:
- *   NEXT_PUBLIC_MAGICBLOCK_ENABLED — turn on ER routing (0/1).
- *   MAGICBLOCK_CLUSTER             — 'devnet' (default) | 'mainnet'.
- *   MAGICBLOCK_REGION              — 'us' (default) | 'eu' | 'as' | 'tee'.
- *   MAGICBLOCK_RPC                 — full override. If set, used verbatim
+ *   NEXT_PUBLIC_MAGICBLOCK_ENABLED, turn on ER routing (0/1).
+ *   MAGICBLOCK_CLUSTER            , 'devnet' (default) | 'mainnet'.
+ *   MAGICBLOCK_REGION             , 'us' (default) | 'eu' | 'as' | 'tee'.
+ *   MAGICBLOCK_RPC                , full override. If set, used verbatim
  *                                    instead of the region/cluster pair.
  */
 
@@ -97,7 +97,7 @@ export function getMagicBlockAdapter(): MagicBlockAdapter {
 
 /**
  * Surface status for /demo/hackathon + Truth Table. Honest labels
- * only — if the flag is off, we report Inactive even with the
+ * only, if the flag is off, we report Inactive even with the
  * validator list known.
  */
 export function magicBlockSurfaceStatus(): {

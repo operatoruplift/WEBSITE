@@ -1,5 +1,5 @@
 /**
- * Tool registry — single source of truth for what tools exist, what tier
+ * Tool registry, single source of truth for what tools exist, what tier
  * they belong to, and what capability they require.
  *
  * Used by:
@@ -37,7 +37,7 @@ export const TOOL_REGISTRY: ToolMeta[] = [
     { id: 'tasks.create', tool: 'tasks', action: 'create', label: 'Create task', description: 'Add a task to your list.', tier: 1, requires: 'none' },
     { id: 'tasks.list', tool: 'tasks', action: 'list', label: 'List tasks', description: 'List your pending tasks.', tier: 1, requires: 'none' },
     { id: 'reminders.schedule', tool: 'reminders', action: 'schedule', label: 'Schedule reminder', description: 'Schedule an iMessage-style nudge.', tier: 1, requires: 'none' },
-    // Tokens API — Solana market/price/risk data. Server-held key so
+    // Tokens API, Solana market/price/risk data. Server-held key so
     // the user doesn't need to connect anything; Tier 1 / none-required.
     { id: 'tokens.search', tool: 'tokens', action: 'search', label: 'Search token', description: 'Find a Solana token by name or symbol.', tier: 1, requires: 'none' },
     { id: 'tokens.price', tool: 'tokens', action: 'price', label: 'Token price chart', description: 'OHLCV candles for a canonical asset.', tier: 1, requires: 'none' },
@@ -75,7 +75,7 @@ export const TOOL_REGISTRY: ToolMeta[] = [
 
     // iMessage via the Photon adapter (lib/photon/adapter.ts). Tier 2
     // because a real provider key has to be configured; the registry
-    // treats `requires: 'photon'` as "configured server-side" — we
+    // treats `requires: 'photon'` as "configured server-side", we
     // don't expose that env state to clients.
     { id: 'imessage.send', tool: 'imessage', action: 'send', label: 'Send iMessage', description: 'Send an iMessage via the Photon adapter.', tier: 2, requires: 'photon' },
 ];
@@ -103,7 +103,7 @@ export function isToolAvailable(meta: ToolMeta, caps: CapabilityState): boolean 
     // `photon` and `tokens` are server-env-configured, not per-user.
     // The handler routes enforce the real config check. We treat them
     // as available so the modal isn't greyed out when the server has
-    // the key — the route will 503 honestly if it doesn't.
+    // the key, the route will 503 honestly if it doesn't.
     if (meta.requires === 'photon' || meta.requires === 'tokens') return true;
     // External-provider tools (slack, linear, jira, notion, github, stripe,
     // twilio) are all comingSoon in May 14, so we never reach here. Return

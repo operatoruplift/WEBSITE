@@ -25,7 +25,7 @@ const ProblemStatement: React.FC = () => {
       </div>
 
       <div className="w-full max-w-[1200px] pb-24 relative z-10">
-        {/* Big number callout — all centered */}
+        {/* Big number callout, all centered */}
         <div className="flex flex-col items-center text-center mb-20">
           {/* Tag centered above the number */}
           <FadeIn>
@@ -36,7 +36,7 @@ const ProblemStatement: React.FC = () => {
             </div>
           </FadeIn>
 
-          {/* Number with ghost behind — clear vertical spacing */}
+          {/* Number with ghost behind, clear vertical spacing */}
           <div className="relative mb-6">
             <span className="text-[120px] md:text-[180px] font-black leading-[0.85] text-white/[0.03] select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
               {problem.stat}

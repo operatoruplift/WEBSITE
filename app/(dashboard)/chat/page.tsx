@@ -45,8 +45,7 @@ const AGENTS = [
 /**
  * Consumer-first prompt suggestions (May 14 positioning).
  *
- * The three demo beats — daily briefing, inbox triage, reminders vibe —
- * lead. These are the first things a cold visitor sees on /chat and each
+ * The three demo beats, daily briefing, inbox triage, reminders vibe ,  * lead. These are the first things a cold visitor sees on /chat and each
  * maps to a real workflow the product can actually run (approval modal,
  * Google tool, or Tier 1 tool in demo mode). Dev-focused prompts demoted
  * to the bottom so they don't steal the first impression.
@@ -135,7 +134,7 @@ function CapabilityBadge({ capabilities, loaded }: { capabilities: Capabilities;
     }
     return (
         <span
-            title="Demo mode — every reply and tool action is simulated"
+            title="Demo mode, every reply and tool action is simulated"
             className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest bg-[#F97316]/10 border border-[#F97316]/30 text-[#F97316]"
         >
             <span className="w-1.5 h-1.5 rounded-full bg-[#F97316]" /> Demo · Simulated
@@ -189,7 +188,7 @@ export default function ChatPage() {
             .catch(() => setCapabilities(DEMO_CAPABILITIES))
             .finally(() => setCapsLoaded(true));
 
-        // Pinned daily briefing — only fetched when authenticated. The
+        // Pinned daily briefing, only fetched when authenticated. The
         // /api/notifications/pinned route returns rows from the
         // `notifications` table whose pinned_until > now(). Demo users
         // never get one because they can't opt in from Profile.
@@ -318,7 +317,7 @@ export default function ChatPage() {
                 });
 
                 if (!response.ok || !response.body) {
-                    // API error — show a calm, actionable message. Include
+                    // API error, show a calm, actionable message. Include
                     // the request ID so support can trace it.
                     let content: string;
                     const requestId = response.headers.get('x-request-id') || '';
@@ -369,12 +368,12 @@ export default function ChatPage() {
 
                 // Check for tool calls
                 if (!hasToolCalls(content)) {
-                    // No tool calls — this is the final response. Add to history and stop.
+                    // No tool calls, this is the final response. Add to history and stop.
                     history.push({ role: 'assistant', content });
                     break;
                 }
 
-                // Has tool calls — execute them, then continue the loop
+                // Has tool calls, execute them, then continue the loop
                 const calls = parseToolCalls(content);
                 const cleanContent = stripToolBlocks(content);
 
@@ -421,10 +420,10 @@ export default function ChatPage() {
                 history.push({ role: 'assistant', content: cleanContent });
                 history.push({ role: 'user', content: `Tool results:\n${toolResults}` });
 
-                // If a tool was denied, stop the chain — don't continue with partial context
+                // If a tool was denied, stop the chain, don't continue with partial context
                 if (anyDenied) break;
 
-                // Otherwise, loop continues — LLM gets called again with the tool results
+                // Otherwise, loop continues, LLM gets called again with the tool results
             }
         } catch (err) {
             const errorMsg = err instanceof Error ? err.message : 'Network error';
@@ -489,8 +488,8 @@ export default function ChatPage() {
                             <Sparkles size={14} className="text-[#F97316] shrink-0" />
                             <p className="text-xs text-[#F97316] flex-1">
                                 {capabilities.authenticated
-                                    ? 'You\'re signed in but no Google or API key is connected — every reply is simulated.'
-                                    : 'Anonymous demo — every reply and tool action is simulated.'}
+                                    ? 'You\'re signed in but no Google or API key is connected, every reply is simulated.'
+                                    : 'Anonymous demo, every reply and tool action is simulated.'}
                                 {' '}
                                 <a href="/integrations" className="underline hover:text-white">Connect Google</a>
                                 {' or '}
@@ -580,7 +579,7 @@ export default function ChatPage() {
                         <div className="max-w-4xl mx-auto">
                             <div className="flex items-end gap-3 p-3 rounded-lg bg-foreground/[0.04] border border-foreground/10 focus-within:border-[#F97316]/40 transition-all">
                                 <button onClick={createNewSession} aria-label="New chat" className="p-2 rounded-xl text-gray-500 hover:text-white hover:bg-white/10 transition-all md:hidden shrink-0"><Plus size={20} /></button>
-                                {/* TODO: Agent selector — load installed agents from localStorage('installed-agents') + localStorage('custom-agents'),
+                                {/* TODO: Agent selector, load installed agents from localStorage('installed-agents') + localStorage('custom-agents'),
                                    show a dropdown to pick an agent whose system prompt seeds the conversation.
                                    For now, the agent personas (General/Code/Research) in the top bar serve this role. */}
                                 <button onClick={() => showToast('File attachments coming soon', 'info')} aria-label="Attach file" className="p-2 rounded-xl text-gray-600 hover:text-gray-400 hover:bg-foreground/[0.06] transition-all shrink-0"><Paperclip size={18} /></button>

@@ -7,7 +7,7 @@
  */
 import { PublicKey, Connection, LAMPORTS_PER_SOL } from '@solana/web3.js';
 
-// Treasury wallet — receives early-access payments
+// Treasury wallet, receives early-access payments
 const TREASURY_WALLET = process.env.NEXT_PUBLIC_TREASURY_WALLET || 'UpL1ft11111111111111111111111111111111111111';
 const SOLANA_RPC = process.env.NEXT_PUBLIC_SOLANA_RPC || 'https://api.mainnet-beta.solana.com';
 const EARLY_ACCESS_PRICE_SOL = 0.1;

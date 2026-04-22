@@ -1,5 +1,5 @@
 /**
- * Tool call interceptor — parses LLM output for tool-call intent,
+ * Tool call interceptor, parses LLM output for tool-call intent,
  * executes approved calls, logs to the audit trail.
  *
  * The LLM emits tool calls as <tool_use> JSON blocks in its text output.
@@ -41,7 +41,7 @@ export interface ToolResult {
     nextAction?: string;
 }
 
-// Match <tool_use> blocks — also handles cases where LLM wraps in backticks or code fences
+// Match <tool_use> blocks, also handles cases where LLM wraps in backticks or code fences
 const TOOL_USE_REGEX = /(?:```\w*\n?)?<tool_use>\s*([\s\S]*?)\s*<\/tool_use>(?:\n?```)?/g;
 
 /** Extract tool-call blocks from LLM output text. */
@@ -63,7 +63,7 @@ export function parseToolCalls(text: string): ToolCall[] {
                 });
             }
         } catch {
-            // Malformed JSON in tool block — skip
+            // Malformed JSON in tool block, skip
         }
     }
 
@@ -191,7 +191,7 @@ export function extractToolCallsFromText(text: string): {
 }
 
 /**
- * Execute a tool call in Demo mode — returns a deterministic Simulated result.
+ * Execute a tool call in Demo mode, returns a deterministic Simulated result.
  *
  * Never hits any external API. Never writes to Supabase. Never produces a
  * receipt. Safe to call from anonymous visitors and from authenticated
@@ -266,7 +266,7 @@ export async function executeToolCall(
             agent_id: opts.agentId ?? null,
         });
 
-        // First attempt — no payment proof
+        // First attempt, no payment proof
         let res = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', ...authHeader },
@@ -307,7 +307,7 @@ export async function executeToolCall(
                     // bucket codes. Fall back to the old shape for older deploys.
                     error: [
                         payErr.message || `Payment failed: ${payErr.error || payRes.status}`,
-                        payErr.reason && !payErr.message ? `— ${payErr.reason}` : null,
+                        payErr.reason && !payErr.message ? `, ${payErr.reason}` : null,
                         payErr.action_required ? `(${payErr.action_required})` : null,
                     ].filter(Boolean).join(' '),
                 };
@@ -393,10 +393,10 @@ export function formatToolResult(result: ToolResult): string {
 
     // Demo-mode: prefix every rendered result with a Simulated tag so the
     // viewer never confuses a mock call with a real side-effect.
-    const simulatedTag = result.simulated ? '*(Simulated — sign in to make it real)*\n\n' : '';
+    const simulatedTag = result.simulated ? '*(Simulated, sign in to make it real)*\n\n' : '';
 
     const data = result.data as Record<string, unknown> | undefined;
-    if (!data) return `${simulatedTag}**${result.tool}.${result.action}** — completed.`;
+    if (!data) return `${simulatedTag}**${result.tool}.${result.action}**, completed.`;
 
     // Calendar results
     if (result.tool === 'calendar' && result.action === 'free_slots' && Array.isArray(data.slots)) {
@@ -405,13 +405,13 @@ export function formatToolResult(result: ToolResult): string {
             const start = new Date(s.start);
             return `${i + 1}. **${start.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}** at ${start.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} (${s.durationMinutes}min)`;
         });
-        return `${simulatedTag}**Calendar — Free Slots Found:**\n${lines.join('\n')}`;
+        return `${simulatedTag}**Calendar, Free Slots Found:**\n${lines.join('\n')}`;
     }
 
     if (result.tool === 'calendar' && result.action === 'create' && data.event) {
         const evt = data.event as { summary: string; start: string; htmlLink?: string };
         const start = new Date(evt.start);
-        return `${simulatedTag}**Calendar Event Created:** "${evt.summary}" on ${start.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })} at ${start.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}${evt.htmlLink ? ` — [View](${evt.htmlLink})` : ''}`;
+        return `${simulatedTag}**Calendar Event Created:** "${evt.summary}" on ${start.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })} at ${start.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}${evt.htmlLink ? `, [View](${evt.htmlLink})` : ''}`;
     }
 
     if (result.tool === 'calendar' && result.action === 'list' && Array.isArray(data.events)) {
@@ -419,7 +419,7 @@ export function formatToolResult(result: ToolResult): string {
         if (events.length === 0) return `${simulatedTag}**Calendar:** No upcoming events found.`;
         const lines = events.slice(0, 5).map(e => {
             const d = new Date(e.start);
-            return `- ${d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} ${d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} — ${e.summary}`;
+            return `- ${d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} ${d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}, ${e.summary}`;
         });
         return `${simulatedTag}**Upcoming Events (${events.length}):**\n${lines.join('\n')}`;
     }
@@ -442,16 +442,16 @@ export function formatToolResult(result: ToolResult): string {
         return `${simulatedTag}**Recent Emails (${msgs.length}):**\n${lines.join('\n')}`;
     }
 
-    // Reminders — the 3rd demo beat
+    // Reminders, the 3rd demo beat
     if (result.tool === 'reminders' && result.action === 'schedule') {
-        return `${simulatedTag}**Reminder scheduled** — ${data.message ?? 'Nudge queued for tomorrow.'}`;
+        return `${simulatedTag}**Reminder scheduled**, ${data.message ?? 'Nudge queued for tomorrow.'}`;
     }
 
-    // Tokens API — market + price + risk
+    // Tokens API, market + price + risk
     if (result.tool === 'tokens' && result.action === 'search' && Array.isArray(data.results)) {
         const hits = data.results as { assetId?: string; symbol?: string; name?: string }[];
         if (hits.length === 0) return `${simulatedTag}**Tokens:** no matches.`;
-        const lines = hits.slice(0, 6).map(h => `- **${h.symbol ?? h.assetId}** — ${h.name ?? h.assetId}`);
+        const lines = hits.slice(0, 6).map(h => `- **${h.symbol ?? h.assetId}**, ${h.name ?? h.assetId}`);
         return `${simulatedTag}**Token search (${hits.length}):**\n${lines.join('\n')}`;
     }
     if (result.tool === 'tokens' && result.action === 'price' && Array.isArray(data.candles)) {
@@ -460,10 +460,10 @@ export function formatToolResult(result: ToolResult): string {
         const first = candles[0];
         const change = first && last ? ((last.c - first.c) / first.c) * 100 : 0;
         const arrow = change >= 0 ? '▲' : '▼';
-        return `${simulatedTag}**${data.assetId} price (${data.interval ?? '1h'}):** $${last?.c?.toFixed(2) ?? '—'} ${arrow} ${change.toFixed(2)}% (${candles.length} candles).`;
+        return `${simulatedTag}**${data.assetId} price (${data.interval ?? '1h'}):** $${last?.c?.toFixed(2) ?? ','} ${arrow} ${change.toFixed(2)}% (${candles.length} candles).`;
     }
     if (result.tool === 'tokens' && result.action === 'risk') {
-        return `${simulatedTag}**Risk score:** ${data.grade ?? '—'} (${data.score ?? '—'}/100) — ${data.label ?? 'no label'}.`;
+        return `${simulatedTag}**Risk score:** ${data.grade ?? ','} (${data.score ?? ','}/100), ${data.label ?? 'no label'}.`;
     }
     if (result.tool === 'tokens' && result.action === 'markets' && Array.isArray(data.markets)) {
         const mkts = data.markets as { dex?: string; pair?: string; liquidity_usd?: number }[];
@@ -477,7 +477,7 @@ export function formatToolResult(result: ToolResult): string {
     // iMessage (via Photon adapter)
     if (result.tool === 'imessage' && result.action === 'send') {
         const sent = (data.sent ?? data) as { messageId?: string; provider?: string };
-        return `${simulatedTag}**iMessage sent** (id: \`${(sent.messageId ?? '—').slice(0, 10)}...\`).`;
+        return `${simulatedTag}**iMessage sent** (id: \`${(sent.messageId ?? ',').slice(0, 10)}...\`).`;
     }
 
     // Generic fallback
@@ -519,7 +519,7 @@ You have access to the user's Google Calendar and Gmail. When you need to take a
 {"tool": "gmail", "action": "send", "params": {"to": "recipient@example.com", "subject": "Subject", "body": "Plain-text fallback", "html": "<p>Optional HTML body.</p>"}}
 </tool_use>
 
-When the user asks for an HTML-formatted / professional / presentable email, populate BOTH the "body" field (short plain-text fallback for clients that strip HTML) and the "html" field (the full styled message). Do NOT put raw HTML tags in "body" alone — that sends the tags as literal text.
+When the user asks for an HTML-formatted / professional / presentable email, populate BOTH the "body" field (short plain-text fallback for clients that strip HTML) and the "html" field (the full styled message). Do NOT put raw HTML tags in "body" alone, that sends the tags as literal text.
 
 ### Tokens (Solana market + price + risk data)
 
@@ -547,13 +547,13 @@ Use tokens.search first when the user mentions a token by name/symbol; feed the 
 {"tool": "imessage", "action": "send", "params": {"to": "+15551234567", "text": "Plain-text fallback", "subject": "Optional"}}
 </tool_use>
 
-Only emit this when the user explicitly asks to text someone. The recipient should be an E.164 phone number or the user's known iMessage alias. Never auto-bundle a text with an email — ask the user which channel they want.
+Only emit this when the user explicitly asks to text someone. The recipient should be an E.164 phone number or the user's known iMessage alias. Never auto-bundle a text with an email, ask the user which channel they want.
 
 ## Behavioral Rules
 
-1. ACT FIRST, then ask. When the user wants to schedule a meeting, immediately emit a calendar.free_slots tool call. Do NOT ask for details first. Present 2-3 available slots, THEN ask "Who should I invite?" — one question only.
+1. ACT FIRST, then ask. When the user wants to schedule a meeting, immediately emit a calendar.free_slots tool call. Do NOT ask for details first. Present 2-3 available slots, THEN ask "Who should I invite?", one question only.
 2. Maximum 1 clarifying question per response. Never ask 2+ questions before acting. If you can infer reasonable defaults, use them and act.
-3. ALWAYS use <tool_use> blocks for actions. Do not describe what you would do — emit the tool call.
+3. ALWAYS use <tool_use> blocks for actions. Do not describe what you would do, emit the tool call.
 4. Each tool call will be shown to the user for approval before executing.
 5. After the tool executes, you'll receive the result and can continue your response.
 6. Only emit ONE tool call per response. Wait for the result before emitting another.

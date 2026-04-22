@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     try {
         const caps = await getCapabilities(request);
 
-        // Demo branch — capability_real is false. Canned replies only,
+        // Demo branch, capability_real is false. Canned replies only,
         // zero API spend, 10/hr/IP. Never writes to Supabase.
         if (!caps.capability_real) {
             const ip = getClientIp(request);
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
             });
         }
 
-        // Real branch — authenticated + capability_real true.
+        // Real branch, authenticated + capability_real true.
         // Rate limit by verified user ID.
         const rl = await checkRateLimit(caps.userId!, 'free'); // TODO: check user tier for 'pro'
         if (!rl.allowed) {

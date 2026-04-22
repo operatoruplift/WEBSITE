@@ -1,5 +1,5 @@
 /**
- * Google Calendar integration — server-side helpers.
+ * Google Calendar integration, server-side helpers.
  *
  * Every function takes a userId and internally fetches + refreshes
  * the OAuth tokens via lib/google/oauth.ts. Caller never touches tokens.
@@ -109,7 +109,7 @@ export async function findFreeSlots(
         end: new Date(b.end!).getTime(),
     }));
 
-    // Build free windows between busy blocks, within 9am–6pm MYT
+    // Build free windows between busy blocks, within 9am-6pm MYT
     const slots: FreeSlot[] = [];
     const durationMs = durationMin * 60_000;
 

@@ -7,7 +7,7 @@
  * slug-based dynamic route.
  *
  * Ordering matches the sidebar. Keep the first entry as the landing
- * page — `/docs` (no slug) renders whatever is here.
+ * page, `/docs` (no slug) renders whatever is here.
  *
  * Content rule: docs must match reality. If a line in here claims a
  * behavior the code doesn't ship, rewrite or delete it.

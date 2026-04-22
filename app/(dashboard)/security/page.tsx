@@ -56,7 +56,7 @@ export default function SecurityPage() {
         setOnChainRecord(getOnChainRecord());
 
         // Then fetch server-authoritative entries from Supabase
-        // and merge — newer server entries override the local cache.
+        // and merge, newer server entries override the local cache.
         const token = localStorage.getItem('token');
         fetch('/api/audit/log?limit=100', {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -137,7 +137,7 @@ export default function SecurityPage() {
     const approvedCount = auditLog.filter(e => e.approved === true).length;
     const deniedCount = auditLog.filter(e => e.approved === false).length;
 
-    // Signed receipts — paid tool executions
+    // Signed receipts, paid tool executions
     const [receipts, setReceipts] = useState<SignedReceiptRow[]>([]);
     const [copiedReceipt, setCopiedReceipt] = useState<string | null>(null);
 
@@ -205,7 +205,7 @@ export default function SecurityPage() {
                     <div className="grid grid-cols-2 lg:grid-cols-5 gap-4" style={{ animationDelay: '100ms' }}>
                         {[
                             { label: 'Encryption', value: encConfigured ? 'AES-256-GCM' : 'Not Set', icon: Lock, color: encConfigured ? 'text-emerald-400' : 'text-amber-400', gradient: 'from-emerald-500/20 to-transparent', numeric: false },
-                            { label: 'Key Derivation', value: encConfigured ? 'PBKDF2 100K' : '—', icon: Key, color: 'text-emerald-400', gradient: 'from-emerald-500/20 to-transparent', numeric: false },
+                            { label: 'Key Derivation', value: encConfigured ? 'PBKDF2 100K' : ',', icon: Key, color: 'text-emerald-400', gradient: 'from-emerald-500/20 to-transparent', numeric: false },
                             { label: 'Total Actions', value: String(totalActions), icon: Activity, color: 'text-[#F97316]', gradient: 'from-[#F97316]/20 to-transparent', numeric: true, numVal: totalActions },
                             { label: 'Approved', value: String(approvedCount), icon: ShieldCheck, color: 'text-emerald-400', gradient: 'from-emerald-500/20 to-transparent', numeric: true, numVal: approvedCount },
                             { label: 'Denied', value: String(deniedCount), icon: AlertTriangle, color: deniedCount > 0 ? 'text-red-400' : 'text-gray-500', gradient: deniedCount > 0 ? 'from-red-500/20 to-transparent' : 'from-gray-500/20 to-transparent', numeric: true, numVal: deniedCount },
@@ -228,7 +228,7 @@ export default function SecurityPage() {
                         })}
                     </div>
 
-                    {/* Signed Receipts — x402 payment artifacts */}
+                    {/* Signed Receipts, x402 payment artifacts */}
                     <Card variant="glass" className="p-6 border-foreground/10 bg-foreground/[0.04]">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">
@@ -242,7 +242,7 @@ export default function SecurityPage() {
                         </div>
                         {receipts.length === 0 ? (
                             <p className="text-xs text-gray-500 py-6 text-center">
-                                No signed receipts yet. Approve a paid action on <a href="/chat" className="text-[#F97316] hover:underline">Chat</a> — Calendar create or Gmail draft/send — and the signed receipt will appear here.
+                                No signed receipts yet. Approve a paid action on <a href="/chat" className="text-[#F97316] hover:underline">Chat</a>, Calendar create or Gmail draft/send, and the signed receipt will appear here.
                             </p>
                         ) : (
                             <div className="space-y-2">
@@ -277,7 +277,7 @@ export default function SecurityPage() {
                     </Card>
 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6" style={{ animationDelay: '200ms' }}>
-                        {/* Left column — encryption status + emergency controls */}
+                        {/* Left column, encryption status + emergency controls */}
                         <div className="lg:col-span-4 space-y-6">
                             {/* Encryption Status */}
                             <Card variant="glass" className="p-6 border-foreground/10 bg-foreground/[0.04]">
@@ -423,7 +423,7 @@ export default function SecurityPage() {
                             </Card>
                         </div>
 
-                        {/* Right column — live audit log */}
+                        {/* Right column, live audit log */}
                         <div className="lg:col-span-8">
                             <Card variant="glass" className="p-6 h-full border-emerald-500/10 flex flex-col relative overflow-hidden bg-foreground/[0.06]">
                                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent pointer-events-none" />

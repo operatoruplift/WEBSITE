@@ -7,19 +7,19 @@ import { Activity, CheckCircle2, XCircle, Loader2, Copy, ShieldAlert } from 'luc
  * Admin-gated reliability harness at /dev/reliability.
  *
  * Runs five scripted checks against the same internal tool-call paths
- * that /chat uses. Does NOT create a parallel codepath — every check
+ * that /chat uses. Does NOT create a parallel codepath, every check
  * POSTs to the real route so any bug surfaces identically to the chat
  * flow.
  *
  * The five checks:
- *   1. calendar.list              — free read, expected 200
- *   2. calendar.free_slots        — free read, expected 200
- *   3. gmail.draft                — write, expected 402 (x402 challenge)
+ *   1. calendar.list             , free read, expected 200
+ *   2. calendar.free_slots       , free read, expected 200
+ *   3. gmail.draft               , write, expected 402 (x402 challenge)
  *                                   or 403 (google_not_connected)
- *   4. calendar.create            — write, expected 402 or 403
- *   5. /api/dev/reliability/timeout — expected 504 with calm copy
+ *   4. calendar.create           , write, expected 402 or 403
+ *   5. /api/dev/reliability/timeout, expected 504 with calm copy
  *
- * Access control happens server-side on every check route — this page
+ * Access control happens server-side on every check route, this page
  * only renders the UI and the pre-flight admin probe via /api/whoami.
  * A non-admin sees a clean "admin-only" notice with no dev surface.
  */
@@ -77,7 +77,7 @@ function makeCheck(
             const pass = isPass(httpStatus);
             const nextAction = String((data?.nextAction ?? data?.message ?? '') || (pass
                 ? 'Behaved as expected.'
-                : 'Re-run the check — upstream may be transient.'));
+                : 'Re-run the check, upstream may be transient.'));
             const detail = String(data?.error ?? data?.detail ?? data?.reason ?? '(no body)');
             return { status: pass ? 'pass' : 'fail', httpStatus, requestId, nextAction, detail };
         },
@@ -127,7 +127,7 @@ const CHECKS: Check[] = [
     makeCheck(
         'provider.timeout',
         'provider.timeout (simulated)',
-        'Admin-only. Sleeps 6s then returns 504 with calm copy — proves the calm-error path renders.',
+        'Admin-only. Sleeps 6s then returns 504 with calm copy, proves the calm-error path renders.',
         '/api/dev/reliability/timeout',
         { delayMs: 6000 },
         passIfStatusIn([504]),
@@ -302,7 +302,7 @@ export default function ReliabilityHarnessPage() {
                 </div>
 
                 <p className="mt-6 text-[10px] font-mono text-gray-600 text-center">
-                    Admin-gated. 402/403 on writes are expected — they prove x402 + google-connect gates fire.
+                    Admin-gated. 402/403 on writes are expected, they prove x402 + google-connect gates fire.
                 </p>
             </div>
         </div>

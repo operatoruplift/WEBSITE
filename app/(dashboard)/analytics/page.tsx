@@ -67,7 +67,7 @@ export default function AnalyticsPage() {
                                 <span className="text-[8px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded border bg-amber-400/10 text-amber-400 border-amber-400/20">DEMO</span>
                             </div>
                             <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Analytics</h1>
-                            <p className="text-sm text-gray-400 mt-1">Sample data — connect Supabase metrics for live analytics</p>
+                            <p className="text-sm text-gray-400 mt-1">Sample data, connect Supabase metrics for live analytics</p>
                         </div>
                         <div className="flex items-center gap-1 bg-foreground/[0.04] border border-white/10 rounded-lg p-1">
                             {(['24h', '7d', '30d'] as const).map(range => (

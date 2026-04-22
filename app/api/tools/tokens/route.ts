@@ -9,7 +9,7 @@ export const maxDuration = 15;
  * Body: { action: 'search' | 'resolve' | 'asset' | 'price' | 'risk' | 'markets', params: {...} }
  *
  * Tier 1 tool backed by the Tokens API at https://api.tokens.xyz/v1
- * (docs.tokens.xyz). Auth is server-held via x-api-key — the user
+ * (docs.tokens.xyz). Auth is server-held via x-api-key, the user
  * never sees the key and the client can't call Tokens directly.
  *
  * Demo-mode callers are routed through executeMock client-side, so

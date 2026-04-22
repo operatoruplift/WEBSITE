@@ -14,7 +14,7 @@ export async function GET(request: Request) {
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
         const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
         if (!supabaseUrl || !supabaseKey) {
-            // No Supabase — fall back to local-only check
+            // No Supabase, fall back to local-only check
             return NextResponse.json({ access: false, reason: 'no backend' });
         }
 

@@ -1,5 +1,5 @@
 /**
- * Audit log — append-only local record of every tool action taken by agents.
+ * Audit log, append-only local record of every tool action taken by agents.
  *
  * Stored in localStorage. When encryption is configured, entries are
  * encrypted at rest via lib/encryption.ts. Used by the Security page and
@@ -57,7 +57,7 @@ export function logAction(
         localStorage.setItem(AUDIT_KEY, JSON.stringify(updated));
 
         // Write to server-side Supabase (tamper-proof, cross-device)
-        // Fire-and-forget — don't block the UI on the audit write
+        // Fire-and-forget, don't block the UI on the audit write
         fetch('/api/audit/log', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

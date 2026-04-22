@@ -14,7 +14,7 @@ export const maxDuration = 60;
  * 2. Build a summary
  * 3. Send a self-to-self Gmail notification
  *
- * Protected by CRON_SECRET — Vercel sends this header automatically.
+ * Protected by CRON_SECRET, Vercel sends this header automatically.
  */
 export async function GET(request: Request) {
     // Verify cron secret (Vercel sends this automatically for cron jobs)
@@ -79,11 +79,11 @@ export async function GET(request: Request) {
                 const start = e.start?.dateTime
                     ? new Date(e.start.dateTime).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
                     : 'All day';
-                return `${start} — ${e.summary || '(No title)'}`;
+                return `${start}, ${e.summary || '(No title)'}`;
             });
 
             const subject = `${events.length} meeting${events.length === 1 ? '' : 's'} today`;
-            const body = `Good morning! Here's your schedule:\n\n${lines.join('\n')}\n\nWant me to prepare agendas? Open operatoruplift.com/chat and ask.\n\n— Operator Uplift`;
+            const body = `Good morning! Here's your schedule:\n\n${lines.join('\n')}\n\nWant me to prepare agendas? Open operatoruplift.com/chat and ask.\n\n, Operator Uplift`;
 
             // Send self-to-self Gmail notification
             const gmail = google.gmail({ version: 'v1', auth: oauth2 });

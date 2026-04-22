@@ -5,7 +5,7 @@ import { ChevronDown, Download } from 'lucide-react';
 import { detectOS, downloadOptions, optionFor, type OSKey } from '@/config/downloads';
 
 /**
- * Download CTA — renders a platform-smart primary button plus an
+ * Download CTA, renders a platform-smart primary button plus an
  * "Other downloads" dropdown. Defaults to the detected OS, but the
  * user can always pick a different installer.
  *

@@ -38,7 +38,7 @@ export async function GET(request: Request) {
 
     // Optional: also log who hit this. Do not fail if no session.
     try { await verifySession(request); } catch (err) {
-        if (err instanceof AuthError) { /* ignore — admin key already matched */ }
+        if (err instanceof AuthError) { /* ignore, admin key already matched */ }
     }
 
     const result: Record<string, unknown> = {

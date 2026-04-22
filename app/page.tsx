@@ -21,15 +21,15 @@ import BuildWithUs from '@/src/sections/BuildWithUs';
 import Footer from '@/src/components/Footer';
 
 /**
- * Landing composition — trust-first consumer flow (April 2026 rewrite).
+ * Landing composition, trust-first consumer flow (April 2026 rewrite).
  *
- *   Hero                 — 5-second test: what it does + for whom + why safe
- *   WhatBecomesReal      — three proof blocks (Gmail/Calendar, Approval, Receipt)
- *   DemoVideo            — 60 s recording from the Playwright harness
- *   ProblemStatement     — why this matters
- *   Product              — scrollytelling walk-through
+ *   Hero                , 5-second test: what it does + for whom + why safe
+ *   WhatBecomesReal     , three proof blocks (Gmail/Calendar, Approval, Receipt)
+ *   DemoVideo           , 60 s recording from the Playwright harness
+ *   ProblemStatement    , why this matters
+ *   Product             , scrollytelling walk-through
  *   ...remaining sections in a tightened order (no StatsBar, no TractionBar,
- *     no DemoPreview — those used placeholder stats/carousels that were
+ *     no DemoPreview, those used placeholder stats/carousels that were
  *     unverifiable).
  */
 export default function Home() {

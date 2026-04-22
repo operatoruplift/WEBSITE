@@ -46,7 +46,7 @@ const DemoPreview: React.FC = () => {
         </div>
       </div>
 
-      {/* Title — centered above CLI */}
+      {/* Title, centered above CLI */}
       <FadeIn>
         <div className="w-full flex flex-col items-center mb-10">
           <div className="flex items-center justify-center gap-3 mb-4">

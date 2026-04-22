@@ -1,11 +1,11 @@
 /**
- * Invoice CRUD — server-side. Backing store: tool_invoices in Supabase.
+ * Invoice CRUD, server-side. Backing store: tool_invoices in Supabase.
  *
  * Lifecycle:
- *   pending   — 402 response has been sent to the client
- *   paid      — client submitted payment proof, we verified (devnet: sim)
- *   consumed  — tool executed using this invoice; cannot be reused
- *   expired   — 10 minutes passed without consumption
+ *   pending  , 402 response has been sent to the client
+ *   paid     , client submitted payment proof, we verified (devnet: sim)
+ *   consumed , tool executed using this invoice; cannot be reused
+ *   expired  , 10 minutes passed without consumption
  */
 import crypto from 'crypto';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
@@ -38,7 +38,7 @@ export function hashParams(value: unknown): string {
     return crypto.createHash('sha256').update(canonicalJson(value)).digest('hex');
 }
 
-/** Canonical JSON stringify — sort keys recursively so hashing is stable. */
+/** Canonical JSON stringify, sort keys recursively so hashing is stable. */
 export function canonicalJson(value: unknown): string {
     if (value === null || typeof value !== 'object') return JSON.stringify(value);
     if (Array.isArray(value)) return '[' + value.map(canonicalJson).join(',') + ']';
@@ -110,7 +110,7 @@ export async function markInvoicePaid(ref: string, txSignature: string): Promise
     return !error;
 }
 
-/** Mark an invoice consumed — tool has executed using this payment. */
+/** Mark an invoice consumed, tool has executed using this payment. */
 export async function markInvoiceConsumed(ref: string): Promise<boolean> {
     const client = supa();
     if (!client) return false;

@@ -1,12 +1,12 @@
 /**
- * Daily briefing — server-side composer.
+ * Daily briefing, server-side composer.
  *
  * Given a user_id, fetch today's Google Calendar events and compose a
  * short agenda string (max 280 chars). The cron route at
  * /api/cron/daily-briefing calls this once per opted-in user per day.
  *
  * Returns null when the user has no events today (the caller then
- * skips the notifications insert — an empty briefing is noise).
+ * skips the notifications insert, an empty briefing is noise).
  */
 import { google } from 'googleapis';
 import { getAuthenticatedClient } from '@/lib/google/oauth';
@@ -50,10 +50,10 @@ export async function composeBriefing(userId: string): Promise<BriefingPayload |
     const title = `${events.length} meeting${events.length === 1 ? '' : 's'} today`;
     const parts: string[] = [
         `${events.length} event${events.length === 1 ? '' : 's'} today.`,
-        `First: ${firstStart} — ${firstSummary}.`,
+        `First: ${firstStart}, ${firstSummary}.`,
     ];
     if (noAgendaCount > 0) {
-        parts.push(`${noAgendaCount} without an agenda — want me to draft one?`);
+        parts.push(`${noAgendaCount} without an agenda, want me to draft one?`);
     }
     const body = parts.join(' ').slice(0, MAX_BODY);
 

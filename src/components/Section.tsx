@@ -5,7 +5,7 @@ import React from 'react';
 /**
  * Shared marketing-site section wrapper.
  *
- * Enforces predictable layout — no one-off mt values. Every section that
+ * Enforces predictable layout, no one-off mt values. Every section that
  * uses this gets:
  *   - py-14 mobile / py-20 desktop padding
  *   - max-w-[1200px] content width

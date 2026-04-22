@@ -26,7 +26,7 @@ function getUpstashLimiters() {
     const url = process.env.UPSTASH_REDIS_REST_URL;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN;
 
-    if (!url || !token) return null; // Upstash not configured — use memory fallback
+    if (!url || !token) return null; // Upstash not configured, use memory fallback
 
     const redis = new Redis({ url, token });
 
@@ -62,8 +62,8 @@ export interface RateLimitResult {
 
 /**
  * Check rate limit for a user or IP.
- * @param key    — verified Privy user ID (free/pro) or IP (demo)
- * @param tier   — 'demo' | 'free' | 'pro' (default: 'free')
+ * @param key   , verified Privy user ID (free/pro) or IP (demo)
+ * @param tier  , 'demo' | 'free' | 'pro' (default: 'free')
  */
 export async function checkRateLimit(
     key: string,

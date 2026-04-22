@@ -10,7 +10,7 @@ export const maxDuration = 20;
  * Body: { action: 'send', params: { to: string, text: string, html?: string, subject?: string } }
  *
  * iMessage send via the Photon adapter (see lib/photon/adapter.ts).
- * Tier 2 tool — requires a connected Photon account + the user to be
+ * Tier 2 tool, requires a connected Photon account + the user to be
  * authenticated. Demo-mode never reaches this route; unauthenticated
  * callers get 403 from the capability guard below.
  *

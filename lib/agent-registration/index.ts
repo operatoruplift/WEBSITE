@@ -10,7 +10,7 @@
  * verify the document hasn't been tampered with by recomputing it.
  *
  * This is the static version of what would be an on-chain ERC-721
- * agent NFT — the NFT metadata would point at this URI.
+ * agent NFT, the NFT metadata would point at this URI.
  */
 import crypto from 'crypto';
 import { canonicalJson } from '@/lib/x402/invoices';

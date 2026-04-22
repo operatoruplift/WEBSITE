@@ -6,7 +6,7 @@ import Footer from '@/src/components/Footer';
 import { DOC_GROUPS, DOC_SECTIONS } from '@/lib/docs/sections';
 
 /**
- * /docs layout — GitBook-style: fixed left sidebar nav + content pane.
+ * /docs layout, GitBook-style: fixed left sidebar nav + content pane.
  *
  * The sidebar highlights the active slug via a client-only effect on
  * the docs page itself; this layout is server-rendered so it stays

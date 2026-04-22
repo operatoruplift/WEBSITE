@@ -10,7 +10,7 @@ import { Logo } from '@/src/components/Icons';
 import { cn } from '@/lib/utils';
 
 /**
- * Narrow icon dock — matches the uplift.exe Electron app layout.
+ * Narrow icon dock, matches the uplift.exe Electron app layout.
  * w-14 fixed, icon-only with hover tooltip appearing to the right.
  *
  * Demo surfaces (hidden from nav, routes still mounted for re-enable post-May 15):
@@ -52,7 +52,7 @@ function DockIcon({ item, isActive }: { item: DockItem; isActive: boolean }) {
                 <Icon size={18} />
             </div>
 
-            {/* Tooltip — appears to the right */}
+            {/* Tooltip, appears to the right */}
             {showTooltip && (
                 <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 z-50 px-2.5 py-1 rounded-lg border border-[#FAFAFA]/10 bg-[#0A0A0A]/95 backdrop-blur-sm shadow-lg whitespace-nowrap">
                     <span className="text-xs font-medium text-[#FAFAFA]">{item.label}</span>

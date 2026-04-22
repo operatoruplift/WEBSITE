@@ -3,16 +3,16 @@ import React from 'react';
 type LogoProps = { className?: string };
 
 /**
- * Brand marks for the "Built With" carousel — monochrome SVG
+ * Brand marks for the "Built With" carousel, monochrome SVG
  * (fill="currentColor") so the grayscale-default + color-on-hover
  * treatment works uniformly.
  *
- * All marks: 24x24 viewBox, 1:1 aspect — no clipping, no stretching.
+ * All marks: 24x24 viewBox, 1:1 aspect, no clipping, no stretching.
  * Shapes are the official brand silhouettes at reduced detail so they
  * render cleanly at w-5 h-5.
  */
 
-// Privy — clean capital P monogram with a round counter.
+// Privy, clean capital P monogram with a round counter.
 // At w-5 h-5 the previous mark read as a blob; the new path is a
 // proper closed-outline "P": vertical stem, rounded bowl, empty
 // interior. Renders cleanly at small sizes and in monochrome.
@@ -31,7 +31,7 @@ export const PrivyLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
     </svg>
 );
 
-// Supabase — electric arrow (official mark, single-color)
+// Supabase, electric arrow (official mark, single-color)
 export const SupabaseLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
     <svg
         className={className}
@@ -44,11 +44,11 @@ export const SupabaseLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
     </svg>
 );
 
-// Solana — three parallel slanted bars, all tilting the same way.
+// Solana, three parallel slanted bars, all tilting the same way.
 // Brand mark at reduced detail: each bar is a parallelogram whose
 // left edge is at the sheared x=sheared position, mirroring the
 // official mark where the three horizontal stripes share one skew
-// angle (they are not opposing — that was a previous mistake).
+// angle (they are not opposing, that was a previous mistake).
 // 24x24 viewBox, centered, equal spacing.
 export const SolanaLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
     <svg
@@ -58,16 +58,16 @@ export const SolanaLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
         xmlns="http://www.w3.org/2000/svg"
         aria-label="Solana"
     >
-        {/* Top bar — parallelogram sheared to the right */}
+        {/* Top bar, parallelogram sheared to the right */}
         <path d="M7 5h12l-2 2.5H5z" />
-        {/* Middle bar — same shear direction as top */}
+        {/* Middle bar, same shear direction as top */}
         <path d="M7 10.25h12l-2 2.5H5z" />
-        {/* Bottom bar — same shear direction as top */}
+        {/* Bottom bar, same shear direction as top */}
         <path d="M7 15.5h12l-2 2.5H5z" />
     </svg>
 );
 
-// Vercel — equilateral triangle mark
+// Vercel, equilateral triangle mark
 export const VercelLogo = ({ className = 'w-5 h-5' }: LogoProps) => (
     <svg
         className={className}

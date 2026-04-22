@@ -7,7 +7,7 @@ export interface LLMMessage {
 }
 
 export interface CallLLMOptions {
-  /** Opaque identifier for tracing — passed through to structured logs. */
+  /** Opaque identifier for tracing, passed through to structured logs. */
   requestId?: string;
   /** Internal: current retry attempt (1-based). Callers should not set this. */
   attempt?: number;
@@ -17,7 +17,7 @@ const MAX_ATTEMPTS = 3;
 const BACKOFF_MS = [0, 500, 1500];
 
 function isRetryableError(err: unknown): boolean {
-  // Missing-key errors are terminal — no amount of retrying fixes config.
+  // Missing-key errors are terminal, no amount of retrying fixes config.
   if (err instanceof ProviderError) return false;
   if (!(err instanceof Error)) return true;
   const name = err.name;
@@ -35,7 +35,7 @@ function logCall(event: 'attempt' | 'success' | 'failed' | 'giveup', payload: Re
 }
 
 /**
- * Public entry — retries transient failures with exponential backoff.
+ * Public entry, retries transient failures with exponential backoff.
  * On terminal errors (missing key, malformed request) the error is
  * surfaced immediately so the caller can show a specific fix message.
  */

@@ -12,7 +12,7 @@ export const runtime = 'nodejs';
  *
  * Operational view of which external adapters are wired and which
  * aren't. Validates Pattern 10 (honest-status rule) from a single
- * surface — so ops can curl one endpoint and see which env vars are
+ * surface, so ops can curl one endpoint and see which env vars are
  * missing, rather than probing tool routes one by one and reading
  * their 503 responses.
  *

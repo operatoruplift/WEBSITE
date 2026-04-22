@@ -3,7 +3,7 @@
  *
  * Any /api route that can fail for auth/subscription reasons maps its
  * underlying error into one of these five classes. The UI copy layer
- * reads only the `class` — never the free-form detail message.
+ * reads only the `class`, never the free-form detail message.
  *
  * Adding a new class requires updating the UI copy templates in the
  * paywall and Diagnostics surfaces.

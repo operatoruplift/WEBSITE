@@ -43,7 +43,7 @@ const MarketOpportunity: React.FC = () => {
           </FadeIn>
         </div>
 
-        {/* Stats grid — using TechCard style */}
+        {/* Stats grid, using TechCard style */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
           {market.stats.map((stat, index) => (
             <FadeIn key={stat.label} delay={200 + index * 100}>
@@ -64,7 +64,7 @@ const MarketOpportunity: React.FC = () => {
           ))}
         </div>
 
-        {/* Narrative — matching dashed card style */}
+        {/* Narrative, matching dashed card style */}
         <FadeIn delay={600}>
           <div className="relative p-2 rounded-2xl border border-dashed border-white/10 bg-white/[0.01]">
             <div className="absolute -top-[1px] -left-[1px] w-4 h-4 border-t border-l border-white/30 rounded-tl-lg"></div>

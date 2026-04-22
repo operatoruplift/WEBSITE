@@ -1,5 +1,5 @@
 /**
- * Subscription check — server-side.
+ * Subscription check, server-side.
  *
  * Checks Supabase for an active subscription for the given user.
  * Returns the tier ('free' | 'pro') and whether the user can access gated routes.
@@ -12,9 +12,9 @@ export interface SubscriptionStatus {
     tier: 'free' | 'pro' | 'enterprise';
     active: boolean;
     expiresAt: string | null;
-    /** Machine-readable reason when active=false — used by /api/debug/subscription */
+    /** Machine-readable reason when active=false, used by /api/debug/subscription */
     reason?: string;
-    /** Why this check returned its current state — for debugging */
+    /** Why this check returned its current state, for debugging */
     source?: 'bypass_all' | 'bypass_email' | 'no_backend' | 'supabase_active' | 'supabase_expired' | 'supabase_none';
 }
 
@@ -24,8 +24,8 @@ const FREE_STATUS: SubscriptionStatus = { tier: 'free', active: false, expiresAt
  * Emails / userIds allowed to bypass the paywall.
  * Both work at runtime (no build-time caching).
  *
- * PAYWALL_BYPASS_EMAILS — comma-separated email list (lowercased match)
- * PAYWALL_BYPASS_USER_IDS — comma-separated Privy DIDs (preferred; stable
+ * PAYWALL_BYPASS_EMAILS, comma-separated email list (lowercased match)
+ * PAYWALL_BYPASS_USER_IDS, comma-separated Privy DIDs (preferred; stable
  *   even if the user changes their email)
  */
 function bypassEmails(): string[] {
@@ -54,12 +54,12 @@ export function isUserIdBypassed(userId: string | null | undefined): boolean {
 }
 
 export async function checkSubscription(userId: string, email?: string): Promise<SubscriptionStatus> {
-    // 1. Global bypass (staging/dev) — evaluated at request time
+    // 1. Global bypass (staging/dev), evaluated at request time
     if (isBypassAllEnabled()) {
         return { tier: 'pro', active: true, expiresAt: null, source: 'bypass_all' };
     }
 
-    // 2. Per-userId bypass (preferred — stable across email changes)
+    // 2. Per-userId bypass (preferred, stable across email changes)
     if (isUserIdBypassed(userId)) {
         return { tier: 'pro', active: true, expiresAt: null, source: 'bypass_email' };
     }
@@ -73,7 +73,7 @@ export async function checkSubscription(userId: string, email?: string): Promise
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
-        // No Supabase — dev mode, grant pro access
+        // No Supabase, dev mode, grant pro access
         return { tier: 'pro', active: true, expiresAt: null, source: 'no_backend' };
     }
 
@@ -90,7 +90,7 @@ export async function checkSubscription(userId: string, email?: string): Promise
 
     // Check expiry
     if (data.expires_at && new Date(data.expires_at) < new Date()) {
-        // Expired — update status
+        // Expired, update status
         await supabase
             .from('subscriptions')
             .update({ status: 'expired', updated_at: new Date().toISOString() })

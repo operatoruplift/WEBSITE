@@ -9,10 +9,10 @@ export const runtime = 'nodejs';
  *
  * Called by Google after the user consents. The `state` param carries
  * our HMAC-signed userId. We verify the signature (and expiry) before
- * exchanging the auth code — this prevents an attacker from tricking
+ * exchanging the auth code, this prevents an attacker from tricking
  * someone into linking their Google account to a different Privy user.
  *
- * This route is public (Google itself calls it — no Privy token). The
+ * This route is public (Google itself calls it, no Privy token). The
  * state signature IS the auth.
  */
 export async function GET(request: Request) {
@@ -35,7 +35,7 @@ export async function GET(request: Request) {
             );
         }
 
-        // Verify signed state — returns userId or null
+        // Verify signed state, returns userId or null
         const userId = verifyOAuthState(state);
         if (!userId) {
             console.warn('[google-callback] invalid or expired state');

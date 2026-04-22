@@ -13,7 +13,7 @@
  */
 import crypto from 'crypto';
 
-const STATE_TTL_SECONDS = 10 * 60; // 10 minutes — covers OAuth flow
+const STATE_TTL_SECONDS = 10 * 60; // 10 minutes, covers OAuth flow
 
 function getSecret(): string {
     const secret =

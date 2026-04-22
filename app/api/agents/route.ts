@@ -13,7 +13,7 @@ function getSupabase() {
 }
 
 /**
- * GET /api/agents — list all published agents from Supabase.
+ * GET /api/agents, list all published agents from Supabase.
  * No auth required for browsing the marketplace.
  */
 export async function GET(request: Request) {
@@ -42,7 +42,7 @@ export async function GET(request: Request) {
 }
 
 /**
- * POST /api/agents — publish a new agent manifest.
+ * POST /api/agents, publish a new agent manifest.
  * Requires auth. Stores in Supabase agents table.
  */
 export async function POST(request: Request) {

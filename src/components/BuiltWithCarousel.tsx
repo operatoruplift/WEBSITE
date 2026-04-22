@@ -5,16 +5,16 @@ import { infraLogos } from './InfraLogos';
 import { AnthropicLogo, OpenAILogo } from './ProviderLogos';
 
 /**
- * Built With carousel — reuses the marquee pattern from TrustedBy
+ * Built With carousel, reuses the marquee pattern from TrustedBy
  * (mask-gradient edges, animate-marquee 40s, grayscale default,
- * pause on hover). Subtle — no glows, no gradients.
+ * pause on hover). Subtle, no glows, no gradients.
  *
  * Row layout:
  *   - Outer wrapper: py-4 (prevents bottom clipping on mobile)
- *   - Inner scroll track: h-14 fixed — enough vertical room for the
+ *   - Inner scroll track: h-14 fixed, enough vertical room for the
  *     two-line logo+role block without clipping descenders
  *   - Each item: h-full flex items-center (center-aligned)
- *   - Logos: w-5 h-5 (1:1 aspect) — no stretching
+ *   - Logos: w-5 h-5 (1:1 aspect), no stretching
  *
  * Pause-on-hover is driven by `group-hover:[animation-play-state:paused]`
  * which piggybacks on the outer `group` class. No new JS.
@@ -42,7 +42,7 @@ export function BuiltWithCarousel() {
     return (
         <div className="w-full py-4">
             <div className="relative w-full overflow-hidden mask-gradient group">
-                {/* Edge fades — match the page background so logos dissolve on the sides */}
+                {/* Edge fades, match the page background so logos dissolve on the sides */}
                 <div className="absolute top-0 left-0 w-12 md:w-24 h-full bg-gradient-to-r from-[#0A0A0A] to-transparent z-10 pointer-events-none" />
                 <div className="absolute top-0 right-0 w-12 md:w-24 h-full bg-gradient-to-l from-[#0A0A0A] to-transparent z-10 pointer-events-none" />
 
