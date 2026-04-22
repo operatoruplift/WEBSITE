@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { verifySession, getOptionalUser } from '@/lib/auth';
+import { getOptionalUser } from '@/lib/auth';
+import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 
@@ -16,12 +17,12 @@ function getSupabase() {
  * List memory entries for a user, with optional type filter and search.
  */
 export async function GET(request: Request) {
+    const meta = withRequestMeta(request, 'memory.entries.list');
     try {
-        // Use verified user ID from session, fall back to query param for backward compat
         const user = await getOptionalUser(request);
         const url = new URL(request.url);
         const userId = user?.userId || url.searchParams.get('user_id');
-        if (!userId) return NextResponse.json({ error: 'user_id required' }, { status: 400 });
+        if (!userId) return validationError('`user_id` required (query param or session).', 'Sign in or pass ?user_id=.', meta);
 
         const type = url.searchParams.get('type');
         const search = url.searchParams.get('search');
@@ -39,11 +40,11 @@ export async function GET(request: Request) {
         if (search) query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,content.ilike.%${search}%`);
 
         const { data, error } = await query;
-        if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+        if (error) return errorResponse(new Error(error.message), meta, { httpHint: 500 });
 
-        return NextResponse.json({ entries: data || [] });
+        return NextResponse.json({ entries: data || [] }, { headers: meta.headers });
     } catch (err) {
-        return NextResponse.json({ error: err instanceof Error ? err.message : 'Unknown' }, { status: 500 });
+        return errorResponse(err, meta);
     }
 }
 
@@ -53,12 +54,18 @@ export async function GET(request: Request) {
  * Body: { user_id, id?, name, description, type, content, tags }
  */
 export async function POST(request: Request) {
+    const meta = withRequestMeta(request, 'memory.entries.upsert');
     try {
         const body = await request.json();
         const { user_id, name, description, type, content, tags } = body;
 
         if (!user_id || !name || !type || !content) {
-            return NextResponse.json({ error: 'user_id, name, type, content required' }, { status: 400 });
+            return validationError(
+                'Memory entry needs `user_id`, `name`, `type`, and `content`.',
+                'Include the missing fields and retry.',
+                meta,
+                { missing: ['user_id', 'name', 'type', 'content'].filter(f => !body?.[f]) },
+            );
         }
 
         const id = body.id || `mem-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -76,10 +83,10 @@ export async function POST(request: Request) {
             last_accessed: new Date().toISOString(),
         }, { onConflict: 'id' }).select().single();
 
-        if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-        return NextResponse.json({ entry: data });
+        if (error) return errorResponse(new Error(error.message), meta, { httpHint: 500 });
+        return NextResponse.json({ entry: data }, { headers: meta.headers });
     } catch (err) {
-        return NextResponse.json({ error: err instanceof Error ? err.message : 'Unknown' }, { status: 500 });
+        return errorResponse(err, meta);
     }
 }
 
@@ -88,9 +95,10 @@ export async function POST(request: Request) {
  * Body: { user_id, id }
  */
 export async function DELETE(request: Request) {
+    const meta = withRequestMeta(request, 'memory.entries.delete');
     try {
         const { user_id, id } = await request.json();
-        if (!user_id || !id) return NextResponse.json({ error: 'user_id and id required' }, { status: 400 });
+        if (!user_id || !id) return validationError('Both `user_id` and `id` are required.', 'Include both and retry.', meta);
 
         const supabase = getSupabase();
         const { error } = await supabase
@@ -99,9 +107,9 @@ export async function DELETE(request: Request) {
             .eq('id', id)
             .eq('user_id', user_id);
 
-        if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-        return NextResponse.json({ deleted: true });
+        if (error) return errorResponse(new Error(error.message), meta, { httpHint: 500 });
+        return NextResponse.json({ deleted: true }, { headers: meta.headers });
     } catch (err) {
-        return NextResponse.json({ error: err instanceof Error ? err.message : 'Unknown' }, { status: 500 });
+        return errorResponse(err, meta);
     }
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { verifySession, AuthError } from '@/lib/auth';
+import { withRequestMeta, errorResponse, validationError, type RequestMeta } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 
@@ -20,23 +21,22 @@ function getSupabase() {
     return createClient(url, key, { auth: { persistSession: false } });
 }
 
-async function requireUser(request: Request) {
+async function requireUser(request: Request, meta: RequestMeta) {
     try {
         const user = await verifySession(request);
         return { user, error: null as NextResponse | null };
     } catch (err) {
-        if (err instanceof AuthError) {
-            return { user: null, error: NextResponse.json({ error: err.message }, { status: 401 }) };
-        }
-        return { user: null, error: NextResponse.json({ error: 'auth_failed' }, { status: 401 }) };
+        const classHint = err instanceof AuthError ? undefined : undefined;
+        return { user: null, error: errorResponse(err, meta, { httpHint: 401, errorClass: classHint }) };
     }
 }
 
 export async function GET(request: Request) {
-    const { user, error } = await requireUser(request);
+    const meta = withRequestMeta(request, 'notifications.pinned.list');
+    const { user, error } = await requireUser(request, meta);
     if (error) return error;
     const supabase = getSupabase();
-    if (!supabase) return NextResponse.json({ pinned: [] });
+    if (!supabase) return NextResponse.json({ pinned: [] }, { headers: meta.headers });
 
     const { data } = await supabase
         .from('notifications')
@@ -47,17 +47,18 @@ export async function GET(request: Request) {
         .order('pinned_until', { ascending: true })
         .limit(10);
 
-    return NextResponse.json({ pinned: data ?? [] });
+    return NextResponse.json({ pinned: data ?? [] }, { headers: meta.headers });
 }
 
 export async function DELETE(request: Request) {
-    const { user, error } = await requireUser(request);
+    const meta = withRequestMeta(request, 'notifications.pinned.dismiss');
+    const { user, error } = await requireUser(request, meta);
     if (error) return error;
     const supabase = getSupabase();
-    if (!supabase) return NextResponse.json({ ok: true });
+    if (!supabase) return NextResponse.json({ ok: true }, { headers: meta.headers });
 
     const id = new URL(request.url).searchParams.get('id');
-    if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 });
+    if (!id) return validationError('Missing `id` query param.', 'Include ?id=<notification-id> and retry.', meta);
 
     await supabase
         .from('notifications')
@@ -65,5 +66,5 @@ export async function DELETE(request: Request) {
         .eq('user_id', user!.userId)
         .eq('id', id);
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true }, { headers: meta.headers });
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { verifySession, getOptionalUser } from '@/lib/auth';
+import { verifySession } from '@/lib/auth';
+import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 
@@ -16,6 +17,7 @@ function getSupabase() {
  * No auth required for browsing the marketplace.
  */
 export async function GET(request: Request) {
+    const meta = withRequestMeta(request, 'agents.list');
     try {
         const supabase = getSupabase();
         const url = new URL(request.url);
@@ -32,10 +34,10 @@ export async function GET(request: Request) {
         }
 
         const { data, error } = await query;
-        if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-        return NextResponse.json({ agents: data || [] });
+        if (error) return errorResponse(new Error(error.message), meta, { httpHint: 500 });
+        return NextResponse.json({ agents: data || [] }, { headers: meta.headers });
     } catch (err) {
-        return NextResponse.json({ error: err instanceof Error ? err.message : 'Unknown' }, { status: 500 });
+        return errorResponse(err, meta);
     }
 }
 
@@ -44,12 +46,18 @@ export async function GET(request: Request) {
  * Requires auth. Stores in Supabase agents table.
  */
 export async function POST(request: Request) {
+    const meta = withRequestMeta(request, 'agents.publish');
     try {
-        const verified = await verifySession(request);
+        let verified;
+        try {
+            verified = await verifySession(request);
+        } catch (authErr) {
+            return errorResponse(authErr, meta, { httpHint: 401 });
+        }
         const body = await request.json();
 
         if (!body.name) {
-            return NextResponse.json({ error: 'name required' }, { status: 400 });
+            return validationError('Agent publish needs a `name`.', 'Include a non-empty name and retry.', meta);
         }
 
         const supabase = getSupabase();
@@ -76,12 +84,9 @@ export async function POST(request: Request) {
             .select()
             .single();
 
-        if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-        return NextResponse.json({ agent: data }, { status: 201 });
+        if (error) return errorResponse(new Error(error.message), meta, { httpHint: 500 });
+        return NextResponse.json({ agent: data }, { status: 201, headers: meta.headers });
     } catch (err) {
-        if (err instanceof Error && err.name === 'AuthError') {
-            return NextResponse.json({ error: err.message }, { status: 401 });
-        }
-        return NextResponse.json({ error: err instanceof Error ? err.message : 'Unknown' }, { status: 500 });
+        return errorResponse(err, meta);
     }
 }
