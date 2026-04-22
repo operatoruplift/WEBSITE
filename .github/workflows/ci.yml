@@ -1,0 +1,122 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+# Cancel redundant runs on the same ref so a rapid-fire push queue
+# doesn't back up the runner.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: build + check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # pnpm before setup-node so we can use the cache that pnpm installs
+      # into. setup-node's cache: pnpm requires pnpm to already be on PATH.
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Build must pass. The Next.js build is the authoritative gate
+      # for "does the app compile + route-generate cleanly?"
+      - name: Build
+        run: pnpm build
+
+      # pnpm check runs the grep-guards (copy-check, capability-check,
+      # trust-gate). The orchestrator script + individual guards live in
+      # open PRs (#138, #139, #142, #143) so we guard for them here.
+      # Once all land this becomes an unconditional `run: pnpm check`.
+      - name: Run grep-guards (if present)
+        run: |
+          if [ -f scripts/check.mjs ]; then
+            pnpm check
+          else
+            echo "scripts/check.mjs not present yet (depends on PR #143). Skipping."
+          fi
+
+      # Hermetic Playwright specs. Each spec file sits in an open PR;
+      # we enumerate the known ones and only run those that exist on the
+      # current ref. Once all land we flip to a single pattern match.
+      - name: Install Playwright browsers (chromium)
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Run hermetic Playwright specs
+        id: hermetic_tests
+        continue-on-error: true
+        run: |
+          SPECS=""
+          for spec in \
+            tests/e2e/helpers.spec.ts \
+            tests/e2e/copy-check.spec.ts \
+            tests/e2e/capability-check.spec.ts \
+            tests/e2e/trust-gate.spec.ts \
+            tests/e2e/check-orchestrator.spec.ts \
+            tests/e2e/health-adapters.spec.ts \
+            tests/e2e/magicblock-honest-status.spec.ts; do
+            if [ -f "$spec" ]; then SPECS="$SPECS $spec"; fi
+          done
+          if [ -z "$SPECS" ]; then
+            echo "No hermetic specs present on this ref. Skipping."
+          else
+            echo "Running:$SPECS"
+            pnpm exec playwright test $SPECS --reporter=list
+          fi
+
+      - name: Upload Playwright report on failure
+        if: steps.hermetic_tests.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+      - name: Fail job if hermetic tests failed
+        if: steps.hermetic_tests.outcome == 'failure'
+        run: exit 1
+
+  lint:
+    name: lint (informational)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # Lint is informational on master today. 70 pre-existing errors
+      # from the pre-W1B period are documented in PR #131. The step
+      # continues-on-error so CI status stays green until those are
+      # retrofitted in a separate multi-PR cleanup. Still runs so the
+      # delta is visible in the run log.
+      - name: ESLint (non-blocking)
+        run: pnpm lint
+        continue-on-error: true
