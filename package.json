@@ -8,7 +8,8 @@
     "build:desktop": "node scripts/build-desktop.mjs",
     "start": "next start",
     "lint": "eslint",
-    "copy-check": "node scripts/copy-check.mjs"
+    "copy-check": "node scripts/copy-check.mjs",
+    "capability-check": "node scripts/capability-check.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.82.0",

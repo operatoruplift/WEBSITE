@@ -2,6 +2,10 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
+// capability-check-exempt: x402 proxy. Auth is proof-of-payment via
+// X-Payment-Proof on retry, not a Privy session. No user-bound state
+// is read or written here; the route only forwards the outbound fetch.
+
 /**
  * x402 tool endpoint — proxy for premium API calls that may require payment.
  *
