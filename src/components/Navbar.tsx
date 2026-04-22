@@ -12,7 +12,11 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
   const navItems = [
     { name: 'PRODUCT', targetId: 'product' },
     { name: 'STORE', targetId: 'store', href: '/store' },
-    { name: 'DEMO', targetId: 'demo', href: '/demo' },
+    // DEMO scrolls to the video section on the homepage so the nav
+    // link + the Hero's "Watch 90s demo" CTA + the DemoVideo <section
+    // id="demo-video"> are one surface. See docs/research/DESIGN.md,
+    // single source of truth for "watch the demo."
+    { name: 'DEMO', targetId: 'demo-video', href: '/#demo-video' },
     { name: 'PRIVACY', targetId: 'security' },
     { name: 'BLOG', targetId: 'blog', href: '/blog' },
   ];

@@ -70,7 +70,7 @@ const Hero: React.FC = () => {
 
           {/* CTAs — one primary, one secondary per the 5-second test.
               Primary drives Real Mode conversion (Google connect).
-              Secondary gives a zero-friction "see it first" via the 60s demo video. */}
+              Secondary gives a zero-friction "see it first" via the 90s demo video. */}
           <FadeIn delay={800}>
             <div className="flex flex-col sm:flex-row items-start gap-3 mb-4">
               <Link href="/login?returnTo=/integrations"
@@ -81,7 +81,7 @@ const Hero: React.FC = () => {
               <a href="#demo-video"
                 className="inline-flex items-center px-6 py-3 bg-white/5 text-white font-bold text-sm rounded-lg border border-white/10 hover:bg-white/10 transition-all uppercase tracking-wide">
                 <svg className="mr-2 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3" /></svg>
-                Watch 60s demo
+                Watch 90s demo
               </a>
             </div>
             <p className="text-[11px] text-gray-500 mb-8 max-w-md">
