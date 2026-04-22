@@ -2,92 +2,99 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Bot, Plus, Search, Play, Pause, Settings, Trash2, Activity, Clock, Zap, MoreHorizontal, Star } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Bot, Plus, Search, Settings, Star, ArrowRight, Check } from 'lucide-react';
 import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
+import { listStoreAgents, dependencyRoute, chatDeepLink, type LiveAgent } from '@/config/agents';
 
-interface Agent {
-    id: string;
-    name: string;
-    description: string;
-    status: 'running' | 'idle' | 'error' | 'stopped';
-    model: string;
-    lastActive: string;
-    sessions: number;
-    memoryUsage: string;
-    favorite: boolean;
+/**
+ * Dashboard /agents page. Lists live agents from config/agents.ts.
+ *
+ * Live agents are the single source of truth. Fake sessions / memory-usage
+ * counters and "coming soon" placeholders are out: every card here routes
+ * to a working in-app experience. Clicking lands in /chat with the agent's
+ * test prompt pre-filled, or redirects to a calm gating screen when a
+ * dependency is missing.
+ */
+
+interface Capabilities {
+    capability_google: boolean;
+    capability_key: boolean;
+    capability_real: boolean;
+    authenticated: boolean;
 }
 
-const DEMO_AGENTS: Agent[] = [
-    { id: '1', name: 'CodePilot Pro', description: 'Full-stack code generation and debugging assistant', status: 'running', model: 'Claude Opus 4.6', lastActive: 'Now', sessions: 142, memoryUsage: '2.4GB', favorite: true },
-    { id: '2', name: 'Research Assistant', description: 'Multi-source academic research and synthesis', status: 'running', model: 'GPT-4.1', lastActive: '2m ago', sessions: 89, memoryUsage: '1.8GB', favorite: true },
-    { id: '3', name: 'Blackwall Guard', description: 'Real-time API security and threat detection', status: 'running', model: 'Claude Opus 4.6', lastActive: '5m ago', sessions: 2847, memoryUsage: '512MB', favorite: false },
-    { id: '4', name: 'Data Analyst', description: 'SQL generation, visualization, and insight extraction', status: 'idle', model: 'Gemini 2.5 Pro', lastActive: '1h ago', sessions: 56, memoryUsage: '3.1GB', favorite: false },
-    { id: '5', name: 'Content Writer', description: 'Blog posts, docs, and marketing copy generation', status: 'idle', model: 'Claude Opus 4.6', lastActive: '3h ago', sessions: 34, memoryUsage: '890MB', favorite: false },
-    { id: '6', name: 'DevOps Monitor', description: 'K8s cluster monitoring and auto-remediation', status: 'error', model: 'Llama 3.3', lastActive: '12h ago', sessions: 12, memoryUsage: '256MB', favorite: false },
-    { id: '7', name: 'Meeting Summarizer', description: 'Transcribes and summarizes video calls', status: 'stopped', model: 'Grok 3', lastActive: '2d ago', sessions: 8, memoryUsage: '0MB', favorite: false },
-];
-
-const statusConfig: Record<string, { color: string; bg: string; label: string; pulse?: boolean }> = {
-    running: { color: 'text-emerald-400', bg: 'bg-emerald-400', label: 'Active', pulse: true },
-    idle: { color: 'text-amber-400', bg: 'bg-amber-400', label: 'Ready' },
-    error: { color: 'text-red-400', bg: 'bg-red-400', label: 'Error', pulse: true },
-    stopped: { color: 'text-gray-500', bg: 'bg-gray-500', label: 'Stopped' },
+const DEMO_CAPS: Capabilities = {
+    capability_google: false,
+    capability_key: false,
+    capability_real: false,
+    authenticated: false,
 };
 
 export default function AgentsPage() {
-    const [agents, setAgents] = useState<Agent[]>(DEMO_AGENTS);
     const [search, setSearch] = useState('');
-    const [filter, setFilter] = useState<'all' | 'running' | 'idle' | 'error'>('all');
+    const [favorites, setFavorites] = useState<Set<string>>(new Set());
+    const [caps, setCaps] = useState<Capabilities>(DEMO_CAPS);
     const { showToast } = useToast();
+    const router = useRouter();
 
-    // Load custom agents from builder and installed agents from marketplace
+    const agents = listStoreAgents();
+
+    // Load favorites + capability state once on mount. No /api/capabilities
+    // call when there's no auth token; simulated mode is inferred locally.
     useEffect(() => {
         try {
-            const custom: { name: string; description?: string; model?: string }[] = JSON.parse(localStorage.getItem('custom-agents') || '[]');
-            const installed: string[] = JSON.parse(localStorage.getItem('installed-agents') || '[]');
+            const saved: string[] = JSON.parse(localStorage.getItem('agent-favorites') || '[]');
+            setFavorites(new Set(saved));
+        } catch { /* no saved favs */ }
 
-            const customAgents: Agent[] = custom.map((a, i) => ({
-                id: `custom-${i}`, name: a.name, description: a.description || 'Custom agent',
-                status: 'idle' as const, model: a.model || 'Claude Opus 4.6',
-                lastActive: 'Ready', sessions: 0, memoryUsage: '0MB', favorite: false,
-            }));
-
-            const installedAgents: Agent[] = installed
-                .filter(name => !DEMO_AGENTS.some(d => d.name === name))
-                .map((name, i) => ({
-                    id: `installed-${i}`, name, description: 'Installed from marketplace',
-                    status: 'idle' as const, model: 'Auto', lastActive: 'Ready',
-                    sessions: 0, memoryUsage: '0MB', favorite: false,
-                }));
-
-            if (customAgents.length || installedAgents.length) {
-                setAgents(prev => [...prev, ...customAgents, ...installedAgents]);
-            }
-        } catch { /* demo fallback */ }
+        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+        if (!token) { setCaps(DEMO_CAPS); return; }
+        fetch('/api/capabilities', {
+            headers: { Authorization: `Bearer ${token}` },
+            cache: 'no-store',
+        })
+            .then(r => r.json())
+            .then((data: Capabilities) => setCaps(data))
+            .catch(() => setCaps(DEMO_CAPS));
     }, []);
 
-    const filtered = agents.filter(a => {
-        const matchSearch = !search || a.name.toLowerCase().includes(search.toLowerCase()) || a.description.toLowerCase().includes(search.toLowerCase());
-        const matchFilter = filter === 'all' || a.status === filter;
-        return matchSearch && matchFilter;
-    });
-
-    const toggleAgent = (id: string) => {
-        setAgents(prev => prev.map(a => {
-            if (a.id !== id) return a;
-            const newStatus = a.status === 'running' ? 'idle' : 'running';
-            showToast(`${a.name} ${newStatus === 'running' ? 'started' : 'paused'}`, newStatus === 'running' ? 'success' : 'info');
-            return { ...a, status: newStatus, lastActive: newStatus === 'running' ? 'Now' : 'Just now' };
-        }));
-    };
-
     const toggleFavorite = (id: string) => {
-        setAgents(prev => prev.map(a => a.id === id ? { ...a, favorite: !a.favorite } : a));
+        setFavorites(prev => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id); else next.add(id);
+            try { localStorage.setItem('agent-favorites', JSON.stringify([...next])); } catch {}
+            return next;
+        });
     };
+
+    const openAgent = (agent: LiveAgent) => {
+        const hasToken = typeof window !== 'undefined' && !!localStorage.getItem('token');
+        const gate = dependencyRoute(agent, {
+            hasToken,
+            hasGoogle: caps.capability_google,
+            hasKey: caps.capability_key,
+        });
+        if (gate) {
+            showToast(`${agent.name} needs a quick setup step.`, 'info');
+            router.push(gate);
+            return;
+        }
+        router.push(chatDeepLink(agent));
+    };
+
+    const filtered = agents.filter(a =>
+        !search ||
+        a.name.toLowerCase().includes(search.toLowerCase()) ||
+        a.description.toLowerCase().includes(search.toLowerCase()) ||
+        a.tags.some(t => t.toLowerCase().includes(search.toLowerCase())),
+    );
+
+    const liveCount = agents.length;
 
     return (
         <MobilePageWrapper>
@@ -97,69 +104,127 @@ export default function AgentsPage() {
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <Bot size={16} className="text-[#F97316]" />
-                                <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Fleet</span>
-                                <span className="text-[8px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded border bg-amber-400/10 text-amber-400 border-amber-400/20">DEMO</span>
+                                <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Agents</span>
+                                <span className="text-[8px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                                    {liveCount} live
+                                </span>
                             </div>
                             <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">My Agents</h1>
-                            <p className="text-sm text-gray-400 mt-1">{agents.filter(a => a.status === 'running').length} active, {agents.length} total</p>
+                            <p className="text-sm text-gray-400 mt-1">Every agent here is wired end-to-end. Tap one to try it.</p>
                         </div>
                         <Link href="/agents/builder">
                             <GlowButton className="h-11 px-5"><Plus size={16} className="mr-2" /> Create Agent</GlowButton>
                         </Link>
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-3">
-                        <div className="relative flex-1">
-                            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
-                            <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search agents..." aria-label="Search agents" className="w-full bg-foreground/[0.04] border border-white/10 rounded-xl pl-11 pr-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-primary/50 focus:outline-none transition-colors" />
-                        </div>
-                        <div className="flex gap-1 bg-foreground/[0.04] border border-white/10 rounded-xl p-1">
-                            {(['all', 'running', 'idle', 'error'] as const).map(f => (
-                                <button key={f} onClick={() => setFilter(f)} className={`px-3 py-1.5 rounded-lg text-xs font-mono capitalize transition-all ${filter === f ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-gray-300'}`}>{f}</button>
-                            ))}
-                        </div>
+                    <div className="relative">
+                        <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                        <input
+                            type="text"
+                            value={search}
+                            onChange={e => setSearch(e.target.value)}
+                            placeholder="Search agents..."
+                            aria-label="Search agents"
+                            className="w-full bg-foreground/[0.04] border border-white/10 rounded-xl pl-11 pr-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-primary/50 focus:outline-none transition-colors"
+                        />
                     </div>
 
-                    <div className="space-y-3">
-                        {filtered.map((agent, i) => {
-                            const status = statusConfig[agent.status];
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" data-testid="agent-store-grid">
+                        {filtered.map(agent => {
+                            const hasToken = typeof window !== 'undefined' && !!localStorage.getItem('token');
+                            const gate = dependencyRoute(agent, {
+                                hasToken,
+                                hasGoogle: caps.capability_google,
+                                hasKey: caps.capability_key,
+                            });
+                            const fav = favorites.has(agent.id);
                             return (
-                                <Card key={agent.id} variant="glass" className="group hover:border-primary/30 transition-all" style={{ animationDelay: `${i * 60}ms` }}>
+                                <div key={agent.id} data-testid={`agent-card-${agent.id}`}>
+                                <Card
+                                    variant="glass"
+                                    className="group hover:border-primary/30 transition-all"
+                                >
                                     <CardContent className="p-5">
-                                        <div className="flex flex-col md:flex-row md:items-center gap-4">
-                                            <div className="flex items-center gap-4 flex-1 min-w-0">
-                                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-[#F97316]/10 border border-foreground/10 flex items-center justify-center flex-shrink-0 relative">
-                                                    <Bot size={20} className="text-white" />
-                                                    <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full ${status.bg} border-2 border-[#0a0a0f] ${status.pulse ? 'animate-pulse' : ''}`} />
-                                                </div>
-                                                <div className="min-w-0">
-                                                    <div className="flex items-center gap-2 mb-0.5">
-                                                        <Link href={`/agents/${agent.id}`} className="text-white font-semibold truncate hover:text-primary transition-colors">{agent.name}</Link>
-                                                        <Badge variant="default" className={`text-[9px] ${status.color} bg-foreground/[0.04] border border-white/10`}>{status.label}</Badge>
-                                                        {agent.favorite && <Star size={12} className="text-amber-400 fill-amber-400" />}
-                                                    </div>
-                                                    <p className="text-sm text-gray-400 truncate">{agent.description}</p>
-                                                    <div className="flex items-center gap-4 mt-1.5 text-[10px] font-mono text-gray-500">
-                                                        <span>{agent.model}</span>
-                                                        <span className="flex items-center gap-1"><Clock size={9} />{agent.lastActive}</span>
-                                                        <span className="flex items-center gap-1"><Zap size={9} />{agent.sessions} sessions</span>
-                                                        <span className="flex items-center gap-1"><Activity size={9} />{agent.memoryUsage}</span>
-                                                    </div>
-                                                </div>
+                                        <div className="flex items-start gap-3 mb-3">
+                                            <div className="w-12 h-12 rounded-xl bg-foreground/[0.04] border border-white/10 flex items-center justify-center text-2xl flex-shrink-0">
+                                                {agent.avatar}
                                             </div>
-                                            <div className="flex items-center gap-2 flex-shrink-0">
-                                                <button onClick={() => toggleFavorite(agent.id)} aria-label={agent.favorite ? 'Remove from favorites' : 'Add to favorites'} className={`p-2 rounded-lg transition-colors ${agent.favorite ? 'bg-amber-400/10 text-amber-400' : 'bg-foreground/[0.04] text-gray-500 hover:text-amber-400'}`}><Star size={14} /></button>
-                                                <button onClick={() => toggleAgent(agent.id)} aria-label={agent.status === 'running' ? 'Pause agent' : 'Start agent'} className={`p-2 rounded-lg transition-colors ${agent.status === 'running' ? 'bg-amber-400/10 text-amber-400 hover:bg-amber-400/20' : 'bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20'}`}>
-                                                    {agent.status === 'running' ? <Pause size={14} /> : <Play size={14} />}
-                                                </button>
-                                                <Link href="/settings" className="p-2 rounded-lg bg-foreground/[0.04] text-gray-500 hover:text-white hover:bg-white/10 transition-colors"><Settings size={14} /></Link>
+                                            <div className="min-w-0 flex-1">
+                                                <div className="flex items-center gap-2 mb-0.5">
+                                                    <h3 className="text-base font-semibold text-white truncate">{agent.name}</h3>
+                                                    <Badge variant="default" className="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Live</Badge>
+                                                </div>
+                                                <p className="text-xs text-gray-500 uppercase tracking-wider font-mono">{agent.category}</p>
                                             </div>
+                                            <button
+                                                onClick={() => toggleFavorite(agent.id)}
+                                                aria-label={fav ? 'Remove from favorites' : 'Add to favorites'}
+                                                className={`p-1.5 rounded-lg transition-colors ${fav ? 'bg-amber-400/10 text-amber-400' : 'bg-foreground/[0.04] text-gray-500 hover:text-amber-400'}`}
+                                            >
+                                                <Star size={12} className={fav ? 'fill-amber-400' : ''} />
+                                            </button>
+                                        </div>
+                                        <p className="text-sm text-gray-400 leading-relaxed mb-3 line-clamp-3">{agent.description}</p>
+                                        <div className="flex flex-wrap gap-1.5 mb-4">
+                                            {agent.tags.slice(0, 4).map(tag => (
+                                                <span key={tag} className="text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-white/[0.04] border border-white/10 text-gray-400">
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        {gate ? (
+                                            <Link
+                                                href={gate}
+                                                className="flex items-center justify-between gap-2 w-full py-2 px-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider hover:bg-amber-500/15 transition-colors"
+                                                data-testid={`agent-gate-${agent.id}`}
+                                            >
+                                                <span>Connect {gate === '/login' ? 'Account' : gate === '/integrations' ? 'Google' : 'API Key'}</span>
+                                                <ArrowRight size={12} />
+                                            </Link>
+                                        ) : (
+                                            <button
+                                                onClick={() => openAgent(agent)}
+                                                className="flex items-center justify-between gap-2 w-full py-2 px-3 rounded-lg bg-[#F97316]/10 border border-[#F97316]/30 text-[#F97316] text-xs font-bold uppercase tracking-wider hover:bg-[#F97316]/15 transition-colors"
+                                                data-testid={`agent-open-${agent.id}`}
+                                            >
+                                                <span>Try in Chat</span>
+                                                <ArrowRight size={12} />
+                                            </button>
+                                        )}
+                                        <div className="flex items-center gap-3 mt-3 text-[10px] font-mono text-gray-500">
+                                            <span className="flex items-center gap-1">
+                                                {agent.surfacesEnabled.web && <Check size={10} className="text-emerald-400" />}
+                                                Web
+                                            </span>
+                                            {agent.surfacesEnabled.imessage && (
+                                                <span className="flex items-center gap-1">
+                                                    <Check size={10} className="text-emerald-400" />
+                                                    iMessage
+                                                </span>
+                                            )}
+                                            {agent.surfacesEnabled.dmg && (
+                                                <span className="flex items-center gap-1">
+                                                    <Check size={10} className="text-emerald-400" />
+                                                    macOS
+                                                </span>
+                                            )}
+                                            <Link href="/settings" className="ml-auto p-1 rounded text-gray-500 hover:text-white transition-colors" aria-label="Agent settings">
+                                                <Settings size={10} />
+                                            </Link>
                                         </div>
                                     </CardContent>
                                 </Card>
+                                </div>
                             );
                         })}
                     </div>
+
+                    {filtered.length === 0 && (
+                        <div className="text-center py-16 text-gray-500">
+                            <Bot size={32} className="mx-auto mb-3 opacity-40" />
+                            <p className="text-sm">No agents match &ldquo;{search}&rdquo;.</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </MobilePageWrapper>
