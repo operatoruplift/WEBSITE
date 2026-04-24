@@ -42,45 +42,31 @@ jobs:
       - name: Build
         run: pnpm build
 
-      # pnpm check runs the grep-guards (copy-check, capability-check,
-      # trust-gate). The orchestrator script + individual guards live in
-      # open PRs (#138, #139, #142, #143) so we guard for them here.
-      # Once all land this becomes an unconditional `run: pnpm check`.
-      - name: Run grep-guards (if present)
-        run: |
-          if [ -f scripts/check.mjs ]; then
-            pnpm check
-          else
-            echo "scripts/check.mjs not present yet (depends on PR #143). Skipping."
-          fi
+      # grep-guards (copy-check, capability-check, trust-gate) routed
+      # through scripts/check.mjs. Blocking on master.
+      - name: Run grep-guards
+        run: pnpm check
 
-      # Hermetic Playwright specs. Each spec file sits in an open PR;
-      # we enumerate the known ones and only run those that exist on the
-      # current ref. Once all land we flip to a single pattern match.
       - name: Install Playwright browsers (chromium)
         run: pnpm exec playwright install chromium --with-deps
 
+      # Hermetic Playwright specs. Only the network-free specs run here.
+      # Specs that need real tokens (bypass, paywall, x402-gate,
+      # capability/*) are kept out — they live in a separate workflow
+      # with secrets.
       - name: Run hermetic Playwright specs
         id: hermetic_tests
         continue-on-error: true
         run: |
-          SPECS=""
-          for spec in \
+          pnpm exec playwright test \
             tests/e2e/helpers.spec.ts \
             tests/e2e/copy-check.spec.ts \
             tests/e2e/capability-check.spec.ts \
             tests/e2e/trust-gate.spec.ts \
             tests/e2e/check-orchestrator.spec.ts \
             tests/e2e/health-adapters.spec.ts \
-            tests/e2e/magicblock-honest-status.spec.ts; do
-            if [ -f "$spec" ]; then SPECS="$SPECS $spec"; fi
-          done
-          if [ -z "$SPECS" ]; then
-            echo "No hermetic specs present on this ref. Skipping."
-          else
-            echo "Running:$SPECS"
-            pnpm exec playwright test $SPECS --reporter=list
-          fi
+            tests/e2e/magicblock-honest-status.spec.ts \
+            --reporter=list
 
       - name: Upload Playwright report on failure
         if: steps.hermetic_tests.outcome == 'failure'
