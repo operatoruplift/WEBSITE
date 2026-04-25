@@ -1,22 +1,22 @@
 import { test, expect } from '@playwright/test';
+import { authedHeaders, requirePrivyToken } from './_helpers';
 
 /**
- * Blocker 2 smoke tests — paywall bypass for a session email / userId.
+ * Blocker 2 smoke tests, paywall bypass for a session email / userId.
  *
  * Requires:
- *   PLAYWRIGHT_PRIVY_TOKEN     — valid Privy JWT for a bypass-listed user
- *   PLAYWRIGHT_BYPASS_EMAIL    — email on PAYWALL_BYPASS_EMAILS (or)
- *   PLAYWRIGHT_BYPASS_USER_ID  — userId on PAYWALL_BYPASS_USER_IDS
- *   DEBUG_ADMIN_KEY            — matching server key, for /api/whoami
+ *   PLAYWRIGHT_PRIVY_TOKEN     valid Privy JWT for a bypass-listed user
+ *   PLAYWRIGHT_BYPASS_EMAIL    email on PAYWALL_BYPASS_EMAILS (or)
+ *   PLAYWRIGHT_BYPASS_USER_ID  userId on PAYWALL_BYPASS_USER_IDS
+ *   DEBUG_ADMIN_KEY            matching server key, for /api/whoami
  */
 
-test.describe('bypass — server', () => {
+test.describe('bypass, server', () => {
     test('/api/subscription returns active=true with tier=pro when session email is bypassed', async ({ request }) => {
-        const token = process.env.PLAYWRIGHT_PRIVY_TOKEN;
-        test.skip(!token, 'PLAYWRIGHT_PRIVY_TOKEN not set');
+        const token = requirePrivyToken();
 
         const res = await request.get('/api/subscription', {
-            headers: { Authorization: `Bearer ${token!}` },
+            headers: authedHeaders(token),
         });
         expect(res.ok()).toBeTruthy();
         const body = await res.json();
@@ -27,15 +27,12 @@ test.describe('bypass — server', () => {
     });
 
     test('/api/whoami diagnostic reports used_identifier', async ({ request }) => {
-        const token = process.env.PLAYWRIGHT_PRIVY_TOKEN;
+        const token = requirePrivyToken();
         const adminKey = process.env.DEBUG_ADMIN_KEY;
-        test.skip(!token || !adminKey, 'PLAYWRIGHT_PRIVY_TOKEN + DEBUG_ADMIN_KEY required');
+        test.skip(!adminKey, 'DEBUG_ADMIN_KEY required');
 
         const res = await request.get('/api/whoami', {
-            headers: {
-                Authorization: `Bearer ${token!}`,
-                'X-Debug-Key': adminKey!,
-            },
+            headers: authedHeaders(token, { 'X-Debug-Key': adminKey! }),
         });
         expect(res.ok()).toBeTruthy();
         const body = await res.json();
@@ -46,16 +43,15 @@ test.describe('bypass — server', () => {
     });
 });
 
-test.describe('bypass — client', () => {
-    test('bypass user lands on /chat (not /marketplace) after visiting a gated URL', async ({ page, context }) => {
-        const token = process.env.PLAYWRIGHT_PRIVY_TOKEN;
-        test.skip(!token, 'PLAYWRIGHT_PRIVY_TOKEN not set');
+test.describe('bypass, client', () => {
+    test('bypass user lands on /chat (not /marketplace) after visiting a gated URL', async ({ page }) => {
+        const token = requirePrivyToken();
 
         // Pre-seed the session token into localStorage
         await page.addInitScript(tok => {
             localStorage.setItem('token', tok);
             localStorage.setItem('user', JSON.stringify({ email: 'bypass@example.com', id: 'did:privy:test' }));
-        }, token!);
+        }, token);
 
         await page.goto('/chat');
         // Should remain on /chat (not redirect to /paywall)
