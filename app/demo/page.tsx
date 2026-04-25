@@ -139,7 +139,7 @@ export default function DemoPage() {
                 <p className="text-gray-400">Your agent ran locally. Zero cloud. Zero surveillance.</p>
                 <div className="mt-6 flex items-center justify-center gap-4">
                   <Link href="/login" className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary/80 transition-colors">
-                    Get Early Access
+                    Try it free
                   </Link>
                   <button onClick={reset} className="px-4 py-2 bg-white/5 text-gray-400 rounded-lg text-sm hover:bg-white/10 transition-colors">
                     Watch Again

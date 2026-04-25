@@ -32,7 +32,7 @@ const TractionBar: React.FC = () => {
             ))}
           </div>
           <p className="text-gray-500 text-sm font-mono mt-8 text-center max-w-lg">
-            Validated with our first build. Now rebuilding enterprise-grade infrastructure from the ground up.
+            Validated with our first build. Now rebuilding the whole thing on a stronger foundation.
           </p>
         </div>
       </FadeIn>

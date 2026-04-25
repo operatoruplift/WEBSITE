@@ -31,9 +31,9 @@ const Privacy: React.FC = () => {
           </section>
 
           <section>
-            <h2 className="text-xl text-white font-bold mb-3">3. Data Security (Local-First)</h2>
+            <h2 className="text-xl text-white font-bold mb-3">3. Data Security (Stays on your computer)</h2>
             <p>
-              Operator Uplift is designed with a local-first architecture. Your agent configurations, session logs, and sensitive context data are processed within your isolated environment. We do not have access to the internal state of your agents unless you explicitly enable cloud logging or diagnostic sharing.
+              Operator Uplift runs on your computer, not on our servers. Your assistant settings, chat history, and the sensitive content you share with it stay on your machine. We can&apos;t see what your assistant is doing unless you turn on optional cloud logging or send us a diagnostic.
             </p>
           </section>
 

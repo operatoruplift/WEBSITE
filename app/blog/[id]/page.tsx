@@ -234,9 +234,9 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
                 {/* CTA */}
                 <div className="mt-16 p-8 rounded-2xl border border-white/10 bg-white/[0.02] text-center">
                     <h3 className="text-xl font-medium text-white mb-3">Want to try it?</h3>
-                    <p className="text-gray-400 text-sm mb-6">Operator Uplift is in private beta. Join the waitlist for early access.</p>
+                    <p className="text-gray-400 text-sm mb-6">Operator Uplift is in private beta. Join the waitlist and we&apos;ll let you in.</p>
                     <Link href="/login" className="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-primary/80 transition-colors">
-                        Get Early Access
+                        Try it free
                     </Link>
                 </div>
             </article>
