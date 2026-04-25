@@ -6,18 +6,18 @@ import { OpenAILogo, AnthropicLogo, GoogleLogo, XAILogo } from '@/src/components
 import { Logo as UpliftLogo } from '@/src/components/Icons';
 
 const features = [
-  { name: 'Runs on your device', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'Runs on your computer', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
   { name: 'Your data stays private', uplift: true, chatgpt: false, claude: true, gemini: false, grok: false },
-  { name: 'No training on your data', uplift: true, chatgpt: false, claude: true, gemini: false, grok: false },
+  { name: 'Doesn\u2019t learn from your messages', uplift: true, chatgpt: false, claude: true, gemini: false, grok: false },
   { name: 'Works offline', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
-  { name: 'Use any AI model', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
-  { name: 'Agent marketplace', uplift: true, chatgpt: true, claude: false, gemini: false, grok: false },
-  { name: 'Multi-agent swarms', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
-  { name: 'Permission controls', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
-  { name: 'Encrypted memory', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
-  { name: 'No vendor lock-in', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
-  { name: 'Open source', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
-  { name: 'Enterprise compliance (HIPAA/SOC2/GDPR)', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'Pick any AI you want', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'Built-in store of helpers', uplift: true, chatgpt: true, claude: false, gemini: false, grok: false },
+  { name: 'Helpers that work as a team', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'You approve every action', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'Remembers things, privately', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'Switch AIs any time', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'Code you can read yourself', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'Privacy paperwork (HIPAA, SOC 2, GDPR)', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
 ];
 
 /** Logo component renders at the same fixed size so mobile doesn't wrap
@@ -59,7 +59,7 @@ const Comparison: React.FC = () => {
             Why Operator Uplift?
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            Every other AI platform runs on their servers, trains on your data, and locks you into their ecosystem. We do the opposite.
+            Other AIs run on their servers, learn from your messages, and only work if you stay loyal to one company. We don&apos;t do any of that.
           </p>
         </div>
 

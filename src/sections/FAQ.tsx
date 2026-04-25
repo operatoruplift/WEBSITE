@@ -5,36 +5,36 @@ import { FadeIn } from '@/src/components/Animators';
 
 const faqs = [
   {
-    q: 'What is Operator Uplift?',
-    a: 'A local-first AI agent platform that deploys on your infrastructure. Install AI agents from a marketplace, build custom ones, and orchestrate multi-agent workflows. All data stays encrypted on your machines, never on our servers.',
+    q: 'What does Operator Uplift do?',
+    a: 'It\u2019s an AI assistant that handles the parts of your day you wish would just disappear, replying to email, scheduling meetings, sending follow-ups, reminding you to call your mom. Set it up once, then let it work in the background.',
   },
   {
-    q: 'How is this different from ChatGPT Enterprise or Microsoft Copilot?',
-    a: 'Those products run on their cloud and process your data on their servers. Operator Uplift runs on YOUR infrastructure. You control the models, the data, and the permissions. Open-source runtime means full auditability.',
+    q: 'How is this different from ChatGPT?',
+    a: 'ChatGPT only talks. Operator Uplift actually does things. It opens your inbox, drafts the reply, books the meeting, sends the message. And your data stays on your computer, not on someone else\u2019s server.',
   },
   {
-    q: 'What compliance standards do you support?',
-    a: 'The platform is designed for HIPAA, SOC 2, and GDPR readiness. AES-256-GCM encryption at rest, isolated agent sessions, time-limited access keys, and a full audit trail for every action. The runtime is open-source so your security team can audit it.',
+    q: 'Is my data private?',
+    a: 'Yes. Everything stays on your machine, encrypted. We never see your email, calendar, or messages. The whole app is open for anyone technical to inspect, so you don\u2019t have to take our word for it.',
   },
   {
-    q: 'What AI models does it support?',
-    a: 'Claude (Anthropic), GPT-4.1 (OpenAI), Gemini (Google), Llama (Meta), Grok (xAI), Mistral, and local models through Ollama and LM Studio. Switch providers without changing code. Zero vendor lock-in.',
+    q: 'Which AI does it use?',
+    a: 'Whichever you want. Claude, ChatGPT, Gemini, Grok, or even an AI running on your own laptop. It picks the best one for each task, but you can switch with one click.',
   },
   {
-    q: 'How does deployment work?',
-    a: 'The web dashboard is available immediately. Desktop apps (macOS, Windows, Linux) are in development with macOS beta in Q3 2026. For enterprise, we support on-premise deployment inside your firewall.',
+    q: 'How do I use it?',
+    a: 'Sign up on the website and you\u2019re working in about a minute. There\u2019s also a free Mac app, with Windows and Linux on the way. No setup files, no manuals.',
   },
   {
-    q: 'What are agents and swarms?',
-    a: 'Agents are AI assistants specialized for tasks like code review, research, or data analysis. Swarms are multi-agent teams that collaborate via sequential pipelines, parallel execution, or debate topologies. The default chat flow uses one model per message so you see exactly what ran.',
+    q: 'What\u2019s an "agent"?',
+    a: 'A small AI helper trained for one job, like "reply to email" or "find me a hotel under $200." A "swarm" is a few helpers working together: one finds the hotel, another books it, a third adds it to your calendar. You don\u2019t think about it; it just happens.',
   },
   {
-    q: 'How does pricing work?',
-    a: 'Team ($49/seat/month) for up to 10 agents. Business ($99/seat/month) for unlimited agents with priority support. Enterprise for custom deployments. All plans include AES-256 encryption and compliance features.',
+    q: 'How much does it really cost?',
+    a: '$19 a month, plus a tiny fee for the work it does on top of that. Most people spend a few extra dollars across a whole month. Cancel any time.',
   },
   {
-    q: 'Can individual developers use it?',
-    a: 'Absolutely. The platform is built for teams but works great for individual developers and power users. The agent builder, chat, and marketplace are designed to be intuitive without any technical setup.',
+    q: 'I\u2019m not a techie. Is this for me?',
+    a: 'Yes. Open it, connect your Gmail or Google Calendar, and start asking. No code, no setup, no manuals.',
   },
 ];
 
@@ -58,10 +58,10 @@ const FAQ: React.FC = () => {
             </div>
           </FadeIn>
           <h2 className="text-3xl md:text-4xl font-medium text-white mb-4 tracking-tight">
-            Common Questions
+            Common questions
           </h2>
           <p className="text-gray-400">
-            Everything you need to know to get started.
+            Quick answers before you sign up.
           </p>
         </div>
 

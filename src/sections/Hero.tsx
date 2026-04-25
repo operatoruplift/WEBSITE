@@ -76,7 +76,7 @@ const Hero: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-start gap-3 mb-4">
               <Link href="/login?returnTo=/integrations"
                 className="inline-flex items-center px-6 py-3 bg-primary text-white font-bold text-sm rounded-lg hover:bg-primary/90 transition-colors uppercase tracking-wide shadow-[0_0_20px_rgba(249,115,22,0.25)]">
-                Sign in to connect Google
+                Sign in and connect Gmail
                 <svg className="ml-2 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
               </Link>
               <a href="#demo-video"
@@ -86,7 +86,7 @@ const Hero: React.FC = () => {
               </a>
             </div>
             <p className="text-[11px] text-gray-500 mb-4 max-w-md">
-              Prefer to poke around first? <Link href="/chat" className="text-gray-300 hover:text-white underline underline-offset-4 decoration-dotted">Try the demo</Link>, no signup, everything simulated.
+              Want to look around first? <Link href="/chat" className="text-gray-300 hover:text-white underline underline-offset-4 decoration-dotted">Try the demo</Link>, no signup, nothing&apos;s real yet.
             </p>
             <div className="mb-8">
               <DownloadCTA />

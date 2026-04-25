@@ -20,27 +20,27 @@ import { SectionHeader } from '@/src/components/SectionHeader';
 const BEATS = [
     {
         icon: Sun,
-        tag: 'Daily Briefing',
-        headline: 'Start every day with your calendar, handled.',
-        before: 'Before: you wake up, scroll 3 apps, and realise your 9am has no agenda.',
-        after: 'After: at 8am a pinned message hits your chat. "3 events today, your 2pm has no agenda, want me to draft one?"',
+        tag: 'Morning briefing',
+        headline: 'Wake up to your day, already sorted',
+        before: 'Before: you wake up, scroll three apps, and realize your 9am has no agenda.',
+        after: 'After: at 8am you get one message. "You have 3 things today. Your 2pm has no agenda, want me to draft one?"',
         prompt: '"What\u2019s on my calendar today and what should I worry about?"',
     },
     {
         icon: Inbox,
-        tag: 'Inbox Triage',
-        headline: 'Your inbox, drafted. You approve every send.',
-        before: 'Before: 3 emails sitting in your head all morning because you haven\u2019t decided how to reply.',
-        after: 'After: three drafts line up on screen. Approve each to send, deny to discard. Nothing leaves Gmail without your click.',
-        prompt: '"Draft replies to these 3 emails, ask me before sending."',
+        tag: 'Inbox cleanup',
+        headline: 'Your inbox, replied to, pending your okay',
+        before: 'Before: three emails stuck in your head all morning because you haven\u2019t decided how to answer.',
+        after: 'After: three drafts line up on screen. Approve to send, swipe to skip. Nothing leaves Gmail without your tap.',
+        prompt: '"Draft replies to these three emails, ask me before sending."',
     },
     {
         icon: Bell,
-        tag: 'Reminders That Pull You Back',
-        headline: 'iMessage-style nudges for the morning that matters.',
-        before: 'Before: another AI you forget about by lunchtime.',
-        after: 'After: weather at 7:55, your calendar at 8:00, one weird fun thing (horoscope) at 8:05. You come back tomorrow.',
-        prompt: '"Turn this into iMessage-style nudges for tomorrow morning."',
+        tag: 'Morning nudges',
+        headline: 'Friendly nudges that actually get used',
+        before: 'Before: another app you forget about by lunchtime.',
+        after: 'After: weather at 7:55, your day at 8:00, one fun thing at 8:05. You actually look forward to tomorrow.',
+        prompt: '"Set up morning nudges for me starting tomorrow."',
     },
 ];
 
@@ -48,9 +48,9 @@ const UseCases: React.FC = () => {
     return (
         <Section>
             <SectionHeader
-                eyebrow="Try It Today"
-                title="Three things it does well, before you sign in."
-                description="Open /chat, paste one of these, and watch every action wait for your Approve click."
+                eyebrow="Try it today"
+                title="Three things it handles well, try them before you sign up"
+                description="Open the demo, paste any of these, and watch every action wait for your okay."
             />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch">

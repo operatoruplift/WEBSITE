@@ -9,20 +9,21 @@ import { SectionHeader } from '@/src/components/SectionHeader';
 
 const TIERS = [
     {
-        name: 'Self-Hosted',
+        name: 'Free',
         price: 'Free',
         period: 'forever',
-        description: 'Run Operator Uplift on your own machine',
+        description: 'A taste of what your AI assistant can do',
         icon: Shield,
         highlight: false,
         features: [
-            'Browse Agent Marketplace',
-            'Desktop app (3.9 MB DMG)',
-            'Bring your own API keys',
-            'Full source code (open-source)',
-            'Community support',
+            'Ready-made helpers for email, calendar, research, and more',
+            'Lightweight Mac app, opens instantly',
+            'Built-in AI works out of the box',
+            'Runs on your computer, your data never leaves it',
+            'Free forever, no card needed',
+            'Friendly help on Discord',
         ],
-        cta: 'Download DMG',
+        cta: 'Get the free Mac app',
         ctaLink: '/store',
         ctaIcon: Download,
         ctaStyle: 'bg-[#FAFAFA]/5 hover:bg-[#FAFAFA]/10 border border-[#222222] text-white',
@@ -31,41 +32,40 @@ const TIERS = [
         name: 'Pro',
         price: '$19',
         period: '/month',
-        description: 'Full agent orchestration with cloud features',
+        description: 'Your personal assistant for the boring stuff',
         icon: Zap,
         highlight: true,
         features: [
-            'Google Calendar + Gmail tool execution',
-            'On-chain Merkle audit trail (Solana)',
-            '6 LLM providers (Claude, GPT, Gemini, Grok, DeepSeek, Ollama)',
-            'Morning briefing cron job',
-            'x402 per-query agent payments',
-            'Encrypted memory engine',
-            'Priority support',
+            'Reads your email and writes replies in your voice',
+            'Schedules meetings and sends "let\u2019s grab coffee" follow-ups',
+            'Wakes up before you do and texts a one-minute briefing',
+            'Remembers your projects, contacts, and habits',
+            'Switches between Claude, ChatGPT, Gemini, and others, automatically',
+            'Every action is signed and saved, nothing happens without your okay',
+            'Real people on email when you need help',
         ],
-        cta: 'Get Pro Access',
+        cta: 'Start Pro',
         ctaLink: '/paywall',
         ctaIcon: ArrowRight,
         ctaStyle: 'bg-[#F97316] hover:bg-[#F97316]/90 text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]',
     },
     {
-        name: 'Enterprise',
+        name: 'For Teams',
         price: 'Custom',
         period: '',
-        description: 'On-prem deployment with dedicated support',
+        description: 'For families, small businesses, or companies',
         icon: Building2,
         highlight: false,
         features: [
             'Everything in Pro',
-            'On-premise deployment',
-            'Custom LLM integrations',
-            'HIPAA + SOC 2 compliance pack',
-            'SSO / SAML authentication',
-            'Dedicated account manager',
-            'SLA with 99.9% uptime',
-            'Custom agent development',
+            'Shared calendar, shared follow-ups, shared inbox',
+            'Stronger privacy controls and a full activity log',
+            'Sign in with Google, Microsoft, or Okta',
+            'A real person you can call when something matters',
+            '99.9% uptime guarantee, in writing',
+            'Custom helpers built for your specific work',
         ],
-        cta: 'Contact Sales',
+        cta: 'Talk to us',
         ctaLink: '/contact',
         ctaIcon: ArrowRight,
         ctaStyle: 'bg-[#FAFAFA]/5 hover:bg-[#FAFAFA]/10 border border-[#222222] text-white',
@@ -77,8 +77,8 @@ const Pricing: React.FC = () => {
         <Section id="pricing">
             <SectionHeader
                 eyebrow="Pricing"
-                title="Simple, transparent pricing"
-                description="Start free. Pay with USDC via Solana Pay. Cancel anytime."
+                title="Pick a plan, start in a minute"
+                description="Start free. Pay $19 a month when you want more. Cancel any time."
             />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch">

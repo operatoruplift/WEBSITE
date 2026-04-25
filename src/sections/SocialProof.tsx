@@ -15,21 +15,21 @@ import { BuiltWithCarousel } from '@/src/components/BuiltWithCarousel';
  */
 
 const SHIPPED_FEATURES = [
-    { icon: Key, label: 'Privy JWT auth middleware on every /api/* route' },
-    { icon: Database, label: 'Server-side audit ledger in Supabase (user_id-scoped RLS)' },
-    { icon: Lock, label: 'SHA-256 hashing via Web Crypto on every agent action' },
-    { icon: Activity, label: 'Anchor publish_root instruction deployed on Solana devnet' },
-    { icon: ShieldCheck, label: 'Upstash Redis rate limiting (60/hr free, 600/hr Pro)' },
-    { icon: Zap, label: 'Paywall gated server-side with runtime bypass for admins' },
+    { icon: Key, label: 'Sign-in is checked on every page, no shortcuts, no exceptions' },
+    { icon: Database, label: 'Every action you take is saved to your account, only visible to you' },
+    { icon: Lock, label: 'Each action gets a tamper-proof fingerprint that can\u2019t be edited later' },
+    { icon: Activity, label: 'We anchor those fingerprints on a public chain so we can\u2019t rewrite the history' },
+    { icon: ShieldCheck, label: 'Limits on how often the system can be hit, so spammers can\u2019t pile on' },
+    { icon: Zap, label: 'The paywall is checked on the server, you can\u2019t sneak past it on the front end' },
 ];
 
 const SocialProof: React.FC = () => {
     return (
         <Section>
             <SectionHeader
-                eyebrow="Why Trust This?"
-                title="Built with tools we trust"
-                description="Operator Uplift is built on infrastructure chosen for security, reliability, and speed. Not marketing."
+                eyebrow="Why trust this?"
+                title="Built on tools you already trust"
+                description="Picked for security, speed, and reliability, not for the marketing budget."
             />
 
             {/* Carousel, matches the Hero/TrustedBy marquee pattern */}
@@ -38,7 +38,7 @@ const SocialProof: React.FC = () => {
             {/* What's Shipped, verifiable */}
             <div className="w-full">
                 <p className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase mb-6 text-center">
-                    What&apos;s Shipped
+                    What&apos;s already live
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full items-stretch text-left">
@@ -60,14 +60,14 @@ const SocialProof: React.FC = () => {
 
             <div className="flex flex-col items-center gap-3">
                 <p className="text-sm text-[#A1A1AA]">
-                    Want to see the architecture? Check the Security page.
+                    Want the technical details? Check the Privacy page.
                 </p>
                 <p className="text-[11px] text-[#52525B] max-w-md">
-                    Beta software. Features listed are shipped to devnet or staging. Formal audits on the roadmap.
+                    Beta software. Everything listed is live in our staging environment. Formal audits are next.
                 </p>
                 <Link href="/paywall"
                     className="inline-flex items-center h-11 px-6 bg-[#F97316] text-white rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-[#F97316]/90 transition-colors mt-4">
-                    Get Early Access <ArrowRight size={16} className="ml-2" />
+                    Try it free <ArrowRight size={16} className="ml-2" />
                 </Link>
             </div>
         </Section>

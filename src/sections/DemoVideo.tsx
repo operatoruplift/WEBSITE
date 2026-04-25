@@ -36,9 +36,9 @@ export function DemoVideo() {
     return (
         <Section id="demo-video">
             <SectionHeader
-                eyebrow="90 Seconds"
-                title="See the three real demo beats"
-                description="Briefing, inbox triage, morning nudges. Recorded end-to-end against prod. Every tool call in this clip is labeled SIMULATED, the real versions run after you sign in."
+                eyebrow="90 seconds"
+                title="Watch it actually work"
+                description="Three real things, your morning briefing, your inbox, your reminders. Recorded end-to-end. Every action waits for the tap."
             />
 
             <FadeIn>
@@ -69,9 +69,9 @@ export function DemoVideo() {
                     {failed && (
                         <div className="absolute inset-0 flex items-center justify-center bg-black/60 px-6">
                             <p className="text-sm text-[#A1A1AA] font-mono text-center">
-                                The demo video could not load. Refresh, or
+                                The demo video didn&apos;t load. Refresh, or
                                 {' '}
-                                <Link href="/chat" className="underline hover:text-white">try the simulated chat</Link>
+                                <Link href="/chat" className="underline hover:text-white">try the live demo chat</Link>
                                 {' '}instead.
                             </p>
                         </div>
@@ -81,13 +81,13 @@ export function DemoVideo() {
 
             <div className="flex flex-col items-center gap-3 pt-4">
                 <p className="text-xs text-[#A1A1AA] font-mono text-center max-w-md">
-                    90s · recorded on prod · every tool call has `simulated: true` in the payload
+                    90 seconds. Nothing is real until you sign in.
                 </p>
                 <Link
                     href="/login?returnTo=/integrations"
                     className="inline-flex items-center h-11 px-6 bg-[#F97316] text-white rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-[#F97316]/90 transition-colors"
                 >
-                    Sign in to connect Google <ArrowRight size={16} className="ml-2" />
+                    Sign in and connect Gmail <ArrowRight size={16} className="ml-2" />
                 </Link>
             </div>
         </Section>
