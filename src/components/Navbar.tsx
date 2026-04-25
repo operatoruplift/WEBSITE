@@ -10,13 +10,13 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const navItems = [
-    { name: 'PRODUCT', targetId: 'product' },
-    { name: 'STORE', targetId: 'store', href: '/store' },
+    { name: 'HOW IT WORKS', targetId: 'product' },
+    { name: 'HELPERS', targetId: 'store', href: '/store' },
     // DEMO scrolls to the video section on the homepage so the nav
     // link + the Hero's "Watch 90s demo" CTA + the DemoVideo <section
     // id="demo-video"> are one surface. See docs/research/DESIGN.md,
     // single source of truth for "watch the demo."
-    { name: 'DEMO', targetId: 'demo-video', href: '/#demo-video' },
+    { name: 'WATCH DEMO', targetId: 'demo-video', href: '/#demo-video' },
     { name: 'PRIVACY', targetId: 'security' },
     { name: 'BLOG', targetId: 'blog', href: '/blog' },
   ];
@@ -54,7 +54,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
               href="/docs"
               className="group flex items-center text-xs font-bold text-muted hover:text-white transition-colors tracking-[0.15em] px-1"
             >
-              DOCS
+              HELP
             </Link>
           </div>
           
@@ -73,7 +73,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
               href="/paywall"
               className="inline-flex items-center h-9 px-4 text-xs font-bold bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors uppercase tracking-wide whitespace-nowrap"
             >
-              Get Early Access
+              Try it free
             </Link>
 
             <Link
@@ -118,7 +118,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
             onClick={() => setMobileMenuOpen(false)}
             className="text-lg font-bold text-white hover:text-primary transition-colors tracking-wide"
           >
-            DOCS
+            HELP
           </Link>
           
           <div className="w-full h-px bg-white/10 my-4" />
@@ -138,7 +138,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
             className="text-sm font-bold bg-primary text-white px-4 py-3 rounded-sm hover:bg-primary/80 transition-colors uppercase tracking-wide w-full text-center shadow-[0_0_12px_rgba(231,118,48,0.3)]"
             onClick={() => setMobileMenuOpen(false)}
           >
-            Launch App
+            Open the app
           </Link>
 
           <Link

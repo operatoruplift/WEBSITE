@@ -30,13 +30,13 @@ export interface MarketData {
 export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData } = {
   problem: {
     stat: '40+',
-    subline: 'Your team uses 40+ SaaS tools. Each one stores your data on their servers, trains on your inputs, and locks you into their ecosystem.',
+    subline: 'You jump between Gmail, Calendar, Slack, Notion, and twenty more, every day. Each one stores your stuff somewhere different, and AI tools can only see one app at a time.',
     pillars: [
-      { id: 'siloed-memory', emoji: '🧠', problem: 'Fragmented Stack', solution: 'Unified Platform', description: 'Your tools don\'t talk to each other. Data lives in silos. AI agents should unify your entire workflow with shared memory across every tool.', href: '#product' },
-      { id: 'exposed-privacy', emoji: '🔓', problem: 'Data Leakage', solution: 'On-Premise', description: 'Every cloud AI tool ingests your proprietary data. Operator Uplift runs on your infrastructure. Nothing leaves your environment.', href: '#product' },
-      { id: 'no-boundaries', emoji: '⚠️', problem: 'No Compliance', solution: 'Audit-Ready', description: 'Cloud AI tools can\'t meet HIPAA, SOC 2, or GDPR requirements. Our runtime is open-source, auditable, and deploys inside your firewall.', href: '#product' },
+      { id: 'siloed-memory', emoji: '🧠', problem: 'Apps don\'t talk', solution: 'One assistant', description: 'Your inbox doesn\'t know about your calendar. Your notes don\'t know about your messages. One assistant that sees the whole picture and moves work across them.', href: '#product' },
+      { id: 'exposed-privacy', emoji: '🔓', problem: 'Sent to the cloud', solution: 'Stays on your computer', description: 'Most AI sends your email, files, and chats to someone else\'s server. Ours runs on your machine. Nothing leaves unless you say so.', href: '#product' },
+      { id: 'no-boundaries', emoji: '⚠️', problem: 'No paperwork', solution: 'Privacy-ready', description: 'Cloud AI can\'t pass HIPAA, SOC 2, or GDPR audits. Ours can. The code is open and the data is local, so your IT team can sign off in an afternoon.', href: '#product' },
     ],
-    solution: 'One platform that replaces fragmented SaaS with AI agents you actually control.',
+    solution: 'one assistant for all your apps, on your computer, that you fully control.',
   },
   market: {
     headline: 'Massive and Growing.',
@@ -49,10 +49,10 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
     ],
   },
   hero: {
-    visionTag: "PERSONAL AI OPERATOR",
-    headline: "AI for your calendar and inbox. That you control.",
-    subhead: "A personal AI operator for email and calendar. Every action waits for your Approve click. Every real action leaves a signed receipt.",
-    description: "Ask for a daily briefing, triage your inbox, schedule meetings, all through one chat. Nothing sends or books without your OK. Try the live demo before you sign in.",
+    visionTag: "YOUR AI ASSISTANT",
+    headline: "AI that runs your inbox and calendar. You stay in charge.",
+    subhead: "Drafts your replies, schedules your meetings, sends your follow-ups. Nothing goes out without your tap.",
+    description: "Ask for a quick rundown of your day, triage your inbox, or book a meeting, all in one chat. Try the demo first, no signup needed.",
     contractAddress: "",
     contractLabel: "",
     downloads: {
@@ -67,42 +67,42 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
   },
   product: {
     tag: "HOW IT WORKS",
-    headline: "Your AI, Your Rules.",
-    subhead: "Five simple principles that keep you in control.",
+    headline: "Your AI. Your rules.",
+    subhead: "Five small ideas that keep you in charge.",
     features: [
       {
         id: 'isolated',
         navTitle: 'YOUR DATA',
-        cardTitle: '1. Your Data Stays Yours',
-        description: 'Everything stays on your device. Your AI assistants use private, encrypted memory. Nothing gets sent to the cloud without your say-so.',
+        cardTitle: '1. Your data stays yours',
+        description: 'Everything lives on your computer, encrypted. Your assistant remembers what matters in private. Nothing goes to the cloud unless you say so.',
         iconType: 'kanban'
       },
       {
         id: 'store',
-        navTitle: 'APP STORE',
-        cardTitle: '2. Pick Your Agents',
-        description: 'Browse and install AI assistants from our marketplace, like an app store for AI. One tap to add, one tap to remove.',
+        navTitle: 'PICK HELPERS',
+        cardTitle: '2. Pick your helpers',
+        description: 'Browse a built-in store of ready-made AI helpers, like an app store, but for AI. One tap to add one, one tap to remove.',
         iconType: 'globe'
       },
       {
         id: 'runtime',
         navTitle: 'CLEAN EXITS',
-        cardTitle: '3. They Leave When Done',
-        description: 'When an agent finishes a task, it loses access to your stuff. No background snooping, no lingering connections. Clean in, clean out.',
+        cardTitle: '3. Clean exits',
+        description: 'When a helper finishes a job, its access shuts off. No background snooping, no lingering logins. Clean in, clean out.',
         iconType: 'terminal'
       },
       {
         id: 'tokens',
         navTitle: 'ACCESS',
-        cardTitle: '4. Temporary Access Only',
-        description: 'Agents only see what you allow, for as long as you allow it. Like giving someone a guest pass that expires automatically.',
+        cardTitle: '4. Temporary access only',
+        description: 'Helpers only see what you allow, for as long as you allow it. Like a guest pass that expires on its own.',
         iconType: 'message'
       },
       {
         id: 'permissions',
         navTitle: 'APPROVAL',
-        cardTitle: '5. You Approve Everything',
-        description: 'Every action an agent wants to take, like reading a file, sending a message, or accessing the internet, needs your OK first.',
+        cardTitle: '5. You approve everything',
+        description: 'Every action, read this, send that, look something up online, needs your okay first.',
         iconType: 'check'
       }
     ]

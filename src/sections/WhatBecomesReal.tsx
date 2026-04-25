@@ -20,21 +20,21 @@ import { SectionHeader } from '@/src/components/SectionHeader';
 const BLOCKS = [
     {
         icon: Mail,
-        eyebrow: '01 · Real',
-        title: 'Gmail + Calendar, for real',
-        body: 'Connect Google once. Your agent lists events, drafts replies, and creates meetings on your actual accounts. Scopes are minimum-necessary: calendar.events + gmail.compose + gmail.readonly.',
+        eyebrow: '01 · Real email',
+        title: 'Real Gmail. Real calendar.',
+        body: 'Connect Google once. After that, it pulls up your meetings, drafts replies in your actual inbox, and books events on your real calendar. We only ask for the bare minimum, read your mail, write drafts, manage events. That\u2019s it.',
     },
     {
         icon: Hand,
-        eyebrow: '02 · Approved',
-        title: 'You approve every write',
-        body: 'Before anything sends or books, a modal shows exactly what will happen and what data was used. One click to approve, one to cancel. Nothing is committed until you click.',
+        eyebrow: '02 · You decide',
+        title: 'Nothing goes out without your okay',
+        body: 'Before any email sends or any meeting is booked, a popup shows you exactly what\u2019s about to happen and what info it used. One tap to approve, one to cancel. Until you tap, nothing moves.',
     },
     {
         icon: FileSignature,
-        eyebrow: '03 · Receipted',
-        title: 'Every real action leaves a signed receipt',
-        body: 'ed25519-signed, hashed, and anchored to a Merkle root on Solana devnet. You can audit every draft sent and every event created, the signature proves Operator Uplift can\u2019t rewrite history.',
+        eyebrow: '03 · Receipts',
+        title: 'Every action leaves a paper trail',
+        body: 'Every email it sends and every meeting it books gets a tamper-proof receipt. You can scroll back and see exactly what happened, when, and why. We can\u2019t quietly rewrite the history.',
     },
 ];
 
@@ -42,9 +42,9 @@ export function WhatBecomesReal() {
     return (
         <Section>
             <SectionHeader
-                eyebrow="After You Sign In"
-                title="What becomes real after login"
-                description="The demo on /chat is simulated. Sign in + connect Google and three things switch on, each designed so you stay in control."
+                eyebrow="After you sign in"
+                title="Three things turn on when you sign in"
+                description="The demo lets you play, but nothing real happens. Sign in and hook up Gmail and three things switch on, and you stay in charge the whole time."
             />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 w-full items-stretch">
