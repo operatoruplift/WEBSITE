@@ -79,12 +79,11 @@ const MarketOpportunity: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white mb-2">
-                    Why now? The AI inflection point.
+                    Why now?
                   </h3>
                   <p className="text-muted leading-relaxed font-mono text-sm">
-                    We are at the exact moment. Models are good enough, compute is cheap enough, and users are frustrated enough
-                    that a local-first AI OS can replace every productivity app people use today.
-                    Operator Uplift is positioned to capture the consumer AI automation market before big tech consolidates it.
+                    AI is finally good enough, fast enough, and cheap enough that one assistant on your computer can replace the dozens of productivity apps you juggle today.
+                    We&apos;re building it before big tech does, and putting it on your machine instead of theirs.
                   </p>
                 </div>
               </div>
