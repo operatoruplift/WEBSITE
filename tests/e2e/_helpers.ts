@@ -1,3 +1,4 @@
+import { test as baseTest } from '@playwright/test';
 import type { Browser, BrowserContext, Page, Request as PWRequest } from '@playwright/test';
 
 /**
@@ -151,3 +152,59 @@ export const UA = {
     WINDOWS: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     LINUX: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
 } as const;
+
+/**
+ * Real-mode helper: returns PLAYWRIGHT_PRIVY_TOKEN or skips the test.
+ *
+ * Replaces the `const token = process.env...; test.skip(!token, ...)`
+ * pair that the four real-mode spec files (bypass, paywall, x402-gate,
+ * capability/logged-in) repeated 15+ times. Centralizing the skip
+ * message keeps the failure mode uniform across CI logs.
+ *
+ * @example
+ *   test('thing', async ({ request }) => {
+ *     const token = requirePrivyToken();
+ *     const res = await request.get('/api/x', { headers: authedHeaders(token) });
+ *   });
+ */
+export function requirePrivyToken(): string {
+    const token = process.env.PLAYWRIGHT_PRIVY_TOKEN;
+    baseTest.skip(!token, 'PLAYWRIGHT_PRIVY_TOKEN not set');
+    return token as string;
+}
+
+/**
+ * Returns the standard Bearer-auth header set used by every real-mode
+ * spec. Pass `extra` to merge additional headers like Content-Type.
+ */
+export function authedHeaders(token: string, extra: Record<string, string> = {}): Record<string, string> {
+    return { Authorization: `Bearer ${token}`, ...extra };
+}
+
+/**
+ * Seed both the cookie and the localStorage token that the client
+ * AuthGate looks for. Used by browser-side specs that need a
+ * pre-authenticated page before the first navigation.
+ *
+ * @example
+ *   const token = requirePrivyToken();
+ *   await seedAuthedSession(page, context, token);
+ *   await page.goto('/chat');
+ */
+export async function seedAuthedSession(
+    page: Page,
+    context: BrowserContext,
+    token: string,
+): Promise<void> {
+    await context.addCookies([
+        {
+            name: 'privy-token',
+            value: token,
+            domain: new URL(page.url() || resolveBaseUrl()).hostname,
+            path: '/',
+        },
+    ]);
+    await page.addInitScript((tok: string) => {
+        localStorage.setItem('token', tok);
+    }, token);
+}
