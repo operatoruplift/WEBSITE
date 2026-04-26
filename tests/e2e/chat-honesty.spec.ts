@@ -104,3 +104,15 @@ test('chat header loading state does not say "5 agents debating"', async ({ page
         expect(text).not.toContain('council');
     }
 });
+
+test('paywall does not advertise the removed council feature', async ({ page }) => {
+    // PR #155 fixed this. Lock it in: anyone considering payment
+    // should never see "LLM Council, 5 agents debate every decision"
+    // (or any of the fabricated personas) listed as a Pro feature.
+    await page.goto('/paywall');
+
+    const body = (await page.locator('body').innerText()).toLowerCase();
+    for (const phrase of FORBIDDEN_PHRASES) {
+        expect(body, `forbidden phrase detected on /paywall: "${phrase}"`).not.toContain(phrase.toLowerCase());
+    }
+});
