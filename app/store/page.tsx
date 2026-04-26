@@ -18,16 +18,16 @@ interface StoreAgent {
 }
 
 const agents: StoreAgent[] = [
-    { id: 'task', name: 'Task Manager', category: 'Productivity', price: '0.01 SOL', description: 'Organize tasks, set reminders, track deadlines automatically', emoji: '✅', live: true },
-    { id: 'calendar', name: 'Calendar Agent', category: 'Scheduling', price: '0.01 SOL', description: 'Manage your calendar, schedule meetings, send invites', emoji: '📅', live: true },
-    { id: 'research', name: 'Research Agent', category: 'Knowledge', price: '0.02 SOL', description: 'Deep research on any topic, summarized and saved to memory', emoji: '🔍', live: true },
-    { id: 'finance', name: 'Finance Tracker', category: 'Finance', price: '0.02 SOL', description: 'Track spending, categorize transactions, generate reports', emoji: '💰', live: true },
-    { id: 'code', name: 'Code Assistant', category: 'Developer', price: '0.03 SOL', description: 'Review code, suggest fixes, write tests', emoji: '💻', live: true },
-    { id: 'health', name: 'Health Coach', category: 'Wellness', price: '0.02 SOL', description: 'Track habits, sleep, nutrition and give personalized recommendations', emoji: '🏃', live: false },
-    { id: 'legal', name: 'Legal Assistant', category: 'Compliance', price: '0.05 SOL', description: 'Review contracts, flag risks, summarize legal documents', emoji: '⚖️', live: false },
-    { id: 'music', name: 'Music Agent', category: 'Creative', price: '0.02 SOL', description: 'Generate playlists, identify songs, manage your music library', emoji: '🎵', live: false },
-    { id: 'language', name: 'Language Tutor', category: 'Education', price: '0.02 SOL', description: 'Daily language practice, vocabulary drills, conversation coaching', emoji: '🌍', live: false },
-    { id: 'sleep', name: 'Sleep Coach', category: 'Wellness', price: '0.01 SOL', description: 'Track sleep patterns, optimize your schedule, morning briefings', emoji: '😴', live: false },
+    { id: 'task', name: 'Task Manager', category: 'Productivity', price: 'Free in beta', description: 'Organizes your tasks, sets reminders, tracks deadlines automatically.', emoji: '✅', live: true },
+    { id: 'calendar', name: 'Calendar', category: 'Scheduling', price: 'Free in beta', description: 'Manages your calendar, schedules meetings, sends invites.', emoji: '📅', live: true },
+    { id: 'research', name: 'Researcher', category: 'Knowledge', price: 'Free in beta', description: 'Deep research on any topic, summarized and saved for you.', emoji: '🔍', live: true },
+    { id: 'finance', name: 'Finance Tracker', category: 'Finance', price: 'Free in beta', description: 'Tracks spending, sorts transactions, generates clean reports.', emoji: '💰', live: true },
+    { id: 'code', name: 'Code Assistant', category: 'Developer', price: 'Free in beta', description: 'Reviews code, suggests fixes, writes tests.', emoji: '💻', live: true },
+    { id: 'health', name: 'Health Coach', category: 'Wellness', price: 'Free in beta', description: 'Tracks habits, sleep, and nutrition. Gives personalized advice.', emoji: '🏃', live: false },
+    { id: 'legal', name: 'Legal Assistant', category: 'Compliance', price: 'Free in beta', description: 'Reads contracts, flags risks, summarizes legal documents.', emoji: '⚖️', live: false },
+    { id: 'music', name: 'Music', category: 'Creative', price: 'Free in beta', description: 'Generates playlists, identifies songs, manages your library.', emoji: '🎵', live: false },
+    { id: 'language', name: 'Language Tutor', category: 'Education', price: 'Free in beta', description: 'Daily language practice, vocabulary drills, conversation coaching.', emoji: '🌍', live: false },
+    { id: 'sleep', name: 'Sleep Coach', category: 'Wellness', price: 'Free in beta', description: 'Tracks sleep patterns, suggests a better schedule, morning briefings.', emoji: '😴', live: false },
 ];
 
 export default function StorePage() {
@@ -44,9 +44,8 @@ export default function StorePage() {
     const deploy = async (agent: StoreAgent) => {
         if (!agent.live || installed.has(agent.id)) return;
         setDeploying(agent.id);
-        // Simulate Solana devnet transaction (2s)
+        // Simulate install (2s)
         await new Promise(r => setTimeout(r, 2000));
-        const sig = Array.from({ length: 44 }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz123456789'[Math.floor(Math.random() * 58)]).join('');
         setInstalled(prev => {
             const next = new Set(prev);
             next.add(agent.id);
@@ -54,7 +53,7 @@ export default function StorePage() {
             return next;
         });
         setDeploying(null);
-        alert(`Agent deployed! Transaction: ${sig}`);
+        alert(`${agent.name} installed.`);
     };
 
     return (
@@ -67,12 +66,12 @@ export default function StorePage() {
                 <div className="relative z-10 max-w-3xl mx-auto">
                     <FadeIn>
                         <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 text-primary px-3 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest mb-6">
-                            <Zap size={12} /> On-Chain Agents
+                            <Zap size={12} /> Built-in store
                         </div>
                     </FadeIn>
-                    <h1 className="text-4xl md:text-6xl font-medium text-white tracking-tight mb-4">The Agent Store</h1>
-                    <p className="text-lg text-gray-400 mb-8">Deploy AI agents on-chain. Powered by Solana.</p>
-                    <p className="text-xs text-gray-600 font-mono">All transactions on Solana devnet. No real funds required during beta.</p>
+                    <h1 className="text-4xl md:text-6xl font-medium text-white tracking-tight mb-4">Helpers</h1>
+                    <p className="text-lg text-gray-400 mb-8">AI helpers for the parts of your day you&apos;d rather not handle yourself.</p>
+                    <p className="text-xs text-gray-600 font-mono">All free during beta. No card required.</p>
                 </div>
             </section>
 
@@ -90,7 +89,7 @@ export default function StorePage() {
             {/* Agent Grid */}
             <section className="py-16 px-6 md:px-12 max-w-[1200px] mx-auto">
                 <div className="flex items-center gap-3 mb-8">
-                    <span className="text-xs font-bold tracking-widest text-primary uppercase">Live Agents</span>
+                    <span className="text-xs font-bold tracking-widest text-primary uppercase">Live now</span>
                     <span className="flex-1 h-px bg-white/10" />
                 </div>
 
@@ -111,7 +110,7 @@ export default function StorePage() {
                                     ) : (
                                         <button onClick={() => deploy(agent)} disabled={deploying === agent.id}
                                             className="px-4 py-2 rounded-lg bg-primary text-white text-xs font-bold uppercase tracking-widest hover:bg-primary/80 transition-colors shadow-[0_0_15px_rgba(231,118,48,0.3)] disabled:opacity-50">
-                                            {deploying === agent.id ? 'Deploying...' : 'Deploy with SOL'}
+                                            {deploying === agent.id ? 'Installing...' : 'Install'}
                                         </button>
                                     )}
                                 </div>
@@ -121,7 +120,7 @@ export default function StorePage() {
                 </div>
 
                 <div className="flex items-center gap-3 mb-8">
-                    <span className="text-xs font-bold tracking-widest text-gray-500 uppercase">Coming Soon</span>
+                    <span className="text-xs font-bold tracking-widest text-gray-500 uppercase">Coming soon</span>
                     <span className="flex-1 h-px bg-white/10" />
                 </div>
 
@@ -149,9 +148,9 @@ export default function StorePage() {
 
             {/* CTA */}
             <section className="py-16 px-6 md:px-12 text-center">
-                <p className="text-gray-500 mb-4">Want to build your own agent?</p>
+                <p className="text-gray-500 mb-4">Want to build your own helper?</p>
                 <Link href="/agents/builder" className="inline-flex items-center gap-2 bg-white text-black px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors">
-                    Open Agent Builder <ArrowRight size={14} />
+                    Build your own <ArrowRight size={14} />
                 </Link>
             </section>
 
