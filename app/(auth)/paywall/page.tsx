@@ -152,16 +152,17 @@ export default function PaywallPage() {
     };
 
     const PRO_FEATURES = [
-        'LLM Council, 5 agents debate every decision',
-        'Google Calendar + Gmail tool execution',
-        'On-chain Merkle audit trail (Solana devnet)',
-        'All 6 LLM providers',
-        'Priority support',
+        'Drafts your replies and sends them with your tap',
+        'Schedules meetings on your real Google Calendar',
+        'Wakes up before you and texts a one-minute briefing',
+        'Switches between Claude, ChatGPT, Gemini, and others, automatically',
+        'Every action gets a tamper-proof receipt you can scroll back through',
+        'Real people on email when you need help',
     ];
     const FREE_FEATURES = [
-        'Browse the Agent Marketplace',
-        'Self-hosted desktop app (Tauri DMG)',
-        'Bring your own API keys',
+        'Browse the helpers store',
+        'Free Mac app',
+        'Use your own ChatGPT or Claude key',
     ];
 
     return (
@@ -183,9 +184,9 @@ export default function PaywallPage() {
                 {/* Header */}
                 <div className="text-center mb-12">
                     <Logo className="w-12 h-12 mx-auto mb-4" />
-                    <h1 className="text-3xl font-semibold text-white tracking-tight">Choose Your Plan</h1>
+                    <h1 className="text-3xl font-semibold text-white tracking-tight">Pick a plan</h1>
                     <p className="text-sm text-[#A1A1AA] mt-2 max-w-md mx-auto">
-                        Operator Uplift is in early access. Get Pro for the full experience, or join the waitlist.
+                        Start free. Pay $19 a month when you want it doing email and calendar for you. Cancel any time.
                     </p>
                     <p className="text-xs text-[#52525B] mt-3">
                         Already have an account?{' '}
@@ -207,7 +208,7 @@ export default function PaywallPage() {
                             </div>
                             <div>
                                 <h2 className="text-xl font-semibold text-white">Pro</h2>
-                                <p className="text-xs text-[#A1A1AA]">Full agent orchestration</p>
+                                <p className="text-xs text-[#A1A1AA]">Your assistant for the boring stuff</p>
                             </div>
                         </div>
 
@@ -218,7 +219,7 @@ export default function PaywallPage() {
                         </div>
                         {/* Conversion clarifier, what changes after paying */}
                         <p className="text-xs text-[#A1A1AA] mb-6 leading-relaxed">
-                            Unlocks <span className="text-white font-medium">Real Mode</span>: write actions execute on your accounts and each produces a signed receipt.
+                            After this, it actually opens your inbox, drafts the reply, and books the meeting. Every action waits for your tap.
                         </p>
 
                         <ul className="space-y-3 mb-6">
@@ -366,7 +367,7 @@ export default function PaywallPage() {
                             </div>
                             <div>
                                 <h2 className="text-xl font-semibold text-white">Free</h2>
-                                <p className="text-xs text-[#A1A1AA]">Marketplace access + waitlist</p>
+                                <p className="text-xs text-[#A1A1AA]">Try the helpers, join the waitlist</p>
                             </div>
                         </div>
                         <div className="mb-6">
@@ -381,7 +382,7 @@ export default function PaywallPage() {
                             ))}
                             <li className="flex items-start gap-2.5 text-sm text-[#52525B]">
                                 <Lock size={14} className="mt-0.5 shrink-0" />
-                                Chat, Swarm, Security, Pro only
+                                Email, calendar, follow-ups, Pro only
                             </li>
                         </ul>
 
