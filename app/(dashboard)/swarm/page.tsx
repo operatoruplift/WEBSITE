@@ -44,7 +44,7 @@ const PRESET_SWARMS: SwarmConfig[] = [
         ],
     },
     {
-        id: 'research', name: 'Research Council', description: 'Parallel research agents synthesize findings into a unified report',
+        id: 'research', name: 'Research Team', description: 'Four research helpers work in parallel and synthesize a single report',
         topology: 'parallel', status: 'ready', runs: 0, lastRun: 'Never',
         agents: [
             { id: 'b1', name: 'Web Researcher', role: 'Search and analyze web sources', model: 'Claude Sonnet 4.6', status: 'idle', icon: Brain },
