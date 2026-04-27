@@ -69,6 +69,7 @@ jobs:
             tests/e2e/consumer-copy.spec.ts \
             tests/e2e/chat-honesty.spec.ts \
             tests/e2e/dashboard-honesty.spec.ts \
+            tests/e2e/request-id-runtime.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure
