@@ -17,14 +17,27 @@ export function DownloadCTA({ className = '' }: { className?: string }) {
     const options = downloadOptions();
     // SSR-safe default: macOS. The useEffect below upgrades to the
     // actual detection result on the client so hydration stays stable.
-    const [selectedOS, setSelectedOS] = useState<OSKey>('macos');
+    // Lazy initializer: detectOS() reads window.navigator on the
+    // client. SSR returns 'macos' as a safe default; the client picks
+    // the real OS on first render without an extra setState/effect.
+    const [selectedOS, setSelectedOS] = useState<OSKey>(() => {
+        if (typeof window === 'undefined') return 'macos';
+        try { return detectOS(); } catch { return 'macos'; }
+    });
     const [manuallyPicked, setManuallyPicked] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const rootRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (!manuallyPicked) setSelectedOS(detectOS());
-    }, [manuallyPicked]);
+        // Re-detect only if the user hasn't manually picked. Initial
+        // detection ran in the lazy initializer above, this hook is
+        // here for the corner case where detectOS() result depends
+        // on something that could change post-mount (rare).
+        if (!manuallyPicked) {
+            const detected = detectOS();
+            if (detected !== selectedOS) setSelectedOS(detected);
+        }
+    }, [manuallyPicked, selectedOS]);
 
     useEffect(() => {
         const onDocClick = (e: MouseEvent) => {

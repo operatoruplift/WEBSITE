@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
@@ -30,16 +30,18 @@ const agents: StoreAgent[] = [
     { id: 'sleep', name: 'Sleep Coach', category: 'Wellness', price: 'Free in beta', description: 'Tracks sleep patterns, suggests a better schedule, morning briefings.', emoji: '😴', live: false },
 ];
 
-export default function StorePage() {
-    const [installed, setInstalled] = useState<Set<string>>(new Set());
-    const [deploying, setDeploying] = useState<string | null>(null);
+// Lazy initializer reads localStorage once during the first client
+// render, avoids the setState-in-effect cascading-render warning.
+function loadInstalledSet(): Set<string> {
+    if (typeof window === 'undefined') return new Set();
+    try {
+        return new Set(JSON.parse(localStorage.getItem('store-installed') || '[]'));
+    } catch { return new Set(); }
+}
 
-    useEffect(() => {
-        try {
-            const saved = JSON.parse(localStorage.getItem('store-installed') || '[]');
-            setInstalled(new Set(saved));
-        } catch { /* fresh */ }
-    }, []);
+export default function StorePage() {
+    const [installed, setInstalled] = useState<Set<string>>(loadInstalledSet);
+    const [deploying, setDeploying] = useState<string | null>(null);
 
     const deploy = async (agent: StoreAgent) => {
         if (!agent.live || installed.has(agent.id)) return;
