@@ -3,12 +3,9 @@ import { createClient } from '@supabase/supabase-js';
 import { verifySession, getUserEmail } from '@/lib/auth';
 import { checkSubscription } from '@/lib/subscription';
 import { classifyError, envelope } from '@/lib/errorTaxonomy';
+import { withRequestMeta } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
-
-function newRequestId(): string {
-    return `req_${crypto.randomUUID()}`;
-}
 
 /**
  * Extract the JOSE header fields from a compact JWS without verifying.
@@ -39,29 +36,29 @@ function jwsHeaderDebug(request: Request): { alg?: string; typ?: string; kid?: s
  *    activate one (status=active) after Solana Pay confirmation.
  */
 export async function GET(request: Request) {
-    const requestId = request.headers.get('x-request-id') || newRequestId();
-    const startedAt = new Date().toISOString();
+    const meta = withRequestMeta(request, 'subscription.get');
+    const { requestId, startedAt } = meta;
     try {
         const verified = await verifySession(request);
         const email = await getUserEmail(verified.userId);
         const status = await checkSubscription(verified.userId, email || undefined);
-        return NextResponse.json(status, { headers: { 'X-Request-Id': requestId } });
+        return NextResponse.json(status, { headers: meta.headers });
     } catch (err) {
         const msg = err instanceof Error ? err.message : 'Auth required';
         const jws = jwsHeaderDebug(request);
         const errorClass = classifyError(err);
-        console.log(JSON.stringify({ at: 'subscription', event: 'auth-failed', route: 'GET /api/subscription', requestId, ts: startedAt, errorClass, reason: msg.slice(0, 120), jws }));
+        console.log(JSON.stringify({ at: meta.route, event: 'auth-failed', route: 'GET /api/subscription', requestId, ts: startedAt, errorClass, reason: msg.slice(0, 120), jws }));
         const body = envelope(errorClass, msg, requestId, startedAt);
         return NextResponse.json(
             { tier: 'free', active: false, ...body },
-            { status: 401, headers: { 'X-Request-Id': requestId } },
+            { status: 401, headers: meta.headers },
         );
     }
 }
 
 export async function POST(request: Request) {
-    const requestId = request.headers.get('x-request-id') || newRequestId();
-    const startedAt = new Date().toISOString();
+    const meta = withRequestMeta(request, 'subscription.post');
+    const { requestId, startedAt } = meta;
     try {
         let verified;
         try {
@@ -74,7 +71,7 @@ export async function POST(request: Request) {
             console.log(JSON.stringify({ at: 'subscription', event: 'auth-failed', route: 'POST /api/subscription', requestId, ts: startedAt, errorClass, reason: code.slice(0, 120), jws }));
             return NextResponse.json(
                 envelope(errorClass, code, requestId, startedAt),
-                { status: 401, headers: { 'X-Request-Id': requestId } },
+                { status: 401, headers: meta.headers },
             );
         }
         const body = await request.json();
@@ -189,7 +186,7 @@ export async function POST(request: Request) {
         console.log(JSON.stringify({ at: 'subscription', event: 'unhandled', route: 'POST /api/subscription', requestId, ts: startedAt, errorClass, error: msg.slice(0, 240) }));
         return NextResponse.json(
             envelope(errorClass, msg, requestId, startedAt),
-            { status: errorClass === 'provider_unavailable' ? 503 : 500, headers: { 'X-Request-Id': requestId } },
+            { status: errorClass === 'provider_unavailable' ? 503 : 500, headers: meta.headers },
         );
     }
 }

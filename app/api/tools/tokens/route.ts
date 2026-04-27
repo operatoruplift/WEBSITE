@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCapabilities } from '@/lib/capabilities';
+import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 export const maxDuration = 15;
@@ -60,19 +61,17 @@ async function tokensPost(path: string, body: unknown) {
 }
 
 export async function POST(request: Request) {
+    const meta = withRequestMeta(request, 'tools.tokens');
     const caps = await getCapabilities(request);
     if (!caps.capability_real) {
         return NextResponse.json(
-            { error: 'demo_mode', simulated: true, message: 'Sign in to run real token lookups.' },
-            { status: 403 },
+            { error: 'demo_mode', simulated: true, message: 'Sign in to run real token lookups.', requestId: meta.requestId },
+            { status: 403, headers: meta.headers },
         );
     }
 
     if (!process.env.TOKENS_API_KEY) {
-        return NextResponse.json(
-            { error: 'tokens_not_configured', message: 'TOKENS_API_KEY not set on the server.' },
-            { status: 503 },
-        );
+        return errorResponse(new Error('TOKENS_API_KEY not set on the server.'), meta, { errorClass: 'provider_unavailable' });
     }
 
     const { action, params } = (await request.json()) as {
@@ -84,65 +83,66 @@ export async function POST(request: Request) {
         switch (action) {
             case 'search': {
                 const query = String(params?.query ?? '').trim();
-                if (!query) return NextResponse.json({ error: 'query required' }, { status: 400 });
+                if (!query) return validationError('query required', 'Send params.query in the JSON body.', meta, { missing: ['query'] });
                 const data = await tokensGet('/assets/search', { q: query, limit: Number(params?.limit ?? 10) });
-                return NextResponse.json({ action, ...data });
+                return NextResponse.json({ action, ...data }, { headers: meta.headers });
             }
             case 'resolve': {
                 const ref = String(params?.ref ?? params?.mint ?? params?.alias ?? '').trim();
-                if (!ref) return NextResponse.json({ error: 'ref|mint|alias required' }, { status: 400 });
+                if (!ref) return validationError('ref|mint|alias required', 'Send one of ref, mint, or alias in params.', meta, { missing: ['ref'] });
                 const data = await tokensGet('/assets/resolve', { ref });
-                return NextResponse.json({ action, ...data });
+                return NextResponse.json({ action, ...data }, { headers: meta.headers });
             }
             case 'asset': {
                 const id = String(params?.assetId ?? params?.id ?? '').trim();
-                if (!id) return NextResponse.json({ error: 'assetId required' }, { status: 400 });
+                if (!id) return validationError('assetId required', 'Send params.assetId.', meta, { missing: ['assetId'] });
                 const data = await tokensGet(`/assets/${encodeURIComponent(id)}`, {
                     includes: params?.includes as string | undefined,
                     mint: params?.mint as string | undefined,
                 });
-                return NextResponse.json({ action, ...data });
+                return NextResponse.json({ action, ...data }, { headers: meta.headers });
             }
             case 'price': {
                 const id = String(params?.assetId ?? '').trim();
-                if (!id) return NextResponse.json({ error: 'assetId required' }, { status: 400 });
+                if (!id) return validationError('assetId required', 'Send params.assetId.', meta, { missing: ['assetId'] });
                 // price-chart returns OHLCV candles we can pull the latest close from
                 const data = await tokensGet(`/assets/${encodeURIComponent(id)}/price-chart`, {
                     interval: (params?.interval as string) || '1h',
                     from: params?.from as string | undefined,
                     to: params?.to as string | undefined,
                 });
-                return NextResponse.json({ action, ...data });
+                return NextResponse.json({ action, ...data }, { headers: meta.headers });
             }
             case 'risk': {
                 const mint = String(params?.mint ?? '').trim();
-                if (!mint) return NextResponse.json({ error: 'mint required' }, { status: 400 });
+                if (!mint) return validationError('mint required', 'Send params.mint.', meta, { missing: ['mint'] });
                 const data = await tokensGet('/assets/risk-summary', { mint });
-                return NextResponse.json({ action, ...data });
+                return NextResponse.json({ action, ...data }, { headers: meta.headers });
             }
             case 'markets': {
                 const id = String(params?.assetId ?? '').trim();
                 const mint = String(params?.mint ?? '').trim();
-                if (!id) return NextResponse.json({ error: 'assetId required' }, { status: 400 });
+                if (!id) return validationError('assetId required', 'Send params.assetId.', meta, { missing: ['assetId'] });
                 const data = await tokensGet(`/assets/${encodeURIComponent(id)}/markets`, { mint });
-                return NextResponse.json({ action, ...data });
+                return NextResponse.json({ action, ...data }, { headers: meta.headers });
             }
             case 'market_snapshots': {
                 const refs = (params?.refs as string[] | undefined) ?? [];
                 if (!Array.isArray(refs) || refs.length === 0) {
-                    return NextResponse.json({ error: 'refs[] required' }, { status: 400 });
+                    return validationError('refs[] required', 'Send params.refs as a non-empty array.', meta, { missing: ['refs'] });
                 }
                 const data = await tokensPost('/assets/market-snapshots', { refs });
-                return NextResponse.json({ action, snapshots: data });
+                return NextResponse.json({ action, snapshots: data }, { headers: meta.headers });
             }
             default:
-                return NextResponse.json(
-                    { error: `unknown_action:${action}. Supported: search, resolve, asset, price, risk, markets, market_snapshots` },
-                    { status: 400 },
+                return validationError(
+                    `unknown_action:${action}`,
+                    'Use action="search" | "resolve" | "asset" | "price" | "risk" | "markets" | "market_snapshots".',
+                    meta,
+                    { action },
                 );
         }
     } catch (err) {
-        const msg = err instanceof Error ? err.message : 'tokens_call_failed';
-        return NextResponse.json({ error: msg }, { status: 502 });
+        return errorResponse(err, meta, { httpHint: 502 });
     }
 }
