@@ -20,11 +20,15 @@ interface Workflow {
     trigger: string;
 }
 
+// Example workflows shipped as starter templates. Each user lands
+// here with all five marked as drafts and zero runs, the previous
+// version pre-fabricated 142 / 891 / 56 / 23 runs and timestamps
+// like "2h ago" that the user never produced.
 const DEMO_WORKFLOWS: Workflow[] = [
-    { id: '1', name: 'Daily Code Review', description: 'Scans PRs, runs analysis, posts summaries to Slack', status: 'active', steps: 5, lastRun: '2h ago', runs: 142, trigger: 'Cron: 9am daily' },
-    { id: '2', name: 'Issue Triage Bot', description: 'Classifies new GitHub issues by severity and assigns teams', status: 'active', steps: 3, lastRun: '15m ago', runs: 891, trigger: 'Webhook: GitHub' },
-    { id: '3', name: 'Customer Onboarding', description: 'Sends welcome sequence, provisions accounts, schedules demo', status: 'paused', steps: 7, lastRun: '3d ago', runs: 56, trigger: 'Event: signup' },
-    { id: '4', name: 'Security Scan Pipeline', description: 'Weekly dependency audit with CVE matching and PR creation', status: 'active', steps: 4, lastRun: '1d ago', runs: 23, trigger: 'Cron: Monday 6am' },
+    { id: '1', name: 'Daily Code Review', description: 'Scans PRs, runs analysis, posts summaries to Slack', status: 'draft', steps: 5, lastRun: 'Never', runs: 0, trigger: 'Cron: 9am daily' },
+    { id: '2', name: 'Issue Triage Bot', description: 'Classifies new GitHub issues by severity and assigns teams', status: 'draft', steps: 3, lastRun: 'Never', runs: 0, trigger: 'Webhook: GitHub' },
+    { id: '3', name: 'Customer Onboarding', description: 'Sends welcome sequence, provisions accounts, schedules demo', status: 'draft', steps: 7, lastRun: 'Never', runs: 0, trigger: 'Event: signup' },
+    { id: '4', name: 'Security Scan Pipeline', description: 'Weekly dependency audit with CVE matching and PR creation', status: 'draft', steps: 4, lastRun: 'Never', runs: 0, trigger: 'Cron: Monday 6am' },
     { id: '5', name: 'Content Pipeline', description: 'Draft blog posts from research notes using RAG + editing agents', status: 'draft', steps: 6, lastRun: 'Never', runs: 0, trigger: 'Manual' },
 ];
 

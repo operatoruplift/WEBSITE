@@ -10,33 +10,25 @@ import { MobilePageWrapper } from '@/src/components/mobile';
 
 interface Notification { id: string; type: string; title: string; message: string; time: string; read: boolean; icon: React.ComponentType<{ size?: number; className?: string }>; color: string; }
 
-const INITIAL_NOTIFICATIONS: Notification[] = [
-    { id: '1', type: 'security', title: 'Blackwall: 3 threats blocked', message: 'Prompt injection attempts neutralized from 2 IPs', time: '5m ago', read: false, icon: Shield, color: 'text-red-400' },
-    { id: '2', type: 'agent', title: 'CodePilot Pro updated', message: 'Version 2.4.1 available with TypeScript improvements', time: '1h ago', read: false, icon: Bot, color: 'text-[#F97316]' },
-    { id: '3', type: 'chat', title: 'New message from Founder Ops', message: 'Weekly summary report is ready for review', time: '2h ago', read: false, icon: MessageSquare, color: 'text-[#F97316]' },
-    { id: '4', type: 'workflow', title: 'Nightly sync completed', message: 'GitHub issue sync and embeddings updated successfully', time: '6h ago', read: true, icon: Workflow, color: 'text-emerald-400' },
-    { id: '5', type: 'memory', title: 'Knowledge base indexed', message: '1,247 new documents processed and embedded', time: '1d ago', read: true, icon: Brain, color: 'text-primary' },
-];
-
 const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
     bot: Bot, shield: Shield, message: MessageSquare, workflow: Workflow, brain: Brain,
 };
 
 export default function NotificationsPage() {
-    const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
+    // Real notifications only. Empty list renders the empty state, no
+    // hardcoded "Blackwall blocked 3 threats" / "1,247 new documents"
+    // stubs that the page used to display to fresh users.
+    const [notifications, setNotifications] = useState<Notification[]>([]);
     const unreadCount = notifications.filter(n => !n.read).length;
 
-    // Load real notifications from localStorage and merge with demos
     useEffect(() => {
         const stored = getNotifications();
-        if (stored.length > 0) {
-            const realNotifs: Notification[] = stored.map(n => ({
-                id: n.id, type: n.type, title: n.title, message: n.message,
-                time: n.time, read: n.read,
-                icon: iconMap[n.icon] || Bot, color: n.color,
-            }));
-            setNotifications([...realNotifs, ...INITIAL_NOTIFICATIONS]);
-        }
+        const real: Notification[] = stored.map(n => ({
+            id: n.id, type: n.type, title: n.title, message: n.message,
+            time: n.time, read: n.read,
+            icon: iconMap[n.icon] || Bot, color: n.color,
+        }));
+        setNotifications(real);
     }, []);
 
     const markAllRead = () => { setNotifications(prev => prev.map(n => ({ ...n, read: true }))); markAllReadStore(); };
