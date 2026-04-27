@@ -270,8 +270,8 @@ export default function SwarmPage() {
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Multi-Agent</span>
                                 <span className="px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider rounded bg-amber-500/15 text-amber-300 border border-amber-500/20">Beta</span>
                             </div>
-                            <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Swarm Orchestration</h1>
-                            <p className="text-sm text-gray-400 mt-1">Design and run multi-agent swarms with different topologies. Swarm presets are curated; execution runs against your configured LLM providers.</p>
+                            <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Swarms</h1>
+                            <p className="text-sm text-gray-400 mt-1">A swarm is a small team of helpers working together on one job. Pick a preset or build your own. Runs use the AI you have connected.</p>
                         </div>
                         <GlowButton className="h-11 px-5" onClick={() => setShowCreate(true)}>
                             <Plus size={16} className="mr-2" /> New Swarm

@@ -82,8 +82,8 @@ export default function MemoryPage() {
                                 <Brain size={16} className="text-[#F97316]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Knowledge Base</span>
                             </div>
-                            <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Memory Bank</h1>
-                            <p className="text-sm text-gray-400 mt-1">Your agents&apos; shared knowledge, indexed and searchable</p>
+                            <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Memory</h1>
+                            <p className="text-sm text-gray-400 mt-1">Everything your helpers remember, in one place. Searchable.</p>
                         </div>
                         <div className="flex gap-2">
                             <GlowButton variant="outline" className="h-11 px-4" onClick={() => {

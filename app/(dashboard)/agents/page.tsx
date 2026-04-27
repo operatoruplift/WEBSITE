@@ -109,11 +109,11 @@ export default function AgentsPage() {
                                     {liveCount} live
                                 </span>
                             </div>
-                            <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">My Agents</h1>
-                            <p className="text-sm text-gray-400 mt-1">Every agent here is wired end-to-end. Tap one to try it.</p>
+                            <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">My Helpers</h1>
+                            <p className="text-sm text-gray-400 mt-1">Each one is hooked up and ready. Tap to try it.</p>
                         </div>
                         <Link href="/agents/builder">
-                            <GlowButton className="h-11 px-5"><Plus size={16} className="mr-2" /> Create Agent</GlowButton>
+                            <GlowButton className="h-11 px-5"><Plus size={16} className="mr-2" /> Build a helper</GlowButton>
                         </Link>
                     </div>
 

@@ -89,11 +89,11 @@ export default function MarketplacePage() {
                         <div>
                             <div className="flex items-center gap-3 mb-2">
                                 <div className="w-10 h-10 rounded-xl flex items-center justify-center relative" style={{ background: 'linear-gradient(135deg, #F97316, #F97316)' }}><Store size={20} className="text-white" /></div>
-                                <Badge variant="default" className="bg-[#F97316]/10 text-[#F97316] border-[#F97316]/20 text-[10px] tracking-widest font-mono">v2.0 ORCHESTRATION</Badge>
+                                <Badge variant="default" className="bg-[#F97316]/10 text-[#F97316] border-[#F97316]/20 text-[10px] tracking-widest font-mono">v2.0</Badge>
                                 <Badge variant="default" className="bg-amber-400/10 text-amber-400 border border-amber-400/20 text-[8px] font-mono tracking-widest">DEMO</Badge>
                             </div>
-                            <h1 className="text-4xl lg:text-5xl font-medium tracking-tight text-white">Agent Marketplace</h1>
-                            <p className="text-sm text-gray-400 mt-2 font-mono">Deploy pre-trained intelligences directly into your swarm architecture</p>
+                            <h1 className="text-4xl lg:text-5xl font-medium tracking-tight text-white">Helpers store</h1>
+                            <p className="text-sm text-gray-400 mt-2 font-mono">Browse ready-made AI helpers and add them to your team in one tap.</p>
                         </div>
                         <Link href="/agents/builder"><GlowButton className="h-11 px-6 bg-foreground/[0.04] border border-white/10 hover:bg-white/10 group transition-all"><Sparkles size={16} className="mr-2 text-[#F97316]" /><span className="font-medium tracking-wide">Build Your Own</span></GlowButton></Link>
                     </div>

@@ -35,9 +35,9 @@ const fetchDashboardData = async () => {
         setTimeout(() => {
             resolve({
                 stats: [
-                    { id: '1', label: 'Active Agents', value: String(agentCount || 14), change: agentCount ? `${agentCount} installed` : '+3 this week', positive: true, icon: Bot, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
-                    { id: '2', label: 'Chat Sessions', value: String(chatCount || 8), change: chatCount ? 'Local storage' : 'Stable', positive: true, icon: Workflow, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
-                    { id: '3', label: 'Memory Bank Nodes', value: '12.4K', change: '+2.1K today', positive: true, icon: Brain, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
+                    { id: '1', label: 'Helpers installed', value: String(agentCount || 14), change: agentCount ? `${agentCount} installed` : '+3 this week', positive: true, icon: Bot, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
+                    { id: '2', label: 'Chat sessions', value: String(chatCount || 8), change: chatCount ? 'On your computer' : 'Stable', positive: true, icon: Workflow, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
+                    { id: '3', label: 'Memories saved', value: '12.4K', change: '+2.1K today', positive: true, icon: Brain, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
                     { id: '4', label: 'Security Threats Blocked', value: '47', change: '-12% vs yesterday', positive: true, icon: Shield, gradient: 'from-emerald-500/20 to-teal-500/10' },
                 ],
                 activity: [
@@ -112,7 +112,7 @@ export default function DashboardPage() {
                                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Uplift Core Online
                                 </div>
                             </div>
-                            <h1 className="text-4xl lg:text-5xl font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-400">Good {greeting}, Commander.</h1>
+                            <h1 className="text-4xl lg:text-5xl font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-400">Good {greeting}.</h1>
                             <p className="text-sm text-gray-400 mt-2 font-mono flex items-center gap-2"><Activity size={12} className="text-[#F97316]" /> Systems optimized. Monitoring {isLoading ? '...' : activity.length} critical events.</p>
                         </div>
                         <div className="flex items-center gap-4">
