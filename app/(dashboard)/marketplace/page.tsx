@@ -23,7 +23,7 @@ const fetchMarketplaceData = async (): Promise<{ agents: MarketplaceAgent[] }> =
         const data = await res.json();
         // Map Supabase fields to the component's interface
         return {
-            agents: (data.agents || []).map((a: any) => ({
+            agents: (data.agents || []).map((a: Record<string, unknown>) => ({
                 id: a.id,
                 name: a.name,
                 author: a.author,

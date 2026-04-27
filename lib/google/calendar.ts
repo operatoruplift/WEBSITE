@@ -7,10 +7,6 @@
 import { google, calendar_v3 } from 'googleapis';
 import { getAuthenticatedClient } from './oauth';
 
-function getCalendar(auth: ReturnType<typeof google.auth.OAuth2.prototype.setCredentials> extends void ? never : Parameters<typeof google.calendar>[0]['auth']) {
-    return google.calendar({ version: 'v3', auth: auth as any });
-}
-
 export interface CalendarEvent {
     id: string;
     summary: string;
