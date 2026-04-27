@@ -1,14 +1,18 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
+import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
+    const meta = withRequestMeta(request, 'waitlist');
     try {
         const { email } = await request.json();
 
         if (!email || !email.includes('@')) {
-            return NextResponse.json({ error: 'Valid email required' }, { status: 400 });
+            return validationError('Valid email required', 'Send a valid email in the JSON body.', meta, {
+                missing: !email ? ['email'] : ['email_format'],
+            });
         }
 
         // Check if already on waitlist
@@ -21,7 +25,7 @@ export async function POST(request: Request) {
             .single();
 
         if (existing) {
-            return NextResponse.json({ message: 'Already on waitlist', alreadyExists: true });
+            return NextResponse.json({ message: 'Already on waitlist', alreadyExists: true }, { headers: meta.headers });
         }
 
         // Insert new entry
@@ -30,11 +34,11 @@ export async function POST(request: Request) {
             .insert({ email: email.toLowerCase() });
 
         if (error) {
-            return NextResponse.json({ error: 'Failed to join waitlist' }, { status: 500 });
+            return errorResponse(new Error(error.message), meta);
         }
 
-        return NextResponse.json({ message: 'Successfully joined waitlist' });
-    } catch {
-        return NextResponse.json({ error: 'Server error' }, { status: 500 });
+        return NextResponse.json({ message: 'Successfully joined waitlist' }, { headers: meta.headers });
+    } catch (err) {
+        return errorResponse(err, meta);
     }
 }

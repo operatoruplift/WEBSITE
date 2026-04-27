@@ -1,21 +1,23 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { withRequestMeta } from '@/lib/apiHelpers';
 
 export async function GET(request: Request) {
+    const meta = withRequestMeta(request, 'access.check');
     try {
         const url = new URL(request.url);
         const wallet = url.searchParams.get('wallet');
         const email = url.searchParams.get('email');
 
         if (!wallet && !email) {
-            return NextResponse.json({ access: false, reason: 'no identifier' });
+            return NextResponse.json({ access: false, reason: 'no identifier' }, { headers: meta.headers });
         }
 
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
         const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
         if (!supabaseUrl || !supabaseKey) {
             // No Supabase, fall back to local-only check
-            return NextResponse.json({ access: false, reason: 'no backend' });
+            return NextResponse.json({ access: false, reason: 'no backend' }, { headers: meta.headers });
         }
 
         const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false } });
@@ -28,7 +30,7 @@ export async function GET(request: Request) {
                 .eq('wallet_address', wallet)
                 .single();
             if (data) {
-                return NextResponse.json({ access: true, tier: 'early_access', granted_at: data.granted_at });
+                return NextResponse.json({ access: true, tier: 'early_access', granted_at: data.granted_at }, { headers: meta.headers });
             }
         }
 
@@ -40,13 +42,13 @@ export async function GET(request: Request) {
                 .eq('email', email)
                 .single();
             if (data?.approved) {
-                return NextResponse.json({ access: true, tier: 'waitlist_approved' });
+                return NextResponse.json({ access: true, tier: 'waitlist_approved' }, { headers: meta.headers });
             }
         }
 
-        return NextResponse.json({ access: false, reason: 'not_on_list' });
+        return NextResponse.json({ access: false, reason: 'not_on_list' }, { headers: meta.headers });
     } catch (err) {
         const msg = err instanceof Error ? err.message : 'Unknown error';
-        return NextResponse.json({ access: false, error: msg });
+        return NextResponse.json({ access: false, error: msg, requestId: meta.requestId }, { headers: meta.headers });
     }
 }

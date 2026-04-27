@@ -1,15 +1,19 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { verifyPayment } from '@/lib/solana/pay';
+import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
+    const meta = withRequestMeta(request, 'access.verify-payment');
     try {
         const { reference, wallet_address, user_id, email } = await request.json();
 
         if (!reference || !wallet_address) {
-            return NextResponse.json({ error: 'reference and wallet_address required' }, { status: 400 });
+            return validationError('reference and wallet_address required', 'Send both reference and wallet_address in the JSON body.', meta, {
+                missing: [!reference && 'reference', !wallet_address && 'wallet_address'].filter(Boolean),
+            });
         }
 
         // Verify on-chain
@@ -19,14 +23,17 @@ export async function POST(request: Request) {
             return NextResponse.json({
                 verified: false,
                 error: result.error || 'Payment not confirmed',
-            }, { status: 402 });
+                requestId: meta.requestId,
+            }, { status: 402, headers: meta.headers });
         }
 
         // Write to early_access table in Supabase
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
         const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
         if (!supabaseUrl || !supabaseKey) {
-            return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
+            return errorResponse(new Error('Supabase not configured'), meta, {
+                errorClass: 'provider_unavailable',
+            });
         }
 
         const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false } });
@@ -53,10 +60,8 @@ export async function POST(request: Request) {
             verified: true,
             signature: result.signature,
             access: 'granted',
-        });
+        }, { headers: meta.headers });
     } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Unknown error';
-        console.error('[verify-payment]', msg);
-        return NextResponse.json({ error: msg }, { status: 500 });
+        return errorResponse(err, meta);
     }
 }

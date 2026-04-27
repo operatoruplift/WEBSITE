@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getConsentUrl } from '@/lib/google/oauth';
 import { signOAuthState } from '@/lib/google/oauth-state';
 import { verifySession } from '@/lib/auth';
+import { withRequestMeta, errorResponse } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 
@@ -27,12 +28,12 @@ export const runtime = 'nodejs';
  * userId for this flow. Forgery prevention.
  */
 export async function GET(request: Request) {
+    const meta = withRequestMeta(request, 'integrations.google.connect');
     try {
         if (!process.env.GOOGLE_OAUTH_CLIENT_ID || !process.env.GOOGLE_OAUTH_CLIENT_SECRET) {
-            return NextResponse.json(
-                { error: 'Google OAuth not configured, set GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET' },
-                { status: 503 },
-            );
+            return errorResponse(new Error('Google OAuth not configured, set GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET'), meta, {
+                errorClass: 'provider_unavailable',
+            });
         }
 
         // Verify the Privy session server-side. This reads from:
@@ -58,8 +59,6 @@ export async function GET(request: Request) {
         const consentUrl = getConsentUrl(signedState);
         return NextResponse.redirect(consentUrl);
     } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Unknown error';
-        console.error('[google-connect]', msg);
-        return NextResponse.json({ error: msg }, { status: 500 });
+        return errorResponse(err, meta);
     }
 }
