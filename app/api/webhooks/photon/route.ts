@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 import { getPhotonAdapter } from '@/lib/photon/adapter';
+import { withRequestMeta } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 export const maxDuration = 15;
@@ -125,6 +126,7 @@ async function sendFallbackAck(sender: string, platform: string, supabase: Retur
 }
 
 export async function POST(request: Request) {
+    const meta = withRequestMeta(request, 'webhooks.photon');
     const raw = await request.text();
 
     // Signature verification. Spectrum hasn't published its exact
@@ -140,7 +142,10 @@ export async function POST(request: Request) {
         ).replace(/^sha256=/, '');
         const expected = hmacHex(secret, raw);
         if (!provided || !constantTimeEq(provided, expected)) {
-            return NextResponse.json({ error: 'invalid_signature' }, { status: 401 });
+            return NextResponse.json(
+                { error: 'invalid_signature', requestId: meta.requestId, timestamp: meta.startedAt },
+                { status: 401, headers: meta.headers },
+            );
         }
     }
 
@@ -148,7 +153,10 @@ export async function POST(request: Request) {
     try {
         body = raw ? JSON.parse(raw) : {};
     } catch {
-        return NextResponse.json({ error: 'invalid_json' }, { status: 400 });
+        return NextResponse.json(
+            { error: 'invalid_json', requestId: meta.requestId, timestamp: meta.startedAt },
+            { status: 400, headers: meta.headers },
+        );
     }
 
     // Normalise the payload. Different Spectrum events may surface
@@ -175,7 +183,7 @@ export async function POST(request: Request) {
         if (shouldSendFallbackAck(sender)) {
             setTimeout(() => { sendFallbackAck(sender, platform, null, null).catch(() => {}); }, FALLBACK_MS);
         }
-        return NextResponse.json({ ok: true, logged: false, providerMessageId });
+        return NextResponse.json({ ok: true, logged: false, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
     }
 
     // Idempotent insert. The unique index on (provider, provider_message_id)
@@ -205,12 +213,12 @@ export async function POST(request: Request) {
             /duplicate key|unique constraint/i.test(error.message);
         if (isDuplicate) {
             console.info('[photon webhook] duplicate', { providerMessageId, sender });
-            return NextResponse.json({ ok: true, logged: false, duplicate: true, providerMessageId });
+            return NextResponse.json({ ok: true, logged: false, duplicate: true, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
         }
         // Likely the table doesn't exist yet. Still 200 so Spectrum
         // doesn't retry; ops can create the table off the error log.
         console.warn('[photon webhook] supabase insert failed:', error.message);
-        return NextResponse.json({ ok: true, logged: false, reason: error.message, providerMessageId });
+        return NextResponse.json({ ok: true, logged: false, reason: error.message, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
     }
 
     const rowId = (inserted as { id?: string } | null)?.id ?? null;
@@ -222,10 +230,11 @@ export async function POST(request: Request) {
         setTimeout(() => { sendFallbackAck(sender, platform, supabase, rowId).catch(() => {}); }, FALLBACK_MS);
     }
 
-    return NextResponse.json({ ok: true, logged: true, providerMessageId });
+    return NextResponse.json({ ok: true, logged: true, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
 }
 
 /** Health probe, Spectrum dashboards often GET the webhook URL to check liveness. */
-export async function GET() {
-    return NextResponse.json({ ok: true, route: 'photon_webhook' });
+export async function GET(request: Request) {
+    const meta = withRequestMeta(request, 'webhooks.photon.health');
+    return NextResponse.json({ ok: true, route: 'photon_webhook' }, { headers: meta.headers });
 }
