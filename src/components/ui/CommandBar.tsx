@@ -9,14 +9,14 @@ interface CommandItem { id: string; label: string; description: string; icon: Re
 const COMMANDS: CommandItem[] = [
     { id: 'nav-cockpit', label: 'Go to Cockpit', description: 'Dashboard overview', icon: LayoutDashboard, href: '/app', category: 'Navigation' },
     { id: 'nav-chat', label: 'Go to Chat', description: 'Start or continue conversations', icon: MessageSquare, href: '/chat', category: 'Navigation' },
-    { id: 'nav-marketplace', label: 'Go to Agent Store', description: 'Browse & install agents', icon: Bot, href: '/marketplace', category: 'Navigation' },
-    { id: 'nav-builder', label: 'Go to Agent Builder', description: 'Create custom agents', icon: Sparkles, href: '/agents/builder', category: 'Navigation' },
+    { id: 'nav-marketplace', label: 'Go to Helpers', description: 'Browse and install helpers', icon: Bot, href: '/marketplace', category: 'Navigation' },
+    { id: 'nav-builder', label: 'Go to Builder', description: 'Build a custom helper', icon: Sparkles, href: '/agents/builder', category: 'Navigation' },
     { id: 'nav-notifications', label: 'Go to Notifications', description: 'View alerts', icon: Shield, href: '/notifications', category: 'Navigation' },
-    { id: 'nav-security', label: 'Go to Security', description: 'Blackwall security dashboard', icon: Shield, href: '/security', category: 'Navigation' },
+    { id: 'nav-security', label: 'Go to Security', description: 'Encryption, receipts, and activity log', icon: Shield, href: '/security', category: 'Navigation' },
     { id: 'nav-settings', label: 'Go to Settings', description: 'Account preferences', icon: Settings, href: '/settings', category: 'Navigation' },
-    { id: 'nav-home', label: 'Go to Website', description: 'Marketing homepage', icon: Bot, href: '/', category: 'Navigation' },
-    { id: 'act-new-chat', label: 'New Chat', description: 'Start a fresh conversation', icon: MessageSquare, href: '/chat', category: 'Actions' },
-    { id: 'act-build-agent', label: 'Build Agent', description: 'Create an agent from scratch', icon: Sparkles, href: '/agents/builder', category: 'Actions' },
+    { id: 'nav-home', label: 'Go to Website', description: 'Public homepage', icon: Bot, href: '/', category: 'Navigation' },
+    { id: 'act-new-chat', label: 'New chat', description: 'Start a fresh conversation', icon: MessageSquare, href: '/chat', category: 'Actions' },
+    { id: 'act-build-agent', label: 'Build a helper', description: 'Build a helper from scratch', icon: Sparkles, href: '/agents/builder', category: 'Actions' },
 ];
 
 export function CommandBar() {
