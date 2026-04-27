@@ -12,9 +12,9 @@ const tiers = [
         name: 'Team',
         price: '$49',
         period: '/seat/month',
-        description: 'For small teams getting started with AI agents.',
-        features: ['Up to 10 agents', 'AES-256 encrypted memory', 'GDPR compliant', 'Email support', 'Shared agent workspace'],
-        cta: 'Get Started',
+        description: 'For small teams that want one assistant for everyone.',
+        features: ['Up to 10 helpers', 'Shared inbox and calendar', 'GDPR-ready privacy', 'Email support', 'Shared workspace'],
+        cta: 'Get started',
         ctaLink: '/contact',
         highlight: false,
     },
@@ -22,9 +22,9 @@ const tiers = [
         name: 'Business',
         price: '$99',
         period: '/seat/month',
-        description: 'For growing teams that need compliance and scale.',
-        features: ['Unlimited agents', 'HIPAA ready', 'SOC 2 ready', 'GDPR compliant', 'Priority support', 'Advanced analytics'],
-        cta: 'Get Started',
+        description: 'For growing teams that need privacy paperwork and scale.',
+        features: ['Unlimited helpers', 'HIPAA-ready', 'SOC 2-ready', 'GDPR-ready', 'Priority support', 'Usage analytics'],
+        cta: 'Get started',
         ctaLink: '/contact',
         highlight: true,
     },
@@ -32,19 +32,19 @@ const tiers = [
         name: 'Enterprise',
         price: 'Custom',
         period: '',
-        description: 'For organizations with specific security and compliance needs.',
-        features: ['Dedicated instance', 'Custom SLA', 'Compliance audit support', 'On-prem deployment option', 'Dedicated account manager', '24/7 support'],
-        cta: 'Book a Demo',
+        description: 'For companies with specific privacy and compliance needs.',
+        features: ['Dedicated instance', 'Custom SLA', 'We help with audits', 'Runs inside your firewall', 'A real person on call', '24/7 support'],
+        cta: 'Book a call',
         ctaLink: '/contact',
         highlight: false,
     },
 ];
 
 const badges = [
-    { label: 'HIPAA Ready', icon: Shield },
-    { label: 'GDPR Compliant', icon: Shield },
-    { label: 'SOC 2 Ready', icon: Shield },
-    { label: 'AES-256-GCM Encrypted', icon: Shield },
+    { label: 'HIPAA-ready', icon: Shield },
+    { label: 'GDPR-ready', icon: Shield },
+    { label: 'SOC 2-ready', icon: Shield },
+    { label: 'Strong encryption', icon: Shield },
 ];
 
 export default function PricingPage() {
@@ -57,8 +57,8 @@ export default function PricingPage() {
                     {/* Header */}
                     <div className="text-center mb-16">
                         <FadeIn>
-                            <h1 className="text-4xl md:text-5xl font-medium text-white tracking-tight mb-4">Simple, transparent pricing</h1>
-                            <p className="text-gray-400 text-lg max-w-xl mx-auto">Start free during beta. Scale with your team.</p>
+                            <h1 className="text-4xl md:text-5xl font-medium text-white tracking-tight mb-4">Pricing for teams</h1>
+                            <p className="text-gray-400 text-lg max-w-xl mx-auto">Personal plans start free at $0 or $19/month. Team plans are below. Free during beta.</p>
                         </FadeIn>
                     </div>
 
@@ -72,7 +72,7 @@ export default function PricingPage() {
                                         : 'border-white/10 bg-white/[0.02] hover:border-white/20'
                                 }`}>
                                     {tier.highlight && (
-                                        <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-4">Most Popular</span>
+                                        <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-4">Recommended</span>
                                     )}
                                     <h3 className="text-2xl font-medium text-white mb-2">{tier.name}</h3>
                                     <div className="mb-4">
