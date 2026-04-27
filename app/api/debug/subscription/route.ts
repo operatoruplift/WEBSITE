@@ -6,6 +6,7 @@ import {
     isEmailBypassed,
     isGatedRoute,
 } from '@/lib/subscription';
+import { withRequestMeta, errorResponse } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 
@@ -20,6 +21,7 @@ export const runtime = 'nodejs';
  * with the admin debug header (X-Debug-Key matching DEBUG_ADMIN_KEY env).
  */
 export async function GET(request: Request) {
+    const meta = withRequestMeta(request, 'debug.subscription');
     try {
         const url = new URL(request.url);
         const debugKey = request.headers.get('x-debug-key');
@@ -44,7 +46,9 @@ export async function GET(request: Request) {
                 error: 'unauthorized',
                 hint: 'Must be authenticated as a bypass-listed email, OR provide X-Debug-Key header matching DEBUG_ADMIN_KEY.',
                 authError,
-            }, { status: 403 });
+                requestId: meta.requestId,
+                timestamp: meta.startedAt,
+            }, { status: 403, headers: meta.headers });
         }
 
         const pathname = url.searchParams.get('pathname') || '/chat';
@@ -86,9 +90,9 @@ export async function GET(request: Request) {
                 simulatorEnabled: process.env.PAYMENT_SIMULATOR_ENABLED === '1',
             },
             timestamp: new Date().toISOString(),
-        });
+            requestId: meta.requestId,
+        }, { headers: meta.headers });
     } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Unknown error';
-        return NextResponse.json({ error: msg }, { status: 500 });
+        return errorResponse(err, meta);
     }
 }
