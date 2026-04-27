@@ -46,6 +46,15 @@ const fetchMarketplaceData = async (): Promise<{ agents: MarketplaceAgent[] }> =
     }
 };
 
+// Lazy initializer reads localStorage once; avoids the
+// setState-in-effect cascading-render warning.
+function loadInstalledIds(): Set<string> {
+    if (typeof window === 'undefined') return new Set();
+    try {
+        return new Set(JSON.parse(localStorage.getItem('installed-agents') || '[]'));
+    } catch { return new Set(); }
+}
+
 export default function MarketplacePage() {
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('All');
@@ -54,11 +63,11 @@ export default function MarketplacePage() {
     const [isLoading, setIsLoading] = useState(true);
     const { showToast } = useToast();
     const [agents, setAgents] = useState<MarketplaceAgent[]>([]);
-    const [installed, setInstalled] = useState<Set<string>>(new Set());
+    const [installed, setInstalled] = useState<Set<string>>(loadInstalledIds);
 
     useEffect(() => {
+        // Async marketplace fetch is a real side effect, stays in useEffect.
         fetchMarketplaceData().then(data => { setAgents(data.agents); setIsLoading(false); });
-        try { const saved = JSON.parse(localStorage.getItem('installed-agents') || '[]'); setInstalled(new Set(saved)); } catch {}
     }, []);
 
     const installAgent = async (id: string, agentName: string) => {
