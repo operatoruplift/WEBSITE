@@ -35,23 +35,30 @@ const DEMO_CAPS: Capabilities = {
     authenticated: false,
 };
 
+// Lazy initializer reads localStorage once during the first client
+// render. Avoids the setState-in-effect cascading-render warning that
+// the previous load-on-mount pattern triggered.
+function loadInitialFavorites(): Set<string> {
+    if (typeof window === 'undefined') return new Set();
+    try {
+        const saved: string[] = JSON.parse(localStorage.getItem('agent-favorites') || '[]');
+        return new Set(saved);
+    } catch { return new Set(); }
+}
+
 export default function AgentsPage() {
     const [search, setSearch] = useState('');
-    const [favorites, setFavorites] = useState<Set<string>>(new Set());
+    const [favorites, setFavorites] = useState<Set<string>>(loadInitialFavorites);
     const [caps, setCaps] = useState<Capabilities>(DEMO_CAPS);
     const { showToast } = useToast();
     const router = useRouter();
 
     const agents = listStoreAgents();
 
-    // Load favorites + capability state once on mount. No /api/capabilities
-    // call when there's no auth token; simulated mode is inferred locally.
+    // Capability fetch is a real async side effect, it stays in
+    // useEffect. The favorites read moved to a lazy initializer above
+    // so we don't trigger an unnecessary re-render on mount.
     useEffect(() => {
-        try {
-            const saved: string[] = JSON.parse(localStorage.getItem('agent-favorites') || '[]');
-            setFavorites(new Set(saved));
-        } catch { /* no saved favs */ }
-
         const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
         if (!token) { setCaps(DEMO_CAPS); return; }
         fetch('/api/capabilities', {
