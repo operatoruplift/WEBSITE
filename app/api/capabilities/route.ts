@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCapabilities } from '@/lib/capabilities';
+import { withRequestMeta } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 
@@ -11,6 +12,7 @@ export const runtime = 'nodejs';
  * UI knows whether to route to mock or real execution.
  */
 export async function GET(request: Request) {
+    const meta = withRequestMeta(request, 'capabilities');
     const caps = await getCapabilities(request);
     // Never return the userId if not authenticated
     const payload = {
@@ -20,6 +22,6 @@ export async function GET(request: Request) {
         authenticated: caps.userId !== null,
     };
     return NextResponse.json(payload, {
-        headers: { 'Cache-Control': 'no-store, private' },
+        headers: { 'Cache-Control': 'no-store, private', ...meta.headers },
     });
 }

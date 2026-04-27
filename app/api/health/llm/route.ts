@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
 import { probeAllProviders } from '@/lib/llmHealth';
+import { withRequestMeta } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request: Request) {
+    const meta = withRequestMeta(request, 'health.llm');
     const started = Date.now();
     const providers = await probeAllProviders();
     const anyOk = providers.some(p => p.configured && p.ok);
@@ -21,7 +23,7 @@ export async function GET() {
         },
         {
             status: anyOk ? 200 : 503,
-            headers: { 'Cache-Control': 'no-store' },
+            headers: { 'Cache-Control': 'no-store', ...meta.headers },
         },
     );
 }
