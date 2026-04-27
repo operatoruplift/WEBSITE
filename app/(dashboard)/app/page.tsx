@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
-    MessageSquare, Workflow, Bot, Code, Sparkles, TrendingUp,
-    Brain, Zap, ArrowRight, Activity, Plus, Loader2, Shield, Network
+    MessageSquare, Workflow, Bot, Code, Sparkles,
+    Brain, Zap, Activity, Plus, Loader2, Shield
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
@@ -21,37 +21,36 @@ interface ActivityEvent { id: string; type: string; title: string; description: 
 interface SystemHealth { label: string; status: string; color: string; }
 
 const fetchDashboardData = async () => {
-    // Pull real counts from localStorage
-    let agentCount = 0, chatCount = 0;
+    // Pull real counts from localStorage. Anything we can't measure
+    // honestly is left out, the dashboard previously fabricated stats
+    // (e.g. "Security Threats Blocked: 47") and a five-event activity
+    // feed that didn't reflect anything the user actually did. Both
+    // are gone.
+    let agentCount = 0, chatCount = 0, memoryCount = 0;
     try {
         const installed = JSON.parse(localStorage.getItem('installed-agents') || '[]');
         const custom = JSON.parse(localStorage.getItem('custom-agents') || '[]');
         const sessions = JSON.parse(localStorage.getItem('chat-sessions-v2') || '[]');
+        const memories = JSON.parse(localStorage.getItem('memory-engine-v1') || '[]');
         agentCount = installed.length + custom.length;
         chatCount = sessions.length;
-    } catch { /* demo fallback */ }
+        memoryCount = Array.isArray(memories) ? memories.length : 0;
+    } catch { /* fresh user, all zeros */ }
 
     return new Promise<{ stats: StatData[], activity: ActivityEvent[], health: SystemHealth[] }>((resolve) => {
         setTimeout(() => {
             resolve({
                 stats: [
-                    { id: '1', label: 'Helpers installed', value: String(agentCount || 14), change: agentCount ? `${agentCount} installed` : '+3 this week', positive: true, icon: Bot, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
-                    { id: '2', label: 'Chat sessions', value: String(chatCount || 8), change: chatCount ? 'On your computer' : 'Stable', positive: true, icon: Workflow, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
-                    { id: '3', label: 'Memories saved', value: '12.4K', change: '+2.1K today', positive: true, icon: Brain, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
-                    { id: '4', label: 'Security Threats Blocked', value: '47', change: '-12% vs yesterday', positive: true, icon: Shield, gradient: 'from-emerald-500/20 to-teal-500/10' },
+                    { id: '1', label: 'Helpers installed', value: String(agentCount), change: agentCount === 1 ? '1 helper' : `${agentCount} helpers`, positive: true, icon: Bot, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
+                    { id: '2', label: 'Chat sessions', value: String(chatCount), change: 'On your computer', positive: true, icon: Workflow, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
+                    { id: '3', label: 'Memories saved', value: String(memoryCount), change: 'Local, encrypted', positive: true, icon: Brain, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
                 ],
-                activity: [
-                    { id: '101', type: 'security', title: 'Blackwall Blocked SQLi', description: 'Agent prompt injection attempt neutralised', time: '2m ago', icon: Shield, color: 'text-emerald-400' },
-                    { id: '102', type: 'agent', title: 'DeepRepo Orchestration', description: 'Recursive codebase scan completed on 3 repos', time: '14m ago', icon: Bot, color: 'text-[#F97316]' },
-                    { id: '103', type: 'workflow', title: 'Nightly Sync Executed', description: 'GitHub issue sync and embeddings update', time: '1h ago', icon: Workflow, color: 'text-[#F97316]' },
-                    { id: '104', type: 'memory', title: 'Knowledge Indexed', description: 'Zo.computer rules loaded to agent memory', time: '4h ago', icon: Brain, color: 'text-[#F97316]' },
-                    { id: '105', type: 'chat', title: 'Founder Ops Briefing', description: 'Weekly roundup synthesized', time: '5h ago', icon: MessageSquare, color: 'text-gray-400' },
-                ],
+                activity: [],
                 health: [
-                    { label: 'API Gateway (Blackwall)', status: 'Healthy', color: 'bg-emerald-400' },
-                    { label: 'Swarm Router', status: 'Active', color: 'bg-emerald-400' },
-                    { label: 'ATP Settlement Layer', status: 'Running', color: 'bg-emerald-400' },
-                    { label: 'Vector Store', status: 'Healthy', color: 'bg-emerald-400' },
+                    { label: 'Chat', status: 'Live', color: 'bg-emerald-400' },
+                    { label: 'Helpers', status: 'Live', color: 'bg-emerald-400' },
+                    { label: 'Memory', status: 'Live', color: 'bg-emerald-400' },
+                    { label: 'Receipts', status: 'Live', color: 'bg-emerald-400' },
                 ]
             });
         }, 800);
@@ -85,13 +84,15 @@ export default function DashboardPage() {
         const t = setInterval(updateTime, 10000);
         fetchDashboardData().then(data => {
             setStats(data.stats);
-            // Merge real notifications into activity stream
-            const realNotifs = getNotifications().slice(0, 3).map(n => ({
+            // Activity feed is real notifications only. If the user
+            // hasn't done anything yet we render an empty state, never
+            // a fake "SQLi blocked 2 minutes ago" placeholder.
+            const realNotifs = getNotifications().slice(0, 5).map(n => ({
                 id: n.id, type: n.type, title: n.title, description: n.message, time: n.time,
                 icon: n.icon === 'bot' ? Bot : n.icon === 'workflow' ? Workflow : n.icon === 'shield' ? Shield : MessageSquare,
                 color: n.color,
             }));
-            setActivity(realNotifs.length > 0 ? [...realNotifs, ...data.activity.slice(realNotifs.length)] : data.activity);
+            setActivity(realNotifs);
             setHealth(data.health);
             setIsLoading(false);
         });
@@ -109,11 +110,11 @@ export default function DashboardPage() {
                                     <Logo className="w-10 h-10" />
                                 </div>
                                 <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2 py-1 rounded-md text-[10px] uppercase tracking-widest font-mono flex items-center gap-1.5 backdrop-blur-md">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Uplift Core Online
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> All systems live
                                 </div>
                             </div>
                             <h1 className="text-4xl lg:text-5xl font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-400">Good {greeting}.</h1>
-                            <p className="text-sm text-gray-400 mt-2 font-mono flex items-center gap-2"><Activity size={12} className="text-[#F97316]" /> Systems optimized. Monitoring {isLoading ? '...' : activity.length} critical events.</p>
+                            <p className="text-sm text-gray-400 mt-2 font-mono flex items-center gap-2"><Activity size={12} className="text-[#F97316]" /> Welcome back. Here&apos;s a snapshot.</p>
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="text-right">
@@ -122,7 +123,7 @@ export default function DashboardPage() {
                             </div>
                             <GlowButton onClick={() => router.push('/agents/builder')} className="h-12 px-6 bg-foreground/[0.04] hover:bg-white/10 border border-white/10 overflow-hidden relative group">
                                 <div className="absolute inset-0 bg-gradient-to-r from-[#F97316] via-[#F97316] to-[#FFEDD5] opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
-                                <Plus size={16} className="mr-2 text-[#F97316]" /><span className="font-medium tracking-wide">Initialize Agent</span>
+                                <Plus size={16} className="mr-2 text-[#F97316]" /><span className="font-medium tracking-wide">Build a helper</span>
                             </GlowButton>
                         </div>
                     </div>
@@ -158,7 +159,7 @@ export default function DashboardPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10">
                         <div className="col-span-1 lg:col-span-2 space-y-6">
                             <div className="animate-fadeInUp" style={{ animationDelay: '300ms' }}>
-                                <div className="flex items-center gap-2 mb-4 px-1"><Zap size={14} className="text-[#F97316]" /><h2 className="text-xs font-mono text-gray-400 uppercase tracking-widest">Warp Network</h2></div>
+                                <div className="flex items-center gap-2 mb-4 px-1"><Zap size={14} className="text-[#F97316]" /><h2 className="text-xs font-mono text-gray-400 uppercase tracking-widest">Quick actions</h2></div>
                                 <StaggerChildren delayMs={60} className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                     {QUICK_ACTIONS.map(action => { const Icon = action.icon; return (
                                         <Link key={action.label} href={action.href}>
@@ -175,11 +176,18 @@ export default function DashboardPage() {
                             <Card variant="glass" className="card-animate" style={{ animationDelay: '400ms' }}>
                                 <CardHeader className="border-b border-foreground/10 pb-4">
                                     <CardTitle className="flex items-center justify-between text-sm">
-                                        <div className="flex items-center gap-2 text-gray-300 font-mono tracking-widest uppercase"><Activity size={14} className="text-[#F97316]" /> Event Stream</div>
+                                        <div className="flex items-center gap-2 text-gray-300 font-mono tracking-widest uppercase"><Activity size={14} className="text-[#F97316]" /> Recent activity</div>
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-0">
-                                    {isLoading ? <div className="flex flex-col items-center justify-center py-12"><Loader2 size={24} className="animate-spin text-gray-600 mb-2" /><span className="text-xs font-mono text-gray-500">Syncing streams...</span></div> :
+                                    {isLoading ? <div className="flex flex-col items-center justify-center py-12"><Loader2 size={24} className="animate-spin text-gray-600 mb-2" /><span className="text-xs font-mono text-gray-500">Loading...</span></div> :
+                                        activity.length === 0 ? (
+                                            <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
+                                                <div className="w-12 h-12 rounded-xl bg-foreground/[0.04] border border-foreground/10 flex items-center justify-center mb-3"><Activity size={20} className="text-gray-500" /></div>
+                                                <p className="text-sm text-gray-300 mb-1">No activity yet</p>
+                                                <p className="text-xs text-gray-500 max-w-xs">Open the chat or install a helper, your first action shows up here.</p>
+                                            </div>
+                                        ) : (
                                         <div className="divide-y divide-white/5">
                                             {activity.map(event => { const Icon = event.icon; return (
                                                 <div key={event.id} className="p-4 flex items-start gap-4 hover:bg-foreground/[0.06] transition-colors group cursor-pointer">
@@ -193,13 +201,17 @@ export default function DashboardPage() {
                                                 </div>
                                             ); })}
                                         </div>
+                                        )
                                     }
                                 </CardContent>
                             </Card>
                         </div>
                         <div className="space-y-6">
-                            <Card variant="glass" className="border-[#F97316]/20" style={{ animationDelay: '500ms', background: 'radial-gradient(circle at top right, rgba(0,212,255,0.05), transparent 70%)' }}>
-                                <CardHeader className="pb-2"><CardTitle className="flex items-center justify-between text-xs font-mono text-gray-400 uppercase tracking-widest"><span className="flex items-center gap-2"><ServerIcon /> Core Infrastructure</span><span className="text-[8px] font-bold tracking-widest px-1.5 py-0.5 rounded border bg-amber-400/10 text-amber-400 border-amber-400/20 normal-case">DEMO</span></CardTitle></CardHeader>
+                            {/* System status panel. Items here map to live product
+                                surfaces (Chat, Helpers store, Memory, Receipts) so
+                                the badge accurately reflects what's available. */}
+                            <Card variant="glass" className="border-[#F97316]/20" style={{ animationDelay: '500ms' }}>
+                                <CardHeader className="pb-2"><CardTitle className="flex items-center text-xs font-mono text-gray-400 uppercase tracking-widest"><span className="flex items-center gap-2"><ServerIcon /> System status</span></CardTitle></CardHeader>
                                 <CardContent>
                                     {isLoading ? <div className="space-y-3">{[1,2,3,4].map(i => <div key={i} className="h-6 bg-foreground/[0.04] rounded" />)}</div> :
                                         <div className="space-y-4 pt-2">
@@ -212,36 +224,8 @@ export default function DashboardPage() {
                                                     </div>
                                                 </div>
                                             ))}
-                                            <div className="pt-4 mt-2 border-t border-foreground/10 flex items-center justify-between">
-                                                <span className="text-[10px] font-mono text-gray-500">Global Region</span>
-                                                <Badge variant="default" className="text-[10px] bg-foreground/[0.04]">US-EAST-1</Badge>
-                                            </div>
                                         </div>
                                     }
-                                </CardContent>
-                            </Card>
-                            <Card variant="glass" className="group overflow-hidden" style={{ animationDelay: '600ms' }}>
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#F97316]/20 to-transparent blur-2xl" />
-                                <CardContent className="p-6 relative z-10">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <div className="flex items-center gap-2 text-xs font-mono text-gray-400 uppercase tracking-widest">
-                                            <svg className="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><text x="12" y="16" textAnchor="middle" fontSize="12" fill="#000" fontWeight="bold">G</text></svg>
-                                            Gold Agent
-                                        </div>
-                                        <Badge variant="default" className="text-[9px] bg-amber-400/10 text-amber-400 border border-amber-400/20">Oro GRAIL</Badge>
-                                    </div>
-                                    <div className="mb-1"><span className="text-3xl font-bold font-mono text-white tracking-tighter">0.0847</span><span className="text-sm font-bold text-amber-400 ml-1">oz</span></div>
-                                    <div className="text-xs text-gray-400 mb-4">≈ $278.24 USD</div>
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <span className="text-[10px] font-mono text-gray-500">Gold Spot</span>
-                                        <span className="text-[10px] font-mono text-white">$3,284.50/oz</span>
-                                        <span className="text-[10px] font-mono text-emerald-400">+1.2%</span>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <div className="flex justify-between text-[10px] font-mono"><span className="text-gray-500">Weekly DCA</span><span className="text-white">$49.27</span></div>
-                                        <div className="flex justify-between text-[10px] font-mono"><span className="text-gray-500">Round-ups</span><span className="text-white">$9.85</span></div>
-                                        <div className="flex justify-between text-[10px] font-mono"><span className="text-gray-500">Cashback</span><span className="text-white">$3.28</span></div>
-                                    </div>
                                 </CardContent>
                             </Card>
                         </div>
