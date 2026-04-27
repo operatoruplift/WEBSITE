@@ -66,6 +66,8 @@ jobs:
             tests/e2e/check-orchestrator.spec.ts \
             tests/e2e/health-adapters.spec.ts \
             tests/e2e/magicblock-honest-status.spec.ts \
+            tests/e2e/consumer-copy.spec.ts \
+            tests/e2e/chat-honesty.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure
