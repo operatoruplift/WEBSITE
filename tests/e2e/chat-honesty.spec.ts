@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { prepareGatedSession } from './_helpers';
 
 /**
  * W1A-honesty-1 acceptance spec.
@@ -114,5 +115,24 @@ test('paywall does not advertise the removed council feature', async ({ page }) 
     const body = (await page.locator('body').innerText()).toLowerCase();
     for (const phrase of FORBIDDEN_PHRASES) {
         expect(body, `forbidden phrase detected on /paywall: "${phrase}"`).not.toContain(phrase.toLowerCase());
+    }
+});
+
+test('swarm presets do not include the fabricated council', async ({ page }) => {
+    // PR #156 removed the 'council' preset (Contrarian, First
+    // Principles, Expansionist, Outsider, Chairman) from /swarm. Lock
+    // it in. The page is dashboard-gated so we use the auth-bypass
+    // helpers (#137 / #151) to render it.
+    await prepareGatedSession(page);
+    await page.goto('/swarm');
+
+    // Wait for the preset cards to render. The "Code Review" preset is
+    // the first one in PRESET_SWARMS and is the safest anchor since it
+    // has nothing to do with the council.
+    await expect(page.getByText(/Code Review/i).first()).toBeVisible({ timeout: 10_000 });
+
+    const body = (await page.locator('body').innerText()).toLowerCase();
+    for (const phrase of FORBIDDEN_PHRASES) {
+        expect(body, `forbidden phrase detected on /swarm: "${phrase}"`).not.toContain(phrase.toLowerCase());
     }
 });
