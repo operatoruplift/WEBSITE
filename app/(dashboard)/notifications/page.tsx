@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Bell, Check, CheckCheck, Shield, Bot, MessageSquare, Workflow, Brain, Trash2 } from 'lucide-react';
 import { getNotifications, markNotificationRead, markAllRead as markAllReadStore, deleteNotification as deleteNotifStore } from '@/lib/notifications';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Card';
@@ -18,18 +18,19 @@ export default function NotificationsPage() {
     // Real notifications only. Empty list renders the empty state, no
     // hardcoded "Blackwall blocked 3 threats" / "1,247 new documents"
     // stubs that the page used to display to fresh users.
-    const [notifications, setNotifications] = useState<Notification[]>([]);
-    const unreadCount = notifications.filter(n => !n.read).length;
-
-    useEffect(() => {
-        const stored = getNotifications();
-        const real: Notification[] = stored.map(n => ({
+    //
+    // Lazy initializer reads localStorage once during the first client
+    // render so we don't trigger an unnecessary re-render on mount
+    // (avoids the setState-in-effect cascading-render warning).
+    const [notifications, setNotifications] = useState<Notification[]>(() => {
+        if (typeof window === 'undefined') return [];
+        return getNotifications().map(n => ({
             id: n.id, type: n.type, title: n.title, message: n.message,
             time: n.time, read: n.read,
             icon: iconMap[n.icon] || Bot, color: n.color,
         }));
-        setNotifications(real);
-    }, []);
+    });
+    const unreadCount = notifications.filter(n => !n.read).length;
 
     const markAllRead = () => { setNotifications(prev => prev.map(n => ({ ...n, read: true }))); markAllReadStore(); };
     const markRead = (id: string) => { setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n)); markNotificationRead(id); };
