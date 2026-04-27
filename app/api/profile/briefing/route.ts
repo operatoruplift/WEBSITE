@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { verifySession, AuthError } from '@/lib/auth';
+import { withRequestMeta, errorResponse, type RequestMeta } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 
@@ -18,37 +19,51 @@ function getSupabase() {
     return createClient(url, key, { auth: { persistSession: false } });
 }
 
-async function requireUser(request: Request) {
+async function requireUser(request: Request, meta: RequestMeta) {
     try {
         const user = await verifySession(request);
         return { user, error: null as NextResponse | null };
     } catch (err) {
-        if (err instanceof AuthError) {
-            return { user: null, error: NextResponse.json({ error: err.message }, { status: 401 }) };
-        }
-        return { user: null, error: NextResponse.json({ error: 'auth_failed' }, { status: 401 }) };
+        const message = err instanceof AuthError ? err.message : 'auth_failed';
+        return {
+            user: null,
+            error: NextResponse.json(
+                { error: message, requestId: meta.requestId, timestamp: meta.startedAt },
+                { status: 401, headers: meta.headers },
+            ),
+        };
     }
 }
 
 export async function GET(request: Request) {
-    const { user, error } = await requireUser(request);
+    const meta = withRequestMeta(request, 'profile.briefing.get');
+    const { user, error } = await requireUser(request, meta);
     if (error) return error;
     const supabase = getSupabase();
-    if (!supabase) return NextResponse.json({ error: 'supabase_not_configured' }, { status: 503 });
+    if (!supabase) {
+        return errorResponse(new Error('supabase_not_configured'), meta, {
+            errorClass: 'provider_unavailable',
+        });
+    }
 
     const { data } = await supabase
         .from('users')
         .select('briefing_enabled')
         .eq('user_id', user!.userId)
         .maybeSingle();
-    return NextResponse.json({ enabled: Boolean(data?.briefing_enabled) });
+    return NextResponse.json({ enabled: Boolean(data?.briefing_enabled) }, { headers: meta.headers });
 }
 
 export async function PUT(request: Request) {
-    const { user, error } = await requireUser(request);
+    const meta = withRequestMeta(request, 'profile.briefing.put');
+    const { user, error } = await requireUser(request, meta);
     if (error) return error;
     const supabase = getSupabase();
-    if (!supabase) return NextResponse.json({ error: 'supabase_not_configured' }, { status: 503 });
+    if (!supabase) {
+        return errorResponse(new Error('supabase_not_configured'), meta, {
+            errorClass: 'provider_unavailable',
+        });
+    }
 
     const body = (await request.json().catch(() => ({}))) as { enabled?: boolean };
     const enabled = Boolean(body.enabled);
@@ -60,7 +75,7 @@ export async function PUT(request: Request) {
             { onConflict: 'user_id' },
         );
     if (upsertErr) {
-        return NextResponse.json({ error: upsertErr.message }, { status: 500 });
+        return errorResponse(new Error(upsertErr.message), meta);
     }
-    return NextResponse.json({ enabled });
+    return NextResponse.json({ enabled }, { headers: meta.headers });
 }

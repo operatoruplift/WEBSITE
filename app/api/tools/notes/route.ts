@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { getCapabilities } from '@/lib/capabilities';
+import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 export const maxDuration = 15;
@@ -21,47 +22,54 @@ function getSupabase() {
 }
 
 export async function POST(request: Request) {
-    const caps = await getCapabilities(request);
-    if (!caps.capability_real || !caps.userId) {
-        return NextResponse.json(
-            { error: 'demo_mode', simulated: true, message: 'Sign in to save real notes.' },
-            { status: 403 },
-        );
-    }
-    const supabase = getSupabase();
-    if (!supabase) {
-        return NextResponse.json({ error: 'supabase_not_configured' }, { status: 503 });
-    }
+    const meta = withRequestMeta(request, 'tools.notes');
+    try {
+        const caps = await getCapabilities(request);
+        if (!caps.capability_real || !caps.userId) {
+            return NextResponse.json(
+                { error: 'demo_mode', simulated: true, message: 'Sign in to save real notes.', requestId: meta.requestId },
+                { status: 403, headers: meta.headers },
+            );
+        }
+        const supabase = getSupabase();
+        if (!supabase) {
+            return errorResponse(new Error('supabase_not_configured'), meta, { errorClass: 'provider_unavailable' });
+        }
 
-    const { action, params } = (await request.json()) as {
-        action?: string;
-        params?: { title?: string; body?: string; limit?: number };
-    };
+        const { action, params } = (await request.json()) as {
+            action?: string;
+            params?: { title?: string; body?: string; limit?: number };
+        };
 
-    if (action === 'create') {
-        const title = String(params?.title ?? '').slice(0, 200);
-        const body = String(params?.body ?? '').slice(0, 20000);
-        if (!body) return NextResponse.json({ error: 'body required' }, { status: 400 });
-        const { data, error } = await supabase
-            .from('notes')
-            .insert({ user_id: caps.userId, title: title || body.slice(0, 80), body })
-            .select('id, title, body, created_at')
-            .single();
-        if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-        return NextResponse.json({ action, note: data });
+        if (action === 'create') {
+            const title = String(params?.title ?? '').slice(0, 200);
+            const body = String(params?.body ?? '').slice(0, 20000);
+            if (!body) {
+                return validationError('body required', 'Send params.body in the JSON payload.', meta, { missing: ['body'] });
+            }
+            const { data, error } = await supabase
+                .from('notes')
+                .insert({ user_id: caps.userId, title: title || body.slice(0, 80), body })
+                .select('id, title, body, created_at')
+                .single();
+            if (error) return errorResponse(new Error(error.message), meta);
+            return NextResponse.json({ action, note: data }, { headers: meta.headers });
+        }
+
+        if (action === 'list') {
+            const limit = Math.max(1, Math.min(50, Number(params?.limit ?? 20)));
+            const { data, error } = await supabase
+                .from('notes')
+                .select('id, title, body, created_at')
+                .eq('user_id', caps.userId)
+                .order('created_at', { ascending: false })
+                .limit(limit);
+            if (error) return errorResponse(new Error(error.message), meta);
+            return NextResponse.json({ action, notes: data ?? [] }, { headers: meta.headers });
+        }
+
+        return validationError(`unknown_action:${action}`, 'Use action="create" or action="list".', meta, { action });
+    } catch (err) {
+        return errorResponse(err, meta);
     }
-
-    if (action === 'list') {
-        const limit = Math.max(1, Math.min(50, Number(params?.limit ?? 20)));
-        const { data, error } = await supabase
-            .from('notes')
-            .select('id, title, body, created_at')
-            .eq('user_id', caps.userId)
-            .order('created_at', { ascending: false })
-            .limit(limit);
-        if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-        return NextResponse.json({ action, notes: data ?? [] });
-    }
-
-    return NextResponse.json({ error: `unknown_action:${action}` }, { status: 400 });
 }
