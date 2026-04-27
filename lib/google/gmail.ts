@@ -4,7 +4,7 @@
  * Functions for listing, reading, drafting, and sending emails.
  * Auth is handled transparently via lib/google/oauth.ts.
  */
-import { google } from 'googleapis';
+import { google, gmail_v1 } from 'googleapis';
 import { getAuthenticatedClient } from './oauth';
 
 export interface GmailMessage {
@@ -284,7 +284,7 @@ function getHeader(
     return headers?.find((h) => h.name?.toLowerCase() === name.toLowerCase())?.value ?? '';
 }
 
-function toGmailMessage(msg: any): GmailMessage {
+function toGmailMessage(msg: gmail_v1.Schema$Message): GmailMessage {
     const headers = msg.payload?.headers ?? [];
     return {
         id: msg.id ?? '',

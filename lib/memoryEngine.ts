@@ -59,7 +59,7 @@ async function fetchFromSupabase(search?: string): Promise<MemoryEntry[]> {
     const res = await fetch(`/api/memory/entries?${params}`);
     if (!res.ok) return getCachedEntries();
     const data = await res.json();
-    const entries: MemoryEntry[] = (data.entries || []).map((e: any) => ({
+    const entries: MemoryEntry[] = (data.entries || []).map((e: Record<string, unknown>) => ({
       id: e.id,
       name: e.name,
       description: e.description,
