@@ -6,6 +6,7 @@ import {
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 import { verifySession } from '@/lib/auth';
+import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -83,13 +84,14 @@ function buildPublishRootIx(
  * Initializes the per-user PDA on first publish.
  */
 export async function POST(request: Request) {
+    const meta = withRequestMeta(request, 'audit.publish-root');
     try {
         const verified = await verifySession(request);
         const { action_hashes } = await request.json();
         const user_id = verified.userId;
 
         if (!action_hashes || !Array.isArray(action_hashes) || action_hashes.length === 0) {
-            return NextResponse.json({ error: 'action_hashes[] required' }, { status: 400 });
+            return validationError('action_hashes[] required', 'Send a non-empty action_hashes array in the JSON body.', meta, { missing: ['action_hashes'] });
         }
 
         const merkleRoot = computeMerkleRoot(action_hashes);
@@ -98,14 +100,14 @@ export async function POST(request: Request) {
         // Get the server's signing wallet
         const walletKey = process.env.SOLANA_DEPLOY_WALLET_KEY;
         if (!walletKey) {
-            return NextResponse.json({ error: 'SOLANA_DEPLOY_WALLET_KEY not set' }, { status: 503 });
+            return errorResponse(new Error('SOLANA_DEPLOY_WALLET_KEY not set'), meta, { errorClass: 'provider_unavailable' });
         }
 
         let payer: Keypair;
         try {
             payer = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(walletKey)));
         } catch {
-            return NextResponse.json({ error: 'Invalid SOLANA_DEPLOY_WALLET_KEY' }, { status: 503 });
+            return errorResponse(new Error('Invalid SOLANA_DEPLOY_WALLET_KEY'), meta, { errorClass: 'provider_unavailable' });
         }
 
         // Derive the PDA for this authority (the server wallet acts as authority for all users)
@@ -160,11 +162,10 @@ export async function POST(request: Request) {
             initialized: needsInit,
             explorer_url: `https://explorer.solana.com/tx/${signature}?cluster=devnet`,
             action_count: action_hashes.length,
-        });
+            requestId: meta.requestId,
+        }, { headers: meta.headers });
     } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Unknown error';
-        console.error('[audit/publish-root]', msg);
-        return NextResponse.json({ error: msg }, { status: 500 });
+        return errorResponse(err, meta);
     }
 }
 

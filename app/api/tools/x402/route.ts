@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 
@@ -14,17 +15,20 @@ export const runtime = 'nodejs';
  * 2. If 402, returns the payment request for the UI to show approval
  * 3. After payment, retries with the X-Payment-Proof header
  *
- * This is the server-side bridge. The full x402 implementation lives
- * in /workspaces/x402-agent/biarritz/.
+ * Real payment settlement lives in /api/tools/x402/pay (signs a real
+ * ed25519 receipt and broadcasts the on-chain tx). This route only
+ * forwards outbound fetches and surfaces 402 challenges back to the
+ * client.
  */
 export async function POST(request: Request) {
+    const meta = withRequestMeta(request, 'tools.x402');
     try {
         const { action, params } = await request.json();
 
         if (action === 'fetch') {
             const url = params?.url;
             if (!url || typeof url !== 'string') {
-                return NextResponse.json({ error: 'url required' }, { status: 400 });
+                return validationError('url required', 'Send params.url in the JSON body.', meta, { missing: ['url'] });
             }
 
             // Fetch the target URL
@@ -42,49 +46,42 @@ export async function POST(request: Request) {
                     status: 402,
                     payment: paymentHeader ? JSON.parse(paymentHeader) : null,
                     url,
-                }, { status: 402 });
+                    requestId: meta.requestId,
+                }, { status: 402, headers: meta.headers });
             }
 
             // Otherwise return the response data
             let data: unknown;
             try { data = await res.json(); } catch { data = { raw: await res.text() }; }
-            return NextResponse.json({ action: 'fetch', status: res.status, data });
+            return NextResponse.json(
+                { action: 'fetch', status: res.status, data },
+                { headers: meta.headers },
+            );
         }
 
         if (action === 'charge') {
-            // x402 per-query charge, records the payment intent.
-            // In production this would trigger a Solana Pay USDC transfer.
-            // For devnet/demo, we log and approve immediately.
-            const { amount, currency, memo, userId: chargeUserId } = params || {};
-            if (!amount || amount <= 0) {
-                return NextResponse.json({ error: 'amount required' }, { status: 400 });
-            }
-
-            // TODO: In production, build a Solana Pay transfer URL for USDC
-            // and wait for on-chain confirmation before returning success.
-            // For now, log the charge and return success (devnet mode).
-            const chargeRecord = {
-                amount,
-                currency: currency || 'USDC',
-                memo: memo || 'x402 query charge',
-                userId: chargeUserId,
-                timestamp: new Date().toISOString(),
-                status: 'approved', // devnet: auto-approve
-                tx_signature: `x402-devnet-${Date.now()}`,
-            };
-
-            console.log('[x402/charge]', chargeRecord);
-
+            // The legacy "charge" action used to log a payment intent and
+            // return a fabricated `tx_signature: x402-devnet-${Date.now()}`,
+            // which violated the honesty rule (PR #147). Real settlement
+            // lives in /api/tools/x402/pay where a genuine ed25519 receipt
+            // is produced. Returning 410 Gone with a clear nextAction so
+            // any stale caller is pointed at the real endpoint.
             return NextResponse.json({
-                action: 'charge',
-                ...chargeRecord,
-            });
+                error: 'gone',
+                errorClass: 'unknown',
+                requestId: meta.requestId,
+                timestamp: meta.startedAt,
+                message: 'The "charge" action is deprecated.',
+                nextAction: 'Use POST /api/tools/x402/pay with the invoice_reference. That route signs a real ed25519 receipt and submits the on-chain tx.',
+            }, { status: 410, headers: meta.headers });
         }
 
         if (action === 'retry_with_proof') {
             const { url, tx_signature, method, headers: reqHeaders, body } = params || {};
             if (!url || !tx_signature) {
-                return NextResponse.json({ error: 'url and tx_signature required' }, { status: 400 });
+                return validationError('url and tx_signature required', 'Send both params.url and params.tx_signature in the JSON body.', meta, {
+                    missing: [!url && 'url', !tx_signature && 'tx_signature'].filter(Boolean),
+                });
             }
 
             const res = await fetch(url, {
@@ -95,12 +92,14 @@ export async function POST(request: Request) {
 
             let data: unknown;
             try { data = await res.json(); } catch { data = { raw: await res.text() }; }
-            return NextResponse.json({ action: 'retry_with_proof', status: res.status, data });
+            return NextResponse.json(
+                { action: 'retry_with_proof', status: res.status, data },
+                { headers: meta.headers },
+            );
         }
 
-        return NextResponse.json({ error: `Unknown action: ${action}` }, { status: 400 });
+        return validationError(`Unknown action: ${action}`, 'Use action="fetch" or action="retry_with_proof".', meta, { action });
     } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Unknown error';
-        return NextResponse.json({ error: msg }, { status: 500 });
+        return errorResponse(err, meta);
     }
 }
