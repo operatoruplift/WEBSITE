@@ -26,7 +26,7 @@ const Terms: React.FC = () => {
           <section>
             <h2 className="text-xl text-white font-bold mb-3">2. Description of Service</h2>
             <p>
-              Operator Uplift provides an agentic AI infrastructure platform that allows users to run, manage, and deploy AI agents in isolated environments. We reserve the right to modify, suspend, or discontinue the Service at any time.
+              Operator Uplift is an AI assistant that helps you with email, calendar, and similar daily work. You can install ready-made helpers or build your own. We reserve the right to modify, suspend, or discontinue the Service at any time.
             </p>
           </section>
 

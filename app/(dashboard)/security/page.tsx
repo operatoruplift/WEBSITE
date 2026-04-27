@@ -191,7 +191,7 @@ export default function SecurityPage() {
                             <h1 className="text-4xl lg:text-5xl font-medium tracking-tight text-white">Security</h1>
                             <p className="text-sm text-gray-400 mt-2 font-mono flex items-center gap-2">
                                 <ShieldCheck size={14} className="text-emerald-400" />
-                                On-device encryption · Cryptographic audit trail · Zero cloud storage
+                                Encrypted on your computer · Tamper-proof receipts · Nothing in the cloud
                             </p>
                         </div>
                         <div className="flex gap-2">

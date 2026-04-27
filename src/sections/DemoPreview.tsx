@@ -55,7 +55,7 @@ const DemoPreview: React.FC = () => {
             <span className="h-px w-16 bg-primary/40" />
           </div>
           <p className="text-gray-500 text-sm font-mono text-center max-w-md">
-            From init to deploy in seconds. Every step sandboxed and encrypted.
+            From open to first reply in seconds. Every step waits for your tap.
           </p>
         </div>
       </FadeIn>
