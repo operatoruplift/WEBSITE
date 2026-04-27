@@ -4,6 +4,21 @@ import { AnthropicLogo, OpenAILogo, GoogleLogo, MetaLogo, XAILogo } from '@/src/
 import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn, GlideText } from '@/src/components/Animators';
 
+// Hoisted out of the Security render so React doesn't remount the
+// children on every parent re-render (fixes react-hooks/static-components).
+const TechCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+  <div className={`relative p-2 rounded-2xl border border-dashed border-white/10 bg-white/[0.01] flex flex-col transition-all duration-300 hover:bg-white/[0.03] hover:border-white/20 ${className}`}>
+      <div className="absolute -top-[1px] -left-[1px] w-4 h-4 border-t border-l border-white/30 rounded-tl-lg"></div>
+      <div className="absolute -top-[1px] -right-[1px] w-4 h-4 border-t border-r border-white/30 rounded-tr-lg"></div>
+      <div className="absolute -bottom-[1px] -left-[1px] w-4 h-4 border-b border-l border-white/30 rounded-bl-lg"></div>
+      <div className="absolute -bottom-[1px] -right-[1px] w-4 h-4 border-b border-r border-white/30 rounded-br-lg"></div>
+
+      <div className="flex-1 w-full bg-[#111111] rounded-xl border border-white/5 overflow-hidden flex flex-col relative group hover:border-white/10 transition-colors duration-500">
+          {children}
+      </div>
+  </div>
+);
+
 const Security: React.FC = () => {
   const [time, setTime] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -19,19 +34,6 @@ const Security: React.FC = () => {
     animate();
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
-
-  const TechCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-    <div className={`relative p-2 rounded-2xl border border-dashed border-white/10 bg-white/[0.01] flex flex-col transition-all duration-300 hover:bg-white/[0.03] hover:border-white/20 ${className}`}>
-        <div className="absolute -top-[1px] -left-[1px] w-4 h-4 border-t border-l border-white/30 rounded-tl-lg"></div>
-        <div className="absolute -top-[1px] -right-[1px] w-4 h-4 border-t border-r border-white/30 rounded-tr-lg"></div>
-        <div className="absolute -bottom-[1px] -left-[1px] w-4 h-4 border-b border-l border-white/30 rounded-bl-lg"></div>
-        <div className="absolute -bottom-[1px] -right-[1px] w-4 h-4 border-b border-r border-white/30 rounded-br-lg"></div>
-        
-        <div className="flex-1 w-full bg-[#111111] rounded-xl border border-white/5 overflow-hidden flex flex-col relative group hover:border-white/10 transition-colors duration-500">
-            {children}
-        </div>
-    </div>
-  );
 
   return (
     <section id="security" className="w-full bg-background pb-16 px-6 md:px-12 flex justify-center flex-col items-center aurora-section">

@@ -279,6 +279,25 @@ type ShowToast = (msg: string, type: 'success' | 'info' | 'warning' | 'error') =
  * Copy of the last requestId is one click, the reference support
  * asks for when something breaks.
  */
+
+// Hoisted out of DiagnosticsPanel so React doesn't remount these on
+// every refresh (fixes react-hooks/static-components).
+const DiagRow = ({ label, value, hint }: { label: string; value: React.ReactNode; hint?: string }) => (
+    <div className="flex items-center justify-between py-3 border-b border-foreground/5 last:border-b-0">
+        <div>
+            <p className="text-sm text-white">{label}</p>
+            {hint ? <p className="text-[11px] text-gray-500 mt-0.5">{hint}</p> : null}
+        </div>
+        <div className="text-xs font-mono text-gray-300">{value}</div>
+    </div>
+);
+
+const DiagPill = ({ ok, onLabel, offLabel }: { ok: boolean; onLabel: string; offLabel: string }) => (
+    <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-widest ${ok ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-gray-500/15 text-gray-400 border border-white/10'}`}>
+        {ok ? onLabel : offLabel}
+    </span>
+);
+
 function DiagnosticsPanel({ showToast }: { showToast: ShowToast }) {
     const [caps, setCaps] = useState<{ capability_real: boolean; capability_google: boolean; capability_key: boolean; authenticated: boolean } | null>(null);
     const [lastRequestId, setLastRequestId] = useState<string>('');
@@ -314,22 +333,6 @@ function DiagnosticsPanel({ showToast }: { showToast: ShowToast }) {
         catch { showToast('Could not access clipboard', 'warning'); }
     };
 
-    const Row = ({ label, value, hint }: { label: string; value: React.ReactNode; hint?: string }) => (
-        <div className="flex items-center justify-between py-3 border-b border-foreground/5 last:border-b-0">
-            <div>
-                <p className="text-sm text-white">{label}</p>
-                {hint ? <p className="text-[11px] text-gray-500 mt-0.5">{hint}</p> : null}
-            </div>
-            <div className="text-xs font-mono text-gray-300">{value}</div>
-        </div>
-    );
-
-    const Pill = ({ ok, onLabel, offLabel }: { ok: boolean; onLabel: string; offLabel: string }) => (
-        <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-widest ${ok ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-gray-500/15 text-gray-400 border border-white/10'}`}>
-            {ok ? onLabel : offLabel}
-        </span>
-    );
-
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -348,29 +351,29 @@ function DiagnosticsPanel({ showToast }: { showToast: ShowToast }) {
 
             <div className="p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10">
                 <p className="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-2">Mode</p>
-                <Row
+                <DiagRow
                     label="Real Mode"
                     hint="Write actions + signed receipts. Off = Demo (simulated, no writes)."
-                    value={<Pill ok={!!caps?.capability_real} onLabel="On" offLabel="Demo" />}
+                    value={<DiagPill ok={!!caps?.capability_real} onLabel="On" offLabel="Demo" />}
                 />
-                <Row
+                <DiagRow
                     label="Authenticated"
                     hint="Signed in with a verified Privy session."
-                    value={<Pill ok={!!caps?.authenticated} onLabel="Yes" offLabel="No" />}
+                    value={<DiagPill ok={!!caps?.authenticated} onLabel="Yes" offLabel="No" />}
                 />
             </div>
 
             <div className="p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10">
                 <p className="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-2">Connected accounts</p>
-                <Row
+                <DiagRow
                     label="Google (Calendar + Gmail)"
                     hint="OAuth row in user_integrations with a refresh token."
-                    value={<Pill ok={!!caps?.capability_google} onLabel="Connected" offLabel="Not connected" />}
+                    value={<DiagPill ok={!!caps?.capability_google} onLabel="Connected" offLabel="Not connected" />}
                 />
-                <Row
+                <DiagRow
                     label="LLM provider key"
                     hint="Server env or a BYO key has been supplied."
-                    value={<Pill ok={!!caps?.capability_key} onLabel="Available" offLabel="Missing" />}
+                    value={<DiagPill ok={!!caps?.capability_key} onLabel="Available" offLabel="Missing" />}
                 />
             </div>
 
