@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 import { createClient } from '@supabase/supabase-js';
+import { withRequestMeta, errorResponse } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -17,16 +18,20 @@ export const maxDuration = 60;
  * Protected by CRON_SECRET, Vercel sends this header automatically.
  */
 export async function GET(request: Request) {
+    const meta = withRequestMeta(request, 'cron.morning-briefing');
     // Verify cron secret (Vercel sends this automatically for cron jobs)
     const authHeader = request.headers.get('authorization');
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        return NextResponse.json(
+            { error: 'Unauthorized', requestId: meta.requestId, timestamp: meta.startedAt },
+            { status: 401, headers: meta.headers },
+        );
     }
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     if (!supabaseUrl || !supabaseKey) {
-        return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
+        return errorResponse(new Error('Supabase not configured'), meta, { errorClass: 'provider_unavailable' });
     }
 
     const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false } });
@@ -39,7 +44,7 @@ export async function GET(request: Request) {
         .not('refresh_token', 'is', null);
 
     if (error || !users) {
-        return NextResponse.json({ error: 'Failed to fetch users', detail: error?.message }, { status: 500 });
+        return errorResponse(new Error(error?.message || 'Failed to fetch users'), meta);
     }
 
     let processed = 0;
@@ -107,5 +112,6 @@ export async function GET(request: Request) {
         users_processed: processed,
         users_notified: notified,
         timestamp: new Date().toISOString(),
-    });
+        requestId: meta.requestId,
+    }, { headers: meta.headers });
 }
