@@ -3,6 +3,7 @@ import { callLLM, ProviderError, type LLMMessage } from '@/lib/llm';
 import { checkRateLimit } from '@/lib/rateLimit';
 import { getCapabilities } from '@/lib/capabilities';
 import { getCannedReply, cannedReplyToStream } from '@/lib/cannedReplies';
+import { withRequestMeta, validationError } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -14,14 +15,8 @@ function getClientIp(request: Request): string {
     return real?.trim() || 'unknown';
 }
 
-function newRequestId(): string {
-    // crypto.randomUUID() is available in the Node 18+ runtime used here.
-    return `req_${crypto.randomUUID()}`;
-}
-
 export async function POST(request: Request) {
-    const requestId = request.headers.get('x-request-id') || newRequestId();
-    const startedAt = new Date().toISOString();
+    const meta = withRequestMeta(request, 'chat');
     try {
         const caps = await getCapabilities(request);
 
@@ -36,14 +31,15 @@ export async function POST(request: Request) {
                     fallback: true,
                     demoMode: true,
                     retryAfterSeconds: rl.retryAfterSeconds,
-                }, { status: 429 });
+                    requestId: meta.requestId,
+                }, { status: 429, headers: meta.headers });
                 res.headers.set('Retry-After', String(rl.retryAfterSeconds));
                 return res;
             }
 
             const { message } = await request.json();
             if (!message) {
-                return NextResponse.json({ error: 'Message required' }, { status: 400 });
+                return validationError('Message required', 'Send a message in the JSON body.', meta, { missing: ['message'] });
             }
             const reply = getCannedReply(String(message));
             const stream = cannedReplyToStream(reply.text);
@@ -54,6 +50,7 @@ export async function POST(request: Request) {
                     'Cache-Control': 'no-cache',
                     'X-Demo-Mode': '1',
                     'X-Demo-Beat': reply.beat,
+                    ...meta.headers,
                 },
             });
         }
@@ -66,7 +63,8 @@ export async function POST(request: Request) {
                 error: `Rate limit exceeded (${rl.remaining} remaining). Try again in ${rl.retryAfterSeconds}s.`,
                 fallback: true,
                 retryAfterSeconds: rl.retryAfterSeconds,
-            }, { status: 429 });
+                requestId: meta.requestId,
+            }, { status: 429, headers: meta.headers });
             res.headers.set('Retry-After', String(rl.retryAfterSeconds));
             return res;
         }
@@ -74,7 +72,7 @@ export async function POST(request: Request) {
         const { message, model, history, systemPrompt } = await request.json();
 
         if (!message) {
-            return NextResponse.json({ error: 'Message required' }, { status: 400 });
+            return validationError('Message required', 'Send a message in the JSON body.', meta, { missing: ['message'] });
         }
 
         const modelKey = (model || 'claude-sonnet-4-6').toLowerCase();
@@ -117,37 +115,37 @@ export async function POST(request: Request) {
 
         messages.push({ role: 'user', content: message });
 
-        const stream = await callLLM(modelKey, messages, { requestId });
+        const stream = await callLLM(modelKey, messages, { requestId: meta.requestId });
 
         return new Response(stream, {
             headers: {
                 'Content-Type': 'text/plain; charset=utf-8',
                 'Transfer-Encoding': 'chunked',
                 'Cache-Control': 'no-cache',
-                'X-Request-Id': requestId,
+                ...meta.headers,
             },
         });
     } catch (err) {
         if (err instanceof ProviderError) {
-            console.log(JSON.stringify({ at: 'chat', event: 'provider-missing', requestId, startedAt, envVar: err.envVar }));
+            console.log(JSON.stringify({ at: meta.route, event: 'provider-missing', requestId: meta.requestId, startedAt: meta.startedAt, envVar: err.envVar }));
             return NextResponse.json({
                 error: err.message,
                 envVar: err.envVar,
                 fallback: true,
                 connectPrompt: `Connect ${err.envVar.replace('_API_KEY', '').replace('_', ' ')} in Settings → API Keys`,
-                requestId,
-                timestamp: startedAt,
-            }, { status: 503, headers: { 'X-Request-Id': requestId } });
+                requestId: meta.requestId,
+                timestamp: meta.startedAt,
+            }, { status: 503, headers: meta.headers });
         }
         const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-        console.log(JSON.stringify({ at: 'chat', event: 'unhandled', requestId, startedAt, error: errorMessage.slice(0, 240) }));
+        console.log(JSON.stringify({ at: meta.route, event: 'unhandled', requestId: meta.requestId, startedAt: meta.startedAt, error: errorMessage.slice(0, 240) }));
         return NextResponse.json({
             error: 'The model is temporarily unavailable. Try again in a moment, or switch to another model from the selector.',
             detail: errorMessage,
             fallback: true,
-            requestId,
-            timestamp: startedAt,
+            requestId: meta.requestId,
+            timestamp: meta.startedAt,
             retryable: true,
-        }, { status: 503, headers: { 'X-Request-Id': requestId } });
+        }, { status: 503, headers: meta.headers });
     }
 }

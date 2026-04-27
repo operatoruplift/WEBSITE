@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { composeBriefing } from '@/lib/briefing';
+import { withRequestMeta, errorResponse } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -22,19 +23,23 @@ export const maxDuration = 60;
  *        https://<host>/api/cron/daily-briefing
  */
 export async function GET(request: Request) {
+    const meta = withRequestMeta(request, 'cron.daily-briefing');
     const expected = process.env.CRON_SECRET;
     if (!expected) {
-        return NextResponse.json({ error: 'CRON_SECRET not configured' }, { status: 503 });
+        return errorResponse(new Error('CRON_SECRET not configured'), meta, { errorClass: 'provider_unavailable' });
     }
     const auth = request.headers.get('authorization');
     if (auth !== `Bearer ${expected}`) {
-        return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+        return NextResponse.json(
+            { error: 'unauthorized', requestId: meta.requestId, timestamp: meta.startedAt },
+            { status: 401, headers: meta.headers },
+        );
     }
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     if (!supabaseUrl || !supabaseKey) {
-        return NextResponse.json({ error: 'supabase_not_configured' }, { status: 503 });
+        return errorResponse(new Error('supabase_not_configured'), meta, { errorClass: 'provider_unavailable' });
     }
     const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false } });
 
@@ -45,7 +50,7 @@ export async function GET(request: Request) {
         .select('user_id')
         .eq('briefing_enabled', true);
     if (optedErr) {
-        return NextResponse.json({ error: optedErr.message }, { status: 500 });
+        return errorResponse(new Error(optedErr.message), meta);
     }
 
     let processed = 0;
@@ -89,5 +94,6 @@ export async function GET(request: Request) {
         inserted,
         failures,
         ran_at: new Date().toISOString(),
-    });
+        requestId: meta.requestId,
+    }, { headers: meta.headers });
 }
