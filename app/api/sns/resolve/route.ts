@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { resolveSolDomain, mockSolDomain } from '@/lib/sns';
 import { getCapabilities } from '@/lib/capabilities';
+import { withRequestMeta, validationError } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 export const maxDuration = 10;
@@ -15,9 +16,12 @@ export const maxDuration = 10;
  * never throws on cold load.
  */
 export async function GET(request: Request) {
+    const meta = withRequestMeta(request, 'sns.resolve');
     const name = new URL(request.url).searchParams.get('name');
     if (!name) {
-        return NextResponse.json({ error: 'name required' }, { status: 400 });
+        return validationError('name required', 'Pass ?name=<domain> in the query string.', meta, {
+            missing: ['name'],
+        });
     }
 
     const caps = await getCapabilities(request);
@@ -30,6 +34,7 @@ export async function GET(request: Request) {
             // SNS is cheap but the Bonfida proxy can flake, allow the
             // CDN to cache for a minute so cold loads don't stampede.
             'Cache-Control': 'public, max-age=60, s-maxage=60',
+            ...meta.headers,
         },
     });
 }

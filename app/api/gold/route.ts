@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getGoldPrice, getGoldBalance, getGoldTransactions } from '@/lib/oro-grail';
+import { withRequestMeta, errorResponse } from '@/lib/apiHelpers';
 
-export async function GET() {
+export async function GET(request: Request) {
+  const meta = withRequestMeta(request, 'gold');
   try {
     const [price, balance, transactions] = await Promise.all([
       getGoldPrice(),
@@ -9,9 +11,8 @@ export async function GET() {
       getGoldTransactions(),
     ]);
 
-    return NextResponse.json({ price, balance, transactions });
+    return NextResponse.json({ price, balance, transactions }, { headers: meta.headers });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : 'Unknown error';
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return errorResponse(err, meta);
   }
 }
