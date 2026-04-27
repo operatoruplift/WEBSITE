@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'Operator Uplift, Your AI Operating System';
+export const alt = 'Operator Uplift, AI for your inbox and calendar';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -70,10 +70,10 @@ export default async function Image() {
             letterSpacing: -2,
             lineHeight: 1.15,
             marginBottom: 24,
-            maxWidth: 800,
+            maxWidth: 880,
           }}
         >
-          Your AI Operating System
+          AI for your inbox and calendar
         </div>
 
         {/* Description */}
@@ -82,11 +82,11 @@ export default async function Image() {
             color: 'rgba(255, 255, 255, 0.5)',
             fontSize: 22,
             textAlign: 'center',
-            maxWidth: 680,
+            maxWidth: 720,
             lineHeight: 1.5,
           }}
         >
-          Multi-agent orchestration with on-device encryption. Calendar, email, and on-chain tools, governed by you.
+          Drafts your replies, schedules your meetings, sends your follow-ups. Every action waits for your tap.
         </div>
 
         {/* Bottom capability chips */}
@@ -99,10 +99,10 @@ export default async function Image() {
           }}
         >
           {[
-            'Multi-Agent Swarm',
-            'AES-256 Encrypted',
-            'Solana Native',
-            'Real Google APIs',
+            'Real Gmail',
+            'Real Calendar',
+            'Your computer',
+            'Your tap, every time',
           ].map((label) => (
             <div
               key={label}
