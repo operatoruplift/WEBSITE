@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { exchangeCode } from '@/lib/google/oauth';
 import { verifyOAuthState } from '@/lib/google/oauth-state';
+import { withRequestMeta } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 
@@ -16,6 +17,9 @@ export const runtime = 'nodejs';
  * state signature IS the auth.
  */
 export async function GET(request: Request) {
+    // withRequestMeta still attaches an X-Request-Id even on the redirect
+    // path, so support can grep oauth callback failures.
+    const meta = withRequestMeta(request, 'integrations.google.callback');
     try {
         const url = new URL(request.url);
         const code = url.searchParams.get('code');
@@ -25,7 +29,7 @@ export async function GET(request: Request) {
         if (error) {
             // User denied consent or Google-side error
             return NextResponse.redirect(
-                new URL(`/integrations?error=${encodeURIComponent(error)}`, request.url),
+                new URL(`/integrations?error=${encodeURIComponent(error)}&ref=${meta.requestId}`, request.url),
             );
         }
 
@@ -51,9 +55,17 @@ export async function GET(request: Request) {
         );
     } catch (err) {
         const msg = err instanceof Error ? err.message : 'Unknown error';
-        console.error('[google-callback]', msg);
+        console.log(JSON.stringify({
+            at: meta.route,
+            event: 'error',
+            ts: meta.startedAt,
+            requestId: meta.requestId,
+            errorClass: 'unknown',
+            httpStatus: 302,
+            detail: msg.slice(0, 240),
+        }));
         return NextResponse.redirect(
-            new URL(`/integrations?error=${encodeURIComponent(msg)}`, request.url),
+            new URL(`/integrations?error=${encodeURIComponent(msg)}&ref=${meta.requestId}`, request.url),
         );
     }
 }
