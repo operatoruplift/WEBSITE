@@ -3,8 +3,8 @@ import { DocContent } from './_components/DocContent';
 import { DOC_SECTIONS } from '@/lib/docs/sections';
 
 export const metadata = {
-    title: 'Docs, Operator Uplift',
-    description: 'Getting started, demo mode vs real mode, approvals, receipts, x402, integrations, troubleshooting.',
+    title: 'Help, Operator Uplift',
+    description: 'How to get started, what the demo does, how approvals work, what your receipts mean, integrations, and troubleshooting.',
 };
 
 /**

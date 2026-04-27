@@ -12,22 +12,22 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.operatoruplift.com"),
-  title: "Operator Uplift, Your AI Operating System",
-  description: "Multi-agent orchestration with on-device encryption. Run AI agents that use your calendar, email, and on-chain tools, governed by you, not a cloud.",
-  keywords: ["AI agents", "agent orchestration", "local-first AI", "Solana AI", "encrypted agents", "multi-agent swarm", "AI OS", "agent marketplace", "on-device AI"],
+  title: "Operator Uplift, AI for your inbox and calendar",
+  description: "An AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Runs on your computer. Every action waits for your tap.",
+  keywords: ["AI assistant", "email AI", "calendar AI", "AI inbox", "AI scheduler", "private AI", "Gmail AI", "Google Calendar AI", "AI for productivity", "personal AI"],
   openGraph: {
     title: "Operator Uplift",
-    description: "Multi-agent orchestration with on-device encryption. Calendar, email, and on-chain tools, governed by you.",
+    description: "AI that drafts your email and schedules your meetings. Runs on your computer. Every action waits for your tap.",
     url: "https://www.operatoruplift.com",
     siteName: "Operator Uplift",
     locale: "en_US",
     type: "website",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Operator Uplift, Your AI Operating System" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Operator Uplift, AI for your inbox and calendar" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Operator Uplift",
-    description: "Multi-agent orchestration with on-device encryption. Calendar, email, and on-chain tools, governed by you.",
+    description: "AI that drafts your email and schedules your meetings. Runs on your computer. Every action waits for your tap.",
     creator: "@OperatorUplift",
     images: ["/opengraph-image"],
   },
