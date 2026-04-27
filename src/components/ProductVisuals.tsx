@@ -10,7 +10,7 @@ export const SandboxVisual = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     let animationFrameId: number;
-    let particles: {x: number, y: number, vx: number, vy: number}[] = [];
+    const particles: {x: number, y: number, vx: number, vy: number}[] = [];
 
     const resize = () => {
       const parent = canvas.parentElement;
@@ -22,11 +22,11 @@ export const SandboxVisual = () => {
     window.addEventListener('resize', resize);
     resize();
 
-    let width = canvas.width;
-    let height = canvas.height;
-    let boxSize = Math.min(width, height) * 0.7;
-    let boxX = (width - boxSize) / 2;
-    let boxY = (height - boxSize) / 2;
+    const width = canvas.width;
+    const height = canvas.height;
+    const boxSize = Math.min(width, height) * 0.7;
+    const boxX = (width - boxSize) / 2;
+    const boxY = (height - boxSize) / 2;
 
     for(let i=0; i<15; i++) {
       particles.push({

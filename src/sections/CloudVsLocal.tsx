@@ -28,7 +28,7 @@ const CloudVsLocal: React.FC = () => {
         <div className="text-center mb-12">
           <FadeIn>
             <h2 className="text-3xl md:text-4xl font-medium text-white mb-4 tracking-tight">The last AI you will need to trust.</h2>
-            <p className="text-gray-400">Because you don't have to trust it. You own it.</p>
+            <p className="text-gray-400">Because you don&apos;t have to trust it. You own it.</p>
           </FadeIn>
         </div>
 

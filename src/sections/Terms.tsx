@@ -19,7 +19,7 @@ const Terms: React.FC = () => {
           <section>
             <h2 className="text-xl text-white font-bold mb-3">1. Acceptance of Terms</h2>
             <p>
-              By accessing and using the Operator Uplift platform ("Service"), you agree to comply with and be bound by these Terms of Service. If you do not agree to these terms, you may not access or use the Service.
+              By accessing and using the Operator Uplift platform (&ldquo;Service&rdquo;), you agree to comply with and be bound by these Terms of Service. If you do not agree to these terms, you may not access or use the Service.
             </p>
           </section>
 
