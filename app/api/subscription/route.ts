@@ -151,35 +151,25 @@ export async function POST(request: Request) {
             });
         }
 
-        // action=confirm (default, legacy), confirm a real Solana Pay tx
-        if (!tx_signature) {
-            return NextResponse.json({ error: 'tx_signature required' }, { status: 400 });
-        }
-
-        // TODO: Verify the Solana tx on-chain before activating.
-        // For devnet/demo, we trust the client-provided signature.
-
-        const now = new Date();
-        const expiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
-
-        await supabase.from('subscriptions').upsert({
-            user_id: verified.userId,
-            tier: 'pro',
-            status: 'active',
-            price_usdc: 19.00,
-            tx_signature,
-            invoice_reference: invoice_reference || null,
-            started_at: now.toISOString(),
-            expires_at: expiresAt.toISOString(),
-            updated_at: now.toISOString(),
-        }, { onConflict: 'user_id' });
-
+        // The legacy "confirm" fall-through path used to mark a user
+        // active just because they posted a tx_signature. No on-chain
+        // verification, no replay protection, anyone could submit any
+        // 88-char string and get marked Pro. Real settlement lives on
+        // /api/access/verify-payment which calls verifyPayment(reference)
+        // against the Solana RPC. Closing this path explicitly to avoid
+        // a future caller ending up here by accident, plus the noise
+        // (`tx_signature` and `invoice_reference` are still parsed off
+        // the body to keep the destructure readable, they just go
+        // unused below).
+        void tx_signature; void invoice_reference;
         return NextResponse.json({
-            tier: 'pro',
-            active: true,
-            expiresAt: expiresAt.toISOString(),
-            tx_signature,
-        });
+            error: 'gone',
+            errorClass: 'unknown',
+            requestId: meta.requestId,
+            timestamp: meta.startedAt,
+            message: 'POST /api/subscription with no recognized action is no longer accepted.',
+            nextAction: 'Use action="create_invoice" to start payment, then call POST /api/access/verify-payment with the invoice reference + wallet address. That route verifies the on-chain tx before granting access.',
+        }, { status: 410, headers: meta.headers });
     } catch (err) {
         const msg = err instanceof Error ? err.message : 'Unknown error';
         const errorClass = classifyError(err);
