@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 /**
  * Doc content map, one TSX block per slug in lib/docs/sections.ts.
@@ -90,7 +91,7 @@ const CONTENT: Record<string, React.ReactNode> = {
                 <li>If the signature checks, the receipt is authentic. If it doesn&apos;t, we faked it and you caught us.</li>
             </ol>
             <h2>Merkle root and Solana devnet</h2>
-            <p>Every five receipts, the server computes a Merkle root and publishes it via our Anchor <code>publish_root</code> program on Solana devnet. That gives you a public commitment that makes silently-rewriting history detectable. See <a href="/blog/audit-trail">the audit-trail post</a> for the full pipeline.</p>
+            <p>Every five receipts, the server computes a Merkle root and publishes it via our Anchor <code>publish_root</code> program on Solana devnet. That gives you a public commitment that makes silently-rewriting history detectable. See <Link href="/blog/audit-trail">the audit-trail post</Link> for the full pipeline.</p>
         </>
     ),
     'x402': (

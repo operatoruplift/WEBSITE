@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
     useEffect(() => {
@@ -23,9 +24,9 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
                     <button onClick={reset} className="px-6 py-3 bg-primary text-white rounded-lg text-sm font-bold uppercase tracking-wide hover:bg-primary/80 transition-colors">
                         Try Again
                     </button>
-                    <a href="/" className="px-6 py-3 bg-white/5 border border-white/10 text-gray-300 rounded-lg text-sm font-bold uppercase tracking-wide hover:bg-white/10 transition-colors text-center">
+                    <Link href="/" className="px-6 py-3 bg-white/5 border border-white/10 text-gray-300 rounded-lg text-sm font-bold uppercase tracking-wide hover:bg-white/10 transition-colors text-center">
                         Go Home
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>
