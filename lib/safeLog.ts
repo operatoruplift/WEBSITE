@@ -94,7 +94,7 @@ export function safeLog(fields: SafeLogFields): void {
         ...(requestId ? { requestId } : {}),
         ...(redact(rest) as Record<string, unknown>),
     };
-    // eslint-disable-next-line no-console
+     
     console.log(JSON.stringify(payload));
 }
 
@@ -108,7 +108,7 @@ export function safeWarn(fields: SafeLogFields): void {
         ...(requestId ? { requestId } : {}),
         ...(redact(rest) as Record<string, unknown>),
     };
-    // eslint-disable-next-line no-console
+     
     console.warn(JSON.stringify(payload));
 }
 
@@ -123,7 +123,7 @@ export function safeError(fields: SafeLogFields & { error?: unknown }): void {
         ...(error ? { error: redact(normalizeError(error)) } : {}),
         ...(redact(rest) as Record<string, unknown>),
     };
-    // eslint-disable-next-line no-console
+     
     console.error(JSON.stringify(payload));
 }
 
