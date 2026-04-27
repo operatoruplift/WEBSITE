@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { getCapabilities } from '@/lib/capabilities';
+import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 export const maxDuration = 15;
@@ -36,63 +37,74 @@ function tomorrowAt(hhmm: string): Date | null {
 }
 
 export async function POST(request: Request) {
-    const caps = await getCapabilities(request);
-    if (!caps.capability_real || !caps.userId) {
-        return NextResponse.json(
-            { error: 'demo_mode', simulated: true, message: 'Sign in to schedule real nudges.' },
-            { status: 403 },
-        );
+    const meta = withRequestMeta(request, 'tools.reminders');
+    try {
+        const caps = await getCapabilities(request);
+        if (!caps.capability_real || !caps.userId) {
+            return NextResponse.json(
+                { error: 'demo_mode', simulated: true, message: 'Sign in to schedule real nudges.', requestId: meta.requestId },
+                { status: 403, headers: meta.headers },
+            );
+        }
+        const supabase = getSupabase();
+        if (!supabase) {
+            return errorResponse(new Error('supabase_not_configured'), meta, { errorClass: 'provider_unavailable' });
+        }
+
+        const { action, params } = (await request.json()) as {
+            action?: string;
+            params?: { kind?: string; time?: string; id?: string; body?: string };
+        };
+
+        if (action === 'schedule') {
+            const kind = String(params?.kind ?? 'custom');
+            const scheduledFor = params?.time ? tomorrowAt(String(params.time)) : tomorrowAt('08:00');
+            if (!scheduledFor) {
+                return validationError('invalid_time', 'Pass params.time as 24h HH:mm (e.g. "08:00").', meta, { time: params?.time });
+            }
+            const body = params?.body ? String(params.body) : `${kind} nudge for tomorrow morning`;
+            const { data, error } = await supabase
+                .from('notifications')
+                .insert({
+                    user_id: caps.userId,
+                    type: `reminder:${kind}`,
+                    body,
+                    pinned_until: scheduledFor.toISOString(),
+                })
+                .select('id, type, body, pinned_until, created_at')
+                .single();
+            if (error) return errorResponse(new Error(error.message), meta);
+            return NextResponse.json({ action, reminder: data }, { headers: meta.headers });
+        }
+
+        if (action === 'list') {
+            const { data, error } = await supabase
+                .from('notifications')
+                .select('id, type, body, pinned_until, created_at')
+                .eq('user_id', caps.userId)
+                .like('type', 'reminder:%')
+                .order('pinned_until', { ascending: true })
+                .limit(50);
+            if (error) return errorResponse(new Error(error.message), meta);
+            return NextResponse.json({ action, reminders: data ?? [] }, { headers: meta.headers });
+        }
+
+        if (action === 'cancel') {
+            const id = String(params?.id ?? '').trim();
+            if (!id) {
+                return validationError('id required', 'Send params.id in the JSON payload.', meta, { missing: ['id'] });
+            }
+            const { error } = await supabase
+                .from('notifications')
+                .delete()
+                .eq('user_id', caps.userId)
+                .eq('id', id);
+            if (error) return errorResponse(new Error(error.message), meta);
+            return NextResponse.json({ action, cancelled: id }, { headers: meta.headers });
+        }
+
+        return validationError(`unknown_action:${action}`, 'Use action="schedule", "list", or "cancel".', meta, { action });
+    } catch (err) {
+        return errorResponse(err, meta);
     }
-    const supabase = getSupabase();
-    if (!supabase) return NextResponse.json({ error: 'supabase_not_configured' }, { status: 503 });
-
-    const { action, params } = (await request.json()) as {
-        action?: string;
-        params?: { kind?: string; time?: string; id?: string; body?: string };
-    };
-
-    if (action === 'schedule') {
-        const kind = String(params?.kind ?? 'custom');
-        const scheduledFor = params?.time ? tomorrowAt(String(params.time)) : tomorrowAt('08:00');
-        if (!scheduledFor) return NextResponse.json({ error: 'invalid_time' }, { status: 400 });
-        const body = params?.body ? String(params.body) : `${kind} nudge for tomorrow morning`;
-        const { data, error } = await supabase
-            .from('notifications')
-            .insert({
-                user_id: caps.userId,
-                type: `reminder:${kind}`,
-                body,
-                pinned_until: scheduledFor.toISOString(),
-            })
-            .select('id, type, body, pinned_until, created_at')
-            .single();
-        if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-        return NextResponse.json({ action, reminder: data });
-    }
-
-    if (action === 'list') {
-        const { data, error } = await supabase
-            .from('notifications')
-            .select('id, type, body, pinned_until, created_at')
-            .eq('user_id', caps.userId)
-            .like('type', 'reminder:%')
-            .order('pinned_until', { ascending: true })
-            .limit(50);
-        if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-        return NextResponse.json({ action, reminders: data ?? [] });
-    }
-
-    if (action === 'cancel') {
-        const id = String(params?.id ?? '').trim();
-        if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 });
-        const { error } = await supabase
-            .from('notifications')
-            .delete()
-            .eq('user_id', caps.userId)
-            .eq('id', id);
-        if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-        return NextResponse.json({ action, cancelled: id });
-    }
-
-    return NextResponse.json({ error: `unknown_action:${action}` }, { status: 400 });
 }

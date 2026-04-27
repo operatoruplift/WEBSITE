@@ -6,6 +6,7 @@ import {
     isUserIdBypassed,
     checkSubscription,
 } from '@/lib/subscription';
+import { withRequestMeta, errorResponse } from '@/lib/apiHelpers';
 
 export const runtime = 'nodejs';
 
@@ -22,6 +23,7 @@ export const runtime = 'nodejs';
  * Returns structured JWT diagnostic (never the full token).
  */
 export async function GET(request: Request) {
+    const meta = withRequestMeta(request, 'whoami');
     try {
         const debugKey = request.headers.get('x-debug-key');
         const adminKey = process.env.DEBUG_ADMIN_KEY;
@@ -60,13 +62,15 @@ export async function GET(request: Request) {
             return NextResponse.json(
                 {
                     error: 'unauthorized',
+                    requestId: meta.requestId,
+                    timestamp: meta.startedAt,
                     hint: 'Must be authenticated as a bypass-listed user (by email or userId), OR provide X-Debug-Key matching DEBUG_ADMIN_KEY.',
                     // Tell the caller what was tried (but not why it failed in
                     // full detail, no token leakage)
                     token_shape_ok: jwsDiag.shape_ok,
                     auth_error: authError,
                 },
-                { status: 403 },
+                { status: 403, headers: meta.headers },
             );
         }
 
@@ -117,10 +121,10 @@ export async function GET(request: Request) {
                 has_privy: !!process.env.PRIVY_APP_SECRET,
             },
             timestamp: new Date().toISOString(),
-        });
+            requestId: meta.requestId,
+        }, { headers: meta.headers });
     } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Unknown error';
-        return NextResponse.json({ error: msg }, { status: 500 });
+        return errorResponse(err, meta);
     }
 }
 
