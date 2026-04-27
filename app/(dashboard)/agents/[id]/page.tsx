@@ -123,19 +123,19 @@ interface AgentConfig {
     memoryUsage: string;
 }
 
+// Sample helpers shipped as starter detail pages. Counts are zeroed
+// so the page doesn't pretend the helper has been running on the
+// user's account (was: hardcoded `sessions: 2847`, `memoryUsage:
+// '2.4GB'`, etc.). Status is 'idle' until the user actually runs them.
 const DEMO_AGENTS: Record<string, AgentConfig> = {
-    '1': { id: '1', name: 'CodePilot Pro', description: 'Full-stack code generation and debugging assistant', model: 'Claude Opus 4.6', systemPrompt: 'You are an expert software engineer. Analyze code, find bugs, suggest improvements, and generate clean, production-ready code.', status: 'running', temperature: 0.3, maxTokens: 4096, tools: ['code_exec', 'file_read', 'web_search'], createdAt: '2026-01-15', sessions: 142, memoryUsage: '2.4GB' },
-    '2': { id: '2', name: 'Research Assistant', description: 'Multi-source academic research and synthesis', model: 'GPT-4.1', systemPrompt: 'You are a research assistant. Find, analyze, and synthesize information from multiple sources. Always cite sources and highlight key findings.', status: 'running', temperature: 0.5, maxTokens: 8192, tools: ['web_search', 'file_read', 'memory_search'], createdAt: '2026-02-03', sessions: 89, memoryUsage: '1.8GB' },
-    '3': { id: '3', name: 'Blackwall Guard', description: 'Real-time API security and threat detection', model: 'Claude Opus 4.6', systemPrompt: 'You are a security analyst. Monitor API traffic, detect threats, and respond to incidents. Flag suspicious patterns and recommend mitigations.', status: 'running', temperature: 0.1, maxTokens: 2048, tools: ['api_monitor', 'threat_scan', 'alert_send'], createdAt: '2026-01-01', sessions: 2847, memoryUsage: '512MB' },
+    '1': { id: '1', name: 'Code Pilot', description: 'Code generation and debugging assistant', model: 'Claude Opus 4.6', systemPrompt: 'You are an expert software engineer. Analyze code, find bugs, suggest improvements, and generate clean, production-ready code.', status: 'idle', temperature: 0.3, maxTokens: 4096, tools: ['code_exec', 'file_read', 'web_search'], createdAt: '2026-01-15', sessions: 0, memoryUsage: ',' },
+    '2': { id: '2', name: 'Research Assistant', description: 'Multi-source research and synthesis', model: 'GPT-4.1', systemPrompt: 'You are a research assistant. Find, analyze, and synthesize information from multiple sources. Always cite sources and highlight key findings.', status: 'idle', temperature: 0.5, maxTokens: 8192, tools: ['web_search', 'file_read', 'memory_search'], createdAt: '2026-02-03', sessions: 0, memoryUsage: ',' },
+    '3': { id: '3', name: 'Security Guard', description: 'Watches API traffic and flags suspicious patterns', model: 'Claude Opus 4.6', systemPrompt: 'You are a security analyst. Monitor API traffic, detect threats, and respond to incidents. Flag suspicious patterns and recommend mitigations.', status: 'idle', temperature: 0.1, maxTokens: 2048, tools: ['api_monitor', 'threat_scan', 'alert_send'], createdAt: '2026-01-01', sessions: 0, memoryUsage: ',' },
 };
 
-const ACTIVITY_LOG = [
-    { time: '2m ago', event: 'Completed task: "Refactor auth middleware"', type: 'success' },
-    { time: '15m ago', event: 'Started code analysis on 3 repos', type: 'info' },
-    { time: '1h ago', event: 'Memory indexed: 847 new embeddings', type: 'info' },
-    { time: '3h ago', event: 'Session timeout, auto-paused', type: 'warning' },
-    { time: '1d ago', event: 'Deployed from Agent Builder', type: 'success' },
-];
+// Empty by default. The page renders a "no activity yet" state when
+// this is empty, was: a hardcoded list of fake events with timestamps.
+const ACTIVITY_LOG: Array<{ time: string; event: string; type: 'success' | 'info' | 'warning' }> = [];
 
 export default function AgentDetailPage() {
     const params = useParams();
@@ -347,14 +347,20 @@ export default function AgentDetailPage() {
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-0">
-                                    <div className="divide-y divide-white/5">
-                                        {ACTIVITY_LOG.map((entry, i) => (
-                                            <div key={i} className="px-4 py-3">
-                                                <p className="text-xs text-gray-300">{entry.event}</p>
-                                                <span className="text-[10px] text-gray-600 font-mono">{entry.time}</span>
-                                            </div>
-                                        ))}
-                                    </div>
+                                    {ACTIVITY_LOG.length === 0 ? (
+                                        <div className="px-4 py-8 text-center">
+                                            <p className="text-xs text-gray-500">No activity yet. Run this helper to see results here.</p>
+                                        </div>
+                                    ) : (
+                                        <div className="divide-y divide-white/5">
+                                            {ACTIVITY_LOG.map((entry, i) => (
+                                                <div key={i} className="px-4 py-3">
+                                                    <p className="text-xs text-gray-300">{entry.event}</p>
+                                                    <span className="text-[10px] text-gray-600 font-mono">{entry.time}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </CardContent>
                             </Card>
                         </div>

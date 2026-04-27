@@ -19,14 +19,14 @@ interface AgentContextType {
 const AgentContext = createContext<AgentContextType | undefined>(undefined);
 
 const MOCK_AGENTS: Agent[] = [
-    { id: 'founder-ops', name: 'Founder Ops', status: 'online', description: 'Orchestrating company operations' },
-    { id: 'growth-lead', name: 'Growth Lead', status: 'online', description: 'Managing marketing campaigns' },
-    { id: 'dev-rel', name: 'DevRel', status: 'busy', description: 'Engaging with developer community' },
-    { id: 'support-bot', name: 'Support Bot', status: 'offline', description: 'Handling customer tickets' },
+    { id: 'inbox', name: 'Inbox helper', status: 'online', description: 'Drafts replies and clears your inbox' },
+    { id: 'calendar', name: 'Calendar helper', status: 'online', description: 'Schedules meetings and manages your day' },
+    { id: 'research', name: 'Research helper', status: 'online', description: 'Finds and summarizes information' },
+    { id: 'reminders', name: 'Reminders', status: 'online', description: 'Morning briefings and follow-ups' },
 ];
 
 export function AgentProvider({ children }: { children: ReactNode }) {
-    const [activeAgentId, setActiveAgentId] = useState('founder-ops');
+    const [activeAgentId, setActiveAgentId] = useState('inbox');
     const activeAgent = MOCK_AGENTS.find(a => a.id === activeAgentId) || MOCK_AGENTS[0];
     return (
         <AgentContext.Provider value={{ activeAgentId, activeAgent, setActiveAgent: setActiveAgentId, agents: MOCK_AGENTS }}>
