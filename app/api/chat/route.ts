@@ -5,6 +5,7 @@ import { getCapabilities } from '@/lib/capabilities';
 import { getCannedReply, cannedReplyToStream } from '@/lib/cannedReplies';
 import { withRequestMeta, validationError } from '@/lib/apiHelpers';
 import { checkSubscription } from '@/lib/subscription';
+import { safeLog } from '@/lib/safeLog';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -136,7 +137,7 @@ export async function POST(request: Request) {
         });
     } catch (err) {
         if (err instanceof ProviderError) {
-            console.log(JSON.stringify({ at: meta.route, event: 'provider-missing', requestId: meta.requestId, startedAt: meta.startedAt, envVar: err.envVar }));
+            safeLog({ at: meta.route, event: 'provider-missing', requestId: meta.requestId, envVar: err.envVar });
             return NextResponse.json({
                 error: err.message,
                 envVar: err.envVar,
@@ -147,7 +148,7 @@ export async function POST(request: Request) {
             }, { status: 503, headers: meta.headers });
         }
         const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-        console.log(JSON.stringify({ at: meta.route, event: 'unhandled', requestId: meta.requestId, startedAt: meta.startedAt, error: errorMessage.slice(0, 240) }));
+        safeLog({ at: meta.route, event: 'unhandled', requestId: meta.requestId, error: errorMessage.slice(0, 240) });
         return NextResponse.json({
             error: 'The model is temporarily unavailable. Try again in a moment, or switch to another model from the selector.',
             detail: errorMessage,

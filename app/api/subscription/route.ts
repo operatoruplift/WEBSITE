@@ -4,6 +4,7 @@ import { verifySession, getUserEmail } from '@/lib/auth';
 import { checkSubscription } from '@/lib/subscription';
 import { classifyError, envelope } from '@/lib/errorTaxonomy';
 import { withRequestMeta } from '@/lib/apiHelpers';
+import { safeLog } from '@/lib/safeLog';
 
 export const runtime = 'nodejs';
 
@@ -47,7 +48,7 @@ export async function GET(request: Request) {
         const msg = err instanceof Error ? err.message : 'Auth required';
         const jws = jwsHeaderDebug(request);
         const errorClass = classifyError(err);
-        console.log(JSON.stringify({ at: meta.route, event: 'auth-failed', route: 'GET /api/subscription', requestId, ts: startedAt, errorClass, reason: msg.slice(0, 120), jws }));
+        safeLog({ at: meta.route, event: 'auth-failed', route: 'GET /api/subscription', requestId, errorClass, reason: msg.slice(0, 120), jws });
         const body = envelope(errorClass, msg, requestId, startedAt);
         return NextResponse.json(
             { tier: 'free', active: false, ...body },
@@ -68,7 +69,7 @@ export async function POST(request: Request) {
             const jws = jwsHeaderDebug(request);
             const errorClass = classifyError(authErr);
             // JWS header is safe to log (alg/typ/kid), never log payload or signature.
-            console.log(JSON.stringify({ at: 'subscription', event: 'auth-failed', route: 'POST /api/subscription', requestId, ts: startedAt, errorClass, reason: code.slice(0, 120), jws }));
+            safeLog({ at: 'subscription', event: 'auth-failed', route: 'POST /api/subscription', requestId, errorClass, reason: code.slice(0, 120), jws });
             return NextResponse.json(
                 envelope(errorClass, code, requestId, startedAt),
                 { status: 401, headers: meta.headers },
@@ -173,7 +174,7 @@ export async function POST(request: Request) {
     } catch (err) {
         const msg = err instanceof Error ? err.message : 'Unknown error';
         const errorClass = classifyError(err);
-        console.log(JSON.stringify({ at: 'subscription', event: 'unhandled', route: 'POST /api/subscription', requestId, ts: startedAt, errorClass, error: msg.slice(0, 240) }));
+        safeLog({ at: 'subscription', event: 'unhandled', route: 'POST /api/subscription', requestId, errorClass, error: msg.slice(0, 240) });
         return NextResponse.json(
             envelope(errorClass, msg, requestId, startedAt),
             { status: errorClass === 'provider_unavailable' ? 503 : 500, headers: meta.headers },

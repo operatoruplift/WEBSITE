@@ -4,6 +4,7 @@ import { isGoogleConnected } from '@/lib/google/oauth';
 import { verifySession } from '@/lib/auth';
 import { x402Gate } from '@/lib/x402/middleware';
 import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
+import { safeLog } from '@/lib/safeLog';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -45,9 +46,7 @@ export async function POST(request: Request) {
 
         const connected = await isGoogleConnected(user_id);
         if (!connected) {
-            console.log(JSON.stringify({
-                at: meta.route, event: 'google_not_connected', requestId: meta.requestId, ts: meta.startedAt,
-            }));
+            safeLog({ at: meta.route, event: 'google_not_connected', requestId: meta.requestId });
             return NextResponse.json(
                 {
                     error: 'google_not_connected',
