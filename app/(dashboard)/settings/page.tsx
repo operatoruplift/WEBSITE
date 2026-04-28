@@ -479,9 +479,9 @@ function EncryptionSetup({ showToast }: { showToast: (msg: string, type: 'succes
             await setupEncryption(encPassword);
             setIsConfigured(true);
             setEncPassword('');
-            showToast('AES-256 encryption enabled for local data', 'success');
+            showToast('Encryption password saved. Per-record encryption ships once secureStore/secureRetrieve are wired into chat sessions and memory.', 'info');
         } catch {
-            showToast('Failed to set up encryption', 'error');
+            showToast('Failed to save encryption password', 'error');
         }
         setVerifying(false);
     };
@@ -492,10 +492,13 @@ function EncryptionSetup({ showToast }: { showToast: (msg: string, type: 'succes
                 <div>
                     <p className="text-sm text-white font-medium flex items-center gap-2">
                         AES-256 Encryption
-                        {isConfigured && <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-400/10 text-emerald-400 border border-emerald-400/20 uppercase font-mono">Active</span>}
+                        <span className="text-[8px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded border bg-amber-400/10 text-amber-400 border-amber-400/20">DEMO</span>
+                        {isConfigured && <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-400/10 text-emerald-400 border border-emerald-400/20 uppercase font-mono">Password set</span>}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
-                        {isConfigured ? 'Local data encrypted with AES-256-GCM via Web Crypto API' : 'Encrypt agent configs, chat sessions, and memory with AES-256-GCM'}
+                        {isConfigured
+                            ? 'Password stored. Encrypt-at-rest for chat sessions and memory ships once those flows call secureStore/secureRetrieve in lib/encryption.ts.'
+                            : 'Set a password now; chat sessions and memory will encrypt with AES-256-GCM via Web Crypto once those flows are wired up.'}
                     </p>
                 </div>
             </div>
@@ -505,7 +508,7 @@ function EncryptionSetup({ showToast }: { showToast: (msg: string, type: 'succes
                         className="flex-1 bg-foreground/[0.04] border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:border-primary/50 focus:outline-none" />
                     <button onClick={handleSetup} disabled={verifying}
                         className="px-4 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary text-sm hover:bg-primary/20 transition-colors whitespace-nowrap">
-                        {verifying ? 'Setting up...' : 'Enable'}
+                        {verifying ? 'Saving...' : 'Save password'}
                     </button>
                 </div>
             )}
