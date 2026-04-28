@@ -32,7 +32,7 @@ export default function SignupPage() {
             if (!res.ok) { setError(data.error || 'Signup failed'); setIsLoading(false); return; }
             if (data.session?.access_token) {
                 localStorage.setItem('token', data.session.access_token);
-                localStorage.setItem('user', JSON.stringify({ name: name || 'Commander', email, plan: 'Pro' }));
+                localStorage.setItem('user', JSON.stringify({ name: name || (email?.split('@')[0] || 'Friend'), email, plan: 'Pro' }));
                 router.push('/chat');
             } else {
                 // Email confirmation required, show success state
