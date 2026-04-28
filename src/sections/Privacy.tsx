@@ -12,7 +12,7 @@ const Privacy: React.FC = () => {
         <div className="border-b border-white/10 pb-8 mb-12">
           <div className="text-xs font-bold tracking-[0.2em] text-primary uppercase mb-4">LEGAL</div>
           <h1 className="text-4xl md:text-5xl text-white font-medium tracking-tight">Privacy Policy</h1>
-          <p className="text-muted mt-4 font-mono text-sm">Last Updated: February 2026</p>
+          <p className="text-muted mt-4 font-mono text-sm">Last Updated: April 2026</p>
         </div>
 
         <div className="space-y-6 leading-relaxed">
@@ -31,9 +31,15 @@ const Privacy: React.FC = () => {
           </section>
 
           <section>
-            <h2 className="text-xl text-white font-bold mb-3">3. Data Security (Stays on your computer)</h2>
+            <h2 className="text-xl text-white font-bold mb-3">3. Where Your Data Goes</h2>
             <p>
-              Operator Uplift runs on your computer, not on our servers. Your assistant settings, chat history, and the sensitive content you share with it stay on your machine. We can&apos;t see what your assistant is doing unless you turn on optional cloud logging or send us a diagnostic.
+              When you use the web app at operatoruplift.com, your chat content is processed by our servers (Vercel + Supabase) and forwarded to whichever AI provider you select (Anthropic, OpenAI, Google, xAI, DeepSeek). Privy handles authentication. Each link is a real third party we contract with; we don&apos;t resell your data.
+            </p>
+            <p className="mt-3">
+              Your local settings, custom-agent configs, and chat session cache are stored in your browser&apos;s localStorage. Server-side, we store: your account record (Privy DID + email), subscription state, audit-log entries, and uploaded knowledge. You can export or delete this data at any time from <a href="/settings" className="text-[#F97316] hover:underline">Settings → Data</a>.
+            </p>
+            <p className="mt-3">
+              Our roadmap includes a desktop app that runs on your machine and can route to local Ollama for the AI step. That capability is in development; this Privacy Policy will be updated to describe it accurately when it ships.
             </p>
           </section>
 
