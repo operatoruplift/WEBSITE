@@ -74,7 +74,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
         id: 'isolated',
         navTitle: 'YOUR DATA',
         cardTitle: '1. Your data stays yours',
-        description: 'Everything lives on your computer, encrypted. Your assistant remembers what matters in private. Nothing goes to the cloud unless you say so.',
+        description: 'You can export or erase your account from Settings → Data. Third parties (Anthropic, OpenAI, Google, xAI, DeepSeek) only see the prompts you send them, and only the one you select per turn. We don\u2019t resell.',
         iconType: 'kanban'
       },
       {
@@ -108,16 +108,16 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
     ]
   },
   security: {
-    tag: "ENTERPRISE SECURITY",
-    headline: "Enterprise-grade infrastructure, zero cloud dependency.",
-    subhead: "AES-256 encrypted local storage. HIPAA, SOC 2, and GDPR ready. Open-source runtime anyone can audit. Deploys inside your firewall.",
+    tag: "TRUST",
+    headline: "Trust by construction, not promise.",
+    subhead: "Approval gate before every action, signed receipt afterward, on-chain audit log. HIPAA-aware architecture, GDPR workflows, MIT-licensed open source.",
     features: {
       security: {
-        tag: "COMPLIANCE READY",
-        title: "Your data never leaves your environment",
-        description: "Everything is AES-256 encrypted and stored on your infrastructure. Agents operate in isolated sessions with time-limited access keys. Full audit trail for every action.",
+        tag: "VERIFIABLE",
+        title: "Every action carries a receipt",
+        description: "Each tool action emits an ed25519-signed receipt with a request ID. Receipts hash into a Merkle tree that we anchor to Solana via the deployed audit-trail Anchor program. You can verify a receipt against the public key without trusting our server.",
         linkText: "Security documentation",
-        linkUrl: "https://help.operatoruplift.com/"
+        linkUrl: "/docs/receipts"
       },
       enterprise: {
         tag: "MODEL AGNOSTIC",
