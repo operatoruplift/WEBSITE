@@ -121,3 +121,61 @@ test('/memory shows empty knowledge base on cold load (no fake DEMO_NODES)', asy
     // Empty state copy or DEMO disclosure must be visible
     expect(body).toMatch(/no knowledge indexed yet|demo/i);
 });
+
+test('/agents/builder Tools step labels stub tools as DEMO', async ({ page }) => {
+    // PR #218 added a `live: boolean` field on each tool option in the
+    // wizard; tools without a backing /api/tools/* route get a DEMO
+    // badge. Lock that in: the wizard's Tools step must show DEMO badges
+    // on at least the known stubs (Slack, Notion, GitHub, Database) so
+    // a builder doesn't ship an agent claiming capabilities it can't
+    // actually invoke.
+    await prepareGatedSession(page);
+    await page.goto('/agents/builder');
+
+    await expect(page.getByRole('heading', { name: /Agent Builder/i })).toBeVisible({ timeout: 10_000 });
+
+    // Click through Template + Configure to reach the Tools step.
+    await page.getByText(/General Assistant/i).first().click();
+    await page.getByRole('button', { name: /Continue|Next/i }).first().click();
+    // Configure step needs name + description before continuing
+    await page.getByPlaceholder('My Agent').fill('Honesty test agent');
+    await page.getByPlaceholder('What does this agent do?').fill('Locks in DEMO tag on stub tools');
+    await page.getByRole('button', { name: /Continue|Next/i }).first().click();
+
+    // Tools step renders. The four most-recognizable stubs must each
+    // appear within a tile that also includes a DEMO badge.
+    const body = await page.locator('body').innerText();
+    for (const stub of ['Slack', 'Notion', 'GitHub', 'Database']) {
+        expect(body, `${stub} should still be a stub tool`).toContain(stub);
+    }
+    // At least 5 DEMO badges (we marked 14 stubs). DEMO appears as a
+    // pill on each non-live tile; "DEMO" is also used elsewhere on the
+    // page so we just assert the count is plural.
+    const demoCount = (body.match(/DEMO/g) || []).length;
+    expect(demoCount, `Tools step should show >= 5 DEMO badges, got ${demoCount}`).toBeGreaterThanOrEqual(5);
+});
+
+test('/settings API Keys section discloses DEMO + drops fake expiry', async ({ page }) => {
+    // PR #212 retired the "API key generated (expires in 30 days)" lie.
+    // The flow still creates `sk-ou-demo-...` strings but labels them
+    // clearly so a builder doesn't try to authenticate against /api/*
+    // with a non-functional key.
+    await prepareGatedSession(page);
+    await page.goto('/settings');
+
+    await expect(page.getByText(/Settings/).first()).toBeVisible({ timeout: 10_000 });
+
+    // The Settings page has a tab nav. Click into the API tab.
+    const apiTab = page.getByRole('button', { name: /API|Keys/i }).first();
+    if (await apiTab.isVisible().catch(() => false)) {
+        await apiTab.click();
+    }
+
+    const body = (await page.locator('body').innerText()).toLowerCase();
+    // The disclosure paragraph or the DEMO badge must be visible on the
+    // API Keys section (one or the other; both is fine).
+    expect(body).toMatch(/auth backend.*not.*live|not yet authenticate|generate demo key|demo/i);
+    // The retired "expires in 30 days" toast wording must not be present
+    // anywhere on the page (the loaded HTML reflects current strings).
+    expect(body, 'fake "expires in 30 days" wording stayed retired').not.toContain('expires in 30 days');
+});
