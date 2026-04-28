@@ -204,8 +204,11 @@ export default function SecurityPage() {
                     {/* Stats */}
                     <div className="grid grid-cols-2 lg:grid-cols-5 gap-4" style={{ animationDelay: '100ms' }}>
                         {[
-                            { label: 'Encryption', value: encConfigured ? 'AES-256-GCM' : 'Not Set', icon: Lock, color: encConfigured ? 'text-emerald-400' : 'text-amber-400', gradient: 'from-emerald-500/20 to-transparent', numeric: false },
-                            { label: 'Key Derivation', value: encConfigured ? 'PBKDF2 100K' : ',', icon: Key, color: 'text-emerald-400', gradient: 'from-emerald-500/20 to-transparent', numeric: false },
+                            // The configured key + algorithm exist but no chat-session,
+                            // memory, or agent-config write goes through secureStore yet,
+                            // so "Configured" is the accurate label, not "Active".
+                            { label: 'Encryption', value: encConfigured ? 'Configured' : 'Not Set', icon: Lock, color: encConfigured ? 'text-amber-400' : 'text-gray-500', gradient: 'from-amber-500/20 to-transparent', numeric: false },
+                            { label: 'Key Derivation', value: encConfigured ? 'PBKDF2 100K' : ',', icon: Key, color: encConfigured ? 'text-amber-400' : 'text-gray-500', gradient: 'from-amber-500/20 to-transparent', numeric: false },
                             { label: 'Total Actions', value: String(totalActions), icon: Activity, color: 'text-[#F97316]', gradient: 'from-[#F97316]/20 to-transparent', numeric: true, numVal: totalActions },
                             { label: 'Approved', value: String(approvedCount), icon: ShieldCheck, color: 'text-emerald-400', gradient: 'from-emerald-500/20 to-transparent', numeric: true, numVal: approvedCount },
                             { label: 'Denied', value: String(deniedCount), icon: AlertTriangle, color: deniedCount > 0 ? 'text-red-400' : 'text-gray-500', gradient: deniedCount > 0 ? 'from-red-500/20 to-transparent' : 'from-gray-500/20 to-transparent', numeric: true, numVal: deniedCount },
@@ -284,6 +287,17 @@ export default function SecurityPage() {
                                 <h3 className="text-xs font-mono text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                                     <Lock size={12} className="text-emerald-400" /> Encryption Status
                                 </h3>
+                                {encConfigured && (
+                                    <div className="mb-3 p-3 rounded-lg bg-amber-500/5 border border-amber-500/15">
+                                        <div className="flex items-start gap-2">
+                                            <AlertTriangle size={14} className="text-amber-400 mt-0.5 shrink-0" />
+                                            <div>
+                                                <p className="text-xs text-amber-300 font-medium">Encryption configured, not yet applied</p>
+                                                <p className="text-[10px] text-gray-500 mt-1">A password is set and a derived key is ready. Chat sessions, memory, and agent configs are not yet routed through secureStore/secureRetrieve, so they remain in localStorage as plain JSON.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                                 <div className="space-y-3">
                                     {[
                                         { label: 'Algorithm', value: 'AES-256-GCM', active: encConfigured },
