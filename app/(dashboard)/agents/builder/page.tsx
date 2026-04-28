@@ -51,32 +51,37 @@ export default function AgentBuilderPage() {
     const [enableDirectives, setEnableDirectives] = useState(true);
     const { showToast } = useToast();
 
-    const TOOLS = [
+    // `live` is true when the tool has a backing /api/tools/* route the
+    // agent runtime can actually call. Demo tools render but get a
+    // DEMO badge so a builder doesn't ship an agent that secretly
+    // can't do half of what its config claims. Keep this list aligned
+    // with /integrations and the toolCalls router (lib/toolCalls.ts).
+    const TOOLS: Array<{ id: string; name: string; desc: string; category: string; live: boolean }> = [
         // Core
-        { id: 'web-search', name: 'Web Search', desc: 'Search the internet in real-time', category: 'Core' },
-        { id: 'web-scrape', name: 'Web Scraper', desc: 'Extract content from URLs', category: 'Core' },
-        { id: 'code-exec', name: 'Code Executor', desc: 'Run Python/JS code in sandbox', category: 'Core' },
-        { id: 'file-system', name: 'File System', desc: 'Read, write, and manage files', category: 'Core' },
-        { id: 'memory', name: 'Memory Bank', desc: 'Read/write to knowledge base', category: 'Core' },
+        { id: 'web-search', name: 'Web Search', desc: 'Search the internet in real-time', category: 'Core', live: true },
+        { id: 'web-scrape', name: 'Web Scraper', desc: 'Extract content from URLs', category: 'Core', live: false },
+        { id: 'code-exec', name: 'Code Executor', desc: 'Run Python/JS code in sandbox', category: 'Core', live: false },
+        { id: 'file-system', name: 'File System', desc: 'Read, write, and manage files', category: 'Core', live: false },
+        { id: 'memory', name: 'Memory Bank', desc: 'Read/write to knowledge base', category: 'Core', live: true },
         // Developer
-        { id: 'database', name: 'Database', desc: 'Query SQL/NoSQL databases', category: 'Dev' },
-        { id: 'api-call', name: 'HTTP/API', desc: 'Make REST/GraphQL API calls', category: 'Dev' },
-        { id: 'github', name: 'GitHub', desc: 'PRs, issues, repos, and actions', category: 'Dev' },
-        { id: 'shell', name: 'Shell', desc: 'Execute terminal commands', category: 'Dev' },
-        { id: 'grep', name: 'Code Search', desc: 'Search codebases with regex', category: 'Dev' },
+        { id: 'database', name: 'Database', desc: 'Query SQL/NoSQL databases', category: 'Dev', live: false },
+        { id: 'api-call', name: 'HTTP/API', desc: 'Make REST/GraphQL API calls', category: 'Dev', live: false },
+        { id: 'github', name: 'GitHub', desc: 'PRs, issues, repos, and actions', category: 'Dev', live: false },
+        { id: 'shell', name: 'Shell', desc: 'Execute terminal commands', category: 'Dev', live: false },
+        { id: 'grep', name: 'Code Search', desc: 'Search codebases with regex', category: 'Dev', live: false },
         // Communication
-        { id: 'email', name: 'Email', desc: 'Send and read emails', category: 'Comm' },
-        { id: 'calendar', name: 'Calendar', desc: 'Manage calendar events', category: 'Comm' },
-        { id: 'slack', name: 'Slack', desc: 'Send messages and manage channels', category: 'Comm' },
-        { id: 'notion', name: 'Notion', desc: 'Read/write pages and databases', category: 'Comm' },
+        { id: 'email', name: 'Email', desc: 'Send and read emails', category: 'Comm', live: true },
+        { id: 'calendar', name: 'Calendar', desc: 'Manage calendar events', category: 'Comm', live: true },
+        { id: 'slack', name: 'Slack', desc: 'Send messages and manage channels', category: 'Comm', live: false },
+        { id: 'notion', name: 'Notion', desc: 'Read/write pages and databases', category: 'Comm', live: false },
         // Blockchain
-        { id: 'solana', name: 'Solana', desc: 'On-chain transactions and wallet ops', category: 'Chain' },
-        { id: 'oro-grail', name: 'Oro GRAIL', desc: 'Gold-backed asset management', category: 'Chain' },
-        { id: 'dd-xyz', name: 'DD.xyz Risk', desc: 'Real-time risk scoring and due diligence', category: 'Chain' },
-        { id: 'x402', name: 'x402 Payments', desc: 'Agent-to-agent micropayments', category: 'Chain' },
+        { id: 'solana', name: 'Solana', desc: 'On-chain transactions and wallet ops', category: 'Chain', live: false },
+        { id: 'dd-xyz', name: 'DD.xyz Risk', desc: 'Real-time risk scoring and due diligence', category: 'Chain', live: false },
+        { id: 'x402', name: 'x402 Payments', desc: 'Agent-to-agent micropayments', category: 'Chain', live: true },
+        { id: 'tokens', name: 'Token Lookup', desc: 'Price, risk grade, liquidity for any token', category: 'Chain', live: true },
         // Creative
-        { id: 'image-gen', name: 'Image Gen', desc: 'Generate images with DALL-E/Flux', category: 'Creative' },
-        { id: 'voice', name: 'Voice', desc: 'Text-to-speech and speech-to-text', category: 'Creative' },
+        { id: 'image-gen', name: 'Image Gen', desc: 'Generate images with DALL-E/Flux', category: 'Creative', live: false },
+        { id: 'voice', name: 'Voice', desc: 'Text-to-speech and speech-to-text', category: 'Creative', live: false },
     ];
 
     const toggleTool = (id: string) => {
@@ -200,10 +205,15 @@ export default function AgentBuilderPage() {
                                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                                 {catTools.map(tool => (
                                                     <button key={tool.id} onClick={() => toggleTool(tool.id)}
-                                                        className={`p-3 rounded-xl border text-left transition-all ${selectedTools.includes(tool.id) ? 'border-primary/50 bg-primary/10' : 'border-foreground/10 bg-white/[0.02] hover:border-primary/30'}`}>
-                                                        <div className="flex items-center justify-between">
-                                                            <p className="text-xs font-bold text-white">{tool.name}</p>
-                                                            {selectedTools.includes(tool.id) && <Check size={10} className="text-primary" />}
+                                                        className={`p-3 rounded-xl border text-left transition-all ${selectedTools.includes(tool.id) ? 'border-primary/50 bg-primary/10' : 'border-foreground/10 bg-white/[0.02] hover:border-primary/30'} ${!tool.live ? 'opacity-70' : ''}`}>
+                                                        <div className="flex items-center justify-between gap-1">
+                                                            <p className="text-xs font-bold text-white truncate">{tool.name}</p>
+                                                            <div className="flex items-center gap-1 flex-shrink-0">
+                                                                {!tool.live && (
+                                                                    <span className="text-[7px] font-mono font-bold tracking-widest uppercase px-1 py-0.5 rounded border bg-amber-400/10 text-amber-400 border-amber-400/20">DEMO</span>
+                                                                )}
+                                                                {selectedTools.includes(tool.id) && <Check size={10} className="text-primary" />}
+                                                            </div>
                                                         </div>
                                                         <p className="text-[9px] text-gray-500 mt-1">{tool.desc}</p>
                                                     </button>
