@@ -57,7 +57,7 @@ export default function LoginPage() {
 
         // Any Privy-authenticated user gets access, store session and redirect
         if (authenticated && user) {
-            const userName = user.google?.name || user.github?.username || 'Commander';
+            const userName = user.google?.name || user.github?.username || user.email?.address?.split('@')[0] || 'Friend';
             const userEmail = user.google?.email || user.email?.address || '';
             const walletAddr = user.wallet?.address || '';
 
@@ -162,7 +162,7 @@ export default function LoginPage() {
                     console.error('[verify-payment] getAccessToken failed:', err);
                 }
                 localStorage.setItem('user', JSON.stringify({
-                    name: user?.google?.name || user?.github?.username || 'Commander',
+                    name: user?.google?.name || user?.github?.username || (user?.email?.address?.split('@')[0]) || 'Friend',
                     email: user?.google?.email || user?.email?.address || email,
                     plan: 'Early Access',
                     id: user?.id || 'anon',

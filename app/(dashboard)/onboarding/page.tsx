@@ -40,7 +40,7 @@ export default function OnboardingPage() {
     const finishOnboarding = () => {
         // Save onboarding data
         const user = JSON.parse(localStorage.getItem('user') || '{}');
-        user.name = name || user.name || 'Commander';
+        user.name = name || user.name || 'Friend';
         user.useCases = [...selectedCases];
         user.onboarded = true;
         localStorage.setItem('user', JSON.stringify(user));

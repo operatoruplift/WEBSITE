@@ -8,7 +8,7 @@ import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
 
 export default function ProfilePage() {
-    const [user, setUser] = useState({ name: 'Commander', email: 'you@example.com', plan: 'Pro', joined: 'March 2026' });
+    const [user, setUser] = useState({ name: 'Friend', email: 'you@example.com', plan: 'Pro', joined: 'March 2026' });
     const [editing, setEditing] = useState(false);
     const [editName, setEditName] = useState('');
     const [editEmail, setEditEmail] = useState('');
