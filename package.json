@@ -11,6 +11,7 @@
     "copy-check": "node scripts/copy-check.mjs",
     "capability-check": "node scripts/capability-check.mjs",
     "trust-gate": "node scripts/trust-gate.mjs",
+    "fabrication-rot-check": "node scripts/fabrication-rot-check.mjs",
     "check": "node scripts/check.mjs"
   },
   "dependencies": {
