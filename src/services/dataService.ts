@@ -33,10 +33,10 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
     subline: 'You jump between Gmail, Calendar, Slack, Notion, and twenty more, every day. Each one stores your stuff somewhere different, and AI tools can only see one app at a time.',
     pillars: [
       { id: 'siloed-memory', emoji: '🧠', problem: 'Apps don\'t talk', solution: 'One assistant', description: 'Your inbox doesn\'t know about your calendar. Your notes don\'t know about your messages. One assistant that sees the whole picture and moves work across them.', href: '#product' },
-      { id: 'exposed-privacy', emoji: '🔓', problem: 'Sent to the cloud', solution: 'Stays on your computer', description: 'Most AI sends your email, files, and chats to someone else\'s server. Ours runs on your machine. Nothing leaves unless you say so.', href: '#product' },
-      { id: 'no-boundaries', emoji: '⚠️', problem: 'No paperwork', solution: 'Privacy-ready', description: 'Cloud AI can\'t pass HIPAA, SOC 2, or GDPR audits. Ours can. The code is open and the data is local, so your IT team can sign off in an afternoon.', href: '#product' },
+      { id: 'no-blanket-trust', emoji: '🔓', problem: 'Free-running AI', solution: 'Tap to approve', description: 'Most AI agents act on your behalf the moment they decide to. Ours pauses before anything is sent, booked, or saved, and waits for your tap. Every action gets a signed receipt you can scroll back through.', href: '#product' },
+      { id: 'audit-trail', emoji: '⚠️', problem: 'No proof afterward', solution: 'On-chain audit log', description: 'When something goes wrong with a chat-only assistant, all you have is a fading memory. Ours hashes every action and anchors the log to a Merkle root on Solana. The history can\'t be quietly rewritten.', href: '#product' },
     ],
-    solution: 'one assistant for all your apps, on your computer, that you fully control.',
+    solution: 'one assistant for all your apps, with approval before every action and a receipt afterward.',
   },
   market: {
     headline: 'Massive and Growing.',
