@@ -74,6 +74,8 @@ jobs:
             tests/e2e/download-cta.spec.ts \
             tests/e2e/demo-flow.spec.ts \
             tests/e2e/photon-webhook.spec.ts \
+            tests/e2e/toolSafety.spec.ts \
+            tests/e2e/auth-diagnoseJws.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure
