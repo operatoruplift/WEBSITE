@@ -326,7 +326,7 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
           ctx.fillText('[ SESSION TERMINATED ]', cx, cy - 5);
           ctx.font = "7px 'SF Mono', monospace";
           ctx.fillStyle = 'rgba(255,255,255,0.25)';
-          ctx.fillText('vault sealed · memory encrypted', cx, cy + 12);
+          ctx.fillText('session closed · receipt anchored', cx, cy + 12);
           ctx.restore();
         }
       }
