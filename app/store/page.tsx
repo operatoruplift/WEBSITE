@@ -1,62 +1,30 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 import { FadeIn } from '@/src/components/Animators';
-import { Check, Zap, Clock, ArrowRight } from 'lucide-react';
+import { Zap, ArrowRight } from 'lucide-react';
+import { listStoreAgents, chatDeepLink } from '@/config/agents';
 
-interface StoreAgent {
-    id: string;
-    name: string;
-    category: string;
-    price: string;
-    description: string;
-    emoji: string;
-    live: boolean;
-}
-
-const agents: StoreAgent[] = [
-    { id: 'task', name: 'Task Manager', category: 'Productivity', price: 'Free in beta', description: 'Organizes your tasks, sets reminders, tracks deadlines automatically.', emoji: '✅', live: true },
-    { id: 'calendar', name: 'Calendar', category: 'Scheduling', price: 'Free in beta', description: 'Manages your calendar, schedules meetings, sends invites.', emoji: '📅', live: true },
-    { id: 'research', name: 'Researcher', category: 'Knowledge', price: 'Free in beta', description: 'Deep research on any topic, summarized and saved for you.', emoji: '🔍', live: true },
-    { id: 'finance', name: 'Finance Tracker', category: 'Finance', price: 'Free in beta', description: 'Tracks spending, sorts transactions, generates clean reports.', emoji: '💰', live: true },
-    { id: 'code', name: 'Code Assistant', category: 'Developer', price: 'Free in beta', description: 'Reviews code, suggests fixes, writes tests.', emoji: '💻', live: true },
-    { id: 'health', name: 'Health Coach', category: 'Wellness', price: 'Free in beta', description: 'Tracks habits, sleep, and nutrition. Gives personalized advice.', emoji: '🏃', live: false },
-    { id: 'legal', name: 'Legal Assistant', category: 'Compliance', price: 'Free in beta', description: 'Reads contracts, flags risks, summarizes legal documents.', emoji: '⚖️', live: false },
-    { id: 'music', name: 'Music', category: 'Creative', price: 'Free in beta', description: 'Generates playlists, identifies songs, manages your library.', emoji: '🎵', live: false },
-    { id: 'language', name: 'Language Tutor', category: 'Education', price: 'Free in beta', description: 'Daily language practice, vocabulary drills, conversation coaching.', emoji: '🌍', live: false },
-    { id: 'sleep', name: 'Sleep Coach', category: 'Wellness', price: 'Free in beta', description: 'Tracks sleep patterns, suggests a better schedule, morning briefings.', emoji: '😴', live: false },
-];
-
-// Lazy initializer reads localStorage once during the first client
-// render, avoids the setState-in-effect cascading-render warning.
-function loadInstalledSet(): Set<string> {
-    if (typeof window === 'undefined') return new Set();
-    try {
-        return new Set(JSON.parse(localStorage.getItem('store-installed') || '[]'));
-    } catch { return new Set(); }
-}
-
+/**
+ * Public store page. Surfaces the LIVE_AGENTS registry from
+ * config/agents.ts so the public surface, the dashboard /agents page,
+ * and the chat-deeplinker all read from a single source of truth.
+ *
+ * Earlier versions of this file shipped a hand-written list of 10
+ * agents (Task Manager, Calendar, Researcher, Finance Tracker, Code
+ * Assistant, Health Coach, Legal Assistant, Music, Language Tutor,
+ * Sleep Coach) that didn't exist in the registry. The "Install" button
+ * was a 2-second fake setTimeout that wrote the agent id to
+ * localStorage and toasted "X installed" without doing anything else.
+ *
+ * Now: only the real, isLive=true agents render here, and the CTA
+ * deeplinks into /chat with the agent's testPrompt seeded so the
+ * visitor immediately sees the agent doing work in demo mode.
+ */
 export default function StorePage() {
-    const [installed, setInstalled] = useState<Set<string>>(loadInstalledSet);
-    const [deploying, setDeploying] = useState<string | null>(null);
-
-    const deploy = async (agent: StoreAgent) => {
-        if (!agent.live || installed.has(agent.id)) return;
-        setDeploying(agent.id);
-        // Simulate install (2s)
-        await new Promise(r => setTimeout(r, 2000));
-        setInstalled(prev => {
-            const next = new Set(prev);
-            next.add(agent.id);
-            localStorage.setItem('store-installed', JSON.stringify([...next]));
-            return next;
-        });
-        setDeploying(null);
-        alert(`${agent.name} installed.`);
-    };
+    const agents = listStoreAgents();
 
     return (
         <div className="w-full bg-background min-h-screen">
@@ -68,12 +36,12 @@ export default function StorePage() {
                 <div className="relative z-10 max-w-3xl mx-auto">
                     <FadeIn>
                         <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 text-primary px-3 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest mb-6">
-                            <Zap size={12} /> Built-in store
+                            <Zap size={12} /> Built-in helpers
                         </div>
                     </FadeIn>
                     <h1 className="text-4xl md:text-6xl font-medium text-white tracking-tight mb-4">Helpers</h1>
                     <p className="text-lg text-gray-400 mb-8">AI helpers for the parts of your day you&apos;d rather not handle yourself.</p>
-                    <p className="text-xs text-gray-600 font-mono">All free during beta. No card required.</p>
+                    <p className="text-xs text-gray-600 font-mono">Free during beta. Try any helper in chat without signing up.</p>
                 </div>
             </section>
 
@@ -82,7 +50,7 @@ export default function StorePage() {
                 <div className="flex animate-marquee whitespace-nowrap">
                     {[...agents, ...agents].map((a, i) => (
                         <span key={i} className="mx-6 text-sm text-gray-600 font-mono">
-                            {a.emoji} {a.name}
+                            {a.avatar} {a.name}
                         </span>
                     ))}
                 </div>
@@ -96,56 +64,37 @@ export default function StorePage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-                    {agents.filter(a => a.live).map((agent, i) => (
+                    {agents.map((agent, i) => (
                         <FadeIn key={agent.id} delay={i * 80}>
-                            <div className={`p-6 rounded-2xl border transition-all duration-300 h-full flex flex-col ${installed.has(agent.id) ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-white/10 bg-white/[0.02] hover:border-primary/30 hover:bg-primary/5'}`}>
+                            <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 h-full flex flex-col">
                                 <div className="flex items-start justify-between mb-4">
-                                    <span className="text-3xl">{agent.emoji}</span>
+                                    <span className="text-3xl">{agent.avatar}</span>
                                     <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest bg-white/5 px-2 py-1 rounded">{agent.category}</span>
                                 </div>
                                 <h3 className="text-lg font-medium text-white mb-2">{agent.name}</h3>
                                 <p className="text-sm text-gray-400 mb-4 flex-1">{agent.description}</p>
+                                {agent.tags.length > 0 && (
+                                    <div className="flex flex-wrap gap-1.5 mb-4">
+                                        {agent.tags.slice(0, 3).map(tag => (
+                                            <span key={tag} className="text-[10px] font-mono text-gray-500 uppercase bg-white/[0.04] px-2 py-0.5 rounded">{tag}</span>
+                                        ))}
+                                    </div>
+                                )}
                                 <div className="flex items-center justify-between">
-                                    <span className="text-sm font-mono text-primary">{agent.price}</span>
-                                    {installed.has(agent.id) ? (
-                                        <span className="inline-flex items-center gap-1 text-emerald-400 text-xs font-bold"><Check size={14} /> Installed</span>
-                                    ) : (
-                                        <button onClick={() => deploy(agent)} disabled={deploying === agent.id}
-                                            className="px-4 py-2 rounded-lg bg-primary text-white text-xs font-bold uppercase tracking-widest hover:bg-primary/80 transition-colors shadow-[0_0_15px_rgba(231,118,48,0.3)] disabled:opacity-50">
-                                            {deploying === agent.id ? 'Installing...' : 'Install'}
-                                        </button>
-                                    )}
+                                    <span className="text-sm font-mono text-primary">Free in beta</span>
+                                    <Link href={chatDeepLink(agent)}
+                                        className="px-4 py-2 rounded-lg bg-primary text-white text-xs font-bold uppercase tracking-widest hover:bg-primary/80 transition-colors shadow-[0_0_15px_rgba(231,118,48,0.3)] inline-flex items-center gap-1">
+                                        Try in chat <ArrowRight size={12} />
+                                    </Link>
                                 </div>
                             </div>
                         </FadeIn>
                     ))}
                 </div>
 
-                <div className="flex items-center gap-3 mb-8">
-                    <span className="text-xs font-bold tracking-widest text-gray-500 uppercase">Coming soon</span>
-                    <span className="flex-1 h-px bg-white/10" />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {agents.filter(a => !a.live).map((agent, i) => (
-                        <FadeIn key={agent.id} delay={i * 80}>
-                            <div className="p-6 rounded-2xl border border-white/5 bg-white/[0.01] opacity-60 h-full flex flex-col">
-                                <div className="flex items-start justify-between mb-4">
-                                    <span className="text-3xl grayscale">{agent.emoji}</span>
-                                    <span className="text-[10px] font-mono text-gray-600 uppercase tracking-widest bg-white/5 px-2 py-1 rounded">{agent.category}</span>
-                                </div>
-                                <h3 className="text-lg font-medium text-gray-400 mb-2">{agent.name}</h3>
-                                <p className="text-sm text-gray-600 mb-4 flex-1">{agent.description}</p>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm font-mono text-gray-600">{agent.price}</span>
-                                    <button className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-400 text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-colors">
-                                        <Clock size={12} className="inline mr-1" /> Notify Me
-                                    </button>
-                                </div>
-                            </div>
-                        </FadeIn>
-                    ))}
-                </div>
+                <p className="text-xs text-gray-600 text-center font-mono">
+                    More helpers ship as the registry grows. The list above is the canonical set, no placeholders, no &ldquo;coming soon&rdquo; stubs.
+                </p>
             </section>
 
             {/* CTA */}

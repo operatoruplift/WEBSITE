@@ -83,8 +83,12 @@ test('/store leads with Helpers and free-in-beta pricing', async ({ page }) => {
 
     await expect(page.getByRole('heading', { name: /^Helpers$/ })).toBeVisible({ timeout: 10_000 });
     await expect(page.getByText(/Free in beta/i).first()).toBeVisible();
-    // The "Deploy with SOL" button label was retired in #154
-    await expect(page.getByRole('button', { name: /Install/i }).first()).toBeVisible();
+    // The previous "Install" button was a 2s setTimeout fake that wrote a
+    // localStorage marker and toasted "X installed" without doing anything.
+    // The CTA now deeplinks straight into /chat with the agent's testPrompt
+    // seeded, so a visitor immediately sees the agent doing real work in
+    // demo mode.
+    await expect(page.getByRole('link', { name: /Try in chat/i }).first()).toBeVisible();
 
     const body = await page.locator('body').innerText();
     assertNoBannedPhrases(body, '/store');
