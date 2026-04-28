@@ -55,7 +55,8 @@ const PROBES: Probe[] = [
     { name: 'tools.web', method: 'POST', path: '/api/tools/web', body: { action: 'search', params: { query: 'x' } }, expectStatus: [401, 403] },
     { name: 'tools.notes', method: 'POST', path: '/api/tools/notes', body: { action: 'list' }, expectStatus: [401, 403] },
     { name: 'access.check', method: 'GET', path: '/api/access/check', expectStatus: [200, 401] },
-    { name: 'risk', method: 'POST', path: '/api/risk', body: {}, expectStatus: [400, 401] },
+    { name: 'risk (410 gone)', method: 'POST', path: '/api/risk', body: {}, expectStatus: [401, 410] },
+    { name: 'gold (410 gone)', method: 'GET', path: '/api/gold', expectStatus: [401, 410] },
 ];
 
 test.describe('Runtime trust-gate: every response carries X-Request-Id', () => {
