@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 import { getPhotonAdapter } from '@/lib/photon/adapter';
 import { withRequestMeta } from '@/lib/apiHelpers';
+import { safeLog, safeWarn } from '@/lib/safeLog';
 
 export const runtime = 'nodejs';
 export const maxDuration = 15;
@@ -114,7 +115,12 @@ async function sendFallbackAck(sender: string, platform: string, supabase: Retur
         platform: platform as 'imessage' | 'telegram' | 'whatsapp' | 'x' | 'discord' | 'instagram',
     });
     if (!result.ok) {
-        console.warn('[photon webhook] fallback ack failed:', result.reason, result.message);
+        safeWarn({
+            at: 'webhooks.photon',
+            event: 'fallback_ack_failed',
+            reason: result.reason,
+            message: result.message,
+        });
         return;
     }
     if (supabase && rowId) {
@@ -178,7 +184,16 @@ export async function POST(request: Request) {
     const supabase = getSupabase();
     if (!supabase) {
         // No Supabase, accept-and-log so Spectrum stops retrying.
-        console.info('[photon webhook]', { eventType, platform, sender, textLen: text.length, providerMessageId });
+        safeLog({
+            at: meta.route,
+            event: 'no_supabase_log_only',
+            requestId: meta.requestId,
+            eventType,
+            platform,
+            sender,
+            textLen: text.length,
+            providerMessageId,
+        });
         // Still offer the 5s ack when configured, even with no persistence.
         if (shouldSendFallbackAck(sender)) {
             setTimeout(() => { sendFallbackAck(sender, platform, null, null).catch(() => {}); }, FALLBACK_MS);
@@ -212,12 +227,23 @@ export async function POST(request: Request) {
             error.code === '23505' ||
             /duplicate key|unique constraint/i.test(error.message);
         if (isDuplicate) {
-            console.info('[photon webhook] duplicate', { providerMessageId, sender });
+            safeLog({
+                at: meta.route,
+                event: 'duplicate_message',
+                requestId: meta.requestId,
+                providerMessageId,
+                sender,
+            });
             return NextResponse.json({ ok: true, logged: false, duplicate: true, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
         }
         // Likely the table doesn't exist yet. Still 200 so Spectrum
         // doesn't retry; ops can create the table off the error log.
-        console.warn('[photon webhook] supabase insert failed:', error.message);
+        safeWarn({
+            at: meta.route,
+            event: 'supabase_insert_failed',
+            requestId: meta.requestId,
+            error: error.message,
+        });
         return NextResponse.json({ ok: true, logged: false, reason: error.message, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
     }
 

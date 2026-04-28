@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { exchangeCode } from '@/lib/google/oauth';
 import { verifyOAuthState } from '@/lib/google/oauth-state';
 import { withRequestMeta } from '@/lib/apiHelpers';
+import { safeError, safeWarn } from '@/lib/safeLog';
 
 export const runtime = 'nodejs';
 
@@ -42,7 +43,11 @@ export async function GET(request: Request) {
         // Verify signed state, returns userId or null
         const userId = verifyOAuthState(state);
         if (!userId) {
-            console.warn('[google-callback] invalid or expired state');
+            safeWarn({
+                at: meta.route,
+                event: 'invalid_or_expired_state',
+                requestId: meta.requestId,
+            });
             return NextResponse.redirect(
                 new URL('/integrations?error=invalid_state', request.url),
             );
@@ -55,15 +60,14 @@ export async function GET(request: Request) {
         );
     } catch (err) {
         const msg = err instanceof Error ? err.message : 'Unknown error';
-        console.log(JSON.stringify({
+        safeError({
             at: meta.route,
-            event: 'error',
-            ts: meta.startedAt,
+            event: 'callback_error',
             requestId: meta.requestId,
             errorClass: 'unknown',
             httpStatus: 302,
             detail: msg.slice(0, 240),
-        }));
+        });
         return NextResponse.redirect(
             new URL(`/integrations?error=${encodeURIComponent(msg)}&ref=${meta.requestId}`, request.url),
         );

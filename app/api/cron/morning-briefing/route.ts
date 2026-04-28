@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 import { createClient } from '@supabase/supabase-js';
 import { withRequestMeta, errorResponse } from '@/lib/apiHelpers';
+import { safeError } from '@/lib/safeLog';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -103,7 +104,13 @@ export async function GET(request: Request) {
             await gmail.users.messages.send({ userId: 'me', requestBody: { raw } });
             notified++;
         } catch (err) {
-            console.error(`[morning-briefing] Error for ${user.user_id}:`, err);
+            safeError({
+                at: meta.route,
+                event: 'user_briefing_failed',
+                requestId: meta.requestId,
+                user_id: user.user_id,
+                error: err instanceof Error ? err.message : String(err),
+            });
         }
     }
 

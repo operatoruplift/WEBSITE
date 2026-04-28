@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { verifyPayment } from '@/lib/solana/pay';
 import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
+import { safeError } from '@/lib/safeLog';
 
 export const runtime = 'nodejs';
 
@@ -51,7 +52,13 @@ export async function POST(request: Request) {
         );
 
         if (dbError) {
-            console.error('[verify-payment] Supabase error:', dbError);
+            safeError({
+                at: meta.route,
+                event: 'supabase_write_failed',
+                requestId: meta.requestId,
+                error: dbError.message,
+                code: dbError.code,
+            });
             // Payment confirmed but DB write failed, still grant access
             // The on-chain record is the source of truth
         }
