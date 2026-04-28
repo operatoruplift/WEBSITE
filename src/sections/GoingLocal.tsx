@@ -17,7 +17,7 @@ const GoingLocal: React.FC = () => {
           </FadeIn>
           <h2 className="text-3xl md:text-5xl font-medium text-white mb-4 tracking-tight">Even Google agrees.</h2>
           <p className="text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Gemma 4 now runs fully on-device on iPhone 17 Pro. Same research base as Gemini 3. 40 tokens per second. No cloud. No internet. This is the direction the entire industry is moving, and we have been building it since July 2025, alone, before it was obvious. It self-validated organically: elders, local disabled veterans, non-tech-savvy users, anti-techies, family, friends, and communities from gaming, Web3, and beyond adopted it without any marketing.
+            Gemma 4 now runs fully on-device on iPhone 17 Pro. Same research base as Gemini 3. 40 tokens per second. No cloud. No internet. This is the direction the entire industry is moving, and we have been building toward it since July 2025, alone, before it was obvious. The web app today is approval-gated and audit-anchored; the desktop+Ollama build on the roadmap takes inference local. The early audience self-validated organically: elders, disabled veterans, non-technical users, anti-techies, friends, family, and communities from gaming, Web3, and beyond adopted it without any marketing.
           </p>
         </div>
 
