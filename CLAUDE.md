@@ -13,17 +13,18 @@ Marketing site + live demo chat + Privy auth + Solana Pay gate + audit viewer. O
 ## Verification commands
 - `pnpm build` → 0 errors. Authoritative production-build gate.
 - `pnpm exec tsc --noEmit` → 0 errors.
-- `pnpm check` → 3 grep-guards pass (copy-check, capability-check, trust-gate). Trust-gate currently reports 44/44 routes on `withRequestMeta`.
+- `pnpm check` → 4 grep-guards pass (copy-check, capability-check, trust-gate, fabrication-rot). Trust-gate currently reports 44/44 routes on `withRequestMeta`. Fabrication-rot encodes the patterns we've explicitly retired (Gold Agent balances, Webacy fake risk grades, x402-devnet-${Date.now()} tx signatures, random-vector fakes, etc.) and points each match at the original cleanup PR — see `scripts/fabrication-rot-check.mjs`.
 - `pnpm exec playwright test tests/e2e` → 17 hermetic specs pass on every PR (see `.github/workflows/ci.yml`).
 
 ## Honesty regression net
-Five specs lock in the consumer-copy + fabrication cleanups (PRs #147 → #196). Any drift fails CI:
+Five specs + one grep-guard lock in the consumer-copy + fabrication cleanups (PRs #147 → #224). Any drift fails CI:
 
 - `tests/e2e/chat-honesty.spec.ts` — /chat, /paywall, /swarm: no LLM Council, no Chairman/Contrarian/Outsider, no fake transcripts.
 - `tests/e2e/consumer-copy.spec.ts` — homepage, navbar, /paywall, /store, /pricing, OG metadata, JSON-LD, /login, /signup: must use the new consumer voice (`stay in charge`, `Try it free`, `drafts your email`), and must not contain banned dev/sci-fi vocabulary (Multi-agent orchestration, AI Operating System, Self-Hosted, Local-first, Commander, Blackwall, Founder Ops, Warp Network, Uplift Core, Gold Agent).
-- `tests/e2e/dashboard-honesty.spec.ts` — /app, /notifications, /workflows: no fabricated stats, no Gold Agent widget, no fake "Blackwall blocked 3 threats" notifications, no hardcoded "142 runs" workflow counts.
-- `tests/e2e/request-id-runtime.spec.ts` — 16 representative endpoints all carry `X-Request-Id` (including the middleware-401 path).
+- `tests/e2e/dashboard-honesty.spec.ts` — /app, /notifications, /workflows, /memory, /integrations, /agents/builder, /settings: no fabricated stats, no Gold Agent widget, no fake "Blackwall blocked 3 threats" notifications, no hardcoded "142 runs" workflow counts, no pre-seeded fake memory nodes, integrations summary shows live + coming-soon (not "X available"), agent-builder DEMO badges on stub tools, settings API-keys disclosure.
+- `tests/e2e/request-id-runtime.spec.ts` — 17 representative endpoints all carry `X-Request-Id` (including /api/risk + /api/gold returning 410 Gone, and the middleware-401 path).
 - `tests/e2e/demo-flow.spec.ts` — anonymous /chat hits exactly one server route (`/api/chat`); no leaks to /api/capabilities, /api/audit/log, or other auth-required routes.
+- `scripts/fabrication-rot-check.mjs` — 10 literal/regex patterns for retired fabrications (Gold Agent balances, Webacy fake A-grades, x402-devnet-${Date.now()}, random-vector fakes, "expires in 30 days" toast, fake-install alert, etc.). Each match prints the original cleanup PR.
 
 ## Trust-gate
 Source-level (`scripts/check.mjs::trust-gate`): every `app/api/*/route.ts` imports `@/lib/apiHelpers` and calls `withRequestMeta`. Currently 44/44 (100%).
