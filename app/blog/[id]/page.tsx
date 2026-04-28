@@ -13,7 +13,7 @@ function getArticleContent(id: string) {
         'balaji-pivot-advice': (
             <div className="space-y-6">
                 <p className="text-lg">Balaji looked at what I was building and told me to walk away.</p>
-                <p>This is specific, so I&apos;ll be specific. I showed him Operator Uplift in March: a local-first AI operator with approval-gated tool calls and on-chain audit receipts. He gave three pieces of advice, back to back, in the order he gave them.</p>
+                <p>This is specific, so I&apos;ll be specific. I showed him Operator Uplift in March: an AI operator with approval-gated tool calls, ed25519-signed receipts per action, and a roadmap toward a desktop+Ollama build for full local inference. He gave three pieces of advice, back to back, in the order he gave them.</p>
                 <p><strong>One.</strong> &quot;You&apos;re competing with Perplexity, OpenAI, Anthropic, and Google. Solo founder, no funding, walk away.&quot;</p>
                 <p><strong>Two.</strong> &quot;If you stay, your wedge isn&apos;t privacy. It&apos;s a professional class that has a confidentiality obligation and no product that respects it. Lawyers. Accountants. Therapists.&quot;</p>
                 <p><strong>Three.</strong> &quot;Whatever you ship, ship it on-chain. You&apos;re on Solana. Use Solana.&quot;</p>
@@ -67,10 +67,10 @@ function getArticleContent(id: string) {
             <div className="space-y-6">
                 <p className="text-lg">Every privacy product has a threat model. Most of them hide it. Here is ours, stated honestly.</p>
                 <p><strong>What we protect against:</strong></p>
-                <p>(1) Cloud-side data retention. When an agent reads your calendar or drafts an email, the raw content stays on your machine or passes through our server only as transient inference. We do not store agent conversations, attachments, or the output of tool calls in a persistent cloud database.</p>
+                <p>(1) Cloud-side data retention. The web app routes prompts through whichever AI provider you pick per turn (Anthropic, OpenAI, Google, xAI, DeepSeek). Beyond that hop, we do not store agent conversations, tool-call outputs, or attachment bodies in our own database. Chat sessions and memory live in your browser&apos;s localStorage. The desktop+Ollama path on the roadmap removes the provider hop entirely; until then, the trade-off is the one each provider documents.</p>
                 <p>(2) Silent action. Every write happens behind an approval modal. A compromised LLM cannot send an email without you clicking Allow.</p>
                 <p>(3) Tampered audit history. The on-chain Merkle root means we cannot delete or rewrite what your agent did without it being detectable.</p>
-                <p>(4) Credential leaks from the client. API keys live encrypted in your browser via AES-256-GCM. Even a stolen laptop with the disk unlocked requires your passphrase to use them.</p>
+                <p>(4) Credential leaks from the client. Settings &rarr; Security exposes a passphrase setup that hashes a key via Web Crypto AES-256-GCM. The encrypt/decrypt round-trip is wired up but is not yet called by the chat session and memory persistence paths, so today the data sits in localStorage as plain JSON. We disclose this state in the Settings UI itself rather than in marketing copy. Encrypt-at-rest ships once those flows call secureStore/secureRetrieve.</p>
                 <p><strong>What we do NOT protect against (yet):</strong></p>
                 <p>(1) Compromised LLM provider. If Anthropic or OpenAI is breached, and they decide to log your prompts, we cannot stop that. Use Ollama if you need full local inference.</p>
                 <p>(2) Malicious browser extensions. An extension with content-script access can read anything the page can read, including your approvals modal. This is an operating-system-level problem we inherit.</p>
@@ -86,7 +86,7 @@ function getArticleContent(id: string) {
                 <p>Accountants face the same wall. Tax documents, bank reconciliations, payroll, client financials. Any of it going into a third-party LLM is a potential SOC 2 finding and a definite IRS Circular 230 problem if the information is ever subpoenaed from the model provider.</p>
                 <p>Therapists are the cleanest case. HIPAA is explicit. Patient session notes cannot sit in a system the provider has access to without a Business Associate Agreement. No major LLM provider will sign a BAA for individual practitioners.</p>
                 <p>This is our wedge. Not &quot;AI is cool.&quot; Not &quot;productivity.&quot; The question &quot;how do I use AI without breaking my professional license.&quot;</p>
-                <p>Operator Uplift answers it three ways. First, agents run with encrypted local memory &mdash; session notes, draft briefs, and financial records never touch a third-party cloud unless you explicitly send them. Second, every tool action requires approval &mdash; the agent can not silently forward a client email to an outside service. Third, the audit trail is on-chain &mdash; when the bar or the IRS asks &quot;what did your AI do,&quot; you have a cryptographic record.</p>
+                <p>Operator Uplift answers it three ways. First, the only data that reaches a third-party AI provider is the prompt you send for that turn, against the provider you pick. We do not silently route content through a model you did not choose. Second, every tool action requires approval, the agent can not silently forward a client email to an outside service. Third, the audit trail is on-chain, when the bar or the IRS asks &quot;what did your AI do,&quot; you have a cryptographic record. The desktop+Ollama path on the roadmap removes the provider hop entirely for users who need full on-device inference.</p>
                 <p>The three professions are our wedge because they share three traits: high hourly rate (they can pay $19/mo without thinking), strict confidentiality obligation (they need what we built), and a peer network (they tell each other about tools that work). One referral per customer is our growth loop.</p>
             </div>
         ),
@@ -105,12 +105,12 @@ function getArticleContent(id: string) {
         'why-i-built-an-ai-os': (
             <div className="space-y-6">
                 <p className="text-lg">Balaji told me to pivot.</p>
-                <p>He is one of the smartest people in tech. He looked at what I was building, a local-first AI operating system, and said: you are competing with Perplexity, OpenAI, Anthropic, and Google. Solo founder. No funding. Walk away.</p>
+                <p>He is one of the smartest people in tech. He looked at what I was building, an AI operating layer with approval-gated tool access and a local-first roadmap, and said: you are competing with Perplexity, OpenAI, Anthropic, and Google. Solo founder. No funding. Walk away.</p>
                 <p>I didn&apos;t.</p>
                 <p>Not because I think I am smarter than Balaji. I don&apos;t. But because the thing he was describing, competing on model quality, on inference speed, on benchmark scores, isn&apos;t what I am building.</p>
                 <p>I am not building a better ChatGPT. I am building the OS layer that runs underneath all of them.</p>
                 <p>Here is the distinction that matters: every AI assistant you use today is a tenant. It lives on someone else&apos;s server. It reads your data, stores your context, and makes decisions about what to remember and what to forget, on their terms, not yours. You don&apos;t own any of it.</p>
-                <p>Operator Uplift is the landlord. It runs on your device. Your agents, your memory, your context, encrypted, local, yours. The model underneath can be Claude, Llama, GPT, anything. We don&apos;t compete with the models. We are the environment they run in.</p>
+                <p>Operator Uplift is the landlord. The web app today is approval-gated: every tool call, every email, every booking pauses for your tap and emits a signed receipt. The desktop build on the roadmap pulls inference local via Ollama so even the prompt never leaves your machine. The model underneath can be Claude, Llama, GPT, anything. We don&apos;t compete with the models. We are the environment they run in, with the trust and audit primitives the cloud assistants leave out.</p>
                 <p>The pivot Balaji suggested would have made me a better-funded version of something that already exists. Staying the course means building something that doesn&apos;t.</p>
                 <p>I have been homeless. I have built from nothing before. The only thing that has ever worked for me is building something I actually believe in, not something that is easier to explain to investors.</p>
                 <p>So I didn&apos;t pivot. And I am still building.</p>
@@ -123,7 +123,7 @@ function getArticleContent(id: string) {
                 <p>Here is what that actually looks like day to day:</p>
                 <p>It looks like a message at 11pm from a beta user saying &quot;I have been using the task agent every morning for 6 weeks, it is the first thing I open.&quot; It looks like someone in our Discord asking when the calendar agent ships because they have already restructured their workflow around the assumption that it will. It looks like 2,500 community members who joined before we had a public product.</p>
                 <p>High retention at small scale is the only signal that matters early. It tells you the core loop works. It tells you the people who found you are not leaving. Everything else, growth, revenue, press, is just amplification of that signal.</p>
-                <p>What drives our retention isn&apos;t features. It is ownership. When your data lives on your device, when your agents remember what you told them last week without phoning home to a server, the product becomes part of your environment. You don&apos;t churn from your environment.</p>
+                <p>What drives our retention isn&apos;t features. It is the trust loop. Approval before every action and a signed receipt afterward means people stop second-guessing what their assistant did, they can scroll back and verify. The product becomes part of your routine because it does not surprise you. You don&apos;t churn from a tool that never embarrasses you.</p>
                 <p>We are not optimizing for DAU. We are optimizing for dependency. The kind that feels good because you chose it.</p>
                 <p>93% is the proof that we are on the right track. The next phase is finding out what happens when 3,000 people feel that way instead of 300.</p>
             </div>
@@ -166,7 +166,7 @@ function getArticleContent(id: string) {
     return content[id] || (
         <div className="space-y-6">
             <p className="text-lg">{posts.find(p => p.id === id)?.excerpt}</p>
-            <p>This is part of our ongoing development of Operator Uplift, the local-first AI agent platform. We ship updates constantly and share our progress transparently.</p>
+            <p>This is part of our ongoing development of Operator Uplift, the approval-gated AI agent platform with a local-first desktop build on the roadmap. We ship updates constantly and share our progress transparently.</p>
             <p>Follow us on <a href="https://x.com/OperatorUplift" target="_blank" rel="noreferrer" className="text-primary hover:underline">X</a> and join our <a href="https://discord.gg/eka7hqJcAY" target="_blank" rel="noreferrer" className="text-primary hover:underline">Discord</a> for the latest updates.</p>
         </div>
     );
