@@ -114,7 +114,7 @@ export default function AgentBuilderPage() {
         const existing = JSON.parse(localStorage.getItem('custom-agents') || '[]');
         existing.push(agent);
         localStorage.setItem('custom-agents', JSON.stringify(existing));
-        showToast(`Agent "${name}" deployed locally!`, 'success');
+        showToast(`Agent "${name}" saved to this browser.`, 'success');
         addNotification({ type: 'agent', title: `Agent "${name}" deployed`, message: `${model} agent with ${selectedTools.length} tools`, icon: 'bot', color: 'text-[#F97316]' });
         setStep(0); setName(''); setDescription(''); setTemplate(''); setSystemPrompt('');
     };
