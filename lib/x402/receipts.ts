@@ -16,6 +16,7 @@
 import crypto, { type KeyObject } from 'crypto';
 import { createClient } from '@supabase/supabase-js';
 import { canonicalJson } from './invoices';
+import { safeLog, safeWarn } from '../safeLog';
 
 let cachedPrivate: KeyObject | null = null;
 let cachedPublic: KeyObject | null = null;
@@ -33,14 +34,22 @@ function loadOrGenerateKeypair(): { privateKey: KeyObject; publicKey: KeyObject 
             cachedPublic = crypto.createPublicKey({ key: pub, format: 'pem' });
             return { privateKey: cachedPrivate, publicKey: cachedPublic };
         } catch (err) {
-            console.warn('[receipts] invalid RECEIPT_SIGNING_* keys, regenerating:', err);
+            safeWarn({
+                at: 'receipts',
+                event: 'invalid_signing_keys',
+                error: err instanceof Error ? err.message : String(err),
+            });
         }
     }
 
     const { privateKey, publicKey } = crypto.generateKeyPairSync('ed25519');
     cachedPrivate = privateKey;
     cachedPublic = publicKey;
-    console.info('[receipts] auto-generated ed25519 keypair (env not set). Hackathon demo only, set RECEIPT_SIGNING_* for production.');
+    safeLog({
+        at: 'receipts',
+        event: 'auto_generated_keypair',
+        note: 'Hackathon demo only. Set RECEIPT_SIGNING_PRIVATE_KEY + RECEIPT_SIGNING_PUBLIC_KEY for production.',
+    });
     return { privateKey, publicKey };
 }
 
