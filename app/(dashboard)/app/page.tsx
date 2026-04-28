@@ -41,8 +41,8 @@ const fetchDashboardData = async () => {
             resolve({
                 stats: [
                     { id: '1', label: 'Helpers installed', value: String(agentCount), change: agentCount === 1 ? '1 helper' : `${agentCount} helpers`, positive: true, icon: Bot, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
-                    { id: '2', label: 'Chat sessions', value: String(chatCount), change: 'On your computer', positive: true, icon: Workflow, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
-                    { id: '3', label: 'Memories saved', value: String(memoryCount), change: 'Local, encrypted', positive: true, icon: Brain, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
+                    { id: '2', label: 'Chat sessions', value: String(chatCount), change: 'In this browser', positive: true, icon: Workflow, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
+                    { id: '3', label: 'Memories saved', value: String(memoryCount), change: 'In this browser', positive: true, icon: Brain, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
                 ],
                 activity: [],
                 health: [
