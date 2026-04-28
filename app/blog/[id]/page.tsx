@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft, Calendar, Clock, Tag } from 'lucide-react';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
-import { posts } from '../page';
+import { posts } from '../posts';
 import { BlogToc } from './BlogToc';
 
 function getArticleContent(id: string) {
