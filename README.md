@@ -40,7 +40,7 @@ Every PR runs:
 
 - `pnpm build` (Next.js production compile)
 - `pnpm check` (grep-guards: copy-check, capability-check, trust-gate)
-- 11 hermetic Playwright specs (helpers, copy-check, capability-check, trust-gate, check-orchestrator, health-adapters, magicblock-honest-status, chat-honesty, consumer-copy, dashboard-honesty, request-id-runtime)
+- 17 hermetic Playwright specs (helpers, copy-check, capability-check, trust-gate, check-orchestrator, health-adapters, magicblock-honest-status, chat-honesty, consumer-copy, dashboard-honesty, request-id-runtime, agents-store, download-cta, demo-flow, photon-webhook, toolSafety, auth-diagnoseJws)
 
 The honesty regression tests guard against re-introducing fabricated features (LLM Council, fake telemetry, Gold Agent widget) and dev jargon (Multi-agent orchestration, AI Operating System) that prior versions of the site shipped.
 
