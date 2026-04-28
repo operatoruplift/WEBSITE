@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
+import { safeLog } from './safeLog';
 
 export interface LLMMessage {
   role: 'system' | 'user' | 'assistant';
@@ -30,8 +31,10 @@ function isRetryableError(err: unknown): boolean {
 }
 
 function logCall(event: 'attempt' | 'success' | 'failed' | 'giveup', payload: Record<string, unknown>) {
-  // One-line structured log so Vercel / Datadog can parse it.
-  console.log(JSON.stringify({ at: 'llm', event, ts: new Date().toISOString(), ...payload }));
+  // safeLog preserves the existing `at: 'llm'`, `event`, and `ts` shape
+  // and adds default redaction so any sensitive payload field (api keys,
+  // bearer tokens leaking via SDK error stacks, etc.) gets scrubbed.
+  safeLog({ at: 'llm', event, ...payload });
 }
 
 /**
