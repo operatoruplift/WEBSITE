@@ -9,18 +9,18 @@ import { SectionHeader } from '@/src/components/SectionHeader';
 const items = [
     {
         icon: Shield,
-        title: 'HIPAA Ready',
-        description: 'Architecture supports HIPAA requirements. Data stays in your environment, agents run in isolated sandboxes, every action is logged.',
+        title: 'HIPAA-aware Architecture',
+        description: 'Approval gates every send and write. Each action carries a request ID and is hashed into the audit log. The disclaimer below this section explains what we do and don\'t claim.',
     },
     {
         icon: Globe,
-        title: 'GDPR Compliant',
-        description: 'All data stays in your jurisdiction. No cross-border transfers. Full right to erasure via local data wipe.',
+        title: 'GDPR Workflows',
+        description: 'Account export and erasure live in Settings → Data. The web app runs on Vercel and routes the AI step to the provider you pick (Anthropic, OpenAI, Google, xAI, DeepSeek), each documented as a sub-processor.',
     },
     {
         icon: Eye,
         title: 'Auditable by Design',
-        description: 'Open-source runtime. Every agent action is hashed, logged, and anchored to a Merkle root on Solana devnet.',
+        description: 'Open-source runtime. Every agent action is hashed, logged, and anchored to a Merkle root on Solana devnet via the deployed audit-trail Anchor program.',
     },
 ];
 
