@@ -4,6 +4,7 @@ import { checkRateLimit } from '@/lib/rateLimit';
 import { getCapabilities } from '@/lib/capabilities';
 import { getCannedReply, cannedReplyToStream } from '@/lib/cannedReplies';
 import { withRequestMeta, validationError } from '@/lib/apiHelpers';
+import { checkSubscription } from '@/lib/subscription';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -56,8 +57,16 @@ export async function POST(request: Request) {
         }
 
         // Real branch, authenticated + capability_real true.
-        // Rate limit by verified user ID.
-        const rl = await checkRateLimit(caps.userId!, 'free'); // TODO: check user tier for 'pro'
+        // Rate limit by verified user ID, respecting subscription tier.
+        // Pro users get 600 req/hr; free users get 60 req/hr. The
+        // subscription lookup also honors the bypass-email and
+        // bypass-userId env vars (used in dev / staging) so an admin
+        // doesn't get capped at the free limit during testing.
+        const sub = await checkSubscription(caps.userId!);
+        const rateLimitTier: 'free' | 'pro' = (sub.tier === 'pro' || sub.tier === 'enterprise') && sub.active
+            ? 'pro'
+            : 'free';
+        const rl = await checkRateLimit(caps.userId!, rateLimitTier);
         if (!rl.allowed) {
             const res = NextResponse.json({
                 error: `Rate limit exceeded (${rl.remaining} remaining). Try again in ${rl.retryAfterSeconds}s.`,
