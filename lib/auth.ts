@@ -8,6 +8,7 @@
  * full cryptographic verification via Privy's server SDK.
  */
 import { PrivyClient } from '@privy-io/server-auth';
+import { safeWarn } from './safeLog';
 
 let privyClient: PrivyClient | null = null;
 
@@ -55,7 +56,11 @@ export async function getUserEmail(userId: string): Promise<string | null> {
         }
         return null;
     } catch (err) {
-        console.warn('[auth.getUserEmail] failed:', err instanceof Error ? err.message : err);
+        safeWarn({
+            at: 'auth.getUserEmail',
+            event: 'fetch_failed',
+            error: err instanceof Error ? err.message : String(err),
+        });
         return null;
     }
 }
@@ -143,7 +148,9 @@ export async function verifySession(request: Request): Promise<VerifiedUser> {
     const diag = diagnoseJws(token);
     if (!diag.shape_ok) {
         // Never log the full token, only length + shape diagnostics
-        console.warn('[auth.verifySession] malformed JWS:', {
+        safeWarn({
+            at: 'auth.verifySession',
+            event: 'malformed_jws',
             length: diag.length,
             segments: diag.segments,
             error: diag.error,
@@ -160,7 +167,9 @@ export async function verifySession(request: Request): Promise<VerifiedUser> {
     } catch (err) {
         const msg = err instanceof Error ? err.message : 'token_verification_failed';
         // Log structured diagnostic info so we can debug without leaking the token
-        console.warn('[auth.verifySession] verify failed:', {
+        safeWarn({
+            at: 'auth.verifySession',
+            event: 'verify_failed',
             length: diag.length,
             header_alg: diag.header_alg,
             header_kid: diag.header_kid,
