@@ -91,9 +91,9 @@ export default function RootLayout({
                 {
                   "@type": "SoftwareApplication",
                   "name": "Operator Uplift",
-                  "applicationCategory": "DeveloperApplication",
+                  "applicationCategory": "ProductivityApplication",
                   "operatingSystem": "Windows, macOS, Linux",
-                  "description": "Local-first AI agent platform with secure, private memory. Build, deploy, and monetize autonomous agents, no cloud required.",
+                  "description": "AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Runs on your computer; every action waits for your tap.",
                   "offers": {
                     "@type": "Offer",
                     "price": "0",

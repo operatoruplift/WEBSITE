@@ -371,11 +371,11 @@ export default function LoginPage() {
 
                 {/* Footer */}
                 <div className="mt-6 flex items-center justify-center gap-6 text-[10px] font-mono text-gray-600 uppercase tracking-widest">
-                    <span>Local-first</span>
+                    <span>Your computer</span>
                     <span className="w-1 h-1 rounded-full bg-gray-700" />
-                    <span>Privacy-first</span>
+                    <span>Encrypted</span>
                     <span className="w-1 h-1 rounded-full bg-gray-700" />
-                    <span>On-chain</span>
+                    <span>Signed receipts</span>
                 </div>
             </div>
         </div>

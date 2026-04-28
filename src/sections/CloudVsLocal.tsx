@@ -52,7 +52,7 @@ const CloudVsLocal: React.FC = () => {
             <div className="p-8 rounded-2xl border border-primary/30 bg-primary/5 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl rounded-full" />
               <h3 className="text-sm font-bold text-primary uppercase tracking-widest mb-6 relative z-10">Operator Uplift</h3>
-              <p className="text-xs text-gray-400 font-mono mb-4 relative z-10">Local-first, your infrastructure</p>
+              <p className="text-xs text-gray-400 font-mono mb-4 relative z-10">Runs on your computer</p>
               <ul className="space-y-4 relative z-10">
                 {localItems.map(item => (
                   <li key={item} className="flex items-center gap-3 text-white text-sm">
