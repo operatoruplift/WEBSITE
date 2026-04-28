@@ -5,6 +5,7 @@
  * encrypted at rest via lib/encryption.ts. Used by the Security page and
  * the Security page to show cryptographic proof of actions.
  */
+import { safeWarn, safeError } from './safeLog';
 
 export interface AuditEntry {
     id: string;
@@ -82,8 +83,15 @@ export function logAction(
                 publishMerkleRoot().catch(() => {});
             }
         }
-    } catch {
-        console.warn('[audit-log] failed to persist:', entry);
+    } catch (err) {
+        safeWarn({
+            at: 'audit-log',
+            event: 'persist_failed',
+            entry_id: entry.id,
+            entry_category: entry.category,
+            entry_action: entry.action,
+            error: err instanceof Error ? err.message : String(err),
+        });
     }
 
     return entry;
@@ -148,7 +156,12 @@ export async function publishMerkleRoot(): Promise<OnChainRecord | null> {
 
         if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
-            console.error('[audit] publish failed:', res.status, errData);
+            safeError({
+                at: 'audit',
+                event: 'publish_failed',
+                status: res.status,
+                error: errData,
+            });
             return null;
         }
         const data = await res.json();
