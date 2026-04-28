@@ -81,7 +81,7 @@ if (!existsSync(API_DIR)) {
 }
 
 // Refuse to run if any convention file has a stale .skip from a prior crash.
-for (const { real, hidden } of conventionPaths) {
+for (const { hidden } of conventionPaths) {
     if (existsSync(hidden)) {
         console.error(
             `[build-desktop] ERROR: ${hidden} already exists from a previous run.`,

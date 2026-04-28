@@ -110,8 +110,9 @@ export async function POST(request: Request) {
             return errorResponse(new Error('Invalid SOLANA_DEPLOY_WALLET_KEY'), meta, { errorClass: 'provider_unavailable' });
         }
 
-        // Derive the PDA for this authority (the server wallet acts as authority for all users)
-        const [auditTrailPDA, _bump] = deriveAuditTrailPDA(payer.publicKey);
+        // Derive the PDA for this authority (the server wallet acts as authority for all users).
+        // Solana's PDA derivation returns [pda, bump]; we only need the PDA address here.
+        const [auditTrailPDA] = deriveAuditTrailPDA(payer.publicKey);
 
         // Check if the PDA account exists (first publish needs initialization)
         const accountInfo = await connection.getAccountInfo(auditTrailPDA);
