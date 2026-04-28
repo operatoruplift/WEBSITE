@@ -123,18 +123,8 @@ interface AgentConfig {
     memoryUsage: string;
 }
 
-// Sample helpers shipped as starter detail pages. Counts are zeroed
-// so the page doesn't pretend the helper has been running on the
-// user's account (was: hardcoded `sessions: 2847`, `memoryUsage:
-// '2.4GB'`, etc.). Status is 'idle' until the user actually runs them.
-const DEMO_AGENTS: Record<string, AgentConfig> = {
-    '1': { id: '1', name: 'Code Pilot', description: 'Code generation and debugging assistant', model: 'Claude Opus 4.6', systemPrompt: 'You are an expert software engineer. Analyze code, find bugs, suggest improvements, and generate clean, production-ready code.', status: 'idle', temperature: 0.3, maxTokens: 4096, tools: ['code_exec', 'file_read', 'web_search'], createdAt: '2026-01-15', sessions: 0, memoryUsage: ',' },
-    '2': { id: '2', name: 'Research Assistant', description: 'Multi-source research and synthesis', model: 'GPT-4.1', systemPrompt: 'You are a research assistant. Find, analyze, and synthesize information from multiple sources. Always cite sources and highlight key findings.', status: 'idle', temperature: 0.5, maxTokens: 8192, tools: ['web_search', 'file_read', 'memory_search'], createdAt: '2026-02-03', sessions: 0, memoryUsage: ',' },
-    '3': { id: '3', name: 'Security Guard', description: 'Watches API traffic and flags suspicious patterns', model: 'Claude Opus 4.6', systemPrompt: 'You are a security analyst. Monitor API traffic, detect threats, and respond to incidents. Flag suspicious patterns and recommend mitigations.', status: 'idle', temperature: 0.1, maxTokens: 2048, tools: ['api_monitor', 'threat_scan', 'alert_send'], createdAt: '2026-01-01', sessions: 0, memoryUsage: ',' },
-};
-
 // Empty by default. The page renders a "no activity yet" state when
-// this is empty, was: a hardcoded list of fake events with timestamps.
+// this is empty (was: a hardcoded list of fake events with timestamps).
 const ACTIVITY_LOG: Array<{ time: string; event: string; type: 'success' | 'info' | 'warning' }> = [];
 
 export default function AgentDetailPage() {
@@ -150,7 +140,12 @@ export default function AgentDetailPage() {
     const [hasChanges, setHasChanges] = useState(false);
 
     useEffect(() => {
-        // Try custom agents from localStorage first
+        // Look up the user's custom agent in localStorage. There used
+        // to be a DEMO_AGENTS fallback for ids '1', '2', '3' (Code Pilot,
+        // Research Assistant, Security Guard) that no UI ever linked to;
+        // it's been removed so a typo'd URL just renders the "not found"
+        // state instead of fabricating a starter agent the user didn't
+        // create.
         try {
             const custom = JSON.parse(localStorage.getItem('custom-agents') || '[]');
             const found = custom.find((a: { id?: string; name: string }, i: number) => (a.id || `custom-${i}`) === agentId);
@@ -166,18 +161,8 @@ export default function AgentDetailPage() {
                 setEditedPrompt(config.systemPrompt);
                 setEditedTemp(config.temperature);
                 setEditedMaxTokens(config.maxTokens);
-                return;
             }
-        } catch { /* fall through */ }
-
-        // Fall back to demo agents
-        const demo = DEMO_AGENTS[agentId];
-        if (demo) {
-            setAgent(demo);
-            setEditedPrompt(demo.systemPrompt);
-            setEditedTemp(demo.temperature);
-            setEditedMaxTokens(demo.maxTokens);
-        }
+        } catch { /* fall through to "not found" state */ }
     }, [agentId]);
 
     const handleSave = () => {
