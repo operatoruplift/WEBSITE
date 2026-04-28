@@ -7,10 +7,15 @@ import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
 
+// Demo-only key generator. These keys never leave the browser
+// (localStorage only) and no /api/* route accepts them. Math.random
+// is fine here because nothing security-sensitive depends on the
+// output. Replace with crypto.getRandomValues + a real allowlist
+// when the auth backend ships.
 function generateApiKey() {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    let key = 'sk-ou-';
-    for (let i = 0; i < 32; i++) key += chars[Math.floor(Math.random() * chars.length)];
+    let key = 'sk-ou-demo-';
+    for (let i = 0; i < 28; i++) key += chars[Math.floor(Math.random() * chars.length)];
     return key;
 }
 
@@ -75,14 +80,16 @@ export default function SettingsPage() {
     };
 
     const handleGenerateKey = () => {
-        const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now
+        // The generated key is stored in localStorage but no /api/* route
+        // accepts it. Until the auth backend lands, mark the key as DEMO
+        // so a user trying to use it knows it won't authenticate.
         const newKey = {
             key: generateApiKey(),
             created: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-            expires: expires.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            expires: undefined,
         };
         setApiKeys(prev => [...prev, newKey]);
-        showToast('API key generated (expires in 30 days)', 'success');
+        showToast('Demo key created. The API auth backend is not yet wired up, so this key will not authenticate against /api/* routes.', 'info');
     };
 
     const handleCopyKey = async (key: string) => {
@@ -212,12 +219,16 @@ export default function SettingsPage() {
                                 )}
                                 {activeTab === 'api' && (
                                     <div className="space-y-6">
-                                        <h2 className="text-lg font-medium text-white">API Keys</h2>
+                                        <div className="flex items-center gap-2">
+                                            <h2 className="text-lg font-medium text-white">API Keys</h2>
+                                            <span className="text-[8px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded border bg-amber-400/10 text-amber-400 border-amber-400/20">DEMO</span>
+                                        </div>
+                                        <p className="text-xs text-gray-500 -mt-2">Generated keys are stored locally for UI testing. The auth backend that accepts them isn&apos;t live yet, so these keys won&apos;t authenticate against the API.</p>
                                         {apiKeys.length > 0 ? (
                                             <div className="space-y-3">
                                                 {apiKeys.map(k => (
                                                     <div key={k.key} className="p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10 flex items-center justify-between">
-                                                        <div><p className="text-sm text-gray-400 font-mono">{k.key.substring(0, 12)}••••••••{k.key.substring(k.key.length - 4)}</p><p className="text-[10px] text-gray-600 mt-1">Created {k.created}{k.expires ? ` · Expires ${k.expires}` : ''}</p></div>
+                                                        <div><p className="text-sm text-gray-400 font-mono">{k.key.substring(0, 12)}••••••••{k.key.substring(k.key.length - 4)}</p><p className="text-[10px] text-gray-600 mt-1">Created {k.created} · Demo key, not yet active</p></div>
                                                         <div className="flex gap-2">
                                                             <button onClick={() => handleCopyKey(k.key)} className="text-xs text-primary hover:underline flex items-center gap-1"><Copy size={12} /> Copy</button>
                                                             <button onClick={() => handleRevokeKey(k.key)} className="text-xs text-red-400 hover:underline">Revoke</button>
@@ -228,7 +239,7 @@ export default function SettingsPage() {
                                         ) : (
                                             <div className="p-6 rounded-xl bg-white/[0.02] border border-foreground/10 text-center"><p className="text-sm text-gray-500">No API keys generated yet</p></div>
                                         )}
-                                        <GlowButton variant="outline" onClick={handleGenerateKey}><Key size={16} className="mr-2" /> Generate New Key</GlowButton>
+                                        <GlowButton variant="outline" onClick={handleGenerateKey}><Key size={16} className="mr-2" /> Generate Demo Key</GlowButton>
                                     </div>
                                 )}
                                 {activeTab === 'data' && (
