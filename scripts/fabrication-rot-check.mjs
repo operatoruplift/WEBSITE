@@ -121,6 +121,42 @@ const RULES = [
         retiredIn: 'PR#231 (security section honesty)',
         message: '"Your data never leaves your environment" was retired. Prompts are sent to whichever provider the user selects per turn, do not reintroduce this claim.',
     },
+    // Hero canvas + dashboard + auth + demo + Security badge claims
+    // retired in #233, #235, #238, #239. The web app does not encrypt
+    // chat sessions or memory at rest (no secureStore callers from
+    // those flows), the demo flows through the same cloud pipeline as
+    // the rest of the app, and the agent runtime is cloud-backed not
+    // local.
+    {
+        pattern: /vault sealed[^a-zA-Z]+memory encrypted/i,
+        retiredIn: 'PR#235 (HeroAnimation canvas honesty)',
+        message: 'Hero canvas "vault sealed memory encrypted" text was retired. Memory is not encrypted at rest. New text: "session closed receipt anchored".',
+    },
+    {
+        pattern: /Encrypted on your computer/i,
+        retiredIn: 'PR#238 (/security page header honesty)',
+        message: 'Dashboard /security page header "Encrypted on your computer Tamper-proof receipts Nothing in the cloud" was retired. The page already discloses lower down that encryption is "Configured" not "Active".',
+    },
+    {
+        pattern: /Your agent ran locally\. Zero cloud\. Zero surveillance/i,
+        retiredIn: 'PR#238 (/demo page honesty)',
+        message: '/demo step-6 success message "Your agent ran locally. Zero cloud. Zero surveillance." was retired. The demo runs through the same cloud-routed pipeline as the rest of the app.',
+    },
+    {
+        pattern: /\$\{[^}]+\}\s+deployed locally/,
+        retiredIn: 'PR#238 (/agents/builder toast honesty)',
+        message: '/agents/builder save toast `Agent "${name}" deployed locally!` was retired. The builder writes to localStorage; the agent runtime is cloud-backed.',
+    },
+    {
+        pattern: /AES-256-GCM Encrypted/,
+        retiredIn: 'PR#239 (Security card badge honesty)',
+        message: 'Security card badge "AES-256-GCM Encrypted" was retired. The card is now about ed25519-signed receipts on Solana, the badge should describe that, not encryption that no production code path uses.',
+    },
+    {
+        pattern: /change:\s*['"]Local,\s+encrypted['"]|change:\s*['"]On your computer['"]/,
+        retiredIn: 'PR#233 (/app dashboard stat tile honesty)',
+        message: 'Dashboard stat-tile sublabels "Local, encrypted" and "On your computer" were retired. localStorage is browser-scoped, but no encryption is applied. Use "In this browser" instead.',
+    },
 ];
 
 function walk(dir, out) {
