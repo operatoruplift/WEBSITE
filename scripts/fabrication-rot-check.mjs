@@ -96,6 +96,31 @@ const RULES = [
         retiredIn: 'PR#216',
         message: 'The 2-second setTimeout fake-install on /store was retired. The store now deeplinks into /chat with the agent\'s testPrompt seeded.',
     },
+    // Local-only marketing claims retired across the homepage and
+    // dashboard in #227-#234. The web app is Vercel-hosted and
+    // routes prompts through Anthropic / OpenAI / Google / xAI /
+    // DeepSeek per user selection per turn. The desktop+Ollama path
+    // is roadmap-only.
+    {
+        pattern: /on your machine instead of theirs/i,
+        retiredIn: 'PR#232 (MarketOpportunity narrative honesty)',
+        message: 'Marketing claim "putting it on your machine instead of theirs" was retired. The web app is cloud-routed; the desktop+Ollama path is roadmap-only.',
+    },
+    {
+        pattern: /Everything lives on your computer/i,
+        retiredIn: 'PR#231 (dataService product card honesty)',
+        message: 'Product copy "Everything lives on your computer" was retired. Use the export/erase + named third-party providers framing instead.',
+    },
+    {
+        pattern: /AES-256 encrypted local storage/i,
+        retiredIn: 'PR#231 (security section honesty)',
+        message: '"AES-256 encrypted local storage" was retired. encrypt/decrypt callers from chat session and memory persistence are absent; do not advertise encryption that no production code path uses.',
+    },
+    {
+        pattern: /your data never leaves your environment/i,
+        retiredIn: 'PR#231 (security section honesty)',
+        message: '"Your data never leaves your environment" was retired. Prompts are sent to whichever provider the user selects per turn, do not reintroduce this claim.',
+    },
 ];
 
 function walk(dir, out) {
