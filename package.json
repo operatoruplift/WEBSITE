@@ -21,9 +21,7 @@
     "@supabase/supabase-js": "^2.99.3",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.37.0",
-    "ai": "^6.0.137",
     "clsx": "^2.1.1",
-    "framer-motion": "^12.38.0",
     "geist": "^1.7.0",
     "googleapis": "^171.4.0",
     "lucide-react": "^0.577.0",
@@ -31,8 +29,7 @@
     "openai": "^6.32.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "tailwind-merge": "^3.5.0",
-    "zustand": "^5.0.12"
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
