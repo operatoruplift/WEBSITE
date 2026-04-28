@@ -1,52 +1,49 @@
 # Operator Uplift
 
-**Your Life, Automated.** One app. Every agent. All yours.
+**AI for your inbox and calendar. You stay in charge.**
 
-Operator Uplift is a local-first AI agent operating system. It runs on your device, keeps your data encrypted, and lets you install, build, and manage AI agents without sending anything to the cloud. Privacy-first by design.
+Operator Uplift is an AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. It runs on your computer (not a cloud), and every action waits for your tap.
 
-- **Local-first**: Your data stays on your device, encrypted with AES-256-GCM
-- **Model agnostic**: Use Claude, GPT, Gemini, Llama, Grok, or local models via Ollama
-- **Agent marketplace**: Install pre-built agents or create your own
-- **Multi-agent swarms**: Orchestrate teams of agents with sequential, parallel, hierarchical, or debate topologies
+- **Real Gmail and Calendar**: connect Google once, the assistant works on your actual accounts
+- **Pick any AI**: Claude, ChatGPT, Gemini, Grok, or a model running on your laptop via Ollama
+- **You approve everything**: a popup before any send or booking, one tap to confirm or cancel
+- **Tamper-proof receipts**: every action gets a signed receipt you can scroll back through
 - **Open source**: MIT licensed
 
 **Live at [operatoruplift.com](https://operatoruplift.com)**
 
 ---
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is a [Next.js 16](https://nextjs.org) app deployed on Vercel.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project layout
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `app/` - Next.js app router pages and API routes
+- `app/api/*` - Server-side endpoints. Every route uses `withRequestMeta` from `lib/apiHelpers.ts` to propagate `X-Request-Id` headers
+- `src/sections/` - Homepage section components
+- `src/components/` - Shared UI components
+- `lib/` - Server + shared utilities (auth, capabilities, error taxonomy, receipts)
+- `tests/e2e/` - Playwright specs (run on every PR via `.github/workflows/ci.yml`)
 
-## Learn More
+## CI checks
 
-To learn more about Next.js, take a look at the following resources:
+Every PR runs:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `pnpm build` (Next.js production compile)
+- `pnpm check` (grep-guards: copy-check, capability-check, trust-gate)
+- 11 hermetic Playwright specs (helpers, copy-check, capability-check, trust-gate, check-orchestrator, health-adapters, magicblock-honest-status, chat-honesty, consumer-copy, dashboard-honesty, request-id-runtime)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The honesty regression tests guard against re-introducing fabricated features (LLM Council, fake telemetry, Gold Agent widget) and dev jargon (Multi-agent orchestration, AI Operating System) that prior versions of the site shipped.
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Pushes to `master` deploy automatically via Vercel. PR previews are generated for every pull request.
