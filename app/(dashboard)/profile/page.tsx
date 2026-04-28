@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { Mail, Calendar, Shield, Key, LogOut, Edit3, Camera, X, Check, Bell, Globe, Sparkles, BadgeCheck } from 'lucide-react';
 import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
-import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
 
 export default function ProfilePage() {

@@ -24,7 +24,6 @@ function isAuthOptional(pathname: string | null): boolean {
 export function AuthGate({ children }: { children: React.ReactNode }) {
     const [checked, setChecked] = useState(false);
     const [hasAccess, setHasAccess] = useState(false);
-    const [subTier, setSubTier] = useState<SubTier>('free');
     const pathname = usePathname();
     const router = useRouter();
     const authOptional = isAuthOptional(pathname);
@@ -59,7 +58,6 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
         // Use cached tier immediately for fast render, then verify
         if (cachedTier === 'pro' || cachedTier === 'enterprise') {
             setHasAccess(true);
-            setSubTier(cachedTier);
             setChecked(true);
         }
 
@@ -72,7 +70,6 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
                 const active = data.active === true;
 
                 localStorage.setItem('subscription_tier', tier);
-                setSubTier(tier);
 
                 if (active) {
                     setHasAccess(true);

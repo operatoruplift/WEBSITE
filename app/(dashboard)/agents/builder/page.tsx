@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Sparkles, ArrowRight, ArrowLeft, Check, Bot, Brain, Code, FileText, Globe, Shield, Zap, MessageSquare } from 'lucide-react';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { addNotification } from '@/lib/notifications';
-import { Card, CardContent } from '@/src/components/ui/Card';
+import { Card } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';

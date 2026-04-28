@@ -6,7 +6,7 @@ interface NavbarProps {
   currentPage: string;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
+const Navbar: React.FC<NavbarProps> = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const navItems = [

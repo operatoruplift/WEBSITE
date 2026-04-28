@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { Network, Play, Pause, Plus, Trash2, Zap, ArrowRight, Clock, Bot, Brain, Shield, MessageSquare, X, Settings } from 'lucide-react';
+import { useState, useCallback, useRef } from 'react';
+import { Network, Play, Plus, Zap, ArrowRight, Bot, Brain, Shield, MessageSquare, X, Settings } from 'lucide-react';
 import { parseToolCalls, hasToolCalls, stripToolBlocks, formatToolResult, getToolSystemPrompt } from '@/lib/toolCalls';
 import type { ToolCall, ToolResult } from '@/lib/toolCalls';
 import { ToolApprovalModal } from '@/src/components/ui/ToolApprovalModal';
@@ -10,7 +10,7 @@ import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
-import { AnimatedCard, BorderBeam, StaggerChildren } from '@/src/components/effects/MagicUI';
+import { AnimatedCard, StaggerChildren } from '@/src/components/effects/MagicUI';
 
 interface SwarmAgent {
     id: string;

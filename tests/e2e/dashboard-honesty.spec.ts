@@ -14,40 +14,16 @@ import { prepareGatedSession } from './_helpers';
  * 0.0847 oz worth $278.24` to fresh users.
  */
 
-const BANNED_FABRICATED_VALUES = [
-    // Dashboard home stats fabrication retired in #164
-    '12.4K',
-    '+2.1K today',
-    '47',           // shown in conjunction with "Security Threats" - asserted contextually below
-    'Security Threats Blocked',
-    '-12% vs yesterday',
-    // Gold Agent widget retired in #164
-    '0.0847',
-    '$278.24',
-    'Gold Agent',
-    'Oro GRAIL',
-    // Activity feed fabrication retired in #164
-    'Blackwall Blocked SQLi',
-    'DeepRepo Orchestration',
-    'Recursive codebase scan',
-    'Knowledge Indexed',
-    'Founder Ops Briefing',
-    // System status fabrication retired in #164
-    'API Gateway (Blackwall)',
-    'Swarm Router',
-    'ATP Settlement Layer',
-    'Vector Store',
-    'US-EAST-1',
-    // Header chip retired in #164
-    'Uplift Core Online',
-    // Workflows fake run counts retired in #165
-    '142',          // Daily Code Review pretend-run count, asserted contextually
-    '891',          // Issue Triage Bot pretend-run count
-    // Notifications fakes retired in #165
-    'Blackwall: 3 threats blocked',
-    '1,247 new documents',
-    'CodePilot Pro updated',
-];
+/*
+ * Banned fabricated values (documentation, asserted individually below).
+ * Dashboard home stats #164: '12.4K', '+2.1K today', '47', 'Security Threats Blocked', '-12% vs yesterday'.
+ * Gold Agent widget #164: '0.0847', '$278.24', 'Gold Agent', 'Oro GRAIL'.
+ * Activity feed #164: 'Blackwall Blocked SQLi', 'DeepRepo Orchestration', 'Recursive codebase scan', 'Knowledge Indexed', 'Founder Ops Briefing'.
+ * System status #164: 'API Gateway (Blackwall)', 'Swarm Router', 'ATP Settlement Layer', 'Vector Store', 'US-EAST-1'.
+ * Header chip #164: 'Uplift Core Online'.
+ * Workflows fake counts #165: '142', '891'.
+ * Notifications fakes #165: 'Blackwall: 3 threats blocked', '1,247 new documents', 'CodePilot Pro updated'.
+ */
 
 test('/app dashboard renders honest stats and empty activity for a fresh user', async ({ page }) => {
     await prepareGatedSession(page);

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import {
     Connection, Keypair, PublicKey, Transaction, TransactionInstruction,
-    SystemProgram, LAMPORTS_PER_SOL,
+    SystemProgram,
 } from '@solana/web3.js';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';

@@ -7,7 +7,6 @@ import { FadeIn, GlideText } from '@/src/components/Animators';
 const Product: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [animStep, setAnimStep] = useState(0);
   const [isInView, setIsInView] = useState(false);
   const [timerKey, setTimerKey] = useState(0); // increment to reset timer
   const CYCLE_MS = 12000; // 12 seconds per feature
@@ -43,7 +42,6 @@ const Product: React.FC = () => {
     if (!isInView) return;
     const timer = setInterval(() => {
       setActiveIndex(prev => (prev + 1) % features.length);
-      setAnimStep(0);
     }, CYCLE_MS);
     return () => clearInterval(timer);
   }, [isInView, features.length, timerKey]);
@@ -91,7 +89,6 @@ const Product: React.FC = () => {
       } else {
         setActiveIndex(prev => Math.max(0, prev - 1));
       }
-      setAnimStep(0);
       setTimerKey(k => k + 1);
     };
 
@@ -102,7 +99,6 @@ const Product: React.FC = () => {
 
   const scrollToFeature = (index: number) => {
     setActiveIndex(index);
-    setAnimStep(0);
     setTimerKey(k => k + 1); // reset auto-advance timer
   };
 

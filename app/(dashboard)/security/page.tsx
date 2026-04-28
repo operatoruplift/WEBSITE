@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Shield, ShieldCheck, Lock, Key, FileText, Clock, Trash2, Download, AlertTriangle, Eye, Activity, Receipt, Copy, Check } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Card';
+import { Card } from '@/src/components/ui/Card';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
