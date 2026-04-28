@@ -38,6 +38,18 @@ const BANNED_DEV_PHRASES = [
     'First Principles thinker',
     'Expansionist',
     'Outsider',
+    // Local-machine fabrications retired in PRs #227-#239. The web
+    // app is Vercel-hosted and routes prompts through Anthropic /
+    // OpenAI / Google / xAI / DeepSeek per user selection per turn,
+    // so any present-tense "local" / "encrypted" claim was wrong.
+    'Everything lives on your computer',
+    'on your machine instead of theirs',
+    'AES-256 encrypted local storage',
+    'AES-256-GCM Encrypted',
+    'Your agent ran locally',
+    'Zero cloud. Zero surveillance',
+    'Encrypted on your computer',
+    'your data never leaves your environment',
 ];
 
 function assertNoBannedPhrases(body: string, surface: string) {
