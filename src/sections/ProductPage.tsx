@@ -25,19 +25,21 @@ const visuals = [
 
 // Extended descriptions for the product deep-dive page
 const extendedDescriptions = [
-  'Every helper runs in its own private space on your computer, encrypted. What it remembers stays on your machine. Nothing gets uploaded unless you say so, and helpers can\u2019t see each other\u2019s data.',
+  'Each helper has its own scope: only the tools it needs, only the data you let it see, and only for the session it\u2019s active. Helpers can\u2019t reach into each other\u2019s state.',
   'Browse a built-in store of helpers, like an app store, but for AI. Each one tells you exactly what it does and what it costs. One tap to install, and the app double-checks the helper before it runs.',
   'When a helper finishes a job, its access shuts off. Nothing keeps running in the background. No leftover logins, no quiet permissions still active tomorrow.',
   'Helpers only see what you allow, for as long as you allow it. Cancel any helper\u2019s access in one tap, like revoking a guest pass.',
-  'Reading a file, taking an action on your computer, hitting the internet, every one needs your okay first. The app enforces the limits you set. No surprises, no silent activity.',
+  'Sending an email, booking a meeting, hitting an external API, every one waits for your tap. The app enforces the limits you set. No silent activity, every action logged with a request ID.',
 ];
 
+// Technical detail bullets per feature card. Each one points at a
+// shipped surface so a reviewer can ground-truth the claim.
 const technicalDetails = [
-  ['Encrypted local memory', 'Per-session isolation', 'Optional sync with E2EE'],
-  ['One-click deployment', 'Cryptographic verification', 'Transparent permissions'],
-  ['Sub-second cold start', 'Automatic cleanup', 'Zero residual access'],
-  ['Scoped access tokens', 'Instant revocation', 'Time-bound sessions'],
-  ['Policy-as-code rules', 'Real-time action prompts', 'Granular allow/block lists'],
+  ['Per-session scoping', 'Approval gate per tool', 'Capability flags (lib/capabilities.ts)'],
+  ['Built-in helper registry', 'Capability check before install', 'Runtime tool classification (lib/toolSafety.ts)'],
+  ['Session ends cleanly on sign-out', 'No background tool execution', 'Audit log keeps the trail'],
+  ['Privy-issued JWTs (short-lived)', 'Server-side capability check per request', 'Sign out clears the token'],
+  ['Approval modal before any side effect', 'Request ID per action', 'ed25519-signed receipts'],
 ];
 
 const ProductPage: React.FC = () => {
