@@ -85,3 +85,20 @@ test('/workflows starter templates show 0 runs and Never lastRun', async ({ page
     expect(body, 'fake 142 run count removed').not.toMatch(/\b142\b.*runs/i);
     expect(body, 'fake 891 run count removed').not.toMatch(/\b891\b.*runs/i);
 });
+
+test('/memory shows empty knowledge base on cold load (no fake DEMO_NODES)', async ({ page }) => {
+    await prepareGatedSession(page);
+    await page.goto('/memory');
+
+    await expect(page.getByText(/Memory/).first()).toBeVisible({ timeout: 10_000 });
+
+    const body = (await page.locator('body').innerText()).toLowerCase();
+    // Pre-seeded fake titles retired in this PR — fresh user must not see
+    // any of them on first load.
+    expect(body, 'fake "Operator Uplift Architecture" seed removed').not.toContain('operator uplift architecture');
+    expect(body, 'fake "Agent Builder API Spec" seed removed').not.toContain('agent builder api spec');
+    expect(body, 'fake "Security Whitepaper" seed removed').not.toContain('security whitepaper');
+    expect(body, 'fake "User Feedback Q1 2026" seed removed').not.toContain('user feedback q1 2026');
+    // Empty state copy or DEMO disclosure must be visible
+    expect(body).toMatch(/no knowledge indexed yet|demo/i);
+});
