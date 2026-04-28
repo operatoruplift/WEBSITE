@@ -132,7 +132,10 @@ test('/login + /signup auth pages do not show "Commander"', async ({ page }) => 
     // settings, and the API. Lock that in: a fresh user landing on
     // /login or /signup must never see the word.
     for (const path of ['/login', '/signup']) {
-        await page.goto(path);
+        // domcontentloaded (vs default 'load') skips waiting on fonts +
+        // images we don't need for innerText. 60s timeout absorbs the
+        // Next.js dev-server first-compile cost in CI.
+        await page.goto(path, { waitUntil: 'domcontentloaded', timeout: 60_000 });
         const body = (await page.locator('body').innerText()).toLowerCase();
         expect(body, `"Commander" leaked into ${path}`).not.toContain('commander');
         expect(body, `"Local-first" leaked into ${path}`).not.toContain('local-first');
