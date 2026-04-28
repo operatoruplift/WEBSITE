@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Bot, Code, Brain, Shield, Sparkles, Check, Zap, MessageSquare, User } from 'lucide-react';
+import { ArrowRight, Bot, Code, Brain, Shield, Sparkles, Check, Zap, MessageSquare } from 'lucide-react';
 import { Logo } from '@/src/components/Icons';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 

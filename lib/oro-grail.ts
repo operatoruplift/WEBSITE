@@ -23,8 +23,6 @@ export interface GoldPriceData {
   low24h: number;
 }
 
-const GRAIL_API_BASE = process.env.NEXT_PUBLIC_ORO_GRAIL_API_URL || 'https://api.grail.oro.com/v1';
-
 /** Get current gold spot price */
 export async function getGoldPrice(): Promise<GoldPriceData> {
   // Demo data until API key is configured

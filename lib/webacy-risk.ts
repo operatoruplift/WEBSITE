@@ -40,8 +40,6 @@ export interface ApprovalRisk extends RiskScore {
   unlimited: boolean;
 }
 
-const DD_API_BASE = process.env.NEXT_PUBLIC_DD_API_URL || 'https://api.dd.xyz/v1';
-
 function gradeFromScore(score: number): RiskScore['grade'] {
   if (score >= 85) return 'A';
   if (score >= 70) return 'B';

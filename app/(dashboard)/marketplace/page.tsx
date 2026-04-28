@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Store, Search, Star, Download, TrendingUp, Grid, List, Bot, ChevronDown, Sparkles, Crown, Check, Users, Loader2, ArrowRight } from 'lucide-react';
+import { Store, Search, Star, Download, TrendingUp, Grid, List, Bot, ChevronDown, Sparkles, Crown, Check, Users } from 'lucide-react';
 import { addNotification } from '@/lib/notifications';
 import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
-import { AnimatedCard, BorderBeam, Spotlight, NumberTicker } from '@/src/components/effects/MagicUI';
+import { AnimatedCard, BorderBeam } from '@/src/components/effects/MagicUI';
 
 interface MarketplaceAgent { id: string; name: string; author: string; description: string; category: string; rating: number; reviews: number; installs: string; price: 'free' | 'pro' | 'enterprise'; tags: string[]; avatar: string; featured?: boolean; trending?: boolean; verified?: boolean; status?: 'stable' | 'llm_only' | 'beta'; }
 

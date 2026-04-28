@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Calendar, Clock, Tag, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, ArrowRight } from 'lucide-react';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 import { FadeIn } from '@/src/components/Animators';

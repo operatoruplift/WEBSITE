@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Bot, ArrowLeft, Play, Pause, Trash2, Star, Settings, MessageSquare, Clock, Zap, Brain, Shield, Save, Activity, FileJson, KeyRound, ExternalLink, CheckCircle2 } from 'lucide-react';
+import { Bot, ArrowLeft, Play, Pause, Trash2, Settings, MessageSquare, Clock, Zap, Brain, Save, Activity, FileJson, KeyRound, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';

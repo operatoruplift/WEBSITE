@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Check, RotateCcw, Sparkles } from 'lucide-react';
+import { Check, RotateCcw } from 'lucide-react';
 
 // Illustrative transaction signature shown in the walkthrough demo.
 // Not a real on-chain tx, real audit-trail publishes are linked from /security.

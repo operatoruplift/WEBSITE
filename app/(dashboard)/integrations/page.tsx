@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { Search, ExternalLink, Check, Plug, Github, Mail, MessageSquare, Calendar, Database, FileText, Globe, Shield, Zap, Code } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Card';
+import { Search, Check, Plug, Github, Mail, MessageSquare, Calendar, Database, FileText, Globe, Shield, Zap, Code } from 'lucide-react';
+import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
-import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
 
@@ -87,7 +86,6 @@ export default function IntegrationsPage() {
         .filter(i => category === 'All' || i.category === category)
         .filter(i => !search || i.name.toLowerCase().includes(search.toLowerCase()) || i.description.toLowerCase().includes(search.toLowerCase()));
 
-    const [googleConnected, setGoogleConnected] = useState(false);
     const callbackHandled = useRef(false);
 
     // Check URL params for OAuth callback result (ref guard prevents strict-mode double-fire)
@@ -105,7 +103,6 @@ export default function IntegrationsPage() {
         if (params.get('google') === 'connected') {
             callbackHandled.current = true;
             clearPrivyCookie();
-            setGoogleConnected(true);
             setConnectedIds(prev => { const next = new Set(prev); next.add('gmail'); next.add('gcal'); return next; });
             showToast('Google Calendar + Gmail connected!', 'success');
             window.history.replaceState({}, '', '/integrations');

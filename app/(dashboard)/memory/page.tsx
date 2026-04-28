@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Brain, Search, Plus, FileText, Code, Globe, Link2, Tag, Clock, Trash2, Sparkles, X, RefreshCw } from 'lucide-react';
 import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';

@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { Bot, User, Send, Plus, Trash2, Copy, Check, Loader2, Sparkles, Zap, ChevronDown, Mic, Paperclip, Search, Code, FileText, Brain, Globe, MessageSquare, Pin, X as XIcon } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Bot, User, Send, Plus, Trash2, Copy, Check, Loader2, Sparkles, ChevronDown, Mic, Paperclip, Search, Code, Brain, MessageSquare, Pin, X as XIcon } from 'lucide-react';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
-import { hasToolCalls, parseToolCalls, stripToolBlocks, formatToolResult, getToolSystemPrompt, extractToolCallsFromText } from '@/lib/toolCalls';
+import { hasToolCalls, parseToolCalls, stripToolBlocks, formatToolResult, getToolSystemPrompt } from '@/lib/toolCalls';
 import type { ToolCall, ToolResult } from '@/lib/toolCalls';
 import { ToolApprovalModal } from '@/src/components/ui/ToolApprovalModal';
 import { findAgent } from '@/config/agents';

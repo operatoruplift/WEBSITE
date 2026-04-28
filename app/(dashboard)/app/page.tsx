@@ -12,7 +12,6 @@ import { Badge } from '@/src/components/ui/Badge';
 import { Logo } from '@/src/components/Icons';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';
-import { useToast } from '@/src/components/ui/Toast';
 import { getNotifications } from '@/lib/notifications';
 import { AnimatedCard, NumberTicker, StaggerChildren, Spotlight } from '@/src/components/effects/MagicUI';
 
@@ -70,7 +69,6 @@ export default function DashboardPage() {
     const [greeting, setGreeting] = useState('');
     const [currentTime, setCurrentTime] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-    const { showToast } = useToast();
     const router = useRouter();
     const [stats, setStats] = useState<StatData[]>([]);
     const [activity, setActivity] = useState<ActivityEvent[]>([]);
@@ -130,7 +128,7 @@ export default function DashboardPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
                         {isLoading ? Array(4).fill(0).map((_, i) => <div key={i} className="h-32 rounded-2xl bg-foreground/[0.04] border border-foreground/10" />) :
-                            stats.map((stat, i) => {
+                            stats.map((stat) => {
                                 const Icon = stat.icon;
                                 const numericValue = parseInt(stat.value.replace(/[^0-9]/g, ''), 10);
                                 const isNumeric = !isNaN(numericValue) && numericValue > 0;

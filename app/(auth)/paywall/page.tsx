@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Shield, Zap, Check, ArrowRight, Crown, Lock, Copy, ExternalLink, AlertTriangle } from 'lucide-react';
+import { Shield, Zap, Check, ArrowRight, Crown, Lock, Copy, AlertTriangle } from 'lucide-react';
 import { Logo } from '@/src/components/Icons';
 
 type PayState = 'idle' | 'creating_invoice' | 'awaiting_payment' | 'confirming' | 'active' | 'failed' | 'reauth_required';

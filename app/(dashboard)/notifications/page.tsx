@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from 'react';
-import { Bell, Check, CheckCheck, Shield, Bot, MessageSquare, Workflow, Brain, Trash2 } from 'lucide-react';
+import { Bell, CheckCheck, Shield, Bot, MessageSquare, Workflow, Brain, Trash2 } from 'lucide-react';
 import { getNotifications, markNotificationRead, markAllRead as markAllReadStore, deleteNotification as deleteNotifStore } from '@/lib/notifications';
-import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/Card';
+import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { MobilePageWrapper } from '@/src/components/mobile';

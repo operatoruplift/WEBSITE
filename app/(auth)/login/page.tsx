@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Mail, Sparkles, CheckCircle2, Wallet, Github, Loader2, QrCode, ExternalLink } from 'lucide-react';
+import { ArrowRight, Mail, Sparkles, CheckCircle2, Wallet, Github, Loader2, ExternalLink } from 'lucide-react';
 import { usePrivy, useLogin } from '@privy-io/react-auth';
 import { GlowButton } from '@/src/components/ui/GlowButton';
 import { Badge } from '@/src/components/ui/Badge';
@@ -172,7 +172,7 @@ export default function LoginPage() {
             } else {
                 setError(data.error || 'Payment not confirmed yet. Please wait and try again.');
             }
-        } catch (err) {
+        } catch {
             setError('Verification failed. Please try again.');
         }
         setIsLoading(false);

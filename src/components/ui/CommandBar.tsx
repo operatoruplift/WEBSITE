@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, MessageSquare, Workflow, Bot, Code, Settings, Brain, Layers, Bell, Coins, Network, Sparkles, LayoutDashboard, ArrowRight, Command, Shield } from 'lucide-react';
+import { Search, MessageSquare, Bot, Settings, Sparkles, LayoutDashboard, ArrowRight, Command, Shield } from 'lucide-react';
 
 interface CommandItem { id: string; label: string; description: string; icon: React.ComponentType<{ size?: number; className?: string }>; href?: string; action?: () => void; category: string; }
 
