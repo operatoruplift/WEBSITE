@@ -1,7 +1,7 @@
 # Operator Uplift — Website
 
 ## Role
-Marketing site + live demo chat + Privy auth + Solana Pay gate + audit viewer. Owns `operatoruplift.com` and every `/api/*` route the web dashboard talks to. Consumer-first positioning for the May 14 Colosseum Demo Day.
+Marketing site + live demo chat + Privy auth + Solana Pay gate + audit viewer. Owns `operatoruplift.com` and every `/api/*` route the web dashboard talks to. Consumer pitch: "AI for your inbox and calendar. You stay in charge."
 
 ## Must not touch
 - Tauri desktop wrapper — that's `webview/san-francisco`.
@@ -10,23 +10,26 @@ Marketing site + live demo chat + Privy auth + Solana Pay gate + audit viewer. O
 - MCPay payment rail internals — that's `x402-agent/biarritz`.
 - Google Calendar / Gmail tool node internals — that's `calendar_agent/cambridge` (the webhook interface only).
 
-## May 14 priorities (in order)
-1. Capability gating: `capability_google`, `capability_key`, `capability_real` surfaced via `/api/capabilities`, consumed by `/chat` and every tool route. Two user-visible states only: Demo (simulated) or Real.
-2. Anonymous demo on `/chat` — canned replies, mock tool execution, Simulated chip everywhere, `10/hr/IP` rate limit.
-3. Daily 8am briefing loop — Vercel Cron → `/api/cron/daily-briefing` → `notifications` → pinned row on `/chat`.
-4. Consumer-first hero copy + `/demo` script wired to the 3 beats (briefing, inbox triage, reminders).
-5. Solana devnet receipts for real tool calls only — never produce a receipt for a mock.
+## Verification commands
+- `pnpm build` → 0 errors. Authoritative production-build gate.
+- `pnpm exec tsc --noEmit` → 0 errors.
+- `pnpm check` → 3 grep-guards pass (copy-check, capability-check, trust-gate). Trust-gate currently reports 44/44 routes on `withRequestMeta`.
+- `pnpm exec playwright test tests/e2e` → 11 hermetic specs pass on every PR (see `.github/workflows/ci.yml`).
 
-## Verification
-- `npm run build` → 0 errors.
-- `npx tsc --noEmit` → 0 errors.
-- `npx playwright test tests/e2e/capability` → 4 specs pass.
-- `curl /api/capabilities` unauthenticated → all flags false.
-- Incognito → `/chat` loads, Demo pill visible, no redirect to `/login`.
-- Real sign-in + Google connected → Real pill, `/security` shows receipt row after a tool run.
+## Honesty regression net
+Four specs lock in the consumer-copy + fabrication cleanups (PRs #147 → #192). Any drift fails CI:
+
+- `tests/e2e/chat-honesty.spec.ts` — /chat, /paywall, /swarm: no LLM Council, no Chairman/Contrarian/Outsider, no fake transcripts.
+- `tests/e2e/consumer-copy.spec.ts` — homepage, navbar, /paywall, /store, /pricing, OG metadata, JSON-LD, /login, /signup: must use the new consumer voice (`stay in charge`, `Try it free`, `drafts your email`), and must not contain banned dev/sci-fi vocabulary (Multi-agent orchestration, AI Operating System, Self-Hosted, Local-first, Commander, Blackwall, Founder Ops, Warp Network, Uplift Core, Gold Agent).
+- `tests/e2e/dashboard-honesty.spec.ts` — /app, /notifications, /workflows: no fabricated stats, no Gold Agent widget, no fake "Blackwall blocked 3 threats" notifications, no hardcoded "142 runs" workflow counts.
+- `tests/e2e/request-id-runtime.spec.ts` — 16 representative endpoints all carry `X-Request-Id` (including the middleware-401 path).
+
+## Trust-gate
+Source-level (`scripts/check.mjs::trust-gate`): every `app/api/*/route.ts` imports `@/lib/apiHelpers` and calls `withRequestMeta`. Currently 44/44 (100%).
+
+Runtime (the spec above): every response — including the middleware's 401 — carries `X-Request-Id`. The middleware mints a fresh `req_<uuid>` if the request doesn't already have one and forwards it to the handler so end-to-end IDs match.
 
 ## Current state snapshot
-- Shipped: chat, /security, Google OAuth (Calendar + Gmail), morning-briefing cron, paywall gate, Privy JWT verification, Upstash rate limiting.
-- In-flight (this PR): capability primitive, Demo mode, daily-briefing cron, Tier 1 tools (web/notes/tasks/reminders).
-- Stubbed/comingSoon: Tier 2 tools (Slack, Linear, Jira, Notion, GitHub, Drive, Stripe, SMS).
-- Deferred post-May-15: Stripe billing, ERC-8004, per-user-local-time briefings, brand-color reconcile (#E77630 vs #F97316).
+- **Shipped**: chat (with honesty guarantees), /security, Google OAuth (Calendar + Gmail), morning-briefing cron, paywall gate, Privy JWT verification, Upstash rate limiting, capability primitive, Demo mode, daily-briefing cron, Tier 1 tools (web/notes/tasks/reminders), full consumer-copy rewrite across every public surface, sitemap + robots updated, JSON-LD rewritten for Google rich-results.
+- **Stubbed / coming soon**: Tier 2 tools (Slack, Linear, Jira, Notion, GitHub, Drive, Stripe, SMS).
+- **Deferred**: Stripe billing, ERC-8004, per-user-local-time briefings, brand-color reconcile (#E77630 vs #F97316), the lint long-tail (~19 setState-in-effect warnings in legitimate state machines).
