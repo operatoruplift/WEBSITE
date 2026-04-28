@@ -17,9 +17,9 @@ const TIERS = [
         highlight: false,
         features: [
             'Ready-made helpers for email, calendar, research, and more',
-            'Lightweight Mac app, opens instantly',
-            'Built-in AI works out of the box',
-            'Runs on your computer, your data never leaves it',
+            'Try /chat with no signup, simulated mode',
+            'Bring your own API key or sign in with Google for live mode',
+            'Approval gate before any send, draft, or booking',
             'Free forever, no card needed',
             'Friendly help on Discord',
         ],

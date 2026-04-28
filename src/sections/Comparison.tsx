@@ -5,19 +5,22 @@ import { FadeIn } from '@/src/components/Animators';
 import { OpenAILogo, AnthropicLogo, GoogleLogo, XAILogo } from '@/src/components/ProviderLogos';
 import { Logo as UpliftLogo } from '@/src/components/Icons';
 
+// Comparison rows lean on properties we can actually demonstrate today.
+// "Runs on your computer" / "Works offline" rows were removed in the
+// honesty sweep that fixed the same claim in the Privacy Policy and
+// ProblemStatement pillars; the cloud-deployed website doesn't have
+// either property and the desktop+Ollama path is on the roadmap.
 const features = [
-  { name: 'Runs on your computer', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
-  { name: 'Your data stays private', uplift: true, chatgpt: false, claude: true, gemini: false, grok: false },
-  { name: 'Doesn\u2019t learn from your messages', uplift: true, chatgpt: false, claude: true, gemini: false, grok: false },
-  { name: 'Works offline', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
-  { name: 'Pick any AI you want', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'Tap to approve before every action', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'Signed receipt for every action', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'On-chain audit log (Solana)', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'Pick any AI you want, mid-conversation', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
   { name: 'Built-in store of helpers', uplift: true, chatgpt: true, claude: false, gemini: false, grok: false },
   { name: 'Helpers that work as a team', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
-  { name: 'You approve every action', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
-  { name: 'Remembers things, privately', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
-  { name: 'Switch AIs any time', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
-  { name: 'Code you can read yourself', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
-  { name: 'Privacy paperwork (HIPAA, SOC 2, GDPR)', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'Real Gmail + Calendar via Google OAuth', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'Memory you can export and erase', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'Open-source codebase, MIT licensed', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
+  { name: 'Privacy posture (HIPAA-aware, GDPR workflows)', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false },
 ];
 
 /** Logo component renders at the same fixed size so mobile doesn't wrap

@@ -10,11 +10,11 @@ const faqs = [
   },
   {
     q: 'How is this different from ChatGPT?',
-    a: 'ChatGPT only talks. Operator Uplift actually does things. It opens your inbox, drafts the reply, books the meeting, sends the message. And your data stays on your computer, not on someone else\u2019s server.',
+    a: 'ChatGPT only talks. Operator Uplift actually does things. It opens your inbox, drafts the reply, books the meeting, sends the message. Every one of those actions waits for your tap and produces a signed receipt you can scroll back through.',
   },
   {
     q: 'Is my data private?',
-    a: 'Yes. Everything stays on your machine, encrypted. We never see your email, calendar, or messages. The whole app is open for anyone technical to inspect, so you don\u2019t have to take our word for it.',
+    a: 'Today the web app routes through our servers and the AI provider you pick (Anthropic, OpenAI, Google, xAI, DeepSeek). We don\u2019t resell any of it; the third parties are listed in the privacy policy. The roadmap includes a desktop app that runs locally with Ollama. The whole codebase is MIT-licensed so anyone technical can verify how data moves.',
   },
   {
     q: 'Which AI does it use?',
