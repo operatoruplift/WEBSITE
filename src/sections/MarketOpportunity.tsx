@@ -82,8 +82,8 @@ const MarketOpportunity: React.FC = () => {
                     Why now?
                   </h3>
                   <p className="text-muted leading-relaxed font-mono text-sm">
-                    AI is finally good enough, fast enough, and cheap enough that one assistant on your computer can replace the dozens of productivity apps you juggle today.
-                    We&apos;re building it before big tech does, and putting it on your machine instead of theirs.
+                    AI is finally good enough, fast enough, and cheap enough that one assistant can sit across the dozens of productivity apps you juggle and move work between them.
+                    We&apos;re building it with approval before every action and a signed receipt afterward, so you can trust what it does on your behalf.
                   </p>
                 </div>
               </div>
