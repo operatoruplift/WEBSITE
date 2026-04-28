@@ -371,9 +371,9 @@ export default function LoginPage() {
 
                 {/* Footer */}
                 <div className="mt-6 flex items-center justify-center gap-6 text-[10px] font-mono text-gray-600 uppercase tracking-widest">
-                    <span>Your computer</span>
+                    <span>Approval-gated</span>
                     <span className="w-1 h-1 rounded-full bg-gray-700" />
-                    <span>Encrypted</span>
+                    <span>Open source</span>
                     <span className="w-1 h-1 rounded-full bg-gray-700" />
                     <span>Signed receipts</span>
                 </div>

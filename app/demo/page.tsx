@@ -136,7 +136,7 @@ export default function DemoPage() {
                 <div className="inline-flex items-center gap-2 text-emerald-400 text-lg font-bold mb-2">
                   <Check size={20} /> Complete
                 </div>
-                <p className="text-gray-400">Your agent ran locally. Zero cloud. Zero surveillance.</p>
+                <p className="text-gray-400">Approval before every action. Signed receipt for the audit log.</p>
                 <div className="mt-6 flex items-center justify-center gap-4">
                   <Link href="/login" className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary/80 transition-colors">
                     Try it free
