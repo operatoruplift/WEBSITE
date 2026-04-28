@@ -33,4 +33,4 @@ Runtime (the spec above): every response — including the middleware's 401 — 
 ## Current state snapshot
 - **Shipped**: chat (with honesty guarantees), /security, Google OAuth (Calendar + Gmail), morning-briefing cron, paywall gate, Privy JWT verification, Upstash rate limiting, capability primitive, Demo mode, daily-briefing cron, Tier 1 tools (web/notes/tasks/reminders), full consumer-copy rewrite across every public surface, sitemap + robots updated, JSON-LD rewritten for Google rich-results.
 - **Stubbed / coming soon**: Tier 2 tools (Slack, Linear, Jira, Notion, GitHub, Drive, Stripe, SMS).
-- **Deferred**: Stripe billing, ERC-8004, per-user-local-time briefings, brand-color reconcile (#E77630 vs #F97316), the lint long-tail (~19 setState-in-effect warnings in legitimate state machines).
+- **Deferred**: Stripe billing, ERC-8004, per-user-local-time briefings, the react-hooks lint long-tail (~17 errors in legitimate state machines: setState-in-effect, ref access during render, store mutations from event handlers — non-blocking, in the informational lint job).
