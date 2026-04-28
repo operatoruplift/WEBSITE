@@ -124,6 +124,17 @@ test('OG metadata leads with the daily job', async ({ page }) => {
     const description = await page.locator('meta[name="description"]').getAttribute('content');
     expect(description, 'meta description').toContain('drafts your email');
     expect(description, 'meta description').not.toContain('Multi-agent orchestration');
+    // PR #242 retired "Runs on your computer" from meta + OG + Twitter
+    // descriptions in favor of "Approval before every action; signed
+    // receipt afterward." Both halves describe primitives the web app
+    // actually ships today.
+    expect(description, 'meta description').not.toContain('Runs on your computer');
+
+    const ogDescription = await page.locator('meta[property="og:description"]').getAttribute('content');
+    expect(ogDescription, 'og:description').not.toContain('Runs on your computer');
+
+    const twitterDescription = await page.locator('meta[name="twitter:description"]').getAttribute('content');
+    expect(twitterDescription, 'twitter:description').not.toContain('Runs on your computer');
 
     const title = await page.title();
     expect(title.toLowerCase()).toContain('inbox and calendar');
@@ -133,13 +144,18 @@ test('OG metadata leads with the daily job', async ({ page }) => {
 test('JSON-LD structured data uses the consumer pitch', async ({ page }) => {
     // The schema.org SoftwareApplication blob is what Google reads for
     // rich-result snippets. PR #190 retired the "Local-first AI agent
-    // platform" string from the description. Locking that in.
+    // platform" string from the description. PR #242 changed the
+    // @type to WebApplication and retired "Runs on your computer".
+    // Locking those in.
     await page.goto('/');
 
     const ldJson = await page.locator('script[type="application/ld+json"]').first().innerText();
     expect(ldJson).toContain('drafts your email');
     expect(ldJson).not.toContain('Local-first AI agent platform');
     expect(ldJson).not.toContain('autonomous agents');
+    expect(ldJson).not.toContain('Runs on your computer');
+    // Web app, not a desktop SoftwareApplication today.
+    expect(ldJson).toContain('WebApplication');
 });
 
 test('/login + /signup auth pages do not show "Commander"', async ({ page }) => {
