@@ -51,13 +51,14 @@ function runInTmp({ scripts, args = [] }: Scenario): { code: number | null; stdo
 }
 
 test('skips missing scripts with exit 0', () => {
-    // No scripts present — orchestrator should report 3 SKIPs and exit 0.
+    // No scripts present — orchestrator should report 4 SKIPs and exit 0.
     const { code, stdout } = runInTmp({ scripts: {} });
     expect(code).toBe(0);
     expect(stdout).toContain('[copy-check] SKIP');
     expect(stdout).toContain('[capability-check] SKIP');
     expect(stdout).toContain('[trust-gate] SKIP');
-    expect(stdout).toContain('0 passed, 0 failed, 3 skipped');
+    expect(stdout).toContain('[fabrication-rot] SKIP');
+    expect(stdout).toContain('0 passed, 0 failed, 4 skipped');
 });
 
 test('passes when every present check exits 0', () => {
@@ -66,10 +67,11 @@ test('passes when every present check exits 0', () => {
             'copy-check': { exitCode: 0 },
             'capability-check': { exitCode: 0 },
             'trust-gate': { exitCode: 0 },
+            'fabrication-rot-check': { exitCode: 0 },
         },
     });
     expect(code).toBe(0);
-    expect(stdout).toContain('3 passed, 0 failed');
+    expect(stdout).toContain('4 passed, 0 failed');
 });
 
 test('fail-fast: stops after the first failing check', () => {
@@ -78,12 +80,13 @@ test('fail-fast: stops after the first failing check', () => {
             'copy-check': { exitCode: 1 },
             'capability-check': { exitCode: 0 },
             'trust-gate': { exitCode: 0 },
+            'fabrication-rot-check': { exitCode: 0 },
         },
     });
     expect(code).toBe(1);
     // Default fail-fast: only copy-check ran before the bail.
     expect(stdout).toContain('0 passed, 1 failed');
-    expect(stdout).toContain('2 not run (fail-fast)');
+    expect(stdout).toContain('3 not run (fail-fast)');
 });
 
 test('--all runs every check even after a failure', () => {
@@ -92,11 +95,12 @@ test('--all runs every check even after a failure', () => {
             'copy-check': { exitCode: 1 },
             'capability-check': { exitCode: 0 },
             'trust-gate': { exitCode: 1 },
+            'fabrication-rot-check': { exitCode: 0 },
         },
         args: ['--all'],
     });
     expect(code).toBe(1);
-    expect(stdout).toContain('1 passed, 2 failed');
+    expect(stdout).toContain('2 passed, 2 failed');
     expect(stdout).not.toContain('not run');
 });
 
@@ -104,11 +108,11 @@ test('mix of skipped + passing + failing reports accurately', () => {
     const { code, stdout } = runInTmp({
         scripts: {
             'copy-check': { exitCode: 0 },
-            // capability-check intentionally missing
+            // capability-check + fabrication-rot intentionally missing
             'trust-gate': { exitCode: 1 },
         },
         args: ['--all'],
     });
     expect(code).toBe(1);
-    expect(stdout).toContain('1 passed, 1 failed, 1 skipped');
+    expect(stdout).toContain('1 passed, 1 failed, 2 skipped');
 });
