@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Settings, User, Bell, Palette, Shield, Key, Database, Save, Check, Copy, RefreshCw, Activity } from 'lucide-react';
 import { Card } from '@/src/components/ui/Card';
 import { GlowButton } from '@/src/components/ui/GlowButton';
@@ -14,46 +14,57 @@ function generateApiKey() {
     return key;
 }
 
+interface PersistedSettings {
+    displayName?: string;
+    email?: string;
+    emailNotifs?: boolean;
+    pushNotifs?: boolean;
+    productUpdates?: boolean;
+    marketing?: boolean;
+    theme?: string;
+    apiKeys?: { key: string; created: string; expires?: string }[];
+}
+
+// Lazy initializer reads localStorage once at first client render.
+// Avoids the cascading-render warning that the old "useState defaults
+// + useEffect setState" pattern triggered.
+function loadSettings(): PersistedSettings {
+    if (typeof window === 'undefined') return {};
+    try {
+        return JSON.parse(localStorage.getItem('ou-settings') || '{}') as PersistedSettings;
+    } catch { return {}; }
+}
+
 export default function SettingsPage() {
     const [activeTab, setActiveTab] = useState('profile');
     const [saved, setSaved] = useState(false);
     const { showToast } = useToast();
 
-    // Profile
-    const [displayName, setDisplayName] = useState('Commander');
-    const [email, setEmail] = useState('user@operator.uplift');
+    // All localStorage-derived state goes through a single lazy
+    // initializer. The defaults below are what we use when there's no
+    // saved value (fresh user) or during SSR.
+    const persisted = useMemo(() => loadSettings(), []);
+    const [displayName, setDisplayName] = useState(persisted.displayName ?? 'Friend');
+    const [email, setEmail] = useState(persisted.email ?? 'user@operator.uplift');
+    const [emailNotifs, setEmailNotifs] = useState(persisted.emailNotifs ?? true);
+    const [pushNotifs, setPushNotifs] = useState(persisted.pushNotifs ?? true);
+    const [productUpdates, setProductUpdates] = useState(persisted.productUpdates ?? true);
+    const [marketing, setMarketing] = useState(persisted.marketing ?? false);
+    const [theme, setTheme] = useState(persisted.theme ?? 'Dark');
+    const [apiKeys, setApiKeys] = useState<{ key: string; created: string; expires?: string }[]>(persisted.apiKeys ?? []);
 
-    // Notifications
-    const [emailNotifs, setEmailNotifs] = useState(true);
-    const [pushNotifs, setPushNotifs] = useState(true);
-    const [productUpdates, setProductUpdates] = useState(true);
-    const [marketing, setMarketing] = useState(false);
-
-    // Appearance
-    const [theme, setTheme] = useState('Dark');
-
-    // API Keys
-    const [apiKeys, setApiKeys] = useState<{ key: string; created: string; expires?: string }[]>([]);
-
-    // Load from localStorage
+    // Theme is a real DOM side effect, this useEffect only applies the
+    // already-resolved `theme` state to the document. No setState on
+    // mount, no cascading render.
     useEffect(() => {
-        try {
-            const settings = JSON.parse(localStorage.getItem('ou-settings') || '{}');
-            if (settings.displayName) setDisplayName(settings.displayName);
-            if (settings.email) setEmail(settings.email);
-            if (settings.emailNotifs !== undefined) setEmailNotifs(settings.emailNotifs);
-            if (settings.pushNotifs !== undefined) setPushNotifs(settings.pushNotifs);
-            if (settings.productUpdates !== undefined) setProductUpdates(settings.productUpdates);
-            if (settings.marketing !== undefined) setMarketing(settings.marketing);
-            if (settings.theme) {
-                setTheme(settings.theme);
-                // Apply saved theme on load
-                if (settings.theme === 'Light') document.documentElement.setAttribute('data-theme', 'light');
-                else if (settings.theme === 'System' && window.matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.setAttribute('data-theme', 'light');
-            }
-            if (settings.apiKeys) setApiKeys(settings.apiKeys);
-        } catch {}
-    }, []);
+        if (theme === 'Light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        } else if (theme === 'System' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            document.documentElement.setAttribute('data-theme', 'light');
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+        }
+    }, [theme]);
 
     const handleSave = () => {
         const settings = { displayName, email, emailNotifs, pushNotifs, productUpdates, marketing, theme, apiKeys };
@@ -399,11 +410,10 @@ function DiagnosticsPanel({ showToast }: { showToast: ShowToast }) {
 }
 
 function AdvancedSettings({ showToast }: { showToast: ShowToast }) {
-    const [advancedMode, setAdvancedMode] = useState(false);
-
-    useEffect(() => {
-        setAdvancedMode(localStorage.getItem('advanced_mode') === '1');
-    }, []);
+    const [advancedMode, setAdvancedMode] = useState(() => {
+        if (typeof window === 'undefined') return false;
+        return localStorage.getItem('advanced_mode') === '1';
+    });
 
     const toggleAdvanced = () => {
         const next = !advancedMode;
