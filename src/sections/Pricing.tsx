@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Check, Zap, Shield, Crown, ArrowRight, Download, Building2 } from 'lucide-react';
+import { Check, Zap, Shield, Crown, ArrowRight, Building2 } from 'lucide-react';
 import { FadeIn } from '@/src/components/Animators';
 import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
@@ -23,9 +23,9 @@ const TIERS = [
             'Free forever, no card needed',
             'Friendly help on Discord',
         ],
-        cta: 'Get the free Mac app',
-        ctaLink: '/store',
-        ctaIcon: Download,
+        cta: 'Try the demo',
+        ctaLink: '/chat',
+        ctaIcon: ArrowRight,
         ctaStyle: 'bg-[#FAFAFA]/5 hover:bg-[#FAFAFA]/10 border border-[#222222] text-white',
     },
     {
