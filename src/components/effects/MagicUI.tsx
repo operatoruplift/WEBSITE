@@ -12,8 +12,12 @@
  */
 import React from 'react';
 
-/* BorderBeam, no-op. Kept as named export for backwards compatibility. */
-export function BorderBeam(_props: Record<string, unknown>) {
+/* BorderBeam, no-op. Kept as named export for backwards compatibility.
+ * Accepts arbitrary props (size, duration, colorFrom, colorTo, etc.)
+ * because callers spread the props that the original animated version
+ * used. We discard them here so the simplified component never errors. */
+export function BorderBeam(props: Record<string, unknown>) {
+    void props;
     return null;
 }
 
