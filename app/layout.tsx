@@ -13,11 +13,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.operatoruplift.com"),
   title: "Operator Uplift, AI for your inbox and calendar",
-  description: "An AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Runs on your computer. Every action waits for your tap.",
+  description: "An AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Approval before every action; signed receipt afterward.",
   keywords: ["AI assistant", "email AI", "calendar AI", "AI inbox", "AI scheduler", "private AI", "Gmail AI", "Google Calendar AI", "AI for productivity", "personal AI"],
   openGraph: {
     title: "Operator Uplift",
-    description: "AI that drafts your email and schedules your meetings. Runs on your computer. Every action waits for your tap.",
+    description: "AI that drafts your email and schedules your meetings. Approval before every action; signed receipt afterward.",
     url: "https://www.operatoruplift.com",
     siteName: "Operator Uplift",
     locale: "en_US",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Operator Uplift",
-    description: "AI that drafts your email and schedules your meetings. Runs on your computer. Every action waits for your tap.",
+    description: "AI that drafts your email and schedules your meetings. Approval before every action; signed receipt afterward.",
     creator: "@OperatorUplift",
     images: ["/opengraph-image"],
   },
@@ -89,11 +89,12 @@ export default function RootLayout({
                   ]
                 },
                 {
-                  "@type": "SoftwareApplication",
+                  "@type": "WebApplication",
                   "name": "Operator Uplift",
                   "applicationCategory": "ProductivityApplication",
-                  "operatingSystem": "Windows, macOS, Linux",
-                  "description": "AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Runs on your computer; every action waits for your tap.",
+                  "operatingSystem": "Web",
+                  "browserRequirements": "Requires a modern browser",
+                  "description": "AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Approval before every action; signed receipt afterward.",
                   "offers": {
                     "@type": "Offer",
                     "price": "0",
