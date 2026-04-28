@@ -21,22 +21,30 @@ async function withUserAgent(browser: import('@playwright/test').Browser, userAg
     return ctx.newPage();
 }
 
-test('Mac UA gets "Download for Mac" CTA', async ({ browser }) => {
+// Pre-launch (no NEXT_PUBLIC_DOWNLOAD_<OS> env vars set) the CTA reads
+// "Get early access for <OS>" instead of "Download for <OS>" so the
+// button text matches what actually happens on click. The data-os
+// attribute is the stable signal across both modes; assertions allow
+// either label so the spec works pre-launch and post-launch.
+const DOWNLOAD_OR_EARLY_ACCESS_RE = (os: string) =>
+    new RegExp(`(Download|Get early access)\\s+for\\s+${os}`, 'i');
+
+test('Mac UA selects the macOS install option', async ({ browser }) => {
     const page = await withUserAgent(browser, UA_MAC);
     await page.goto('/');
     const primary = page.getByTestId('download-primary');
     await expect(primary).toBeVisible();
     await expect(primary).toHaveAttribute('data-os', 'macos');
-    await expect(primary).toContainText(/Download for Mac/i);
+    await expect(primary).toContainText(DOWNLOAD_OR_EARLY_ACCESS_RE('Mac'));
 });
 
-test('Windows UA gets "Download for Windows" CTA', async ({ browser }) => {
+test('Windows UA selects the Windows install option', async ({ browser }) => {
     const page = await withUserAgent(browser, UA_WIN);
     await page.goto('/');
     const primary = page.getByTestId('download-primary');
     await expect(primary).toBeVisible();
     await expect(primary).toHaveAttribute('data-os', 'windows');
-    await expect(primary).toContainText(/Download for Windows/i);
+    await expect(primary).toContainText(DOWNLOAD_OR_EARLY_ACCESS_RE('Windows'));
 });
 
 test('picking Linux from the dropdown overrides the default', async ({ browser }) => {
@@ -49,5 +57,5 @@ test('picking Linux from the dropdown overrides the default', async ({ browser }
     await page.getByTestId('download-option-linux').click();
 
     await expect(page.getByTestId('download-primary')).toHaveAttribute('data-os', 'linux');
-    await expect(page.getByTestId('download-primary')).toContainText(/Download for Linux/i);
+    await expect(page.getByTestId('download-primary')).toContainText(DOWNLOAD_OR_EARLY_ACCESS_RE('Linux'));
 });

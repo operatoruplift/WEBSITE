@@ -23,6 +23,14 @@ export interface DownloadOption {
     fileSuffix: string;
     url: string;
     ctaLabel: string;
+    /**
+     * True when this option is in the pre-launch state, the CTA points
+     * at /login instead of an actual installer because the
+     * NEXT_PUBLIC_DOWNLOAD_<OS> env var is unset. Components can use
+     * this to switch the button text from "Download" to a
+     * roadmap-honest label like "Get early access".
+     */
+    isPreLaunch: boolean;
 }
 
 const fallbackUrl = (os: OSKey): string => {
@@ -39,29 +47,42 @@ function env(name: string): string | undefined {
 /**
  * Resolves a configured URL or the pre-launch fallback. Each env var
  * is prefixed with NEXT_PUBLIC_ so it inlines into the client bundle.
+ *
+ * When the env var is unset, isPreLaunch is true and the ctaLabel
+ * becomes "Get early access for X" so the button text matches what
+ * actually happens on click (a sign-in flow, not a binary download).
+ * Once NEXT_PUBLIC_DOWNLOAD_<OS> is set in Vercel and a real installer
+ * URL is in place, isPreLaunch flips to false and the ctaLabel reads
+ * "Download for X" again.
  */
 export function downloadOptions(): DownloadOption[] {
+    const macUrl = env('NEXT_PUBLIC_DOWNLOAD_MACOS');
+    const winUrl = env('NEXT_PUBLIC_DOWNLOAD_WINDOWS');
+    const linUrl = env('NEXT_PUBLIC_DOWNLOAD_LINUX');
     return [
         {
             os: 'macos',
             label: 'macOS',
             fileSuffix: '.dmg',
-            url: env('NEXT_PUBLIC_DOWNLOAD_MACOS') || fallbackUrl('macos'),
-            ctaLabel: 'Download for Mac',
+            url: macUrl || fallbackUrl('macos'),
+            ctaLabel: macUrl ? 'Download for Mac' : 'Get early access for Mac',
+            isPreLaunch: !macUrl,
         },
         {
             os: 'windows',
             label: 'Windows',
             fileSuffix: '.exe',
-            url: env('NEXT_PUBLIC_DOWNLOAD_WINDOWS') || fallbackUrl('windows'),
-            ctaLabel: 'Download for Windows',
+            url: winUrl || fallbackUrl('windows'),
+            ctaLabel: winUrl ? 'Download for Windows' : 'Get early access for Windows',
+            isPreLaunch: !winUrl,
         },
         {
             os: 'linux',
             label: 'Linux',
             fileSuffix: '.AppImage',
-            url: env('NEXT_PUBLIC_DOWNLOAD_LINUX') || fallbackUrl('linux'),
-            ctaLabel: 'Download for Linux',
+            url: linUrl || fallbackUrl('linux'),
+            ctaLabel: linUrl ? 'Download for Linux' : 'Get early access for Linux',
+            isPreLaunch: !linUrl,
         },
     ];
 }
