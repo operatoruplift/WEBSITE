@@ -19,14 +19,11 @@ interface MemoryNode {
     size: string;
 }
 
-const DEMO_NODES: MemoryNode[] = [
-    { id: '1', title: 'Operator Uplift Architecture', type: 'document', source: 'architecture.md', tags: ['system', 'core'], vectors: 1240, lastIndexed: '1h ago', size: '48KB' },
-    { id: '2', title: 'Agent Builder API Spec', type: 'code', source: 'api-reference.ts', tags: ['api', 'agents'], vectors: 890, lastIndexed: '3h ago', size: '32KB' },
-    { id: '3', title: 'Security Whitepaper', type: 'document', source: 'security-model.pdf', tags: ['security', 'privacy'], vectors: 2100, lastIndexed: '1d ago', size: '156KB' },
-    { id: '4', title: 'Competitor Analysis', type: 'url', source: 'notion.so/competitor-analysis', tags: ['research', 'market'], vectors: 560, lastIndexed: '2d ago', size: '24KB' },
-    { id: '5', title: 'Solana Integration Notes', type: 'note', source: 'Manual entry', tags: ['blockchain', 'payments'], vectors: 340, lastIndexed: '5d ago', size: '8KB' },
-    { id: '6', title: 'User Feedback Q1 2026', type: 'document', source: 'feedback-q1.csv', tags: ['users', 'feedback'], vectors: 1800, lastIndexed: '12h ago', size: '92KB' },
-];
+// Empty by default. Memory backend wiring (Supabase + embeddings) is
+// tracked in lib/memoryEngine.ts but the dashboard page hasn't been
+// connected yet. Keeping fresh users on an empty state instead of
+// pre-seeded fakes. See #164 for the same cleanup on /app + /agents.
+const DEFAULT_NODES: MemoryNode[] = [];
 
 const typeConfig = {
     document: { icon: FileText, color: 'text-blue-400', bg: 'bg-blue-400/10' },
@@ -36,7 +33,7 @@ const typeConfig = {
 };
 
 export default function MemoryPage() {
-    const [nodes, setNodes] = useState<MemoryNode[]>(DEMO_NODES);
+    const [nodes, setNodes] = useState<MemoryNode[]>(DEFAULT_NODES);
     const [search, setSearch] = useState('');
     const [showAdd, setShowAdd] = useState(false);
     const [newTitle, setNewTitle] = useState('');
@@ -56,20 +53,24 @@ export default function MemoryPage() {
 
     const addNode = () => {
         if (!newTitle.trim()) return;
+        // Vectors + size are 0 until the embedding backend is wired up
+        // (lib/memoryEngine.ts has the contract; the page just doesn't
+        // call it yet). Better to show a real zero than to fake a
+        // random count and lie to the user about indexing.
         const node: MemoryNode = {
             id: Date.now().toString(),
             title: newTitle.trim(),
             type: newType,
             source: newSource.trim() || 'Manual entry',
             tags: newTags.split(',').map(t => t.trim()).filter(Boolean),
-            vectors: Math.floor(Math.random() * 2000) + 100,
-            lastIndexed: 'Just now',
-            size: `${Math.floor(Math.random() * 100) + 4}KB`,
+            vectors: 0,
+            lastIndexed: 'Pending',
+            size: 'Unknown',
         };
         setNodes(prev => [node, ...prev]);
         setNewTitle(''); setNewSource(''); setNewTags(''); setNewType('document');
         setShowAdd(false);
-        showToast(`${node.title} indexed with ${node.vectors} vectors`, 'success');
+        showToast(`${node.title} added. Embeddings will be computed once the indexer is connected.`, 'info');
     };
 
     return (
@@ -81,9 +82,10 @@ export default function MemoryPage() {
                             <div className="flex items-center gap-2 mb-2">
                                 <Brain size={16} className="text-[#F97316]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Knowledge Base</span>
+                                <span className="text-[8px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded border bg-amber-400/10 text-amber-400 border-amber-400/20">DEMO</span>
                             </div>
                             <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-white">Memory</h1>
-                            <p className="text-sm text-gray-400 mt-1">Everything your helpers remember, in one place. Searchable.</p>
+                            <p className="text-sm text-gray-400 mt-1">Add knowledge sources here. Embedding + search will activate once the indexer is connected.</p>
                         </div>
                         <div className="flex gap-2">
                             <GlowButton variant="outline" className="h-11 px-4" onClick={() => {
