@@ -113,3 +113,28 @@ test('OG metadata leads with the daily job', async ({ page }) => {
     expect(title.toLowerCase()).toContain('inbox and calendar');
     expect(title).not.toContain('AI Operating System');
 });
+
+test('JSON-LD structured data uses the consumer pitch', async ({ page }) => {
+    // The schema.org SoftwareApplication blob is what Google reads for
+    // rich-result snippets. PR #190 retired the "Local-first AI agent
+    // platform" string from the description. Locking that in.
+    await page.goto('/');
+
+    const ldJson = await page.locator('script[type="application/ld+json"]').first().innerText();
+    expect(ldJson).toContain('drafts your email');
+    expect(ldJson).not.toContain('Local-first AI agent platform');
+    expect(ldJson).not.toContain('autonomous agents');
+});
+
+test('/login + /signup auth pages do not show "Commander"', async ({ page }) => {
+    // PRs #168, #186, and #191 retired "Commander" as a default
+    // display name across signup, login, profile, onboarding,
+    // settings, and the API. Lock that in: a fresh user landing on
+    // /login or /signup must never see the word.
+    for (const path of ['/login', '/signup']) {
+        await page.goto(path);
+        const body = (await page.locator('body').innerText()).toLowerCase();
+        expect(body, `"Commander" leaked into ${path}`).not.toContain('commander');
+        expect(body, `"Local-first" leaked into ${path}`).not.toContain('local-first');
+    }
+});
