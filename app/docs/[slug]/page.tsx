@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DocContent } from '../_components/DocContent';
@@ -5,13 +6,28 @@ import { DOC_SECTIONS, findDoc } from '@/lib/docs/sections';
 
 interface Params { params: Promise<{ slug: string }> }
 
-export async function generateMetadata({ params }: Params) {
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
     const { slug } = await params;
     const doc = findDoc(slug);
     if (!doc) return { title: 'Docs, Operator Uplift' };
+    const title = `${doc.title}, Operator Uplift Docs`;
     return {
-        title: `${doc.title}, Operator Uplift Docs`,
+        title,
         description: doc.summary,
+        openGraph: {
+            title,
+            description: doc.summary,
+            type: 'article',
+            url: `https://operatoruplift.com/docs/${doc.slug}`,
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description: doc.summary,
+        },
+        alternates: {
+            canonical: `/docs/${doc.slug}`,
+        },
     };
 }
 
