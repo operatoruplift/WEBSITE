@@ -28,9 +28,6 @@ import Footer from '@/src/components/Footer';
  *   DemoVideo           , 60 s recording from the Playwright harness
  *   ProblemStatement    , why this matters
  *   Product             , scrollytelling walk-through
- *   ...remaining sections in a tightened order (no StatsBar, no TractionBar,
- *     no DemoPreview, those used placeholder stats/carousels that were
- *     unverifiable).
  */
 export default function Home() {
   return (
