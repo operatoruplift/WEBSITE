@@ -72,6 +72,7 @@ jobs:
             tests/e2e/request-id-runtime.spec.ts \
             tests/e2e/agents-store.spec.ts \
             tests/e2e/download-cta.spec.ts \
+            tests/e2e/demo-flow.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure

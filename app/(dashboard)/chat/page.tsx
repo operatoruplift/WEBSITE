@@ -134,6 +134,7 @@ function CapabilityBadge({ capabilities, loaded }: { capabilities: Capabilities;
     }
     return (
         <span
+            data-testid="simulated-indicator"
             title="Demo mode, every reply and tool action is simulated"
             className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest bg-[#F97316]/10 border border-[#F97316]/30 text-[#F97316]"
         >
@@ -177,10 +178,17 @@ export default function ChatPage() {
 
     // Fetch capability state on mount so the Demo/Real badge renders correctly
     // and tool approvals know whether to route to executeMock or executeToolCall.
+    // Anonymous visitors skip the round-trip. Without a token, capabilities are
+    // always demo-only, and demo-flow.spec.ts asserts zero leaks beyond /api/chat.
     useEffect(() => {
         const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+        if (!token) {
+            setCapabilities(DEMO_CAPABILITIES);
+            setCapsLoaded(true);
+            return;
+        }
         fetch('/api/capabilities', {
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
+            headers: { Authorization: `Bearer ${token}` },
             cache: 'no-store',
         })
             .then(r => r.json())

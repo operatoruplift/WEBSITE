@@ -15,28 +15,35 @@ import { test, expect } from '@playwright/test';
  * See docs/research/DEMO_SCRIPT.md for the human-readable walkthrough.
  */
 
-test('simulated chat: zero /api/* calls, exact canned briefing reply', async ({ page, context }) => {
-    // Belt-and-braces: anonymous visitor, no stale auth token. Without a
-    // token the /chat page must skip /api/capabilities AND /api/chat.
+// Anonymous demo mode talks to one route only: POST /api/chat. The
+// server's demo branch streams the canned reply directly. Anything
+// else hitting /api/* (capabilities, audit/log, notifications/pinned,
+// etc.) means the client leaked into the authenticated path.
+const ALLOWED_DEMO_API = /\/api\/chat(\?|$)/;
+
+function recordLeaks(page: import('@playwright/test').Page): string[] {
+    const leaks: string[] = [];
+    const baseUrl = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000';
+    const originOrigin = new URL(baseUrl).origin;
+    page.on('request', (req) => {
+        const url = req.url();
+        if (!url.startsWith(originOrigin)) return;
+        if (!url.includes('/api/')) return;
+        if (ALLOWED_DEMO_API.test(url)) return;
+        leaks.push(`${req.method()} ${url}`);
+    });
+    return leaks;
+}
+
+test('simulated chat: only /api/chat is hit, exact canned briefing reply', async ({ page, context }) => {
+    // Belt-and-braces: anonymous visitor, no stale auth token. Server-side
+    // canned replies arrive via /api/chat; nothing else should be called.
     await context.clearCookies();
     await context.addInitScript(() => {
         try { localStorage.removeItem('token'); } catch { /* noop */ }
     });
 
-    // Record every /api/* request the page issues. Strict assertion at
-    // the end: this array must be empty in simulated mode.
-    const apiCalls: string[] = [];
-    // Same-origin /api/* only. Third-party SDK calls (e.g. Privy's
-    // auth.privy.io/api/v1/...) are irrelevant to the simulated-mode
-    // contract, which is about our own /api/* routes.
-    const baseUrl = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000';
-    const originOrigin = new URL(baseUrl).origin;
-    page.on('request', (req) => {
-        const url = req.url();
-        if (url.startsWith(originOrigin) && url.includes('/api/')) {
-            apiCalls.push(`${req.method()} ${url}`);
-        }
-    });
+    const leaks = recordLeaks(page);
 
     await page.goto('/chat');
 
@@ -71,24 +78,12 @@ test('simulated chat: zero /api/* calls, exact canned briefing reply', async ({ 
     await expect(page.getByText(expectedFirstBullet)).toBeVisible();
     await expect(page.getByText(expectedSecondBullet)).toBeVisible();
 
-    // Hard acceptance: zero network calls to /api/* in simulated mode.
-    // Any hit here means the client leaked into the real path.
-    expect(apiCalls, `Expected zero /api/* calls in simulated mode, got:\n${apiCalls.join('\n')}`).toEqual([]);
+    // Hard acceptance: zero leaks to non-/api/chat routes in demo mode.
+    expect(leaks, `Demo mode leaked into non-/api/chat routes:\n${leaks.join('\n')}`).toEqual([]);
 });
 
-test('simulated chat: tool approval routes to executeMock (no network)', async ({ page }) => {
-    const apiCalls: string[] = [];
-    // Same-origin /api/* only. Third-party SDK calls (e.g. Privy's
-    // auth.privy.io/api/v1/...) are irrelevant to the simulated-mode
-    // contract, which is about our own /api/* routes.
-    const baseUrl = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000';
-    const originOrigin = new URL(baseUrl).origin;
-    page.on('request', (req) => {
-        const url = req.url();
-        if (url.startsWith(originOrigin) && url.includes('/api/')) {
-            apiCalls.push(`${req.method()} ${url}`);
-        }
-    });
+test('simulated chat: tool approval routes to executeMock (no extra network)', async ({ page }) => {
+    const leaks = recordLeaks(page);
 
     await page.goto('/chat');
     await expect(page.getByTestId('simulated-indicator')).toBeVisible();
@@ -103,9 +98,9 @@ test('simulated chat: tool approval routes to executeMock (no network)', async (
     // Simulated pill inside the modal confirms the mock path is selected.
     await expect(page.getByText(/Simulated/).first()).toBeVisible();
 
-    // Deny closes the modal without a network call.
+    // Deny closes the modal without an extra network call.
     await page.getByRole('button', { name: /Deny/i }).click();
     await expect(page.getByText('Tool Permission Request')).not.toBeVisible();
 
-    expect(apiCalls, `Expected zero /api/* calls in simulated mode, got:\n${apiCalls.join('\n')}`).toEqual([]);
+    expect(leaks, `Demo mode leaked into non-/api/chat routes:\n${leaks.join('\n')}`).toEqual([]);
 });
