@@ -104,6 +104,7 @@ jobs:
             tests/e2e/photon-send.spec.ts \
             tests/e2e/calendar-toEvent.spec.ts \
             tests/e2e/gmail-message-mappers.spec.ts \
+            tests/e2e/llm-streamToString.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure
