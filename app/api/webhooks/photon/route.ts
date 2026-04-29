@@ -1,7 +1,13 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import crypto from 'crypto';
 import { getPhotonAdapter } from '@/lib/photon/adapter';
+import {
+    verifyWebhookSignature,
+    computeProviderMessageId,
+    normalizeWebhookPayload,
+    makeFallbackAckGate,
+    FALLBACK_MS,
+} from '@/lib/photon/webhook-helpers';
 import { withRequestMeta } from '@/lib/apiHelpers';
 import { safeLog, safeWarn } from '@/lib/safeLog';
 
@@ -41,45 +47,11 @@ export const maxDuration = 15;
  * HTTP POSTs. Security comes from the signature check above.
  */
 
-function hmacHex(secret: string, body: string): string {
-    return crypto.createHmac('sha256', secret).update(body).digest('hex');
-}
-
-function constantTimeEq(a: string, b: string): boolean {
-    if (a.length !== b.length) return false;
-    try {
-        return crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b));
-    } catch {
-        return false;
-    }
-}
-
 function getSupabase() {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
     if (!url || !key) return null;
     return createClient(url, key, { auth: { persistSession: false } });
-}
-
-/**
- * Stable id for idempotency. Prefer the id Photon gives us; fall back
- * to a content hash that rounds the receive time to a 5s bucket so
- * legitimate identical sends aren't false-deduped but a burst retry
- * within the same bucket is.
- */
-function computeProviderMessageId(body: Record<string, unknown>, sender: string, text: string): string {
-    const providerId = (body.message_id as string)
-        ?? (body.id as string)
-        ?? (body.event_id as string)
-        ?? ((body.data as { message_id?: string })?.message_id)
-        ?? '';
-    if (providerId) return providerId;
-    const bucket = Math.floor(Date.now() / 5000);
-    return 'hash:' + crypto
-        .createHash('sha256')
-        .update(`${sender}|${text}|${bucket}`)
-        .digest('hex')
-        .slice(0, 24);
 }
 
 // In-memory debounce for the 5s fallback ack. Keyed by sender so a
@@ -88,22 +60,10 @@ function computeProviderMessageId(body: Record<string, unknown>, sender: string,
 // cold-start resets the map, which is acceptable for an "at most once"
 // best-effort ack. A Supabase acked_at check adds a second line of
 // defense across instances.
-const ACK_WINDOW_MS = 60_000;
-const FALLBACK_MS = 5_000;
-const recentAcks = new Map<string, number>();
+const ackGate = makeFallbackAckGate();
 
 function shouldSendFallbackAck(sender: string): boolean {
-    const now = Date.now();
-    const last = recentAcks.get(sender);
-    if (last && now - last < ACK_WINDOW_MS) return false;
-    recentAcks.set(sender, now);
-    // Best-effort cleanup so the map doesn't grow unbounded.
-    if (recentAcks.size > 500) {
-        for (const [k, t] of recentAcks) {
-            if (now - t > ACK_WINDOW_MS) recentAcks.delete(k);
-        }
-    }
-    return true;
+    return ackGate.shouldSend(sender);
 }
 
 async function sendFallbackAck(sender: string, platform: string, supabase: ReturnType<typeof getSupabase>, rowId: string | null) {
@@ -138,21 +98,20 @@ export async function POST(request: Request) {
     // Signature verification. Spectrum hasn't published its exact
     // header name yet, so accept any of the common ones. Compare in
     // constant time.
-    const secret = process.env.PHOTON_WEBHOOK_SECRET;
-    if (secret) {
-        const provided = (
-            request.headers.get('x-photon-signature')
-            || request.headers.get('x-spectrum-signature')
-            || request.headers.get('x-signature')
-            || ''
-        ).replace(/^sha256=/, '');
-        const expected = hmacHex(secret, raw);
-        if (!provided || !constantTimeEq(provided, expected)) {
-            return NextResponse.json(
-                { error: 'invalid_signature', requestId: meta.requestId, timestamp: meta.startedAt },
-                { status: 401, headers: meta.headers },
-            );
-        }
+    const provided =
+        request.headers.get('x-photon-signature')
+        || request.headers.get('x-spectrum-signature')
+        || request.headers.get('x-signature');
+    const sigCheck = verifyWebhookSignature({
+        secret: process.env.PHOTON_WEBHOOK_SECRET,
+        body: raw,
+        provided,
+    });
+    if (!sigCheck.ok) {
+        return NextResponse.json(
+            { error: 'invalid_signature', requestId: meta.requestId, timestamp: meta.startedAt },
+            { status: 401, headers: meta.headers },
+        );
     }
 
     let body: Record<string, unknown>;
@@ -165,20 +124,7 @@ export async function POST(request: Request) {
         );
     }
 
-    // Normalise the payload. Different Spectrum events may surface
-    // the sender under different keys; try the ones I've seen.
-    const platform = (body.platform as string) ?? 'imessage';
-    const sender = (body.sender as string)
-        ?? (body.from as string)
-        ?? (body.phone as string)
-        ?? ((body.user as { phone?: string })?.phone)
-        ?? 'unknown';
-    const text = (body.text as string)
-        ?? (body.message as string)
-        ?? ((body.content as { text?: string })?.text)
-        ?? '';
-    const eventType = (body.event as string) ?? (body.type as string) ?? 'message';
-
+    const { platform, sender, text, eventType } = normalizeWebhookPayload(body);
     const providerMessageId = computeProviderMessageId(body, sender, text);
 
     const supabase = getSupabase();

@@ -119,6 +119,7 @@ jobs:
             tests/e2e/briefing-formatter.spec.ts \
             tests/e2e/chat-helpers.spec.ts \
             tests/e2e/llm-providerRouting.spec.ts \
+            tests/e2e/photon-webhook-helpers.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure
