@@ -120,6 +120,7 @@ jobs:
             tests/e2e/chat-helpers.spec.ts \
             tests/e2e/llm-providerRouting.spec.ts \
             tests/e2e/photon-webhook-helpers.spec.ts \
+            tests/e2e/memoryEngine-localStorage.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure
