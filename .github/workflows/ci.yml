@@ -118,6 +118,7 @@ jobs:
             tests/e2e/auditLog-localStorage.spec.ts \
             tests/e2e/briefing-formatter.spec.ts \
             tests/e2e/chat-helpers.spec.ts \
+            tests/e2e/llm-providerRouting.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure
