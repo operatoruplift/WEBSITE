@@ -19,21 +19,8 @@ import { test, expect } from '@playwright/test';
  *   pnpm exec playwright test tests/e2e/encryption-roundtrip.spec.ts --reporter=list
  */
 
-// ── localStorage polyfill (stable per worker) ────────────────────
-const store = new Map<string, string>();
-const localStorageStub: Storage = {
-    getItem: (k: string) => store.get(k) ?? null,
-    setItem: (k: string, v: string) => { store.set(k, String(v)); },
-    removeItem: (k: string) => { store.delete(k); },
-    clear: () => { store.clear(); },
-    key: (i: number) => Array.from(store.keys())[i] ?? null,
-    get length() { return store.size; },
-};
-
-// Install before the dynamic import so getSalt() uses our stub.
-(globalThis as unknown as { localStorage: Storage }).localStorage = localStorageStub;
-
-// Static import after polyfill is installed
+// Static import is safe — the module body just declares functions
+// and constants. localStorage is only touched at function-call time.
 import {
     encrypt,
     decrypt,
@@ -45,6 +32,31 @@ import {
 } from '@/lib/encryption';
 
 test.describe.configure({ mode: 'serial' });
+
+// localStorage polyfill scoped to this spec's lifetime via
+// beforeAll/afterAll. Top-level globalThis.localStorage assignment
+// would leak into other specs in the same Playwright worker.
+const store = new Map<string, string>();
+let savedLocalStorage: unknown;
+
+test.beforeAll(() => {
+    const g = globalThis as unknown as Record<string, unknown>;
+    savedLocalStorage = g.localStorage;
+    g.localStorage = {
+        getItem: (k: string) => store.get(k) ?? null,
+        setItem: (k: string, v: string) => { store.set(k, String(v)); },
+        removeItem: (k: string) => { store.delete(k); },
+        clear: () => { store.clear(); },
+        key: (i: number) => Array.from(store.keys())[i] ?? null,
+        get length() { return store.size; },
+    } satisfies Storage;
+});
+
+test.afterAll(() => {
+    const g = globalThis as unknown as Record<string, unknown>;
+    if (savedLocalStorage === undefined) delete g.localStorage;
+    else g.localStorage = savedLocalStorage;
+});
 
 test.beforeEach(() => {
     store.clear();
