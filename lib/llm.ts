@@ -222,7 +222,7 @@ async function callLLMOnce(model: string, messages: LLMMessage[]): Promise<Reada
 }
 
 /** Map friendly model names to actual API model IDs */
-function mapModelId(model: string): string {
+export function mapModelId(model: string): string {
   const map: Record<string, string> = {
     // Anthropic
     'claude-opus-4-6': 'claude-opus-4-6',
