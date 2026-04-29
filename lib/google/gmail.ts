@@ -277,14 +277,14 @@ export function buildRawEmail(email: {
     return Buffer.from(message, 'utf8').toString('base64url');
 }
 
-function getHeader(
+export function getHeader(
     headers: { name?: string | null; value?: string | null }[] | undefined,
     name: string,
 ): string {
     return headers?.find((h) => h.name?.toLowerCase() === name.toLowerCase())?.value ?? '';
 }
 
-function toGmailMessage(msg: gmail_v1.Schema$Message): GmailMessage {
+export function toGmailMessage(msg: gmail_v1.Schema$Message): GmailMessage {
     const headers = msg.payload?.headers ?? [];
     return {
         id: msg.id ?? '',
