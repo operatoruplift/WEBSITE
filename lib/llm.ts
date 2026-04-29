@@ -17,7 +17,7 @@ export interface CallLLMOptions {
 const MAX_ATTEMPTS = 3;
 const BACKOFF_MS = [0, 500, 1500];
 
-function isRetryableError(err: unknown): boolean {
+export function isRetryableError(err: unknown): boolean {
   // Missing-key errors are terminal, no amount of retrying fixes config.
   if (err instanceof ProviderError) return false;
   if (!(err instanceof Error)) return true;
