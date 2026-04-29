@@ -179,7 +179,7 @@ export async function createEvent(
     return toEvent(res.data);
 }
 
-function toEvent(item: calendar_v3.Schema$Event): CalendarEvent {
+export function toEvent(item: calendar_v3.Schema$Event): CalendarEvent {
     return {
         id: item.id ?? '',
         summary: item.summary ?? '(No title)',
