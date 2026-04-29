@@ -185,12 +185,12 @@ async function getFromAddress(gmail: ReturnType<typeof google.gmail>): Promise<s
  * false-positive into multipart/alternative than false-negative into
  * a plain-text send that shows raw tags.
  */
-function looksLikeHtml(body: string): boolean {
+export function looksLikeHtml(body: string): boolean {
     return /<\s*(html|body|p|div|table|a\s|br\s*\/?|ul|ol|li|h[1-6]|strong|em|span)\b/i.test(body);
 }
 
 /** Quick-and-safe text fallback derived from HTML. Strips tags + collapses whitespace. */
-function htmlToText(html: string): string {
+export function htmlToText(html: string): string {
     return html
         .replace(/<style[\s\S]*?<\/style>/gi, '')
         .replace(/<script[\s\S]*?<\/script>/gi, '')
@@ -213,13 +213,13 @@ function htmlToText(html: string): string {
  * accented characters need `=?UTF-8?B?...?=` or the recipient sees
  * `???` and some strict MTAs (e.g. Proofpoint) bounce the message.
  */
-function encodeHeader(value: string): string {
+export function encodeHeader(value: string): string {
     if (/^[\x20-\x7e]*$/.test(value)) return value;
     const b64 = Buffer.from(value, 'utf8').toString('base64');
     return `=?UTF-8?B?${b64}?=`;
 }
 
-function buildRawEmail(email: {
+export function buildRawEmail(email: {
     to: string;
     subject: string;
     body: string;
