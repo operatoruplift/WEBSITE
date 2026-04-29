@@ -14,10 +14,10 @@ Marketing site + live demo chat + Privy auth + Solana Pay gate + audit viewer. O
 - `pnpm build` → 0 errors. Authoritative production-build gate.
 - `pnpm exec tsc --noEmit` → 0 errors.
 - `pnpm check` → 4 grep-guards pass (copy-check, capability-check, trust-gate, fabrication-rot). Trust-gate currently reports 44/44 routes on `withRequestMeta`. Fabrication-rot encodes the patterns we've explicitly retired (Gold Agent balances, Webacy fake risk grades, x402-devnet-${Date.now()} tx signatures, random-vector fakes, etc.) and points each match at the original cleanup PR — see `scripts/fabrication-rot-check.mjs`.
-- `pnpm exec playwright test tests/e2e` → 17 hermetic specs pass on every PR (see `.github/workflows/ci.yml`).
+- `pnpm exec playwright test tests/e2e` → 38 hermetic specs pass on every PR (see `.github/workflows/ci.yml`). Includes 17 unit-style specs for lib/ pure helpers added in PRs #254-#271 (safeLog, errorTaxonomy, cannedReplies, subscription bypass, rateLimit memory fallback, oauth-state HMAC, x402 pricing+canonicalJson+hashParams, apiHelpers pure helpers, solana-pay builders, photon-adapter, magicblock-adapter ER routing, flags DEC_UI, google-oauth-consent scope contract, llm-isRetryable, sns mock, receipts ed25519 verify, llm provider status).
 
 ## Honesty regression net
-Five specs + one grep-guard lock in the consumer-copy + fabrication cleanups (PRs #147 → #240). Any drift fails CI:
+Five specs + one grep-guard lock in the consumer-copy + fabrication cleanups (PRs #147 → #271). Any drift fails CI:
 
 - `tests/e2e/chat-honesty.spec.ts` — /chat, /paywall, /swarm: no LLM Council, no Chairman/Contrarian/Outsider, no fake transcripts.
 - `tests/e2e/consumer-copy.spec.ts` — homepage, navbar, /paywall, /store, /pricing, OG metadata, JSON-LD, /login, /signup: must use the new consumer voice (`stay in charge`, `Try it free`, `drafts your email`), and must not contain banned dev/sci-fi vocabulary (Multi-agent orchestration, AI Operating System, Self-Hosted, Local-first, Commander, Blackwall, Founder Ops, Warp Network, Uplift Core, Gold Agent) NOR retired local-machine claims (Everything lives on your computer, on your machine instead of theirs, AES-256 encrypted local storage, AES-256-GCM Encrypted, Your agent ran locally, Zero cloud Zero surveillance, Encrypted on your computer, your data never leaves your environment).
