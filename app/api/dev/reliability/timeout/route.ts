@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { verifySession, getUserEmail } from '@/lib/auth';
 import { isEmailBypassed, isUserIdBypassed } from '@/lib/subscription';
 import { withRequestMeta } from '@/lib/apiHelpers';
+import { safeLog } from '@/lib/safeLog';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
 
     await new Promise(resolve => setTimeout(resolve, delayMs));
 
-    console.log(JSON.stringify({ at: meta.route, event: 'simulated-timeout', requestId: meta.requestId, ts: meta.startedAt, delayMs }));
+    safeLog({ at: meta.route, event: 'simulated-timeout', requestId: meta.requestId, delayMs });
     return NextResponse.json(
         {
             error: 'provider_timeout',

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { verifySession, getOptionalUser } from '@/lib/auth';
 import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
+import { safeLog } from '@/lib/safeLog';
 
 export const runtime = 'nodejs';
 
@@ -51,10 +52,12 @@ export async function POST(request: Request) {
 
         const { error } = await supabase.from('audit_entries').insert(entry);
         if (error) {
-            console.log(JSON.stringify({
-                at: meta.route, event: 'insert-failed', requestId: meta.requestId, ts: meta.startedAt,
+            safeLog({
+                at: meta.route,
+                event: 'insert-failed',
+                requestId: meta.requestId,
                 reason: error.message.slice(0, 240),
-            }));
+            });
             // Non-blocking, don't fail the user's action if audit write fails
         }
 

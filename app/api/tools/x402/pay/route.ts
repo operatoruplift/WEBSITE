@@ -6,6 +6,7 @@ import { verifySession } from '@/lib/auth';
 import { getInvoice, markInvoicePaid } from '@/lib/x402/invoices';
 import { getMagicBlockAdapter } from '@/lib/magicblock/adapter';
 import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
+import { safeLog } from '@/lib/safeLog';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -196,9 +197,12 @@ export async function POST(request: Request) {
                     : /SOLANA_DEPLOY_WALLET_KEY/i.test(msg)
                         ? 'Set SOLANA_DEPLOY_WALLET_KEY in Vercel env (JSON array keypair from `solana-keygen`).'
                         : 'Check /api/debug/solana-wallet for full diagnostics.';
-                console.log(JSON.stringify({
-                    at: meta.route, event: 'devnet_submit_failed', requestId: meta.requestId, ts: meta.startedAt, reason: msg.slice(0, 240),
-                }));
+                safeLog({
+                    at: meta.route,
+                    event: 'devnet_submit_failed',
+                    requestId: meta.requestId,
+                    reason: msg.slice(0, 240),
+                });
                 return NextResponse.json(
                     {
                         error: 'devnet_submit_failed',
@@ -219,7 +223,7 @@ export async function POST(request: Request) {
 
         const ok = await markInvoicePaid(invoice_reference, sig);
         if (!ok) {
-            console.log(JSON.stringify({ at: meta.route, event: 'mark_paid_failed', requestId: meta.requestId, ts: meta.startedAt, invoice_reference }));
+            safeLog({ at: meta.route, event: 'mark_paid_failed', requestId: meta.requestId, invoice_reference });
             return NextResponse.json({
                 error: 'mark_paid_failed',
                 errorClass: 'unknown',
