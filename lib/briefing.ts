@@ -8,7 +8,7 @@
  * Returns null when the user has no events today (the caller then
  * skips the notifications insert, an empty briefing is noise).
  */
-import { google } from 'googleapis';
+import { google, calendar_v3 } from 'googleapis';
 import { getAuthenticatedClient } from '@/lib/google/oauth';
 
 export interface BriefingPayload {
@@ -19,24 +19,13 @@ export interface BriefingPayload {
 
 const MAX_BODY = 280;
 
-export async function composeBriefing(userId: string): Promise<BriefingPayload | null> {
-    const client = await getAuthenticatedClient(userId);
-    const calendar = google.calendar({ version: 'v3', auth: client });
-
-    const now = new Date();
-    const startOfDay = new Date(now); startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date(now); endOfDay.setHours(23, 59, 59, 999);
-
-    const res = await calendar.events.list({
-        calendarId: 'primary',
-        timeMin: startOfDay.toISOString(),
-        timeMax: endOfDay.toISOString(),
-        singleEvents: true,
-        orderBy: 'startTime',
-        maxResults: 20,
-    });
-
-    const events = res.data.items ?? [];
+/**
+ * Pure formatter, exported separately so it can be unit-tested
+ * without spinning up an authenticated calendar client.
+ */
+export function composeBriefingFromEvents(
+    events: calendar_v3.Schema$Event[],
+): BriefingPayload | null {
     if (events.length === 0) return null;
 
     const first = events[0];
@@ -58,4 +47,24 @@ export async function composeBriefing(userId: string): Promise<BriefingPayload |
     const body = parts.join(' ').slice(0, MAX_BODY);
 
     return { title, body, eventCount: events.length };
+}
+
+export async function composeBriefing(userId: string): Promise<BriefingPayload | null> {
+    const client = await getAuthenticatedClient(userId);
+    const calendar = google.calendar({ version: 'v3', auth: client });
+
+    const now = new Date();
+    const startOfDay = new Date(now); startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(now); endOfDay.setHours(23, 59, 59, 999);
+
+    const res = await calendar.events.list({
+        calendarId: 'primary',
+        timeMin: startOfDay.toISOString(),
+        timeMax: endOfDay.toISOString(),
+        singleEvents: true,
+        orderBy: 'startTime',
+        maxResults: 20,
+    });
+
+    return composeBriefingFromEvents(res.data.items ?? []);
 }
