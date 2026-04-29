@@ -13,51 +13,20 @@ import { test, expect } from '@playwright/test';
  *   getUnreadCount()
  *
  * The module is browser-shaped: it reads/writes localStorage and
- * dispatches a 'notification' CustomEvent to window. We polyfill
- * both before importing the module.
+ * dispatches a 'notification' CustomEvent to window.
  *
- * A regression in addNotification's slice(0, 50) cap would mean
- * the user's notifications array grows unbounded. A regression in
- * markAllRead would mean the badge count never clears.
+ * IMPORTANT: polyfills are scoped to beforeAll/afterAll, NOT set at
+ * top-level. Setting globalThis.window at module-load time made other
+ * spec files (auth-diagnoseJws, capabilities-hasServerLLMKey) load
+ * @privy-io/server-auth in the same Playwright worker and throw
+ * "cannot be used in a browser environment" because Privy's library
+ * checks `typeof window !== 'undefined'`. Cleanup in afterAll restores
+ * the original globals so subsequent specs in the same worker see
+ * server-shaped globals.
  *
  * Run:
  *   pnpm exec playwright test tests/e2e/notifications-localStorage.spec.ts --reporter=list
  */
-
-// localStorage polyfill (shared per worker)
-const store = new Map<string, string>();
-const localStorageStub: Storage = {
-    getItem: (k: string) => store.get(k) ?? null,
-    setItem: (k: string, v: string) => { store.set(k, String(v)); },
-    removeItem: (k: string) => { store.delete(k); },
-    clear: () => { store.clear(); },
-    key: (i: number) => Array.from(store.keys())[i] ?? null,
-    get length() { return store.size; },
-};
-(globalThis as unknown as { localStorage: Storage }).localStorage = localStorageStub;
-
-// window polyfill: addNotification dispatches a CustomEvent. We don't
-// actually need to listen to it for these tests, but the stub must
-// exist so `window.dispatchEvent` doesn't throw.
-const dispatched: CustomEvent[] = [];
-(globalThis as unknown as { window: { dispatchEvent: (e: CustomEvent) => boolean } }).window = {
-    dispatchEvent: (e: CustomEvent) => {
-        dispatched.push(e);
-        return true;
-    },
-};
-// Polyfill CustomEvent constructor for node (it exists in Node 18+ but
-// is sometimes missing in test workers).
-if (typeof globalThis.CustomEvent === 'undefined') {
-    class CustomEventPolyfill<T = unknown> extends Event {
-        detail: T;
-        constructor(type: string, init?: { detail?: T }) {
-            super(type);
-            this.detail = init?.detail as T;
-        }
-    }
-    (globalThis as unknown as { CustomEvent: typeof CustomEvent }).CustomEvent = CustomEventPolyfill as unknown as typeof CustomEvent;
-}
 
 import {
     getNotifications,
@@ -69,6 +38,64 @@ import {
 } from '@/lib/notifications';
 
 test.describe.configure({ mode: 'serial' });
+
+const store = new Map<string, string>();
+const dispatched: CustomEvent[] = [];
+let savedLocalStorage: unknown;
+let savedWindow: unknown;
+let savedCustomEvent: unknown;
+
+function installPolyfills() {
+    const g = globalThis as unknown as Record<string, unknown>;
+    savedLocalStorage = g.localStorage;
+    savedWindow = g.window;
+    savedCustomEvent = g.CustomEvent;
+
+    g.localStorage = {
+        getItem: (k: string) => store.get(k) ?? null,
+        setItem: (k: string, v: string) => { store.set(k, String(v)); },
+        removeItem: (k: string) => { store.delete(k); },
+        clear: () => { store.clear(); },
+        key: (i: number) => Array.from(store.keys())[i] ?? null,
+        get length() { return store.size; },
+    } satisfies Storage;
+
+    g.window = {
+        dispatchEvent: (e: CustomEvent) => {
+            dispatched.push(e);
+            return true;
+        },
+    };
+
+    if (typeof savedCustomEvent === 'undefined') {
+        class CustomEventPolyfill<T = unknown> extends Event {
+            detail: T;
+            constructor(type: string, init?: { detail?: T }) {
+                super(type);
+                this.detail = init?.detail as T;
+            }
+        }
+        g.CustomEvent = CustomEventPolyfill;
+    }
+}
+
+function restorePolyfills() {
+    const g = globalThis as unknown as Record<string, unknown>;
+    if (savedLocalStorage === undefined) delete g.localStorage;
+    else g.localStorage = savedLocalStorage;
+    if (savedWindow === undefined) delete g.window;
+    else g.window = savedWindow;
+    if (savedCustomEvent === undefined) delete g.CustomEvent;
+    else g.CustomEvent = savedCustomEvent;
+}
+
+test.beforeAll(() => {
+    installPolyfills();
+});
+
+test.afterAll(() => {
+    restorePolyfills();
+});
 
 test.beforeEach(() => {
     store.clear();
@@ -82,7 +109,6 @@ test.describe('getNotifications', () => {
 
     test('returns [] when stored value is malformed JSON', () => {
         store.set('ou-notifications', '{not json}');
-        // Per the contract, JSON.parse failure is caught and returns [].
         expect(getNotifications()).toEqual([]);
     });
 
@@ -136,17 +162,12 @@ test.describe('addNotification', () => {
     });
 
     test('caps the array at 50 entries (oldest are dropped)', () => {
-        // Add 60 notifications; only the newest 50 should remain.
         for (let i = 0; i < 60; i++) {
             addNotification({ type: 't', title: `n${i}`, message: '', icon: 'x', color: 'y' });
         }
         const list = getNotifications();
         expect(list).toHaveLength(50);
-        // The freshest one (n59) is at the top.
         expect(list[0].title).toBe('n59');
-        // n9 is the oldest of the surviving 50 (n10..n59 and the
-        // newest, n59, kept at index 0). The 10 oldest (n0..n9) are
-        // dropped.
         expect(list[49].title).toBe('n10');
     });
 });
