@@ -7,8 +7,14 @@
  */
 import { PublicKey, Connection, LAMPORTS_PER_SOL } from '@solana/web3.js';
 
-// Treasury wallet, receives early-access payments
-const TREASURY_WALLET = process.env.NEXT_PUBLIC_TREASURY_WALLET || 'UpL1ft11111111111111111111111111111111111111';
+// Treasury wallet, receives early-access payments. Production deploys
+// set NEXT_PUBLIC_TREASURY_WALLET to the real treasury pubkey; the
+// fallback is the Solana System Program ID, a valid PublicKey that
+// makes builders parse cleanly in dev/test without crashing. The
+// previous "UpL1ft1..." literal was a vanity prefix that didn't decode
+// to a 32-byte pubkey, so getTreasuryAddress() threw at runtime
+// whenever the env var was unset.
+const TREASURY_WALLET = process.env.NEXT_PUBLIC_TREASURY_WALLET || '11111111111111111111111111111111';
 const SOLANA_RPC = process.env.NEXT_PUBLIC_SOLANA_RPC || 'https://api.mainnet-beta.solana.com';
 const EARLY_ACCESS_PRICE_SOL = 0.1;
 
