@@ -6,16 +6,15 @@ import { getCannedReply, cannedReplyToStream } from '@/lib/cannedReplies';
 import { withRequestMeta, validationError } from '@/lib/apiHelpers';
 import { checkSubscription } from '@/lib/subscription';
 import { safeLog } from '@/lib/safeLog';
+import {
+    getClientIp,
+    resolveModelDisplayName,
+    buildSystemPrompt,
+    normalizeModelKey,
+} from '@/lib/chat-helpers';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
-
-function getClientIp(request: Request): string {
-    const xff = request.headers.get('x-forwarded-for');
-    if (xff) return xff.split(',')[0]?.trim() || 'unknown';
-    const real = request.headers.get('x-real-ip');
-    return real?.trim() || 'unknown';
-}
 
 export async function POST(request: Request) {
     const meta = withRequestMeta(request, 'chat');
@@ -85,33 +84,15 @@ export async function POST(request: Request) {
             return validationError('Message required', 'Send a message in the JSON body.', meta, { missing: ['message'] });
         }
 
-        const modelKey = (model || 'claude-sonnet-4-6').toLowerCase();
-
-        // Map model key to display name so each model identifies itself correctly
-        const MODEL_DISPLAY_NAMES: Record<string, string> = {
-            'claude-opus-4-6': 'Claude Opus 4.6 (Anthropic)',
-            'claude-sonnet-4-6': 'Claude Sonnet 4.6 (Anthropic)',
-            'claude-haiku-4-5': 'Claude Haiku 4.5 (Anthropic)',
-            'gpt-4.1': 'GPT-4.1 (OpenAI)',
-            'gpt-4.1-mini': 'GPT-4.1 Mini (OpenAI)',
-            'gpt-4o': 'GPT-4o (OpenAI)',
-            'gemini-2.5-pro': 'Gemini 2.5 Pro (Google)',
-            'gemini-2.5-flash': 'Gemini 2.5 Flash (Google)',
-            'grok-3': 'Grok 3 (xAI)',
-            'grok-3-mini': 'Grok 3 Mini (xAI)',
-            'deepseek-r1': 'DeepSeek R1 (DeepSeek)',
-            'deepseek-v3': 'DeepSeek V3 (DeepSeek)',
-        };
-        const modelDisplayName = MODEL_DISPLAY_NAMES[modelKey] || modelKey;
+        const modelKey = normalizeModelKey(model);
+        const modelDisplayName = resolveModelDisplayName(modelKey);
 
         // Build message array
         const messages: LLMMessage[] = [];
 
-        const defaultPrompt = `You are ${modelDisplayName}, running on the Operator Uplift platform. You are concise, accurate, and helpful. You can assist with coding, research, writing, analysis, and general questions. When showing code, use markdown code blocks with language tags. Never claim to be a different model than ${modelDisplayName}.`;
-
         messages.push({
             role: 'system',
-            content: systemPrompt ? `${systemPrompt}\n\nYou are ${modelDisplayName}. Never identify as a different model.` : defaultPrompt,
+            content: buildSystemPrompt(modelDisplayName, systemPrompt),
         });
 
         if (history && Array.isArray(history)) {
