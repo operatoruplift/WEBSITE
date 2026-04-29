@@ -24,7 +24,7 @@
  */
 import { NextResponse } from 'next/server';
 import { classifyError, envelope, type ErrorClass } from './errorTaxonomy';
-import { redact } from './safeLog';
+import { safeLog } from './safeLog';
 
 export interface RequestMeta {
     requestId: string;
@@ -86,21 +86,20 @@ export function errorResponse(
         ...(opts?.details ? { details: opts.details } : {}),
     };
 
-    // Log via redact(): `detail` may contain a Bearer token or cookie
-    // string echoed back from an upstream error message. `details.opsHint`
-    // is usually a plain diagnostic string but we redact defensively.
-    const safeDetail = typeof redact(detail) === 'string' ? redact(detail) as string : detail.slice(0, 240);
-    const safeExtra = opts?.details ? redact(opts.details) : undefined;
-    console.log(JSON.stringify({
+    // safeLog runs the payload through redact() automatically: `detail`
+    // may contain a Bearer token or cookie string echoed back from an
+    // upstream error message; `details.opsHint` is usually a plain
+    // diagnostic string but redact handles either shape defensively.
+    const truncatedDetail = detail.slice(0, 240);
+    safeLog({
         at: meta.route,
         event: 'error',
-        ts: meta.startedAt,
         requestId: meta.requestId,
         errorClass,
         httpStatus,
-        detail: typeof safeDetail === 'string' ? safeDetail.slice(0, 240) : String(safeDetail).slice(0, 240),
-        ...(safeExtra ? { extra: safeExtra } : {}),
-    }));
+        detail: truncatedDetail,
+        ...(opts?.details ? { extra: opts.details } : {}),
+    });
 
     return NextResponse.json(body, {
         status: httpStatus,
@@ -118,13 +117,12 @@ export function validationError(
     meta: RequestMeta,
     details?: Record<string, unknown>,
 ): NextResponse {
-    console.log(JSON.stringify({
+    safeLog({
         at: meta.route,
         event: 'validation',
-        ts: meta.startedAt,
         requestId: meta.requestId,
         detail: message.slice(0, 240),
-    }));
+    });
     return NextResponse.json({
         error: message,
         errorClass: 'unknown' as ErrorClass,
