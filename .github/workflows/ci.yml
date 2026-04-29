@@ -121,6 +121,7 @@ jobs:
             tests/e2e/llm-providerRouting.spec.ts \
             tests/e2e/photon-webhook-helpers.spec.ts \
             tests/e2e/memoryEngine-localStorage.spec.ts \
+            tests/e2e/agents-buildAgentManifest.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure
