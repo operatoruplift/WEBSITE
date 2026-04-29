@@ -108,6 +108,7 @@ jobs:
             tests/e2e/capabilities-hasServerLLMKey.spec.ts \
             tests/e2e/toolCalls-parsers.spec.ts \
             tests/e2e/llmHealth-prefix.spec.ts \
+            tests/e2e/toolCalls-formatToolResult.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure
