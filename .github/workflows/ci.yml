@@ -54,6 +54,10 @@ jobs:
       # Specs that need real tokens (bypass, paywall, x402-gate,
       # capability/*) are kept out — they live in a separate workflow
       # with secrets.
+      #
+      # Two halves below: the original 17 e2e specs that exercise the
+      # dev-server URL contract, and the 17 unit-style specs added in
+      # PRs #254-#271 that import lib/ modules directly.
       - name: Run hermetic Playwright specs
         id: hermetic_tests
         continue-on-error: true
@@ -76,6 +80,23 @@ jobs:
             tests/e2e/photon-webhook.spec.ts \
             tests/e2e/toolSafety.spec.ts \
             tests/e2e/auth-diagnoseJws.spec.ts \
+            tests/e2e/safeLog.spec.ts \
+            tests/e2e/errorTaxonomy.spec.ts \
+            tests/e2e/cannedReplies.spec.ts \
+            tests/e2e/subscription-bypass.spec.ts \
+            tests/e2e/rateLimit.spec.ts \
+            tests/e2e/oauth-state.spec.ts \
+            tests/e2e/x402-pricing-invoices.spec.ts \
+            tests/e2e/apiHelpers.spec.ts \
+            tests/e2e/solana-pay-builders.spec.ts \
+            tests/e2e/photon-adapter.spec.ts \
+            tests/e2e/magicblock-adapter.spec.ts \
+            tests/e2e/flags.spec.ts \
+            tests/e2e/google-oauth-consent.spec.ts \
+            tests/e2e/llm-isRetryable.spec.ts \
+            tests/e2e/sns.spec.ts \
+            tests/e2e/receipts-verify.spec.ts \
+            tests/e2e/llm-provider-status.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure
