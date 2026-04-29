@@ -110,6 +110,7 @@ jobs:
             tests/e2e/llmHealth-prefix.spec.ts \
             tests/e2e/toolCalls-formatToolResult.spec.ts \
             tests/e2e/toolCalls-humanizeToolError.spec.ts \
+            tests/e2e/x402Gate-free.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure
