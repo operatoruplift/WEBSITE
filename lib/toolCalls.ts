@@ -363,7 +363,7 @@ export async function executeToolCall(
 }
 
 /** Map raw API error codes to clean user-facing messages. */
-function humanizeToolError(rawError: string | undefined, tool: string, status: number): string {
+export function humanizeToolError(rawError: string | undefined, tool: string, status: number): string {
     const code = rawError || '';
     if (code === 'google_not_connected' || status === 403)
         return `Google ${tool === 'calendar' ? 'Calendar' : 'Gmail'} not connected. Go to Integrations to connect your Google account.`;
