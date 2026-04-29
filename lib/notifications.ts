@@ -24,7 +24,10 @@ export function addNotification(notification: Omit<AppNotification, 'id' | 'time
     const notifications = getNotifications();
     const newNotif: AppNotification = {
         ...notification,
-        id: Date.now().toString(),
+        // Date.now() alone collides on rapid back-to-back adds (same ms),
+        // which makes markNotificationRead flip more than the intended
+        // entry. Append a random suffix so each id is unique.
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         time: 'Just now',
         read: false,
     };
