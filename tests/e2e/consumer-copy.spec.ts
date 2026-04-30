@@ -73,6 +73,21 @@ test('homepage hero shows the consumer pitch', async ({ page }) => {
     assertNoBannedPhrases(body, '/');
 });
 
+test('homepage shows the local-first flow before the demo video', async ({ page }) => {
+    await page.goto('/');
+
+    // The Local-First section anchors trust signals (BYOK, signed
+    // receipts, OAuth-not-storage) to a 4-step flow. Adding it to the
+    // homepage in PR #313 fixed the "local-first sounds powerful but
+    // abstract" feedback. This spec pins the section into place so a
+    // future trim doesn't accidentally remove it.
+    const localFirst = page.locator('#local-first');
+    await expect(localFirst).toBeVisible({ timeout: 10_000 });
+    await expect(localFirst).toContainText(/Your data, your keys, your audit log/i);
+    await expect(localFirst).toContainText(/Bring your own key/i);
+    await expect(localFirst).toContainText(/never store/i);
+});
+
 test('navbar uses plain-English labels', async ({ page }) => {
     await page.goto('/');
 
