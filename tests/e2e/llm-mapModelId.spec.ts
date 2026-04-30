@@ -20,7 +20,10 @@ import { mapModelId } from '@/lib/llm';
 
 test.describe('mapModelId', () => {
     test('Anthropic friendly names round-trip correctly', () => {
-        expect(mapModelId('claude-opus-4-6')).toBe('claude-opus-4-6');
+        // Opus 4.7 is the current flagship; 4-6 is kept as an alias
+        // that routes to 4-7 so old chat sessions keep working.
+        expect(mapModelId('claude-opus-4-7')).toBe('claude-opus-4-7');
+        expect(mapModelId('claude-opus-4-6')).toBe('claude-opus-4-7');
         expect(mapModelId('claude-sonnet-4-6')).toBe('claude-sonnet-4-6');
         // Haiku has a dated suffix
         expect(mapModelId('claude-haiku-4-5')).toBe('claude-haiku-4-5-20251001');
@@ -77,6 +80,7 @@ test.describe('mapModelId', () => {
         // Document the contract: no entry is "" so a regression that
         // accidentally drops a value would surface here.
         const friendlyNames = [
+            'claude-opus-4-7',
             'claude-opus-4-6',
             'claude-sonnet-4-6',
             'claude-haiku-4-5',

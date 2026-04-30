@@ -62,9 +62,12 @@ function assertNoBannedPhrases(body: string, surface: string) {
 test('homepage hero shows the consumer pitch', async ({ page }) => {
     await page.goto('/');
 
-    // New consumer headline + CTA must be visible
-    await expect(page.getByText(/stay in charge/i).first()).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByRole('link', { name: /try it free/i }).first()).toBeVisible();
+    // April 30 2026 trim (#307): hero copy reduced to two short lines.
+    // The "stay in charge" + "Try it free" copy from the prior version
+    // moved to the FAQ + paywall surfaces. This test now pins the new
+    // crisp hero so a regression that re-bloated the headline trips CI.
+    await expect(page.getByText(/Inbox and calendar, on autopilot/i).first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole('link', { name: /sign in and connect gmail/i }).first()).toBeVisible();
 
     const body = await page.locator('body').innerText();
     assertNoBannedPhrases(body, '/');

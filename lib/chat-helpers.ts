@@ -16,7 +16,8 @@
  */
 
 const MODEL_DISPLAY_NAMES: Record<string, string> = {
-    'claude-opus-4-6': 'Claude Opus 4.6 (Anthropic)',
+    'claude-opus-4-7': 'Claude Opus 4.7 (Anthropic)',
+    'claude-opus-4-6': 'Claude Opus 4.7 (Anthropic)',
     'claude-sonnet-4-6': 'Claude Sonnet 4.6 (Anthropic)',
     'claude-haiku-4-5': 'Claude Haiku 4.5 (Anthropic)',
     'gpt-4.1': 'GPT-4.1 (OpenAI)',
