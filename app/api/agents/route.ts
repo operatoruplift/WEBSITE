@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { verifySession } from '@/lib/auth';
 import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
+import { buildAgentManifest } from '@/lib/agents/build-manifest';
 
 export const runtime = 'nodejs';
 
@@ -61,22 +62,7 @@ export async function POST(request: Request) {
         }
 
         const supabase = getSupabase();
-        const agent = {
-            id: body.id || `agent-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-            name: body.name,
-            description: body.description || '',
-            version: body.version || '1.0.0',
-            author: body.author || 'Community',
-            author_id: verified.userId,
-            category: body.category || 'General',
-            model: body.model || 'claude-sonnet-4-6',
-            system_prompt: body.systemPrompt || body.system_prompt || '',
-            tools: body.tools || [],
-            permissions: body.permissions || [],
-            price: body.price || 'free',
-            avatar: body.avatar || '',
-            tags: body.tags || [],
-        };
+        const agent = buildAgentManifest(body, verified.userId);
 
         const { data, error } = await supabase
             .from('agents')
