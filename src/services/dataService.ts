@@ -212,7 +212,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
     ]
   },
   footer: {
-    tag: "FOOTER",
+    tag: "OPERATOR UPLIFT",
     copyright: "\u00a9 Operator Uplift 2026. All rights reserved.",
     socials: {
       twitter: "https://x.com/OperatorUplift",
@@ -223,7 +223,7 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
       resources: {
         title: "Resources",
         links: [
-          { label: "Docs", url: "https://help.operatoruplift.com" },
+          { label: "Docs", action: "docs" },
           { label: "Contact", action: "contact" }
         ]
       },
