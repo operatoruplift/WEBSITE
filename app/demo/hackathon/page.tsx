@@ -184,9 +184,14 @@ export default function HackathonDemoPage() {
                         </Link>
                         <p className="text-[11px] text-[#52525B] mt-3">
                             Read the full technical writeup in{' '}
-                            <Link href="/docs/HACKATHON_GATE2.md" className="text-[#F97316] hover:underline">
+                            <a
+                                href="https://github.com/operatoruplift/website/blob/master/docs/HACKATHON_GATE2.md"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-[#F97316] hover:underline"
+                            >
                                 HACKATHON_GATE2.md
-                            </Link>
+                            </a>
                             .
                         </p>
                     </div>
