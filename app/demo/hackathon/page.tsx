@@ -14,7 +14,7 @@ import { magicBlockSurfaceStatus } from '@/lib/magicblock/adapter';
  */
 export default function HackathonDemoPage() {
     return (
-        <div className="min-h-screen bg-[#0A0A0A] text-[#FAFAFA]">
+        <div className="theme-light min-h-screen bg-background text-foreground">
             <Navbar currentPage="demo-hackathon" />
 
             <main className="pt-32 pb-20 px-6 md:px-12">

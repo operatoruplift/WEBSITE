@@ -29,7 +29,7 @@ export default function PressKitPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#0A0A0A] text-[#FAFAFA]">
+        <div className="theme-light min-h-screen bg-background text-foreground">
             <Navbar currentPage="press-kit" />
 
             <main className="pt-32 pb-20 px-6 md:px-12">
