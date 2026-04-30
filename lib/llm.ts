@@ -224,8 +224,11 @@ async function callLLMOnce(model: string, messages: LLMMessage[]): Promise<Reada
 /** Map friendly model names to actual API model IDs */
 export function mapModelId(model: string): string {
   const map: Record<string, string> = {
-    // Anthropic
-    'claude-opus-4-6': 'claude-opus-4-6',
+    // Anthropic. Opus 4.7 is the current flagship as of April 2026.
+    // 4.6 alias kept so existing chat sessions and saved-agent
+    // manifests still resolve while users migrate.
+    'claude-opus-4-7': 'claude-opus-4-7',
+    'claude-opus-4-6': 'claude-opus-4-7',
     'claude-sonnet-4-6': 'claude-sonnet-4-6',
     'claude-haiku-4-5': 'claude-haiku-4-5-20251001',
     // OpenAI

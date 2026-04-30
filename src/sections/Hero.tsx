@@ -49,17 +49,21 @@ const Hero: React.FC = () => {
             </p>
           </FadeIn>
 
-          {/* Description */}
-          <FadeIn delay={600}>
-            <p className="text-xs sm:text-sm md:text-base text-gray-400 mb-4 md:mb-6 max-w-xl leading-relaxed">
-              {data.description}
-            </p>
-            {data.contractAddress && (
+          {/* Optional description (empty in the trimmed copy; only renders when set) */}
+          {data.description && (
+            <FadeIn delay={600}>
+              <p className="text-xs sm:text-sm md:text-base text-gray-400 mb-4 md:mb-6 max-w-xl leading-relaxed">
+                {data.description}
+              </p>
+            </FadeIn>
+          )}
+          {data.contractAddress && (
+            <FadeIn delay={600}>
               <div className="mb-6 md:mb-8">
                 <AddressDisplay address={data.contractAddress} label={data.contractLabel} />
               </div>
-            )}
-          </FadeIn>
+            </FadeIn>
+          )}
 
           {/* Mobile & Tablet Animation Container - Placed between Text and Download */}
           <div className="block lg:hidden w-full h-[400px] sm:h-[500px] md:h-[600px] relative mb-6 md:mb-8 rounded-xl overflow-hidden bg-white/5 border border-white/10">

@@ -49,10 +49,10 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
     ],
   },
   hero: {
-    visionTag: "YOUR AI ASSISTANT",
-    headline: "AI that runs your inbox and calendar. You stay in charge.",
-    subhead: "Drafts your replies, schedules your meetings, sends your follow-ups. Nothing goes out without your tap.",
-    description: "Ask for a quick rundown of your day, triage your inbox, or book a meeting, all in one chat. Try the demo first, no signup needed.",
+    visionTag: "AI ASSISTANT",
+    headline: "Inbox and calendar, on autopilot.",
+    subhead: "AI drafts and schedules. You approve every send.",
+    description: "",
     contractAddress: "",
     contractLabel: "",
     downloads: {
@@ -177,9 +177,9 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
       {
         id: 'email',
         title: 'Email',
-        description: 'matt@operatoruplift.com',
+        description: 'operatoruplift@gmail.com',
         iconType: 'email',
-        url: 'mailto:matt@operatoruplift.com'
+        url: 'mailto:operatoruplift@gmail.com'
       },
       {
         id: 'meeting',

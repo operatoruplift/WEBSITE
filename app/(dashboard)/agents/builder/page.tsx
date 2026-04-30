@@ -22,7 +22,7 @@ const TEMPLATES = [
 ];
 
 const MODELS = [
-    { id: 'claude-opus-4-6', name: 'Claude Opus 4.6', provider: 'Anthropic', badge: 'BEST' },
+    { id: 'claude-opus-4-7', name: 'Claude Opus 4.7', provider: 'Anthropic', badge: 'BEST' },
     { id: 'claude-sonnet-4-6', name: 'Claude Sonnet 4.6', provider: 'Anthropic', badge: 'FAST' },
     { id: 'gpt-4.1', name: 'GPT-4.1', provider: 'OpenAI', badge: 'VERSATILE' },
     { id: 'gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'OpenAI', badge: 'CHEAP' },

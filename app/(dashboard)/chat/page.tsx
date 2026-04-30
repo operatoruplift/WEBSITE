@@ -29,10 +29,10 @@ const DEMO_CAPABILITIES: Capabilities = {
 };
 
 const MODELS = [
-    { id: 'claude-opus-4-6', label: 'Claude Opus 4.6', provider: 'Anthropic', color: 'text-[#F97316]', badge: 'SMART' },
+    { id: 'claude-opus-4-7', label: 'Claude Opus 4.7', provider: 'Anthropic', color: 'text-[#F97316]', badge: 'SMART' },
     { id: 'gpt-4.1', label: 'GPT-4.1', provider: 'OpenAI', color: 'text-emerald-400', badge: 'FAST' },
     { id: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro', provider: 'Google', color: 'text-[#F97316]', badge: 'LONG CTX' },
-    { id: 'deepseek-v3', label: 'DeepSeek V3', provider: 'DeepSeek', color: 'text-amber-400', badge: 'OPEN' },
+    { id: 'deepseek-r1', label: 'DeepSeek R1', provider: 'DeepSeek', color: 'text-amber-400', badge: 'REASON' },
     { id: 'grok-3', label: 'Grok 3', provider: 'xAI', color: 'text-red-400', badge: 'REASON' },
 ];
 

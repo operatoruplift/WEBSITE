@@ -2,51 +2,42 @@
 
 import Navbar from '@/src/components/Navbar';
 import Hero from '@/src/sections/Hero';
-import WhatBecomesReal from '@/src/sections/WhatBecomesReal';
 import DemoVideo from '@/src/sections/DemoVideo';
 import Comparison from '@/src/sections/Comparison';
-import Security from '@/src/sections/Security';
 import UseCases from '@/src/sections/UseCases';
 import Pricing from '@/src/sections/Pricing';
 import FAQ from '@/src/sections/FAQ';
 import Footer from '@/src/components/Footer';
 
 /**
- * Landing composition, trimmed April 30 2026 from 17 sections to 8.
+ * Landing composition, second pass (April 30 2026): 8 → 6 sections.
  *
- * What survived (every block earns its scroll):
- *   Hero            , 5-second test (what + for whom + why safe) + CTAs
- *   WhatBecomesReal , three proof blocks (Gmail/Calendar, Approval, Receipt)
- *   DemoVideo       , 90 s recording from the Playwright harness
- *   Comparison      , vs. Gemini Workspace / Copilot
- *   Security        , Privy auth + Solana receipts + RLS
- *   UseCases        , concrete jobs the agent does for the user
- *   Pricing         , single SKU, no enterprise upsell on the consumer page
- *   FAQ             , objection handling
+ * What survived:
+ *   Hero        , one short headline + two CTAs
+ *   DemoVideo   , 90 s recording. Still the fastest "show, don't tell"
+ *   Comparison  , vs. Gemini Workspace / Copilot
+ *   UseCases    , concrete jobs the agent does for the user
+ *   Pricing     , single SKU
+ *   FAQ         , objection handling (and where Security bullets now live)
  *
- * What got cut (dense / repetitive on first visit):
- *   ProblemStatement → folds into Hero and the FAQ "why does this exist" Q
- *   Product (scrollytelling) → the demo video does this job in 90s
- *   Compliance       → folded into Security
- *   GoingLocal       → /docs/integrations is the canonical source
- *   CloudVsLocal     → folded into Comparison
- *   MarketOpportunity → investor-deck content, not consumer landing
- *   DeveloperDocs    → /docs is one click away in the navbar
- *   SocialProof      → empty pre-launch; bring back when there are quotes
- *   BuildWithUs      → recruiting CTA lives on /careers
+ * Cut in this pass:
+ *   WhatBecomesReal (the "What's already live" three-card block) → the
+ *      demo video shows the same proof in motion. The static cards
+ *      duplicated the content and slowed the first-fold scroll.
+ *   Security → Privy + Solana + RLS bullets moved into FAQ "How is
+ *      this safe?" so a curious user can drill in, but a casual one
+ *      isn't asked to read trust-marketing copy on the way to the demo.
  *
- * Sections still present on dedicated pages (Pricing, FAQ, etc. when
- * users navigate there from the navbar).
+ * Pages /press-kit, /privacy, /security, /docs still exist, navbar
+ * links survive for users who came looking for those specifically.
  */
 export default function Home() {
   return (
     <div className="w-full bg-background">
       <Navbar currentPage="home" />
       <Hero />
-      <WhatBecomesReal />
       <DemoVideo />
       <Comparison />
-      <Security />
       <UseCases />
       <Pricing />
       <FAQ />
