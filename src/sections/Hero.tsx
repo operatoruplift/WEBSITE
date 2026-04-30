@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 import HeroAnimation from '@/src/components/HeroAnimation';
-import DownloadWidget from '@/src/components/DownloadWidget';
 import { DownloadCTA } from '@/src/components/DownloadCTA';
 import TrustedBy from '@/src/components/TrustedBy';
 import AddressDisplay from '@/src/components/AddressDisplay';
@@ -69,9 +68,11 @@ const Hero: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/50 pointer-events-none"></div>
           </div>
 
-          {/* CTAs, one primary, one secondary per the 5-second test.
-              Primary drives Real Mode conversion (Google connect).
-              Secondary gives a zero-friction "see it first" via the 90s demo video. */}
+          {/* CTAs: one primary action (sign in for the web app),
+              one secondary (watch the recorded demo), and the
+              OS-aware desktop installer. The DownloadCTA replaces
+              the old "Try it free" + OS-tabs widget so we don't
+              show three sign-in entry points. */}
           <FadeIn delay={800}>
             <div className="flex flex-col sm:flex-row items-start gap-3 mb-4">
               <Link href="/login?returnTo=/integrations"
@@ -88,10 +89,7 @@ const Hero: React.FC = () => {
             <p className="text-[11px] text-gray-500 mb-4 max-w-md">
               Want to look around first? <Link href="/chat" className="text-gray-300 hover:text-white underline underline-offset-4 decoration-dotted">Try the demo</Link>, no signup, nothing&apos;s real yet.
             </p>
-            <div className="mb-8">
-              <DownloadCTA />
-            </div>
-            <DownloadWidget data={data} />
+            <DownloadCTA />
           </FadeIn>
 
           {/* Works With Any Model (Marquee) */}

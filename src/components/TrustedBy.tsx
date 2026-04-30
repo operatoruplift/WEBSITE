@@ -3,15 +3,20 @@ import React from 'react';
 import { providerLogos } from './ProviderLogos';
 
 const TrustedBy: React.FC = () => {
+  // Pinned to the latest models live on each provider as of the
+  // April 2026 marketing refresh. The chat router (lib/llm.ts +
+  // ModelSelector) ships these specific IDs, so the marquee names
+  // mirror what the user actually picks at runtime.
   const models = [
-    { name: "Claude Opus 4.6", provider: "Anthropic" },
+    { name: "Claude Opus 4.7", provider: "Anthropic" },
+    { name: "Claude Sonnet 4.6", provider: "Anthropic" },
     { name: "GPT-4.1", provider: "OpenAI" },
+    { name: "GPT-4o", provider: "OpenAI" },
     { name: "Gemini 2.5 Pro", provider: "Google" },
-    { name: "Llama 4 Maverick", provider: "Meta" },
-    { name: "Mistral Large 25.03", provider: "Mistral AI" },
-    { name: "Command A", provider: "Cohere" },
     { name: "Grok 3", provider: "xAI" },
     { name: "DeepSeek-R1", provider: "DeepSeek" },
+    { name: "Llama 4 Maverick", provider: "Meta" },
+    { name: "Mistral Large 25.03", provider: "Mistral AI" },
     { name: "Qwen 3", provider: "Alibaba" },
     { name: "Phi-4", provider: "Microsoft" },
     { name: "Ollama", provider: "Ollama" },

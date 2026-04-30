@@ -88,7 +88,7 @@ test.describe('getOnChainRecord', () => {
             futureField: 'unknown',
         };
         store.set('ou-audit-on-chain', JSON.stringify(record));
-        const result = getOnChainRecord() as Record<string, unknown>;
+        const result = getOnChainRecord() as unknown as Record<string, unknown>;
         expect(result?.futureField).toBe('unknown');
     });
 

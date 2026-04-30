@@ -1,8 +1,20 @@
 "use client";
 
 import { useEffect, useState, useRef } from 'react';
-import { ChevronDown, Download } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { detectOS, downloadOptions, optionFor, type OSKey } from '@/config/downloads';
+import { AppleIcon, WindowsIcon, LinuxIcon } from './Icons';
+
+/**
+ * Map an OS key to its brand icon. The primary button shows this icon
+ * so the user gets a clear visual cue that the download targets their
+ * platform (replaces the older generic download arrow).
+ */
+const OS_ICONS: Record<OSKey, React.ComponentType<{ className?: string }>> = {
+    macos: AppleIcon,
+    windows: WindowsIcon,
+    linux: LinuxIcon,
+};
 
 /**
  * Download CTA, renders a platform-smart primary button plus an
@@ -57,6 +69,8 @@ export function DownloadCTA({ className = '' }: { className?: string }) {
         setMenuOpen(false);
     };
 
+    const OsIcon = OS_ICONS[selectedOS];
+
     return (
         <div ref={rootRef} className={`relative inline-flex items-center gap-2 ${className}`} data-testid="download-cta-root">
             <a
@@ -65,7 +79,7 @@ export function DownloadCTA({ className = '' }: { className?: string }) {
                 data-os={current.os}
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#F97316] hover:bg-[#F97316]/90 text-white px-5 py-3 text-sm font-bold uppercase tracking-widest transition-colors"
             >
-                <Download size={16} />
+                <OsIcon className="w-4 h-4" />
                 <span>{current.ctaLabel}</span>
             </a>
 
