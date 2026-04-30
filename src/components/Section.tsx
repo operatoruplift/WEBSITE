@@ -10,7 +10,7 @@ import React from 'react';
  *   - py-14 mobile / py-20 desktop padding
  *   - max-w-[1200px] content width
  *   - flex flex-col items-center for vertical centering + centered header
- *   - bg-[#0A0A0A] by default (pass `bgClassName` to override)
+ *   - bg-background by default (pass `bgClassName` to override)
  *
  * Use with <SectionHeader /> for the header block, then drop content
  * underneath. The flex-col + gap-12 keeps the header visually balanced
@@ -24,7 +24,7 @@ interface SectionProps {
     innerClassName?: string;
 }
 
-export function Section({ id, children, bgClassName = 'bg-[#0A0A0A]', innerClassName = '' }: SectionProps) {
+export function Section({ id, children, bgClassName = 'bg-background', innerClassName = '' }: SectionProps) {
     return (
         <section id={id} className={`w-full ${bgClassName} px-6 md:px-12 py-14 md:py-20 flex justify-center`}>
             <div className={`w-full max-w-[1200px] flex flex-col items-center text-center gap-12 ${innerClassName}`}>
