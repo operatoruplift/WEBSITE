@@ -76,10 +76,12 @@ test('homepage hero shows the consumer pitch', async ({ page }) => {
 test('navbar uses plain-English labels', async ({ page }) => {
     await page.goto('/');
 
-    // The post-#152 navbar uses these explicit strings
-    await expect(page.getByText(/HOW IT WORKS/).first()).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByText(/HELPERS/).first()).toBeVisible();
-    await expect(page.getByText(/WATCH DEMO/).first()).toBeVisible();
+    // April 30 2026 trim (#308) cut HOW IT WORKS (broken anchor),
+    // HELPERS (off-topic for marketing), and BLOG (no posts yet).
+    // Surviving links: WATCH DEMO + PRICING + FAQ.
+    await expect(page.getByText(/WATCH DEMO/).first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(/PRICING/).first()).toBeVisible();
+    await expect(page.getByText(/FAQ/).first()).toBeVisible();
 });
 
 test('/paywall sells real features, not the removed council', async ({ page }) => {

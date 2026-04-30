@@ -12,7 +12,10 @@ const Footer: React.FC = () => {
     if (link.action === 'contact') return '/contact';
     if (link.action === 'terms') return '/terms';
     if (link.action === 'privacy') return '/privacy';
-    if (link.action === 'product') return '/product';
+    // 'product' link used to point at the standalone /product page,
+    // retired in #308. Bring users back to the homepage hero, which
+    // is the single source of truth for "what does this do?"
+    if (link.action === 'product') return '/';
     return '/';
   };
 

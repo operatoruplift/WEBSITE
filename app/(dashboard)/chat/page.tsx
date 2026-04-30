@@ -157,7 +157,6 @@ export default function ChatPage() {
     const toolCallResolveRef = useRef<((result: ToolResult | null) => void) | null>(null);
     const [capabilities, setCapabilities] = useState<Capabilities>(DEMO_CAPABILITIES);
     const [capsLoaded, setCapsLoaded] = useState(false);
-    const [demoBannerDismissed, setDemoBannerDismissed] = useState(false);
     const [pinned, setPinned] = useState<{ id: string; type: string; title?: string; body?: string; pinned_until?: string }[]>([]);
 
     const getChatUserId = (): string => {
@@ -491,28 +490,11 @@ export default function ChatPage() {
                             </div>}
                         </div>
                     </div>
-                    {capsLoaded && !capabilities.capability_real && !demoBannerDismissed && (
-                        <div className="px-4 py-2 border-b border-[#F97316]/20 bg-[#F97316]/5 flex items-center gap-3 shrink-0">
-                            <Sparkles size={14} className="text-[#F97316] shrink-0" />
-                            <p className="text-xs text-[#F97316] flex-1">
-                                {capabilities.authenticated
-                                    ? 'You\'re signed in but no Google or API key is connected, every reply is simulated.'
-                                    : 'Anonymous demo, every reply and tool action is simulated.'}
-                                {' '}
-                                <a href="/integrations" className="underline hover:text-white">Connect Google</a>
-                                {' or '}
-                                <a href="/settings" className="underline hover:text-white">add an API key</a>
-                                {' to make it real.'}
-                            </p>
-                            <button
-                                onClick={() => setDemoBannerDismissed(true)}
-                                aria-label="Dismiss demo banner"
-                                className="p-1 rounded text-[#F97316]/60 hover:text-[#F97316] hover:bg-[#F97316]/10"
-                            >
-                                <XIcon size={14} />
-                            </button>
-                        </div>
-                    )}
+                    {/* Demo-mode chip retired in #308. The capability_real gate
+                         still drives canned-replies behavior server-side, but
+                         we no longer label the surface as "demo" in the UI.
+                         The user lands in the chat and sees it work; the moment
+                         they connect Google, every action becomes real. */}
                     {pinned.length > 0 && (
                         <div className="px-4 py-2 border-b border-emerald-500/20 bg-emerald-500/5 shrink-0 space-y-2">
                             {pinned.map(row => (
