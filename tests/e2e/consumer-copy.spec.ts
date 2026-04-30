@@ -62,11 +62,11 @@ function assertNoBannedPhrases(body: string, surface: string) {
 test('homepage hero shows the consumer pitch', async ({ page }) => {
     await page.goto('/');
 
-    // April 30 2026 trim (#307): hero copy reduced to two short lines.
-    // The "stay in charge" + "Try it free" copy from the prior version
-    // moved to the FAQ + paywall surfaces. This test now pins the new
-    // crisp hero so a regression that re-bloated the headline trips CI.
-    await expect(page.getByText(/Inbox and calendar, on autopilot/i).first()).toBeVisible({ timeout: 10_000 });
+    // April 30 2026 second-pass trim: hero headline switched from
+    // "Inbox and calendar, on autopilot." to "AI that runs on your
+    // terms." per user feedback (the new copy frames consent + control
+    // up front instead of leading with the daily job).
+    await expect(page.getByText(/AI that runs on your terms/i).first()).toBeVisible({ timeout: 10_000 });
     await expect(page.getByRole('link', { name: /sign in and connect gmail/i }).first()).toBeVisible();
 
     const body = await page.locator('body').innerText();
@@ -76,12 +76,12 @@ test('homepage hero shows the consumer pitch', async ({ page }) => {
 test('navbar uses plain-English labels', async ({ page }) => {
     await page.goto('/');
 
-    // April 30 2026 trim (#308) cut HOW IT WORKS (broken anchor),
-    // HELPERS (off-topic for marketing), and BLOG (no posts yet).
-    // Surviving links: WATCH DEMO + PRICING + FAQ.
-    await expect(page.getByText(/WATCH DEMO/).first()).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByText(/PRICING/).first()).toBeVisible();
+    // April 30 2026 trim, second pass: WATCH DEMO removed from nav
+    // (Hero already has a "Watch 90s demo" anchor), HELP relabeled to
+    // DOCS so it points users to docs explicitly.
+    await expect(page.getByText(/PRICING/).first()).toBeVisible({ timeout: 10_000 });
     await expect(page.getByText(/FAQ/).first()).toBeVisible();
+    await expect(page.getByText(/DOCS/).first()).toBeVisible();
 });
 
 test('/paywall sells real features, not the removed council', async ({ page }) => {

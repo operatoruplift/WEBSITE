@@ -10,16 +10,10 @@ const Navbar: React.FC<NavbarProps> = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const navItems = [
-    // April 30 2026 trim. HOW IT WORKS pointed at #product which the
-    // homepage no longer renders. HELPERS sent users to the dashboard
-    // /store page, off-topic for marketing. BLOG had no posts yet so
-    // the link surfaced an empty page; bring it back when there are
-    // real posts. See PR #308.
-    //
-    // WATCH DEMO scrolls to the homepage video so the nav link + the
-    // Hero "Watch 90s demo" CTA + the DemoVideo <section id="demo-video">
-    // are one surface.
-    { name: 'WATCH DEMO', targetId: 'demo-video', href: '/#demo-video' },
+    // April 30 2026 trim, second pass. WATCH DEMO was redundant: the
+    // homepage hero already has a "Watch 90s demo" anchor, and a nav
+    // duplicate of that just clutters the bar. Pricing + FAQ remain
+    // because they answer two distinct first-visit questions.
     { name: 'PRICING', targetId: 'pricing', href: '/#pricing' },
     { name: 'FAQ', targetId: 'faq', href: '/#faq' },
   ];
@@ -57,7 +51,7 @@ const Navbar: React.FC<NavbarProps> = () => {
               href="/docs"
               className="group flex items-center text-xs font-bold text-muted hover:text-white transition-colors tracking-[0.15em] px-1"
             >
-              HELP
+              DOCS
             </Link>
           </div>
           
@@ -121,7 +115,7 @@ const Navbar: React.FC<NavbarProps> = () => {
             onClick={() => setMobileMenuOpen(false)}
             className="text-lg font-bold text-white hover:text-primary transition-colors tracking-wide"
           >
-            HELP
+            DOCS
           </Link>
           
           <div className="w-full h-px bg-white/10 my-4" />
