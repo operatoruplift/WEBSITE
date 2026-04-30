@@ -17,9 +17,9 @@ const USE_CASES = [
 
 const STARTER_AGENTS = [
     { id: 'codepilot', name: 'Code Pilot', desc: 'Code generation and debugging', model: 'Claude Sonnet 4.6', prompt: 'You are an expert software engineer.' },
-    { id: 'researcher', name: 'Researcher', desc: 'Multi-source research and synthesis', model: 'Claude Opus 4.6', prompt: 'You are a thorough research assistant.' },
+    { id: 'researcher', name: 'Researcher', desc: 'Multi-source research and synthesis', model: 'Claude Opus 4.7', prompt: 'You are a thorough research assistant.' },
     { id: 'writer', name: 'Content Writer', desc: 'Blog posts, docs, and copy', model: 'Claude Sonnet 4.6', prompt: 'You are a skilled content writer.' },
-    { id: 'guard', name: 'Security Guard', desc: 'Watches API traffic and flags suspicious patterns', model: 'Claude Opus 4.6', prompt: 'You are a security analyst.' },
+    { id: 'guard', name: 'Security Guard', desc: 'Watches API traffic and flags suspicious patterns', model: 'Claude Opus 4.7', prompt: 'You are a security analyst.' },
 ];
 
 export default function OnboardingPage() {

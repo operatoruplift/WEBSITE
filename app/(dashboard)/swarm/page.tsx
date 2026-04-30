@@ -38,7 +38,7 @@ const PRESET_SWARMS: SwarmConfig[] = [
         id: 'code-review', name: 'Code Review Swarm', description: 'Multi-agent code review: analyzer finds issues, fixer proposes patches, reviewer validates',
         topology: 'sequential', status: 'ready', runs: 0, lastRun: 'Never',
         agents: [
-            { id: 'a1', name: 'Code Analyzer', role: 'Scan codebase for bugs, vulnerabilities, and anti-patterns', model: 'Claude Opus 4.6', status: 'idle', icon: Bot },
+            { id: 'a1', name: 'Code Analyzer', role: 'Scan codebase for bugs, vulnerabilities, and anti-patterns', model: 'Claude Opus 4.7', status: 'idle', icon: Bot },
             { id: 'a2', name: 'Fix Proposer', role: 'Generate patches for each identified issue', model: 'Claude Sonnet 4.6', status: 'idle', icon: Zap },
             { id: 'a3', name: 'Review Gate', role: 'Validate fixes meet quality standards before merge', model: 'GPT-4.1', status: 'idle', icon: Shield },
         ],
@@ -48,18 +48,18 @@ const PRESET_SWARMS: SwarmConfig[] = [
         topology: 'parallel', status: 'ready', runs: 0, lastRun: 'Never',
         agents: [
             { id: 'b1', name: 'Web Researcher', role: 'Search and analyze web sources', model: 'Claude Sonnet 4.6', status: 'idle', icon: Brain },
-            { id: 'b2', name: 'Paper Analyst', role: 'Extract insights from academic papers', model: 'Claude Opus 4.6', status: 'idle', icon: Brain },
+            { id: 'b2', name: 'Paper Analyst', role: 'Extract insights from academic papers', model: 'Claude Opus 4.7', status: 'idle', icon: Brain },
             { id: 'b3', name: 'Data Validator', role: 'Cross-reference claims and check sources', model: 'GPT-4.1', status: 'idle', icon: Shield },
-            { id: 'b4', name: 'Report Writer', role: 'Synthesize all findings into a coherent report', model: 'Claude Opus 4.6', status: 'idle', icon: MessageSquare },
+            { id: 'b4', name: 'Report Writer', role: 'Synthesize all findings into a coherent report', model: 'Claude Opus 4.7', status: 'idle', icon: MessageSquare },
         ],
     },
     {
         id: 'debate', name: 'Agent Debate', description: 'Two agents argue opposing positions, a judge synthesizes the best answer',
         topology: 'debate', status: 'ready', runs: 0, lastRun: 'Never',
         agents: [
-            { id: 'c1', name: 'Advocate', role: 'Argue in favor of the proposition', model: 'Claude Opus 4.6', status: 'idle', icon: MessageSquare },
+            { id: 'c1', name: 'Advocate', role: 'Argue in favor of the proposition', model: 'Claude Opus 4.7', status: 'idle', icon: MessageSquare },
             { id: 'c2', name: 'Skeptic', role: 'Challenge assumptions and argue against', model: 'GPT-4.1', status: 'idle', icon: MessageSquare },
-            { id: 'c3', name: 'Judge', role: 'Evaluate arguments and produce final synthesis', model: 'Claude Opus 4.6', status: 'idle', icon: Shield },
+            { id: 'c3', name: 'Judge', role: 'Evaluate arguments and produce final synthesis', model: 'Claude Opus 4.7', status: 'idle', icon: Shield },
         ],
     },
     {
@@ -67,7 +67,7 @@ const PRESET_SWARMS: SwarmConfig[] = [
         topology: 'hierarchical', status: 'ready', runs: 0, lastRun: 'Never',
         agents: [
             { id: 'd1', name: 'Vuln Scanner', role: 'Scan for OWASP Top 10, CVEs, and misconfigs', model: 'Claude Sonnet 4.6', status: 'idle', icon: Shield },
-            { id: 'd2', name: 'Threat Analyst', role: 'Classify severity and exploitation paths', model: 'Claude Opus 4.6', status: 'idle', icon: Brain },
+            { id: 'd2', name: 'Threat Analyst', role: 'Classify severity and exploitation paths', model: 'Claude Opus 4.7', status: 'idle', icon: Brain },
             { id: 'd3', name: 'Remediation Agent', role: 'Generate fix PRs for critical vulnerabilities', model: 'Claude Sonnet 4.6', status: 'idle', icon: Zap },
         ],
     },
