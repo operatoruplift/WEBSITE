@@ -498,3 +498,23 @@
 .docs-prose pre { background: #0A0A0A; border: 1px solid #222222; border-radius: 10px; padding: 1rem 1.25rem; overflow-x: auto; margin: 1rem 0 1.5rem; font-size: 0.88em; line-height: 1.6; }
 .docs-prose pre code { background: none; border: none; padding: 0; color: #E5E5E5; }
 .docs-prose blockquote { border-left: 3px solid #F97316; padding: 0.25rem 0 0.25rem 1rem; margin: 1rem 0; color: #FAFAFA; font-style: italic; }
+
+/* ------------------------------------------------------------------
+   Light-mode overrides for prose. The base .blog-content and
+   .docs-prose styles target dark surfaces (near-white text on near-
+   black bg). On marketing pages those wrappers sit inside .theme-light,
+   so flip text colors to dark grays for readable contrast.
+------------------------------------------------------------------ */
+.theme-light .blog-content p.text-lg { color: #18181B; }
+.theme-light .blog-content strong { color: #0A0A0A; }
+.theme-light .blog-content em { color: #27272A; }
+.theme-light .blog-content h2 { color: #0A0A0A; }
+.theme-light .blog-content h3 { color: #0A0A0A; }
+.theme-light .blog-content blockquote { color: #18181B; }
+
+.theme-light .docs-prose { color: #27272A; }
+.theme-light .docs-prose .lead { color: #0A0A0A; }
+.theme-light .docs-prose strong { color: #0A0A0A; }
+.theme-light .docs-prose h2 { color: #0A0A0A; }
+.theme-light .docs-prose h3 { color: #0A0A0A; }
+.theme-light .docs-prose blockquote { color: #18181B; }
