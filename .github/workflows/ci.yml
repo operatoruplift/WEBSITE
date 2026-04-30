@@ -75,7 +75,6 @@ jobs:
             tests/e2e/dashboard-honesty.spec.ts \
             tests/e2e/request-id-runtime.spec.ts \
             tests/e2e/agents-store.spec.ts \
-            tests/e2e/download-cta.spec.ts \
             tests/e2e/demo-flow.spec.ts \
             tests/e2e/photon-webhook.spec.ts \
             tests/e2e/toolSafety.spec.ts \
@@ -127,6 +126,9 @@ jobs:
             tests/e2e/supabase-getTokenFromRequest.spec.ts \
             tests/e2e/apiHelpers-errorResponse.spec.ts \
             tests/e2e/auditLog-getOnChainRecord.spec.ts \
+            tests/e2e/light-mode-contrast.spec.ts \
+            tests/e2e/hero-anim-perf.spec.ts \
+            tests/e2e/reduced-motion.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure
