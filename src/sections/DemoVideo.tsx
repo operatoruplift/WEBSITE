@@ -68,7 +68,7 @@ export function DemoVideo() {
                     )}
                     {failed && (
                         <div className="absolute inset-0 flex items-center justify-center bg-black/60 px-6">
-                            <p className="text-sm text-[#A1A1AA] font-mono text-center">
+                            <p className="text-sm text-muted font-mono text-center">
                                 The demo video didn&apos;t load. Refresh, or
                                 {' '}
                                 <Link href="/chat" className="underline hover:text-white">try the live demo chat</Link>
@@ -80,7 +80,7 @@ export function DemoVideo() {
             </FadeIn>
 
             <div className="flex flex-col items-center gap-3 pt-4">
-                <p className="text-xs text-[#A1A1AA] font-mono text-center max-w-md">
+                <p className="text-xs text-muted font-mono text-center max-w-md">
                     90 seconds. Nothing is real until you sign in.
                 </p>
                 <Link

@@ -27,7 +27,7 @@ export default function StorePage() {
     const agents = listStoreAgents();
 
     return (
-        <div className="w-full bg-background min-h-screen">
+        <div className="theme-light w-full bg-background min-h-screen">
             <Navbar currentPage="store" />
 
             {/* Hero */}

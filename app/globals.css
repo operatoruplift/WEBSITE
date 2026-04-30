@@ -103,6 +103,82 @@
 [data-theme="light"] .dashboard-content .text-gray-400 { color: #777; }
 [data-theme="light"] .dashboard-content .text-gray-500 { color: #999; }
 
+/* ─────────────────────────────────────────────────────────────────
+ * Marketing site light theme.
+ *
+ * Apply by adding `theme-light` to a wrapper element. The marketing
+ * pages opt in (homepage, /pricing, /contact, /press-kit, /privacy,
+ * /terms, /docs, /blog), so the dashboard keeps its dark palette.
+ *
+ * The strategy mirrors the dashboard light-mode block above:
+ *   1. Override the CSS-variable color tokens at the wrapper, so
+ *      Tailwind utility classes built on those vars (bg-background,
+ *      text-foreground, text-muted, etc.) flip automatically.
+ *   2. Add explicit overrides for the most-used hardcoded utility
+ *      classes (text-white, bg-white/N, border-white/N, the gray-*
+ *      family, fixed-hex rgba blocks). These appear inline in
+ *      component JSX and would not be picked up by token swaps alone.
+ * ───────────────────────────────────────────────────────────────── */
+.theme-light {
+  --color-background: #FAFAFA;
+  --color-foreground: #0A0A0A;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-card: #FFFFFF;
+  --color-muted: #6B7280;
+  --color-muted-foreground: #6B7280;
+  --color-border: #E5E7EB;
+  --color-border-visible: #D1D5DB;
+
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* Inverted text family. Most marketing components use text-white as the
+ * primary copy color, gray-300/400/500 for secondary, gray-600/700 as
+ * dim accents. Map them so reading order survives in light mode. */
+.theme-light .text-white { color: #0A0A0A; }
+.theme-light .text-gray-100 { color: #18181B; }
+.theme-light .text-gray-200 { color: #27272A; }
+.theme-light .text-gray-300 { color: #3F3F46; }
+.theme-light .text-gray-400 { color: #4B5563; }
+.theme-light .text-gray-500 { color: #6B7280; }
+.theme-light .text-gray-600 { color: #6B7280; }
+.theme-light .text-gray-700 { color: #9CA3AF; }
+.theme-light .text-muted { color: #6B7280; }
+
+/* Inverted backgrounds: bg-white/N is the dark-mode "lift" pattern.
+ * Translate to a thin black wash so cards still read as elevated. */
+.theme-light .bg-background { background: #FAFAFA; }
+.theme-light .bg-white\/5 { background: rgba(0,0,0,0.04); }
+.theme-light .bg-white\/10 { background: rgba(0,0,0,0.06); }
+.theme-light .bg-white\/\[0\.02\] { background: rgba(0,0,0,0.02); }
+.theme-light .bg-white\/\[0\.03\] { background: rgba(0,0,0,0.03); }
+.theme-light .bg-white\/\[0\.05\] { background: rgba(0,0,0,0.05); }
+.theme-light .bg-white\/\[0\.01\] { background: rgba(0,0,0,0.02); }
+.theme-light .bg-black\/40 { background: rgba(255,255,255,0.85); }
+.theme-light .bg-black\/60 { background: rgba(255,255,255,0.85); }
+
+/* Hardcoded near-black brand surfaces (#0c0c0c, #0c0c0f, #050508) used
+ * for "elevated dark cards" become a soft off-white instead. */
+.theme-light .bg-\[\#0c0c0c\] { background: #FFFFFF; }
+.theme-light .bg-\[\#0c0c0f\] { background: #FFFFFF; }
+.theme-light .bg-\[\#050508\] { background: #FAFAFA; }
+
+/* Borders. Most components use border-white/N which is invisible on a
+ * white page, so swap to a black wash with a slightly higher floor so
+ * card outlines stay readable. */
+.theme-light .border-white\/5 { border-color: rgba(0,0,0,0.06); }
+.theme-light .border-white\/10 { border-color: rgba(0,0,0,0.08); }
+.theme-light .border-white\/20 { border-color: rgba(0,0,0,0.12); }
+
+/* Text accents that lean on rgba(255,255,255) for dim labels. */
+.theme-light .text-\[\#a1a1aa\] { color: #4B5563; }
+.theme-light .text-\[\#71717a\] { color: #6B7280; }
+
+/* Selection contrast: dark page used dark fg on light bg; flip it. */
+.theme-light::selection { background-color: #0A0A0A; color: #FAFAFA; }
+
 /* Glass utility for dashboard cards */
 .glass {
   background: rgba(255, 255, 255, 0.03);

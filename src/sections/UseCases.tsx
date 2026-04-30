@@ -58,17 +58,17 @@ const UseCases: React.FC = () => {
                     const Icon = beat.icon;
                     return (
                         <FadeIn key={beat.tag} delay={i * 150}>
-                            <div className="rounded-2xl border border-[#222222] bg-[#111111] p-8 h-full flex flex-col text-left hover:border-[#F97316]/30 transition-colors">
+                            <div className="rounded-2xl border border-border bg-card p-8 h-full flex flex-col text-left hover:border-[#F97316]/30 transition-colors">
                                 <div className="w-12 h-12 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center mb-5">
                                     <Icon size={22} className="text-[#F97316]" />
                                 </div>
                                 <span className="text-[10px] font-bold uppercase tracking-widest text-[#F97316] mb-2">{beat.tag}</span>
-                                <h3 className="text-lg font-semibold text-white mb-3">{beat.headline}</h3>
-                                <div className="space-y-2 text-sm text-[#A1A1AA] leading-relaxed flex-1">
+                                <h3 className="text-lg font-semibold text-foreground mb-3">{beat.headline}</h3>
+                                <div className="space-y-2 text-sm text-muted leading-relaxed flex-1">
                                     <p>{beat.before}</p>
-                                    <p className="text-white">{beat.after}</p>
+                                    <p className="text-foreground">{beat.after}</p>
                                 </div>
-                                <div className="mt-6 pt-4 border-t border-[#222222]">
+                                <div className="mt-6 pt-4 border-t border-border">
                                     <span className="text-xs font-mono text-[#F97316]">{beat.prompt}</span>
                                 </div>
                             </div>

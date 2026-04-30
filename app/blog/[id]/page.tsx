@@ -185,7 +185,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
 
     if (!post) {
         return (
-            <div className="w-full bg-background min-h-screen">
+            <div className="theme-light w-full bg-background min-h-screen">
                 <Navbar currentPage="blog" />
                 <div className="pt-32 pb-24 px-6 md:px-12 max-w-[800px] mx-auto text-center">
                     <h1 className="text-3xl font-medium text-white mb-4">Post not found</h1>
@@ -197,7 +197,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
     }
 
     return (
-        <div className="w-full bg-background min-h-screen">
+        <div className="theme-light w-full bg-background min-h-screen">
             <Navbar currentPage="blog" />
 
             <article className="pt-32 pb-24 px-6 md:px-12 max-w-[720px] mx-auto">

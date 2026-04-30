@@ -49,7 +49,7 @@ const badges = [
 
 export default function PricingPage() {
     return (
-        <div className="w-full bg-background min-h-screen">
+        <div className="theme-light w-full bg-background min-h-screen">
             <Navbar currentPage="pricing" />
 
             <div className="pt-32 pb-24 px-6 md:px-12">

@@ -29,7 +29,7 @@ export default function PressKitPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#0A0A0A] text-[#FAFAFA]">
+        <div className="theme-light min-h-screen bg-background text-foreground">
             <Navbar currentPage="press-kit" />
 
             <main className="pt-32 pb-20 px-6 md:px-12">
@@ -43,7 +43,7 @@ export default function PressKitPage() {
                         <h1 className="text-3xl md:text-4xl font-medium tracking-tight mb-4">
                             Press & media resources
                         </h1>
-                        <p className="text-[#A1A1AA] leading-relaxed">
+                        <p className="text-muted leading-relaxed">
                             Past coverage, founder bio, product screenshots, and the architecture deck are available on request. Drop your email and we&apos;ll send a kit within 24h.
                         </p>
                     </div>
@@ -54,24 +54,24 @@ export default function PressKitPage() {
                                 <Check size={22} className="text-[#F97316]" />
                             </div>
                             <h2 className="text-xl font-semibold mb-2">Request received</h2>
-                            <p className="text-sm text-[#A1A1AA]">
+                            <p className="text-sm text-muted">
                                 We&apos;ll send the kit to <span className="font-mono text-white">{email}</span> within 24 hours.
                             </p>
                         </div>
                     ) : (
-                        <div className="rounded-2xl border border-[#222222] bg-[#111111] p-8">
-                            <label htmlFor="pk-email" className="block text-sm text-[#A1A1AA] mb-3">
+                        <div className="rounded-2xl border border-border bg-card p-8">
+                            <label htmlFor="pk-email" className="block text-sm text-muted mb-3">
                                 Email
                             </label>
                             <div className="flex items-center gap-2 mb-4">
-                                <Mail size={16} className="text-[#A1A1AA] shrink-0" />
+                                <Mail size={16} className="text-muted shrink-0" />
                                 <input
                                     id="pk-email"
                                     type="email"
                                     value={email}
                                     onChange={e => setEmail(e.target.value)}
                                     placeholder="journalist@outlet.com"
-                                    className="flex-1 h-11 bg-[#0A0A0A] border border-[#222222] rounded-lg px-3 text-sm text-white placeholder-[#52525B] focus:border-[#F97316]/50 focus:outline-none transition-colors"
+                                    className="flex-1 h-11 bg-background border border-border rounded-lg px-3 text-sm text-foreground placeholder:text-muted focus:border-[#F97316]/50 focus:outline-none transition-colors"
                                 />
                             </div>
                             <button
