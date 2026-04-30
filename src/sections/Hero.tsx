@@ -64,12 +64,13 @@ const Hero: React.FC = () => {
             </FadeIn>
           )}
 
-          {/* Mobile & Tablet Animation Container - Placed between Text and Download */}
-          <div className="block lg:hidden w-full h-[400px] sm:h-[500px] md:h-[600px] relative mb-6 md:mb-8 rounded-xl overflow-hidden bg-white/5 border border-white/10">
-            <HeroAnimation className="w-full h-full" />
-            {/* Gradients to blend edges slightly */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/50 pointer-events-none"></div>
-          </div>
+          {/* The mobile/tablet duplicate of HeroAnimation was a 400-600px
+              empty card on the new light palette: the canvas particles
+              were tuned for a dark background so they read as a faded
+              ghost on white, and the surrounding bg-white/5 box pushed
+              the CTAs an extra screen below the fold. Removed in favor
+              of the cleaner above-the-fold copy + CTA stack. The
+              desktop (lg+) keeps its full-bleed background canvas. */}
 
           {/* Single primary action (sign in for the web app) plus a
               secondary anchor to the recorded demo. The desktop
