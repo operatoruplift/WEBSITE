@@ -1,9 +1,14 @@
 "use client";
 
 import { PrivyProvider } from '@privy-io/react-auth';
+import { toSolanaWalletConnectors } from '@privy-io/react-auth/solana';
 import { PrivyTokenSync } from './PrivyTokenSync';
 
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || '';
+
+// Initialize once at module scope so PrivyProvider isn't passed a fresh
+// reference on every render (avoids the wallet list re-mounting).
+const SOLANA_CONNECTORS = toSolanaWalletConnectors();
 
 export function PrivyWrapper({ children }: { children: React.ReactNode }) {
     if (!PRIVY_APP_ID) {
@@ -24,6 +29,13 @@ export function PrivyWrapper({ children }: { children: React.ReactNode }) {
                 loginMethods: ['google', 'github', 'wallet'],
                 embeddedWallets: {
                     solana: { createOnLogin: 'off' },
+                },
+                // Pass Solana connectors so the wallet picker actually
+                // shows Phantom/Backpack/etc. Without this, Privy logs a
+                // warning on every marketing page and the wallet button
+                // on /login fails to surface available providers.
+                externalWallets: {
+                    solana: { connectors: SOLANA_CONNECTORS },
                 },
                 walletConnectCloudProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
                 // The Privy supportedChains type is EVM-shaped; we pass a
