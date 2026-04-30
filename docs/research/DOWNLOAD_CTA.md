@@ -1,9 +1,19 @@
-# Download CTA
+# Download CTA — RETIRED
+
+> **Status:** Retired in PR #312 (DownloadCTA + tests deleted) and
+> PR #325 (DownloadWidget + config/downloads.ts deleted). The honest
+> "Mac app (beta Q3 2026)" framing now lives in `src/sections/FAQ.tsx`
+> Q5 and `app/(auth)/paywall/page.tsx` FREE_FEATURES (PR #324).
+
+This doc is kept for code archaeology. Everything below describes a
+component tree that no longer exists.
+
+---
 
 OS-aware download button in the Hero. Detects the visitor's platform
 and offers the right installer by default, with a dropdown to override.
 
-## Contract
+## Contract (historical)
 
 - **Defaults without guessing wrong.** `detectOS()` prefers the
   high-entropy `navigator.userAgentData.platform` when available
@@ -21,57 +31,31 @@ and offers the right installer by default, with a dropdown to override.
 - **No fragile UA sniffing.** Detection only picks a default, never
   gates a feature. The dropdown is always present.
 
-## Files
+## Files (historical, all deleted)
 
 - `config/downloads.ts` — `detectOS`, `downloadOptions`, `optionFor`,
   `OSKey`, `DownloadOption`. Env-aware URL resolution with fallback.
-- `src/components/DownloadCTA.tsx` — the button + dropdown. Uses
-  `detectOS` once on mount, tracks `manuallyPicked` so override sticks.
-- `src/sections/Hero.tsx` — renders `<DownloadCTA />` above
+- `src/components/DownloadCTA.tsx` — the button + dropdown.
+- `src/components/DownloadWidget.tsx` — the secondary widget.
+- `src/sections/Hero.tsx` — used to render `<DownloadCTA />` above
   `<DownloadWidget />`.
-- `tests/e2e/download-cta.spec.ts` — three Playwright specs: Mac UA,
-  Windows UA, manual override to Linux.
+- `tests/e2e/download-cta.spec.ts` — Playwright specs.
+- `tests/e2e/download-screenshots.spec.ts` — manual screenshot generator.
 
-## Env vars (to wire in production)
+## Why retired
 
-| Env var | Example |
-|---------|---------|
-| `NEXT_PUBLIC_DOWNLOAD_MACOS` | `https://downloads.operatoruplift.com/operator-uplift-1.0.0-mac.dmg` |
-| `NEXT_PUBLIC_DOWNLOAD_WINDOWS` | `https://downloads.operatoruplift.com/operator-uplift-1.0.0-setup.exe` |
-| `NEXT_PUBLIC_DOWNLOAD_LINUX` | `https://downloads.operatoruplift.com/operator-uplift-1.0.0-linux.AppImage` |
+The desktop app slipped to Q3 2026 beta. Advertising a download in the
+hero CTA implied the binary existed today; users who clicked got a
+fallback path with no working installer. The new flow:
 
-Rotate URLs by editing the Vercel env vars and redeploying. No code
-change required.
+1. Hero CTA points at `/login?returnTo=/integrations` so the only
+   advertised path is the working web app.
+2. FAQ Q5 + paywall surface the upcoming Mac app honestly with a
+   `(beta Q3 2026)` qualifier.
+3. The `DownloadWidget` reference component said "Desktop app in
+   development, macOS beta Q3 2026" but no live page imported it.
+   PR #325 removed it as dead code.
 
-## Acceptance tests
-
-```bash
-pnpm exec playwright test tests/e2e/download-cta.spec.ts --reporter=list
-```
-
-Expected:
-
-```
-  ✓ Mac UA gets "Download for Mac" CTA
-  ✓ Windows UA gets "Download for Windows" CTA
-  ✓ picking Linux from the dropdown overrides the default
-  3 passed
-```
-
-## Manual smoke (Chrome DevTools)
-
-1. Open DevTools → Sensors → Override user agent → "Safari - Mac" →
-   reload. Primary button reads `Download for Mac`.
-2. Switch to "Chrome - Windows" → reload. Primary button reads
-   `Download for Windows`.
-3. Click `Other downloads` dropdown, pick `Linux`. Primary button now
-   reads `Download for Linux` and data-os attribute is `linux`.
-
-## Rollback
-
-```
-git revert <W1A-download-1 commit>
-```
-
-Reverts `config/downloads.ts`, `src/components/DownloadCTA.tsx`, and
-the one-line Hero import+render. `DownloadWidget` is untouched.
+When the desktop app actually ships, the implementation pattern in
+git history (search for `DownloadCTA` or `detectOS`) is the starting
+point.
