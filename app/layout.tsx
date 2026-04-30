@@ -5,7 +5,11 @@ import "./globals.css";
 
 export const viewport: Viewport = {
   themeColor: '#F97316',
-  colorScheme: 'dark',
+  // Marketing surfaces use the light palette (PR #309) and the
+  // dashboard keeps a dark palette via its own data-theme opt-in,
+  // so advertise both to the UA. Forms, scrollbars, and selection
+  // chrome adapt to whichever wrapper is active.
+  colorScheme: 'light dark',
   width: 'device-width',
   initialScale: 1,
 };
