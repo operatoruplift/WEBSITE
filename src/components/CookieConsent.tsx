@@ -8,6 +8,10 @@ import { usePathname } from 'next/navigation';
  * keeps the dark palette. The cookie banner is rendered at root
  * layout so it doesn't sit inside either themed wrapper, which
  * means we route-switch the banner's class set explicitly.
+ *
+ * /demo/hackathon explicitly stays dark (PR #321) because its design
+ * language is dark-first, so it's intentionally NOT in this list. The
+ * dark variant of the banner reads correctly there.
  */
 const MARKETING_PREFIXES = [
     '/',
@@ -19,12 +23,14 @@ const MARKETING_PREFIXES = [
     '/privacy',
     '/store',
     '/terms',
-    '/demo',
 ];
+
+const DARK_DEMO_PATHS = new Set(['/demo/hackathon']);
 
 function isMarketingRoute(pathname: string | null): boolean {
     if (!pathname) return true;
     if (pathname === '/') return true;
+    if (DARK_DEMO_PATHS.has(pathname)) return false;
     return MARKETING_PREFIXES.some(p => p !== '/' && pathname.startsWith(p));
 }
 
