@@ -10,15 +10,18 @@ const Navbar: React.FC<NavbarProps> = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const navItems = [
-    { name: 'HOW IT WORKS', targetId: 'product' },
-    { name: 'HELPERS', targetId: 'store', href: '/store' },
-    // DEMO scrolls to the video section on the homepage so the nav
-    // link + the Hero's "Watch 90s demo" CTA + the DemoVideo <section
-    // id="demo-video"> are one surface. See docs/research/DESIGN.md,
-    // single source of truth for "watch the demo."
+    // April 30 2026 trim. HOW IT WORKS pointed at #product which the
+    // homepage no longer renders. HELPERS sent users to the dashboard
+    // /store page, off-topic for marketing. BLOG had no posts yet so
+    // the link surfaced an empty page; bring it back when there are
+    // real posts. See PR #308.
+    //
+    // WATCH DEMO scrolls to the homepage video so the nav link + the
+    // Hero "Watch 90s demo" CTA + the DemoVideo <section id="demo-video">
+    // are one surface.
     { name: 'WATCH DEMO', targetId: 'demo-video', href: '/#demo-video' },
-    { name: 'PRIVACY', targetId: 'security' },
-    { name: 'BLOG', targetId: 'blog', href: '/blog' },
+    { name: 'PRICING', targetId: 'pricing', href: '/#pricing' },
+    { name: 'FAQ', targetId: 'faq', href: '/#faq' },
   ];
 
   return (

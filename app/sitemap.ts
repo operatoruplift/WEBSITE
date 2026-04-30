@@ -26,9 +26,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: HOST, lastModified: now, changeFrequency: 'weekly', priority: 1 },
 
     // Public product surfaces in roughly the order a consumer follows.
-    { url: `${HOST}/product`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    // /product was retired in #308, the homepage is now the single
+    // source of truth for "what does this do?"
     { url: `${HOST}/pricing`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${HOST}/store`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${HOST}/docs`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
     { url: `${HOST}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
     { url: `${HOST}/press-kit`, lastModified: now, changeFrequency: 'monthly', priority: 0.4 },
