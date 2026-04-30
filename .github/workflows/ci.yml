@@ -126,6 +126,7 @@ jobs:
             tests/e2e/docs-sections.spec.ts \
             tests/e2e/supabase-getTokenFromRequest.spec.ts \
             tests/e2e/apiHelpers-errorResponse.spec.ts \
+            tests/e2e/auditLog-getOnChainRecord.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure
