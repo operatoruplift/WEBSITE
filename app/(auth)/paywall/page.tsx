@@ -161,7 +161,7 @@ export default function PaywallPage() {
     ];
     const FREE_FEATURES = [
         'Browse the helpers store',
-        'Free Mac app',
+        'Mac app (beta Q3 2026)',
         'Use your own ChatGPT or Claude key',
     ];
 

@@ -18,11 +18,11 @@ const faqs = [
   },
   {
     q: 'Which AI does it use?',
-    a: 'Whichever you want. Claude, ChatGPT, Gemini, Grok, or even an AI running on your own laptop. It picks the best one for each task, but you can switch with one click.',
+    a: 'Whichever you want. Claude, ChatGPT, Gemini, Grok, DeepSeek, and Mistral are wired in today. Ollama on your own laptop runs through the desktop app on the roadmap. Switch between any of them with one click; it picks the best one for each task by default.',
   },
   {
     q: 'How do I use it?',
-    a: 'Sign up on the website and you\u2019re working in about a minute. There\u2019s also a free Mac app, with Windows and Linux on the way. No setup files, no manuals.',
+    a: 'Sign up on the website and you\u2019re working in about a minute. No setup files, no manuals. A free desktop app for Mac is in development with a beta planned for Q3 2026; Windows and Linux follow.',
   },
   {
     q: 'What\u2019s an "agent"?',
