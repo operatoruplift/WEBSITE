@@ -527,3 +527,25 @@
 .theme-light .docs-prose h2 { color: #0A0A0A; }
 .theme-light .docs-prose h3 { color: #0A0A0A; }
 .theme-light .docs-prose blockquote { color: #18181B; }
+
+/* ------------------------------------------------------------------
+   Reduced-motion respect.
+
+   Users with vestibular sensitivities, attention disorders, or just
+   preference can opt out of motion via the OS setting. We honor it by
+   collapsing animation/transition durations to near-zero so the UI
+   still updates instantly without the stomach-churning sweeps.
+
+   This catches Tailwind animate-* utilities, the marquee, the FadeIn
+   opacity transitions, and any third-party CSS animations. The
+   HeroAnimation canvas separately checks matchMedia in JS and skips
+   its rAF loop entirely (see src/components/HeroAnimation.tsx).
+------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

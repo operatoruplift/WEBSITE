@@ -24,6 +24,15 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Respect prefers-reduced-motion: users with vestibular issues or
+    // attention disorders opt out of motion at the OS level. Skip the
+    // rAF loop entirely; the canvas stays blank and the hero composition
+    // still reads (the visualization is decorative, not load-bearing).
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion) return;
+    }
+
     let animationFrameId: number;
     let width = 0;
     let height = 0;
