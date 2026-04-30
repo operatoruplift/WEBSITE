@@ -71,8 +71,11 @@ const Comparison: React.FC = () => {
             like it's been cut off by the viewport. */}
         <FadeIn delay={200} className="w-full block">
           <div className="relative -mx-6 px-6 md:mx-0 md:px-0">
-            {/* Right-side fade, visible on mobile only, signals horizontal scroll */}
-            <div className="pointer-events-none absolute top-0 right-0 w-8 h-full bg-gradient-to-l from-[#0A0A0A] to-transparent z-10 md:hidden" />
+            {/* Right-side fade, visible on mobile only, signals horizontal scroll.
+                Uses bg-background so the fade tracks the theme palette. The
+                earlier hardcoded #0A0A0A rendered as a black bar on the
+                light marketing page. */}
+            <div className="pointer-events-none absolute top-0 right-0 w-8 h-full bg-gradient-to-l from-background to-transparent z-10 md:hidden" />
             <div className="overflow-x-auto">
               <div className="max-w-[900px] mx-auto rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm">
                 <table className="w-full text-sm">

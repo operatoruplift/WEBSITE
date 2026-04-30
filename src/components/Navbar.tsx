@@ -29,8 +29,10 @@ const Navbar: React.FC<NavbarProps> = () => {
           <Logo className="w-8 h-8 md:w-10 md:h-10" />
         </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-3 lg:space-x-4">
+        {/* Desktop Navigation: lg and above. Below lg, the hamburger
+            menu surfaces the same items so tablet (md) users still
+            have a way to reach Pricing / FAQ / Docs. */}
+        <div className="hidden lg:flex items-center space-x-3 lg:space-x-4">
           <div className="hidden lg:flex items-center gap-8 mr-6">
             {navItems.map((item) => (
               <a
@@ -82,10 +84,12 @@ const Navbar: React.FC<NavbarProps> = () => {
           </div>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Hamburger menu button: shows on mobile + tablet (below lg)
+            so tablet users can reach the nav items that the desktop
+            bar would otherwise hide. */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden flex flex-col items-center justify-center w-10 h-10 space-y-1.5 z-50"
+          className="lg:hidden flex flex-col items-center justify-center w-10 h-10 space-y-1.5 z-50"
           aria-label="Toggle menu"
         >
           <span className={`w-6 h-0.5 bg-white transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
@@ -94,9 +98,9 @@ const Navbar: React.FC<NavbarProps> = () => {
         </button>
       </nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile + tablet menu overlay (below lg). */}
       <div
-        className={`md:hidden fixed inset-0 bg-background/98 backdrop-blur-md z-40 transition-all duration-300 ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        className={`lg:hidden fixed inset-0 bg-background/98 backdrop-blur-md z-40 transition-all duration-300 ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
         style={{ top: '72px' }}
       >
         <div className="flex flex-col items-start px-6 py-8 space-y-6">
@@ -131,11 +135,11 @@ const Navbar: React.FC<NavbarProps> = () => {
           </a>
           
           <Link
-            href="/app"
+            href="/paywall"
             className="text-sm font-bold bg-primary text-white px-4 py-3 rounded-sm hover:bg-primary/80 transition-colors uppercase tracking-wide w-full text-center shadow-[0_0_12px_rgba(231,118,48,0.3)]"
             onClick={() => setMobileMenuOpen(false)}
           >
-            Open the app
+            Try it free
           </Link>
 
           <Link
