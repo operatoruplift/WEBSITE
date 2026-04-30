@@ -27,7 +27,15 @@
 
 @layer base {
   * { margin:0; padding:0; }
-  html { scroll-behavior: auto; }
+  html {
+    scroll-behavior: auto;
+    /* Fixed Navbar is ~72px on mobile and ~88px on desktop. Without
+     * scroll-padding-top the navbar overlays the section heading when
+     * a user clicks a hash anchor (e.g. /#pricing or /#faq), so the
+     * h2 lands hidden behind the bar. 96px gives a small breathing
+     * gap below the bar at every breakpoint. */
+    scroll-padding-top: 96px;
+  }
   body {
     background: var(--color-background);
     color: var(--color-foreground);
