@@ -183,6 +183,15 @@
 /* Text accents that lean on rgba(255,255,255) for dim labels. */
 .theme-light .text-\[\#a1a1aa\] { color: #4B5563; }
 .theme-light .text-\[\#71717a\] { color: #6B7280; }
+/* Same family at uppercase: Tailwind preserves arbitrary-value casing,
+ * and JSX in this repo uses both forms. Map both so light mode covers
+ * the marketing routes without editing each component. */
+.theme-light .text-\[\#A1A1AA\] { color: #4B5563; }
+.theme-light .text-\[\#71717A\] { color: #6B7280; }
+.theme-light .text-\[\#52525B\] { color: #6B7280; }
+.theme-light .text-\[\#D4D4D8\] { color: #27272A; }
+.theme-light .text-\[\#E5E5E5\] { color: #18181B; }
+.theme-light .text-\[\#FAFAFA\] { color: #0A0A0A; }
 
 /* Selection contrast: dark page used dark fg on light bg; flip it. */
 .theme-light::selection { background-color: #0A0A0A; color: #FAFAFA; }
