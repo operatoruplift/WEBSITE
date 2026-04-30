@@ -2,12 +2,15 @@ import { test, expect, type Page } from '@playwright/test';
 
 /**
  * W1A-download-1 acceptance. The Hero download CTA picks the right
- * installer per OS and supports manual override via the dropdown.
+ * installer per OS automatically.
  *
  * Covers:
  *  - macOS userAgent → primary button says "Download for Mac".
  *  - Windows userAgent → primary button says "Download for Windows".
- *  - Manual override via the dropdown changes both label and link.
+ *
+ * The "Other downloads" dropdown was removed in PR #310 (user feedback
+ * called it repetitive next to the Sign-In primary CTA). Users on a
+ * different OS get the installer via /docs.
  *
  * Run:
  *   pnpm exec playwright test tests/e2e/download-cta.spec.ts --reporter=list
@@ -47,15 +50,10 @@ test('Windows UA selects the Windows install option', async ({ browser }) => {
     await expect(primary).toContainText(DOWNLOAD_OR_EARLY_ACCESS_RE('Windows'));
 });
 
-test('picking Linux from the dropdown overrides the default', async ({ browser }) => {
+test('Mac UA does not show an "Other downloads" dropdown', async ({ browser }) => {
     const page = await withUserAgent(browser, UA_MAC);
     await page.goto('/');
-
-    await expect(page.getByTestId('download-primary')).toHaveAttribute('data-os', 'macos');
-
-    await page.getByTestId('download-other-toggle').click();
-    await page.getByTestId('download-option-linux').click();
-
-    await expect(page.getByTestId('download-primary')).toHaveAttribute('data-os', 'linux');
-    await expect(page.getByTestId('download-primary')).toContainText(DOWNLOAD_OR_EARLY_ACCESS_RE('Linux'));
+    // The dropdown was removed in PR #310 — assert it stays gone.
+    await expect(page.getByTestId('download-other-toggle')).toHaveCount(0);
+    await expect(page.getByTestId('download-menu')).toHaveCount(0);
 });
