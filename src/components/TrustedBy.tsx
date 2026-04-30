@@ -3,22 +3,25 @@ import React from 'react';
 import { providerLogos } from './ProviderLogos';
 
 const TrustedBy: React.FC = () => {
-  // Pinned to the latest models live on each provider as of the
-  // April 2026 marketing refresh. The chat router (lib/llm.ts +
-  // ModelSelector) ships these specific IDs, so the marquee names
-  // mirror what the user actually picks at runtime.
+  // Marquee entries mirror the models we actually route to in
+  // lib/llm.ts::mapModelId, so a user reading "Claude Haiku 4.5" or
+  // "Gemini 2.5 Flash" can pick that exact model in /chat. Refreshed
+  // April 30 2026: added Haiku 4.5, Gemini 2.5 Flash, and DeepSeek V3
+  // to match the latest routing table; dropped models we don't ship
+  // (Qwen 3, Phi-4) so the marquee no longer overpromises.
   const models = [
     { name: "Claude Opus 4.7", provider: "Anthropic" },
     { name: "Claude Sonnet 4.6", provider: "Anthropic" },
+    { name: "Claude Haiku 4.5", provider: "Anthropic" },
     { name: "GPT-4.1", provider: "OpenAI" },
     { name: "GPT-4o", provider: "OpenAI" },
     { name: "Gemini 2.5 Pro", provider: "Google" },
+    { name: "Gemini 2.5 Flash", provider: "Google" },
     { name: "Grok 3", provider: "xAI" },
-    { name: "DeepSeek-R1", provider: "DeepSeek" },
+    { name: "DeepSeek V3", provider: "DeepSeek" },
+    { name: "DeepSeek R1", provider: "DeepSeek" },
     { name: "Llama 4 Maverick", provider: "Meta" },
-    { name: "Mistral Large 25.03", provider: "Mistral AI" },
-    { name: "Qwen 3", provider: "Alibaba" },
-    { name: "Phi-4", provider: "Microsoft" },
+    { name: "Mistral Large", provider: "Mistral AI" },
     { name: "Ollama", provider: "Ollama" },
     { name: "LM Studio", provider: "LM Studio" },
   ];

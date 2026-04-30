@@ -50,8 +50,8 @@ export const APP_CONTENT: AppData & { problem: ProblemData; market: MarketData }
   },
   hero: {
     visionTag: "AI ASSISTANT",
-    headline: "Inbox and calendar, on autopilot.",
-    subhead: "AI drafts and schedules. You approve every send.",
+    headline: "AI that runs on your terms.",
+    subhead: "Drafts your email, schedules your meetings. Nothing goes out without your tap.",
     description: "",
     contractAddress: "",
     contractLabel: "",

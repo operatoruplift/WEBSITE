@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 import HeroAnimation from '@/src/components/HeroAnimation';
-import { DownloadCTA } from '@/src/components/DownloadCTA';
 import TrustedBy from '@/src/components/TrustedBy';
 import AddressDisplay from '@/src/components/AddressDisplay';
 import { APP_CONTENT } from '@/src/services/dataService';
@@ -72,11 +71,12 @@ const Hero: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/50 pointer-events-none"></div>
           </div>
 
-          {/* CTAs: one primary action (sign in for the web app),
-              one secondary (watch the recorded demo), and the
-              OS-aware desktop installer. The DownloadCTA replaces
-              the old "Try it free" + OS-tabs widget so we don't
-              show three sign-in entry points. */}
+          {/* Single primary action (sign in for the web app) plus a
+              secondary anchor to the recorded demo. The desktop
+              installer CTA was dropped per user feedback (the Hero
+              already pushes sign-in, and a second orange button for
+              "Get early access for Mac" + the OS picker read as
+              repetitive). Desktop installers stay reachable via /docs. */}
           <FadeIn delay={800}>
             <div className="flex flex-col sm:flex-row items-start gap-3 mb-4">
               <Link href="/login?returnTo=/integrations"
@@ -90,10 +90,6 @@ const Hero: React.FC = () => {
                 Watch 90s demo
               </a>
             </div>
-            <p className="text-[11px] text-gray-500 mb-4 max-w-md">
-              Want to look around first? <Link href="/chat" className="text-gray-300 hover:text-white underline underline-offset-4 decoration-dotted">Try the demo</Link>, no signup, nothing&apos;s real yet.
-            </p>
-            <DownloadCTA />
           </FadeIn>
 
           {/* Works With Any Model (Marquee) */}
