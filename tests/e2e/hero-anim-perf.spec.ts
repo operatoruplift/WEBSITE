@@ -30,15 +30,20 @@ test('hero canvas animation pauses when scrolled offscreen', async ({ page }) =>
     // Wait for the canvas to mount + the rAF loop to start.
     await page.waitForTimeout(2_000);
 
-    // Hero is in view: rAF should be firing actively.
+    // Hero is in view: rAF should be firing actively. Threshold is >5
+    // (not ~60) because headless Chromium under load can throttle the
+    // event loop quite hard (observed 13/s on a heavy local box). The
+    // false-positive we care about is "loop is running at all" vs.
+    // "loop is completely off"; the 5 threshold catches both extremes
+    // while tolerating CI noise.
     const onscreenStart = await page.evaluate(() => window.__rafCount);
     await page.waitForTimeout(1_000);
     const onscreenEnd = await page.evaluate(() => window.__rafCount);
     const onscreenRate = onscreenEnd - onscreenStart;
     expect(
         onscreenRate,
-        `expected onscreen rAF ~60/s, got ${onscreenRate}/s. Animation may not be running.`,
-    ).toBeGreaterThan(20);
+        `expected onscreen rAF firing (>5/s), got ${onscreenRate}/s. Animation may not be running.`,
+    ).toBeGreaterThan(5);
 
     // Scroll well past the hero.
     await page.evaluate(() => window.scrollTo({ top: 2000, behavior: 'instant' }));
