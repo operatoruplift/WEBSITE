@@ -23,7 +23,7 @@ export default function BlogPage() {
         <div className="theme-light w-full bg-background min-h-screen">
             <Navbar currentPage="blog" />
 
-            <div className="pt-32 pb-24 px-6 md:px-12 max-w-[1200px] mx-auto">
+            <main className="pt-32 pb-24 px-6 md:px-12 max-w-[1200px] mx-auto">
                 {/* Header */}
                 <FadeIn>
                     <Link href="/" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-colors mb-8">
@@ -79,7 +79,7 @@ export default function BlogPage() {
                         </FadeIn>
                     ))}
                 </div>
-            </div>
+            </main>
 
             <Footer />
         </div>

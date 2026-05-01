@@ -52,7 +52,7 @@ export default function PricingPage() {
         <div className="theme-light w-full bg-background min-h-screen">
             <Navbar currentPage="pricing" />
 
-            <div className="pt-32 pb-24 px-6 md:px-12">
+            <main className="pt-32 pb-24 px-6 md:px-12">
                 <div className="max-w-[1200px] mx-auto">
                     {/* Header */}
                     <div className="text-center mb-16">
@@ -114,7 +114,7 @@ export default function PricingPage() {
                         </div>
                     </FadeIn>
                 </div>
-            </div>
+            </main>
 
             <Footer />
         </div>

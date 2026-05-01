@@ -30,13 +30,20 @@ export default function Home() {
   return (
     <div className="theme-light w-full bg-background min-h-screen">
       <Navbar currentPage="home" />
-      <Hero />
-      <LocalFirst />
-      <DemoVideo />
-      <Comparison />
-      <UseCases />
-      <Pricing />
-      <FAQ />
+      {/* Wrap content sections in <main> so the page exposes a proper
+          landmark to assistive tech and "skip to main content" UX.
+          The Hero, sections, and conversion blocks live inside;
+          Navbar (already <nav>) and Footer (already <footer>) stay
+          outside as their own landmarks. */}
+      <main>
+        <Hero />
+        <LocalFirst />
+        <DemoVideo />
+        <Comparison />
+        <UseCases />
+        <Pricing />
+        <FAQ />
+      </main>
       <Footer />
     </div>
   );

@@ -8,7 +8,9 @@ export default function TermsPage() {
   return (
     <div className="theme-light w-full bg-background min-h-screen">
       <Navbar currentPage="home" />
-      <Terms />
+      <main>
+        <Terms />
+      </main>
       <Footer />
     </div>
   );

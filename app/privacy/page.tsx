@@ -8,7 +8,9 @@ export default function PrivacyPage() {
   return (
     <div className="theme-light w-full bg-background min-h-screen">
       <Navbar currentPage="home" />
-      <Privacy />
+      <main>
+        <Privacy />
+      </main>
       <Footer />
     </div>
   );
