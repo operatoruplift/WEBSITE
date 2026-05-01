@@ -36,9 +36,9 @@ test('hero canvas animation pauses when scrolled offscreen', async ({ page }) =>
     // false-positive we care about is "loop is running at all" vs.
     // "loop is completely off"; the 5 threshold catches both extremes
     // while tolerating CI noise.
-    const onscreenStart = await page.evaluate(() => window.__rafCount);
+    const onscreenStart = await page.evaluate(() => (window as unknown as { __rafCount: number }).__rafCount);
     await page.waitForTimeout(1_000);
-    const onscreenEnd = await page.evaluate(() => window.__rafCount);
+    const onscreenEnd = await page.evaluate(() => (window as unknown as { __rafCount: number }).__rafCount);
     const onscreenRate = onscreenEnd - onscreenStart;
     expect(
         onscreenRate,
@@ -51,9 +51,9 @@ test('hero canvas animation pauses when scrolled offscreen', async ({ page }) =>
     await page.waitForTimeout(800);
 
     // Hero is offscreen: rAF should be paused.
-    const offscreenStart = await page.evaluate(() => window.__rafCount);
+    const offscreenStart = await page.evaluate(() => (window as unknown as { __rafCount: number }).__rafCount);
     await page.waitForTimeout(1_000);
-    const offscreenEnd = await page.evaluate(() => window.__rafCount);
+    const offscreenEnd = await page.evaluate(() => (window as unknown as { __rafCount: number }).__rafCount);
     const offscreenRate = offscreenEnd - offscreenStart;
     expect(
         offscreenRate,

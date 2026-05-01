@@ -54,9 +54,9 @@ test.describe('prefers-reduced-motion', () => {
         await page.goto('/', { waitUntil: 'load', timeout: 60_000 });
         await page.waitForTimeout(2_000);
 
-        const before = await page.evaluate(() => window.__rafCount);
+        const before = await page.evaluate(() => (window as unknown as { __rafCount: number }).__rafCount);
         await page.waitForTimeout(1_500);
-        const after = await page.evaluate(() => window.__rafCount);
+        const after = await page.evaluate(() => (window as unknown as { __rafCount: number }).__rafCount);
         const rate = after - before;
 
         // Without reduced-motion: 30-60 rAF/1.5s. With: 0-2 (React internal).
