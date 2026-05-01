@@ -3,28 +3,10 @@ export interface NavLink {
   href: string;
 }
 
-export interface DownloadOption {
-  id: string;
-  label: string;
-  url: string;
-  version: string;
-  type: 'macos' | 'windows' | 'linux' | 'ios' | 'android';
-}
-
 export interface HeroData {
   visionTag: string;
   headline: string;
   subhead: string;
-  description: string;
-  contractAddress: string;
-  contractLabel: string;
-  downloads: {
-    macos?: DownloadOption;
-    windows: DownloadOption;
-    linux?: DownloadOption;
-    ios?: DownloadOption;
-    android?: DownloadOption;
-  };
 }
 
 export interface FooterLink {
