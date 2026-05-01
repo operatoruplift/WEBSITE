@@ -51,6 +51,20 @@
     background-color: var(--color-foreground);
     color: #000;
   }
+
+  /* Focus indicators. Tailwind's preflight zeroes out default outlines,
+   * which leaves keyboard users with no visual cue when tabbing through
+   * buttons/links. Provide a brand-colored ring that:
+   *   - only shows on :focus-visible (mouse clicks don't trigger it)
+   *   - works on light and dark surfaces (offset-shadow rather than a
+   *     box-shadow inside the element, so it stays visible regardless
+   *     of element padding/background)
+   * WCAG 2.1 SC 2.4.7 (Focus Visible). */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 }
 
 @layer components {
