@@ -384,8 +384,10 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
   }, []);
 
   return (
-    <div className={`relative ${className}`}>
-      <canvas ref={canvasRef} className="w-full h-full block" />
+    <div className={`relative ${className}`} aria-hidden="true">
+      {/* Decorative particle visualization. role + aria-hidden hide it
+          from assistive tech: there's no information here, just motion. */}
+      <canvas ref={canvasRef} className="w-full h-full block" role="presentation" aria-hidden="true" />
     </div>
   );
 };
