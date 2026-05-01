@@ -8,7 +8,9 @@ export default function ContactPage() {
   return (
     <div className="theme-light w-full bg-background min-h-screen">
       <Navbar currentPage="contact" />
-      <Contact />
+      <main>
+        <Contact />
+      </main>
       <Footer />
     </div>
   );
