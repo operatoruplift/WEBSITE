@@ -131,6 +131,7 @@ jobs:
             tests/e2e/reduced-motion.spec.ts \
             tests/e2e/cookie-banner-theme.spec.ts \
             tests/e2e/landmarks.spec.ts \
+            tests/e2e/console-cleanliness.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure
