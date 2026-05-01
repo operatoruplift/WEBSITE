@@ -97,11 +97,3 @@ export const APP_CONTENT: AppData = {
     }
   }
 };
-
-export const fetchAppData = async (): Promise<AppData> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(APP_CONTENT);
-    }, 50);
-  });
-};
