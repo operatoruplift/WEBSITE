@@ -28,10 +28,15 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const ROOTS = ['src', 'app', 'lib'];
-const EXTS = new Set(['.ts', '.tsx', '.js', '.jsx']);
+const ROOTS = ['src', 'app', 'lib', 'public'];
+// .json catches user-facing JSON like public/manifest.json, where a
+// retired marketing claim slipped through (PRs #339/#340) because the
+// scanner only walked source code. Don't add .md broadly: docs/research
+// has historical patterns that legitimately reference removed phrases
+// for archaeology.
+const EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.json']);
 const SKIP_DIRS = new Set(['node_modules', '.next', 'dist', 'build', 'test-results']);
-const SKIP_FILE_PATTERNS = [/\.test\./, /\.spec\./, /\.stories\./];
+const SKIP_FILE_PATTERNS = [/\.test\./, /\.spec\./, /\.stories\./, /package(-lock)?\.json$/, /pnpm-lock\.yaml$/, /tsconfig.*\.json$/];
 
 /**
  * Each rule = { pattern: RegExp, retiredIn: 'PR#XXX', message: string }.
@@ -156,6 +161,21 @@ const RULES = [
         pattern: /change:\s*['"]Local,\s+encrypted['"]|change:\s*['"]On your computer['"]/,
         retiredIn: 'PR#233 (/app dashboard stat tile honesty)',
         message: 'Dashboard stat-tile sublabels "Local, encrypted" and "On your computer" were retired. localStorage is browser-scoped, but no encryption is applied. Use "In this browser" instead.',
+    },
+    {
+        pattern: /Local-first AI agents/i,
+        retiredIn: 'PR#339 (PWA manifest honesty)',
+        message: '"Local-first AI agents" was the old PWA manifest description. The web app is Vercel-routed and not local-first today. Use the consumer pitch: "AI assistant that drafts your email, schedules your meetings..."',
+    },
+    {
+        pattern: /no cloud required/i,
+        retiredIn: 'PR#339',
+        message: '"no cloud required" is false: the web app routes through Vercel and the AI provider you pick (Anthropic/OpenAI/etc.). Use the upcoming "desktop app routes through Ollama on your machine" framing for that path instead.',
+    },
+    {
+        pattern: /monetize\s+(autonomous\s+)?agents/i,
+        retiredIn: 'PR#339',
+        message: '"monetize autonomous agents on Solana" is not the consumer pitch any more. The product is an AI assistant for inbox + calendar with signed receipts; agent monetization is not the lead.',
     },
 ];
 
