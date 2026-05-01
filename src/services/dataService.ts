@@ -13,18 +13,6 @@ export const APP_CONTENT: AppData = {
     visionTag: "AI ASSISTANT",
     headline: "AI that runs on your terms.",
     subhead: "Drafts your email, schedules your meetings. Nothing goes out without your tap.",
-    description: "",
-    contractAddress: "",
-    contractLabel: "",
-    downloads: {
-      windows: {
-        id: "windows",
-        label: "Download for Windows",
-        url: "https://github.com/operatoruplift/releases",
-        version: "v0.0.1-beta (x64)",
-        type: "windows"
-      }
-    }
   },
   contact: {
     tag: "GET IN TOUCH",

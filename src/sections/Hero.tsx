@@ -2,7 +2,6 @@ import React from 'react';
 import Link from 'next/link';
 import HeroAnimation from '@/src/components/HeroAnimation';
 import TrustedBy from '@/src/components/TrustedBy';
-import AddressDisplay from '@/src/components/AddressDisplay';
 import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn, GlideText } from '@/src/components/Animators';
 
@@ -47,22 +46,6 @@ const Hero: React.FC = () => {
               {data.subhead}
             </p>
           </FadeIn>
-
-          {/* Optional description (empty in the trimmed copy; only renders when set) */}
-          {data.description && (
-            <FadeIn delay={600}>
-              <p className="text-xs sm:text-sm md:text-base text-gray-400 mb-4 md:mb-6 max-w-xl leading-relaxed">
-                {data.description}
-              </p>
-            </FadeIn>
-          )}
-          {data.contractAddress && (
-            <FadeIn delay={600}>
-              <div className="mb-6 md:mb-8">
-                <AddressDisplay address={data.contractAddress} label={data.contractLabel} />
-              </div>
-            </FadeIn>
-          )}
 
           {/* The mobile/tablet duplicate of HeroAnimation was a 400-600px
               empty card on the new light palette: the canvas particles
