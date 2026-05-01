@@ -106,8 +106,42 @@ test('/paywall sells real features, not the removed council', async ({ page }) =
     await expect(page.getByText(/Drafts your replies/i)).toBeVisible({ timeout: 10_000 });
     await expect(page.getByRole('heading', { name: /Pick a plan/i })).toBeVisible();
 
+    // Mac app honesty (PR #324): the Free tier feature list must not
+    // claim a free Mac app exists today. The desktop binary is in
+    // development with a beta planned for Q3 2026; the bullet must
+    // include the "(beta Q3 2026)" qualifier or similar future-tense
+    // framing. Catches regressions back to the unqualified "Free Mac app".
     const body = await page.locator('body').innerText();
+    if (/Mac app/i.test(body)) {
+        // If the bullet exists, it MUST be qualified
+        expect(body, 'paywall Mac app must be qualified as upcoming, not shipping today').toMatch(
+            /Mac app[\s\S]{0,40}(beta|coming|in development|roadmap)/i,
+        );
+    }
+
     assertNoBannedPhrases(body, '/paywall');
+});
+
+test('homepage FAQ frames Mac app as upcoming, not shipping', async ({ page }) => {
+    // PR #324 made the FAQ "How do I use it?" answer honest: "A free
+    // desktop app for Mac is in development with a beta planned for
+    // Q3 2026; Windows and Linux follow." Lock that wording in so a
+    // future PR can't silently regress to "There's also a free Mac app".
+    await page.goto('/#faq');
+
+    const useItHeading = page.getByText('How do I use it?').first();
+    await expect(useItHeading).toBeVisible({ timeout: 10_000 });
+    await useItHeading.click();
+    // FadeIn animation
+    await page.waitForTimeout(500);
+
+    const faqBody = await page.locator('body').innerText();
+    // The new framing must include both "in development" and a future
+    // qualifier (Q3 2026 today, but also acceptable: "beta", "roadmap").
+    // The OLD copy said "there's also a free Mac app" with no qualifier.
+    expect(faqBody, 'FAQ must frame Mac app as upcoming').toMatch(
+        /(desktop app|Mac).*?(in development|beta|Q[1-4] 20\d\d|roadmap)/i,
+    );
 });
 
 test('/store leads with Helpers and free-in-beta pricing', async ({ page }) => {
