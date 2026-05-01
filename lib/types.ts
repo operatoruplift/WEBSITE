@@ -27,61 +27,6 @@ export interface HeroData {
   };
 }
 
-export interface ProductFeature {
-  id: string;
-  navTitle: string;
-  cardTitle: string;
-  description: string;
-  iconType: 'kanban' | 'globe' | 'terminal' | 'message' | 'check'; // mapped to icons
-}
-
-export interface ProductSectionData {
-  tag: string;
-  headline: string;
-  subhead: string;
-  features: ProductFeature[];
-}
-
-export interface SecurityFeature {
-  tag: string;
-  title: string;
-  description: string;
-  linkText: string;
-  linkUrl: string;
-}
-
-export interface SecuritySectionData {
-  tag: string;
-  headline: string;
-  subhead: string;
-  features: {
-    security: SecurityFeature;
-    enterprise: SecurityFeature;
-  };
-}
-
-export interface DocLink {
-  title: string;
-  description: string;
-  url: string;
-  iconType: 'terminal' | 'kanban' | 'globe';
-}
-
-export interface DeveloperDocsData {
-  tag: string;
-  headline: string;
-  description: string;
-  links: DocLink[];
-}
-
-export interface BuildWithUsData {
-  tag: string;
-  cta: string;
-  headline: string;
-  buttonText: string;
-  url: string;
-}
-
 export interface FooterLink {
   label: string;
   url?: string; // external
@@ -127,10 +72,6 @@ export interface ContactData {
 
 export interface AppData {
   hero: HeroData;
-  product: ProductSectionData;
-  security: SecuritySectionData;
-  developerDocs: DeveloperDocsData;
-  buildWithUs: BuildWithUsData;
   contact: ContactData;
   footer: FooterData;
 }
