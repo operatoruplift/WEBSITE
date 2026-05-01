@@ -35,17 +35,27 @@ const TrustedBy: React.FC = () => {
         <span className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">Works With Any Model</span>
       </div>
 
-      <div className="relative w-full overflow-hidden mask-gradient">
+      <div
+        className="relative w-full overflow-hidden mask-gradient"
+        role="region"
+        aria-label="Supported AI models"
+      >
         <div className="absolute top-0 left-0 w-12 md:w-24 h-full bg-gradient-to-r from-background to-transparent z-10"></div>
         <div className="absolute top-0 right-0 w-12 md:w-24 h-full bg-gradient-to-l from-background to-transparent z-10"></div>
 
         <div className="flex w-fit animate-marquee whitespace-nowrap">
           {marqueeItems.map((model, index) => {
             const LogoComponent = providerLogos[model.provider];
+            // The marquee duplicates the model list to make the scroll
+            // animation seamless. Hide the second half from assistive
+            // tech so screen readers don't announce "Claude Opus 4.7"
+            // (etc.) twice.
+            const isDuplicate = index >= models.length;
             return (
               <div
                 key={`${model.name}-${index}`}
                 className="flex items-center space-x-3 mx-8 opacity-50 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 cursor-default group"
+                aria-hidden={isDuplicate ? 'true' : undefined}
               >
                 {LogoComponent && (
                   <div className="text-gray-500 group-hover:text-primary transition-colors">
