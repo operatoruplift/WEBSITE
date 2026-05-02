@@ -91,9 +91,14 @@ const Navbar: React.FC<NavbarProps> = () => {
           className="lg:hidden flex flex-col items-center justify-center w-10 h-10 space-y-1.5 z-50"
           aria-label="Toggle menu"
         >
-          <span className={`w-6 h-0.5 bg-white transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-          <span className={`w-6 h-0.5 bg-white transition-all duration-300 ${mobileMenuOpen ? 'opacity-0' : ''}`} />
-          <span className={`w-6 h-0.5 bg-white transition-all duration-300 ${mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+          {/* Plain `bg-white` is not flipped by the .theme-light wrapper
+              (only `bg-white/N` opacity variants are), so the bars
+              rendered as white-on-white on the light marketing pages
+              and were effectively invisible. `bg-foreground` follows
+              the theme token, dark on light surfaces, white on dark. */}
+          <span className={`w-6 h-0.5 bg-foreground transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+          <span className={`w-6 h-0.5 bg-foreground transition-all duration-300 ${mobileMenuOpen ? 'opacity-0' : ''}`} />
+          <span className={`w-6 h-0.5 bg-foreground transition-all duration-300 ${mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
         </button>
       </nav>
 
