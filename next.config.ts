@@ -29,10 +29,10 @@ const baseConfig: NextConfig = isDesktop
               ];
           },
           async redirects() {
-              // NOTE: /docs previously redirected to help.operatoruplift.com
-              // (GitBook). We now ship an in-repo GitBook-style docs route at
-              // app/docs — that redirect is removed so the local route resolves.
-              // Keep /changelog → /blog since we never built a changelog route.
+              // /docs is now an in-repo GitBook-style route at app/docs,
+              // so it resolves locally without redirect. /changelog still
+              // redirects to /blog because we never built a separate
+              // changelog route.
               return [
                   {
                       source: '/changelog',

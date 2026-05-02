@@ -167,8 +167,8 @@ artifact. Otherwise nothing in the core flow changes.
 
 - `app/docs/layout.tsx` — sticky left sidebar nav grouped by section,
   740 px content column.
-- Seven slugs, statically pre-rendered:
-  `getting-started`, `demo-vs-real`, `approvals`, `receipts`, `x402`,
+- Six slugs, statically pre-rendered:
+  `getting-started`, `approvals`, `receipts`, `x402`,
   `integrations`, `troubleshooting`.
 - Content in `app/docs/_components/DocContent.tsx`. Every claim must
   match shipping behaviour — cross-check against the Truth table.

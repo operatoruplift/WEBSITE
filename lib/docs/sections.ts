@@ -28,12 +28,6 @@ export const DOC_SECTIONS: DocEntry[] = [
         group: 'Start here',
     },
     {
-        slug: 'demo-vs-real',
-        title: 'Demo mode vs Real mode',
-        summary: 'Two states. Demo = simulated. Real = signed receipts.',
-        group: 'Core concepts',
-    },
-    {
         slug: 'approvals',
         title: 'Approvals',
         summary: 'Every write action waits for a human click. How and why.',
