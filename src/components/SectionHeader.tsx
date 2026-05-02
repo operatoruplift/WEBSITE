@@ -27,7 +27,13 @@ export function SectionHeader({ eyebrow, title, description, className = '' }: S
                         <span className="h-px w-16 bg-[#F97316]/40" />
                     </div>
                 )}
-                <h2 className="text-3xl md:text-4xl font-medium text-foreground mb-4 tracking-tight">
+                {/* Subtle vertical gradient on the h2: foreground → 70%
+                 * opacity gives a faint depth read inspired by editorial
+                 * marketing sites (sully.ai). Falls back to the solid
+                 * `text-foreground` value for browsers that don't render
+                 * `bg-clip-text` (covered by `text-foreground` first), so
+                 * the title is never invisible. */}
+                <h2 className="text-3xl md:text-4xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] mb-4 tracking-tight">
                     {title}
                 </h2>
                 {description && (
