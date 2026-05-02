@@ -40,8 +40,8 @@ export default function PressKitPage() {
                             <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">Press Kit</span>
                             <span className="h-px w-16 bg-[#F97316]/40" />
                         </div>
-                        <h1 className="text-3xl md:text-4xl font-medium tracking-tight mb-4">
-                            Press & media resources
+                        <h1 className="text-3xl md:text-4xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] tracking-tight mb-4">
+                            Press &amp; media resources
                         </h1>
                         <p className="text-muted leading-relaxed">
                             Past coverage, founder bio, product screenshots, and the architecture deck are available on request. Drop your email and we&apos;ll send a kit within 24h.
