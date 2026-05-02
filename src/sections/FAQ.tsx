@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FadeIn } from '@/src/components/Animators';
+import { SectionHeader } from '@/src/components/SectionHeader';
 
 const faqs = [
   {
@@ -48,22 +48,11 @@ const FAQ: React.FC = () => {
   return (
     <section id="faq" className="w-full bg-background px-6 md:px-12 flex justify-center aurora-glow">
       <div className="w-full max-w-[800px] py-24">
-        {/* Section header */}
-        <div className="text-center mb-12">
-          <FadeIn>
-            <div className="inline-flex items-center gap-3 mb-6">
-              <span className="h-px w-16 bg-primary/40" />
-              <span className="text-xs font-bold tracking-[0.25em] text-primary uppercase">FAQ</span>
-              <span className="h-px w-16 bg-primary/40" />
-            </div>
-          </FadeIn>
-          <h2 className="text-3xl md:text-4xl font-medium text-white mb-4 tracking-tight">
-            Common questions
-          </h2>
-          <p className="text-gray-400">
-            Quick answers before you sign up.
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="FAQ"
+          title="Common questions"
+          description="Quick answers before you sign up."
+        />
 
         {/* FAQ items - no FadeIn wrapper, direct buttons for reliable mobile taps */}
         <div className="flex flex-col gap-3">
