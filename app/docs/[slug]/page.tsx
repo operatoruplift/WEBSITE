@@ -9,20 +9,23 @@ interface Params { params: Promise<{ slug: string }> }
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
     const { slug } = await params;
     const doc = findDoc(slug);
-    if (!doc) return { title: 'Docs, Operator Uplift' };
-    const title = `${doc.title}, Operator Uplift Docs`;
+    if (!doc) return { title: 'Docs' };
+    // Tab title becomes e.g. "Receipts | Operator Uplift" via the
+    // root template. OG/Twitter cards keep the verbose form because
+    // a social share strips the suffix.
+    const ogTitle = `${doc.title}, Operator Uplift Docs`;
     return {
-        title,
+        title: doc.title,
         description: doc.summary,
         openGraph: {
-            title,
+            title: ogTitle,
             description: doc.summary,
             type: 'article',
             url: `https://operatoruplift.com/docs/${doc.slug}`,
         },
         twitter: {
             card: 'summary_large_image',
-            title,
+            title: ogTitle,
             description: doc.summary,
         },
         alternates: {
