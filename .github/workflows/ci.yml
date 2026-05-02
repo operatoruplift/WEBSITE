@@ -127,6 +127,7 @@ jobs:
             tests/e2e/apiHelpers-errorResponse.spec.ts \
             tests/e2e/auditLog-getOnChainRecord.spec.ts \
             tests/e2e/light-mode-contrast.spec.ts \
+            tests/e2e/marketing-pages-contrast.spec.ts \
             tests/e2e/hero-anim-perf.spec.ts \
             tests/e2e/reduced-motion.spec.ts \
             tests/e2e/cookie-banner-theme.spec.ts \
