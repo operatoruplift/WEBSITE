@@ -152,19 +152,19 @@ const LocalFirst: React.FC = () => {
                         </div>
                         <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
                             <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <AnthropicLogo className="w-4 h-4" /> Claude
+                                <AnthropicLogo aria-hidden className="w-4 h-4" /> Claude
                             </span>
                             <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <OpenAILogo className="w-4 h-4" /> ChatGPT
+                                <OpenAILogo aria-hidden className="w-4 h-4" /> ChatGPT
                             </span>
                             <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <GoogleLogo className="w-4 h-4" /> Gemini
+                                <GoogleLogo aria-hidden className="w-4 h-4" /> Gemini
                             </span>
                             <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <XAILogo className="w-4 h-4" /> Grok
+                                <XAILogo aria-hidden className="w-4 h-4" /> Grok
                             </span>
                             <span className="inline-flex items-center gap-2 text-sm text-muted">
-                                <OllamaLogo className="w-4 h-4" /> Ollama
+                                <OllamaLogo aria-hidden className="w-4 h-4" /> Ollama
                                 <span className="text-[9px] font-mono font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border border-[#F97316]/40 text-[#F97316] bg-[#F97316]/10">
                                     Soon
                                 </span>
