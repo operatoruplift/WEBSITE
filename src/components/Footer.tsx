@@ -54,7 +54,11 @@ const Footer: React.FC = () => {
                 
                 <div className="lg:col-span-6 flex flex-col justify-end">
                 <div className="mt-auto">
-                    <Link href="/" className="inline-block hover:opacity-80 transition-opacity">
+                    <Link
+                      href="/"
+                      className="inline-block hover:opacity-80 transition-opacity"
+                      aria-label="Operator Uplift home"
+                    >
                       <Logo className="w-16 h-16 md:w-20 md:h-20" />
                     </Link>
                 </div>
