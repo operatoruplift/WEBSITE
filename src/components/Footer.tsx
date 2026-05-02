@@ -100,15 +100,16 @@ const Footer: React.FC = () => {
                         original text-lg + space-x-8 take over at md+
                         where the footer card is wider. */}
                     <div className="flex items-center space-x-5 md:space-x-8 flex-wrap gap-y-2">
-                        <a href={data.socials.twitter} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"><span className="text-base md:text-lg font-bold">X (Twitter)</span></a>
-                        <a href={data.socials.linkedin} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"><span className="text-base md:text-lg font-bold">LinkedIn</span></a>
-                        <a href={data.socials.github} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"><span className="text-base md:text-lg font-bold">GitHub</span></a>
+                        <a href={data.socials.twitter} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"><span className="text-base md:text-lg font-bold">X (Twitter)</span><span className="sr-only"> (opens in new tab)</span></a>
+                        <a href={data.socials.linkedin} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"><span className="text-base md:text-lg font-bold">LinkedIn</span><span className="sr-only"> (opens in new tab)</span></a>
+                        <a href={data.socials.github} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"><span className="text-base md:text-lg font-bold">GitHub</span><span className="sr-only"> (opens in new tab)</span></a>
                     </div>
                     <p className="text-gray-600 text-lg font-mono">
                         {data.copyright}
                     </p>
                     <a href="https://solana.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-muted hover:text-foreground transition-colors mt-2 text-sm font-mono">
                         Powered by <span className="font-semibold">Solana</span>
+                        <span className="sr-only"> (opens in new tab)</span>
                     </a>
                     </div>
                 </div>

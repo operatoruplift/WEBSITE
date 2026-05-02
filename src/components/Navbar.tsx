@@ -70,6 +70,7 @@ const Navbar: React.FC<NavbarProps> = () => {
                   link, leaving screen readers with no accessible name.
                   At xl+ the label paints normally next to the icon. */}
               <span className="sr-only xl:not-sr-only">Open Source</span>
+              <span className="sr-only"> (opens in new tab)</span>
             </a>
 
             <Link
@@ -141,6 +142,7 @@ const Navbar: React.FC<NavbarProps> = () => {
           >
             <GitHubIcon aria-hidden className="w-4 h-4" />
             <span>Open Source</span>
+            <span className="sr-only"> (opens in new tab)</span>
           </a>
           
           <Link
