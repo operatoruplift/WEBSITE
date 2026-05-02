@@ -45,6 +45,34 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
     const PRIMARY = '#F97316';
     const GREEN = 'rgba(34, 197, 94,';
 
+    // Theme-aware "page-bg" foreground for particles and decorations
+    // drawn directly on the canvas surface. The canvas is mounted
+    // inside the homepage's `.theme-light` wrapper, so plain white
+    // particles render as white-on-near-white = invisible. Read the
+    // `--color-foreground` token from the canvas's computed style
+    // and construct the comparable rgba.
+    //
+    // Window-internal drawing (chat bubble, message text, "UPLIFT"
+    // label, etc.) keeps its hardcoded white because the chat window
+    // background fill at line 102 is `rgba(5,5,8,0.9)`. White text
+    // on that dark surface stays white on either page theme.
+    const fgRgb = (() => {
+      const fg = getComputedStyle(canvas).getPropertyValue('--color-foreground').trim();
+      // Hex (#RRGGBB or #RGB) -> "R, G, B"; rgb()/rgba() preserved as-is.
+      if (fg.startsWith('#')) {
+        const hex = fg.length === 4
+          ? fg.slice(1).split('').map(c => c + c).join('')
+          : fg.slice(1);
+        const r = parseInt(hex.slice(0, 2), 16);
+        const g = parseInt(hex.slice(2, 4), 16);
+        const b = parseInt(hex.slice(4, 6), 16);
+        return `${r}, ${g}, ${b}`;
+      }
+      const m = fg.match(/(\d+)[\s,]+(\d+)[\s,]+(\d+)/);
+      return m ? `${m[1]}, ${m[2]}, ${m[3]}` : '255, 255, 255';
+    })();
+    const fg = (alpha: number) => `rgba(${fgRgb},${alpha})`;
+
     const resize = () => {
       width = canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth;
       height = canvas.height = canvas.parentElement?.offsetHeight || window.innerHeight;
@@ -82,7 +110,9 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
       const chars = Math.floor(text.length * Math.min(1, progress * 3));
       ctx.fillText(`[ ${text.substring(0, chars)} ]`, 0, 0);
       ctx.shadowBlur = 0;
-      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      // Decoration line drawn on the page bg, theme-aware so the
+      // mark stays visible on the light marketing surface.
+      ctx.strokeStyle = fg(0.15);
       ctx.beginPath(); ctx.moveTo(-20, 12); ctx.lineTo(20, 12); ctx.stroke();
       ctx.restore();
     };
@@ -277,14 +307,19 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
         if ((phase === 'FORM' || phase === 'GUARD') && p.isAgent) {
           particles.filter(n => n.isAgent && n !== p).forEach(n => {
             ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(n.x,n.y);
-            ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 0.5; ctx.stroke();
+            ctx.strokeStyle = fg(0.12); ctx.lineWidth = 0.5; ctx.stroke();
           });
         }
 
-        // Draw particle
+        // Draw particle. Default fill follows the theme via fg(); hero
+        // and active-agent particles stay PRIMARY orange (visible on
+        // both themes). Particles overlapping the chat window blend
+        // slightly with its dark fill, but the orange particles and
+        // the dark window itself carry the visual story so the
+        // tradeoff is acceptable.
         const alphaMod = isMobile ? 0.4 : 1;
-        ctx.fillStyle = (p.isHero || (phase !== 'FLOW' && p.isAgent)) ? PRIMARY : '#fff';
-        if ((phase === 'CHAT' || phase === 'RESPOND') && p.isAgent) ctx.fillStyle = '#fff';
+        ctx.fillStyle = (p.isHero || (phase !== 'FLOW' && p.isAgent)) ? PRIMARY : fg(1);
+        if ((phase === 'CHAT' || phase === 'RESPOND') && p.isAgent) ctx.fillStyle = fg(1);
         ctx.globalAlpha = p.alpha * alphaMod;
         ctx.beginPath(); ctx.arc(p.x, p.y, p.size*(isMobile?0.7:1), 0, Math.PI*2); ctx.fill();
         ctx.globalAlpha = 1;
@@ -296,7 +331,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
       if (phase === 'GUARD') {
         const sz = isMobile ? 130 : 160;
         ctx.save(); ctx.translate(cx, cy);
-        ctx.strokeStyle = `rgba(255,255,255,${0.15 + Math.abs(Math.sin(elapsed/200))*0.3})`;
+        // Drawn on the page bg, theme-aware via fg().
+        ctx.strokeStyle = fg(0.15 + Math.abs(Math.sin(elapsed/200))*0.3);
         ctx.lineWidth = 1; ctx.setLineDash([8, 6]);
         ctx.beginPath(); ctx.rect(-sz/2, -sz/2, sz, sz); ctx.stroke();
         ctx.setLineDash([]);
@@ -334,7 +370,8 @@ const HeroAnimation: React.FC<HeroAnimationProps> = ({ className = "w-full h-ful
           ctx.fillStyle = `rgba(231,118,48,${0.5 + Math.sin(elapsed*0.003)*0.15})`;
           ctx.fillText('[ SESSION TERMINATED ]', cx, cy - 5);
           ctx.font = "7px 'SF Mono', monospace";
-          ctx.fillStyle = 'rgba(255,255,255,0.25)';
+          // Subtitle drawn on the page bg, theme-aware via fg().
+          ctx.fillStyle = fg(0.25);
           ctx.fillText('session closed · receipt anchored', cx, cy + 12);
           ctx.restore();
         }
