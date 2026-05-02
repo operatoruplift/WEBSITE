@@ -12,9 +12,10 @@ const Footer: React.FC = () => {
     if (link.action === 'contact') return '/contact';
     if (link.action === 'terms') return '/terms';
     if (link.action === 'privacy') return '/privacy';
-    // /docs is the in-repo GitBook-style site (P9), the source of
-    // truth for product documentation.
     if (link.action === 'docs') return '/docs';
+    if (link.action === 'blog') return '/blog';
+    if (link.action === 'press') return '/press-kit';
+    if (link.action === 'pricing') return '/pricing';
     // 'product' link used to point at the standalone /product page,
     // retired in #308. Bring users back to the homepage hero, which
     // is the single source of truth for "what does this do?"

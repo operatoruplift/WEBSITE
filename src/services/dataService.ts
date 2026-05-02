@@ -78,13 +78,15 @@ export const APP_CONTENT: AppData = {
         title: "Resources",
         links: [
           { label: "Docs", action: "docs" },
-          { label: "Contact", action: "contact" }
+          { label: "Blog", action: "blog" },
+          { label: "Pricing", action: "pricing" }
         ]
       },
       company: {
         title: "Company",
         links: [
-          { label: "Contact", action: "contact" }
+          { label: "Contact", action: "contact" },
+          { label: "Press kit", action: "press" }
         ]
       },
       legal: {
