@@ -4,6 +4,7 @@ import React from 'react';
 import { FadeIn } from '@/src/components/Animators';
 import { OpenAILogo, AnthropicLogo, GoogleLogo, XAILogo } from '@/src/components/ProviderLogos';
 import { Logo as UpliftLogo } from '@/src/components/Icons';
+import { SectionHeader } from '@/src/components/SectionHeader';
 
 // Comparison rows lean on properties we can actually demonstrate today.
 // "Runs on your computer" / "Works offline" rows were removed in the
@@ -49,22 +50,11 @@ const Comparison: React.FC = () => {
           </div>
         </div>
 
-        {/* Header - centered */}
-        <div className="text-center mb-12">
-          <FadeIn>
-            <div className="inline-flex items-center gap-3 mb-6">
-              <span className="h-px w-16 bg-primary/40" />
-              <span className="text-xs font-bold tracking-[0.25em] text-primary uppercase">Compare</span>
-              <span className="h-px w-16 bg-primary/40" />
-            </div>
-          </FadeIn>
-          <h2 className="text-3xl md:text-4xl font-medium text-white mb-4 tracking-tight">
-            Why Operator Uplift?
-          </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            Other AIs run on their servers, learn from your messages, and only work if you stay loyal to one company. We don&apos;t do any of that.
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="Compare"
+          title="Why Operator Uplift?"
+          description="Other AIs run on their servers, learn from your messages, and only work if you stay loyal to one company. We don't do any of that."
+        />
 
         {/* Table - scrollable on mobile with a right-edge fade so the
             last column visibly "hints" more content, instead of looking
