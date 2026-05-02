@@ -92,12 +92,8 @@ const Footer: React.FC = () => {
                     <p className="text-gray-600 text-lg font-mono">
                         {data.copyright}
                     </p>
-                    <a href="https://solana.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-400 transition-colors mt-2 text-sm font-mono">
-                        Powered by
-                        <svg className="w-16 h-3" viewBox="0 0 508 78" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M87.5 60.8c-4 0-7.1-1.1-9.5-3.2s-3.5-5.3-3.5-9.4V30.7h-6.3v-9h6.3V10.4h11.3v11.3h10.5v9H85.8v16.8c0 1.8.5 3.2 1.4 4.1.9.9 2.3 1.4 4 1.4 1.6 0 3.3-.5 5.1-1.4v9.2c-2.6 1.3-5.4 2-8.3 2zm-48.8-.8V.5h11.3v60.5H38.7zM120.7 61c-9.5 0-17.1-7.4-17.1-20.1 0-12.6 7.6-20.1 17.1-20.1 9.5 0 17.1 7.5 17.1 20.1 0 12.7-7.6 20.1-17.1 20.1zm0-9.5c4 0 5.8-4.2 5.8-10.6 0-6.5-1.8-10.6-5.8-10.6s-5.8 4.1-5.8 10.6c0 6.4 1.8 10.6 5.8 10.6zM158.1 61c-9.5 0-17.1-7.4-17.1-20.1 0-12.6 7.6-20.1 17.1-20.1 9.5 0 17.1 7.5 17.1 20.1 0 12.7-7.6 20.1-17.1 20.1zm0-9.5c4 0 5.8-4.2 5.8-10.6 0-6.5-1.8-10.6-5.8-10.6s-5.8 4.1-5.8 10.6c0 6.4 1.8 10.6 5.8 10.6z"/>
-                            <path d="M207.2 60V38.7c0-5.5-2.7-8.2-7.3-8.2-4.7 0-7.5 3-7.5 8.2V60h-11.3V21.7h10.5v5.2c2.7-3.7 6.8-5.9 12-5.9 8.6 0 14.9 5.7 14.9 15.6V60h-11.3zM246 61c-9.5 0-17.1-7.4-17.1-20.1 0-12.6 7.6-20.1 17.1-20.1 9.5 0 17.1 7.5 17.1 20.1 0 12.7-7.6 20.1-17.1 20.1zm0-9.5c4 0 5.8-4.2 5.8-10.6 0-6.5-1.8-10.6-5.8-10.6s-5.8 4.1-5.8 10.6c0 6.4 1.8 10.6 5.8 10.6z"/>
-                        </svg>
+                    <a href="https://solana.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-muted hover:text-foreground transition-colors mt-2 text-sm font-mono">
+                        Powered by <span className="font-semibold">Solana</span>
                     </a>
                     </div>
                 </div>
