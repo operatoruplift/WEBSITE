@@ -63,8 +63,13 @@ const Navbar: React.FC<NavbarProps> = () => {
               rel="noreferrer"
               className="flex items-center gap-2 h-9 px-3 text-xs font-bold bg-white/5 text-white border border-white/10 rounded-sm hover:bg-white/10 transition-colors uppercase tracking-wide"
             >
-              <GitHubIcon className="w-4 h-4" />
-              <span className="hidden xl:inline">Open Source</span>
+              <GitHubIcon aria-hidden className="w-4 h-4" />
+              {/* `sr-only xl:not-sr-only` keeps the label in the
+                  accessibility tree at all breakpoints. At < xl the
+                  GitHubIcon would otherwise be the only child of the
+                  link, leaving screen readers with no accessible name.
+                  At xl+ the label paints normally next to the icon. */}
+              <span className="sr-only xl:not-sr-only">Open Source</span>
             </a>
 
             <Link
@@ -134,7 +139,7 @@ const Navbar: React.FC<NavbarProps> = () => {
             rel="noreferrer"
             className="flex items-center space-x-2 text-sm font-bold bg-white/5 text-white border border-white/10 px-4 py-3 rounded-sm hover:bg-white/10 transition-all uppercase tracking-wide w-full justify-center"
           >
-            <GitHubIcon className="w-4 h-4" />
+            <GitHubIcon aria-hidden className="w-4 h-4" />
             <span>Open Source</span>
           </a>
           

@@ -191,8 +191,8 @@ export const LinkedInIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const GitHubIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className={className}>
+export const GitHubIcon = ({ className, ...rest }: React.SVGProps<SVGSVGElement>) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className={className} {...rest}>
     <path d="M12 2A10 10 0 008.84 21.5c.5.08.66-.23.66-.5V19.31C6.73 19.91 6.14 18 6.14 18A2.69 2.69 0 005 16.5c-.91-.62.07-.6.07-.6a2.1 2.1 0 011.53 1 2.15 2.15 0 002.91.83 2.16 2.16 0 01.63-1.34C8 16.17 5.62 15.31 5.62 11.5a3.87 3.87 0 011-2.71 3.65 3.65 0 01.1-2.64s.84-.27 2.75 1.02a9.63 9.63 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02a3.65 3.65 0 01.1 2.64 3.87 3.87 0 011 2.71c0 3.82-2.34 4.66-4.57 5.34a2.39 2.39 0 01.69 1.87v2.79c0 .27.16.58.67.5A10 10 0 0012 2z"/>
   </svg>
 );
