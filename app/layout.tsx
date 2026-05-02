@@ -16,7 +16,17 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.operatoruplift.com"),
-  title: "Operator Uplift, AI for your inbox and calendar",
+  // The template appends " | Operator Uplift" onto every per-route
+  // title that returns a string (e.g. /pricing's "Pricing for teams"
+  // becomes "Pricing for teams | Operator Uplift"). The homepage and
+  // any sub-page that doesn't set its own title fall back to
+  // `default`. PR #367 introduced the per-route metadata layouts;
+  // this template ensures their titles still carry the brand for
+  // search results and social previews.
+  title: {
+    default: "Operator Uplift, AI for your inbox and calendar",
+    template: "%s | Operator Uplift",
+  },
   description: "An AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Approval before every action; signed receipt afterward.",
   keywords: ["AI assistant", "email AI", "calendar AI", "AI inbox", "AI scheduler", "private AI", "Gmail AI", "Google Calendar AI", "AI for productivity", "personal AI"],
   openGraph: {
