@@ -54,11 +54,26 @@ export default function PricingPage() {
 
             <main className="pt-32 pb-24 px-6 md:px-12">
                 <div className="max-w-[1200px] mx-auto">
-                    {/* Header */}
-                    <div className="text-center mb-16">
+                    {/* Header. Match the homepage section pattern,
+                        eyebrow accent + h1 with the same vertical
+                        gradient applied to every section h2 via
+                        SectionHeader. The standalone /pricing page
+                        used a bare h1 with no eyebrow, which read as
+                        a generic page on a site that otherwise
+                        commits to a strong editorial header pattern. */}
+                    <div className="text-center mb-16 mx-auto max-w-2xl">
                         <FadeIn>
-                            <h1 className="text-4xl md:text-5xl font-medium text-white tracking-tight mb-4">Pricing for teams</h1>
-                            <p className="text-gray-400 text-lg max-w-xl mx-auto">Personal plans start free at $0 or $19/month. Team plans are below. Free during beta.</p>
+                            <div className="inline-flex items-center gap-3 mb-4">
+                                <span className="h-px w-16 bg-[#F97316]/40" />
+                                <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">For Teams</span>
+                                <span className="h-px w-16 bg-[#F97316]/40" />
+                            </div>
+                            <h1 className="text-3xl md:text-4xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] mb-4 tracking-tight">
+                                Pricing for teams
+                            </h1>
+                            <p className="text-muted leading-relaxed">
+                                Personal plans start free at $0 or $19/month. Team plans are below. Free during beta.
+                            </p>
                         </FadeIn>
                     </div>
 
