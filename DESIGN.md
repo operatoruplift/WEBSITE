@@ -130,7 +130,7 @@ transition-colors
 - **Stagger**: 100ms delay between siblings
 - **Hover**: `transition-all duration-300` for cards and buttons
 - **Scroll**: IntersectionObserver triggers at `threshold: 0.1`
-- **Canvas**: `requestAnimationFrame` for HeroAnimation, DotGlobe, ProductVisuals
+- **Canvas**: `requestAnimationFrame` for HeroAnimation
 
 ### Timing
 
