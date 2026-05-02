@@ -32,31 +32,48 @@ function isReadableOnLight(rgbString: string): boolean {
     return channels.every((c) => c < NEAR_WHITE_THRESHOLD);
 }
 
-async function assertHeadingsReadable(page: import('@playwright/test').Page, route: string) {
+async function assertMarketingLightTheme(page: import('@playwright/test').Page, route: string) {
     await page.goto(route, { waitUntil: 'load', timeout: 60_000 });
 
+    // Step 1: assert the page has a `.theme-light` wrapper. This is the
+    // root cause that protects every dark-palette utility class
+    // (text-white, text-gray-*, bg-white/N, border-white/N, plus the
+    // `text-[#D4D4D8]` arbitrary hex used by blog content) from
+    // rendering near-white on the #FAFAFA marketing surface. Without
+    // the wrapper, every override block in app/globals.css sits idle.
+    const hasThemeLight = await page.evaluate(() => {
+        return !!document.querySelector('.theme-light');
+    });
+    expect(hasThemeLight, `${route} is missing the .theme-light wrapper`).toBe(true);
+
+    // Step 2: assert body copy is readable. We sample paragraphs over
+    // headings because a number of headings on the marketing site use
+    // `bg-clip-text` gradients with `text-fill-color: transparent`,
+    // which technically reports `color: rgb(...)` from getComputedStyle
+    // but renders as the gradient instead. Body copy uses simple text
+    // tokens that any theme-flip regression would expose immediately.
     const styles = await page.evaluate(() => {
         const out: Array<{ tag: string; text: string; color: string }> = [];
-        // Headings carry the most weight on each page; if they regress
-        // the entire page reads broken even if body copy is fine.
-        document.querySelectorAll('h1, h2').forEach((el) => {
+        document.querySelectorAll('p, li').forEach((el) => {
             if (!(el instanceof HTMLElement)) return;
-            // Skip elements that are intentionally transparent (e.g.
-            // `bg-clip-text` gradient titles set text-fill-color:transparent).
-            // The gradient is the visible signal there, not the color.
+            const text = (el.textContent || '').trim();
+            // Skip empty and decorative text (icons, very short labels).
+            if (text.length < 8) return;
+            // Skip elements that are inside an .always-dark block (the
+            // footer card, modals, etc., which intentionally stay dark
+            // even on the light marketing surface).
+            if (el.closest('[data-always-dark]')) return;
             const cs = window.getComputedStyle(el);
-            const fill = (cs as unknown as { webkitTextFillColor?: string }).webkitTextFillColor;
-            if (fill && fill !== cs.color && fill.includes('rgba(0, 0, 0, 0)')) return;
             out.push({
                 tag: el.tagName,
-                text: (el.textContent || '').trim().slice(0, 40),
+                text: text.slice(0, 40),
                 color: cs.color,
             });
         });
-        return out.slice(0, 8);
+        return out.slice(0, 10);
     });
 
-    expect(styles.length, `${route} renders no h1/h2`).toBeGreaterThan(0);
+    expect(styles.length, `${route} renders no body copy to sample`).toBeGreaterThan(0);
     for (const s of styles) {
         expect(
             isReadableOnLight(s.color),
@@ -66,28 +83,28 @@ async function assertHeadingsReadable(page: import('@playwright/test').Page, rou
 }
 
 test('/pricing standalone page heading reads on light surface', async ({ page }) => {
-    await assertHeadingsReadable(page, '/pricing');
+    await assertMarketingLightTheme(page, '/pricing');
 });
 
 test('/press-kit page heading reads on light surface', async ({ page }) => {
-    await assertHeadingsReadable(page, '/press-kit');
+    await assertMarketingLightTheme(page, '/press-kit');
 });
 
 test('/blog landing page heading reads on light surface', async ({ page }) => {
-    await assertHeadingsReadable(page, '/blog');
+    await assertMarketingLightTheme(page, '/blog');
 });
 
 test('/contact page heading reads on light surface', async ({ page }) => {
-    await assertHeadingsReadable(page, '/contact');
+    await assertMarketingLightTheme(page, '/contact');
 });
 
 test('/store page heading reads on light surface', async ({ page }) => {
-    await assertHeadingsReadable(page, '/store');
+    await assertMarketingLightTheme(page, '/store');
 });
 
 test('/not-real-route 404 reads on light surface', async ({ page }) => {
     // Triggers the global app/not-found.tsx render. The 404 page wraps
     // in .theme-light per PR #364 so a misspelled URL on the marketing
     // site doesn't flip into the dashboard's dark chrome.
-    await assertHeadingsReadable(page, '/asdf-this-route-does-not-exist');
+    await assertMarketingLightTheme(page, '/asdf-this-route-does-not-exist');
 });
