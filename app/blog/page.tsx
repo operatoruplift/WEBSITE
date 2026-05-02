@@ -24,13 +24,24 @@ export default function BlogPage() {
             <Navbar currentPage="blog" />
 
             <main className="pt-32 pb-24 px-6 md:px-12 max-w-[1200px] mx-auto">
-                {/* Header */}
+                {/* Header. Match the homepage section pattern, eyebrow
+                    accent + gradient h1 (the same pattern shipped on
+                    /pricing and /press-kit) so the blog landing reads
+                    as part of the same editorial system, not a generic
+                    sub-page. */}
                 <FadeIn>
                     <Link href="/" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-colors mb-8">
                         <ArrowLeft size={14} /> Back to home
                     </Link>
-                    <h1 className="text-4xl md:text-5xl font-medium text-white tracking-tight mb-4">Blog & Changelog</h1>
-                    <p className="text-gray-400 text-lg mb-16 max-w-xl">Product updates, engineering deep-dives, and guides for building with Operator Uplift.</p>
+                    <div className="inline-flex items-center gap-3 mb-4">
+                        <span className="h-px w-16 bg-[#F97316]/40" />
+                        <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">Blog &amp; Changelog</span>
+                        <span className="h-px w-16 bg-[#F97316]/40" />
+                    </div>
+                    <h1 className="text-3xl md:text-4xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] tracking-tight mb-4">
+                        What we shipped, what we learned
+                    </h1>
+                    <p className="text-muted text-lg mb-16 max-w-xl leading-relaxed">Product updates, engineering deep-dives, and guides for building with Operator Uplift.</p>
                 </FadeIn>
 
                 {/* Featured post */}
