@@ -82,6 +82,14 @@ async function assertMarketingLightTheme(page: import('@playwright/test').Page, 
     }
 }
 
+test('/ homepage reads on light surface', async ({ page }) => {
+    // The homepage is the primary marketing surface and the entry
+    // point most visitors land on. Cover it explicitly so a future
+    // change that drops `theme-light` from app/page.tsx (e.g. during
+    // a refactor) doesn't ship as an invisible regression.
+    await assertMarketingLightTheme(page, '/');
+});
+
 test('/pricing standalone page heading reads on light surface', async ({ page }) => {
     await assertMarketingLightTheme(page, '/pricing');
 });
