@@ -129,7 +129,7 @@ const LocalFirst: React.FC = () => {
                                     flow reads continuously left-to-right. */}
                                 {i < FLOW_STEPS.length - 1 && (
                                     <div className="hidden md:flex absolute top-1/2 -right-3 -translate-y-1/2 w-6 h-6 rounded-full bg-background border border-border items-center justify-center z-10">
-                                        <ArrowRight size={12} className="text-foreground/50" />
+                                        <ArrowRight aria-hidden="true" size={12} className="text-foreground/50" />
                                     </div>
                                 )}
                             </div>

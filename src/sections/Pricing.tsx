@@ -103,7 +103,7 @@ const Pricing: React.FC = () => {
                                         // on mobile. Keeping it inside with a short label ("POPULAR")
                                         // + crown icon fits every breakpoint down to 320px.
                                         <div className="absolute top-3 right-3 z-10 px-2.5 py-1 bg-[#F97316] text-white text-[9px] font-bold uppercase tracking-wider rounded-full flex items-center gap-1 shadow-[0_2px_8px_rgba(249,115,22,0.35)]">
-                                            <Crown size={10} className="shrink-0" /> <span>Recommended</span>
+                                            <Crown aria-hidden="true" size={10} className="shrink-0" /> <span>Recommended</span>
                                         </div>
                                     )}
 
@@ -130,7 +130,7 @@ const Pricing: React.FC = () => {
                                     <ul className="space-y-2.5 mb-8 flex-1">
                                         {tier.features.map(f => (
                                             <li key={f} className="flex items-start gap-2 text-sm text-foreground/80">
-                                                <Check size={14} className={`mt-0.5 shrink-0 ${tier.highlight ? 'text-[#F97316]' : 'text-muted'}`} /> {f}
+                                                <Check aria-hidden="true" size={14} className={`mt-0.5 shrink-0 ${tier.highlight ? 'text-[#F97316]' : 'text-muted'}`} /> {f}
                                             </li>
                                         ))}
                                     </ul>

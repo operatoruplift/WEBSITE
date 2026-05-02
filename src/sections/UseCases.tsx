@@ -80,7 +80,7 @@ const UseCases: React.FC = () => {
             <FadeIn delay={500}>
                 <Link href="/chat"
                     className="inline-flex items-center bg-[#F97316] text-white px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-[#F97316]/90 transition-colors">
-                    Try It Live <ArrowRight size={16} className="ml-2" />
+                    Try It Live <ArrowRight aria-hidden="true" size={16} className="ml-2" />
                 </Link>
             </FadeIn>
         </Section>

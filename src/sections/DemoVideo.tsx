@@ -87,7 +87,7 @@ export function DemoVideo() {
                     href="/login?returnTo=/integrations"
                     className="inline-flex items-center h-11 px-6 bg-[#F97316] text-white rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-[#F97316]/90 transition-colors"
                 >
-                    Sign in and connect Gmail <ArrowRight size={16} className="ml-2" />
+                    Sign in and connect Gmail <ArrowRight aria-hidden="true" size={16} className="ml-2" />
                 </Link>
             </div>
         </Section>
