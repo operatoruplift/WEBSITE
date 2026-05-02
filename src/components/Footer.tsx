@@ -24,9 +24,14 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="w-full bg-background pb-12 px-6 md:px-12 flex flex-col items-center">
-      
-      <div className="w-full max-w-[1600px] py-12 flex items-center justify-center opacity-30">
-        <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+      {/* Subtle horizontal rule between the page body and the footer
+          card. Uses a theme-aware gradient via the `--color-border`
+          token: visible on both light (#E5E7EB) and dark (#222222)
+          surfaces. Replaces a `via-white/20` gradient that effectively
+          rendered at 6% opacity (20% white × 30% wrapper opacity) and
+          was invisible on the light marketing surface. */}
+      <div className="w-full max-w-[1600px] py-12 flex items-center justify-center">
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
       </div>
 
       <FadeIn className="w-full max-w-[1600px]" delay={100} threshold={0.05}>
