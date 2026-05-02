@@ -27,18 +27,32 @@ const Contact: React.FC = () => {
     }
   };
 
+  // Corner-bracket "tech terminal" framing. The outer wrapper keeps
+  // the dashed `border-white/10` (theme-light overrides this token to
+  // a faint dark line, so it stays visible). The corner accents
+  // previously used `border-white/30`, which is NOT in the theme-light
+  // override list and rendered as 30%-white-on-near-white = invisible
+  // on /contact's light surface; switched to `border-foreground/30`,
+  // which follows the theme token.
+  //
+  // The inner card was `bg-[#0c0c0c]` (hardcoded near-black) which
+  // turned the entire /contact page into a dark slab on the light
+  // marketing theme — visually inconsistent with Pricing, UseCases,
+  // and LocalFirst, all of which use `bg-card`. Switching to `bg-card`
+  // pulls /contact in line with the rest of the site and lets the
+  // corner brackets read on both themes.
   const TechContact = ({ option, children }: { option: { id: string; title: string; description: string; iconType: string; url: string }; children: React.ReactNode }) => (
     <div className="relative p-2 rounded-2xl border border-dashed border-white/10 bg-white/[0.01] flex flex-col group h-full">
-         <div className="absolute -top-[1px] -left-[1px] w-4 h-4 border-t border-l border-white/30 rounded-tl-lg transition-colors group-hover:border-primary/50"></div>
-         <div className="absolute -top-[1px] -right-[1px] w-4 h-4 border-t border-r border-white/30 rounded-tr-lg transition-colors group-hover:border-primary/50"></div>
-         <div className="absolute -bottom-[1px] -left-[1px] w-4 h-4 border-b border-l border-white/30 rounded-bl-lg transition-colors group-hover:border-primary/50"></div>
-         <div className="absolute -bottom-[1px] -right-[1px] w-4 h-4 border-b border-r border-white/30 rounded-br-lg transition-colors group-hover:border-primary/50"></div>
-         
+         <div className="absolute -top-[1px] -left-[1px] w-4 h-4 border-t border-l border-foreground/30 rounded-tl-lg transition-colors group-hover:border-primary/50"></div>
+         <div className="absolute -top-[1px] -right-[1px] w-4 h-4 border-t border-r border-foreground/30 rounded-tr-lg transition-colors group-hover:border-primary/50"></div>
+         <div className="absolute -bottom-[1px] -left-[1px] w-4 h-4 border-b border-l border-foreground/30 rounded-bl-lg transition-colors group-hover:border-primary/50"></div>
+         <div className="absolute -bottom-[1px] -right-[1px] w-4 h-4 border-b border-r border-foreground/30 rounded-br-lg transition-colors group-hover:border-primary/50"></div>
+
          <a
               href={option.url}
               target="_blank"
               rel="noreferrer"
-              className="flex-1 w-full bg-[#0c0c0c] rounded-xl border border-white/5 overflow-hidden flex items-start p-6 relative hover:bg-white/[0.02] transition-all duration-300"
+              className="flex-1 w-full bg-card rounded-xl border border-border overflow-hidden flex items-start p-6 relative hover:bg-foreground/[0.04] transition-all duration-300"
             >
              {children}
         </a>
