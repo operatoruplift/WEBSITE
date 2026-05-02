@@ -85,10 +85,20 @@ const Footer: React.FC = () => {
 
                 <div className="col-span-2 md:col-span-3 mt-12 flex flex-col md:flex-row md:items-end justify-end gap-8 border-t border-white/5 pt-8">
                     <div className="flex flex-col md:items-end space-y-4">
-                    <div className="flex items-center space-x-8">
-                        <a href={data.socials.twitter} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"><span className="text-lg font-bold">X (Twitter)</span></a>
-                        <a href={data.socials.linkedin} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"><span className="text-lg font-bold">LinkedIn</span></a>
-                        <a href={data.socials.github} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"><span className="text-lg font-bold">GitHub</span></a>
+                    {/* Social row. Three labels at text-lg + space-x-8 gap
+                        overflow the footer card on the smallest mobile
+                        widths (320px viewport leaves ~264px content
+                        width inside the p-8 card; "X (Twitter) +
+                        LinkedIn + GitHub" plus two 32px gaps lands
+                        around 338px). The card uses overflow-hidden,
+                        so the rightmost link was cut off. Drop to
+                        text-base + space-x-5 on mobile and let the
+                        original text-lg + space-x-8 take over at md+
+                        where the footer card is wider. */}
+                    <div className="flex items-center space-x-5 md:space-x-8 flex-wrap gap-y-2">
+                        <a href={data.socials.twitter} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"><span className="text-base md:text-lg font-bold">X (Twitter)</span></a>
+                        <a href={data.socials.linkedin} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"><span className="text-base md:text-lg font-bold">LinkedIn</span></a>
+                        <a href={data.socials.github} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"><span className="text-base md:text-lg font-bold">GitHub</span></a>
                     </div>
                     <p className="text-gray-600 text-lg font-mono">
                         {data.copyright}
