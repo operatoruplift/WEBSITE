@@ -12,42 +12,20 @@ const CONTENT: Record<string, React.ReactNode> = {
     'getting-started': (
         <>
             <p className="lead">Operator Uplift is a personal AI operator for your inbox and calendar. Every action waits for your Approve click, and every real action leaves a signed receipt.</p>
-            <h2>Try it in 60 seconds</h2>
+            <h2>Get started</h2>
             <ol>
-                <li>Open <a href="/chat">/chat</a>. No signup required.</li>
-                <li>Type one of: <em>&quot;What&apos;s on my calendar today?&quot;</em>, <em>&quot;Draft replies to these 3 emails&quot;</em>, or <em>&quot;Schedule an iMessage nudge for tomorrow morning.&quot;</em></li>
-                <li>The Approve modal shows. Click Approve, you&apos;ll see a Simulated chip on the result. No real email was sent.</li>
-                <li>Want real execution? Sign in with Google at <a href="/integrations">/integrations</a>. The orange Demo pill turns green and says Real.</li>
+                <li>Sign in with Google at <a href="/integrations">/integrations</a> to connect Calendar and Gmail.</li>
+                <li>Open <a href="/chat">/chat</a> and type one of: <em>&quot;What&apos;s on my calendar today?&quot;</em>, <em>&quot;Draft replies to these 3 emails&quot;</em>, or <em>&quot;Schedule an iMessage nudge for tomorrow morning.&quot;</em></li>
+                <li>The Approve modal shows the action and its parameters. Click Approve to run.</li>
+                <li>Real actions produce a signed receipt visible at <a href="/security">/security</a>.</li>
             </ol>
             <h2>What ships today</h2>
             <ul>
-                <li>Anonymous Demo mode on <code>/chat</code> with canned replies for three consumer beats.</li>
                 <li>Google Calendar and Gmail tools behind per-action approval.</li>
                 <li>ed25519 signed receipts on <a href="/security">/security</a>, Merkle root published to Solana devnet every five actions.</li>
                 <li>Daily 8am calendar briefing (opt-in from <a href="/profile">/profile</a>).</li>
                 <li>Tier 1 tools that don&apos;t need Google: web search, web fetch, notes, tasks, reminders.</li>
             </ul>
-        </>
-    ),
-    'demo-vs-real': (
-        <>
-            <p className="lead">Two user-visible states. Nothing in between.</p>
-            <h2>Demo (simulated)</h2>
-            <p>Demo mode activates when you are logged out, or logged in without either Google connected or an LLM API key on the server. You see an orange <strong>Demo · Simulated</strong> pill at the top of <code>/chat</code>.</p>
-            <ul>
-                <li>Every chat reply is a deterministic canned response. Zero LLM spend.</li>
-                <li>Every tool approval returns a mock result labelled <code>Simulated</code>. Nothing is sent, booked, or charged.</li>
-                <li>No Supabase writes. No receipt. No rate-limit cost to you beyond <code>10 requests per hour per IP</code>.</li>
-            </ul>
-            <h2>Real</h2>
-            <p>Real mode activates when you are authenticated (Privy) AND <code>capability_real = capability_google || capability_key</code> is true. Green <strong>Real</strong> pill with a sub-label showing which capability is active.</p>
-            <ul>
-                <li>Chat uses the real LLM. Supabase persists the thread.</li>
-                <li>Approve triggers a real API call to Google (Calendar/Gmail) or whichever Tier 2 tool you have connected.</li>
-                <li>Every successful action produces an ed25519 receipt and lands in <a href="/security">/security</a>.</li>
-            </ul>
-            <h2>The rule we never break</h2>
-            <blockquote>Never claim real execution unless it truly ran. Demo mode never produces a receipt.</blockquote>
         </>
     ),
     'approvals': (

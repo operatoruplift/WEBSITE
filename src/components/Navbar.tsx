@@ -46,9 +46,8 @@ const Navbar: React.FC<NavbarProps> = () => {
                 )}
               </a>
             ))}
-            {/* Use the in-repo /docs GitBook-style site (P9) over the
-                legacy help.operatoruplift.com subdomain. Keeps nav flow
-                on-site and docs content in sync with shipped behavior. */}
+            {/* /docs is the in-repo GitBook-style site (P9). Keeps the
+                nav flow on-site and docs in sync with shipped behavior. */}
             <Link
               href="/docs"
               className="group flex items-center text-xs font-bold text-muted hover:text-white transition-colors tracking-[0.15em] px-1"

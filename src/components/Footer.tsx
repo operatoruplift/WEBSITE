@@ -12,9 +12,8 @@ const Footer: React.FC = () => {
     if (link.action === 'contact') return '/contact';
     if (link.action === 'terms') return '/terms';
     if (link.action === 'privacy') return '/privacy';
-    // /docs is the in-repo GitBook-style site (P9). Earlier the footer
-    // pointed at help.operatoruplift.com which is the legacy support
-    // subdomain; the in-repo docs are the source of truth now.
+    // /docs is the in-repo GitBook-style site (P9), the source of
+    // truth for product documentation.
     if (link.action === 'docs') return '/docs';
     // 'product' link used to point at the standalone /product page,
     // retired in #308. Bring users back to the homepage hero, which
