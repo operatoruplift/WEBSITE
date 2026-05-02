@@ -109,7 +109,12 @@ const LocalFirst: React.FC = () => {
                         <FadeIn key={step.label} delay={i * 100}>
                             <div className="relative h-full">
                                 <div className={`relative h-full rounded-2xl border ${step.accent} p-5 flex flex-col text-left`}>
-                                    <span className="text-[10px] font-mono font-bold tracking-widest text-foreground/60 mb-3">
+                                    {/* Larger step number for visual rhythm,
+                                        inspired by editorial / sully.ai-style
+                                        numbered section markers. The brand
+                                        orange tint (50% opacity) keeps it
+                                        from competing with the title. */}
+                                    <span className="text-3xl font-mono font-bold tracking-tight text-[#F97316]/50 mb-2 leading-none">
                                         {step.label}
                                     </span>
                                     <h3 className="text-base font-semibold text-foreground mb-2">
