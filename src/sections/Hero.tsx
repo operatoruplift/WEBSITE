@@ -35,8 +35,14 @@ const Hero: React.FC = () => {
             </div>
           </FadeIn>
 
-          {/* Headline */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl tracking-tight text-white mb-5 md:mb-6 leading-[1.05] min-h-[1.1em]">
+          {/* Headline. Mirrors the subtle vertical text gradient
+              applied to every section h2 via SectionHeader (PR #354)
+              so the hero's most prominent surface ties into the same
+              editorial system as the rest of the page. The
+              `text-foreground` fallback keeps the headline visible on
+              browsers that don't render bg-clip-text. GlideText's
+              opacity transition still applies through the fade-in. */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl tracking-tight text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] mb-5 md:mb-6 leading-[1.05] min-h-[1.1em]">
             <GlideText text={data.headline} />
           </h1>
 
