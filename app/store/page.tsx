@@ -100,7 +100,13 @@ export default function StorePage() {
             {/* CTA */}
             <section className="py-16 px-6 md:px-12 text-center">
                 <p className="text-gray-500 mb-4">Want to build your own helper?</p>
-                <Link href="/agents/builder" className="inline-flex items-center gap-2 bg-white text-black px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors">
+                {/* `bg-white text-black` rendered as a white button on
+                    the page's `.theme-light` surface (the wrapper does
+                    not flip plain `bg-white`, only `bg-white/N` opacity
+                    variants). Switch to `bg-foreground` / `bg-background`
+                    so the CTA is a high-contrast inverted button on
+                    both themes. */}
+                <Link href="/agents/builder" className="inline-flex items-center gap-2 bg-foreground text-background px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-foreground/90 transition-colors">
                     Build your own <ArrowRight size={14} />
                 </Link>
             </section>
