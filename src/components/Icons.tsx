@@ -1,41 +1,6 @@
 
 import React from 'react';
 
-export const CopyIcon = ({ className }: { className?: string }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width="16" 
-    height="16" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className={className}
-  >
-    <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-  </svg>
-);
-
-export const CheckIcon = ({ className }: { className?: string }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width="16" 
-    height="16" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className={className}
-  >
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
-
 export const Logo = ({ className = "text-white" }: { className?: string }) => (
   <svg width="24" height="26" viewBox="0 0 472 510" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
     <path d="M379.51 143.322C379.59 144.022 379.59 144.722 379.51 145.392C379.09 148.712 376.19 151.192 372.87 151.592L261.43 165.892C260.1 166.592 259 167.692 258.28 169.002L243.66 195.722C240.7 201.182 232.85 201.182 229.84 195.722L215.24 169.002C214.52 167.692 213.42 166.592 212.11 165.892L98.9198 151.592C95.5998 151.192 92.7198 148.712 92.2998 145.412C92.1898 144.712 92.1898 144.012 92.2998 143.312C92.7198 139.992 95.5998 137.532 98.9198 137.132L212.11 122.832C213.42 122.112 214.52 121.032 215.24 119.702L229.84 93.0022C232.84 87.5422 240.69 87.5422 243.66 93.0022L258.28 119.702C259 121.032 260.1 122.112 261.43 122.832L372.87 137.132C376.19 137.512 379.09 139.992 379.51 143.312V143.322Z" fill="url(#paint0_linear_243_2)"/>
@@ -96,87 +61,6 @@ export const ChevronRight = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const DownloadIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-    <polyline points="7 10 12 15 17 10"/>
-    <line x1="12" x2="12" y1="15" y2="3"/>
-  </svg>
-);
-
-export const AppleIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 384 512" fill="currentColor" className={className}>
-    <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184 4 273.5c0 26.2 4.8 53.3 14.4 81.2 12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
-  </svg>
-);
-
-export const WindowsIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 448 512" fill="currentColor" className={className}>
-    <path d="M0 93.7l183.6-25.3v177.4H0V93.7zm0 324.6l183.6 25.3V268.4H0v149.9zm203.8 28L448 480V268.4H203.8v177.9zm0-380.6v180.1H448V32L203.8 65.7z"/>
-  </svg>
-);
-
-export const LinuxIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <circle cx="12" cy="7" r="4" />
-    <path d="M12 11c-3 0-5.5 2-6.5 5-.5 1.5-.5 3 .5 4h12c1-1 1-2.5.5-4-1-3-3.5-5-6.5-5z" />
-    <circle cx="10.5" cy="6.5" r=".5" fill="currentColor" />
-    <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
-    <path d="M10 9h4" />
-    <path d="M7 20v2M17 20v2" />
-  </svg>
-);
-
-export const AndroidIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 576 512" fill="currentColor" className={className}>
-    <path d="M420.55 301.93a24 24 0 1 1 24-24 24 24 0 0 1-24 24m-265.1 0a24 24 0 1 1 24-24 24 24 0 0 1-24 24m273.7-144.48l47.94-83a10 10 0 1 0-17.27-10l-48.54 84.07a301.25 301.25 0 0 0-246.56 0L116.18 64.45a10 10 0 1 0-17.27 10l47.94 83C64.53 202.22 8.24 285.55 0 384h576c-8.24-98.45-64.54-181.78-146.85-226.55"/>
-  </svg>
-);
-
-export const SmartphoneIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>
-  </svg>
-);
-
-export const SolanaIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 397 311" fill="currentColor" className={className}>
-    <path d="M64.6 237.9c2.4-2.4 5.7-3.8 9.2-3.8h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1l62.7-62.7z"/>
-    <path d="M64.6 3.8C67.1 1.4 70.4 0 73.8 0h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1L64.6 3.8z"/>
-    <path d="M333.1 120.1c-2.4-2.4-5.7-3.8-9.2-3.8H6.5c-5.8 0-8.7 7-4.6 11.1l62.7 62.7c2.4 2.4 5.7 3.8 9.2 3.8h317.4c5.8 0 8.7-7 4.6-11.1l-62.7-62.7z"/>
-  </svg>
-);
-
-export const TerminalIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <polyline points="4 17 10 11 4 5"/>
-    <line x1="12" x2="20" y1="19" y2="19"/>
-  </svg>
-);
-
-export const GlobeIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <circle cx="12" cy="12" r="10"/>
-    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
-    <path d="M2 12h20"/>
-  </svg>
-);
-
-export const MessageIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-  </svg>
-);
-
-export const KanbanIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <rect width="18" height="18" x="3" y="3" rx="2"/>
-    <path d="M8 7v7"/>
-    <path d="M12 7v4"/>
-    <path d="M16 7v9"/>
-  </svg>
-);
-
 // Social & UI Icons
 
 export const TwitterIcon = ({ className }: { className?: string }) => (
@@ -194,26 +78,6 @@ export const LinkedInIcon = ({ className }: { className?: string }) => (
 export const GitHubIcon = ({ className, ...rest }: React.SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className={className} {...rest}>
     <path d="M12 2A10 10 0 008.84 21.5c.5.08.66-.23.66-.5V19.31C6.73 19.91 6.14 18 6.14 18A2.69 2.69 0 005 16.5c-.91-.62.07-.6.07-.6a2.1 2.1 0 011.53 1 2.15 2.15 0 002.91.83 2.16 2.16 0 01.63-1.34C8 16.17 5.62 15.31 5.62 11.5a3.87 3.87 0 011-2.71 3.65 3.65 0 01.1-2.64s.84-.27 2.75 1.02a9.63 9.63 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02a3.65 3.65 0 01.1 2.64 3.87 3.87 0 011 2.71c0 3.82-2.34 4.66-4.57 5.34a2.39 2.39 0 01.69 1.87v2.79c0 .27.16.58.67.5A10 10 0 0012 2z"/>
-  </svg>
-);
-
-export const SunIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <circle cx="12" cy="12" r="5"/>
-    <path d="M12 1v2"/>
-    <path d="M12 21v2"/>
-    <path d="M4.22 4.22l1.42 1.42"/>
-    <path d="M18.36 18.36l1.42 1.42"/>
-    <path d="M1 12h2"/>
-    <path d="M21 12h2"/>
-    <path d="M4.22 19.78l1.42-1.42"/>
-    <path d="M18.36 5.64l1.42-1.42"/>
-  </svg>
-);
-
-export const MoonIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
   </svg>
 );
 
