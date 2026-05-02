@@ -42,14 +42,7 @@ const platforms: Array<{
 const Comparison: React.FC = () => {
   return (
     <section className="w-full bg-background px-6 md:px-12 flex justify-center aurora-section">
-      {/* Divider */}
       <div className="w-full max-w-[1200px] pt-16 pb-24">
-        <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-white/15 to-transparent relative mb-16">
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-1 bg-background flex items-center justify-center">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(231,118,48,0.6)]"></div>
-          </div>
-        </div>
-
         <SectionHeader
           eyebrow="Compare"
           title="Why Operator Uplift?"
