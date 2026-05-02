@@ -37,7 +37,7 @@ const Contact: React.FC = () => {
   //
   // The inner card was `bg-[#0c0c0c]` (hardcoded near-black) which
   // turned the entire /contact page into a dark slab on the light
-  // marketing theme — visually inconsistent with Pricing, UseCases,
+  // marketing theme, visually inconsistent with Pricing, UseCases,
   // and LocalFirst, all of which use `bg-card`. Switching to `bg-card`
   // pulls /contact in line with the rest of the site and lets the
   // corner brackets read on both themes.
