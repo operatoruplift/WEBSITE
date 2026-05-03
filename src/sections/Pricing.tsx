@@ -81,12 +81,17 @@ const Pricing: React.FC = () => {
                 description="Start free. Pay $19 a month when you want more. Cancel any time."
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch">
+            {/* Three pricing tiers. Promote to <ul>/<li> so screen
+                readers expose the grid as a list of three plans
+                instead of three anonymous divs. `list-none p-0`
+                keeps the grid layout untouched. */}
+            <ul className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch list-none p-0">
                     {TIERS.map((tier, i) => {
                         const Icon = tier.icon;
                         const CtaIcon = tier.ctaIcon;
                         return (
-                            <FadeIn key={tier.name} delay={i * 100}>
+                          <li key={tier.name}>
+                            <FadeIn delay={i * 100}>
                                 {/* overflow-hidden on the card prevents the badge from escaping
                                     the rounded container on any breakpoint. The badge itself
                                     also uses safe padding that fits inside even the narrowest
@@ -113,7 +118,7 @@ const Pricing: React.FC = () => {
                                                 ? 'bg-[#F97316]/15 border border-[#F97316]/30'
                                                 : 'bg-foreground/5 border border-border'
                                         }`}>
-                                            <Icon size={20} className={tier.highlight ? 'text-[#F97316]' : 'text-muted'} />
+                                            <Icon aria-hidden size={20} className={tier.highlight ? 'text-[#F97316]' : 'text-muted'} />
                                         </div>
                                         <h3 className="text-xl font-semibold text-foreground">{tier.name}</h3>
                                     </div>
@@ -137,13 +142,14 @@ const Pricing: React.FC = () => {
 
                                     <Link href={tier.ctaLink}
                                         className={`w-full h-12 rounded-xl font-bold uppercase tracking-widest text-sm transition-all flex items-center justify-center gap-2 ${tier.ctaStyle}`}>
-                                        {tier.cta} <CtaIcon size={14} />
+                                        {tier.cta} <CtaIcon aria-hidden size={14} />
                                     </Link>
                                 </div>
                             </FadeIn>
+                          </li>
                         );
                     })}
-            </div>
+            </ul>
         </Section>
     );
 };
