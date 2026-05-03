@@ -23,10 +23,10 @@ const features = [
   { name: 'Signed receipt for every action',             uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: false, poke: false, hermes: false, openclaw: false },
   { name: 'On-chain audit log (Solana)',                 uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: false, poke: false, hermes: false, openclaw: false },
   { name: 'Pick any AI you want, mid-conversation',      uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: true,  poke: false, hermes: true,  openclaw: true },
-  { name: 'Built-in store of helpers',                   uplift: true, chatgpt: true,  claude: false, gemini: false, grok: false, zo: false, poke: true,  hermes: false, openclaw: true },
+  { name: 'Built-in store of helpers',                   uplift: true, chatgpt: true,  claude: true,  gemini: false, grok: false, zo: false, poke: true,  hermes: true,  openclaw: true },
   { name: 'Helpers that work as a team',                 uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: false, poke: false, hermes: true,  openclaw: true },
-  { name: 'Real Gmail + Calendar via Google OAuth',      uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: true,  poke: true,  hermes: false, openclaw: true },
-  { name: 'Memory you can export and erase',             uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: false, poke: false, hermes: false, openclaw: false },
+  { name: 'Real Gmail + Calendar via Google OAuth',      uplift: true, chatgpt: false, claude: false, gemini: true,  grok: false, zo: true,  poke: true,  hermes: true,  openclaw: true },
+  { name: 'Memory you can export and erase',             uplift: true, chatgpt: true,  claude: true,  gemini: false, grok: false, zo: false, poke: false, hermes: false, openclaw: false },
   { name: 'Open-source codebase, MIT licensed',          uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: false, poke: false, hermes: true,  openclaw: true },
   { name: 'Privacy posture (HIPAA-aware, GDPR workflows)', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: false, poke: false, hermes: false, openclaw: false },
 ];
