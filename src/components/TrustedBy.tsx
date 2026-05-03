@@ -77,7 +77,10 @@ const TrustedBy: React.FC = () => {
                     {model.provider}
                   </span>
                 </div>
-                <div className="w-1 h-1 bg-white/20 rounded-full ml-8"></div>
+                {/* Decorative bullet between marquee items; aria-hidden
+                    so screen readers don't announce it as a separator
+                    between every model entry. */}
+                <div aria-hidden="true" className="w-1 h-1 bg-white/20 rounded-full ml-8"></div>
               </div>
             );
           })}
