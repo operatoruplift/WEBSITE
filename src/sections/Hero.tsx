@@ -9,7 +9,10 @@ const Hero: React.FC = () => {
   const data = APP_CONTENT.hero;
   
   return (
-    <div className="relative min-h-screen w-full bg-background overflow-hidden selection:bg-primary/30 selection:text-white flex flex-col aurora-hero">
+    // <section> + aria-labelledby="hero-heading" surfaces the Hero
+    // as a region with the h1 as its accessible name. Screen reader
+    // users navigating by landmarks can jump straight here.
+    <section aria-labelledby="hero-heading" className="relative min-h-screen w-full bg-background overflow-hidden selection:bg-primary/30 selection:text-white flex flex-col aurora-hero">
       
       {/* Background Visualization Layer - Desktop Only, covers full viewport */}
       <div className="hidden lg:block absolute inset-0 z-0 pointer-events-none opacity-70">
@@ -42,7 +45,7 @@ const Hero: React.FC = () => {
               `text-foreground` fallback keeps the headline visible on
               browsers that don't render bg-clip-text. GlideText's
               opacity transition still applies through the fade-in. */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl tracking-tight text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] mb-5 md:mb-6 leading-[1.05] min-h-[1.1em]">
+          <h1 id="hero-heading" className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl tracking-tight text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] mb-5 md:mb-6 leading-[1.05] min-h-[1.1em]">
             <GlideText text={data.headline} />
           </h1>
 
@@ -94,7 +97,7 @@ const Hero: React.FC = () => {
         </div>
 
       </div>
-    </div>
+    </section>
   );
 };
 
