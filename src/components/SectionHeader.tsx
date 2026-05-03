@@ -8,13 +8,17 @@ interface SectionHeaderProps {
     title: string;
     description?: string;
     className?: string;
+    /** Optional id for the rendered <h2>. Used by parent <section>s
+     * that pair this header with `aria-labelledby="..."` to surface
+     * the section as a landmark named by its title. */
+    headingId?: string;
 }
 
 /**
  * Shared section header for marketing-site sections.
  * Enforces consistent max width, centering, spacing, and neutral accent.
  */
-export function SectionHeader({ eyebrow, title, description, className = '' }: SectionHeaderProps) {
+export function SectionHeader({ eyebrow, title, description, className = '', headingId }: SectionHeaderProps) {
     return (
         <FadeIn>
             <div className={`text-center mb-12 mx-auto max-w-2xl ${className}`}>
@@ -33,7 +37,7 @@ export function SectionHeader({ eyebrow, title, description, className = '' }: S
                  * `text-foreground` value for browsers that don't render
                  * `bg-clip-text` (covered by `text-foreground` first), so
                  * the title is never invisible. */}
-                <h2 className="text-3xl md:text-4xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] mb-4 tracking-tight">
+                <h2 id={headingId} className="text-3xl md:text-4xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] mb-4 tracking-tight">
                     {title}
                 </h2>
                 {description && (

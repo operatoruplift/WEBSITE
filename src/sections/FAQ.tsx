@@ -46,9 +46,10 @@ const FAQ: React.FC = () => {
   };
 
   return (
-    <section id="faq" className="w-full bg-background px-6 md:px-12 flex justify-center aurora-glow">
+    <section id="faq" aria-labelledby="faq-heading" className="w-full bg-background px-6 md:px-12 flex justify-center aurora-glow">
       <div className="w-full max-w-[800px] py-24">
         <SectionHeader
+          headingId="faq-heading"
           eyebrow="FAQ"
           title="Common questions"
           description="Quick answers before you sign up."

@@ -41,9 +41,10 @@ const platforms: Array<{
 
 const Comparison: React.FC = () => {
   return (
-    <section className="w-full bg-background px-6 md:px-12 flex justify-center aurora-section">
+    <section aria-labelledby="comparison-heading" className="w-full bg-background px-6 md:px-12 flex justify-center aurora-section">
       <div className="w-full max-w-[1200px] pt-16 pb-24">
         <SectionHeader
+          headingId="comparison-heading"
           eyebrow="Compare"
           title="Why Operator Uplift?"
           description="Other AIs run on their servers, learn from your messages, and only work if you stay loyal to one company. We don't do any of that."

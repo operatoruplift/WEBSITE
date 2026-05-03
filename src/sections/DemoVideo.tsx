@@ -34,8 +34,9 @@ export function DemoVideo() {
     };
 
     return (
-        <Section id="demo-video">
+        <Section id="demo-video" ariaLabelledby="demo-video-heading">
             <SectionHeader
+                headingId="demo-video-heading"
                 eyebrow="90 seconds"
                 title="Watch it actually work"
                 description="Three real things, your morning briefing, your inbox, your reminders. Recorded end-to-end. Every action waits for the tap."

@@ -74,8 +74,9 @@ const TIERS = [
 
 const Pricing: React.FC = () => {
     return (
-        <Section id="pricing">
+        <Section id="pricing" ariaLabelledby="pricing-heading">
             <SectionHeader
+                headingId="pricing-heading"
                 eyebrow="Pricing"
                 title="Pick a plan, start in a minute"
                 description="Start free. Pay $19 a month when you want more. Cancel any time."

@@ -46,8 +46,9 @@ const BEATS = [
 
 const UseCases: React.FC = () => {
     return (
-        <Section>
+        <Section ariaLabelledby="usecases-heading">
             <SectionHeader
+                headingId="usecases-heading"
                 eyebrow="Try it today"
                 title="Three things it handles well, try them before you sign up"
                 description="Open the demo, paste any of these, and watch every action wait for your okay."

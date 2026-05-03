@@ -22,11 +22,16 @@ interface SectionProps {
     bgClassName?: string;
     /** Extra classes applied to the inner container (max-w-[1200px] block). */
     innerClassName?: string;
+    /** Optional id of the heading inside this section. When provided,
+     * the rendered <section> gets `aria-labelledby="..."` so screen
+     * reader landmark navigation surfaces it as a region named by the
+     * heading. Pair with SectionHeader's `headingId` prop. */
+    ariaLabelledby?: string;
 }
 
-export function Section({ id, children, bgClassName = 'bg-background', innerClassName = '' }: SectionProps) {
+export function Section({ id, children, bgClassName = 'bg-background', innerClassName = '', ariaLabelledby }: SectionProps) {
     return (
-        <section id={id} className={`w-full ${bgClassName} px-6 md:px-12 py-14 md:py-20 flex justify-center`}>
+        <section id={id} aria-labelledby={ariaLabelledby} className={`w-full ${bgClassName} px-6 md:px-12 py-14 md:py-20 flex justify-center`}>
             <div className={`w-full max-w-[1200px] flex flex-col items-center text-center gap-12 ${innerClassName}`}>
                 {children}
             </div>

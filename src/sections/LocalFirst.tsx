@@ -93,8 +93,9 @@ const TRUST_SIGNALS: TrustSignal[] = [
 
 const LocalFirst: React.FC = () => {
     return (
-        <Section id="local-first">
+        <Section id="local-first" ariaLabelledby="local-first-heading">
             <SectionHeader
+                headingId="local-first-heading"
                 eyebrow="Local-first"
                 title="Your data, your keys, your audit log"
                 description="Most AI agents copy your email, train on it, and tie you to one cloud. We just orchestrate. Here is exactly what moves where, every time you ask."
