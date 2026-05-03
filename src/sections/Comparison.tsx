@@ -76,9 +76,14 @@ const Comparison: React.FC = () => {
                           aria-label={p.name}
                         >
                           {/* Mobile: logo only (fixed w-5 h-5, centered).
-                              md+: logo + name side-by-side, no wrap. */}
+                              md+: logo + name side-by-side, no wrap. The
+                              `aria-label` on the th carries the column's
+                              accessible name; the logo SVG inside is
+                              decorative chrome and is marked aria-hidden
+                              so screen readers don't double-announce. */}
                           <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5">
                             <PlatformLogo
+                              aria-hidden
                               className={`w-5 h-5 shrink-0 ${p.highlight ? 'text-primary' : 'text-gray-400'}`}
                             />
                             <span className="hidden md:inline whitespace-nowrap">{p.name}</span>
