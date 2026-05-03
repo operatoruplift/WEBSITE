@@ -65,7 +65,17 @@ const Footer: React.FC = () => {
                 </div>
 
                 <div className="lg:col-span-6 grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
-                
+
+                {/* Three-column nav landmark wraps just the link
+                    columns; the social row + copyright that follows
+                    is sibling content (not navigation), so the nav
+                    closes after the Legal column. The parent
+                    `<footer>` is already a contentinfo landmark, and
+                    this explicit nav lets screen reader users jump
+                    straight to the footer link clusters. `contents`
+                    keeps the nav transparent to layout so the columns
+                    remain direct grid children. */}
+                <nav aria-label="Footer" className="contents">
                 <div className="flex flex-col space-y-4">
                     <h4 className="text-white font-medium text-xl mb-2">{data.sections.resources.title}</h4>
                     {data.sections.resources.links.map((link, i) => (
@@ -86,6 +96,7 @@ const Footer: React.FC = () => {
                         <Link key={i} href={getLinkHref(link)} target={link.url ? "_blank" : undefined} className="text-gray-500 hover:text-white transition-colors text-lg">{link.label}</Link>
                     ))}
                 </div>
+                </nav>
 
                 <div className="col-span-2 md:col-span-3 mt-12 flex flex-col md:flex-row md:items-end justify-end gap-8 border-t border-white/5 pt-8">
                     <div className="flex flex-col md:items-end space-y-4">
