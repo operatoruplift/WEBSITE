@@ -53,14 +53,19 @@ const UseCases: React.FC = () => {
                 description="Open the demo, paste any of these, and watch every action wait for your okay."
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch">
+            {/* Three consumer beats. Promote to <ul>/<li> so screen
+                readers expose the grid as a list of three workflows
+                instead of three anonymous divs. `list-none p-0` keeps
+                the grid layout untouched. */}
+            <ul className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch list-none p-0">
                 {BEATS.map((beat, i) => {
                     const Icon = beat.icon;
                     return (
-                        <FadeIn key={beat.tag} delay={i * 150}>
+                      <li key={beat.tag}>
+                        <FadeIn delay={i * 150}>
                             <div className="rounded-2xl border border-border bg-card p-8 h-full flex flex-col text-left hover:border-[#F97316]/30 transition-colors">
                                 <div className="w-12 h-12 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center mb-5">
-                                    <Icon size={22} className="text-[#F97316]" />
+                                    <Icon aria-hidden size={22} className="text-[#F97316]" />
                                 </div>
                                 <span className="text-[10px] font-bold uppercase tracking-widest text-[#F97316] mb-2">{beat.tag}</span>
                                 <h3 className="text-lg font-semibold text-foreground mb-3">{beat.headline}</h3>
@@ -73,9 +78,10 @@ const UseCases: React.FC = () => {
                                 </div>
                             </div>
                         </FadeIn>
+                      </li>
                     );
                 })}
-            </div>
+            </ul>
 
             <FadeIn delay={500}>
                 <Link href="/chat"
