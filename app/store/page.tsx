@@ -30,13 +30,22 @@ export default function StorePage() {
         <div className="theme-light w-full bg-background min-h-screen">
             <Navbar currentPage="store" />
 
+            {/* Wrap the page content in <main> so /store has the same
+                landmark structure as the other standalone marketing
+                pages (/blog, /contact, /press-kit, /pricing). The
+                outer <div> already carries the theme-light wrapper;
+                <main> sits below the Navbar and above the Footer so
+                landmark navigation lands users on the page content,
+                not the navbar. */}
+            <main>
+
             {/* Hero */}
             <section className="pt-32 pb-16 px-6 md:px-12 text-center relative overflow-hidden">
                 <div className="absolute inset-0 opacity-30" style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 20%, rgba(231,118,48,0.15) 0%, transparent 60%)' }} />
                 <div className="relative z-10 max-w-3xl mx-auto">
                     <FadeIn>
                         <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 text-primary px-3 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest mb-6">
-                            <Zap size={12} /> Built-in helpers
+                            <Zap aria-hidden size={12} /> Built-in helpers
                         </div>
                     </FadeIn>
                     <h1 className="text-4xl md:text-6xl font-medium text-white tracking-tight mb-4">Helpers</h1>
@@ -84,7 +93,7 @@ export default function StorePage() {
                                     <span className="text-sm font-mono text-primary">Free in beta</span>
                                     <Link href={chatDeepLink(agent)}
                                         className="px-4 py-2 rounded-lg bg-primary text-white text-xs font-bold uppercase tracking-widest hover:bg-primary/80 transition-colors shadow-[0_0_15px_rgba(231,118,48,0.3)] inline-flex items-center gap-1">
-                                        Try in chat <ArrowRight size={12} />
+                                        Try in chat <ArrowRight aria-hidden size={12} />
                                     </Link>
                                 </div>
                             </div>
@@ -107,9 +116,11 @@ export default function StorePage() {
                     so the CTA is a high-contrast inverted button on
                     both themes. */}
                 <Link href="/agents/builder" className="inline-flex items-center gap-2 bg-foreground text-background px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-foreground/90 transition-colors">
-                    Build your own <ArrowRight size={14} />
+                    Build your own <ArrowRight aria-hidden size={14} />
                 </Link>
             </section>
+
+            </main>
 
             <Footer />
         </div>
