@@ -59,7 +59,14 @@ const TrustedBy: React.FC = () => {
               >
                 {LogoComponent && (
                   <div className="text-gray-500 group-hover:text-primary transition-colors">
-                    <LogoComponent className="w-5 h-5" />
+                    {/* Decorative logo paired with the visible model
+                        name span below; mark aria-hidden so screen
+                        readers announce just "Claude Opus 4.7,
+                        Anthropic" rather than "image, Claude Opus 4.7,
+                        Anthropic". The marquee region itself already
+                        has role="region" + aria-label="Supported AI
+                        models". */}
+                    <LogoComponent aria-hidden className="w-5 h-5" />
                   </div>
                 )}
                 <div className="flex flex-col">
