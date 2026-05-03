@@ -29,11 +29,11 @@ const DEMO_CAPABILITIES: Capabilities = {
 };
 
 const MODELS = [
-    { id: 'claude-opus-4-7', label: 'Claude Opus 4.7', provider: 'Anthropic', color: 'text-[#F97316]', badge: 'SMART' },
-    { id: 'gpt-4.1', label: 'GPT-4.1', provider: 'OpenAI', color: 'text-emerald-400', badge: 'FAST' },
-    { id: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro', provider: 'Google', color: 'text-[#F97316]', badge: 'LONG CTX' },
-    { id: 'deepseek-r1', label: 'DeepSeek R1', provider: 'DeepSeek', color: 'text-amber-400', badge: 'REASON' },
-    { id: 'grok-3', label: 'Grok 3', provider: 'xAI', color: 'text-red-400', badge: 'REASON' },
+    { id: 'claude-opus-4-7',  label: 'Claude Opus 4.7', provider: 'Anthropic', color: 'text-[#F97316]',     badge: 'SMART' },
+    { id: 'gpt-5.5',          label: 'GPT-5.5',         provider: 'OpenAI',    color: 'text-emerald-400',   badge: 'GENERAL' },
+    { id: 'gemini-3.1-pro',   label: 'Gemini 3.1 Pro',  provider: 'Google',    color: 'text-[#F97316]',     badge: 'LONG CTX' },
+    { id: 'deepseek-v4-pro',  label: 'DeepSeek V4 Pro', provider: 'DeepSeek',  color: 'text-amber-400',     badge: 'REASON' },
+    { id: 'grok-4.3',         label: 'Grok 4.3',        provider: 'xAI',       color: 'text-red-400',       badge: 'AGENTIC' },
 ];
 
 const AGENTS = [
