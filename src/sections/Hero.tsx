@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import HeroAnimation from '@/src/components/HeroAnimation';
+import HeroMessages from '@/src/components/HeroMessages';
 import TrustedBy from '@/src/components/TrustedBy';
 import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn, GlideText } from '@/src/components/Animators';
@@ -14,15 +14,17 @@ const Hero: React.FC = () => {
     // users navigating by landmarks can jump straight here.
     <section aria-labelledby="hero-heading" className="relative min-h-screen w-full bg-background overflow-hidden selection:bg-primary/30 selection:text-white flex flex-col aurora-hero">
       
-      {/* Background Visualization Layer - Desktop Only, covers full viewport */}
-      <div className="hidden lg:block absolute inset-0 z-0 pointer-events-none opacity-70">
-        <HeroAnimation className="w-full h-full" />
-        {/* Left fade so text remains readable */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" style={{ width: '45%' }}></div>
-        {/* Bottom fade into next section */}
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent"></div>
-        {/* Top fade under navbar */}
-        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background/80 to-transparent"></div>
+      {/* iMessage-style chat mockup that auto-cycles through three
+          consumer scenarios (morning briefing / inbox / reminders).
+          Lives in the right column on lg+ instead of behind the
+          headline as a full-bleed canvas. The earlier developer-y
+          particle visualization (HeroAnimation) was retired here
+          because the consumer landing pivot needs the demo to look
+          like the actual product, not an abstract agent diagram. */}
+      <div className="hidden lg:block absolute inset-y-0 right-0 z-0 pointer-events-none w-[45%]">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <HeroMessages className="w-full h-full max-h-[560px]" />
+        </div>
       </div>
 
       <div className="relative z-10 pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 md:pb-10 px-4 sm:px-6 md:px-12 lg:pt-28 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 lg:gap-10 flex-grow">

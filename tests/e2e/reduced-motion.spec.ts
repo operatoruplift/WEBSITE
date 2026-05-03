@@ -8,11 +8,14 @@ import { test, expect } from '@playwright/test';
  *  1. CSS layer: when the browser reports prefers-reduced-motion: reduce,
  *     elements with `transition-opacity` / `transition-colors` etc. must
  *     report a near-zero computed transition-duration.
- *  2. JS layer: HeroAnimation checks matchMedia and bails out, so the
- *     requestAnimationFrame counter must stay near zero.
+ *  2. JS layer: HeroMessages reads matchMedia at mount and skips the
+ *     bubble cycling (renders the full first scenario expanded
+ *     instead). The earlier rAF assertion targeted a canvas-driven
+ *     HeroAnimation that was retired in PR #393; we now check that
+ *     all bubbles render immediately under reduced-motion.
  *
  * If either layer regresses (someone removes the !important rule, or
- * deletes the matchMedia check in HeroAnimation), this spec fails.
+ * deletes the matchMedia check in HeroMessages), this spec fails.
  */
 
 test.describe('prefers-reduced-motion', () => {
@@ -40,29 +43,23 @@ test.describe('prefers-reduced-motion', () => {
         }
     });
 
-    test('HeroAnimation rAF loop is skipped', async ({ page }) => {
+    test('HeroMessages renders all bubbles immediately', async ({ page }) => {
+        // PR #393 swap: with reduced-motion, HeroMessages should
+        // render the first scenario's full bubble list at mount
+        // instead of revealing one bubble at a time.
         await page.emulateMedia({ reducedMotion: 'reduce' });
-        await page.addInitScript(() => {
-            let rafCount = 0;
-            const orig = window.requestAnimationFrame;
-            window.requestAnimationFrame = (fn) => {
-                rafCount++;
-                return orig.call(window, fn);
-            };
-            Object.defineProperty(window, '__rafCount', { get: () => rafCount });
-        });
         await page.goto('/', { waitUntil: 'load', timeout: 60_000 });
-        await page.waitForTimeout(2_000);
+        await page.waitForTimeout(1_000);
 
-        const before = await page.evaluate(() => (window as unknown as { __rafCount: number }).__rafCount);
-        await page.waitForTimeout(1_500);
-        const after = await page.evaluate(() => (window as unknown as { __rafCount: number }).__rafCount);
-        const rate = after - before;
+        const bubbleCount = await page.evaluate(() =>
+            document.querySelectorAll('[aria-live="polite"] > div').length
+        );
 
-        // Without reduced-motion: 30-60 rAF/1.5s. With: 0-2 (React internal).
+        // The Morning scenario has 3 bubbles. Reduced-motion should
+        // surface all 3 at first paint, no cycling delay.
         expect(
-            rate,
-            `expected rAF rate near 0 with reduced-motion, got ${rate}/1.5s`,
-        ).toBeLessThan(10);
+            bubbleCount,
+            `expected all bubbles immediately with reduced-motion (got ${bubbleCount})`,
+        ).toBeGreaterThanOrEqual(3);
     });
 });
