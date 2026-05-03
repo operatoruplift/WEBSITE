@@ -56,10 +56,20 @@ const FAQ: React.FC = () => {
 
         {/* FAQ items - no FadeIn wrapper, direct buttons for reliable mobile taps */}
         <div className="flex flex-col gap-3">
-          {faqs.map((faq, i) => (
+          {faqs.map((faq, i) => {
+            // Stable id pair so the button → panel relationship survives
+            // reorder. `aria-controls` lets screen readers tell the user
+            // which content the disclosure trigger expands; `id` on the
+            // panel + `aria-labelledby` on the panel back-references the
+            // trigger so when the user navigates into the expanded
+            // content, the panel's accessible name is the question.
+            const panelId = `faq-panel-${i}`;
+            const triggerId = `faq-trigger-${i}`;
+            return (
             <div
               key={i}
               role="button"
+              id={triggerId}
               tabIndex={0}
               className={`w-full text-left rounded-xl border transition-all duration-300 cursor-pointer ${
                 openIndex === i ? 'border-primary/30 bg-primary/5' : 'border-white/10 bg-white/[0.02] hover:border-white/20'
@@ -67,6 +77,7 @@ const FAQ: React.FC = () => {
               onClick={() => toggle(i)}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(i); } }}
               aria-expanded={openIndex === i}
+              aria-controls={panelId}
             >
               <div className="flex items-center justify-between p-5">
                 <span className={`text-sm font-medium transition-colors pr-4 ${openIndex === i ? 'text-white' : 'text-gray-300'}`}>
@@ -77,12 +88,18 @@ const FAQ: React.FC = () => {
                 </span>
               </div>
               {openIndex === i && (
-                <div className="px-5 pb-5 text-sm text-gray-400 leading-relaxed border-t border-white/5 pt-4">
+                <div
+                  id={panelId}
+                  role="region"
+                  aria-labelledby={triggerId}
+                  className="px-5 pb-5 text-sm text-gray-400 leading-relaxed border-t border-white/5 pt-4"
+                >
                   {faq.a}
                 </div>
               )}
             </div>
-          ))}
+          );
+          })}
         </div>
       </div>
     </section>
