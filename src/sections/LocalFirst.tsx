@@ -102,11 +102,14 @@ const LocalFirst: React.FC = () => {
 
             {/* Flow strip, four steps, horizontal on desktop, stacked on
                 mobile. The arrow between steps signals movement; the
-                accent color per step ties to the trust grid below. */}
+                accent color per step ties to the trust grid below.
+                `<ol>` semantics expose the four-step sequence to
+                assistive tech as an ordered list of 4 items. */}
             <div className="w-full max-w-[1100px] mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-2 items-stretch relative">
+                <ol className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-2 items-stretch relative list-none p-0">
                     {FLOW_STEPS.map((step, i) => (
-                        <FadeIn key={step.label} delay={i * 100}>
+                        <li key={step.label} className="relative h-full">
+                          <FadeIn delay={i * 100}>
                             <div className="relative h-full">
                                 <div className={`relative h-full rounded-2xl border ${step.accent} p-5 flex flex-col text-left`}>
                                     {/* Larger step number for visual rhythm,
@@ -133,9 +136,10 @@ const LocalFirst: React.FC = () => {
                                     </div>
                                 )}
                             </div>
-                        </FadeIn>
+                          </FadeIn>
+                        </li>
                     ))}
-                </div>
+                </ol>
             </div>
 
             {/* Provider strip: concrete proof that BYOK works across
@@ -178,15 +182,18 @@ const LocalFirst: React.FC = () => {
                 mechanism in the codebase (OAuth scope, BYOK env var,
                 ed25519 receipts, Ollama integration). Avoid generic
                 "we care about privacy" copy; tie each card to the
-                mechanism the user can verify. */}
-            <div className="w-full max-w-[1100px] mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                mechanism the user can verify. `<ul>` semantics expose
+                the four trust signals as an unordered list to
+                assistive tech (no inherent order between them). */}
+            <ul className="w-full max-w-[1100px] mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 list-none p-0">
                 {TRUST_SIGNALS.map((signal, i) => {
                     const Icon = signal.icon;
                     return (
-                        <FadeIn key={signal.headline} delay={i * 80}>
+                      <li key={signal.headline}>
+                        <FadeIn delay={i * 80}>
                             <div className="rounded-2xl border border-border bg-card p-6 h-full flex gap-4 text-left">
                                 <div className="w-10 h-10 shrink-0 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center">
-                                    <Icon size={18} className="text-[#F97316]" />
+                                    <Icon aria-hidden size={18} className="text-[#F97316]" />
                                 </div>
                                 <div className="flex-1">
                                     <h3 className="text-sm font-semibold text-foreground mb-1">
@@ -198,9 +205,10 @@ const LocalFirst: React.FC = () => {
                                 </div>
                             </div>
                         </FadeIn>
+                      </li>
                     );
                 })}
-            </div>
+            </ul>
         </Section>
     );
 };
