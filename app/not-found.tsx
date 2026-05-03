@@ -14,9 +14,13 @@ import Link from 'next/link';
  */
 export default function NotFound() {
     return (
-        <div className="theme-light min-h-screen bg-background flex flex-col items-center justify-center px-6">
+        // <main> wrapper so the 404 has a landmark for screen reader
+        // users navigating by region. The theme-light wrapper still
+        // applies via the same className. The decorative "404"
+        // watermark stays inside as content for the region.
+        <main className="theme-light min-h-screen bg-background flex flex-col items-center justify-center px-6">
             <div className="text-center max-w-md">
-                <div className="text-[120px] font-black leading-none text-foreground/[0.04] select-none">404</div>
+                <div aria-hidden="true" className="text-[120px] font-black leading-none text-foreground/[0.04] select-none">404</div>
                 <h1 className="text-4xl font-medium text-foreground tracking-tight -mt-16 mb-4">Page Not Found</h1>
                 <p className="text-muted mb-8 font-mono text-sm">
                     The route you requested doesn&apos;t exist or has been moved.
@@ -30,10 +34,10 @@ export default function NotFound() {
                     </Link>
                 </div>
                 <div className="mt-12 flex items-center justify-center gap-2 text-[10px] font-mono text-muted uppercase tracking-widest">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+                    <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-primary/50" />
                     Operator Uplift
                 </div>
             </div>
-        </div>
+        </main>
     );
 }
