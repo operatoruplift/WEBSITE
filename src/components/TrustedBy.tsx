@@ -3,23 +3,31 @@ import React from 'react';
 import { providerLogos } from './ProviderLogos';
 
 const TrustedBy: React.FC = () => {
-  // Marquee entries mirror the models we actually route to in
-  // lib/llm.ts::mapModelId, so a user reading "Claude Haiku 4.5" or
-  // "Gemini 2.5 Flash" can pick that exact model in /chat. Refreshed
-  // April 30 2026: added Haiku 4.5, Gemini 2.5 Flash, and DeepSeek V3
-  // to match the latest routing table; dropped models we don't ship
-  // (Qwen 3, Phi-4) so the marquee no longer overpromises.
+  // Marquee entries mirror the frontier models that shipped to
+  // consumer/API surfaces by May 2026. lib/llm.ts::mapModelId
+  // accepts any of these; a user picking "Gemini 3.1 Pro" in /chat
+  // gets routed to that exact model. Refresh notes:
+  //   - GPT-5.5 / GPT-5.5 Pro shipped 2026-04-23
+  //     (openai.com/index/introducing-gpt-5-5)
+  //   - Claude Opus 4.7 shipped 2026-04-16
+  //   - Gemini 3.1 Pro + Gemini 3 Flash shipped 2026-04-22
+  //     (blog.google: gemini-3-flash)
+  //   - Grok 4.3 API GA 2026-04-30 (docs.x.ai/release-notes)
+  //   - DeepSeek V4 Pro + V4 Flash shipped 2026-04-24
+  //     (huggingface.co/deepseek-ai/DeepSeek-V4-Pro)
+  //   - Llama 4 stays current (no Llama 5 as of May 2026)
+  //   - Mistral Large stays current
   const models = [
     { name: "Claude Opus 4.7", provider: "Anthropic" },
     { name: "Claude Sonnet 4.6", provider: "Anthropic" },
     { name: "Claude Haiku 4.5", provider: "Anthropic" },
-    { name: "GPT-4.1", provider: "OpenAI" },
-    { name: "GPT-4o", provider: "OpenAI" },
-    { name: "Gemini 2.5 Pro", provider: "Google" },
-    { name: "Gemini 2.5 Flash", provider: "Google" },
-    { name: "Grok 3", provider: "xAI" },
-    { name: "DeepSeek V3", provider: "DeepSeek" },
-    { name: "DeepSeek R1", provider: "DeepSeek" },
+    { name: "GPT-5.5", provider: "OpenAI" },
+    { name: "GPT-5.5 Pro", provider: "OpenAI" },
+    { name: "Gemini 3.1 Pro", provider: "Google" },
+    { name: "Gemini 3 Flash", provider: "Google" },
+    { name: "Grok 4.3", provider: "xAI" },
+    { name: "DeepSeek V4 Pro", provider: "DeepSeek" },
+    { name: "DeepSeek V4 Flash", provider: "DeepSeek" },
     { name: "Llama 4 Maverick", provider: "Meta" },
     { name: "Mistral Large", provider: "Mistral AI" },
     { name: "Ollama", provider: "Ollama" },

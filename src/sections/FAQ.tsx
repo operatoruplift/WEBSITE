@@ -46,8 +46,15 @@ const FAQ: React.FC = () => {
   };
 
   return (
+    // Inner padding-div gets `flex flex-col items-center gap-12` to
+    // match the rhythm of the homepage sections that use the shared
+    // Section component (LocalFirst, DemoVideo, UseCases, Pricing).
+    // Earlier this section used `py-24` + no flex wrapper, so the
+    // SectionHeader and the FAQ list sat at slightly different
+    // horizontal anchors and the vertical gap between them was
+    // tighter than every other section on the page.
     <section id="faq" aria-labelledby="faq-heading" className="w-full bg-background px-6 md:px-12 flex justify-center aurora-glow">
-      <div className="w-full max-w-[800px] py-24">
+      <div className="w-full max-w-[800px] py-14 md:py-20 flex flex-col items-center gap-12">
         <SectionHeader
           headingId="faq-heading"
           eyebrow="FAQ"
@@ -56,7 +63,7 @@ const FAQ: React.FC = () => {
         />
 
         {/* FAQ items - no FadeIn wrapper, direct buttons for reliable mobile taps */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 w-full">
           {faqs.map((faq, i) => {
             // Stable id pair so the button → panel relationship survives
             // reorder. `aria-controls` lets screen readers tell the user
