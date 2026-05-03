@@ -49,7 +49,10 @@ export default function SignupPage() {
     const strengthLabels = ['', 'Weak', 'Good', 'Strong'];
 
     return (
-        <div className="min-h-screen flex items-center justify-center relative" style={{ background: '#050508' }}>
+        // Adopts the marketing light theme; .theme-light flips the
+        // bg-white/N + text-white + border-white/N + bg-black/40
+        // utility classes inside via app/globals.css.
+        <div className="theme-light min-h-screen flex items-center justify-center relative bg-background">
             <div className="absolute inset-0 opacity-40" style={{
                 background: `radial-gradient(ellipse 80% 50% at 50% 30%, rgba(231, 118, 48, 0.15) 0%, transparent 50%)`
             }} />

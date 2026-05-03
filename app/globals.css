@@ -181,11 +181,24 @@
 .theme-light .bg-black\/40 { background: rgba(255,255,255,0.85); }
 .theme-light .bg-black\/60 { background: rgba(255,255,255,0.85); }
 
-/* Hardcoded near-black brand surfaces (#0c0c0c, #0c0c0f, #050508) used
- * for "elevated dark cards" become a soft off-white instead. */
+/* Hardcoded near-black brand surfaces (#0c0c0c, #0c0c0f, #050508,
+ * #0A0A0A, #111111, #222222) used for "elevated dark cards" become
+ * a soft off-white instead. The paywall + auth flows lean on these
+ * arbitrary hexes most heavily; covering them here keeps those
+ * pages light-theme-friendly without editing each call site. */
 .theme-light .bg-\[\#0c0c0c\] { background: #FFFFFF; }
 .theme-light .bg-\[\#0c0c0f\] { background: #FFFFFF; }
 .theme-light .bg-\[\#050508\] { background: #FAFAFA; }
+.theme-light .bg-\[\#0A0A0A\] { background: #FAFAFA; }
+.theme-light .bg-\[\#0a0a0a\] { background: #FAFAFA; }
+.theme-light .bg-\[\#111111\] { background: #FFFFFF; }
+.theme-light .bg-\[\#222222\] { background: #F3F4F6; }
+.theme-light .border-\[\#222222\] { border-color: #E5E7EB; }
+/* Inverse pair: #FAFAFA at small opacity is the dashboard's "very
+ * faint surface". Flip to a dark wash so cards still read on light. */
+.theme-light .bg-\[\#FAFAFA\]\/5 { background: rgba(0,0,0,0.04); }
+.theme-light .text-\[\#FAFAFA\] { color: #0A0A0A; }
+.theme-light .text-\[\#fafafa\] { color: #0A0A0A; }
 
 /* Borders. Most components use border-white/N which is invisible on a
  * white page, so swap to a black wash with a slightly higher floor so
