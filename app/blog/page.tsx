@@ -30,7 +30,7 @@ export default function BlogPage() {
                     as part of the same editorial system, not a generic
                     sub-page. */}
                 <FadeIn>
-                    <Link href="/" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-colors mb-8">
+                    <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted hover:text-foreground transition-colors mb-8">
                         <ArrowLeft size={14} /> Back to home
                     </Link>
                     <div className="inline-flex items-center gap-3 mb-4">
@@ -71,7 +71,7 @@ export default function BlogPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {rest.map((post, i) => (
                         <FadeIn key={post.id} delay={150 + i * 50}>
-                            <Link href={`/blog/${post.id}`} className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] hover:border-white/20 transition-all cursor-pointer group h-full flex flex-col">
+                            <Link href={`/blog/${post.id}`} className="p-6 rounded-2xl border border-foreground/10 bg-foreground/[0.02] hover:border-foreground/20 transition-all cursor-pointer group h-full flex flex-col">
                                 <div className="flex items-center gap-3 mb-4">
                                     <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded border ${categoryColors[post.category]}`}>
                                         {post.category}

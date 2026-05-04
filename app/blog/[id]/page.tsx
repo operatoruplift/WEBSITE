@@ -201,7 +201,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
             <Navbar currentPage="blog" />
 
             <article className="pt-32 pb-24 px-6 md:px-12 max-w-[720px] mx-auto">
-                <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-colors mb-8">
+                <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-muted hover:text-foreground transition-colors mb-8">
                     <ArrowLeft size={14} /> Back to blog
                 </Link>
 

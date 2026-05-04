@@ -1,62 +1,69 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * Hero canvas animation perf guard.
+ * Hero visual perf guard.
  *
- * Locks in PR #326: the HeroAnimation rAF loop must pause when the
- * canvas scrolls offscreen so we stop burning CPU on a visualization
- * the user can no longer see. The pre-#326 implementation kept the
- * loop firing at ~60fps regardless of scroll position.
+ * Originally locked in PR #326 against a canvas-driven HeroAnimation
+ * (particles + phase labels + chat window). PR #393's hero pivot
+ * replaced that canvas with HeroMessages: a CSS-driven iMessage-style
+ * cycling chat mockup. The new component uses setTimeout to advance
+ * scenarios + bubbles and pauses when scrolled offscreen via
+ * IntersectionObserver — same posture, different mechanism.
  *
- * Strategy: instrument requestAnimationFrame with a getter, scroll the
- * page past the hero, wait for the IntersectionObserver to fire, and
- * assert the rAF call count flatlines.
+ * The original rAF-counting strategy doesn't apply (no rAF anymore),
+ * so this spec was rewritten to verify the bubble cycling behaves:
+ * bubbles arrive over time when the hero is in view, and the DOM
+ * stays stable when the hero scrolls offscreen.
  */
 
-test('hero canvas animation pauses when scrolled offscreen', async ({ page }) => {
-    await page.addInitScript(() => {
-        let rafCount = 0;
-        const orig = window.requestAnimationFrame;
-        window.requestAnimationFrame = (fn) => {
-            rafCount++;
-            return orig.call(window, fn);
-        };
-        Object.defineProperty(window, '__rafCount', { get: () => rafCount });
-    });
-
+test('hero messages cycle when in view and pause when offscreen', async ({ page }) => {
     await page.goto('/', { waitUntil: 'load', timeout: 60_000 });
     await page.setViewportSize({ width: 1440, height: 900 });
 
-    // Wait for the canvas to mount + the rAF loop to start.
+    // Allow the first scenario's first bubble to mount.
+    await page.waitForTimeout(1_500);
+
+    // Count visible bubbles inside the chat mockup. The chat lives in
+    // the right column at lg+ and renders one or more bubble rows
+    // initially. After the cycle interval, more bubbles arrive.
+    const initialCount = await page.evaluate(() =>
+        document.querySelectorAll('[aria-live="polite"] > div').length
+    );
+
+    // Wait through the bubble interval so a second bubble should
+    // have arrived.
     await page.waitForTimeout(2_000);
 
-    // Hero is in view: rAF should be firing actively. Threshold is >5
-    // (not ~60) because headless Chromium under load can throttle the
-    // event loop quite hard (observed 13/s on a heavy local box). The
-    // false-positive we care about is "loop is running at all" vs.
-    // "loop is completely off"; the 5 threshold catches both extremes
-    // while tolerating CI noise.
-    const onscreenStart = await page.evaluate(() => (window as unknown as { __rafCount: number }).__rafCount);
-    await page.waitForTimeout(1_000);
-    const onscreenEnd = await page.evaluate(() => (window as unknown as { __rafCount: number }).__rafCount);
-    const onscreenRate = onscreenEnd - onscreenStart;
-    expect(
-        onscreenRate,
-        `expected onscreen rAF firing (>5/s), got ${onscreenRate}/s. Animation may not be running.`,
-    ).toBeGreaterThan(5);
+    const afterCount = await page.evaluate(() =>
+        document.querySelectorAll('[aria-live="polite"] > div').length
+    );
 
-    // Scroll well past the hero.
+    expect(
+        afterCount,
+        `expected at least one new bubble after 2s in view (had ${initialCount}, got ${afterCount})`,
+    ).toBeGreaterThanOrEqual(initialCount);
+    // At minimum, the cycling must not be frozen at zero/one — the first
+    // bubble lands instantly and at least one more should follow.
+    expect(afterCount, 'at least 2 bubbles should be visible after 2s').toBeGreaterThanOrEqual(2);
+
+    // Scroll well past the hero so IntersectionObserver flips
+    // isInView to false. The cycling timer should clear.
     await page.evaluate(() => window.scrollTo({ top: 2000, behavior: 'instant' }));
-    // Allow IntersectionObserver to fire and the in-flight frame to clear.
     await page.waitForTimeout(800);
 
-    // Hero is offscreen: rAF should be paused.
-    const offscreenStart = await page.evaluate(() => (window as unknown as { __rafCount: number }).__rafCount);
-    await page.waitForTimeout(1_000);
-    const offscreenEnd = await page.evaluate(() => (window as unknown as { __rafCount: number }).__rafCount);
-    const offscreenRate = offscreenEnd - offscreenStart;
+    const offscreenSnapshot = await page.evaluate(() =>
+        document.querySelectorAll('[aria-live="polite"] > div').length
+    );
+    await page.waitForTimeout(1_500);
+    const offscreenLater = await page.evaluate(() =>
+        document.querySelectorAll('[aria-live="polite"] > div').length
+    );
+
+    // Bubble count should not advance while offscreen. The timer was
+    // cleared by the useEffect cleanup. We allow equality (no change)
+    // and reject growth.
     expect(
-        offscreenRate,
-        `expected offscreen rAF near 0/s, got ${offscreenRate}/s. Loop kept firing past the hero.`,
-    ).toBeLessThan(10);
+        offscreenLater,
+        `bubble count should hold steady offscreen (was ${offscreenSnapshot}, became ${offscreenLater})`,
+    ).toBe(offscreenSnapshot);
 });

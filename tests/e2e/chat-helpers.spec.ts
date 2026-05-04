@@ -175,9 +175,9 @@ test.describe('normalizeModelKey', () => {
 });
 
 test.describe('listKnownModelIds (snapshot)', () => {
-    test('returns all 13 documented model ids', () => {
+    test('returns all 20 documented model ids', () => {
         const ids = listKnownModelIds();
-        expect(ids).toHaveLength(13);
+        expect(ids).toHaveLength(20);
     });
 
     test('every entry in the table maps round-trip', () => {

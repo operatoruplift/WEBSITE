@@ -94,7 +94,7 @@ export function BlogToc({ rootSelector = '.blog-content' }: { rootSelector?: str
                             className={`block pl-3 -ml-px py-0.5 transition-colors border-l ${
                                 activeId === item.id
                                     ? 'text-[#F97316] border-[#F97316]'
-                                    : 'text-gray-400 hover:text-white border-transparent'
+                                    : 'text-muted hover:text-foreground border-transparent'
                             }`}
                         >
                             {item.text}

@@ -68,21 +68,21 @@ const Contact: React.FC = () => {
       >
         
         <div className="text-center mb-20 max-w-2xl">
-          <div className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-6">
+          <div className="text-xs font-bold tracking-[0.2em] text-muted uppercase mb-6">
             {data.tag}
           </div>
-          
-          <h1 className="text-5xl md:text-7xl text-white font-medium tracking-tight mb-8">
+
+          <h1 className="text-5xl md:text-7xl text-foreground font-medium tracking-tight mb-8">
             {data.headline}
           </h1>
-          
-          <p className="text-lg text-gray-400 leading-relaxed">
+
+          <p className="text-lg text-muted leading-relaxed">
             {data.subhead}{' '}
-            <a 
+            <a
               href={data.subheadLinkUrl}
-              target="_blank" 
+              target="_blank"
               rel="noreferrer"
-              className="text-primary hover:underline underline-offset-4 decoration-primary/50 transition-colors hover:text-white"
+              className="text-primary hover:underline underline-offset-4 decoration-primary/50 transition-colors hover:text-foreground"
             >
               {data.subheadLinkText}
             </a>
@@ -92,18 +92,18 @@ const Contact: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
           {data.options.map((option) => (
             <TechContact key={option.id} option={option}>
-              <div className="mt-1 mr-5 text-gray-300 group-hover:text-primary transition-colors duration-300">
+              <div className="mt-1 mr-5 text-foreground/70 group-hover:text-primary transition-colors duration-300">
                 {getIcon(option.iconType)}
               </div>
-              
+
               <div className="flex-grow">
                 <div className="flex items-center justify-between mb-1">
-                  <h3 className="text-lg font-medium text-white group-hover:text-primary transition-colors duration-300">
+                  <h3 className="text-lg font-medium text-foreground group-hover:text-primary transition-colors duration-300">
                     {option.title}
                   </h3>
-                  <ArrowUpRightIcon className="w-4 h-4 text-gray-500 group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 duration-300" />
+                  <ArrowUpRightIcon className="w-4 h-4 text-muted group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 duration-300" />
                 </div>
-                <p className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors font-mono">
+                <p className="text-sm text-muted group-hover:text-foreground/80 transition-colors font-mono">
                   {option.description}
                 </p>
               </div>

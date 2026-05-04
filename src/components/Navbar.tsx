@@ -38,7 +38,7 @@ const Navbar: React.FC<NavbarProps> = () => {
               <a
                 key={item.name}
                 href={item.href || `/#${item.targetId}`}
-                className="group flex items-center text-xs font-bold text-muted hover:text-white transition-colors tracking-[0.15em] px-1"
+                className="group flex items-center text-xs font-bold text-muted hover:text-foreground transition-colors tracking-[0.15em] px-1"
               >
                 {item.name}
                 {item.name === 'PRODUCT' && (
@@ -50,7 +50,7 @@ const Navbar: React.FC<NavbarProps> = () => {
                 nav flow on-site and docs in sync with shipped behavior. */}
             <Link
               href="/docs"
-              className="group flex items-center text-xs font-bold text-muted hover:text-white transition-colors tracking-[0.15em] px-1"
+              className="group flex items-center text-xs font-bold text-muted hover:text-foreground transition-colors tracking-[0.15em] px-1"
             >
               DOCS
             </Link>
@@ -61,7 +61,7 @@ const Navbar: React.FC<NavbarProps> = () => {
               href="https://github.com/operatoruplift/"
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-2 h-9 px-3 text-xs font-bold bg-white/5 text-white border border-white/10 rounded-sm hover:bg-white/10 transition-colors uppercase tracking-wide"
+              className="flex items-center gap-2 h-9 px-3 text-xs font-bold bg-foreground/5 text-foreground border border-foreground/10 rounded-sm hover:bg-foreground/10 transition-colors uppercase tracking-wide"
             >
               <GitHubIcon aria-hidden className="w-4 h-4" />
               {/* `sr-only xl:not-sr-only` keeps the label in the
@@ -82,7 +82,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 
             <Link
               href="/contact"
-              className="inline-flex items-center h-9 px-4 text-xs font-bold bg-white/10 text-white border border-white/10 rounded-sm hover:bg-white/20 transition-colors uppercase tracking-wide whitespace-nowrap"
+              className="inline-flex items-center h-9 px-4 text-xs font-bold bg-foreground/10 text-foreground border border-foreground/10 rounded-sm hover:bg-foreground/20 transition-colors uppercase tracking-wide whitespace-nowrap"
             >
               Contact
             </Link>
@@ -138,7 +138,7 @@ const Navbar: React.FC<NavbarProps> = () => {
             href="https://github.com/operatoruplift/" 
             target="_blank" 
             rel="noreferrer"
-            className="flex items-center space-x-2 text-sm font-bold bg-white/5 text-white border border-white/10 px-4 py-3 rounded-sm hover:bg-white/10 transition-all uppercase tracking-wide w-full justify-center"
+            className="flex items-center space-x-2 text-sm font-bold bg-foreground/5 text-foreground border border-foreground/10 px-4 py-3 rounded-sm hover:bg-foreground/10 transition-all uppercase tracking-wide w-full justify-center"
           >
             <GitHubIcon aria-hidden className="w-4 h-4" />
             <span>Open Source</span>
@@ -155,7 +155,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 
           <Link
             href="/contact"
-            className="text-sm font-bold bg-white/10 text-white border border-white/10 px-4 py-3 rounded-sm hover:bg-white/20 transition-all uppercase tracking-wide w-full text-center"
+            className="text-sm font-bold bg-foreground/10 text-foreground border border-foreground/10 px-4 py-3 rounded-sm hover:bg-foreground/20 transition-all uppercase tracking-wide w-full text-center"
             onClick={() => setMobileMenuOpen(false)}
           >
             Contact

@@ -22,14 +22,14 @@ const TEMPLATES = [
 ];
 
 const MODELS = [
-    { id: 'claude-opus-4-7', name: 'Claude Opus 4.7', provider: 'Anthropic', badge: 'BEST' },
+    { id: 'claude-opus-4-7',   name: 'Claude Opus 4.7', provider: 'Anthropic', badge: 'BEST' },
     { id: 'claude-sonnet-4-6', name: 'Claude Sonnet 4.6', provider: 'Anthropic', badge: 'FAST' },
-    { id: 'gpt-4.1', name: 'GPT-4.1', provider: 'OpenAI', badge: 'VERSATILE' },
-    { id: 'gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'OpenAI', badge: 'CHEAP' },
-    { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', provider: 'Google', badge: 'LONG CTX' },
-    { id: 'grok-3', name: 'Grok 3', provider: 'xAI', badge: 'REASONING' },
-    { id: 'llama-4-maverick', name: 'Llama 4 Maverick', provider: 'Meta', badge: 'OPEN' },
-    { id: 'deepseek-r1', name: 'DeepSeek R1', provider: 'DeepSeek', badge: 'LOCAL' },
+    { id: 'gpt-5.5',           name: 'GPT-5.5',         provider: 'OpenAI',    badge: 'VERSATILE' },
+    { id: 'gpt-5.5-pro',       name: 'GPT-5.5 Pro',     provider: 'OpenAI',    badge: 'AGENTIC' },
+    { id: 'gemini-3.1-pro',    name: 'Gemini 3.1 Pro',  provider: 'Google',    badge: 'LONG CTX' },
+    { id: 'grok-4.3',          name: 'Grok 4.3',        provider: 'xAI',       badge: 'REASONING' },
+    { id: 'llama-4-maverick',  name: 'Llama 4 Maverick', provider: 'Meta',     badge: 'OPEN' },
+    { id: 'deepseek-v4-pro',   name: 'DeepSeek V4 Pro', provider: 'DeepSeek',  badge: 'LOCAL' },
 ];
 
 const AGENT_DIRECTIVES = `## Agent Directives

@@ -8,6 +8,7 @@ import Comparison from '@/src/sections/Comparison';
 import UseCases from '@/src/sections/UseCases';
 import Pricing from '@/src/sections/Pricing';
 import FAQ from '@/src/sections/FAQ';
+import FinalCta from '@/src/sections/FinalCta';
 import Footer from '@/src/components/Footer';
 
 /**
@@ -25,6 +26,7 @@ import Footer from '@/src/components/Footer';
  *   UseCases    , concrete jobs the agent does
  *   Pricing     , Free / Pro / Teams
  *   FAQ         , objection handling
+ *   FinalCta    , cream editorial closer (sully.ai-derived pattern)
  */
 export default function Home() {
   return (
@@ -43,6 +45,7 @@ export default function Home() {
         <UseCases />
         <Pricing />
         <FAQ />
+        <FinalCta />
       </main>
       <Footer />
     </div>

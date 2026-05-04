@@ -84,7 +84,7 @@ export default function PricingPage() {
                                 <div className={`rounded-2xl border p-8 flex flex-col h-full transition-all ${
                                     tier.highlight
                                         ? 'border-primary/30 bg-primary/5 shadow-[0_0_30px_rgba(231,118,48,0.1)]'
-                                        : 'border-white/10 bg-white/[0.02] hover:border-white/20'
+                                        : 'border-foreground/10 bg-foreground/[0.02] hover:border-foreground/20'
                                 }`}>
                                     {tier.highlight && (
                                         <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-4">Recommended</span>

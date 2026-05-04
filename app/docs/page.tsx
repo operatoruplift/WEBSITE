@@ -32,12 +32,12 @@ function NextLinks({ current }: { current: string }) {
     return (
         <div className="mt-12 pt-6 border-t border-white/10 flex items-center justify-between text-sm">
             {prev ? (
-                <Link href={`/docs/${prev.slug}`} className="text-gray-400 hover:text-white">
+                <Link href={`/docs/${prev.slug}`} className="text-muted hover:text-foreground">
                     &larr; {prev.title}
                 </Link>
             ) : <span />}
             {next ? (
-                <Link href={`/docs/${next.slug}`} className="text-gray-400 hover:text-white">
+                <Link href={`/docs/${next.slug}`} className="text-muted hover:text-foreground">
                     {next.title} &rarr;
                 </Link>
             ) : <span />}

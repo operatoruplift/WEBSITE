@@ -16,17 +16,30 @@
  */
 
 const MODEL_DISPLAY_NAMES: Record<string, string> = {
+    // Anthropic
     'claude-opus-4-7': 'Claude Opus 4.7 (Anthropic)',
     'claude-opus-4-6': 'Claude Opus 4.7 (Anthropic)',
     'claude-sonnet-4-6': 'Claude Sonnet 4.6 (Anthropic)',
     'claude-haiku-4-5': 'Claude Haiku 4.5 (Anthropic)',
+    // OpenAI: GPT-5.5 + GPT-5.5 Pro shipped 2026-04-23. Older 4.x
+    // entries kept so legacy chat sessions still resolve a name.
+    'gpt-5.5': 'GPT-5.5 (OpenAI)',
+    'gpt-5.5-pro': 'GPT-5.5 Pro (OpenAI)',
     'gpt-4.1': 'GPT-4.1 (OpenAI)',
     'gpt-4.1-mini': 'GPT-4.1 Mini (OpenAI)',
     'gpt-4o': 'GPT-4o (OpenAI)',
+    // Google: Gemini 3.1 Pro + 3 Flash shipped 2026-04-22.
+    'gemini-3.1-pro': 'Gemini 3.1 Pro (Google)',
+    'gemini-3-flash': 'Gemini 3 Flash (Google)',
     'gemini-2.5-pro': 'Gemini 2.5 Pro (Google)',
     'gemini-2.5-flash': 'Gemini 2.5 Flash (Google)',
+    // xAI: Grok 4.3 API GA 2026-04-30.
+    'grok-4.3': 'Grok 4.3 (xAI)',
     'grok-3': 'Grok 3 (xAI)',
     'grok-3-mini': 'Grok 3 Mini (xAI)',
+    // DeepSeek: V4 Pro + V4 Flash shipped 2026-04-24.
+    'deepseek-v4-pro': 'DeepSeek V4 Pro (DeepSeek)',
+    'deepseek-v4-flash': 'DeepSeek V4 Flash (DeepSeek)',
     'deepseek-r1': 'DeepSeek R1 (DeepSeek)',
     'deepseek-v3': 'DeepSeek V3 (DeepSeek)',
 };

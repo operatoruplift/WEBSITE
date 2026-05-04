@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { getPhotonAdapter } from '@/lib/photon/adapter';
+import { runAgentReply } from '@/lib/photon/agent';
 import {
     verifyWebhookSignature,
     computeProviderMessageId,
     normalizeWebhookPayload,
     makeFallbackAckGate,
-    FALLBACK_MS,
 } from '@/lib/photon/webhook-helpers';
 import { withRequestMeta } from '@/lib/apiHelpers';
 import { safeLog, safeWarn } from '@/lib/safeLog';
@@ -54,39 +54,60 @@ function getSupabase() {
     return createClient(url, key, { auth: { persistSession: false } });
 }
 
-// In-memory debounce for the 5s fallback ack. Keyed by sender so a
-// burst of messages from the same thread produces one ack per 60s
-// window, not one per message. Memory-only is fine for demo: serverless
-// cold-start resets the map, which is acceptable for an "at most once"
-// best-effort ack. A Supabase acked_at check adds a second line of
-// defense across instances.
-const ackGate = makeFallbackAckGate();
+// In-memory debounce for agent replies. Keyed by sender so a burst
+// of messages from the same thread doesn't produce a flood of LLM
+// calls. Memory-only is fine: serverless cold-start resets the map,
+// which is acceptable for a "best effort" debounce. A Supabase
+// processed_at check adds a second line of defense across instances.
+const agentGate = makeFallbackAckGate();
 
-function shouldSendFallbackAck(sender: string): boolean {
-    return ackGate.shouldSend(sender);
+function shouldRunAgent(sender: string): boolean {
+    return agentGate.shouldSend(sender);
 }
 
-async function sendFallbackAck(sender: string, platform: string, supabase: ReturnType<typeof getSupabase>, rowId: string | null) {
+type Platform = 'imessage' | 'telegram' | 'whatsapp' | 'x' | 'discord' | 'instagram';
+
+async function processWithAgent(
+    sender: string,
+    text: string,
+    platform: string,
+    supabase: ReturnType<typeof getSupabase>,
+    rowId: string | null,
+    requestId: string,
+) {
     const adapter = getPhotonAdapter();
-    if (!adapter.isActive()) return; // No creds, no ack.
-    const result = await adapter.send({
-        to: sender,
-        text: 'Got it, working on it.',
-        platform: platform as 'imessage' | 'telegram' | 'whatsapp' | 'x' | 'discord' | 'instagram',
-    });
+    const result = await runAgentReply(
+        { sender, text, platform: platform as Platform },
+        adapter,
+        requestId,
+    );
     if (!result.ok) {
         safeWarn({
             at: 'webhooks.photon',
-            event: 'fallback_ack_failed',
+            event: 'agent_failed',
+            requestId,
             reason: result.reason,
-            message: result.message,
+            message: result.message?.slice(0, 240),
+            elapsedMs: result.elapsedMs,
         });
         return;
     }
+    safeLog({
+        at: 'webhooks.photon',
+        event: 'agent_replied',
+        requestId,
+        source: result.source,
+        replyLen: result.replyText.length,
+        elapsedMs: result.elapsedMs,
+    });
     if (supabase && rowId) {
         await supabase
             .from('inbound_messages')
-            .update({ acked_at: new Date().toISOString() })
+            .update({
+                processed_at: new Date().toISOString(),
+                reply_message_id: result.messageId,
+                acked_at: new Date().toISOString(),
+            })
             .eq('id', rowId);
     }
 }
@@ -140,9 +161,12 @@ export async function POST(request: Request) {
             textLen: text.length,
             providerMessageId,
         });
-        // Still offer the 5s ack when configured, even with no persistence.
-        if (shouldSendFallbackAck(sender)) {
-            setTimeout(() => { sendFallbackAck(sender, platform, null, null).catch(() => {}); }, FALLBACK_MS);
+        // Still run the agent when configured, even with no persistence,
+        // so the user gets a real reply on iMessage. Awaiting keeps us
+        // inside the maxDuration budget (15s) so Spectrum doesn't see a
+        // 5xx and retry; the typical Haiku + Photon round trip is ~2-4s.
+        if (shouldRunAgent(sender)) {
+            await processWithAgent(sender, text, platform, null, null, meta.requestId);
         }
         return NextResponse.json({ ok: true, logged: false, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
     }
@@ -182,24 +206,32 @@ export async function POST(request: Request) {
             });
             return NextResponse.json({ ok: true, logged: false, duplicate: true, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
         }
-        // Likely the table doesn't exist yet. Still 200 so Spectrum
-        // doesn't retry; ops can create the table off the error log.
+        // Likely the table doesn't exist yet (run the migration in
+        // lib/photon-webhook-migration.sql). Still 200 so Spectrum
+        // doesn't retry, and still run the agent so the user gets an
+        // iMessage reply even before the audit table is provisioned.
         safeWarn({
             at: meta.route,
             event: 'supabase_insert_failed',
             requestId: meta.requestId,
             error: error.message,
         });
+        if (shouldRunAgent(sender)) {
+            await processWithAgent(sender, text, platform, null, null, meta.requestId);
+        }
         return NextResponse.json({ ok: true, logged: false, reason: error.message, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
     }
 
     const rowId = (inserted as { id?: string } | null)?.id ?? null;
 
-    // 5-second fallback ack. Schedules a background send to the same
-    // thread if we haven't ack'd that sender in the last 60s. Debounce
-    // guards against a burst of messages turning into a burst of acks.
-    if (shouldSendFallbackAck(sender)) {
-        setTimeout(() => { sendFallbackAck(sender, platform, supabase, rowId).catch(() => {}); }, FALLBACK_MS);
+    // Synchronous agent reply. We await Claude Haiku + Photon send
+    // before returning 200 so the user sees a real iMessage response
+    // within the same webhook lifetime. The setTimeout-based fallback
+    // we used before relied on the function instance staying warm
+    // after returning, which Vercel doesn't guarantee. The 60s sender
+    // gate guards against a burst turning into a flood of LLM calls.
+    if (shouldRunAgent(sender)) {
+        await processWithAgent(sender, text, platform, supabase, rowId, meta.requestId);
     }
 
     return NextResponse.json({ ok: true, logged: true, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
