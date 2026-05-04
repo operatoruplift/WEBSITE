@@ -206,14 +206,19 @@ export async function POST(request: Request) {
             });
             return NextResponse.json({ ok: true, logged: false, duplicate: true, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
         }
-        // Likely the table doesn't exist yet. Still 200 so Spectrum
-        // doesn't retry; ops can create the table off the error log.
+        // Likely the table doesn't exist yet (run the migration in
+        // lib/photon-webhook-migration.sql). Still 200 so Spectrum
+        // doesn't retry, and still run the agent so the user gets an
+        // iMessage reply even before the audit table is provisioned.
         safeWarn({
             at: meta.route,
             event: 'supabase_insert_failed',
             requestId: meta.requestId,
             error: error.message,
         });
+        if (shouldRunAgent(sender)) {
+            await processWithAgent(sender, text, platform, null, null, meta.requestId);
+        }
         return NextResponse.json({ ok: true, logged: false, reason: error.message, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
     }
 
