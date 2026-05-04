@@ -42,4 +42,9 @@ test('GET never leaks secrets in the 401 body', async ({ request }) => {
     expect(body).not.toMatch(/PHOTON_API_KEY|PHOTON_TOKEN/);
     expect(body).not.toMatch(/MAGICBLOCK_PAYMENTS_TOKEN/);
     expect(body).not.toMatch(/SUPABASE_SERVICE_ROLE_KEY/);
+    // PR #395 added anthropic + photon_inbox entries on the 200 path.
+    // The 401 envelope must never carry the Anthropic key or any
+    // Supabase service-role artifact, even by accident.
+    expect(body).not.toMatch(/ANTHROPIC_API_KEY|sk-ant-[A-Za-z0-9_-]+/);
+    expect(body).not.toMatch(/inbound_messages/);
 });
