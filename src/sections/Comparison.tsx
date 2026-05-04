@@ -31,27 +31,45 @@ const features = [
   { name: 'Privacy posture (HIPAA-aware, GDPR workflows)', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: false, poke: false, hermes: false, openclaw: false },
 ];
 
-/** Letter-monogram placeholder for the niche-agent columns that don't
- *  have a vendor logo wired in. Renders a circular badge with the
- *  initial inside, sized to match the existing 20px provider logos
- *  so the table header row stays visually balanced. The component
- *  accepts the full SVGProps set so callers can forward aria-hidden,
- *  matching the ProviderLogos signature widened in PR #378. */
-function Monogram({ letter, className, ...rest }: React.SVGProps<SVGSVGElement> & { letter: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} {...rest}>
-      <circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <text x="12" y="16" textAnchor="middle" fontSize="11" fontFamily="ui-monospace, SFMono-Regular, monospace" fontWeight="700" fill="currentColor">
-        {letter}
-      </text>
-    </svg>
-  );
-}
+/** Branded SVG marks for the four niche competitors that don't have
+ *  a public vendor logo we can ship verbatim. Each is hand-drawn from
+ *  brand-cues on the platform's own site so the column headers read
+ *  as intentional brand marks rather than placeholder monograms.
+ *  - Zo Computer: pixel cube (cloud computer for AI agents).
+ *  - Poke: chat-bubble + dot (iMessage-native assistant).
+ *  - Hermes Agent: caduceus-derived double helix wing (Nous Research).
+ *  - OpenClaw: clawed bracket (open-source agent gateway). */
+const ZoLogo = ({ className = 'w-5 h-5', ...rest }: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...rest}>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <path d="M7 8h10L7 16h10" />
+  </svg>
+);
 
-const ZoLogo = (props: React.SVGProps<SVGSVGElement>) => <Monogram letter="Z" {...props} />;
-const PokeLogo = (props: React.SVGProps<SVGSVGElement>) => <Monogram letter="P" {...props} />;
-const HermesLogo = (props: React.SVGProps<SVGSVGElement>) => <Monogram letter="H" {...props} />;
-const OpenClawLogo = (props: React.SVGProps<SVGSVGElement>) => <Monogram letter="C" {...props} />;
+const PokeLogo = ({ className = 'w-5 h-5', ...rest }: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...rest}>
+    <path d="M4 12c0-4.4 3.6-8 8-8s8 3.6 8 8c0 3.6-2.4 6.7-5.7 7.6L12 22l-2.3-2.4C6.4 18.7 4 15.6 4 12z" />
+    <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+  </svg>
+);
+
+const HermesLogo = ({ className = 'w-5 h-5', ...rest }: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...rest}>
+    <path d="M12 3v18" />
+    <path d="M8 6c0 3 4 4 4 4s4-1 4-4" />
+    <path d="M8 10c0 3 4 4 4 4s4-1 4-4" />
+    <path d="M9 21h6" />
+  </svg>
+);
+
+const OpenClawLogo = ({ className = 'w-5 h-5', ...rest }: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...rest}>
+    <path d="M7 4v8c0 2.8 2.2 5 5 5s5-2.2 5-5V4" />
+    <path d="M9 8l-2-2" />
+    <path d="M15 8l2-2" />
+    <path d="M12 17v3" />
+  </svg>
+);
 
 /** Logo component renders at the same fixed size so mobile doesn't wrap
     or overlap. Alt text is the brand name for a11y. */
@@ -103,18 +121,18 @@ const Comparison: React.FC = () => {
                 light marketing page. */}
             <div className="pointer-events-none absolute top-0 right-0 w-8 h-full bg-gradient-to-l from-background to-transparent z-10 md:hidden" />
             <div className="overflow-x-auto">
-              <div className="min-w-[640px] mx-auto rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm">
+              <div className="min-w-[640px] mx-auto rounded-2xl border border-foreground/10 bg-card/60 backdrop-blur-sm">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-white/10">
-                      <th className="text-left p-2.5 sm:p-4 text-gray-500 font-mono text-[10px] sm:text-xs uppercase tracking-wider min-w-[120px] sm:w-[28%]">Feature</th>
+                    <tr className="border-b border-foreground/10">
+                      <th className="text-left p-2.5 sm:p-4 text-muted font-mono text-[10px] sm:text-xs uppercase tracking-wider min-w-[120px] sm:w-[28%]">Feature</th>
                       {platforms.map(p => {
                       const PlatformLogo = p.Logo;
                       return (
                         <th
                           key={p.key}
                           className={`p-2 sm:p-3 text-center font-mono text-[10px] uppercase tracking-wider ${
-                            p.highlight ? 'text-primary bg-primary/5' : 'text-gray-500'
+                            p.highlight ? 'text-primary bg-primary/5' : 'text-muted'
                           }`}
                           aria-label={p.name}
                         >
@@ -127,7 +145,7 @@ const Comparison: React.FC = () => {
                           <div className="flex flex-col lg:flex-row items-center justify-center gap-1 lg:gap-1.5">
                             <PlatformLogo
                               aria-hidden
-                              className={`w-5 h-5 shrink-0 ${p.highlight ? 'text-primary' : 'text-gray-400'}`}
+                              className={`w-5 h-5 shrink-0 ${p.highlight ? 'text-primary' : 'text-foreground/60'}`}
                             />
                             <span className="hidden lg:inline whitespace-nowrap">{p.name}</span>
                             {/* Screen readers only, mobile shows logo visually but keeps the name for accessibility */}
@@ -140,16 +158,16 @@ const Comparison: React.FC = () => {
                 </thead>
                 <tbody>
                   {features.map((f, i) => (
-                    <tr key={f.name} className={`border-b border-white/5 ${i % 2 === 0 ? 'bg-white/[0.01]' : ''}`}>
-                      <td className="p-2.5 sm:p-4 text-gray-300 font-medium text-[11px] sm:text-xs">{f.name}</td>
+                    <tr key={f.name} className={`border-b border-foreground/[0.06] ${i % 2 === 0 ? 'bg-foreground/[0.015]' : ''}`}>
+                      <td className="p-2.5 sm:p-4 text-foreground font-medium text-[11px] sm:text-xs">{f.name}</td>
                       {platforms.map(p => {
                         const val = f[p.key as keyof typeof f] as boolean;
                         return (
                           <td key={p.key} className={`p-2 sm:p-3 text-center ${p.highlight ? 'bg-primary/5' : ''}`}>
                             {val ? (
-                              <span className="text-emerald-400">&#10003;</span>
+                              <span className="text-emerald-600">&#10003;</span>
                             ) : (
-                              <span className="text-gray-700">&#10005;</span>
+                              <span className="text-foreground/25">&#10005;</span>
                             )}
                           </td>
                         );
@@ -161,7 +179,7 @@ const Comparison: React.FC = () => {
               </div>
             </div>
           </div>
-          <p className="text-[10px] text-gray-600 text-center mt-4 font-mono">
+          <p className="text-[10px] text-muted text-center mt-4 font-mono">
             Based on publicly available privacy policies and product features as of May 2026.
           </p>
         </FadeIn>

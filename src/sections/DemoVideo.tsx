@@ -72,7 +72,7 @@ export function DemoVideo() {
                             <p className="text-sm text-muted font-mono text-center">
                                 The demo video didn&apos;t load. Refresh, or
                                 {' '}
-                                <Link href="/chat" className="underline hover:text-white">try the live demo chat</Link>
+                                <Link href="/chat" className="underline hover:text-foreground">try the live demo chat</Link>
                                 {' '}instead.
                             </p>
                         </div>

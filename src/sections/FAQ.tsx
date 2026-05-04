@@ -80,7 +80,7 @@ const FAQ: React.FC = () => {
               id={triggerId}
               tabIndex={0}
               className={`w-full text-left rounded-xl border transition-all duration-300 cursor-pointer ${
-                openIndex === i ? 'border-primary/30 bg-primary/5' : 'border-white/10 bg-white/[0.02] hover:border-white/20'
+                openIndex === i ? 'border-primary/30 bg-primary/5' : 'border-foreground/10 bg-foreground/[0.02] hover:border-foreground/20'
               }`}
               onClick={() => toggle(i)}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(i); } }}
@@ -88,10 +88,10 @@ const FAQ: React.FC = () => {
               aria-controls={panelId}
             >
               <div className="flex items-center justify-between p-5">
-                <span className={`text-sm font-medium transition-colors pr-4 ${openIndex === i ? 'text-white' : 'text-gray-300'}`}>
+                <span className={`text-sm font-medium transition-colors pr-4 ${openIndex === i ? 'text-foreground' : 'text-foreground/80'}`}>
                   {faq.q}
                 </span>
-                <span className={`text-lg leading-none transition-transform duration-300 text-gray-500 flex-shrink-0 ${openIndex === i ? 'rotate-45' : ''}`}>
+                <span className={`text-lg leading-none transition-transform duration-300 text-muted flex-shrink-0 ${openIndex === i ? 'rotate-45' : ''}`}>
                   +
                 </span>
               </div>
@@ -100,7 +100,7 @@ const FAQ: React.FC = () => {
                   id={panelId}
                   role="region"
                   aria-labelledby={triggerId}
-                  className="px-5 pb-5 text-sm text-gray-400 leading-relaxed border-t border-white/5 pt-4"
+                  className="px-5 pb-5 text-sm text-muted leading-relaxed border-t border-foreground/[0.06] pt-4"
                 >
                   {faq.a}
                 </div>
