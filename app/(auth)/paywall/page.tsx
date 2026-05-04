@@ -180,7 +180,7 @@ export default function PaywallPage() {
             */}
             <Link
                 href="/login?returnTo=/chat"
-                className="absolute top-6 right-6 inline-flex items-center gap-1.5 text-sm text-[#A1A1AA] hover:text-white transition-colors"
+                className="absolute top-6 right-6 inline-flex items-center gap-1.5 text-sm text-[#A1A1AA] hover:text-foreground transition-colors"
                 aria-label="Sign in to an existing account"
             >
                 Sign in <ArrowRight size={14} />
@@ -266,7 +266,7 @@ export default function PaywallPage() {
                                     </p>
                                     <div className="flex items-center gap-2 p-2 rounded-lg bg-[#0A0A0A] border border-[#222222] mb-2">
                                         <code className="text-[10px] text-white font-mono flex-1 truncate">{invoice.recipient}</code>
-                                        <button onClick={copyAddress} className="text-[#A1A1AA] hover:text-white" aria-label="Copy address">
+                                        <button onClick={copyAddress} className="text-[#A1A1AA] hover:text-foreground" aria-label="Copy address">
                                             {copied ? <Check size={14} className="text-[#F97316]" /> : <Copy size={14} />}
                                         </button>
                                     </div>
@@ -417,7 +417,7 @@ export default function PaywallPage() {
                 </div>
 
                 <div className="text-center">
-                    <Link href="/marketplace" className="text-sm text-[#A1A1AA] hover:text-white transition-colors">
+                    <Link href="/marketplace" className="text-sm text-[#A1A1AA] hover:text-foreground transition-colors">
                         Or browse the Agent Marketplace for free →
                     </Link>
                 </div>
