@@ -46,15 +46,20 @@ const FAQ: React.FC = () => {
   };
 
   return (
-    // Inner padding-div gets `flex flex-col items-center gap-12` to
-    // match the rhythm of the homepage sections that use the shared
-    // Section component (LocalFirst, DemoVideo, UseCases, Pricing).
-    // Earlier this section used `py-24` + no flex wrapper, so the
-    // SectionHeader and the FAQ list sat at slightly different
-    // horizontal anchors and the vertical gap between them was
-    // tighter than every other section on the page.
+    // Inner column is `max-w-2xl` to match the SectionHeader's own
+    // `max-w-2xl`, so the eyebrow/headline/description and the FAQ
+    // disclosure rows share the same horizontal anchor. The earlier
+    // `max-w-[800px]` + `w-full` list left the questions extending
+    // ~64px past the centered header on each side, which read as
+    // "the FAQ isn't centered" because the visible left edge of the
+    // questions sat outside the visible left edge of the header.
+    //
+    // No `gap-12` on the column: SectionHeader already provides its
+    // own `mb-12` and the additional flex gap was double-spacing
+    // the header away from the first question. `gap-2 md:gap-3` on
+    // the inner list controls the disclosure-row rhythm separately.
     <section id="faq" aria-labelledby="faq-heading" className="w-full bg-background px-6 md:px-12 flex justify-center aurora-glow">
-      <div className="w-full max-w-[800px] py-14 md:py-20 flex flex-col items-center gap-12">
+      <div className="w-full max-w-2xl py-14 md:py-20 flex flex-col items-stretch">
         <SectionHeader
           headingId="faq-heading"
           eyebrow="FAQ"
