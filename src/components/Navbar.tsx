@@ -38,7 +38,7 @@ const Navbar: React.FC<NavbarProps> = () => {
               <a
                 key={item.name}
                 href={item.href || `/#${item.targetId}`}
-                className="group flex items-center text-xs font-bold text-muted hover:text-white transition-colors tracking-[0.15em] px-1"
+                className="group flex items-center text-xs font-bold text-muted hover:text-foreground transition-colors tracking-[0.15em] px-1"
               >
                 {item.name}
                 {item.name === 'PRODUCT' && (
@@ -50,7 +50,7 @@ const Navbar: React.FC<NavbarProps> = () => {
                 nav flow on-site and docs in sync with shipped behavior. */}
             <Link
               href="/docs"
-              className="group flex items-center text-xs font-bold text-muted hover:text-white transition-colors tracking-[0.15em] px-1"
+              className="group flex items-center text-xs font-bold text-muted hover:text-foreground transition-colors tracking-[0.15em] px-1"
             >
               DOCS
             </Link>

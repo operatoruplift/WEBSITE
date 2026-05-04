@@ -79,21 +79,21 @@ const Footer: React.FC = () => {
                 <div className="flex flex-col space-y-4">
                     <h4 className="text-white font-medium text-xl mb-2">{data.sections.resources.title}</h4>
                     {data.sections.resources.links.map((link, i) => (
-                        <Link key={i} href={getLinkHref(link)} target={link.url ? "_blank" : undefined} className="text-gray-500 hover:text-white transition-colors text-lg">{link.label}</Link>
+                        <Link key={i} href={getLinkHref(link)} target={link.url ? "_blank" : undefined} className="text-muted hover:text-foreground transition-colors text-lg">{link.label}</Link>
                     ))}
                 </div>
 
                 <div className="flex flex-col space-y-4">
                     <h4 className="text-white font-medium text-xl mb-2">{data.sections.company.title}</h4>
                     {data.sections.company.links.map((link, i) => (
-                        <Link key={i} href={getLinkHref(link)} target={link.url ? "_blank" : undefined} className="text-gray-500 hover:text-white transition-colors text-lg">{link.label}</Link>
+                        <Link key={i} href={getLinkHref(link)} target={link.url ? "_blank" : undefined} className="text-muted hover:text-foreground transition-colors text-lg">{link.label}</Link>
                     ))}
                 </div>
 
                 <div className="flex flex-col space-y-4">
                     <h4 className="text-white font-medium text-xl mb-2">{data.sections.legal.title}</h4>
                     {data.sections.legal.links.map((link, i) => (
-                        <Link key={i} href={getLinkHref(link)} target={link.url ? "_blank" : undefined} className="text-gray-500 hover:text-white transition-colors text-lg">{link.label}</Link>
+                        <Link key={i} href={getLinkHref(link)} target={link.url ? "_blank" : undefined} className="text-muted hover:text-foreground transition-colors text-lg">{link.label}</Link>
                     ))}
                 </div>
                 </nav>
@@ -111,9 +111,9 @@ const Footer: React.FC = () => {
                         original text-lg + space-x-8 take over at md+
                         where the footer card is wider. */}
                     <div className="flex items-center space-x-5 md:space-x-8 flex-wrap gap-y-2">
-                        <a href={data.socials.twitter} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"><span className="text-base md:text-lg font-bold">X (Twitter)</span><span className="sr-only"> (opens in new tab)</span></a>
-                        <a href={data.socials.linkedin} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"><span className="text-base md:text-lg font-bold">LinkedIn</span><span className="sr-only"> (opens in new tab)</span></a>
-                        <a href={data.socials.github} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"><span className="text-base md:text-lg font-bold">GitHub</span><span className="sr-only"> (opens in new tab)</span></a>
+                        <a href={data.socials.twitter} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-muted hover:text-foreground transition-colors group"><span className="text-base md:text-lg font-bold">X (Twitter)</span><span className="sr-only"> (opens in new tab)</span></a>
+                        <a href={data.socials.linkedin} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-muted hover:text-foreground transition-colors group"><span className="text-base md:text-lg font-bold">LinkedIn</span><span className="sr-only"> (opens in new tab)</span></a>
+                        <a href={data.socials.github} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-muted hover:text-foreground transition-colors group"><span className="text-base md:text-lg font-bold">GitHub</span><span className="sr-only"> (opens in new tab)</span></a>
                     </div>
                     <p className="text-gray-600 text-lg font-mono">
                         {data.copyright}
