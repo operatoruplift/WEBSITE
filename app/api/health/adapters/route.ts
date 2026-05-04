@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 import { withRequestMeta, errorResponse } from '@/lib/apiHelpers';
 import { getCapabilities } from '@/lib/capabilities';
 import { photonStatus } from '@/lib/photon/adapter';
@@ -59,6 +60,8 @@ export async function GET(request: Request) {
         const photon = photonStatus();
         const mbEr = magicBlockSurfaceStatus();
         const mbPaymentsActive = paymentsEnabled();
+        const anthropic = anthropicStatus();
+        const photonInbox = await photonInboxStatus();
 
         const adapters = [
             {
@@ -70,6 +73,18 @@ export async function GET(request: Request) {
                     path: photon.path,
                     projectIdConfigured: Boolean(photon.projectId),
                 },
+            },
+            {
+                name: 'anthropic',
+                active: anthropic.active,
+                reason: anthropic.reason,
+                details: { model: anthropic.model },
+            },
+            {
+                name: 'photon_inbox',
+                active: photonInbox.active,
+                reason: photonInbox.reason,
+                details: photonInbox.details,
             },
             {
                 name: 'magicblock_er',
@@ -97,4 +112,96 @@ export async function GET(request: Request) {
     } catch (err) {
         return errorResponse(err, meta);
     }
+}
+
+interface AnthropicStatus {
+    active: boolean;
+    reason: string;
+    model: string;
+}
+
+function anthropicStatus(): AnthropicStatus {
+    const hasKey = Boolean(process.env.ANTHROPIC_API_KEY?.trim());
+    const model = process.env.PHOTON_AGENT_MODEL?.trim() || 'claude-haiku-4-5-20251001';
+    if (hasKey) {
+        return {
+            active: true,
+            reason: `ANTHROPIC_API_KEY present; agent will reply with ${model}.`,
+            model,
+        };
+    }
+    return {
+        active: false,
+        reason: 'ANTHROPIC_API_KEY missing; iMessage agent will fall back to a fixed-string ack.',
+        model,
+    };
+}
+
+interface InboxStatus {
+    active: boolean;
+    reason: string;
+    details: {
+        tableExists: boolean;
+        last24hReceived: number | null;
+        last24hReplied: number | null;
+        last24hUnreplied: number | null;
+    };
+}
+
+async function photonInboxStatus(): Promise<InboxStatus> {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const empty: InboxStatus['details'] = {
+        tableExists: false,
+        last24hReceived: null,
+        last24hReplied: null,
+        last24hUnreplied: null,
+    };
+
+    if (!url || !serviceKey) {
+        return {
+            active: false,
+            reason: 'Supabase env not set; the webhook still 200s but no audit row is written.',
+            details: empty,
+        };
+    }
+
+    const supabase = createClient(url, serviceKey, { auth: { persistSession: false } });
+    const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+
+    const total = await supabase
+        .from('inbound_messages')
+        .select('id', { count: 'exact', head: true })
+        .gte('received_at', since);
+
+    if (total.error) {
+        const msg = total.error.message || 'unknown';
+        const tableMissing = /relation .* does not exist|Could not find the table/i.test(msg);
+        return {
+            active: false,
+            reason: tableMissing
+                ? 'inbound_messages table missing; run lib/photon-webhook-migration.sql against Supabase.'
+                : `Supabase query failed: ${msg.slice(0, 200)}`,
+            details: empty,
+        };
+    }
+
+    const replied = await supabase
+        .from('inbound_messages')
+        .select('id', { count: 'exact', head: true })
+        .gte('received_at', since)
+        .not('processed_at', 'is', null);
+
+    const received = total.count ?? 0;
+    const repliedCount = replied.count ?? 0;
+    return {
+        active: true,
+        reason: `inbound_messages table healthy: ${received} received / ${repliedCount} replied in last 24h.`,
+        details: {
+            tableExists: true,
+            last24hReceived: received,
+            last24hReplied: repliedCount,
+            last24hUnreplied: Math.max(0, received - repliedCount),
+        },
+    };
 }
