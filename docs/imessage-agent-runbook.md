@@ -72,6 +72,20 @@ In `https://photon.codes/spectrum`:
 
 ## Smoke tests
 
+### Quickest: `pnpm photon:smoke`
+
+```bash
+pnpm photon:smoke
+# 5-step report: liveness, unsigned POST, signed POST,
+# Photon adapter env, Anthropic key. Exits non-zero only if a
+# required leg fails. Set PHOTON_SMOKE_BASE to point at a preview.
+```
+
+If the script prints WARN for `PHOTON_PROJECT_ID`, `PHOTON_API_KEY`,
+or `ANTHROPIC_API_KEY`, those are local-shell warnings — fine to
+ignore as long as Vercel env has them. The PASS/FAIL lines for the
+two webhook POSTs are what matters; FAIL means production is broken.
+
 ### 1. Webhook reachable
 
 ```bash
