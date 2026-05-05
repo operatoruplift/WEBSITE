@@ -29,6 +29,9 @@ interface RecentRow {
     received_at: string;
     processed_at: string | null;
     reply_message_id: string | null;
+    /** Outbound reply text. Null on rows from a pre-migration schema or
+     *  when the agent failed to send. Truncated to 300 chars by /api/admin/photon/recent. */
+    reply_text?: string | null;
     acked_at: string | null;
     status: 'replied' | 'pending';
 }
@@ -419,6 +422,11 @@ export default function DevPhotonPage() {
                                 </div>
                                 {r.text && (
                                     <p className="mt-2 text-sm text-gray-300 line-clamp-3 whitespace-pre-wrap">{r.text}</p>
+                                )}
+                                {r.reply_text && (
+                                    <p className="mt-2 text-sm text-emerald-200/85 line-clamp-3 whitespace-pre-wrap pl-3 border-l-2 border-emerald-500/30">
+                                        {r.reply_text}
+                                    </p>
                                 )}
                                 {r.reply_message_id && (
                                     <div className="mt-2 text-[10px] font-mono text-gray-500 truncate" title={r.reply_message_id}>

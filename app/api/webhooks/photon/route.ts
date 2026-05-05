@@ -68,6 +68,44 @@ function shouldRunAgent(sender: string): boolean {
 }
 
 /**
+ * Marks the inbound row as processed + saves reply_text. Falls back
+ * to the legacy schema (no reply_text column) if the migration hasn't
+ * been applied yet, so an old database keeps working through the
+ * upgrade window.
+ */
+async function markReplied(
+    supabase: ReturnType<typeof getSupabase>,
+    rowId: string | null,
+    replyMessageId: string,
+    replyText: string,
+) {
+    if (!supabase || !rowId) return;
+    const now = new Date().toISOString();
+    const truncated = replyText.length > 1000 ? replyText.slice(0, 1000) : replyText;
+
+    const full = await supabase
+        .from('inbound_messages')
+        .update({
+            processed_at: now,
+            reply_message_id: replyMessageId,
+            acked_at: now,
+            reply_text: truncated,
+        })
+        .eq('id', rowId);
+
+    if (full.error && /column .*reply_text.* does not exist|Could not find the column .*reply_text/i.test(full.error.message || '')) {
+        await supabase
+            .from('inbound_messages')
+            .update({
+                processed_at: now,
+                reply_message_id: replyMessageId,
+                acked_at: now,
+            })
+            .eq('id', rowId);
+    }
+}
+
+/**
  * Wrapper around tryKeywordReply + processWithAgent that honors the
  * persisted opt-out list. An opted-out sender's messages still get
  * logged for audit, but no reply (keyword or LLM) goes out, EXCEPT
@@ -152,16 +190,7 @@ async function tryKeywordReply(
         optOut: match.optOut,
         replyLen: match.reply.length,
     });
-    if (supabase && rowId) {
-        await supabase
-            .from('inbound_messages')
-            .update({
-                processed_at: new Date().toISOString(),
-                reply_message_id: send.messageId,
-                acked_at: new Date().toISOString(),
-            })
-            .eq('id', rowId);
-    }
+    await markReplied(supabase, rowId, send.messageId, match.reply);
     // Persist the opt-out flag so subsequent texts from this sender
     // get skipped instead of paying for another round trip. START
     // clears the flag so users can re-enable replies any time.
@@ -208,16 +237,7 @@ async function processWithAgent(
         replyLen: result.replyText.length,
         elapsedMs: result.elapsedMs,
     });
-    if (supabase && rowId) {
-        await supabase
-            .from('inbound_messages')
-            .update({
-                processed_at: new Date().toISOString(),
-                reply_message_id: result.messageId,
-                acked_at: new Date().toISOString(),
-            })
-            .eq('id', rowId);
-    }
+    await markReplied(supabase, rowId, result.messageId, result.replyText);
 }
 
 export async function POST(request: Request) {
