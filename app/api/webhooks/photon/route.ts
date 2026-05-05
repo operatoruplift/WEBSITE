@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { getPhotonAdapter } from '@/lib/photon/adapter';
 import { runAgentReply } from '@/lib/photon/agent';
 import { matchKeyword } from '@/lib/photon/keyword-replies';
+import { isOptedOut, recordOptOut, clearOptOut } from '@/lib/photon/opt-outs';
 import {
     verifyWebhookSignature,
     computeProviderMessageId,
@@ -66,6 +67,39 @@ function shouldRunAgent(sender: string): boolean {
     return agentGate.shouldSend(sender);
 }
 
+/**
+ * Wrapper around tryKeywordReply + processWithAgent that honors the
+ * persisted opt-out list. An opted-out sender's messages still get
+ * logged for audit, but no reply (keyword or LLM) goes out, EXCEPT
+ * a START keyword which is allowed through so the sender can re-enable
+ * replies without help.
+ */
+async function dispatchReply(
+    sender: string,
+    text: string,
+    platform: string,
+    supabase: ReturnType<typeof getSupabase>,
+    rowId: string | null,
+    requestId: string,
+) {
+    const optOut = await isOptedOut(supabase, sender, requestId);
+    const startKeyword = matchKeyword(text)?.keyword === 'start';
+    if (optOut.optedOut && !startKeyword) {
+        safeLog({
+            at: 'webhooks.photon',
+            event: 'opted_out_skip',
+            requestId,
+            sender,
+            optedOutAt: optOut.optedOutAt,
+        });
+        return;
+    }
+    const handled = await tryKeywordReply(sender, text, platform, supabase, rowId, requestId);
+    if (!handled) {
+        await processWithAgent(sender, text, platform, supabase, rowId, requestId);
+    }
+}
+
 type Platform = 'imessage' | 'telegram' | 'whatsapp' | 'x' | 'discord' | 'instagram';
 
 /**
@@ -127,6 +161,16 @@ async function tryKeywordReply(
                 acked_at: new Date().toISOString(),
             })
             .eq('id', rowId);
+    }
+    // Persist the opt-out flag so subsequent texts from this sender
+    // get skipped instead of paying for another round trip. START
+    // clears the flag so users can re-enable replies any time.
+    if (supabase) {
+        if (match.optOut) {
+            await recordOptOut(supabase, sender, match.keyword, requestId);
+        } else if (match.keyword === 'start') {
+            await clearOptOut(supabase, sender, requestId);
+        }
     }
     return true;
 }
@@ -225,14 +269,11 @@ export async function POST(request: Request) {
             textLen: text.length,
             providerMessageId,
         });
-        // Try a keyword short-circuit (STOP / HELP / PING / etc.)
-        // before paying for an LLM call. Falls through to the agent
-        // if no keyword matches. Same 60s sender debounce applies.
+        // dispatchReply checks the persisted opt-out flag, then runs
+        // a keyword short-circuit (STOP / HELP / PING / etc.) before
+        // paying for an LLM call. Same 60s sender debounce.
         if (shouldRunAgent(sender)) {
-            const handled = await tryKeywordReply(sender, text, platform, null, null, meta.requestId);
-            if (!handled) {
-                await processWithAgent(sender, text, platform, null, null, meta.requestId);
-            }
+            await dispatchReply(sender, text, platform, null, null, meta.requestId);
         }
         return NextResponse.json({ ok: true, logged: false, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
     }
@@ -283,10 +324,7 @@ export async function POST(request: Request) {
             error: error.message,
         });
         if (shouldRunAgent(sender)) {
-            const handled = await tryKeywordReply(sender, text, platform, null, null, meta.requestId);
-            if (!handled) {
-                await processWithAgent(sender, text, platform, null, null, meta.requestId);
-            }
+            await dispatchReply(sender, text, platform, null, null, meta.requestId);
         }
         return NextResponse.json({ ok: true, logged: false, reason: error.message, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
     }
@@ -295,16 +333,12 @@ export async function POST(request: Request) {
 
     // Synchronous reply. We await Claude Haiku + Photon send before
     // returning 200 so the user sees a real iMessage response within
-    // the same webhook lifetime. Keyword short-circuits run first to
-    // skip the LLM for STOP / HELP / PING etc. (saves Anthropic spend
-    // and round-trip latency on common one-word triggers). The 60s
-    // sender gate guards against a burst turning into a flood of
-    // LLM calls.
+    // the same webhook lifetime. dispatchReply checks the persisted
+    // opt-out flag, then runs a keyword short-circuit (STOP / HELP /
+    // PING etc.) before paying for an LLM call. The 60s sender gate
+    // guards against a burst turning into a flood of LLM calls.
     if (shouldRunAgent(sender)) {
-        const handled = await tryKeywordReply(sender, text, platform, supabase, rowId, meta.requestId);
-        if (!handled) {
-            await processWithAgent(sender, text, platform, supabase, rowId, meta.requestId);
-        }
+        await dispatchReply(sender, text, platform, supabase, rowId, meta.requestId);
     }
 
     return NextResponse.json({ ok: true, logged: true, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
