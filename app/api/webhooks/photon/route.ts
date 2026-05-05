@@ -4,6 +4,7 @@ import { getPhotonAdapter } from '@/lib/photon/adapter';
 import { runAgentReply } from '@/lib/photon/agent';
 import { matchKeyword } from '@/lib/photon/keyword-replies';
 import { isOptedOut, recordOptOut, clearOptOut } from '@/lib/photon/opt-outs';
+import { loadHistory } from '@/lib/photon/history';
 import {
     verifyWebhookSignature,
     computeProviderMessageId,
@@ -213,8 +214,13 @@ async function processWithAgent(
     requestId: string,
 ) {
     const adapter = getPhotonAdapter();
+    // Load up to 5 prior completed turns so Claude Haiku gets multi-
+    // turn context. Best-effort: if Supabase is unset, the table is
+    // missing, or reply_text predates the migration, history is
+    // empty and the agent runs one-shot.
+    const history = await loadHistory(supabase, sender, 5, requestId);
     const result = await runAgentReply(
-        { sender, text, platform: platform as Platform },
+        { sender, text, platform: platform as Platform, history },
         adapter,
         requestId,
     );

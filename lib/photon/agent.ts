@@ -23,12 +23,15 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { PhotonAdapter } from './adapter';
 import { stripMarkdown } from './strip-markdown';
+import type { ChatTurn } from './history';
 import { safeLog, safeWarn } from '@/lib/safeLog';
 
 export interface AgentInput {
     sender: string;
     text: string;
     platform: 'imessage' | 'telegram' | 'whatsapp' | 'x' | 'discord' | 'instagram';
+    /** Optional prior turns for multi-turn context (chronological order). */
+    history?: ChatTurn[];
 }
 
 export interface AgentSuccess {
@@ -80,12 +83,30 @@ function getLlmTimeoutMs(): number {
     return Number.isFinite(parsed) && parsed > 0 ? parsed : DEFAULT_LLM_TIMEOUT_MS;
 }
 
-async function generateReply(text: string, requestId?: string): Promise<{ ok: true; reply: string } | { ok: false; reason: string }> {
+async function generateReply(
+    text: string,
+    history: ChatTurn[] | undefined,
+    requestId?: string,
+): Promise<{ ok: true; reply: string } | { ok: false; reason: string }> {
     const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
     if (!apiKey) return { ok: false, reason: 'ANTHROPIC_API_KEY missing' };
 
     const trimmed = text.trim().slice(0, 4000);
     if (!trimmed) return { ok: true, reply: FALLBACK_REPLY };
+
+    // Convert history (chronological order, alternating turns) into
+    // the Anthropic messages array, then append the new user message.
+    // Each prior turn is guaranteed to have both user + assistant
+    // text by lib/photon/history.ts so alternation is preserved.
+    const priorMessages: Array<{ role: 'user' | 'assistant'; content: string }> = [];
+    for (const turn of history ?? []) {
+        priorMessages.push({ role: 'user', content: turn.user });
+        priorMessages.push({ role: 'assistant', content: turn.assistant });
+    }
+    const messages: Array<{ role: 'user' | 'assistant'; content: string }> = [
+        ...priorMessages,
+        { role: 'user', content: trimmed },
+    ];
 
     const timeoutMs = getLlmTimeoutMs();
     const controller = new AbortController();
@@ -97,7 +118,7 @@ async function generateReply(text: string, requestId?: string): Promise<{ ok: tr
                 model: getModel(),
                 max_tokens: getMaxTokens(),
                 system: getSystem(),
-                messages: [{ role: 'user', content: trimmed }],
+                messages,
             },
             { signal: controller.signal },
         );
@@ -119,6 +140,7 @@ async function generateReply(text: string, requestId?: string): Promise<{ ok: tr
             model: getModel(),
             inputLen: trimmed.length,
             outputLen: reply.length,
+            historyTurns: history?.length ?? 0,
             stripped: reply.length !== rawReply.length ? rawReply.length - reply.length : 0,
         });
         return { ok: true, reply };
@@ -158,7 +180,7 @@ export async function runAgentReply(
         };
     }
 
-    const llm = await generateReply(input.text, requestId);
+    const llm = await generateReply(input.text, input.history, requestId);
     const replyText = llm.ok ? llm.reply : FALLBACK_REPLY;
     const source: AgentSuccess['source'] = llm.ok ? 'llm' : 'fallback_no_llm';
 
