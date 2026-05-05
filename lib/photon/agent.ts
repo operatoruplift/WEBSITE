@@ -22,6 +22,7 @@
  */
 import Anthropic from '@anthropic-ai/sdk';
 import type { PhotonAdapter } from './adapter';
+import { stripMarkdown } from './strip-markdown';
 import { safeLog, safeWarn } from '@/lib/safeLog';
 
 export interface AgentInput {
@@ -100,13 +101,26 @@ async function generateReply(text: string, requestId?: string): Promise<{ ok: tr
             },
             { signal: controller.signal },
         );
-        const reply = response.content
+        const rawReply = response.content
             .filter((block): block is Anthropic.TextBlock => block.type === 'text')
             .map(block => block.text)
             .join('\n')
             .trim();
-        if (!reply) return { ok: false, reason: 'empty_response' };
-        safeLog({ at: 'photon.agent', event: 'llm_ok', requestId, model: getModel(), inputLen: trimmed.length, outputLen: reply.length });
+        if (!rawReply) return { ok: false, reason: 'empty_response' };
+        // iMessage doesn't render markdown, so strip backticks,
+        // asterisks, link wrappers, etc. before sending. The agent's
+        // system prompt already says "no markdown" but models drift
+        // and a second-line defense keeps the reply readable.
+        const reply = stripMarkdown(rawReply).trim() || rawReply;
+        safeLog({
+            at: 'photon.agent',
+            event: 'llm_ok',
+            requestId,
+            model: getModel(),
+            inputLen: trimmed.length,
+            outputLen: reply.length,
+            stripped: reply.length !== rawReply.length ? rawReply.length - reply.length : 0,
+        });
         return { ok: true, reply };
     } catch (err) {
         const aborted = (err as { name?: string } | null)?.name === 'AbortError' || controller.signal.aborted;
