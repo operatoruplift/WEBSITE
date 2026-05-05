@@ -95,11 +95,30 @@ export async function GET(request: Request) {
             : 20;
 
         const supabase = createClient(url, serviceKey, { auth: { persistSession: false } });
-        const { data, error } = await supabase
+        const COLUMNS_FULL = 'id, sender, platform, text, received_at, processed_at, reply_message_id, reply_text, acked_at, provider_message_id';
+        const COLUMNS_LEGACY = 'id, sender, platform, text, received_at, processed_at, reply_message_id, acked_at, provider_message_id';
+
+        const primary = await supabase
             .from('inbound_messages')
-            .select('id, sender, platform, text, received_at, processed_at, reply_message_id, acked_at, provider_message_id')
+            .select(COLUMNS_FULL)
             .order('received_at', { ascending: false })
             .limit(limit);
+
+        // Pre-migration fallback: if reply_text column doesn't exist
+        // yet, retry with the legacy column set so /dev/photon still
+        // works on old schemas. Operators see reply_text:null for
+        // every row until they apply the migration.
+        let data: Array<Record<string, unknown>> | null = primary.data as unknown as Array<Record<string, unknown>> | null;
+        let error: { message: string } | null = primary.error as unknown as { message: string } | null;
+        if (error && /column .*reply_text.* does not exist|Could not find the column .*reply_text/i.test(error.message || '')) {
+            const legacy = await supabase
+                .from('inbound_messages')
+                .select(COLUMNS_LEGACY)
+                .order('received_at', { ascending: false })
+                .limit(limit);
+            data = legacy.data as unknown as Array<Record<string, unknown>> | null;
+            error = legacy.error as unknown as { message: string } | null;
+        }
 
         if (error) {
             const tableMissing = /relation .* does not exist|Could not find the table/i.test(error.message || '');
@@ -117,17 +136,23 @@ export async function GET(request: Request) {
             );
         }
 
-        const rows = (data ?? []).map((r) => ({
-            id: r.id,
-            sender: r.sender,
-            platform: r.platform,
-            text: typeof r.text === 'string' ? r.text.slice(0, 200) : null,
-            received_at: r.received_at,
-            processed_at: r.processed_at,
-            reply_message_id: r.reply_message_id,
-            acked_at: r.acked_at,
-            status: r.processed_at ? 'replied' : 'pending',
-        }));
+        const rows = (data ?? []).map((r) => {
+            const replyText = typeof (r as { reply_text?: unknown }).reply_text === 'string'
+                ? ((r as { reply_text: string }).reply_text)
+                : null;
+            return {
+                id: r.id,
+                sender: r.sender,
+                platform: r.platform,
+                text: typeof r.text === 'string' ? r.text.slice(0, 200) : null,
+                received_at: r.received_at,
+                processed_at: r.processed_at,
+                reply_message_id: r.reply_message_id,
+                reply_text: replyText ? replyText.slice(0, 300) : null,
+                acked_at: r.acked_at,
+                status: r.processed_at ? 'replied' : 'pending',
+            };
+        });
 
         safeLog({ at: meta.route, event: 'rows_returned', requestId: meta.requestId, count: rows.length });
 

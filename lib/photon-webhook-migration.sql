@@ -33,8 +33,17 @@ create table if not exists public.inbound_messages (
     -- fallback). Unique per (provider, provider_message_id) so a
     -- retried webhook POST is a no-op on insert.
     provider_message_id text,
-    acked_at timestamptz
+    acked_at timestamptz,
+    -- May 2026: reply_text stores the actual outbound reply (Claude
+    -- Haiku text or canned keyword text) so /dev/photon and the
+    -- admin /recent endpoint can show what the agent said, not
+    -- just the message id. Truncated to 1000 chars at write time.
+    reply_text text
 );
+
+-- Idempotent column add for projects on the original schema.
+alter table public.inbound_messages
+    add column if not exists reply_text text;
 
 -- Idempotent insert guard. Retries from Spectrum hit the same row.
 create unique index if not exists inbound_messages_provider_msgid_idx
