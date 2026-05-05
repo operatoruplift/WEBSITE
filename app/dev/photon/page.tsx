@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Loader2, ShieldAlert, RefreshCw, CheckCircle2, Clock, MessageSquare, Send, ChevronDown, ChevronRight } from 'lucide-react';
+import { Loader2, ShieldAlert, RefreshCw, CheckCircle2, Clock, MessageSquare, Send, ChevronDown, ChevronRight, Ban, X } from 'lucide-react';
 
 /**
  * Admin-gated iMessage observability page at /dev/photon.
@@ -159,9 +159,68 @@ export default function DevPhotonPage() {
         }
     };
 
+    // Opt-outs panel state. Lists active opt-outs and lets the
+    // operator clear one (re-enable replies for that sender) with a
+    // single click. Backed by GET/POST /api/admin/photon/optouts.
+    interface OptOutRow {
+        sender: string;
+        opted_out_at: string;
+        last_reason: string | null;
+        updated_at: string;
+    }
+    const [optsOpen, setOptsOpen] = useState(false);
+    const [optsRows, setOptsRows] = useState<OptOutRow[]>([]);
+    const [optsLoading, setOptsLoading] = useState(false);
+    const [optsErr, setOptsErr] = useState<string | null>(null);
+
+    const refreshOpts = async () => {
+        setOptsLoading(true);
+        setOptsErr(null);
+        try {
+            const res = await fetch('/api/admin/photon/optouts', {
+                headers: authHeaders(readToken()),
+                cache: 'no-store',
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                setOptsRows([]);
+                setOptsErr(data?.nextAction || data?.detail || `HTTP ${res.status}`);
+                return;
+            }
+            setOptsRows(Array.isArray(data?.rows) ? data.rows : []);
+        } catch (e) {
+            setOptsErr(e instanceof Error ? e.message : String(e));
+        } finally {
+            setOptsLoading(false);
+        }
+    };
+
+    const clearOpt = async (sender: string) => {
+        try {
+            const res = await fetch('/api/admin/photon/optouts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeaders(readToken()) },
+                body: JSON.stringify({ sender, action: 'clear' }),
+            });
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                setOptsErr(data?.nextAction || data?.detail || `HTTP ${res.status}`);
+                return;
+            }
+            await refreshOpts();
+        } catch (e) {
+            setOptsErr(e instanceof Error ? e.message : String(e));
+        }
+    };
+
     useEffect(() => {
         if (adminStatus === 'admin') void refresh();
     }, [adminStatus]);
+
+    useEffect(() => {
+        if (adminStatus === 'admin' && optsOpen && optsRows.length === 0 && !optsErr) void refreshOpts();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [adminStatus, optsOpen]);
 
     if (adminStatus === 'loading') {
         return <div className="min-h-screen flex items-center justify-center"><Loader2 size={20} className="animate-spin text-gray-500" /></div>;
@@ -217,6 +276,13 @@ export default function DevPhotonPage() {
                     >
                         {simOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
                         Simulate webhook
+                    </button>
+                    <button
+                        onClick={() => setOptsOpen(o => !o)}
+                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-sm text-white transition-all"
+                    >
+                        {optsOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+                        <Ban size={12} /> Opt-outs
                     </button>
                     {rows.length > 0 && (
                         <span className="text-xs font-mono text-gray-500">
@@ -275,6 +341,52 @@ export default function DevPhotonPage() {
                                 </div>
                                 <pre className="overflow-x-auto whitespace-pre-wrap text-[11px] text-emerald-100/80">{JSON.stringify(simResult.body, null, 2)}</pre>
                             </div>
+                        )}
+                    </div>
+                )}
+
+                {optsOpen && (
+                    <div className="p-4 rounded-xl border border-white/10 bg-white/[0.02] space-y-3">
+                        <div className="flex items-center justify-between">
+                            <p className="text-xs text-gray-400">
+                                Senders that have texted STOP. Click Clear to re-enable replies (writes a START row to imessage_opt_outs).
+                            </p>
+                            <button
+                                onClick={refreshOpts}
+                                disabled={optsLoading}
+                                className="inline-flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-mono uppercase tracking-widest text-gray-400 hover:text-white border border-white/10 hover:bg-white/5 transition-all disabled:opacity-40"
+                            >
+                                {optsLoading ? <Loader2 size={10} className="animate-spin" /> : <RefreshCw size={10} />}
+                                Refresh
+                            </button>
+                        </div>
+                        {optsErr && (
+                            <div className="p-3 rounded-lg border border-red-500/30 bg-red-500/5 text-xs text-red-200">{optsErr}</div>
+                        )}
+                        {!optsErr && optsRows.length === 0 && !optsLoading && (
+                            <div className="text-xs text-gray-500">No active opt-outs.</div>
+                        )}
+                        {optsRows.length > 0 && (
+                            <ul className="space-y-1.5">
+                                {optsRows.map((r) => (
+                                    <li key={r.sender} className="flex items-center gap-3 p-2 rounded-lg bg-black/30 border border-white/5">
+                                        <span className="text-xs font-mono text-gray-300 truncate flex-1" title={r.sender}>{r.sender}</span>
+                                        <span className="text-[10px] font-mono text-gray-500">
+                                            {formatTime(r.opted_out_at)}
+                                        </span>
+                                        {r.last_reason && (
+                                            <span className="text-[10px] font-mono text-amber-300 uppercase tracking-widest">{r.last_reason}</span>
+                                        )}
+                                        <button
+                                            onClick={() => clearOpt(r.sender)}
+                                            className="inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] font-mono uppercase tracking-widest text-emerald-300 hover:text-white border border-emerald-500/30 hover:bg-emerald-500/10 transition-all"
+                                            title={`Re-enable replies for ${r.sender}`}
+                                        >
+                                            <X size={10} /> Clear
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
                         )}
                     </div>
                 )}
