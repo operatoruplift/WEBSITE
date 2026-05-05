@@ -11,6 +11,9 @@
  *   PHOTON_AGENT_MODEL         optional, default 'claude-haiku-4-5-20251001'
  *   PHOTON_AGENT_MAX_TOKENS    optional, default 200 (iMessage-friendly)
  *   PHOTON_AGENT_SYSTEM        optional, override the system prompt
+ *   PHOTON_AGENT_LLM_TIMEOUT_MS optional, default 10000 (10s). Caps the
+ *                              Anthropic call so a slow LLM never blows
+ *                              the Vercel maxDuration=15s budget.
  *
  * If ANTHROPIC_API_KEY is missing, the agent returns a 'no_llm' result
  * and falls back to the previous "Got it, working on it." style ack so
@@ -46,6 +49,7 @@ export type AgentResult = AgentSuccess | AgentFailure;
 
 const DEFAULT_MODEL = 'claude-haiku-4-5-20251001';
 const DEFAULT_MAX_TOKENS = 200;
+const DEFAULT_LLM_TIMEOUT_MS = 10_000;
 const DEFAULT_SYSTEM = [
     'You are Operator Uplift, replying over iMessage.',
     'Keep replies short, ideally one or two sentences. Plain text, no markdown.',
@@ -69,6 +73,12 @@ function getSystem(): string {
     return process.env.PHOTON_AGENT_SYSTEM?.trim() || DEFAULT_SYSTEM;
 }
 
+function getLlmTimeoutMs(): number {
+    const raw = process.env.PHOTON_AGENT_LLM_TIMEOUT_MS?.trim();
+    const parsed = raw ? Number(raw) : NaN;
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : DEFAULT_LLM_TIMEOUT_MS;
+}
+
 async function generateReply(text: string, requestId?: string): Promise<{ ok: true; reply: string } | { ok: false; reason: string }> {
     const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
     if (!apiKey) return { ok: false, reason: 'ANTHROPIC_API_KEY missing' };
@@ -76,14 +86,20 @@ async function generateReply(text: string, requestId?: string): Promise<{ ok: tr
     const trimmed = text.trim().slice(0, 4000);
     if (!trimmed) return { ok: true, reply: FALLBACK_REPLY };
 
+    const timeoutMs = getLlmTimeoutMs();
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
         const anthropic = new Anthropic({ apiKey });
-        const response = await anthropic.messages.create({
-            model: getModel(),
-            max_tokens: getMaxTokens(),
-            system: getSystem(),
-            messages: [{ role: 'user', content: trimmed }],
-        });
+        const response = await anthropic.messages.create(
+            {
+                model: getModel(),
+                max_tokens: getMaxTokens(),
+                system: getSystem(),
+                messages: [{ role: 'user', content: trimmed }],
+            },
+            { signal: controller.signal },
+        );
         const reply = response.content
             .filter((block): block is Anthropic.TextBlock => block.type === 'text')
             .map(block => block.text)
@@ -93,9 +109,18 @@ async function generateReply(text: string, requestId?: string): Promise<{ ok: tr
         safeLog({ at: 'photon.agent', event: 'llm_ok', requestId, model: getModel(), inputLen: trimmed.length, outputLen: reply.length });
         return { ok: true, reply };
     } catch (err) {
+        const aborted = (err as { name?: string } | null)?.name === 'AbortError' || controller.signal.aborted;
         const message = err instanceof Error ? err.message : String(err);
-        safeWarn({ at: 'photon.agent', event: 'llm_failed', requestId, error: message.slice(0, 240) });
-        return { ok: false, reason: message };
+        safeWarn({
+            at: 'photon.agent',
+            event: aborted ? 'llm_timeout' : 'llm_failed',
+            requestId,
+            error: message.slice(0, 240),
+            timeoutMs: aborted ? timeoutMs : undefined,
+        });
+        return { ok: false, reason: aborted ? `llm_timeout_after_${timeoutMs}ms` : message };
+    } finally {
+        clearTimeout(timer);
     }
 }
 
