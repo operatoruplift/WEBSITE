@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Loader2, ShieldAlert, RefreshCw, CheckCircle2, Clock, MessageSquare } from 'lucide-react';
+import { Loader2, ShieldAlert, RefreshCw, CheckCircle2, Clock, MessageSquare, Send, ChevronDown, ChevronRight } from 'lucide-react';
 
 /**
  * Admin-gated iMessage observability page at /dev/photon.
@@ -117,6 +117,48 @@ export default function DevPhotonPage() {
         }
     };
 
+    // Simulator: POSTs a synthetic webhook so we can verify the
+    // round trip without a real iPhone. Calls /api/admin/photon/simulate
+    // (PR #409) which signs the body with PHOTON_WEBHOOK_SECRET so the
+    // webhook signature gate exercises the real code path.
+    const [simSender, setSimSender] = useState('+15551234567');
+    const [simText, setSimText] = useState('hello');
+    const [simPlatform, setSimPlatform] = useState<'imessage' | 'telegram' | 'whatsapp'>('imessage');
+    const [simOpen, setSimOpen] = useState(false);
+    const [simRunning, setSimRunning] = useState(false);
+    const [simResult, setSimResult] = useState<{ status: number; body: unknown; elapsedMs: number } | null>(null);
+    const [simErr, setSimErr] = useState<string | null>(null);
+
+    const runSimulate = async () => {
+        if (!simSender.trim() || !simText.trim()) return;
+        setSimRunning(true);
+        setSimResult(null);
+        setSimErr(null);
+        try {
+            const res = await fetch('/api/admin/photon/simulate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeaders(readToken()) },
+                body: JSON.stringify({ sender: simSender.trim(), text: simText.trim(), platform: simPlatform }),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                setSimErr(data?.nextAction || data?.detail || `HTTP ${res.status}`);
+                return;
+            }
+            setSimResult({
+                status: data?.webhook?.status ?? 0,
+                body: data?.webhook?.body,
+                elapsedMs: data?.webhook?.elapsedMs ?? 0,
+            });
+            // Pull the new row in if we just created one.
+            void refresh();
+        } catch (e) {
+            setSimErr(e instanceof Error ? e.message : String(e));
+        } finally {
+            setSimRunning(false);
+        }
+    };
+
     useEffect(() => {
         if (adminStatus === 'admin') void refresh();
     }, [adminStatus]);
@@ -160,7 +202,7 @@ export default function DevPhotonPage() {
                     </p>
                 </header>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
                     <button
                         onClick={refresh}
                         disabled={loading}
@@ -169,12 +211,73 @@ export default function DevPhotonPage() {
                         {loading ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
                         {loading ? 'Loading' : 'Refresh'}
                     </button>
+                    <button
+                        onClick={() => setSimOpen(o => !o)}
+                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-sm text-white transition-all"
+                    >
+                        {simOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+                        Simulate webhook
+                    </button>
                     {rows.length > 0 && (
                         <span className="text-xs font-mono text-gray-500">
                             {repliedCount} replied · {pendingCount} pending
                         </span>
                     )}
                 </div>
+
+                {simOpen && (
+                    <div className="p-4 rounded-xl border border-white/10 bg-white/[0.02] space-y-3">
+                        <p className="text-xs text-gray-400">
+                            Fires a synthetic POST at /api/webhooks/photon (signed with PHOTON_WEBHOOK_SECRET if configured) so the agent round trip runs without involving Spectrum or a real iPhone.
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <input
+                                value={simSender}
+                                onChange={e => setSimSender(e.target.value)}
+                                placeholder="sender (E.164 phone)"
+                                className="px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#F97316]/50"
+                            />
+                            <select
+                                value={simPlatform}
+                                onChange={e => setSimPlatform(e.target.value as typeof simPlatform)}
+                                className="px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#F97316]/50"
+                            >
+                                <option value="imessage">iMessage</option>
+                                <option value="telegram">Telegram</option>
+                                <option value="whatsapp">WhatsApp</option>
+                            </select>
+                            <button
+                                onClick={runSimulate}
+                                disabled={simRunning || !simSender.trim() || !simText.trim()}
+                                className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#F97316] hover:bg-[#F97316]/90 text-white text-sm font-bold uppercase tracking-widest disabled:opacity-40 transition-all"
+                            >
+                                {simRunning ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
+                                {simRunning ? 'Sending' : 'Send'}
+                            </button>
+                        </div>
+                        <textarea
+                            value={simText}
+                            onChange={e => setSimText(e.target.value)}
+                            rows={2}
+                            placeholder="message text"
+                            className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#F97316]/50 font-mono"
+                        />
+                        {simErr && (
+                            <div className="p-3 rounded-lg border border-red-500/30 bg-red-500/5 text-xs text-red-200">
+                                {simErr}
+                            </div>
+                        )}
+                        {simResult && (
+                            <div className="p-3 rounded-lg border border-emerald-500/30 bg-emerald-500/5 text-xs text-emerald-200 font-mono">
+                                <div className="flex items-center gap-3 mb-1">
+                                    <span className="font-bold">webhook {simResult.status}</span>
+                                    <span className="text-gray-400">{simResult.elapsedMs}ms</span>
+                                </div>
+                                <pre className="overflow-x-auto whitespace-pre-wrap text-[11px] text-emerald-100/80">{JSON.stringify(simResult.body, null, 2)}</pre>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {err && (
                     <div className="p-4 rounded-lg border border-red-500/30 bg-red-500/5 text-sm text-red-200">
