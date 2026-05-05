@@ -49,6 +49,11 @@ const PUBLIC_ROUTES = [
     // 401 before the handler got a chance, since curl calls don't have
     // a Privy session token.
     '/api/debug/',
+    // Admin-only operational endpoints (e.g. /api/admin/photon/recent).
+    // Each handler enforces its own bypass-listed-email + DEBUG_ADMIN_KEY
+    // gate; without this allowlist entry middleware would 401 before the
+    // handler's gate runs, hiding the route's own forbidden envelope.
+    '/api/admin/',
 ];
 
 export function middleware(request: NextRequest) {

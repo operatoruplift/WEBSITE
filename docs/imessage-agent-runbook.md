@@ -113,8 +113,18 @@ Text the bot's number from your iPhone with something like:
 Within ~4 seconds you should see a Claude Haiku reply on iMessage.
 
 If nothing comes back:
+
+- Hit `GET /api/admin/photon/recent` (admin-gated; pass
+  `X-Debug-Key: $DEBUG_ADMIN_KEY` or sign in with a bypass-listed
+  email) to see the last 20 inbound rows with their reply status.
+  Each row carries `status: 'replied' | 'pending'`,
+  `processed_at`, and `reply_message_id`. A tail of `pending`
+  rows means the agent never finished its round trip.
 - Check Vercel Function logs for `at: "photon.agent"` events.
   - `event: "llm_failed"` means `ANTHROPIC_API_KEY` is missing or invalid.
+  - `event: "llm_timeout"` means the Anthropic call exceeded
+    `PHOTON_AGENT_LLM_TIMEOUT_MS` (default 10s); the bot still
+    sent the fixed-string ack via the fallback branch.
   - `event: "send_failed"` means `PHOTON_PROJECT_ID` / `PHOTON_API_KEY` is wrong, or the Spectrum send endpoint moved (override `PHOTON_SEND_PATH`).
   - `event: "agent_replied"` with `source: "fallback_no_llm"` means Anthropic credentials are bad and the fixed-string ack went out instead.
 
