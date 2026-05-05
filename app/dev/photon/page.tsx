@@ -63,6 +63,15 @@ function formatTime(iso: string | null): string {
     }
 }
 
+function Stat({ label, value }: { label: string; value: string }) {
+    return (
+        <div className="flex flex-col">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-gray-500">{label}</span>
+            <span className="text-lg font-mono text-white mt-0.5">{value}</span>
+        </div>
+    );
+}
+
 function StatusPill({ status }: { status: 'replied' | 'pending' }) {
     if (status === 'replied') {
         return (
@@ -78,12 +87,28 @@ function StatusPill({ status }: { status: 'replied' | 'pending' }) {
     );
 }
 
+interface StatsWindow {
+    received: number;
+    replied: number;
+    pending: number;
+    rate: number | null;
+}
+
+interface StatsResponse {
+    last24h?: StatsWindow;
+    last7d?: StatsWindow;
+    byPlatform24h?: Array<{ platform: string; received: number; replied: number }>;
+    error?: string;
+    nextAction?: string;
+}
+
 export default function DevPhotonPage() {
     const [adminStatus, setAdminStatus] = useState<'loading' | 'admin' | 'not-admin' | 'unauthenticated'>('loading');
     const [adminEmail, setAdminEmail] = useState<string | null>(null);
     const [resp, setResp] = useState<RecentResponse | null>(null);
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState<string | null>(null);
+    const [stats, setStats] = useState<StatsResponse | null>(null);
 
     useEffect(() => {
         fetch('/api/whoami', { headers: authHeaders(readToken()), cache: 'no-store' })
@@ -216,8 +241,24 @@ export default function DevPhotonPage() {
         }
     };
 
+    const refreshStats = async () => {
+        try {
+            const res = await fetch('/api/admin/photon/stats', {
+                headers: authHeaders(readToken()),
+                cache: 'no-store',
+            });
+            const data = await res.json().catch(() => ({}));
+            setStats(data as StatsResponse);
+        } catch {
+            /* non-fatal: stats header is optional polish */
+        }
+    };
+
     useEffect(() => {
-        if (adminStatus === 'admin') void refresh();
+        if (adminStatus === 'admin') {
+            void refresh();
+            void refreshStats();
+        }
     }, [adminStatus]);
 
     useEffect(() => {
@@ -263,6 +304,22 @@ export default function DevPhotonPage() {
                         Last {rows.length} inbound webhook rows. Replied rows have a Claude Haiku response on the way back to the sender.
                     </p>
                 </header>
+
+                {stats?.last24h && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-3 rounded-xl border border-white/10 bg-white/[0.02]">
+                        <Stat label="24h received" value={String(stats.last24h.received)} />
+                        <Stat label="24h replied" value={String(stats.last24h.replied)} />
+                        <Stat label="24h pending" value={String(stats.last24h.pending)} />
+                        <Stat
+                            label="24h reply rate"
+                            value={
+                                stats.last24h.rate === null
+                                    ? '\u2014'
+                                    : `${Math.round((stats.last24h.rate ?? 0) * 100)}%`
+                            }
+                        />
+                    </div>
+                )}
 
                 <div className="flex items-center gap-3 flex-wrap">
                     <button
