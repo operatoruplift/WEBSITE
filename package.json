@@ -12,7 +12,8 @@
     "capability-check": "node scripts/capability-check.mjs",
     "trust-gate": "node scripts/trust-gate.mjs",
     "fabrication-rot-check": "node scripts/fabrication-rot-check.mjs",
-    "check": "node scripts/check.mjs"
+    "check": "node scripts/check.mjs",
+    "photon:smoke": "node scripts/photon-smoke.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.82.0",
