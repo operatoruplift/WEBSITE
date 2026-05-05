@@ -17,12 +17,12 @@ export const maxDuration = 10;
  * operator can verify the end-to-end round trip without scrolling
  * Vercel function logs.
  *
- * Auth: same gate as /api/dev/reliability/timeout — bypass-listed
+ * Auth: same gate as /api/dev/reliability/timeout, bypass-listed
  * session email, bypass-listed Privy userId, or X-Debug-Key header
  * matching DEBUG_ADMIN_KEY env var. Anything else gets 403.
  *
  * Query params:
- *   ?limit=N — clamp [1, 100], default 20
+ *   ?limit=N, clamp [1, 100], default 20
  *
  * Response (200):
  *   {
