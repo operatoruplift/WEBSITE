@@ -14,6 +14,11 @@ const Navbar: React.FC<NavbarProps> = () => {
     // homepage hero already has a "Watch 90s demo" anchor, and a nav
     // duplicate of that just clutters the bar. Pricing + FAQ remain
     // because they answer two distinct first-visit questions.
+    //
+    // May 2026: iMessage agent landing page (PR #407) added so a
+    // visitor who arrives via "text the bot" copy doesn't have to
+    // hunt through the homepage to find the relevant pitch.
+    { name: 'iMESSAGE', targetId: 'imessage', href: '/imessage' },
     { name: 'PRICING', targetId: 'pricing', href: '/#pricing' },
     { name: 'FAQ', targetId: 'faq', href: '/#faq' },
   ];
