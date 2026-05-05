@@ -106,7 +106,7 @@ export default function PricingPage() {
                                         className={`w-full py-3 rounded-lg text-sm font-bold text-center transition-colors flex items-center justify-center gap-2 ${
                                             tier.highlight
                                                 ? 'bg-primary text-white hover:bg-primary/80'
-                                                : 'bg-white/5 text-white border border-white/10 hover:bg-white/10'
+                                                : 'bg-foreground/5 text-foreground border border-foreground/10 hover:bg-foreground/10'
                                         }`}>
                                         {tier.cta} <ArrowRight size={14} />
                                     </Link>
