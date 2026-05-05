@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { getPhotonAdapter } from '@/lib/photon/adapter';
 import { runAgentReply } from '@/lib/photon/agent';
+import { matchKeyword } from '@/lib/photon/keyword-replies';
 import {
     verifyWebhookSignature,
     computeProviderMessageId,
@@ -66,6 +67,69 @@ function shouldRunAgent(sender: string): boolean {
 }
 
 type Platform = 'imessage' | 'telegram' | 'whatsapp' | 'x' | 'discord' | 'instagram';
+
+/**
+ * Short-circuit reply for one-word triggers like STOP / HELP / PING.
+ * Skips the LLM entirely; canned text goes straight to the Photon
+ * adapter. Returns true if it handled the message.
+ */
+async function tryKeywordReply(
+    sender: string,
+    text: string,
+    platform: string,
+    supabase: ReturnType<typeof getSupabase>,
+    rowId: string | null,
+    requestId: string,
+): Promise<boolean> {
+    const match = matchKeyword(text);
+    if (!match) return false;
+
+    const adapter = getPhotonAdapter();
+    if (!adapter.isActive()) {
+        safeWarn({
+            at: 'webhooks.photon',
+            event: 'keyword_no_adapter',
+            requestId,
+            keyword: match.keyword,
+        });
+        return false;
+    }
+
+    const send = await adapter.send({
+        to: sender,
+        text: match.reply,
+        platform: platform as Platform,
+    });
+    if (!send.ok) {
+        safeWarn({
+            at: 'webhooks.photon',
+            event: 'keyword_send_failed',
+            requestId,
+            keyword: match.keyword,
+            reason: send.reason,
+        });
+        return false;
+    }
+    safeLog({
+        at: 'webhooks.photon',
+        event: 'keyword_replied',
+        requestId,
+        keyword: match.keyword,
+        optOut: match.optOut,
+        replyLen: match.reply.length,
+    });
+    if (supabase && rowId) {
+        await supabase
+            .from('inbound_messages')
+            .update({
+                processed_at: new Date().toISOString(),
+                reply_message_id: send.messageId,
+                acked_at: new Date().toISOString(),
+            })
+            .eq('id', rowId);
+    }
+    return true;
+}
 
 async function processWithAgent(
     sender: string,
@@ -161,12 +225,14 @@ export async function POST(request: Request) {
             textLen: text.length,
             providerMessageId,
         });
-        // Still run the agent when configured, even with no persistence,
-        // so the user gets a real reply on iMessage. Awaiting keeps us
-        // inside the maxDuration budget (15s) so Spectrum doesn't see a
-        // 5xx and retry; the typical Haiku + Photon round trip is ~2-4s.
+        // Try a keyword short-circuit (STOP / HELP / PING / etc.)
+        // before paying for an LLM call. Falls through to the agent
+        // if no keyword matches. Same 60s sender debounce applies.
         if (shouldRunAgent(sender)) {
-            await processWithAgent(sender, text, platform, null, null, meta.requestId);
+            const handled = await tryKeywordReply(sender, text, platform, null, null, meta.requestId);
+            if (!handled) {
+                await processWithAgent(sender, text, platform, null, null, meta.requestId);
+            }
         }
         return NextResponse.json({ ok: true, logged: false, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
     }
@@ -217,21 +283,28 @@ export async function POST(request: Request) {
             error: error.message,
         });
         if (shouldRunAgent(sender)) {
-            await processWithAgent(sender, text, platform, null, null, meta.requestId);
+            const handled = await tryKeywordReply(sender, text, platform, null, null, meta.requestId);
+            if (!handled) {
+                await processWithAgent(sender, text, platform, null, null, meta.requestId);
+            }
         }
         return NextResponse.json({ ok: true, logged: false, reason: error.message, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
     }
 
     const rowId = (inserted as { id?: string } | null)?.id ?? null;
 
-    // Synchronous agent reply. We await Claude Haiku + Photon send
-    // before returning 200 so the user sees a real iMessage response
-    // within the same webhook lifetime. The setTimeout-based fallback
-    // we used before relied on the function instance staying warm
-    // after returning, which Vercel doesn't guarantee. The 60s sender
-    // gate guards against a burst turning into a flood of LLM calls.
+    // Synchronous reply. We await Claude Haiku + Photon send before
+    // returning 200 so the user sees a real iMessage response within
+    // the same webhook lifetime. Keyword short-circuits run first to
+    // skip the LLM for STOP / HELP / PING etc. (saves Anthropic spend
+    // and round-trip latency on common one-word triggers). The 60s
+    // sender gate guards against a burst turning into a flood of
+    // LLM calls.
     if (shouldRunAgent(sender)) {
-        await processWithAgent(sender, text, platform, supabase, rowId, meta.requestId);
+        const handled = await tryKeywordReply(sender, text, platform, supabase, rowId, meta.requestId);
+        if (!handled) {
+            await processWithAgent(sender, text, platform, supabase, rowId, meta.requestId);
+        }
     }
 
     return NextResponse.json({ ok: true, logged: true, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
