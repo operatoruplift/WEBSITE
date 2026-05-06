@@ -33,6 +33,11 @@ export const maxDuration = 5;
 interface PhoneRow {
     sender: string;
     verified_at: string | null;
+    zodiac: string | null;
+    location: string | null;
+    model_pref: string | null;
+    timezone: string | null;
+    system_prompt_override: string | null;
 }
 
 const TABLE_MISSING_RE = /relation .* does not exist|Could not find the table/i;
@@ -77,7 +82,7 @@ export async function GET(request: Request) {
 
         const { data, error } = await supabase
             .from('imessage_users')
-            .select('sender, verified_at')
+            .select('sender, verified_at, zodiac, location, model_pref, timezone, system_prompt_override')
             .eq('privy_user_id', verified.userId)
             .not('verified_at', 'is', null);
 
@@ -116,7 +121,15 @@ export async function GET(request: Request) {
         const rows = (data ?? []) as PhoneRow[];
         const phones = rows
             .filter(r => typeof r.sender === 'string' && r.sender.length > 0 && r.verified_at)
-            .map(r => ({ phone: r.sender, verified_at: r.verified_at as string }));
+            .map(r => ({
+                phone: r.sender,
+                verified_at: r.verified_at as string,
+                zodiac: r.zodiac,
+                location: r.location,
+                model_pref: r.model_pref,
+                timezone: r.timezone,
+                system_prompt_override: r.system_prompt_override,
+            }));
 
         return NextResponse.json(
             {
