@@ -5,6 +5,9 @@ import { runAgentReply } from '@/lib/photon/agent';
 import { matchKeyword } from '@/lib/photon/keyword-replies';
 import { isOptedOut, recordOptOut, clearOptOut } from '@/lib/photon/opt-outs';
 import { loadHistory } from '@/lib/photon/history';
+import { getUserBySender, updateUserPrefs, type ImessageUser } from '@/lib/photon/users';
+import { classifyIntent } from '@/lib/photon/intents';
+import { getWeather } from '@/lib/photon/weather';
 import {
     verifyWebhookSignature,
     computeProviderMessageId,
@@ -107,16 +110,23 @@ async function markReplied(
 }
 
 /**
- * Wrapper around tryKeywordReply + processWithAgent that honors the
- * persisted opt-out list. An opted-out sender's messages still get
- * logged for audit, but no reply (keyword or LLM) goes out, EXCEPT
- * a START keyword which is allowed through so the sender can re-enable
- * replies without help.
+ * Wrapper around tryKeywordReply + tryIntentReply + processWithAgent
+ * that honors the persisted opt-out list. An opted-out sender's
+ * messages still get logged for audit, but no reply (keyword,
+ * intent, or LLM) goes out, EXCEPT a START keyword which is allowed
+ * through so the sender can re-enable replies without help.
+ *
+ * Dispatch order:
+ *   1. Opt-out gate
+ *   2. Keyword short-circuit (STOP/START/HELP/PING/STATUS)
+ *   3. Intent classifier (set_zodiac, set_location, set_model, weather)
+ *   4. Agent fallback (Claude Haiku)
  */
 async function dispatchReply(
     sender: string,
     text: string,
     platform: string,
+    user: ImessageUser | null,
     supabase: ReturnType<typeof getSupabase>,
     rowId: string | null,
     requestId: string,
@@ -133,10 +143,9 @@ async function dispatchReply(
         });
         return;
     }
-    const handled = await tryKeywordReply(sender, text, platform, supabase, rowId, requestId);
-    if (!handled) {
-        await processWithAgent(sender, text, platform, supabase, rowId, requestId);
-    }
+    if (await tryKeywordReply(sender, text, platform, supabase, rowId, requestId)) return;
+    if (await tryIntentReply(sender, text, platform, user, supabase, rowId, requestId)) return;
+    await processWithAgent(sender, text, platform, user, supabase, rowId, requestId);
 }
 
 type Platform = 'imessage' | 'telegram' | 'whatsapp' | 'x' | 'discord' | 'instagram';
@@ -205,10 +214,104 @@ async function tryKeywordReply(
     return true;
 }
 
+/**
+ * Cheap intent dispatch: classifyIntent → typed handler. Returns
+ * true when an intent was matched (and a reply was sent), false to
+ * fall through to the LLM agent path. Verified-only intents (the
+ * three set_* commands) bounce the user to /integrations when
+ * their phone isn't linked yet so the call site stays simple.
+ */
+async function tryIntentReply(
+    sender: string,
+    text: string,
+    platform: string,
+    user: ImessageUser | null,
+    supabase: ReturnType<typeof getSupabase>,
+    rowId: string | null,
+    requestId: string,
+): Promise<boolean> {
+    const intent = classifyIntent(text);
+    if (intent.intent === 'chat') return false;
+
+    const adapter = getPhotonAdapter();
+    if (!adapter.isActive()) {
+        safeWarn({ at: 'webhooks.photon', event: 'intent_no_adapter', requestId, intent: intent.intent });
+        return false;
+    }
+
+    const verifyHint = 'To set preferences, verify your phone first at operatoruplift.com/integrations.';
+    let reply: string;
+
+    switch (intent.intent) {
+        case 'set_zodiac':
+            if (!user?.verified_at) { reply = verifyHint; break; }
+            await updateUserPrefs(supabase, sender, { zodiac: intent.sign }, requestId);
+            reply = `Got it, you're a ${intent.sign}.`;
+            break;
+        case 'set_location':
+            if (!user?.verified_at) { reply = verifyHint; break; }
+            await updateUserPrefs(supabase, sender, { location: intent.location }, requestId);
+            reply = `Got it, location set to ${intent.location}.`;
+            break;
+        case 'set_model':
+            if (!user?.verified_at) { reply = verifyHint; break; }
+            await updateUserPrefs(supabase, sender, { model_pref: intent.model }, requestId);
+            reply = `Got it, switched to ${intent.model}.`;
+            break;
+        case 'weather': {
+            const loc = intent.location ?? user?.location ?? null;
+            if (!loc) {
+                reply = 'Tell me a city, like "weather in San Francisco". You can also set a default with "I\u2019m in [city]" once your phone is verified.';
+                break;
+            }
+            const weather = await getWeather(loc, requestId);
+            if (weather.ok) {
+                reply = weather.summary;
+            } else if (weather.reason === 'not_configured') {
+                reply = 'Weather lookup is not configured yet. Ask me something else?';
+            } else if (weather.reason === 'geocode_failed') {
+                reply = `Couldn\u2019t find "${loc}" on a map. Try a different city or include the country.`;
+            } else {
+                reply = `Couldn\u2019t fetch weather for "${loc}" right now. Try again in a minute.`;
+            }
+            break;
+        }
+        default:
+            return false;
+    }
+
+    const send = await adapter.send({
+        to: sender,
+        text: reply,
+        platform: platform as Platform,
+    });
+    if (!send.ok) {
+        safeWarn({
+            at: 'webhooks.photon',
+            event: 'intent_send_failed',
+            requestId,
+            intent: intent.intent,
+            reason: send.reason,
+        });
+        return false;
+    }
+    safeLog({
+        at: 'webhooks.photon',
+        event: 'intent_replied',
+        requestId,
+        intent: intent.intent,
+        verified: Boolean(user?.verified_at),
+        replyLen: reply.length,
+    });
+    await markReplied(supabase, rowId, send.messageId, reply);
+    return true;
+}
+
 async function processWithAgent(
     sender: string,
     text: string,
     platform: string,
+    user: ImessageUser | null,
     supabase: ReturnType<typeof getSupabase>,
     rowId: string | null,
     requestId: string,
@@ -220,7 +323,7 @@ async function processWithAgent(
     // empty and the agent runs one-shot.
     const history = await loadHistory(supabase, sender, 5, requestId);
     const result = await runAgentReply(
-        { sender, text, platform: platform as Platform, history },
+        { sender, text, platform: platform as Platform, history, user },
         adapter,
         requestId,
     );
@@ -296,10 +399,12 @@ export async function POST(request: Request) {
             providerMessageId,
         });
         // dispatchReply checks the persisted opt-out flag, then runs
-        // a keyword short-circuit (STOP / HELP / PING / etc.) before
-        // paying for an LLM call. Same 60s sender debounce.
+        // keyword short-circuits (STOP / HELP / PING) and intent
+        // classifiers (set_zodiac, weather, etc.) before paying for
+        // an LLM call. user is null without supabase, so verified-
+        // only intents bounce to /integrations.
         if (shouldRunAgent(sender)) {
-            await dispatchReply(sender, text, platform, null, null, meta.requestId);
+            await dispatchReply(sender, text, platform, null, null, null, meta.requestId);
         }
         return NextResponse.json({ ok: true, logged: false, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
     }
@@ -350,21 +455,22 @@ export async function POST(request: Request) {
             error: error.message,
         });
         if (shouldRunAgent(sender)) {
-            await dispatchReply(sender, text, platform, null, null, meta.requestId);
+            const user = await getUserBySender(supabase, sender, meta.requestId);
+            await dispatchReply(sender, text, platform, user, null, null, meta.requestId);
         }
         return NextResponse.json({ ok: true, logged: false, reason: error.message, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
     }
 
     const rowId = (inserted as { id?: string } | null)?.id ?? null;
 
-    // Synchronous reply. We await Claude Haiku + Photon send before
-    // returning 200 so the user sees a real iMessage response within
-    // the same webhook lifetime. dispatchReply checks the persisted
-    // opt-out flag, then runs a keyword short-circuit (STOP / HELP /
-    // PING etc.) before paying for an LLM call. The 60s sender gate
-    // guards against a burst turning into a flood of LLM calls.
+    // Synchronous reply. We await the typed-handler chain (keyword
+    // short-circuit, intent classifier, agent fallback) + Photon send
+    // before returning 200 so the user sees a real iMessage response
+    // within the same webhook lifetime. The 60s sender gate guards
+    // against a burst turning into a flood of LLM calls.
     if (shouldRunAgent(sender)) {
-        await dispatchReply(sender, text, platform, supabase, rowId, meta.requestId);
+        const user = await getUserBySender(supabase, sender, meta.requestId);
+        await dispatchReply(sender, text, platform, user, supabase, rowId, meta.requestId);
     }
 
     return NextResponse.json({ ok: true, logged: true, providerMessageId, requestId: meta.requestId }, { headers: meta.headers });
