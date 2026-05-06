@@ -9,8 +9,23 @@ export const maxDuration = 30;
 /**
  * GET /api/cron/photon-cleanup
  *
- * Called by Vercel Cron on a low-frequency schedule (see vercel.json)
- * to scrub expired iMessage agent state:
+ * Manually-triggered (or external-cron triggered) cleanup route to
+ * scrub expired iMessage agent state. NOT added to vercel.json
+ * crons because the Hobby plan caps at 2 cron jobs and the existing
+ * daily-briefing + morning-briefing slots are taken.
+ *
+ * Operator can curl this on demand:
+ *
+ *   curl -H "Authorization: Bearer $CRON_SECRET" \
+ *        https://www.operatoruplift.com/api/cron/photon-cleanup
+ *
+ * Or wire it to an external scheduler (cron-job.org, GitHub Actions
+ * schedule, etc.) without changing the route. Either way the auth
+ * shape matches the existing daily-briefing cron, so promoting this
+ * to a scheduled Vercel run later (after a plan upgrade) needs only
+ * a vercel.json edit, no code change.
+ *
+ * Scrubs:
  *
  *   - imessage_pending_actions: rows past expires_at. The 5-minute
  *     TTL means stale rows are deleted on demand by getPending(),
