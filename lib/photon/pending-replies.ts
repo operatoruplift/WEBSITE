@@ -24,7 +24,7 @@ import {
     type PendingAction,
 } from './pending-actions';
 import { getGoogleClientForSender, type BridgeResult } from './google-bridge';
-import { createDraft } from '@/lib/google/gmail';
+import { createDraft, sendEmail } from '@/lib/google/gmail';
 import { createEvent } from '@/lib/google/calendar';
 import { parseEventTime } from './event-time';
 import { safeWarn } from '@/lib/safeLog';
@@ -96,15 +96,21 @@ async function executePending(
         return executeGmailDraft(pending, bridge, requestId);
     }
 
+    if (pending.action_type === 'gmail.send') {
+        const bridge = await getGoogleClientForSender(supabase, sender, requestId);
+        if (!bridge.ok) return bridge.iMessageHint;
+        return executeGmailSend(pending, bridge, requestId);
+    }
+
     if (pending.action_type === 'calendar.create') {
         const bridge = await getGoogleClientForSender(supabase, sender, requestId);
         if (!bridge.ok) return bridge.iMessageHint;
         return executeCalendarCreate(pending, bridge, requestId);
     }
 
-    // gmail.send / calendar.update aren't wired yet. Surface the same
-    // connector-pointer hint as before so the user knows we recognized
-    // their intent but can't act on it.
+    // calendar.update isn't wired yet. Surface the connector-pointer
+    // hint so the user knows we recognized their intent but can't act
+    // on it.
     return connectorHint(pending);
 }
 
@@ -133,6 +139,34 @@ async function executeGmailDraft(
             error: message.slice(0, 240),
         });
         return 'Saving the draft to Gmail failed. Try again from operatoruplift.com/chat.';
+    }
+}
+
+async function executeGmailSend(
+    pending: PendingAction,
+    bridge: BridgeResult & { ok: true },
+    requestId?: string,
+): Promise<string> {
+    const params = pending.params as { to?: unknown; body?: unknown };
+    const to = typeof params.to === 'string' ? params.to.trim() : '';
+    const body = typeof params.body === 'string' ? params.body.trim() : '';
+    if (!to || !body) {
+        return 'Could not parse the staged email. Try again with "send an email to X@Y saying ...".';
+    }
+
+    try {
+        const subject = deriveSubject(body);
+        const result = await sendEmail(bridge.privyUserId, { to, subject, body });
+        return `Email sent to ${to} (id ${result.messageId.slice(0, 8)}).`;
+    } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        safeWarn({
+            at: 'photon.pending_replies',
+            event: 'gmail_send_failed',
+            requestId,
+            error: message.slice(0, 240),
+        });
+        return 'Sending the email via Gmail failed. Try again from operatoruplift.com/chat.';
     }
 }
 

@@ -328,30 +328,33 @@ async function tryIntentReply(
         }
         case 'email_draft': {
             if (!user?.verified_at) {
-                reply = 'To draft email from iMessage, verify your phone first at operatoruplift.com/integrations.';
+                reply = intent.mode === 'send'
+                    ? 'To send email from iMessage, verify your phone first at operatoruplift.com/integrations.'
+                    : 'To draft email from iMessage, verify your phone first at operatoruplift.com/integrations.';
                 break;
             }
-            // Stage as a pending action. Truncate body for the preview
-            // bubble (keep the full body in params). The YES/NO handler
-            // from PR #428 picks this up and replies with the
-            // /integrations connector pointer until Gmail tokens for
-            // iMessage users are wired in.
+            // "send" verb -> gmail.send (delivered immediately on YES).
+            // "draft" / "email" verb -> gmail.draft (saved to Drafts).
+            // The YES/NO handler from PR #428 dispatches to the right
+            // executor based on action_type.
             const previewBody = intent.body.length > 120
                 ? `${intent.body.slice(0, 117)}...`
                 : intent.body;
-            const previewText = `Draft to ${intent.to}: ${previewBody}\nReply YES to stage this draft or NO to cancel.`;
+            const verb = intent.mode === 'send' ? 'Send' : 'Draft';
+            const action_type = intent.mode === 'send' ? 'gmail.send' : 'gmail.draft';
+            const previewText = `${verb} to ${intent.to}: ${previewBody}\nReply YES to confirm or NO to cancel.`;
             const created = await createPending(
                 supabase,
                 sender,
-                'gmail.draft',
+                action_type,
                 { to: intent.to, body: intent.body },
                 previewText,
                 requestId,
             );
             if (!created.ok) {
                 reply = created.tableMissing
-                    ? 'Draft staging is not enabled yet (run the pending_actions migration).'
-                    : 'Could not stage the draft. Try again in a minute.';
+                    ? 'Email staging is not enabled yet (run the pending_actions migration).'
+                    : 'Could not stage the email. Try again in a minute.';
             } else {
                 reply = previewText;
             }
