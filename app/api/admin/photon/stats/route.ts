@@ -80,14 +80,22 @@ export async function GET(request: Request) {
         const since24h = new Date(now - 24 * 3600 * 1000).toISOString();
         const since7d = new Date(now - 7 * 24 * 3600 * 1000).toISOString();
 
-        const [w24Total, w24Replied, w7dTotal, w7dReplied, w24Rows] = await Promise.all([
+        const [w24Total, w24Replied, w7dTotal, w7dReplied, w24Rows, verifiedUsers, optedOut] = await Promise.all([
             supabase.from('inbound_messages').select('id', { count: 'exact', head: true }).gte('received_at', since24h),
             supabase.from('inbound_messages').select('id', { count: 'exact', head: true }).gte('received_at', since24h).not('processed_at', 'is', null),
             supabase.from('inbound_messages').select('id', { count: 'exact', head: true }).gte('received_at', since7d),
             supabase.from('inbound_messages').select('id', { count: 'exact', head: true }).gte('received_at', since7d).not('processed_at', 'is', null),
             supabase.from('inbound_messages').select('platform, processed_at').gte('received_at', since24h),
+            // Best-effort secondary tables. If imessage_users / imessage_opt_outs
+            // are missing (pre-migration), the head-count just returns an
+            // error which we tolerate as "0 known" instead of failing the
+            // entire stats response.
+            supabase.from('imessage_users').select('sender', { count: 'exact', head: true }).not('verified_at', 'is', null),
+            supabase.from('imessage_opt_outs').select('sender', { count: 'exact', head: true }),
         ]);
 
+        // Don't include the secondary tables in firstError check - they can
+        // be missing without blocking the inbound stats.
         const firstError = [w24Total, w24Replied, w7dTotal, w7dReplied, w24Rows].find(r => r.error)?.error;
         if (firstError) {
             const tableMissing = /relation .* does not exist|Could not find the table/i.test(firstError.message || '');
@@ -135,6 +143,13 @@ export async function GET(request: Request) {
             w7Rep,
         });
 
+        // Tolerate missing secondary tables: report null when the
+        // imessage_users / imessage_opt_outs tables haven't been
+        // migrated yet so the operator sees that the stat is unavailable
+        // instead of a fabricated 0.
+        const verifiedUsersCount = verifiedUsers.error ? null : (verifiedUsers.count ?? 0);
+        const optedOutCount = optedOut.error ? null : (optedOut.count ?? 0);
+
         return NextResponse.json(
             {
                 requestId: meta.requestId,
@@ -152,6 +167,8 @@ export async function GET(request: Request) {
                     rate: rate(w7Recv, w7Rep),
                 },
                 byPlatform24h,
+                verifiedUsers: verifiedUsersCount,
+                optedOut: optedOutCount,
             },
             { headers: meta.headers },
         );
