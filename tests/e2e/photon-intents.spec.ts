@@ -166,6 +166,24 @@ test('email_draft does not consume normal chat with no @', () => {
     expect(classifyIntent('draft a sketch of the next feature').intent).toBe('chat');
 });
 
+test('"send an email to X@Y saying ..." sets mode=send', () => {
+    const r = classifyIntent('send an email to john@x.io saying lunch tomorrow');
+    expect(r.intent).toBe('email_draft');
+    if (r.intent === 'email_draft') expect(r.mode).toBe('send');
+});
+
+test('"draft an email to X@Y saying ..." sets mode=draft', () => {
+    const r = classifyIntent('draft an email to mom@example.com saying I will be late');
+    expect(r.intent).toBe('email_draft');
+    if (r.intent === 'email_draft') expect(r.mode).toBe('draft');
+});
+
+test('"email X@Y saying ..." defaults to mode=draft (safer)', () => {
+    const r = classifyIntent('email support@a.com about the broken link');
+    expect(r.intent).toBe('email_draft');
+    if (r.intent === 'email_draft') expect(r.mode).toBe('draft');
+});
+
 test('detects "schedule a meeting tomorrow at 3pm" as calendar_create', () => {
     const r = classifyIntent('schedule a meeting tomorrow at 3pm');
     expect(r.intent).toBe('calendar_create');

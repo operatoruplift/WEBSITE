@@ -26,7 +26,7 @@ export type IntentResult =
     | { intent: 'set_location'; location: string }
     | { intent: 'set_model'; model: string }
     | { intent: 'weather'; location: string | null }
-    | { intent: 'email_draft'; to: string; body: string }
+    | { intent: 'email_draft'; to: string; body: string; mode: 'draft' | 'send' }
     | { intent: 'calendar_create'; title: string; when: string };
 
 const KNOWN_MODELS: Record<string, string> = {
@@ -152,16 +152,24 @@ function tryEmailDraft(text: string): IntentResult | null {
     // these dimensions would be too noisy, so we just bail to chat and
     // let the LLM handle ambiguous cases.
     //
+    // The verb determines the mode:
+    //   - "draft" -> mode: 'draft' (saved to Gmail Drafts, user reviews)
+    //   - "send"  -> mode: 'send'  (delivered immediately on YES)
+    //   - "email" -> mode: 'draft' (safer default, user can re-send)
+    //
     // Examples that match:
-    //   "draft an email to mom@example.com saying I'll be late"
-    //   "email john@x.io saying lunch tomorrow at noon"
-    //   "send an email to support@a.com about the broken link"
+    //   "draft an email to mom@example.com saying I'll be late"  -> draft
+    //   "send an email to john@x.io saying lunch tomorrow"       -> send
+    //   "email support@a.com about the broken link"              -> draft
     //
     // Examples that do NOT match (fall through to chat):
     //   "email me when this is done" (no address)
     //   "draft an email" (no recipient or body)
     //   "send John an email" (named recipient, no address)
-    if (!/\b(?:draft|email|send)\b/i.test(text)) return null;
+    const verbMatch = text.match(/\b(draft|send|email)\b/i);
+    if (!verbMatch) return null;
+    const verb = verbMatch[1].toLowerCase();
+    const mode: 'draft' | 'send' = verb === 'send' ? 'send' : 'draft';
 
     // Email shape: very loose, matches anything with @ and a TLD.
     // We just stage the draft for confirmation, the connector layer
@@ -179,7 +187,7 @@ function tryEmailDraft(text: string): IntentResult | null {
     const body = (sayingMatch?.[1] ?? quotedMatch?.[1] ?? '').trim();
     if (!body || body.length > 500) return null;
 
-    return { intent: 'email_draft', to, body };
+    return { intent: 'email_draft', to, body, mode };
 }
 
 function tryWeather(text: string): IntentResult | null {
