@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Phone, Check, Loader2, MessageSquare, Save, Trash2 } from 'lucide-react';
+import { Phone, Check, Loader2, MessageSquare, Save, Trash2, Send } from 'lucide-react';
 import { Card, CardContent } from '@/src/components/ui/Card';
 import { useToast } from '@/src/components/ui/Toast';
 
@@ -197,6 +197,28 @@ export function IMessageVerifyCard() {
         }
     }
 
+    async function sendTest() {
+        setError(null);
+        setBusy(true);
+        try {
+            const res = await fetch('/api/integrations/imessage/test', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeader() },
+                body: JSON.stringify({ phone }),
+            });
+            const data = (await res.json().catch(() => ({}))) as ApiError & { sent?: boolean; messageId?: string };
+            if (!res.ok || !data.sent) {
+                setError(data.nextAction || data.error || 'Could not send test message.');
+                return;
+            }
+            showToast('Test message sent. Check your iMessages.', 'success');
+        } catch {
+            setError('Network error. Try again in a minute.');
+        } finally {
+            setBusy(false);
+        }
+    }
+
     async function disconnect() {
         if (!window.confirm(`Disconnect ${phone}? You can re-verify any time.`)) return;
         setError(null);
@@ -301,20 +323,32 @@ export function IMessageVerifyCard() {
                             />
                         </PrefField>
                     </div>
-                    <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center justify-between gap-3 flex-wrap">
                         <div className="flex items-center gap-2 text-[11px] text-gray-500 font-mono">
                             <MessageSquare size={12} className="text-primary" />
                             Watch /dev/photon for live inbound rows.
                         </div>
-                        <button
-                            type="button"
-                            onClick={savePrefs}
-                            disabled={busy || !dirty}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide bg-primary/10 text-primary hover:bg-primary/20 transition-all disabled:opacity-50"
-                        >
-                            {busy ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : <Save size={14} aria-hidden="true" />}
-                            Save prefs
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={sendTest}
+                                disabled={busy}
+                                title="Send a test message to your phone"
+                                className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wide bg-foreground/[0.04] text-gray-300 hover:text-white hover:bg-foreground/[0.08] transition-all disabled:opacity-50"
+                            >
+                                <Send size={13} aria-hidden="true" />
+                                Send test
+                            </button>
+                            <button
+                                type="button"
+                                onClick={savePrefs}
+                                disabled={busy || !dirty}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide bg-primary/10 text-primary hover:bg-primary/20 transition-all disabled:opacity-50"
+                            >
+                                {busy ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : <Save size={14} aria-hidden="true" />}
+                                Save prefs
+                            </button>
+                        </div>
                     </div>
                     {error && (
                         <p role="alert" className="mt-3 text-xs text-red-400 leading-relaxed">{error}</p>
