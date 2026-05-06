@@ -165,3 +165,51 @@ test('email_draft does not consume normal chat with no @', () => {
     expect(classifyIntent('hey what are you up to').intent).toBe('chat');
     expect(classifyIntent('draft a sketch of the next feature').intent).toBe('chat');
 });
+
+test('detects "schedule a meeting tomorrow at 3pm" as calendar_create', () => {
+    const r = classifyIntent('schedule a meeting tomorrow at 3pm');
+    expect(r.intent).toBe('calendar_create');
+    if (r.intent === 'calendar_create') {
+        expect(r.when).toMatch(/tomorrow|at 3pm/i);
+        expect(r.title).toBe('meeting');
+    }
+});
+
+test('detects "book a sync about onboarding tomorrow" as calendar_create', () => {
+    const r = classifyIntent('book a sync about onboarding tomorrow');
+    expect(r.intent).toBe('calendar_create');
+    if (r.intent === 'calendar_create') {
+        expect(r.title).toBe('onboarding');
+        expect(r.when).toMatch(/tomorrow/i);
+    }
+});
+
+test('detects "set up a 30-min call next monday at 10am" as calendar_create', () => {
+    const r = classifyIntent('set up a 30-min call next monday at 10am');
+    expect(r.intent).toBe('calendar_create');
+});
+
+test('detects ISO date in calendar_create', () => {
+    const r = classifyIntent('create event for kickoff 2026-09-15');
+    expect(r.intent).toBe('calendar_create');
+    if (r.intent === 'calendar_create') expect(r.when).toBe('2026-09-15');
+});
+
+test('rejects "schedule" without a noun (no event)', () => {
+    expect(classifyIntent('schedule a refund please').intent).toBe('chat');
+});
+
+test('rejects "meeting" without an imperative (descriptive only)', () => {
+    expect(classifyIntent('the meeting tomorrow was great').intent).toBe('chat');
+});
+
+test('rejects calendar_create without a time hint', () => {
+    expect(classifyIntent('book a meeting with the team').intent).toBe('chat');
+});
+
+test('calendar_create wins over email_draft when both could match (no recipient address)', () => {
+    // No @ address means email_draft wouldn't fire anyway, but verify
+    // calendar takes precedence in the priority chain.
+    const r = classifyIntent('schedule a meeting and send an email tomorrow');
+    expect(r.intent).toBe('calendar_create');
+});

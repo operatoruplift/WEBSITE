@@ -26,7 +26,8 @@ export type IntentResult =
     | { intent: 'set_location'; location: string }
     | { intent: 'set_model'; model: string }
     | { intent: 'weather'; location: string | null }
-    | { intent: 'email_draft'; to: string; body: string };
+    | { intent: 'email_draft'; to: string; body: string }
+    | { intent: 'calendar_create'; title: string; when: string };
 
 const KNOWN_MODELS: Record<string, string> = {
     'sonnet': 'claude-sonnet-4-6',
@@ -110,6 +111,40 @@ function tryModel(text: string): IntentResult | null {
     return null;
 }
 
+function tryCalendarCreate(text: string): IntentResult | null {
+    // Conservative match: requires
+    // - An imperative verb (schedule / book / create / set up / put on)
+    // - An event noun (meeting / event / appointment / call / sync /
+    //   chat / standup / interview)
+    // - A time hint (today / tomorrow / Mon-Fri name / "at NN" /
+    //   ISO-ish date / "next week").
+    //
+    // Date/time parsing is delegated to the connector layer at YES
+    // confirm time; here we just stage the raw `when` substring so
+    // Claude or the calendar API can resolve it later. The matcher's
+    // job is only to recognize that the user is requesting an event.
+    if (!/\b(?:schedule|book|create|set\s+up|put\s+on)\b/i.test(text)) return null;
+    if (!/\b(?:meeting|event|appointment|call|sync|chat|standup|interview)\b/i.test(text)) return null;
+
+    const timeRe = /\b(?:today|tomorrow|tonight|monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tue|wed|thu|fri|sat|sun|next\s+(?:week|monday|tuesday|wednesday|thursday|friday|saturday|sunday)|in\s+\d+\s+(?:hour|hours|day|days|week|weeks)|at\s+\d{1,2}(?::\d{2})?\s*(?:am|pm)?|\d{4}-\d{2}-\d{2})\b/i;
+    const whenMatch = text.match(timeRe);
+    if (!whenMatch) return null;
+    const when = whenMatch[0].trim();
+
+    // Title heuristic: first try "about <title>" or "for <title>",
+    // then fall back to the noun + capture window. Title cap 200.
+    const aboutMatch = text.match(/\b(?:about|for|on|titled|with\s+title)\s+([^.!?,]+?)(?=$|\s+(?:at|on|tomorrow|today|tonight|next|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b|[.!?])/i);
+    const fromHeuristic = aboutMatch?.[1]?.trim();
+    let title = (fromHeuristic && fromHeuristic.length <= 200) ? fromHeuristic : '';
+    if (!title) {
+        // Use the event noun as the fallback title, capitalized.
+        const nounMatch = text.match(/\b(meeting|event|appointment|call|sync|chat|standup|interview)\b/i);
+        title = nounMatch ? nounMatch[1].toLowerCase() : 'event';
+    }
+
+    return { intent: 'calendar_create', title, when };
+}
+
 function tryEmailDraft(text: string): IntentResult | null {
     // Conservative match: requires an explicit recipient email address
     // AND an imperative verb (draft, email, send) AND a body separator
@@ -183,10 +218,16 @@ export function classifyIntent(text: string | null | undefined): IntentResult {
     const weather = tryWeather(trimmed);
     if (weather) return weather;
 
-    // email_draft is intentionally LAST in the priority chain because
-    // its trigger words ("send", "email") overlap with normal chat
-    // and the recipient + body match is the strict gate that keeps
-    // false positives down.
+    // calendar_create + email_draft live LAST in the priority chain
+    // because their trigger words ("send", "email", "schedule",
+    // "book") overlap with normal chat. The strict gates (recipient +
+    // body for email; verb + noun + time for calendar) keep the
+    // false-positive rate manageable. calendar_create runs before
+    // email_draft since "schedule a sync" should not also try to
+    // match an email pattern.
+    const calendarCreate = tryCalendarCreate(trimmed);
+    if (calendarCreate) return calendarCreate;
+
     const emailDraft = tryEmailDraft(trimmed);
     if (emailDraft) return emailDraft;
 
