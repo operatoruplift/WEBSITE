@@ -25,11 +25,25 @@ function makeFake() {
         store,
         client: {
             from(table: string) {
-                if (table !== 'imessage_pending_actions') throw new Error(`unexpected table ${table}`);
-                return makeBuilder(store);
+                if (table === 'imessage_pending_actions') return makeBuilder(store);
+                if (table === 'imessage_users') return makeUsersBuilder();
+                throw new Error(`unexpected table ${table}`);
             },
         } as unknown as SupabaseClient,
     };
+}
+
+// imessage_users lookups in the executor return null for any
+// sender, so the bridge reports `sender_not_verified` and the
+// confirm path returns the "verify your phone first" hint instead
+// of touching real Google APIs.
+function makeUsersBuilder() {
+    const builder = {
+        select(_cols: string) { return builder; },
+        eq(_col: string, _value: string) { return builder; },
+        async maybeSingle() { return { data: null, error: null }; },
+    };
+    return builder;
 }
 
 function makeBuilder(store: Map<string, PendingRow>) {
@@ -85,22 +99,25 @@ test('returns null reply when there is no pending row, even on YES', async () =>
     expect(r.matched).toBeNull();
 });
 
-test('YES on a pending gmail.draft confirms and clears the row', async () => {
+test('YES on a pending gmail.draft routes through the bridge and consumes the row', async () => {
     const { client, store } = makeFake();
     await createPending(client, '+15551234567', 'gmail.draft', { to: 'mom@example.com', body: 'Sounds great' }, 'Send to mom?');
     const r = await tryPendingResponse(client, '+15551234567', 'yes');
     expect(r.matched).toBe('confirm');
     expect(r.consumed).toBe(true);
-    expect(r.replyText).toContain('draft that email');
-    expect(r.replyText).toContain('operatoruplift.com/integrations');
+    // The fake imessage_users returns null, so the bridge reports
+    // sender_not_verified and the executor surfaces that hint.
+    expect(r.replyText).toContain('verify your phone');
     expect(store.has('+15551234567')).toBe(false);
 });
 
-test('YES on a pending calendar.create confirms with calendar phrasing', async () => {
+test('YES on a pending calendar.create still falls back to the connector hint', async () => {
     const { client } = makeFake();
     await createPending(client, '+15551234567', 'calendar.create', { title: '9am sync' }, 'Create event?');
     const r = await tryPendingResponse(client, '+15551234567', 'send it');
     expect(r.matched).toBe('confirm');
+    // calendar.create handler isn't wired yet; falls back to the
+    // describeAction/connectorHint copy.
     expect(r.replyText).toContain('create that calendar event');
 });
 
