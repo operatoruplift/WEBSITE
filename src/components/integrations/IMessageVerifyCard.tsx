@@ -50,7 +50,7 @@ export function IMessageVerifyCard() {
 
     // Seed verified state from /api/integrations/imessage/status on mount.
     // Best-effort: any failure (route missing, 401, table missing, network)
-    // silently leaves the user at enter_phone — the verify flow still works.
+    // silently leaves the user at enter_phone, the verify flow still works.
     useEffect(() => {
         let cancelled = false;
         (async () => {
@@ -64,7 +64,7 @@ export function IMessageVerifyCard() {
                 setPhone(data.phones[0].phone);
                 setStage('verified');
             } catch {
-                // network/route missing — silent fallback to enter_phone
+                // network/route missing, silent fallback to enter_phone
             }
         })();
         return () => { cancelled = true; };
