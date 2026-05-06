@@ -5,6 +5,7 @@ import { runAgentReply } from '@/lib/photon/agent';
 import { matchKeyword } from '@/lib/photon/keyword-replies';
 import { isOptedOut, recordOptOut, clearOptOut } from '@/lib/photon/opt-outs';
 import { loadHistory } from '@/lib/photon/history';
+import { getUserBySender } from '@/lib/photon/users';
 import {
     verifyWebhookSignature,
     computeProviderMessageId,
@@ -214,13 +215,15 @@ async function processWithAgent(
     requestId: string,
 ) {
     const adapter = getPhotonAdapter();
-    // Load up to 5 prior completed turns so Claude Haiku gets multi-
-    // turn context. Best-effort: if Supabase is unset, the table is
-    // missing, or reply_text predates the migration, history is
-    // empty and the agent runs one-shot.
-    const history = await loadHistory(supabase, sender, 5, requestId);
+    // Load up to 5 prior completed turns + the verified user row in
+    // parallel. Both are best-effort: missing tables or unset env
+    // returns null/[] and the agent falls back to one-shot anonymous.
+    const [history, user] = await Promise.all([
+        loadHistory(supabase, sender, 5, requestId),
+        getUserBySender(supabase, sender, requestId),
+    ]);
     const result = await runAgentReply(
-        { sender, text, platform: platform as Platform, history },
+        { sender, text, platform: platform as Platform, history, user },
         adapter,
         requestId,
     );
