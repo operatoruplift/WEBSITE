@@ -245,6 +245,46 @@ export default function DevPhotonPage() {
         }
     };
 
+    // Pendings panel state. Lists currently staged tool-call rows
+    // (gmail.draft / calendar.create) so the operator can see what
+    // is about to fire on the next user YES. Backed by GET
+    // /api/admin/photon/pendings.
+    interface PendingRow {
+        sender: string;
+        action_type: string;
+        params: Record<string, unknown>;
+        preview_text: string | null;
+        expires_at: string;
+        created_at: string;
+        expired: boolean;
+    }
+    const [pendOpen, setPendOpen] = useState(false);
+    const [pendRows, setPendRows] = useState<PendingRow[]>([]);
+    const [pendLoading, setPendLoading] = useState(false);
+    const [pendErr, setPendErr] = useState<string | null>(null);
+
+    const refreshPend = async () => {
+        setPendLoading(true);
+        setPendErr(null);
+        try {
+            const res = await fetch('/api/admin/photon/pendings?limit=20', {
+                headers: authHeaders(readToken()),
+                cache: 'no-store',
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                setPendRows([]);
+                setPendErr(data?.nextAction || data?.detail || `HTTP ${res.status}`);
+                return;
+            }
+            setPendRows(Array.isArray(data?.rows) ? data.rows : []);
+        } catch (e) {
+            setPendErr(e instanceof Error ? e.message : String(e));
+        } finally {
+            setPendLoading(false);
+        }
+    };
+
     const refreshStats = async () => {
         try {
             const res = await fetch('/api/admin/photon/stats', {
@@ -267,8 +307,9 @@ export default function DevPhotonPage() {
 
     useEffect(() => {
         if (adminStatus === 'admin' && optsOpen && optsRows.length === 0 && !optsErr) void refreshOpts();
+        if (adminStatus === 'admin' && pendOpen && pendRows.length === 0 && !pendErr) void refreshPend();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [adminStatus, optsOpen]);
+    }, [adminStatus, optsOpen, pendOpen]);
 
     if (adminStatus === 'loading') {
         return <div className="min-h-screen flex items-center justify-center"><Loader2 size={20} className="animate-spin text-gray-500" /></div>;
@@ -360,6 +401,13 @@ export default function DevPhotonPage() {
                     >
                         {optsOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
                         <Ban size={12} /> Opt-outs
+                    </button>
+                    <button
+                        onClick={() => setPendOpen(o => !o)}
+                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-sm text-white transition-all"
+                    >
+                        {pendOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+                        <Clock size={12} /> Pendings
                     </button>
                     {rows.length > 0 && (
                         <span className="text-xs font-mono text-gray-500">
@@ -461,6 +509,51 @@ export default function DevPhotonPage() {
                                         >
                                             <X size={10} /> Clear
                                         </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                )}
+
+                {pendOpen && (
+                    <div className="p-4 rounded-xl border border-white/10 bg-white/[0.02] space-y-3">
+                        <div className="flex items-center justify-between">
+                            <p className="text-xs text-gray-400">
+                                Tool-call rows currently staged for confirmation. Each is a YES/NO away from firing (or being cancelled). Expired rows stay in the list but greyed out until the next cron sweep.
+                            </p>
+                            <button
+                                onClick={refreshPend}
+                                disabled={pendLoading}
+                                className="inline-flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-mono uppercase tracking-widest text-gray-400 hover:text-white border border-white/10 hover:bg-white/5 transition-all disabled:opacity-40"
+                            >
+                                {pendLoading ? <Loader2 size={10} className="animate-spin" /> : <RefreshCw size={10} />}
+                                Refresh
+                            </button>
+                        </div>
+                        {pendErr && (
+                            <div className="p-3 rounded-lg border border-red-500/30 bg-red-500/5 text-xs text-red-200">{pendErr}</div>
+                        )}
+                        {!pendErr && pendRows.length === 0 && !pendLoading && (
+                            <div className="text-xs text-gray-500">No pending tool-call rows. Verified users have no staged drafts/events.</div>
+                        )}
+                        {pendRows.length > 0 && (
+                            <ul className="space-y-1.5">
+                                {pendRows.map((r) => (
+                                    <li key={`${r.sender}-${r.created_at}`} className={`p-2 rounded-lg border ${r.expired ? 'bg-black/20 border-white/5 opacity-60' : 'bg-black/30 border-white/10'}`}>
+                                        <div className="flex items-center gap-3 flex-wrap">
+                                            <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full border ${r.action_type.startsWith('gmail') ? 'bg-blue-500/15 text-blue-300 border-blue-500/30' : 'bg-purple-500/15 text-purple-300 border-purple-500/30'}`}>
+                                                {r.action_type}
+                                            </span>
+                                            <span className="text-xs font-mono text-gray-300 truncate max-w-[200px]" title={r.sender}>{r.sender}</span>
+                                            {r.expired && <span className="text-[10px] font-mono text-amber-300 uppercase tracking-widest">expired</span>}
+                                            <span className="text-[10px] font-mono text-gray-500 ml-auto">
+                                                created {formatTime(r.created_at)} · expires {formatTime(r.expires_at)}
+                                            </span>
+                                        </div>
+                                        {r.preview_text && (
+                                            <p className="mt-2 text-[11px] text-gray-400 line-clamp-2 whitespace-pre-wrap">{r.preview_text}</p>
+                                        )}
                                     </li>
                                 ))}
                             </ul>
