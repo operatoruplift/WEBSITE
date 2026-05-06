@@ -75,25 +75,46 @@ export default function IMessageLanding() {
                             <ol className="space-y-4 text-sm">
                                 <Step n={1} text="You send an iMessage to the bot's number." />
                                 <Step n={2} text="Photon Spectrum POSTs the message to operatoruplift.com over HTTPS with an HMAC-signed body." />
-                                <Step n={3} text="The webhook drops the row into Supabase, then awaits Claude Haiku 4.5 with a 200-token cap." />
+                                <Step n={3} text="The webhook checks 5 stages in order: opt-out, pending YES/NO, keyword (STOP/HELP/PING), intent (set_zodiac/weather/email_draft), and falls back to Claude Haiku 4.5 with multi-turn history." />
                                 <Step n={4} text="The reply gets stripped of any stray markdown, then handed to Photon to deliver back to your phone." />
                             </ol>
+                        </div>
+                    </FadeIn>
+
+                    {/* What works today block */}
+                    <FadeIn delay={250} className="w-full">
+                        <div className="mb-12">
+                            <h2 className="text-xl md:text-2xl font-medium text-foreground tracking-tight mb-4">What you can text today</h2>
+                            <ul className="space-y-3 text-sm text-muted leading-relaxed">
+                                <li>
+                                    <span className="text-foreground font-medium">Plain chat.</span> Multi-turn context is wired: the bot loads up to 5 prior turns from your conversation so the reply makes sense in context.
+                                </li>
+                                <li>
+                                    <span className="text-foreground font-medium">Save preferences.</span> &quot;I&apos;m a leo&quot; saves your zodiac. &quot;I&apos;m in San Francisco&quot; saves your location. &quot;Switch to sonnet&quot; changes the model. Or edit them in the dashboard at /integrations.
+                                </li>
+                                <li>
+                                    <span className="text-foreground font-medium">Weather.</span> &quot;What&apos;s the weather in Austin&quot; pulls a current forecast via Open-Meteo (keyless) or OpenWeatherMap.
+                                </li>
+                                <li>
+                                    <span className="text-foreground font-medium">Email drafts (staged).</span> &quot;Draft an email to mom@example.com saying I&apos;ll be late&quot; stages a Gmail draft and asks YES/NO before doing anything irreversible.
+                                </li>
+                            </ul>
                         </div>
                     </FadeIn>
 
                     {/* Roadmap honesty block */}
                     <FadeIn delay={300} className="w-full">
                         <div className="mb-20">
-                            <h2 className="text-xl md:text-2xl font-medium text-foreground tracking-tight mb-4">What's not here yet</h2>
+                            <h2 className="text-xl md:text-2xl font-medium text-foreground tracking-tight mb-4">What&apos;s not here yet</h2>
                             <ul className="space-y-3 text-sm text-muted leading-relaxed">
                                 <li>
-                                    <span className="text-foreground font-medium">Multi-turn memory.</span> Each message is one-shot today. The bot doesn't remember last week's request, or last hour's. Threading is on the roadmap.
+                                    <span className="text-foreground font-medium">Real Gmail / Calendar sends.</span> The YES/NO confirmation works, but the actual send routes back to /integrations to authorize Google OAuth for your iMessage account. Real send is the next PR.
                                 </li>
                                 <li>
-                                    <span className="text-foreground font-medium">Gmail / Calendar via iMessage.</span> Those tool calls live in the web app at /chat, where every action waits for a tap and produces a signed receipt. Texting the bot to "draft an email" routes back to the web today.
+                                    <span className="text-foreground font-medium">Calendar staging.</span> Email drafts stage today; calendar events use the same pending buffer but don&apos;t have an intent matcher yet.
                                 </li>
                                 <li>
-                                    <span className="text-foreground font-medium">A friendly number.</span> The Spectrum bridge is configured per project. We'll publish the public number when iMessage onboarding is open beyond the team.
+                                    <span className="text-foreground font-medium">A friendly public number.</span> The Spectrum bridge is configured per project. We&apos;ll publish the public number when iMessage onboarding is open beyond the team.
                                 </li>
                             </ul>
                         </div>
