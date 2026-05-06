@@ -7,15 +7,14 @@
  *   - Look at inbound text first to see if it's a confirm/cancel.
  *   - Only check the DB when the text actually looks like a decision
  *     (so a normal chat message never pays for a Supabase round-trip).
- *   - On confirm/cancel, delete the pending row and return reply text.
- *   - On no-match, return null so the webhook falls through to the
+ *   - On confirm: execute the staged tool call via the Google bridge
+ *     (gmail.draft today, calendar.create soon) and return the result
+ *     message. Falls back to the connector-pointer hint when the
+ *     bridge can't complete (sender not verified, Google not connected,
+ *     refresh failed).
+ *   - On cancel: delete the pending row and return "Cancelled."
+ *   - On no-match: return null so the webhook falls through to the
  *     normal pipeline (intents -> agent).
- *
- * Honest-status: today, when a user confirms a pending Gmail/Calendar
- * action, we don't have OAuth tokens for them yet, so the reply
- * points them at /integrations instead of fabricating a sent receipt.
- * When the connector PR lands this is the seam where the real tool
- * call hooks in.
  */
 import type { SupabaseClient } from '@supabase/supabase-js';
 import {
@@ -24,6 +23,9 @@ import {
     classifyPendingResponse,
     type PendingAction,
 } from './pending-actions';
+import { getGoogleClientForSender, type BridgeResult } from './google-bridge';
+import { createDraft } from '@/lib/google/gmail';
+import { safeWarn } from '@/lib/safeLog';
 
 export interface PendingReplyResult {
     /** The text to send back, or null when nothing matched. */
@@ -62,11 +64,8 @@ export async function tryPendingResponse(
     await deletePending(supabase, sender, requestId);
 
     if (decision === 'confirm') {
-        return {
-            replyText: confirmReply(pending),
-            matched: 'confirm',
-            consumed: true,
-        };
+        const replyText = await executePending(supabase, sender, pending, requestId);
+        return { replyText, matched: 'confirm', consumed: true };
     }
     return {
         replyText: 'Cancelled. Anything else?',
@@ -75,7 +74,72 @@ export async function tryPendingResponse(
     };
 }
 
-function describePending(p: PendingAction): string {
+/**
+ * Run the staged tool call. Today: gmail.draft via the Google bridge.
+ * calendar.create + gmail.send fall back to the connector hint until
+ * their handlers are wired in follow-ups.
+ *
+ * Returns the iMessage reply text. Never throws: any thrown error is
+ * caught and reported as an iMessage-friendly string.
+ */
+async function executePending(
+    supabase: SupabaseClient,
+    sender: string,
+    pending: PendingAction,
+    requestId?: string,
+): Promise<string> {
+    if (pending.action_type === 'gmail.draft') {
+        const bridge = await getGoogleClientForSender(supabase, sender, requestId);
+        if (!bridge.ok) return bridge.iMessageHint;
+        return executeGmailDraft(pending, bridge, requestId);
+    }
+
+    // gmail.send / calendar.create / calendar.update aren't wired yet.
+    // Surface the same connector-pointer hint as before so the user
+    // knows we recognized their intent but can't act on it.
+    return connectorHint(pending);
+}
+
+async function executeGmailDraft(
+    pending: PendingAction,
+    bridge: BridgeResult & { ok: true },
+    requestId?: string,
+): Promise<string> {
+    const params = pending.params as { to?: unknown; body?: unknown };
+    const to = typeof params.to === 'string' ? params.to.trim() : '';
+    const body = typeof params.body === 'string' ? params.body.trim() : '';
+    if (!to || !body) {
+        return 'Could not parse the staged draft. Try drafting again with "draft an email to X@Y saying ...".';
+    }
+
+    try {
+        const subject = deriveSubject(body);
+        const result = await createDraft(bridge.privyUserId, { to, subject, body });
+        return `Draft saved to your Gmail (id ${result.draftId.slice(0, 8)}). Open Gmail to review and send.`;
+    } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        safeWarn({
+            at: 'photon.pending_replies',
+            event: 'gmail_draft_failed',
+            requestId,
+            error: message.slice(0, 240),
+        });
+        return 'Saving the draft to Gmail failed. Try again from operatoruplift.com/chat.';
+    }
+}
+
+/**
+ * Derive a subject line from the body. Prefer the first sentence;
+ * fall back to first 60 chars. Subject Caps for readability.
+ */
+function deriveSubject(body: string): string {
+    const sentence = body.match(/^([^.!?\n]{1,80}[.!?]?)/);
+    const raw = (sentence?.[1] ?? body.slice(0, 60)).trim();
+    if (!raw) return 'Note from your iMessage agent';
+    return raw.charAt(0).toUpperCase() + raw.slice(1);
+}
+
+function describeAction(p: PendingAction): string {
     switch (p.action_type) {
         case 'gmail.draft':
             return 'draft that email';
@@ -90,11 +154,8 @@ function describePending(p: PendingAction): string {
     }
 }
 
-function confirmReply(pending: PendingAction): string {
-    // Honest-status: tool execution isn't wired yet for the iMessage
-    // surface. Tell the user what's blocking and where to fix it,
-    // rather than claim we sent it.
-    const what = describePending(pending);
+function connectorHint(pending: PendingAction): string {
+    const what = describeAction(pending);
     return [
         `Got it. To actually ${what}, I need access to your Google account.`,
         'Open operatoruplift.com/integrations to authorize Gmail and Calendar, then text me again.',
