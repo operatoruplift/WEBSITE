@@ -45,7 +45,7 @@ export default function IMessageLanding() {
                     </div>
 
                     {/* Three feature columns */}
-                    <FadeIn delay={100}>
+                    <FadeIn delay={100} className="w-full">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20">
                             <FeatureCard
                                 icon={<Zap className="w-5 h-5" />}
@@ -66,7 +66,7 @@ export default function IMessageLanding() {
                     </FadeIn>
 
                     {/* How it works */}
-                    <FadeIn delay={200}>
+                    <FadeIn delay={200} className="w-full">
                         <div className="rounded-2xl border border-foreground/[0.08] bg-foreground/[0.02] p-8 md:p-12 mb-20">
                             <h2 className="text-2xl md:text-3xl font-medium text-foreground tracking-tight mb-2">How the round trip works</h2>
                             <p className="text-muted mb-8">
@@ -82,7 +82,7 @@ export default function IMessageLanding() {
                     </FadeIn>
 
                     {/* Roadmap honesty block */}
-                    <FadeIn delay={300}>
+                    <FadeIn delay={300} className="w-full">
                         <div className="mb-20">
                             <h2 className="text-xl md:text-2xl font-medium text-foreground tracking-tight mb-4">What's not here yet</h2>
                             <ul className="space-y-3 text-sm text-muted leading-relaxed">
@@ -100,7 +100,7 @@ export default function IMessageLanding() {
                     </FadeIn>
 
                     {/* CTA tile, mirrors FinalCta cream pattern */}
-                    <FadeIn delay={400}>
+                    <FadeIn delay={400} className="w-full">
                         <div className="rounded-3xl border border-foreground/[0.08] bg-[#F7F6F0] px-8 md:px-16 py-16 md:py-20 flex flex-col items-center text-center">
                             <span className="text-xs font-mono tracking-[0.25em] text-foreground/60 uppercase mb-6">
                                 Try it from your phone
