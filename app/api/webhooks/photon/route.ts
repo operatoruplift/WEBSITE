@@ -9,6 +9,7 @@ import { getUserBySender, updateUserPrefs, type ImessageUser } from '@/lib/photo
 import { classifyIntent } from '@/lib/photon/intents';
 import { getWeather } from '@/lib/photon/weather';
 import { tryPendingResponse } from '@/lib/photon/pending-replies';
+import { createPending } from '@/lib/photon/pending-actions';
 import {
     verifyWebhookSignature,
     computeProviderMessageId,
@@ -322,6 +323,37 @@ async function tryIntentReply(
                 reply = `Couldn\u2019t find "${loc}" on a map. Try a different city or include the country.`;
             } else {
                 reply = `Couldn\u2019t fetch weather for "${loc}" right now. Try again in a minute.`;
+            }
+            break;
+        }
+        case 'email_draft': {
+            if (!user?.verified_at) {
+                reply = 'To draft email from iMessage, verify your phone first at operatoruplift.com/integrations.';
+                break;
+            }
+            // Stage as a pending action. Truncate body for the preview
+            // bubble (keep the full body in params). The YES/NO handler
+            // from PR #428 picks this up and replies with the
+            // /integrations connector pointer until Gmail tokens for
+            // iMessage users are wired in.
+            const previewBody = intent.body.length > 120
+                ? `${intent.body.slice(0, 117)}...`
+                : intent.body;
+            const previewText = `Draft to ${intent.to}: ${previewBody}\nReply YES to stage this draft or NO to cancel.`;
+            const created = await createPending(
+                supabase,
+                sender,
+                'gmail.draft',
+                { to: intent.to, body: intent.body },
+                previewText,
+                requestId,
+            );
+            if (!created.ok) {
+                reply = created.tableMissing
+                    ? 'Draft staging is not enabled yet (run the pending_actions migration).'
+                    : 'Could not stage the draft. Try again in a minute.';
+            } else {
+                reply = previewText;
             }
             break;
         }
