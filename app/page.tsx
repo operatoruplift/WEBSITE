@@ -3,6 +3,7 @@
 import Navbar from '@/src/components/Navbar';
 import Hero from '@/src/sections/Hero';
 import LocalFirst from '@/src/sections/LocalFirst';
+import Channels from '@/src/sections/Channels';
 import DemoVideo from '@/src/sections/DemoVideo';
 import Comparison from '@/src/sections/Comparison';
 import UseCases from '@/src/sections/UseCases';
@@ -40,6 +41,7 @@ export default function Home() {
       <main>
         <Hero />
         <LocalFirst />
+        <Channels />
         <DemoVideo />
         <Comparison />
         <UseCases />
