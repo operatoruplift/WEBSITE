@@ -357,6 +357,36 @@ async function tryIntentReply(
             }
             break;
         }
+        case 'calendar_create': {
+            if (!user?.verified_at) {
+                reply = 'To create calendar events from iMessage, verify your phone first at operatoruplift.com/integrations.';
+                break;
+            }
+            // Stage as a pending action. The connector layer at YES
+            // confirm time will resolve the raw `when` substring to a
+            // concrete ISO datetime via Claude or chrono-node before
+            // calling the Calendar API.
+            const previewTitle = intent.title.length > 80
+                ? `${intent.title.slice(0, 77)}...`
+                : intent.title;
+            const previewText = `New event "${previewTitle}" ${intent.when}.\nReply YES to stage this event or NO to cancel.`;
+            const created = await createPending(
+                supabase,
+                sender,
+                'calendar.create',
+                { title: intent.title, when: intent.when },
+                previewText,
+                requestId,
+            );
+            if (!created.ok) {
+                reply = created.tableMissing
+                    ? 'Event staging is not enabled yet (run the pending_actions migration).'
+                    : 'Could not stage the event. Try again in a minute.';
+            } else {
+                reply = previewText;
+            }
+            break;
+        }
         default:
             return false;
     }
