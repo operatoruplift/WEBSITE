@@ -8,6 +8,7 @@ import { loadHistory } from '@/lib/photon/history';
 import { getUserBySender, updateUserPrefs, type ImessageUser } from '@/lib/photon/users';
 import { classifyIntent } from '@/lib/photon/intents';
 import { getWeather } from '@/lib/photon/weather';
+import { tryPendingResponse } from '@/lib/photon/pending-replies';
 import {
     verifyWebhookSignature,
     computeProviderMessageId,
@@ -118,9 +119,10 @@ async function markReplied(
  *
  * Dispatch order:
  *   1. Opt-out gate
- *   2. Keyword short-circuit (STOP/START/HELP/PING/STATUS)
- *   3. Intent classifier (set_zodiac, set_location, set_model, weather)
- *   4. Agent fallback (Claude Haiku)
+ *   2. Pending YES/NO (only fires if a pending row exists)
+ *   3. Keyword short-circuit (STOP/START/HELP/PING/STATUS)
+ *   4. Intent classifier (set_zodiac, set_location, set_model, weather)
+ *   5. Agent fallback (Claude Haiku)
  */
 async function dispatchReply(
     sender: string,
@@ -143,9 +145,56 @@ async function dispatchReply(
         });
         return;
     }
+    if (await tryPendingReply(sender, text, platform, supabase, rowId, requestId)) return;
     if (await tryKeywordReply(sender, text, platform, supabase, rowId, requestId)) return;
     if (await tryIntentReply(sender, text, platform, user, supabase, rowId, requestId)) return;
     await processWithAgent(sender, text, platform, user, supabase, rowId, requestId);
+}
+
+/**
+ * If the inbound text is a YES/NO and a pending tool-call row exists
+ * for this sender, consume it and reply. Otherwise return false so
+ * the dispatch chain continues. Pending lives BEFORE keyword because
+ * "stop" inside a confirm/cancel exchange is most likely cancelling
+ * the staged action, not opting out of all messages.
+ */
+async function tryPendingReply(
+    sender: string,
+    text: string,
+    platform: string,
+    supabase: ReturnType<typeof getSupabase>,
+    rowId: string | null,
+    requestId: string,
+): Promise<boolean> {
+    const r = await tryPendingResponse(supabase, sender, text, requestId);
+    if (!r.replyText) return false;
+
+    const adapter = getPhotonAdapter();
+    if (!adapter.isActive()) {
+        safeWarn({ at: 'webhooks.photon', event: 'pending_no_adapter', requestId, matched: r.matched });
+        return false;
+    }
+    const send = await adapter.send({ to: sender, text: r.replyText, platform: platform as Platform });
+    if (!send.ok) {
+        safeWarn({
+            at: 'webhooks.photon',
+            event: 'pending_send_failed',
+            requestId,
+            matched: r.matched,
+            reason: send.reason,
+        });
+        return false;
+    }
+    safeLog({
+        at: 'webhooks.photon',
+        event: 'pending_replied',
+        requestId,
+        matched: r.matched,
+        consumed: r.consumed,
+        replyLen: r.replyText.length,
+    });
+    await markReplied(supabase, rowId, send.messageId, r.replyText);
+    return true;
 }
 
 type Platform = 'imessage' | 'telegram' | 'whatsapp' | 'x' | 'discord' | 'instagram';
