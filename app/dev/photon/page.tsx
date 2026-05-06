@@ -98,6 +98,10 @@ interface StatsResponse {
     last24h?: StatsWindow;
     last7d?: StatsWindow;
     byPlatform24h?: Array<{ platform: string; received: number; replied: number }>;
+    /** Verified-user count from imessage_users. Null when the table is missing. */
+    verifiedUsers?: number | null;
+    /** Opted-out sender count from imessage_opt_outs. Null when the table is missing. */
+    optedOut?: number | null;
     error?: string;
     nextAction?: string;
 }
@@ -317,6 +321,19 @@ export default function DevPhotonPage() {
                                     ? '\u2014'
                                     : `${Math.round((stats.last24h.rate ?? 0) * 100)}%`
                             }
+                        />
+                    </div>
+                )}
+
+                {stats && (stats.verifiedUsers !== undefined || stats.optedOut !== undefined) && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-3 rounded-xl border border-white/10 bg-white/[0.02]">
+                        <Stat
+                            label="verified users"
+                            value={stats.verifiedUsers === null || stats.verifiedUsers === undefined ? '\u2014' : String(stats.verifiedUsers)}
+                        />
+                        <Stat
+                            label="opted out"
+                            value={stats.optedOut === null || stats.optedOut === undefined ? '\u2014' : String(stats.optedOut)}
                         />
                     </div>
                 )}
