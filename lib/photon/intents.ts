@@ -25,7 +25,8 @@ export type IntentResult =
     | { intent: 'set_zodiac'; sign: ZodiacSign }
     | { intent: 'set_location'; location: string }
     | { intent: 'set_model'; model: string }
-    | { intent: 'weather'; location: string | null };
+    | { intent: 'weather'; location: string | null }
+    | { intent: 'email_draft'; to: string; body: string };
 
 const KNOWN_MODELS: Record<string, string> = {
     'sonnet': 'claude-sonnet-4-6',
@@ -109,6 +110,43 @@ function tryModel(text: string): IntentResult | null {
     return null;
 }
 
+function tryEmailDraft(text: string): IntentResult | null {
+    // Conservative match: requires an explicit recipient email address
+    // AND an imperative verb (draft, email, send) AND a body separator
+    // (saying / about / that / "). Doing param extraction without any of
+    // these dimensions would be too noisy, so we just bail to chat and
+    // let the LLM handle ambiguous cases.
+    //
+    // Examples that match:
+    //   "draft an email to mom@example.com saying I'll be late"
+    //   "email john@x.io saying lunch tomorrow at noon"
+    //   "send an email to support@a.com about the broken link"
+    //
+    // Examples that do NOT match (fall through to chat):
+    //   "email me when this is done" (no address)
+    //   "draft an email" (no recipient or body)
+    //   "send John an email" (named recipient, no address)
+    if (!/\b(?:draft|email|send)\b/i.test(text)) return null;
+
+    // Email shape: very loose, matches anything with @ and a TLD.
+    // We just stage the draft for confirmation, the connector layer
+    // does the real validation before sending.
+    const addrMatch = text.match(/\b([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})\b/i);
+    if (!addrMatch) return null;
+    const to = addrMatch[1];
+
+    // Body separator: " saying X", " about X", " that says X", or
+    // a quoted string. Anchor on the address position so we don't
+    // pick up text that appears BEFORE the address.
+    const afterAddr = text.slice(text.indexOf(to) + to.length);
+    const sayingMatch = afterAddr.match(/(?:\s+(?:saying|that\s+says?|about|re:|regarding))\s+(.+?)(?=$|[.!?])/i);
+    const quotedMatch = afterAddr.match(/[\"']([^\"']{1,500})[\"']/);
+    const body = (sayingMatch?.[1] ?? quotedMatch?.[1] ?? '').trim();
+    if (!body || body.length > 500) return null;
+
+    return { intent: 'email_draft', to, body };
+}
+
 function tryWeather(text: string): IntentResult | null {
     // Trigger words must be present as standalone words. "weather" /
     // "forecast" / "temperature" / "temp" / "raining" / "snowing" /
@@ -144,6 +182,13 @@ export function classifyIntent(text: string | null | undefined): IntentResult {
 
     const weather = tryWeather(trimmed);
     if (weather) return weather;
+
+    // email_draft is intentionally LAST in the priority chain because
+    // its trigger words ("send", "email") overlap with normal chat
+    // and the recipient + body match is the strict gate that keeps
+    // false positives down.
+    const emailDraft = tryEmailDraft(trimmed);
+    if (emailDraft) return emailDraft;
 
     return { intent: 'chat' };
 }
