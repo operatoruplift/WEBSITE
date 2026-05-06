@@ -9,17 +9,32 @@ Haiku reply back. End-to-end smoke test in roughly five minutes.
    Spectrum dashboard).
 2. Spectrum POSTs to `https://www.operatoruplift.com/api/webhooks/photon`.
 3. The webhook verifies the HMAC signature, normalizes the payload,
-   inserts an audit row in Supabase `inbound_messages`, then runs:
+   inserts an audit row in Supabase `inbound_messages`, then runs the
+   5-stage dispatch chain (in order, first match wins):
    - **Opt-out gate.** If the sender previously sent STOP, the
      webhook logs the row and returns 200 without replying. A START
      keyword from the same sender clears the flag.
+   - **Pending YES/NO.** If the sender has a row in
+     `imessage_pending_actions` (a staged Gmail draft or Calendar
+     event) and texts YES / NO / cancel / send / etc., the executor
+     consumes the row. On YES the Google bridge fires the actual
+     Gmail/Calendar API call (when the sender's verified phone is
+     linked to a Privy user with Google OAuth). On NO the row is
+     deleted and the reply is "Cancelled."
    - **Keyword short-circuit.** STOP, HELP, PING, STATUS map to
      canned replies that skip the LLM entirely.
-   - **Agent reply.** Otherwise, the agent loads up to 5 prior
+   - **Intent classifier.** Cheap regex match for set_zodiac,
+     set_location, set_model, weather, email_draft, calendar_create.
+     `set_*` and `email_draft` / `calendar_create` require a verified
+     phone (otherwise the reply bounces the user to /integrations).
+     email_draft + calendar_create stage a `pending_actions` row and
+     reply with the preview asking YES/NO.
+   - **Agent fallback.** Otherwise, the agent loads up to 5 prior
      turns (`text` + `reply_text`) for the sender, hands them as
      multi-turn context to Claude Haiku 4.5 (max 200 tokens), strips
      any markdown the model emits, and sends the reply back via
-     the Photon adapter.
+     the Photon adapter. User prefs (zodiac, location, model_pref,
+     system_prompt_override) are folded into the system prompt.
    - The audit row gets `processed_at`, `reply_message_id`, and
      `reply_text` so `/dev/photon` can show the round trip.
 4. Your phone shows the reply, typically in 2-4 seconds.
@@ -30,9 +45,21 @@ The agent is `lib/photon/agent.ts::runAgentReply`. The webhook is
 - `agent.ts`, generates the LLM reply with timeout + markdown strip.
 - `keyword-replies.ts`, STOP / HELP / PING / STATUS canned replies.
 - `opt-outs.ts`, persisted opt-out flag (Supabase-backed).
+- `users.ts`, imessage_users CRUD (zodiac, location, model_pref).
 - `history.ts`, multi-turn conversation loader.
+- `intents.ts`, regex intent classifier returning a discriminated union.
+- `pending-actions.ts`, imessage_pending_actions buffer + 5-min TTL.
+- `pending-replies.ts`, YES/NO consume + execute via Google bridge.
+- `google-bridge.ts`, sender -> privy_user_id -> Google OAuth client.
+- `verify-codes.ts`, 6-digit phone verification (issue + confirm).
+- `weather.ts`, Open-Meteo / OpenWeatherMap forecast helper.
+- `horoscope.ts`, ZODIAC_SIGNS const + parser.
 - `strip-markdown.ts`, sanitizes Claude output before iMessage send.
 - `webhook-helpers.ts`, signature verification + payload normalization.
+
+Dashboard UI lives at `/integrations` (the `IMessageVerifyCard`
+component). Operators watch `/dev/photon` for live inbound rows,
+verified-user count, opt-outs, and pending tool calls.
 
 ## Required production env vars
 
@@ -62,21 +89,30 @@ Optional overrides (none required for the default behavior):
 
 ## One-time database setup
 
-Two idempotent migrations to apply against your Supabase Postgres
-database. Both use `CREATE TABLE IF NOT EXISTS` and `ADD COLUMN IF
+Idempotent migrations to apply against your Supabase Postgres
+database. All use `CREATE TABLE IF NOT EXISTS` and `ADD COLUMN IF
 NOT EXISTS` so re-running them is safe.
 
 ```bash
 psql "$DATABASE_URL" -f lib/photon-webhook-migration.sql
 psql "$DATABASE_URL" -f lib/photon-optouts-migration.sql
+psql "$DATABASE_URL" -f lib/photon-imessage-users-migration.sql
+psql "$DATABASE_URL" -f lib/photon-pending-actions-migration.sql
 ```
 
-`photon-webhook-migration.sql` creates `public.inbound_messages`
-with the unique idempotency index, the unprocessed/sender lookup
-indexes, and the `reply_text` column the chat-history loader reads.
-
-`photon-optouts-migration.sql` creates `public.imessage_opt_outs`
-keyed by sender, with a partial index on active opt-outs.
+- `photon-webhook-migration.sql` creates `public.inbound_messages`
+  with the unique idempotency index, the unprocessed/sender lookup
+  indexes, and the `reply_text` column the chat-history loader reads.
+- `photon-optouts-migration.sql` creates `public.imessage_opt_outs`
+  keyed by sender, with a partial index on active opt-outs.
+- `photon-imessage-users-migration.sql` creates two tables:
+  `imessage_users` (sender PK, privy_user_id, verified_at, timezone,
+  location, zodiac, model_pref, system_prompt_override, summary)
+  and `imessage_verifications` (sender PK, code_hash, expires_at,
+  pending_for, attempts).
+- `photon-pending-actions-migration.sql` creates
+  `imessage_pending_actions` (sender PK, action_type, params jsonb,
+  preview_text, expires_at, 5-min TTL).
 
 Backward compat: if either table is missing, the webhook still
 serves 200 and the agent still runs (with no history, no opt-out
