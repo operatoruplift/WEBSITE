@@ -19,7 +19,6 @@
  * vs "I don't recognize this phone").
  */
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { OAuth2Client } from 'google-auth-library';
 import { getAuthenticatedClient, isGoogleConnected } from '@/lib/google/oauth';
 import { getUserBySender } from './users';
 import { safeWarn } from '@/lib/safeLog';
@@ -30,9 +29,16 @@ export type BridgeFailureReason =
     | 'google_not_connected'
     | 'auth_refresh_failed';
 
+/**
+ * The Google client returned here is the same shape `getAuthenticatedClient`
+ * returns, usable as the `auth` arg for `google.gmail({ version: 'v1', auth })`.
+ * We deliberately don't import `OAuth2Client` from `google-auth-library`
+ * since that type is a transitive of `googleapis` and isn't in our
+ * direct deps; using `unknown` keeps the public bridge surface dependency-light.
+ */
 export interface BridgeSuccess {
     ok: true;
-    client: OAuth2Client;
+    client: unknown;
     privyUserId: string;
 }
 
