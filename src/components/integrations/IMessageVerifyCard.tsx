@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Phone, Check, Loader2, MessageSquare } from 'lucide-react';
 import { Card, CardContent } from '@/src/components/ui/Card';
 import { useToast } from '@/src/components/ui/Toast';
@@ -47,6 +47,28 @@ export function IMessageVerifyCard() {
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const { showToast } = useToast();
+
+    // Seed verified state from /api/integrations/imessage/status on mount.
+    // Best-effort: any failure (route missing, 401, table missing, network)
+    // silently leaves the user at enter_phone — the verify flow still works.
+    useEffect(() => {
+        let cancelled = false;
+        (async () => {
+            try {
+                const res = await fetch('/api/integrations/imessage/status', {
+                    headers: { ...authHeader() },
+                });
+                if (!res.ok) return;
+                const data = (await res.json().catch(() => null)) as { verified?: boolean; phones?: Array<{ phone: string }> } | null;
+                if (cancelled || !data?.verified || !data.phones?.length) return;
+                setPhone(data.phones[0].phone);
+                setStage('verified');
+            } catch {
+                // network/route missing — silent fallback to enter_phone
+            }
+        })();
+        return () => { cancelled = true; };
+    }, []);
 
     async function startVerification() {
         setError(null);
