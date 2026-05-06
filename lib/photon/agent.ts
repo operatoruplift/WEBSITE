@@ -24,6 +24,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import type { PhotonAdapter } from './adapter';
 import { stripMarkdown } from './strip-markdown';
 import type { ChatTurn } from './history';
+import type { ImessageUser } from './users';
 import { safeLog, safeWarn } from '@/lib/safeLog';
 
 export interface AgentInput {
@@ -32,6 +33,8 @@ export interface AgentInput {
     platform: 'imessage' | 'telegram' | 'whatsapp' | 'x' | 'discord' | 'instagram';
     /** Optional prior turns for multi-turn context (chronological order). */
     history?: ChatTurn[];
+    /** Optional verified user row used to personalize model + prompt. */
+    user?: ImessageUser | null;
 }
 
 export interface AgentSuccess {
@@ -63,7 +66,9 @@ const DEFAULT_SYSTEM = [
 
 const FALLBACK_REPLY = 'Got it, working on it.';
 
-function getModel(): string {
+function getModel(user?: ImessageUser | null): string {
+    const override = user?.model_pref?.trim();
+    if (override) return override;
     return process.env.PHOTON_AGENT_MODEL?.trim() || DEFAULT_MODEL;
 }
 
@@ -73,8 +78,18 @@ function getMaxTokens(): number {
     return Number.isFinite(parsed) && parsed > 0 ? parsed : DEFAULT_MAX_TOKENS;
 }
 
-function getSystem(): string {
-    return process.env.PHOTON_AGENT_SYSTEM?.trim() || DEFAULT_SYSTEM;
+function getSystem(user?: ImessageUser | null): string {
+    const base = user?.system_prompt_override?.trim()
+        || process.env.PHOTON_AGENT_SYSTEM?.trim()
+        || DEFAULT_SYSTEM;
+    if (!user) return base;
+    const facts: string[] = [];
+    if (user.timezone) facts.push(`timezone: ${user.timezone}`);
+    if (user.location) facts.push(`location: ${user.location}`);
+    if (user.zodiac) facts.push(`zodiac: ${user.zodiac}`);
+    if (user.summary) facts.push(`prior context: ${user.summary}`);
+    if (facts.length === 0) return base;
+    return `${base}\n\nWhat you know about this user: ${facts.join('; ')}.`;
 }
 
 function getLlmTimeoutMs(): number {
@@ -86,6 +101,7 @@ function getLlmTimeoutMs(): number {
 async function generateReply(
     text: string,
     history: ChatTurn[] | undefined,
+    user: ImessageUser | null | undefined,
     requestId?: string,
 ): Promise<{ ok: true; reply: string } | { ok: false; reason: string }> {
     const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
@@ -115,9 +131,9 @@ async function generateReply(
         const anthropic = new Anthropic({ apiKey });
         const response = await anthropic.messages.create(
             {
-                model: getModel(),
+                model: getModel(user),
                 max_tokens: getMaxTokens(),
-                system: getSystem(),
+                system: getSystem(user),
                 messages,
             },
             { signal: controller.signal },
@@ -137,7 +153,9 @@ async function generateReply(
             at: 'photon.agent',
             event: 'llm_ok',
             requestId,
-            model: getModel(),
+            model: getModel(user),
+            modelOverride: Boolean(user?.model_pref),
+            promptOverride: Boolean(user?.system_prompt_override),
             inputLen: trimmed.length,
             outputLen: reply.length,
             historyTurns: history?.length ?? 0,
@@ -180,7 +198,7 @@ export async function runAgentReply(
         };
     }
 
-    const llm = await generateReply(input.text, input.history, requestId);
+    const llm = await generateReply(input.text, input.history, input.user ?? null, requestId);
     const replyText = llm.ok ? llm.reply : FALLBACK_REPLY;
     const source: AgentSuccess['source'] = llm.ok ? 'llm' : 'fallback_no_llm';
 
