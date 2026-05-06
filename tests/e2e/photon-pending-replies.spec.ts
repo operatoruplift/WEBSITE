@@ -111,14 +111,15 @@ test('YES on a pending gmail.draft routes through the bridge and consumes the ro
     expect(store.has('+15551234567')).toBe(false);
 });
 
-test('YES on a pending calendar.create still falls back to the connector hint', async () => {
+test('YES on a pending calendar.create routes through the bridge and consumes the row', async () => {
     const { client } = makeFake();
-    await createPending(client, '+15551234567', 'calendar.create', { title: '9am sync' }, 'Create event?');
+    await createPending(client, '+15551234567', 'calendar.create', { title: '9am sync', when: 'tomorrow at 3pm' }, 'Create event?');
     const r = await tryPendingResponse(client, '+15551234567', 'send it');
     expect(r.matched).toBe('confirm');
-    // calendar.create handler isn't wired yet; falls back to the
-    // describeAction/connectorHint copy.
-    expect(r.replyText).toContain('create that calendar event');
+    expect(r.consumed).toBe(true);
+    // Fake imessage_users returns null, so the bridge surfaces
+    // sender_not_verified instead of actually creating an event.
+    expect(r.replyText).toContain('verify your phone');
 });
 
 test('NO on a pending row cancels and clears the row', async () => {

@@ -25,6 +25,8 @@ import {
 } from './pending-actions';
 import { getGoogleClientForSender, type BridgeResult } from './google-bridge';
 import { createDraft } from '@/lib/google/gmail';
+import { createEvent } from '@/lib/google/calendar';
+import { parseEventTime } from './event-time';
 import { safeWarn } from '@/lib/safeLog';
 
 export interface PendingReplyResult {
@@ -75,9 +77,9 @@ export async function tryPendingResponse(
 }
 
 /**
- * Run the staged tool call. Today: gmail.draft via the Google bridge.
- * calendar.create + gmail.send fall back to the connector hint until
- * their handlers are wired in follow-ups.
+ * Run the staged tool call. Today: gmail.draft + calendar.create via
+ * the Google bridge. gmail.send + calendar.update fall back to the
+ * connector hint until their handlers are wired in follow-ups.
  *
  * Returns the iMessage reply text. Never throws: any thrown error is
  * caught and reported as an iMessage-friendly string.
@@ -94,9 +96,15 @@ async function executePending(
         return executeGmailDraft(pending, bridge, requestId);
     }
 
-    // gmail.send / calendar.create / calendar.update aren't wired yet.
-    // Surface the same connector-pointer hint as before so the user
-    // knows we recognized their intent but can't act on it.
+    if (pending.action_type === 'calendar.create') {
+        const bridge = await getGoogleClientForSender(supabase, sender, requestId);
+        if (!bridge.ok) return bridge.iMessageHint;
+        return executeCalendarCreate(pending, bridge, requestId);
+    }
+
+    // gmail.send / calendar.update aren't wired yet. Surface the same
+    // connector-pointer hint as before so the user knows we recognized
+    // their intent but can't act on it.
     return connectorHint(pending);
 }
 
@@ -125,6 +133,59 @@ async function executeGmailDraft(
             error: message.slice(0, 240),
         });
         return 'Saving the draft to Gmail failed. Try again from operatoruplift.com/chat.';
+    }
+}
+
+async function executeCalendarCreate(
+    pending: PendingAction,
+    bridge: BridgeResult & { ok: true },
+    requestId?: string,
+): Promise<string> {
+    const params = pending.params as { title?: unknown; when?: unknown };
+    const title = typeof params.title === 'string' ? params.title.trim() : '';
+    const when = typeof params.when === 'string' ? params.when.trim() : '';
+    if (!title || !when) {
+        return 'Could not parse the staged event. Try again with "schedule a meeting tomorrow at 3pm".';
+    }
+
+    const parsed = parseEventTime(when);
+    if (!parsed) {
+        return `Could not pin down "${when}" as a date and time. Try a clearer phrasing like "tomorrow at 3pm" or "next monday at 10am".`;
+    }
+
+    try {
+        const event = await createEvent(bridge.privyUserId, {
+            summary: title,
+            start: parsed.startISO,
+            end: parsed.endISO,
+        });
+        const startLabel = formatLocalTime(parsed.startISO);
+        const idHint = event.id ? ` (id ${event.id.slice(0, 8)})` : '';
+        return `Event "${title}" created${idHint} for ${startLabel}. Check Google Calendar.`;
+    } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        safeWarn({
+            at: 'photon.pending_replies',
+            event: 'calendar_create_failed',
+            requestId,
+            error: message.slice(0, 240),
+        });
+        return 'Creating the event in Google Calendar failed. Try again from operatoruplift.com/chat.';
+    }
+}
+
+function formatLocalTime(iso: string): string {
+    try {
+        const d = new Date(iso);
+        return d.toLocaleString(undefined, {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+        });
+    } catch {
+        return iso;
     }
 }
 
