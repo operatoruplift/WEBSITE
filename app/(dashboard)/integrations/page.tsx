@@ -7,6 +7,7 @@ import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
 import { IMessageVerifyCard } from '@/src/components/integrations/IMessageVerifyCard';
+import { IMessageRecentPanel } from '@/src/components/integrations/IMessageRecentPanel';
 
 interface Integration {
     id: string;
@@ -198,6 +199,12 @@ export default function IntegrationsPage() {
                         calls over iMessage will require this row before they
                         can fire. */}
                     <IMessageVerifyCard />
+
+                    {/* Personal recent-traffic panel. Collapsed by default
+                        so it doesn't fetch on every dashboard mount. Opens
+                        to show the calling user's own inbound rows + bot
+                        replies, scoped server-side to senders they own. */}
+                    <IMessageRecentPanel />
 
                     {/* Filters */}
                     <div className="flex flex-col sm:flex-row gap-3">
