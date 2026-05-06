@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
 import { useToast } from '@/src/components/ui/Toast';
+import { IMessageVerifyCard } from '@/src/components/integrations/IMessageVerifyCard';
 
 interface Integration {
     id: string;
@@ -190,6 +191,13 @@ export default function IntegrationsPage() {
                             <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400" /> {INTEGRATIONS.filter(i => i.status === 'coming_soon').length} coming soon</span>
                         </div>
                     </div>
+
+                    {/* iMessage verification card. Lives ABOVE the integrations
+                        grid because the iMessage agent's pending YES/NO replies
+                        point users here to authorize, and Gmail/Calendar tool
+                        calls over iMessage will require this row before they
+                        can fire. */}
+                    <IMessageVerifyCard />
 
                     {/* Filters */}
                     <div className="flex flex-col sm:flex-row gap-3">
