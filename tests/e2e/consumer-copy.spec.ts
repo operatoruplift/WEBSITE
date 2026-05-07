@@ -62,11 +62,11 @@ function assertNoBannedPhrases(body: string, surface: string) {
 test('homepage hero shows the consumer pitch', async ({ page }) => {
     await page.goto('/');
 
-    // April 30 2026 second-pass trim: hero headline switched from
-    // "Inbox and calendar, on autopilot." to "AI that runs on your
-    // terms." per user feedback (the new copy frames consent + control
-    // up front instead of leading with the daily job).
-    await expect(page.getByText(/AI that runs on your terms/i).first()).toBeVisible({ timeout: 10_000 });
+    // Wave 6 rewrite: hero headline switched from "AI that runs on your
+    // terms." to "Stop typing the same email twice." per user feedback
+    // (anchor on the user's annoyance, not on consent abstraction). The
+    // primary CTA stays "Sign in and connect Gmail".
+    await expect(page.getByText(/Stop typing the same email twice/i).first()).toBeVisible({ timeout: 10_000 });
     await expect(page.getByRole('link', { name: /sign in and connect gmail/i }).first()).toBeVisible();
 
     const body = await page.locator('body').innerText();

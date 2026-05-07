@@ -17,21 +17,18 @@ const TrustedBy: React.FC = () => {
   //     (huggingface.co/deepseek-ai/DeepSeek-V4-Pro)
   //   - Llama 4 stays current (no Llama 5 as of May 2026)
   //   - Mistral Large stays current
+  // Wave 6 trim: 14 entries was logo-stuffing. Cut to one canonical
+  // row per provider so the marquee reads as a credibility signal,
+  // not a model menu. The /chat model picker is the canonical source
+  // for the full list (lib/llm.ts::mapModelId).
   const models = [
     { name: "Claude Opus 4.7", provider: "Anthropic" },
-    { name: "Claude Sonnet 4.6", provider: "Anthropic" },
-    { name: "Claude Haiku 4.5", provider: "Anthropic" },
     { name: "GPT-5.5", provider: "OpenAI" },
-    { name: "GPT-5.5 Pro", provider: "OpenAI" },
     { name: "Gemini 3.1 Pro", provider: "Google" },
-    { name: "Gemini 3 Flash", provider: "Google" },
     { name: "Grok 4.3", provider: "xAI" },
     { name: "DeepSeek V4 Pro", provider: "DeepSeek" },
-    { name: "DeepSeek V4 Flash", provider: "DeepSeek" },
     { name: "Llama 4 Maverick", provider: "Meta" },
-    { name: "Mistral Large", provider: "Mistral AI" },
     { name: "Ollama", provider: "Ollama" },
-    { name: "LM Studio", provider: "LM Studio" },
   ];
 
   const marqueeItems = [...models, ...models];
@@ -40,7 +37,7 @@ const TrustedBy: React.FC = () => {
     <div className="mt-16 md:mt-16 border-t border-white/5 pt-8 animate-fade-in" style={{ animationDelay: '0.6s' }}>
       <div className="flex items-center mb-6">
         <span className="w-2 h-2 rounded-full bg-primary mr-2 shadow-[0_0_8px_rgba(231,118,48,0.4)]"></span>
-        <span className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">Works With Any Model</span>
+        <span className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">Built on the model you already pay for</span>
       </div>
 
       <div
