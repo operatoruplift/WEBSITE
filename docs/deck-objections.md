@@ -28,7 +28,7 @@ Mapped to the brief's four parts:
 
 ## Slides to keep (7 max)
 
-1. **Hero + tagline**: "Stop typing the same email twice." One CTA: Sign in and connect Gmail.
+1. **Hero + tagline**: "AI that runs on your terms." One CTA: Sign in and connect Gmail.
 2. **Approval-before-action**: three-step diagram (You ask -> Bot drafts -> You tap, then it sends).
 3. **Tool execution today**: Gmail draft + send (live), Calendar create (live), more on the way.
 4. **Trust layer**: SNS-anchored signer identity, ed25519 receipts, public-key verification endpoint.
