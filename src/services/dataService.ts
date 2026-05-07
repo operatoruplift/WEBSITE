@@ -11,8 +11,8 @@ import { AppData } from '@/lib/types';
 export const APP_CONTENT: AppData = {
   hero: {
     visionTag: "AI ASSISTANT",
-    headline: "AI that runs on your terms.",
-    subhead: "Drafts your email, schedules your meetings. Nothing goes out without your tap.",
+    headline: "Stop typing the same email twice.",
+    subhead: "Operator Uplift drafts your replies, schedules your meetings, and waits for your tap before sending anything.",
   },
   contact: {
     tag: "GET IN TOUCH",

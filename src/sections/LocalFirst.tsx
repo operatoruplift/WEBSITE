@@ -98,7 +98,7 @@ const LocalFirst: React.FC = () => {
                 headingId="local-first-heading"
                 eyebrow="Local-first"
                 title="Your data, your keys, your audit log"
-                description="Most AI agents copy your email, train on it, and tie you to one cloud. We just orchestrate. Here is exactly what moves where, every time you ask."
+                description="The wedge is continuity, not paranoia. You will switch from Claude to GPT to Gemini this year. The bot forgets you when you switch unless your context lives somewhere portable. Here is exactly what moves where, every time you ask."
             />
 
             {/* Flow strip, four steps, horizontal on desktop, stacked on
@@ -210,6 +210,33 @@ const LocalFirst: React.FC = () => {
                     );
                 })}
             </ul>
+
+            {/* Continuity callout. Sits below the trust grid because the
+                grid is the proof and this is the pitch: portability is
+                what the grid actually buys you. Plain language only,
+                no jargon, no architecture talk. */}
+            <FadeIn delay={400}>
+                <div className="w-full max-w-[1100px] mx-auto mt-8">
+                    <div className="rounded-2xl border border-[#F97316]/20 bg-[#F97316]/[0.03] p-6 md:p-8 text-left">
+                        <div className="flex items-center gap-3 mb-3">
+                            <span className="w-2 h-2 rounded-full bg-[#F97316]" />
+                            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-foreground/70">
+                                Why this matters tomorrow morning
+                            </span>
+                        </div>
+                        <p className="text-sm md:text-base text-foreground/90 leading-relaxed max-w-[820px]">
+                            You are going to swap models this year. The bot
+                            forgets you when you swap unless your context
+                            lives somewhere portable. Operator Uplift
+                            remembers you because the assistant points at
+                            your Gmail, your calendar, your signed
+                            receipts. Move the API key, keep the
+                            assistant. That is the continuity benefit you
+                            will not get from a closed plugin store.
+                        </p>
+                    </div>
+                </div>
+            </FadeIn>
         </Section>
     );
 };
