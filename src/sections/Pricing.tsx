@@ -36,10 +36,10 @@ const TIERS = [
         icon: Zap,
         highlight: true,
         features: [
-            'Drafts emails in your voice, you tap to send',
+            'Drafts emails from your one-line cue, you tap to send',
             'Creates calendar events from iMessage or chat',
             'Optional daily briefing texted to your phone every morning',
-            '5-turn memory carries between iMessage, chat, and the dashboard',
+            '5-turn rolling memory in iMessage, plus a daily summary that survives across model swaps',
             'Pick the model per session: Claude, GPT, Gemini, Grok, DeepSeek',
             'Every approved action signs an ed25519 receipt to Solana',
             'Email support, average reply under one business day',
