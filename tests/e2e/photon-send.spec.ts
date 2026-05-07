@@ -160,12 +160,28 @@ test.describe('messageId resolution', () => {
         });
     }
 
-    test('falls back to "photon-<timestamp>" when no id key is present', async () => {
+    test('falls back to "photon-<timestamp>-<uuid>" when no id key is present', async () => {
+        // The fallback id was `photon-<timestamp>` originally; two
+        // near-simultaneous fallbacks would collide. Suffixed with a
+        // UUID to keep audit-row writes and receipt log keys unique.
         mockFetch(() => new Response(JSON.stringify({ status: 'sent' }), { status: 200 }));
         const result = await getPhotonAdapter().send({ to: '+1', text: 'hi' });
         expect(result.ok).toBe(true);
         if (result.ok) {
-            expect(result.messageId).toMatch(/^photon-\d+$/);
+            expect(result.messageId).toMatch(/^photon-\d+-[0-9a-f-]{36}$/);
+        }
+    });
+
+    test('two concurrent fallback messageIds do not collide', async () => {
+        mockFetch(() => new Response(JSON.stringify({ status: 'sent' }), { status: 200 }));
+        const adapter = getPhotonAdapter();
+        const [a, b] = await Promise.all([
+            adapter.send({ to: '+1', text: 'hi' }),
+            adapter.send({ to: '+1', text: 'hi' }),
+        ]);
+        expect(a.ok && b.ok).toBe(true);
+        if (a.ok && b.ok) {
+            expect(a.messageId).not.toBe(b.messageId);
         }
     });
 });
@@ -207,13 +223,13 @@ test.describe('Error paths', () => {
     test('Spectrum 200 with non-JSON body still resolves to a fallback messageId', async () => {
         // Some providers return text/html on success. The catch in the
         // module's res.json() falls through to {}, then the messageId
-        // resolver hits the photon-<ts> fallback.
+        // resolver hits the photon-<ts>-<uuid> fallback.
         mockFetch(() => new Response('OK', {
             status: 200,
             headers: { 'Content-Type': 'text/plain' },
         }));
         const result = await getPhotonAdapter().send({ to: '+1', text: 'hi' });
         expect(result.ok).toBe(true);
-        if (result.ok) expect(result.messageId).toMatch(/^photon-\d+$/);
+        if (result.ok) expect(result.messageId).toMatch(/^photon-\d+-[0-9a-f-]{36}$/);
     });
 });

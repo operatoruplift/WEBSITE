@@ -497,6 +497,25 @@ export async function POST(request: Request) {
     }
 
     const { platform, sender, text, eventType } = normalizeWebhookPayload(body);
+    // Reject malformed inbound payloads where the sender alias chain
+    // ran out and `normalizeWebhookPayload` defaulted to 'unknown'.
+    // Without this gate the dispatch chain runs against 'unknown',
+    // accumulates audit rows under a non-routable sender, and (if
+    // Photon is configured to a default destination) the bot can
+    // reply to itself. Spectrum-friendly 200 so retries stop.
+    if (!sender || sender === 'unknown') {
+        safeWarn({
+            at: meta.route,
+            event: 'rejected_no_sender',
+            requestId: meta.requestId,
+            eventType,
+            platform,
+        });
+        return NextResponse.json(
+            { ok: true, ignored: 'no_sender', requestId: meta.requestId },
+            { headers: meta.headers },
+        );
+    }
     const providerMessageId = computeProviderMessageId(body, sender, text);
 
     const supabase = getSupabase();

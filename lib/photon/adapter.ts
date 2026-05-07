@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 /**
  * Photon Spectrum adapter, HTTP + webhook model.
  *
@@ -128,7 +130,13 @@ function adapter(): PhotonAdapter {
                     || data.id
                     || data.uuid
                     || data?.data?.message_id
-                    || `photon-${Date.now()}`;
+                    // Fallback when Spectrum doesn't return an id. Two
+                    // near-simultaneous fallbacks would otherwise share
+                    // a `photon-${ms}` and the audit-row write keys
+                    // would collide. Adding a UUID suffix keeps the id
+                    // stable per call, which the receipt + log
+                    // pipelines key off.
+                    || `photon-${Date.now()}-${randomUUID()}`;
                 return {
                     ok: true,
                     messageId: String(id),
