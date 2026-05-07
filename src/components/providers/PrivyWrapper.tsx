@@ -22,7 +22,11 @@ export function PrivyWrapper({ children }: { children: React.ReactNode }) {
             appId={PRIVY_APP_ID}
             config={{
                 appearance: {
-                    theme: 'dark',
+                    // Light by default so the Privy login modal matches
+                    // the marketing site's light theme. Privy's own
+                    // overlay was previously dark-on-light, the most
+                    // jarring surface a first-time visitor sees.
+                    theme: 'light',
                     accentColor: '#F97316',
                     logo: '/logo.svg',
                 },
