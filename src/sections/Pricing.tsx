@@ -40,7 +40,7 @@ const TIERS = [
             'Creates calendar events from iMessage or chat',
             'Optional daily briefing texted to your phone every morning',
             '5-turn memory carries between iMessage, chat, and the dashboard',
-            'Pick the model per session: Claude, GPT, Gemini, Grok, DeepSeek, Llama',
+            'Pick the model per session: Claude, GPT, Gemini, Grok, DeepSeek',
             'Every approved action signs an ed25519 receipt to Solana',
             'Email support, average reply under one business day',
         ],

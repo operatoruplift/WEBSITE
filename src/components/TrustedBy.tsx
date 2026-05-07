@@ -21,14 +21,21 @@ const TrustedBy: React.FC = () => {
   // row per provider so the marquee reads as a credibility signal,
   // not a model menu. The /chat model picker is the canonical source
   // for the full list (lib/llm.ts::mapModelId).
+  //
+  // Honesty trim: the marquee header is "Built on the model you
+  // already pay for", which is a hosted-API claim. The /chat model
+  // picker exposes Claude / GPT / Gemini / Grok / DeepSeek (5 hosted
+  // providers). Llama and Ollama route through the local Ollama
+  // path in lib/llm.ts:189, which only works once the desktop app
+  // ships (currently roadmap, see Pricing tier list + FAQ "Which AI"
+  // answer). Don't put providers in the "you already pay for"
+  // marquee that can't actually be selected from /chat today.
   const models = [
     { name: "Claude Opus 4.7", provider: "Anthropic" },
     { name: "GPT-5.5", provider: "OpenAI" },
     { name: "Gemini 3.1 Pro", provider: "Google" },
     { name: "Grok 4.3", provider: "xAI" },
     { name: "DeepSeek V4 Pro", provider: "DeepSeek" },
-    { name: "Llama 4 Maverick", provider: "Meta" },
-    { name: "Ollama", provider: "Ollama" },
   ];
 
   const marqueeItems = [...models, ...models];
