@@ -15,7 +15,7 @@ const tiers = [
         description: 'For small teams that want one assistant for everyone.',
         features: ['Up to 10 helpers', 'Shared inbox and calendar', 'GDPR-ready privacy', 'Email support', 'Shared workspace'],
         cta: 'Get started',
-        ctaLink: '/contact',
+        ctaLink: '/login?returnTo=/paywall',
         highlight: false,
     },
     {
@@ -25,7 +25,7 @@ const tiers = [
         description: 'For growing teams that need privacy paperwork and scale.',
         features: ['Unlimited helpers', 'HIPAA-ready', 'SOC 2-ready', 'GDPR-ready', 'Priority support', 'Usage analytics'],
         cta: 'Get started',
-        ctaLink: '/contact',
+        ctaLink: '/login?returnTo=/paywall',
         highlight: true,
     },
     {
