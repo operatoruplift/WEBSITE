@@ -62,11 +62,13 @@ function assertNoBannedPhrases(body: string, surface: string) {
 test('homepage hero shows the consumer pitch', async ({ page }) => {
     await page.goto('/');
 
-    // Wave 6 rewrite: hero headline switched from "AI that runs on your
-    // terms." to "Stop typing the same email twice." per user feedback
-    // (anchor on the user's annoyance, not on consent abstraction). The
-    // primary CTA stays "Sign in and connect Gmail".
-    await expect(page.getByText(/Stop typing the same email twice/i).first()).toBeVisible({ timeout: 10_000 });
+    // Hero headline is "AI that runs on your terms." Wave 6 briefly
+    // tested "Stop typing the same email twice." but user feedback
+    // pulled it back: "AI that runs on your terms" anchors the
+    // consent + control pitch the rest of the page commits to (BYOK,
+    // approval gate, signed receipts) better than the email-fatigue
+    // hook. The primary CTA stays "Sign in and connect Gmail".
+    await expect(page.getByText(/AI that runs on your terms/i).first()).toBeVisible({ timeout: 10_000 });
     await expect(page.getByRole('link', { name: /sign in and connect gmail/i }).first()).toBeVisible();
 
     const body = await page.locator('body').innerText();
