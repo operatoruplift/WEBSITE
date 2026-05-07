@@ -18,7 +18,7 @@ const faqs = [
   },
   {
     q: 'Which AI does it use?',
-    a: 'Whichever you want. Claude, ChatGPT, Gemini, Grok, DeepSeek, and Llama are wired in today, the same six providers shown in the model marquee on the homepage. Open-source models on your laptop via Ollama run through the desktop app on the roadmap. Switch between any of them with one click; it picks the best one for each task by default.',
+    a: 'Whichever you want. Claude, ChatGPT, Gemini, Grok, and DeepSeek are wired in today, the same five hosted providers shown in the model marquee on the homepage. Open-source models on your laptop via Ollama (Llama, Mistral) run through the desktop app on the roadmap. Switch between any of the hosted ones with one click; it picks the best one for each task by default.',
   },
   {
     q: 'How do I use it?',

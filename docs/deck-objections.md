@@ -56,7 +56,8 @@ Mapped to the brief's four parts:
 | Photon Spectrum | implicit | webhook + adapter | invisible plumbing | one logo bullet on slide 6 |
 | Telegram / WhatsApp | Channels section with status pills | platform-agnostic, no separate code | not in demo | slide 6 (channel-agnostic) |
 | Slack / Discord | roadmap pill on Channels section | not implemented | not in demo | slide 7 (roadmap), single line |
-| Anthropic / OpenAI / Gemini / Grok / DeepSeek / Llama / Ollama | `Built on the model you already pay for` marquee | `/chat` model picker | implicit | slide 1 footer ("Built on") |
+| Anthropic / OpenAI / Gemini / Grok / DeepSeek | `Built on the model you already pay for` marquee | `/chat` model picker | implicit | slide 1 footer ("Built on") |
+| Llama / Ollama | not on the marquee (would-be hosted-API claim, but local-only via Ollama path in `lib/llm.ts:189`) | not in `/chat` picker (desktop app required) | not in demo | one optional roadmap bullet on slide 7 only if asked |
 | Filecoin | cut from hero | not implemented | not in demo | cut |
 | ElevenLabs | cut | not implemented | demo voiceover only | cut |
 | Tauri / desktop | mentioned in `/imessage` "What's not here yet" block | `desktop/tauri.conf.json` only | not in demo | cut |

@@ -10,6 +10,7 @@ import {
     OpenAILogo,
     GoogleLogo,
     XAILogo,
+    DeepSeekLogo,
     OllamaLogo,
 } from '@/src/components/ProviderLogos';
 
@@ -167,6 +168,9 @@ const LocalFirst: React.FC = () => {
                             </span>
                             <span className="inline-flex items-center gap-2 text-sm text-foreground">
                                 <XAILogo aria-hidden className="w-4 h-4" /> Grok
+                            </span>
+                            <span className="inline-flex items-center gap-2 text-sm text-foreground">
+                                <DeepSeekLogo aria-hidden className="w-4 h-4" /> DeepSeek
                             </span>
                             <span className="inline-flex items-center gap-2 text-sm text-muted">
                                 <OllamaLogo aria-hidden className="w-4 h-4" /> Ollama
