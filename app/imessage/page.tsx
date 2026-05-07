@@ -96,7 +96,16 @@ export default function IMessageLanding() {
                                     <span className="text-foreground font-medium">Weather.</span> &quot;What&apos;s the weather in Austin&quot; pulls a current forecast via Open-Meteo (keyless) or OpenWeatherMap.
                                 </li>
                                 <li>
-                                    <span className="text-foreground font-medium">Email drafts (staged).</span> &quot;Draft an email to mom@example.com saying I&apos;ll be late&quot; stages a Gmail draft and asks YES/NO before doing anything irreversible.
+                                    <span className="text-foreground font-medium">Gmail drafts.</span> &quot;Draft an email to mom@example.com saying I&apos;ll be late&quot; stages a Gmail draft, asks YES, then writes the draft into your real Gmail account.
+                                </li>
+                                <li>
+                                    <span className="text-foreground font-medium">Gmail sends.</span> &quot;Send an email to alice@team.com saying I&apos;m running late&quot; stages a draft, asks YES, then sends it from your address. Same approval gate.
+                                </li>
+                                <li>
+                                    <span className="text-foreground font-medium">Calendar events.</span> &quot;Schedule a meeting tomorrow at 3pm for 30 minutes&quot; stages the event, asks YES, then writes it onto your real calendar.
+                                </li>
+                                <li>
+                                    <span className="text-foreground font-medium">Daily summaries.</span> Across model swaps. The bot remembers stable preferences and topics from prior turns even when you switch the model in the dropdown.
                                 </li>
                             </ul>
                         </div>
@@ -108,10 +117,10 @@ export default function IMessageLanding() {
                             <h2 className="text-xl md:text-2xl font-medium text-foreground tracking-tight mb-4">What&apos;s not here yet</h2>
                             <ul className="space-y-3 text-sm text-muted leading-relaxed">
                                 <li>
-                                    <span className="text-foreground font-medium">Real Gmail / Calendar sends.</span> The YES/NO confirmation works, but the actual send routes back to /integrations to authorize Google OAuth for your iMessage account. Real send is the next PR.
+                                    <span className="text-foreground font-medium">Slack and Discord.</span> The Spectrum bridge already speaks Telegram and WhatsApp; Slack and Discord adapters are roadmap. The current code is platform-agnostic so this is wiring, not a rewrite.
                                 </li>
                                 <li>
-                                    <span className="text-foreground font-medium">Calendar staging.</span> Email drafts stage today; calendar events use the same pending buffer but don&apos;t have an intent matcher yet.
+                                    <span className="text-foreground font-medium">Tauri desktop binary.</span> A Tauri config exists but the native binary is not yet building. The web app is the canonical surface today.
                                 </li>
                                 <li>
                                     <span className="text-foreground font-medium">A friendly public number.</span> The Spectrum bridge is configured per project. We&apos;ll publish the public number when iMessage onboarding is open beyond the team.
