@@ -33,7 +33,7 @@ const FinalCta: React.FC = () => {
                         id="final-cta-heading"
                         className="text-3xl md:text-5xl font-medium text-foreground tracking-tight max-w-2xl mb-6 leading-[1.1]"
                     >
-                        Stop typing the same email twice.
+                        AI that runs on your terms.
                     </h2>
                     <p className="text-muted leading-relaxed max-w-xl mb-10">
                         Connect Gmail in under a minute. Every action waits for your tap. Cancel any time.
