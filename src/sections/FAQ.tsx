@@ -30,7 +30,7 @@ const faqs = [
   },
   {
     q: 'How much does it really cost?',
-    a: '$19 a month, plus a tiny fee for the work it does on top of that. Most people spend a few extra dollars across a whole month. Cancel any time.',
+    a: '$19 a month, paid in USDC. Cancel any time. Per-action gas (currently a fraction of a cent on Solana devnet) is on us; we don\u2019t pass it through.',
   },
   {
     q: 'I\u2019m not a techie. Is this for me?',
