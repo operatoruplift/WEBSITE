@@ -233,7 +233,7 @@ export default function SecurityPage() {
 
                     {/* Signed Receipts, x402 payment artifacts */}
                     <Card variant="glass" className="p-6 border-foreground/10 bg-foreground/[0.04]">
-                        <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center justify-between mb-2">
                             <h3 className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">
                                 <Receipt size={12} className="text-[#F97316]" /> Signed Receipts
                                 <span className="text-[9px] font-mono px-1.5 py-0.5 rounded border bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]">x402</span>
@@ -243,6 +243,20 @@ export default function SecurityPage() {
                                 Public Key
                             </a>
                         </div>
+                        {/* SNS-anchored signer identity. The .sol name
+                            resolves on-chain to the same ed25519 pubkey
+                            the public-key endpoint exposes; a verifier
+                            can cross-check the two. The /api/sns/resolve
+                            link makes the chain visible to a curious
+                            user, not just to a judge. */}
+                        <p className="text-[10px] font-mono text-gray-500 mb-4">
+                            Signed by{' '}
+                            <a href="/api/sns/resolve?name=operatoruplift.sol" target="_blank" rel="noopener"
+                               className="text-[#F97316] hover:underline decoration-dotted">
+                                operatoruplift.sol
+                            </a>
+                            {' '}, resolves on-chain to the public key above.
+                        </p>
                         {receipts.length === 0 ? (
                             <p className="text-xs text-gray-500 py-6 text-center">
                                 No signed receipts yet. Approve a paid action on <a href="/chat" className="text-[#F97316] hover:underline">Chat</a>, Calendar create or Gmail draft/send, and the signed receipt will appear here.
