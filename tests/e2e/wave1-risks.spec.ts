@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
 
+// Cold-compile budget: the dev server compiles each route on first
+// hit; CI runs against a cold server. 90s leaves room for compile +
+// assertions on /signup and /pricing without flaking under load.
+test.describe.configure({ timeout: 90_000 });
+
 /**
  * Locks in PR #458's Wave 1 demo-day risk fixes so they don't
  * silently regress before recording.
@@ -64,4 +69,20 @@ test('/pricing Enterprise CTA stays /contact (Wave 1 risk #3 exception)', async 
         .first()
         .getAttribute('href');
     expect(enterpriseHref).toBe('/contact');
+});
+
+test('homepage hero CTA "Sign in and connect Gmail" deep-links to /login?returnTo=/integrations', async ({ page }) => {
+    // The deck (docs/deck-objections.md slide 1) and demo recording
+    // script (docs/demo-recording-script.md step 1) both anchor on
+    // this CTA. The text is locked in by consumer-copy.spec.ts; the
+    // href has not been asserted before. If a future PR routes this
+    // to /signup (deprecated), /pricing, or /paywall, the recording
+    // operator's first click lands on the wrong page.
+    await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
+
+    const heroCtaHref = await page
+        .getByRole('link', { name: /sign in and connect gmail/i })
+        .first()
+        .getAttribute('href');
+    expect(heroCtaHref).toBe('/login?returnTo=/integrations');
 });
