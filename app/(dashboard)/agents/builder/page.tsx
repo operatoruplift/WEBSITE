@@ -28,8 +28,8 @@ const MODELS = [
     { id: 'gpt-5.5-pro',       name: 'GPT-5.5 Pro',     provider: 'OpenAI',    badge: 'AGENTIC' },
     { id: 'gemini-3.1-pro',    name: 'Gemini 3.1 Pro',  provider: 'Google',    badge: 'LONG CTX' },
     { id: 'grok-4.3',          name: 'Grok 4.3',        provider: 'xAI',       badge: 'REASONING' },
+    { id: 'deepseek-v4-pro',   name: 'DeepSeek V4 Pro', provider: 'DeepSeek',  badge: 'REASON' },
     { id: 'llama-4-maverick',  name: 'Llama 4 Maverick', provider: 'Meta',     badge: 'OPEN' },
-    { id: 'deepseek-v4-pro',   name: 'DeepSeek V4 Pro', provider: 'DeepSeek',  badge: 'LOCAL' },
 ];
 
 const AGENT_DIRECTIVES = `## Agent Directives
