@@ -104,32 +104,39 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     }, [authOptional, checkSession, pathname, router]);
 
     if (!checked) {
+        // Pre-auth loading state. Wraps in `theme-light` so marketing
+        // visitors see a calm light surface before the dashboard chrome
+        // takes over (the dashboard layout itself stays dark for now).
         return (
-            <div className="flex h-screen items-center justify-center bg-[#0A0A0A]">
+            <div className="theme-light flex h-screen items-center justify-center bg-background">
                 <div className="flex flex-col items-center gap-3">
-                    <div className="w-8 h-8 border-2 border-[#F97316]/30 border-t-[#F97316] rounded-full animate-spin" />
-                    <span className="text-xs font-mono text-[#52525B]">Loading...</span>
+                    <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" aria-hidden="true" />
+                    <span className="text-xs font-mono text-muted">Loading...</span>
                 </div>
             </div>
         );
     }
 
     if (!hasAccess) {
+        // Private-beta gate. Was hardcoded dark; now light by default to
+        // match the marketing site so unauthenticated visitors don't
+        // bounce off a sudden dark slab. Buttons keep the orange accent
+        // for visibility on the light surface.
         return (
-            <div className="flex h-screen items-center justify-center bg-[#0A0A0A]">
+            <div className="theme-light flex h-screen items-center justify-center bg-background">
                 <div className="flex flex-col items-center gap-4 max-w-md text-center px-6">
                     <Logo className="w-16 h-16 mb-2" />
-                    <h1 className="text-2xl font-medium text-white">Private Beta</h1>
-                    <p className="text-[#A1A1AA] text-sm leading-relaxed">
+                    <h1 className="text-2xl font-medium text-foreground">Private Beta</h1>
+                    <p className="text-muted text-sm leading-relaxed">
                         Get Pro for $19/mo or join the waitlist for free.
                     </p>
                     <div className="flex gap-3 mt-4">
                         <Link href="/paywall"
-                            className="inline-flex items-center bg-[#F97316] text-white px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-[#F97316]/80 transition-colors shadow-[0_0_20px_rgba(249,115,22,0.3)]">
+                            className="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-primary/90 transition-colors shadow-[0_0_20px_rgba(249,115,22,0.25)]">
                             Get Access
                         </Link>
                         <Link href="/login"
-                            className="inline-flex items-center bg-[#FAFAFA]/5 text-white px-6 py-3 rounded-lg text-sm font-medium border border-[#222222] hover:bg-[#FAFAFA]/10 transition-colors">
+                            className="inline-flex items-center bg-foreground/5 text-foreground px-6 py-3 rounded-lg text-sm font-medium border border-foreground/15 hover:bg-foreground/10 transition-colors">
                             Sign In
                         </Link>
                     </div>
