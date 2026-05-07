@@ -87,8 +87,15 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
                 setChecked(true);
             })
             .catch(() => {
-                // API unreachable, allow access (dev mode / offline)
-                setHasAccess(true);
+                // API unreachable. In dev / offline, fall open so a
+                // local sandbox without Privy + Supabase still renders
+                // the dashboard. In production, fail closed: a Privy
+                // outage or Supabase outage was previously granting
+                // dashboard access to anyone, who then saw chrome
+                // they couldn't drive (every gated API returns 401).
+                // Wave 1 risk #2.
+                const isProd = process.env.NODE_ENV === 'production';
+                setHasAccess(!isProd);
                 setChecked(true);
             });
 
