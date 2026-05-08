@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { Search, Check, Plug, Github, Mail, MessageSquare, Calendar, Database, FileText, Globe, Shield, Zap, Code } from 'lucide-react';
+import { Search, Plug, Mail, Calendar, Database, Globe } from 'lucide-react';
 import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
@@ -37,50 +37,23 @@ const TIER_BADGE: Record<string, { label: string; className: string }> = {
 // Status semantics:
 //   'connected'   = wired up + working out of the box (no user action)
 //   'available'   = wired up but requires a connect step (Google OAuth)
-//   'coming_soon' = listed as a future plan, no backend implementation yet
 //
-// Only the LIVE_IDS below are actually wired. Everything else is
-// 'coming_soon' until a real integration ships. Don't promote a row
-// to 'available' without a corresponding /api/tools/* route + capability.
+// Only items that ship today appear here. Future integrations don't
+// get a placeholder row; they get a real `/api/tools/*` route + a row
+// at the same time. The grid was previously full of `coming_soon`
+// stubs which (per user feedback 2026-05-08) read as vaporware.
 const INTEGRATIONS: Integration[] = [
-    // Developer Tools
-    { id: 'github', name: 'GitHub', description: 'PR reviews, issue triage, code analysis, commit monitoring', category: 'Developer', icon: Github, status: 'coming_soon', howItWorks: 'Agent uses GitHub API via tool calls to read repos, create PRs, and manage issues.' },
-    { id: 'gitlab', name: 'GitLab', description: 'CI/CD pipelines, merge requests, repository management', category: 'Developer', icon: Code, status: 'coming_soon', howItWorks: 'Agent uses GitLab REST API to manage projects, pipelines, and merge requests.' },
-    { id: 'jira', name: 'Jira', description: 'Issue tracking, sprint management, story estimation', category: 'Developer', icon: Zap, status: 'coming_soon', howItWorks: 'Agent uses Jira Cloud REST API to create/update issues, manage sprints.' },
-    { id: 'linear', name: 'Linear', description: 'Project tracking, issue management, cycle planning', category: 'Developer', icon: Zap, status: 'coming_soon', howItWorks: 'Agent uses Linear GraphQL API to manage issues and projects.' },
-
     // Communication
-    { id: 'slack', name: 'Slack', description: 'Send messages, create channels, monitor conversations', category: 'Communication', icon: MessageSquare, status: 'coming_soon', howItWorks: 'Agent uses Slack Web API to post messages, read channels, and respond to events.' },
-    { id: 'discord', name: 'Discord', description: 'Bot messages, server management, moderation', category: 'Communication', icon: MessageSquare, status: 'coming_soon', howItWorks: 'Agent uses Discord Bot API to send messages and manage servers.' },
-    { id: 'gmail', name: 'Gmail', description: 'Read, draft, and send emails. Label and organize inbox', category: 'Communication', icon: Mail, status: 'available', howItWorks: 'Agent uses Gmail API via OAuth to read and compose emails.' },
-    { id: 'outlook', name: 'Outlook', description: 'Email management, calendar events, contacts', category: 'Communication', icon: Mail, status: 'coming_soon', howItWorks: 'Agent uses Microsoft Graph API for email and calendar access.' },
-
-    // Data & Storage
-    { id: 'postgres', name: 'PostgreSQL', description: 'Query databases, generate reports, manage schemas', category: 'Data', icon: Database, status: 'coming_soon', howItWorks: 'Agent generates and executes SQL queries via secure database connection.' },
-    { id: 'supabase', name: 'Supabase', description: 'Database CRUD, auth management, storage', category: 'Data', icon: Database, status: 'connected', howItWorks: 'Already connected, powers the Operator Uplift backend.' },
-    { id: 'notion', name: 'Notion', description: 'Read and write pages, databases, and wikis', category: 'Data', icon: FileText, status: 'coming_soon', howItWorks: 'Agent uses Notion API to read/write pages and query databases.' },
-    { id: 'gdrive', name: 'Google Drive', description: 'File management, document creation, sharing', category: 'Data', icon: FileText, status: 'coming_soon', howItWorks: 'Agent uses Google Drive API to manage files and folders.' },
+    { id: 'gmail', name: 'Gmail', description: 'Read, draft, and send emails from /chat or iMessage. Approval-gated, signed receipt per action.', category: 'Communication', icon: Mail, status: 'available', howItWorks: 'OAuth scope grants the agent read+compose access. Drafts and sends are staged for your tap; we never auto-send.' },
 
     // Productivity
-    { id: 'gcal', name: 'Google Calendar', description: 'Schedule events, check availability, set reminders', category: 'Productivity', icon: Calendar, status: 'available', howItWorks: 'Agent uses Google Calendar API to create/read events.' },
-    { id: 'todoist', name: 'Todoist', description: 'Task management, project organization, reminders', category: 'Productivity', icon: Check, status: 'coming_soon', howItWorks: 'Agent uses Todoist REST API to manage tasks and projects.' },
+    { id: 'gcal', name: 'Google Calendar', description: 'Create events from natural language ("schedule a meeting tomorrow at 3pm"). Same approval gate.', category: 'Productivity', icon: Calendar, status: 'available', howItWorks: 'OAuth scope for events.write. The natural-language event-time parser turns "tomorrow at 3" into a real ISO range.' },
 
     // Web & APIs
-    { id: 'web_search', name: 'Web Search', description: 'Search the internet, scrape pages, extract data', category: 'Web', icon: Globe, status: 'connected', howItWorks: 'Built-in capability, agents can search and browse the web.' },
-    { id: 'rest_api', name: 'Custom REST API', description: 'Connect to any REST API with custom endpoints', category: 'Web', icon: Globe, status: 'coming_soon', howItWorks: 'Configure custom API endpoints as agent tools.' },
-    { id: 'webhooks', name: 'Webhooks', description: 'Receive and send webhooks for event-driven automation', category: 'Web', icon: Zap, status: 'coming_soon', howItWorks: 'Set up webhook endpoints that trigger agent workflows.' },
+    { id: 'web_search', name: 'Web Search', description: 'Search the internet, browse pages, extract structured data when the agent needs facts beyond your inbox.', category: 'Web', icon: Globe, status: 'connected', howItWorks: 'Built-in. No connect step needed.' },
 
-    // Security
-    { id: 'sentry', name: 'Sentry', description: 'Error tracking, performance monitoring, alerting', category: 'Security', icon: Shield, status: 'coming_soon', howItWorks: 'Agent monitors Sentry API for new errors and creates fix PRs.' },
-    { id: 'cloudflare', name: 'Cloudflare', description: 'DNS management, WAF rules, performance analytics', category: 'Security', icon: Shield, status: 'coming_soon', howItWorks: 'Agent uses Cloudflare API to manage DNS and security rules.' },
-
-    // Blockchain & Finance
-    { id: 'solana', name: 'Solana', description: 'On-chain transactions, wallet management, dApp interactions, agent registry', category: 'Blockchain', icon: Zap, status: 'coming_soon', howItWorks: 'Agent uses Solana Web3.js to sign transactions, check balances, and interact with on-chain programs.' },
-    { id: 'zcash', name: 'Zcash', description: 'Privacy-preserving payments, shielded transactions, z-addr support', category: 'Blockchain', icon: Shield, status: 'coming_soon', howItWorks: 'Agent uses Zcash RPC API for shielded (z-addr) and transparent transactions. Full privacy for agent-to-agent payments.' },
-    { id: 'prime_intellect', name: 'Prime Intellect', description: 'Decentralized AI compute, GPU marketplace, distributed training', category: 'Blockchain', icon: Zap, status: 'coming_soon', howItWorks: 'Agents can provision decentralized GPU compute for model inference and fine-tuning via Prime Intellect API.' },
-    { id: 'oro_grail', name: 'Oro GRAIL', description: 'Gold-backed digital assets, tokenized gold transactions, treasury management', category: 'Blockchain', icon: Database, status: 'coming_soon', howItWorks: 'Agent uses Oro GRAIL API to interact with gold as easily as USDC. Treasury agents can diversify into gold-backed assets.' },
-    { id: 'dd_xyz', name: 'DD.xyz', description: 'Real-time risk data, due diligence reports, compliance scoring', category: 'Blockchain', icon: Shield, status: 'coming_soon', howItWorks: 'Helper queries DD.xyz APIs for risk and compliance data, used by security and compliance helpers.' },
-    { id: 'x402', name: 'x402 Protocol', description: 'Agent-to-agent payments, HTTP 402 micropayments, multi-chain support', category: 'Blockchain', icon: Zap, status: 'coming_soon', howItWorks: 'Enables machine-to-machine payments via HTTP 402 protocol. Zero processing fees beyond on-chain gas. Supports Solana, Ethereum, Base.' },
+    // Data & Storage
+    { id: 'supabase', name: 'Supabase', description: 'Powers the Operator Uplift backend (auth, receipts, opt-outs, audit log). Already wired; nothing to connect.', category: 'Data', icon: Database, status: 'connected', howItWorks: 'Internal. Surfaced here so admins can see which storage layers the agent reads from.' },
 ];
 
 const CATEGORIES = ['All', ...new Set(INTEGRATIONS.map(i => i.category))];
@@ -189,7 +162,6 @@ export default function IntegrationsPage() {
                         </div>
                         <div className="flex items-center gap-3 text-sm text-gray-400">
                             <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-400" /> {INTEGRATIONS.filter(i => getTier(i.id, i.status) === 'live').length} live</span>
-                            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400" /> {INTEGRATIONS.filter(i => i.status === 'coming_soon').length} coming soon</span>
                         </div>
                     </div>
 
