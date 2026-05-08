@@ -9,21 +9,21 @@ import { FadeIn } from '@/src/components/Animators';
 
 const tiers = [
     {
-        name: 'Team',
-        price: '$49',
-        period: '/seat/month',
-        description: 'For small teams that want one assistant for everyone.',
-        features: ['Up to 10 helpers', 'Shared inbox and calendar', 'GDPR-ready privacy', 'Email support', 'Shared workspace'],
-        cta: 'Get started',
+        name: 'Team Starter',
+        price: '$100',
+        period: '/month',
+        description: 'For small teams (up to 5 seats). Same Pro features, shared workspace.',
+        features: ['5 seats included', 'Up to 10 helpers per seat', 'Shared inbox and calendar', 'GDPR-ready privacy', 'Email support'],
+        cta: 'Start team plan',
         ctaLink: '/login?returnTo=/paywall',
         highlight: false,
     },
     {
         name: 'Business',
-        price: '$99',
+        price: '$50',
         period: '/seat/month',
         description: 'For growing teams that need privacy paperwork and scale.',
-        features: ['Unlimited helpers', 'HIPAA-ready', 'SOC 2-ready', 'GDPR-ready', 'Priority support', 'Usage analytics'],
+        features: ['Unlimited seats', 'Unlimited helpers', 'HIPAA-ready', 'SOC 2-ready', 'Priority support', 'Usage analytics'],
         cta: 'Get started',
         ctaLink: '/login?returnTo=/paywall',
         highlight: true,
@@ -72,7 +72,7 @@ export default function PricingPage() {
                                 Pricing for teams
                             </h1>
                             <p className="text-muted leading-relaxed">
-                                Personal plans start free at $0 or $19/month. Team plans are below. Free during beta.
+                                Personal plans start free at $0 or $50/month. Team plans are below. Free during beta.
                             </p>
                         </FadeIn>
                     </div>

@@ -135,7 +135,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
                     <Logo className="w-16 h-16 mb-2" />
                     <h1 className="text-2xl font-medium text-foreground">Private Beta</h1>
                     <p className="text-muted text-sm leading-relaxed">
-                        Get Pro for $19/mo or join the waitlist for free.
+                        Get Pro for $50/mo or join the waitlist for free.
                     </p>
                     <div className="flex gap-3 mt-4">
                         <Link href="/paywall"

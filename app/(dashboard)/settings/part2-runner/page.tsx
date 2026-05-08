@@ -19,7 +19,7 @@ import { executeToolCall, type ToolCall, type ToolResult } from '@/lib/toolCalls
  *
  * What this is NOT:
  *   - Not an auto-login, not a wallet auto-sign. The human signs the
- *     $19 USDC subscription elsewhere (/paywall → Phantom). This page
+ *     $50 USDC subscription elsewhere (/paywall → Phantom). This page
  *     only *verifies* that subscription landed.
  *   - Not a replacement for /chat. It's diagnostic-only.
  */
@@ -382,7 +382,7 @@ export default function Part2RunnerPage() {
                 {/* Step 3, Subscription */}
                 <section className="p-5 rounded-2xl border border-white/10 bg-foreground/[0.04]">
                     <div className="flex items-center justify-between mb-2">
-                        <h2 className="text-base font-medium text-white">3 · Subscription ($19 USDC)</h2>
+                        <h2 className="text-base font-medium text-white">3 · Subscription ($50 USDC)</h2>
                         <Pill chip={subChip} label={subChip} />
                     </div>
                     <p className="text-sm text-gray-400 mb-3">

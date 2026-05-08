@@ -30,7 +30,7 @@ const faqs = [
   },
   {
     q: 'How much does it really cost?',
-    a: '$19 a month, paid in USDC. Cancel any time. Per-action gas (currently a fraction of a cent on Solana devnet) is on us; we don\u2019t pass it through.',
+    a: 'Pro is $50 a month, paid in USDC. Team Starter is $100/mo for 5 seats. Cancel any time. Per-action gas (a fraction of a cent on Solana) is on us; we don\u2019t pass it through.',
   },
   {
     q: 'I\u2019m not a techie. Is this for me?',
