@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { FadeIn } from '@/src/components/Animators';
-import { OpenAILogo, AnthropicLogo } from '@/src/components/ProviderLogos';
 import { Logo as UpliftLogo } from '@/src/components/Icons';
 import { SectionHeader } from '@/src/components/SectionHeader';
 
@@ -12,23 +11,27 @@ import { SectionHeader } from '@/src/components/SectionHeader';
 // ProblemStatement pillars; the cloud-deployed website doesn't have
 // either property and the desktop+Ollama path is on the roadmap.
 //
-// Niche-agent columns added: Zo Computer (cloud computer for AI),
-// Poke (iMessage assistant), Hermes Agent (open-source by Nous
-// Research, NOT General Agents' Ace, which is a separate product),
-// OpenClaw (open-source agent gateway by Peter Steinberger). Each
-// column is conservative: only true if the platform's own docs
-// confirm the feature. Sources verified 2026-05-03 via vendor sites.
+// Niche-agent peer set:
+//   Zo Computer    cloud computer for AI agents
+//   Poke           iMessage assistant
+//   Hermes Agent   open-source by Nous Research
+//   OpenClaw       open-source agent gateway by Peter Steinberger
+// ChatGPT and Claude were dropped per user feedback 2026-05-08:
+// they're chat assistants, not agent platforms, so the "us vs them"
+// table read as one-sided across every feature row. The peer set is
+// the right comparison anyway. Sources verified 2026-05-03 via
+// vendor sites.
 const features = [
-  { name: 'Tap to approve before every action',          uplift: true, chatgpt: false, claude: false, zo: false, poke: true,  hermes: false, openclaw: false },
-  { name: 'Signed receipt for every action',             uplift: true, chatgpt: false, claude: false, zo: false, poke: false, hermes: false, openclaw: false },
-  { name: 'On-chain audit log (Solana)',                 uplift: true, chatgpt: false, claude: false, zo: false, poke: false, hermes: false, openclaw: false },
-  { name: 'Pick any AI you want, mid-conversation',      uplift: true, chatgpt: false, claude: false, zo: true,  poke: false, hermes: true,  openclaw: true },
-  { name: 'Built-in store of helpers',                   uplift: true, chatgpt: true,  claude: true, zo: false, poke: true,  hermes: true,  openclaw: true },
-  { name: 'Helpers that work as a team',                 uplift: true, chatgpt: false, claude: false, zo: false, poke: false, hermes: true,  openclaw: true },
-  { name: 'Real Gmail + Calendar via Google OAuth',      uplift: true, chatgpt: false, claude: false, zo: true,  poke: true,  hermes: true,  openclaw: true },
-  { name: 'Memory you can export and erase',             uplift: true, chatgpt: true,  claude: true, zo: false, poke: false, hermes: false, openclaw: false },
-  { name: 'Open-source codebase, MIT licensed',          uplift: true, chatgpt: false, claude: false, zo: false, poke: false, hermes: true,  openclaw: true },
-  { name: 'Privacy posture (HIPAA-aware, GDPR workflows)', uplift: true, chatgpt: false, claude: false, zo: false, poke: false, hermes: false, openclaw: false },
+  { name: 'Tap to approve before every action',          uplift: true, zo: false, poke: true,  hermes: false, openclaw: false },
+  { name: 'Signed receipt for every action',             uplift: true, zo: false, poke: false, hermes: false, openclaw: false },
+  { name: 'On-chain audit log (Solana)',                 uplift: true, zo: false, poke: false, hermes: false, openclaw: false },
+  { name: 'Pick any AI you want, mid-conversation',      uplift: true, zo: true,  poke: false, hermes: true,  openclaw: true },
+  { name: 'Built-in store of helpers',                   uplift: true, zo: false, poke: true,  hermes: true,  openclaw: true },
+  { name: 'Helpers that work as a team',                 uplift: true, zo: false, poke: false, hermes: true,  openclaw: true },
+  { name: 'Real Gmail + Calendar via Google OAuth',      uplift: true, zo: true,  poke: true,  hermes: true,  openclaw: true },
+  { name: 'Memory you can export and erase',             uplift: true, zo: false, poke: false, hermes: false, openclaw: false },
+  { name: 'Open-source codebase, MIT licensed',          uplift: true, zo: false, poke: false, hermes: true,  openclaw: true },
+  { name: 'Privacy posture (HIPAA-aware, GDPR workflows)', uplift: true, zo: false, poke: false, hermes: false, openclaw: false },
 ];
 
 /** Branded SVG marks for the four niche competitors that don't have
@@ -80,8 +83,6 @@ const platforms: Array<{
   Logo: React.FC<React.SVGProps<SVGSVGElement>>;
 }> = [
   { key: 'uplift',   name: 'Operator Uplift', highlight: true, Logo: UpliftLogo },
-  { key: 'chatgpt',  name: 'ChatGPT',                          Logo: OpenAILogo },
-  { key: 'claude',   name: 'Claude',                           Logo: AnthropicLogo },
   { key: 'zo',       name: 'Zo Computer',                      Logo: ZoLogo },
   { key: 'poke',     name: 'Poke',                             Logo: PokeLogo },
   { key: 'hermes',   name: 'Hermes Agent',                     Logo: HermesLogo },
@@ -160,10 +161,24 @@ const Comparison: React.FC = () => {
                       <td className="p-2.5 sm:p-4 text-foreground font-medium text-[11px] sm:text-xs">{f.name}</td>
                       {platforms.map(p => {
                         const val = f[p.key as keyof typeof f] as boolean;
+                        // Cell background:
+                        //   true  -> green tint so the check pops at a
+                        //            glance (per user feedback 2026-05-08:
+                        //            green check on grey row was hard to
+                        //            read at a distance)
+                        //   false -> default row tint, or primary tint if
+                        //            this is the highlighted Uplift column
+                        const cellBg = val
+                            ? 'bg-emerald-500/12'
+                            : p.highlight
+                                ? 'bg-primary/5'
+                                : '';
                         return (
-                          <td key={p.key} className={`p-2 sm:p-3 text-center ${p.highlight ? 'bg-primary/5' : ''}`}>
+                          <td key={p.key} className={`p-2 sm:p-3 text-center ${cellBg}`}>
                             {val ? (
-                              <span className="text-emerald-600">&#10003;</span>
+                              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/25 text-emerald-700 font-bold">
+                                &#10003;
+                              </span>
                             ) : (
                               <span className="text-foreground/25">&#10005;</span>
                             )}
