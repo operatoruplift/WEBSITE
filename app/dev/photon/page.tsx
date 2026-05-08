@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Loader2, ShieldAlert, RefreshCw, CheckCircle2, Clock, MessageSquare, Send, ChevronDown, ChevronRight, Ban, X } from 'lucide-react';
+import { PhotonHealthCard } from '@/src/components/photon/PhotonHealthCard';
 
 /**
  * Admin-gated iMessage observability page at /dev/photon.
@@ -349,6 +350,12 @@ export default function DevPhotonPage() {
                         Last {rows.length} inbound webhook rows. Replied rows have a Claude Haiku response on the way back to the sender.
                     </p>
                 </header>
+
+                {/* Top-of-page health card. Pulls /api/health/adapters
+                    and surfaces photon adapter + inbox status with a
+                    pointer to the runbook symptom map. The first thing
+                    the operator should look at when iMessage is silent. */}
+                <PhotonHealthCard />
 
                 {stats?.last24h && (
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-3 rounded-xl border border-white/10 bg-white/[0.02]">
