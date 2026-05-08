@@ -34,8 +34,11 @@ Follow this in `Vercel → Project → Settings → Environment Variables` (scop
 | `GOOGLE_OAUTH_CLIENT_SECRET` | **REQUIRED NOW** | same | same | none — must set |
 | `GOOGLE_OAUTH_STATE_SECRET` | **REQUIRED NOW** | `lib/google/oauth-state.ts` | Google OAuth callback validation fails; connect flow loops. | none — must set |
 | `GOOGLE_OAUTH_REDIRECT_URI` | **REQUIRED NOW** (if non-default) | `lib/google/oauth.ts` | Must match the "Authorized redirect URI" in Google Cloud Console. Mismatch = `redirect_uri_mismatch` error. | Use prod URL: `https://www.operatoruplift.com/api/integrations/google/callback` |
+| `PHOTON_PROJECT_ID` | **REQUIRED for iMessage** | `lib/photon/adapter.ts::getProjectId` | Bot receives inbound texts but **cannot reply** (`adapter.send` returns `not_configured`). | Spectrum dashboard → Settings → Project ID (UUID). |
+| `PHOTON_API_KEY` | **REQUIRED for iMessage** | `lib/photon/adapter.ts::getSecret` | Same as above; replies fail with `not_configured`. | Spectrum dashboard → Settings → Secret Key. |
+| `PHOTON_WEBHOOK_SECRET` | **REQUIRED for iMessage** | `app/api/webhooks/photon/route.ts:478` | If unset the route fails *open* (accepts unsigned inbounds). Set in prod so a stranger can't post to your webhook URL. | Spectrum dashboard → Webhooks → secret. |
 
-**Confirm via:** `GET /api/health/llm` returns `{ok:true, upCount ≥ 1}` → LLM keys fine. `/settings → Diagnostics` (signed-in) shows `Google: Connected` after a successful Connect flow → Google OAuth triplet fine.
+**Confirm via:** `GET /api/health/llm` returns `{ok:true, upCount ≥ 1}` → LLM keys fine. `/settings → Diagnostics` (signed-in) shows `Google: Connected` after a successful Connect flow → Google OAuth triplet fine. `GET /api/health/adapters` (admin) shows `photon.active: true` → iMessage send path is wired.
 
 ## Column 2 — Required for Payments ($19 subscription + $0.01 per write)
 
