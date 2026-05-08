@@ -83,11 +83,12 @@ test('/imessage CTA tile deep-links to /login?returnTo=/integrations', async ({ 
 });
 
 test('homepage Channels section flags iMessage as shipping', async ({ page }) => {
-    // PR #463's deck-objections.md anchors the demo on iMessage being
-    // the only "shipping" channel today (Telegram/WhatsApp = ready,
-    // Slack/Discord/Phone = roadmap). If anyone silently flips
-    // iMessage to "roadmap" or removes the badge, the deck story
-    // collapses. Locked in.
+    // The deck (docs/deck-objections.md) anchors on iMessage being the
+    // only "shipping" channel today. The Channels section was trimmed
+    // in #483 to just iMessage (shipping) + Telegram + WhatsApp (ready)
+    // per the user's "make work or remove" rule; Slack/Discord/Phone
+    // were dropped entirely. If anyone flips iMessage to "ready" or
+    // removes the badge, the deck story collapses. Locked in.
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
     // Find the iMessage channel card via heading text, then assert
