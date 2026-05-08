@@ -1,30 +1,25 @@
 'use client';
 
 import React from 'react';
-import { MessageSquare, Send, MessageCircle, Hash, Gamepad2, Phone } from 'lucide-react';
+import { MessageSquare, Send, MessageCircle } from 'lucide-react';
 import { FadeIn } from '@/src/components/Animators';
 import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
 
 /**
- * Channels grid: shows which messaging surfaces the agent runs on.
+ * Channels grid: which messaging surfaces the agent runs on today.
  *
- * Inspiration is the "agents live in messaging apps" framing every
- * agent-platform vendor leans on (Photon Spectrum's product page is
- * one example). Goal here is to translate that framing into our
- * voice: meet users in the threads they already keep open instead
- * of asking them to install another app.
+ * Per user feedback 2026-05-08: "either make the roadmap items work
+ * or we remove them." Slack, Discord, and Phone (voice) were trimmed
+ * because none of them have a verified end-to-end loop yet.
  *
- * Honest framing matters: Photon Spectrum supports more channels
- * than we've validated end-to-end. Each tile shows a `status`
- * (shipping / ready / roadmap) so we don't overpromise:
- *
- *   - shipping: full agent loop verified on prod (iMessage today)
- *   - ready: same webhook + adapter shape, just not yet stress-tested
- *   - roadmap: needs additional integration work
+ * Telegram and WhatsApp share the same Spectrum webhook + adapter as
+ * iMessage; flipping them on is a Spectrum-dashboard config change,
+ * no code change. Marked "Ready" rather than "Shipping" because we
+ * have not yet stress-tested an inbound on those platforms in prod.
  */
 
-type ChannelStatus = 'shipping' | 'ready' | 'roadmap';
+type ChannelStatus = 'shipping' | 'ready';
 
 interface Channel {
     name: string;
@@ -42,33 +37,15 @@ const CHANNELS: Channel[] = [
     },
     {
         name: 'Telegram',
-        blurb: 'Same webhook, same agent. Forward your project traffic to flip it on.',
+        blurb: 'Same webhook, same agent. Flip it on by routing your Spectrum project to Telegram.',
         status: 'ready',
         Icon: Send,
     },
     {
         name: 'WhatsApp',
-        blurb: 'Spectrum bridges WhatsApp Business; the agent loop runs identically.',
+        blurb: 'Spectrum bridges WhatsApp Business; the agent loop runs identically once the project is configured.',
         status: 'ready',
         Icon: MessageCircle,
-    },
-    {
-        name: 'Slack',
-        blurb: 'App with slash commands so the bot can answer in any channel you invite it to.',
-        status: 'roadmap',
-        Icon: Hash,
-    },
-    {
-        name: 'Discord',
-        blurb: 'Server bot with slash commands and DM-aware tool calls.',
-        status: 'roadmap',
-        Icon: Gamepad2,
-    },
-    {
-        name: 'Phone',
-        blurb: 'Voice via Photon\u2019s phone bridge. Same agent answers spoken questions.',
-        status: 'roadmap',
-        Icon: Phone,
     },
 ];
 
@@ -80,10 +57,6 @@ const STATUS_STYLES: Record<ChannelStatus, { label: string; cls: string }> = {
     ready: {
         label: 'Ready',
         cls: 'bg-[#F97316]/10 text-[#F97316] border-[#F97316]/30',
-    },
-    roadmap: {
-        label: 'Roadmap',
-        cls: 'bg-foreground/5 text-foreground/60 border-foreground/15',
     },
 };
 
