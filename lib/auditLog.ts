@@ -147,10 +147,28 @@ export async function publishMerkleRoot(): Promise<OnChainRecord | null> {
         try { return JSON.parse(localStorage.getItem('user') || '{}').id || 'anon'; } catch { return 'anon'; }
     })();
 
+    // The /api/audit/publish-root route runs verifySession() on every
+    // request. Without an Authorization header, every publish would
+    // 401 silently, so the on-chain record never updated. The "auto-
+    // publish every 5 actions" claim was effectively a no-op for any
+    // action taken by an authenticated user.
+    const token = (() => {
+        try { return localStorage.getItem('token'); } catch { return null; }
+    })();
+    if (!token) {
+        // Anon visitor (no Privy session): publishing requires auth
+        // to attribute the merkle root to a user. Skip rather than
+        // 401-and-swallow.
+        return null;
+    }
+
     try {
         const res = await fetch('/api/audit/publish-root', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify({ user_id: userId, action_hashes: hashes }),
         });
 
@@ -178,7 +196,15 @@ export async function publishMerkleRoot(): Promise<OnChainRecord | null> {
             localStorage.setItem(LAST_PUBLISH_KEY, String(entries.length));
             return record;
         }
-    } catch {}
+    } catch (err) {
+        // Don't silently swallow. Surface to console so a developer
+        // checking the network tab can see why the publish stalled.
+        safeError({
+            at: 'audit',
+            event: 'publish_threw',
+            error: err instanceof Error ? err.message : String(err),
+        });
+    }
     return null;
 }
 
