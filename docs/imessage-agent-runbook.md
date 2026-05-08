@@ -3,6 +3,23 @@
 What you need to text the bot from iPhone iMessage and get a Claude
 Haiku reply back. End-to-end smoke test in roughly five minutes.
 
+## "iMessage doesn't work" — symptom map
+
+If you texted the bot and got nothing back, hit one of these in order. The first one that turns up missing is your blocker.
+
+| Symptom | Most likely cause | What to check |
+|---|---|---|
+| No reply at all, no errors visible | Vercel env vars missing | curl `/api/health/adapters` as an admin (logged-in browser → DevTools → copy the request as curl). The `photon` adapter's `active` field tells you which side is dark. |
+| `photon.active: false`, reason `not_configured` | `PHOTON_PROJECT_ID` and/or `PHOTON_API_KEY` not set in Vercel | Set both from the Spectrum dashboard's Settings tab. Redeploy. |
+| `photon.active: true` but Spectrum console shows no inbound | Spectrum webhook URL not configured | In the Spectrum dashboard's Webhooks tab, set the webhook URL to `https://<your-domain>/api/webhooks/photon` and the secret to whatever you set in `PHOTON_WEBHOOK_SECRET`. |
+| Inbound shows in `/dev/photon` but no reply text logged | `ANTHROPIC_API_KEY` missing | Set it in Vercel from console.anthropic.com. The agent falls back to the canned `"Got it, working on it."` reply when the LLM key is unavailable; that fallback uses the Photon adapter, so an empty reply means the *adapter* is also dark. |
+| HMAC signature mismatch in logs | `PHOTON_WEBHOOK_SECRET` differs between Spectrum and Vercel | Re-copy the secret from Spectrum into Vercel verbatim. No quotes. |
+| Bot reply works but YES doesn't execute | Sender's phone not verified, or Google not connected | Open `/integrations` while logged in as the same Privy user, verify the phone, click Connect Google. |
+
+If `/api/health/adapters` returns 401, you're not logged in as an admin. The bypass list is `lib/auth.ts::isAdminAllowlisted`. Sign in with an email on that list, then retry.
+
+If everything looks green and it still doesn't work, run `node scripts/photon-smoke.mjs` against prod (set `PHOTON_SMOKE_BASE` to your domain). Five PASS lines mean the loop is wired; anything else prints the failed leg.
+
 ## How the round trip works
 
 1. You text the bot's iMessage number (the one set up in your Photon
