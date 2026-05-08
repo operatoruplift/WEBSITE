@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { FadeIn } from '@/src/components/Animators';
-import { OpenAILogo, AnthropicLogo, GoogleLogo, XAILogo } from '@/src/components/ProviderLogos';
+import { OpenAILogo, AnthropicLogo } from '@/src/components/ProviderLogos';
 import { Logo as UpliftLogo } from '@/src/components/Icons';
 import { SectionHeader } from '@/src/components/SectionHeader';
 
@@ -19,16 +19,16 @@ import { SectionHeader } from '@/src/components/SectionHeader';
 // column is conservative: only true if the platform's own docs
 // confirm the feature. Sources verified 2026-05-03 via vendor sites.
 const features = [
-  { name: 'Tap to approve before every action',          uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: false, poke: true,  hermes: false, openclaw: false },
-  { name: 'Signed receipt for every action',             uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: false, poke: false, hermes: false, openclaw: false },
-  { name: 'On-chain audit log (Solana)',                 uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: false, poke: false, hermes: false, openclaw: false },
-  { name: 'Pick any AI you want, mid-conversation',      uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: true,  poke: false, hermes: true,  openclaw: true },
-  { name: 'Built-in store of helpers',                   uplift: true, chatgpt: true,  claude: true,  gemini: false, grok: false, zo: false, poke: true,  hermes: true,  openclaw: true },
-  { name: 'Helpers that work as a team',                 uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: false, poke: false, hermes: true,  openclaw: true },
-  { name: 'Real Gmail + Calendar via Google OAuth',      uplift: true, chatgpt: false, claude: false, gemini: true,  grok: false, zo: true,  poke: true,  hermes: true,  openclaw: true },
-  { name: 'Memory you can export and erase',             uplift: true, chatgpt: true,  claude: true,  gemini: false, grok: false, zo: false, poke: false, hermes: false, openclaw: false },
-  { name: 'Open-source codebase, MIT licensed',          uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: false, poke: false, hermes: true,  openclaw: true },
-  { name: 'Privacy posture (HIPAA-aware, GDPR workflows)', uplift: true, chatgpt: false, claude: false, gemini: false, grok: false, zo: false, poke: false, hermes: false, openclaw: false },
+  { name: 'Tap to approve before every action',          uplift: true, chatgpt: false, claude: false, zo: false, poke: true,  hermes: false, openclaw: false },
+  { name: 'Signed receipt for every action',             uplift: true, chatgpt: false, claude: false, zo: false, poke: false, hermes: false, openclaw: false },
+  { name: 'On-chain audit log (Solana)',                 uplift: true, chatgpt: false, claude: false, zo: false, poke: false, hermes: false, openclaw: false },
+  { name: 'Pick any AI you want, mid-conversation',      uplift: true, chatgpt: false, claude: false, zo: true,  poke: false, hermes: true,  openclaw: true },
+  { name: 'Built-in store of helpers',                   uplift: true, chatgpt: true,  claude: true, zo: false, poke: true,  hermes: true,  openclaw: true },
+  { name: 'Helpers that work as a team',                 uplift: true, chatgpt: false, claude: false, zo: false, poke: false, hermes: true,  openclaw: true },
+  { name: 'Real Gmail + Calendar via Google OAuth',      uplift: true, chatgpt: false, claude: false, zo: true,  poke: true,  hermes: true,  openclaw: true },
+  { name: 'Memory you can export and erase',             uplift: true, chatgpt: true,  claude: true, zo: false, poke: false, hermes: false, openclaw: false },
+  { name: 'Open-source codebase, MIT licensed',          uplift: true, chatgpt: false, claude: false, zo: false, poke: false, hermes: true,  openclaw: true },
+  { name: 'Privacy posture (HIPAA-aware, GDPR workflows)', uplift: true, chatgpt: false, claude: false, zo: false, poke: false, hermes: false, openclaw: false },
 ];
 
 /** Branded SVG marks for the four niche competitors that don't have
@@ -82,8 +82,6 @@ const platforms: Array<{
   { key: 'uplift',   name: 'Operator Uplift', highlight: true, Logo: UpliftLogo },
   { key: 'chatgpt',  name: 'ChatGPT',                          Logo: OpenAILogo },
   { key: 'claude',   name: 'Claude',                           Logo: AnthropicLogo },
-  { key: 'gemini',   name: 'Gemini',                           Logo: GoogleLogo },
-  { key: 'grok',     name: 'Grok',                             Logo: XAILogo },
   { key: 'zo',       name: 'Zo Computer',                      Logo: ZoLogo },
   { key: 'poke',     name: 'Poke',                             Logo: PokeLogo },
   { key: 'hermes',   name: 'Hermes Agent',                     Logo: HermesLogo },
