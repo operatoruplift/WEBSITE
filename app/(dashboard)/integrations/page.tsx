@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { Search, Plug, Mail, Calendar, Database, Globe } from 'lucide-react';
+import { Plug, Mail, Calendar, Database, Globe } from 'lucide-react';
 import { Card, CardContent } from '@/src/components/ui/Card';
 import { Badge } from '@/src/components/ui/Badge';
 import { MobilePageWrapper } from '@/src/components/mobile';
@@ -56,18 +56,15 @@ const INTEGRATIONS: Integration[] = [
     { id: 'supabase', name: 'Supabase', description: 'Powers the Operator Uplift backend (auth, receipts, opt-outs, audit log). Already wired; nothing to connect.', category: 'Data', icon: Database, status: 'connected', howItWorks: 'Internal. Surfaced here so admins can see which storage layers the agent reads from.' },
 ];
 
-const CATEGORIES = ['All', ...new Set(INTEGRATIONS.map(i => i.category))];
-
 export default function IntegrationsPage() {
-    const [search, setSearch] = useState('');
-    const [category, setCategory] = useState('All');
     const [connectedIds, setConnectedIds] = useState<Set<string>>(new Set(INTEGRATIONS.filter(i => i.status === 'connected').map(i => i.id)));
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const { showToast } = useToast();
 
-    const filtered = INTEGRATIONS
-        .filter(i => category === 'All' || i.category === category)
-        .filter(i => !search || i.name.toLowerCase().includes(search.toLowerCase()) || i.description.toLowerCase().includes(search.toLowerCase()));
+    // No filtering: with 4 integrations a search box + category chips
+    // are noise. Render the full list. Reinstate the filter row when
+    // the grid grows past ~8 entries.
+    const filtered = INTEGRATIONS;
 
     const callbackHandled = useRef(false);
 
@@ -178,24 +175,11 @@ export default function IntegrationsPage() {
                         replies, scoped server-side to senders they own. */}
                     <IMessageRecentPanel />
 
-                    {/* Filters */}
-                    <div className="flex flex-col sm:flex-row gap-3">
-                        <div className="relative flex-1">
-                            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-                            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search integrations..." aria-label="Search integrations"
-                                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-foreground/[0.04] border border-white/10 text-sm text-white focus:border-primary/50 focus:outline-none" />
-                        </div>
-                        <div className="flex gap-2 overflow-x-auto pb-1">
-                            {CATEGORIES.map(cat => (
-                                <button key={cat} onClick={() => setCategory(cat)}
-                                    className={`px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wide whitespace-nowrap transition-all ${
-                                        category === cat ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-foreground/[0.04] text-gray-400 border border-white/10 hover:border-primary/30'
-                                    }`}>{cat}</button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Grid */}
+                    {/* Grid. Search + category filters were trimmed alongside
+                        the grid trim from 23 -> 4 integrations: filtering 4
+                        cards by name or by 4 single-card categories was UX
+                        noise. When a new integration ships and the count
+                        passes ~8, restore the filter row above this grid. */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {filtered.map(integration => {
                             const Icon = integration.icon;
