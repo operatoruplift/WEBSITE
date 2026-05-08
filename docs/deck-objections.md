@@ -33,7 +33,7 @@ Mapped to the brief's four parts:
 3. **Tool execution today**: Gmail draft + send (live), Calendar create (live), more on the way.
 4. **Trust layer**: SNS-anchored signer identity, ed25519 receipts, public-key verification endpoint.
 5. **Monetization**: deposit-to-credit, $50 USDC minimum, $0.01 per write action, refundable.
-6. **Channel-agnostic**: iMessage shipping, Telegram + WhatsApp ready (Spectrum), Slack + Discord on the roadmap.
+6. **Channel-agnostic**: iMessage shipping, Telegram + WhatsApp ready (Spectrum). Slack + Discord aren't on the marketing surface anymore (trimmed from the Channels section per the "make work or remove" rule); they come back when wired.
 7. **Roadmap**: real-Gmail tool execution from iMessage (already shipping), enterprise OAuth tenant, audit dashboards.
 
 ## Slides to cut
@@ -55,7 +55,7 @@ Mapped to the brief's four parts:
 | SNS identity on receipts | nowhere | `/security` receipts header | only if showing slide 4 substance | one bullet on slide 4 |
 | Photon Spectrum | implicit | webhook + adapter | invisible plumbing | one logo bullet on slide 6 |
 | Telegram / WhatsApp | Channels section with status pills | platform-agnostic, no separate code | not in demo | slide 6 (channel-agnostic) |
-| Slack / Discord | roadmap pill on Channels section | not implemented | not in demo | slide 7 (roadmap), single line |
+| Slack / Discord | not on the marketing surface (trimmed from Channels per "make work or remove" rule) | not implemented | not in demo | cut from the deck until wired |
 | Anthropic / OpenAI / Gemini / Grok / DeepSeek | `Built on the model you already pay for` marquee | `/chat` model picker | implicit | slide 1 footer ("Built on") |
 | Llama / Ollama | not on the marquee (would-be hosted-API claim, but local-only via Ollama path in `lib/llm.ts:189`) | not in `/chat` picker (desktop app required) | not in demo | one optional roadmap bullet on slide 7 only if asked |
 | Filecoin | cut from hero | not implemented | not in demo | cut |
@@ -63,13 +63,13 @@ Mapped to the brief's four parts:
 | Tauri / desktop | mentioned in `/imessage` "What's not here yet" block | `desktop/tauri.conf.json` only | not in demo | cut |
 | Base / Ethereum | not added | not added | not in demo | cut (one chain story) |
 | MagicBlock | not surfaced | flag-gated, off by default | not in demo | one optional bullet on slide 4 only if asked |
-| Pricing model | homepage Pricing section | `/paywall` (currently $19/month subscription, deposit-to-credit pivot deferred) | not in demo | slide 5 |
+| Pricing model | homepage Pricing section | `/paywall` (currently $50/month Pro subscription; Team Starter $299/mo for 5 seats; deposit-to-credit pivot deferred) | not in demo | slide 5 |
 
 ## What stays "roadmap" honestly
 
 If a feature is labeled `roadmap` in code (via `src/sections/Channels.tsx` status pills, `app/(dashboard)/integrations/page.tsx` `coming_soon` status, or the `/imessage` "What's not here yet" block), do NOT promote it to live in the deck. The honesty is the wedge. Examples:
 
-- Slack / Discord: still `roadmap`. Don't claim they ship.
+- Slack / Discord: trimmed from the Channels section entirely per the "make work or remove" rule. Don't claim they ship and don't promote them on the deck until they actually do.
 - Calendar event from iMessage: ships (PR #451). OK to claim.
 - Gmail draft from iMessage: ships (PR #446). OK to claim.
 - Gmail send from iMessage: ships (PR #452). OK to claim.
