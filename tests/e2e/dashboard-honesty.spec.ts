@@ -86,22 +86,23 @@ test('/workflows starter templates show 0 runs and Never lastRun', async ({ page
     expect(body, 'fake 891 run count removed').not.toMatch(/\b891\b.*runs/i);
 });
 
-test('/integrations summary shows live + coming-soon counts (not fake "X available")', async ({ page }) => {
+test('/integrations summary shows live count only (no coming-soon stubs)', async ({ page }) => {
     await prepareGatedSession(page);
     await page.goto('/integrations');
 
     await expect(page.getByText(/Integrations/).first()).toBeVisible({ timeout: 10_000 });
 
     const body = (await page.locator('body').innerText()).toLowerCase();
-    // Header summary should call out live + coming-soon counts.
-    // Older copy pretended every non-connected row was "available"
-    // even when zero of them had a working tool route.
+    // Header summary calls out the live count. Per user feedback
+    // 2026-05-08, the grid no longer carries `coming_soon` placeholder
+    // rows: future integrations get a real /api/tools/* route + a row
+    // at the same time. So the "X coming soon" chip is gone.
     expect(body).toMatch(/\d+ live/);
-    expect(body).toMatch(/\d+ coming soon/);
+    expect(body).not.toMatch(/\d+ coming soon/);
     // The bare phrase "available" was misleading when 17 rows had it
-    // but only 4 routes existed. Now only Gmail/Calendar/Supabase/
-    // web-search use the 'available'/'connected' status, so the
-    // summary line shouldn't show "X available" at all.
+    // but only 4 routes existed. Today only Gmail/Calendar/Supabase/
+    // web-search appear, so a summary like "X available" should never
+    // surface.
     expect(body).not.toMatch(/\d+ available/);
 });
 
