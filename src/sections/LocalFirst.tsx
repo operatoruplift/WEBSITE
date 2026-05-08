@@ -1,18 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Lock, KeyRound, FileSignature, Cpu, ArrowRight } from 'lucide-react';
+import { Lock, KeyRound, FileSignature, Cpu, ArrowRight, Triangle, Database, Send, Zap, Circle, Hexagon, Box, AudioWaveform } from 'lucide-react';
 import { FadeIn } from '@/src/components/Animators';
 import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
-import {
-    AnthropicLogo,
-    OpenAILogo,
-    GoogleLogo,
-    XAILogo,
-    DeepSeekLogo,
-    OllamaLogo,
-} from '@/src/components/ProviderLogos';
 
 /**
  * Concrete demonstration of the local-first / BYOK flow.
@@ -144,36 +136,64 @@ const LocalFirst: React.FC = () => {
                 </ol>
             </div>
 
-            {/* Provider strip: concrete proof that BYOK works across
-                providers, plus a "Soon" pill on Ollama to flag the
-                roadmap commitment without overclaiming. */}
+            {/* Built On strip: the infrastructure under the agent.
+                Replaces the previous "Works with the model you already
+                pay for" provider strip, which duplicated the homepage
+                TrustedBy marquee one screen above.
+
+                Each row tags a real provider used today. Roadmap
+                providers wear a "Soon" pill so we don't overclaim
+                infrastructure we haven't wired. Per the project
+                honesty rule (every roadmap is labeled or absent). */}
             <FadeIn delay={500}>
                 <div className="w-full max-w-[1100px] mx-auto mt-12">
                     <div className="rounded-2xl border border-border bg-card p-6 md:p-8">
                         <div className="flex items-center gap-3 mb-5">
                             <span className="w-2 h-2 rounded-full bg-emerald-400" />
                             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted">
-                                Works with the model you already pay for
+                                Built on
                             </span>
                         </div>
                         <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                            {/* Shipping: actually wired in the codebase today */}
                             <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <AnthropicLogo aria-hidden className="w-4 h-4" /> Claude
+                                <Zap aria-hidden className="w-4 h-4" /> Solana
                             </span>
                             <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <OpenAILogo aria-hidden className="w-4 h-4" /> ChatGPT
+                                <Triangle aria-hidden className="w-4 h-4" /> Vercel
                             </span>
                             <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <GoogleLogo aria-hidden className="w-4 h-4" /> Gemini
+                                <Database aria-hidden className="w-4 h-4" /> Supabase
                             </span>
                             <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <XAILogo aria-hidden className="w-4 h-4" /> Grok
+                                <Send aria-hidden className="w-4 h-4" /> Photon
                             </span>
-                            <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <DeepSeekLogo aria-hidden className="w-4 h-4" /> DeepSeek
+                            {/* Roadmap: tagged Soon so we don't overclaim. Base
+                                + Ethereum land when we add an x402 buyer client
+                                that pays paid APIs (lib/paysh roadmap).
+                                Filecoin is the receipt-anchoring path documented
+                                in docs/filecoin-decision.md. ElevenLabs is voice,
+                                gated on Phone channel work. */}
+                            <span className="inline-flex items-center gap-2 text-sm text-muted">
+                                <Circle aria-hidden className="w-4 h-4" /> Base
+                                <span className="text-[9px] font-mono font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border border-[#F97316]/40 text-[#F97316] bg-[#F97316]/10">
+                                    Soon
+                                </span>
                             </span>
                             <span className="inline-flex items-center gap-2 text-sm text-muted">
-                                <OllamaLogo aria-hidden className="w-4 h-4" /> Ollama
+                                <Hexagon aria-hidden className="w-4 h-4" /> Ethereum
+                                <span className="text-[9px] font-mono font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border border-[#F97316]/40 text-[#F97316] bg-[#F97316]/10">
+                                    Soon
+                                </span>
+                            </span>
+                            <span className="inline-flex items-center gap-2 text-sm text-muted">
+                                <Box aria-hidden className="w-4 h-4" /> Filecoin
+                                <span className="text-[9px] font-mono font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border border-[#F97316]/40 text-[#F97316] bg-[#F97316]/10">
+                                    Soon
+                                </span>
+                            </span>
+                            <span className="inline-flex items-center gap-2 text-sm text-muted">
+                                <AudioWaveform aria-hidden className="w-4 h-4" /> ElevenLabs
                                 <span className="text-[9px] font-mono font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border border-[#F97316]/40 text-[#F97316] bg-[#F97316]/10">
                                     Soon
                                 </span>
