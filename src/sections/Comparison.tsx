@@ -104,14 +104,14 @@ const Comparison: React.FC = () => {
           headingId="comparison-heading"
           eyebrow="Compare"
           title="Why Operator Uplift?"
-          description="Other AIs run on their servers, learn from your messages, and only work if you stay loyal to one company. We don't do any of that."
+          description="Other agent platforms approve some actions, log some history, and let you swap models. We do all three, plus we sign every action with a key you can verify."
         />
 
         {/* Table - scrollable on mobile with a right-edge fade so the
             last column visibly "hints" more content, instead of looking
-            like it's been cut off by the viewport. The bigger column
-            count (9 platforms) makes the horizontal scroll on smaller
-            viewports the load-bearing affordance, not a fallback. */}
+            like it's been cut off by the viewport. 5 platforms after
+            the ChatGPT/Claude trim still benefit from horizontal scroll
+            below ~640px because each column needs a logo + text. */}
         <FadeIn delay={200} className="w-full block">
           <div className="relative -mx-6 px-6 md:mx-0 md:px-0">
             {/* Right-side fade, visible on mobile only, signals horizontal scroll.
