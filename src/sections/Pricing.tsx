@@ -51,9 +51,9 @@ const TIERS = [
     },
     {
         name: 'Team Starter',
-        price: '$100',
+        price: '$299',
         period: '/month',
-        description: 'For 5-seat teams that want one assistant for everyone',
+        description: 'For 5-seat teams. Pro for everyone, plus shared inbox/calendar and admin tools.',
         icon: Building2,
         highlight: false,
         features: [
@@ -79,7 +79,7 @@ const Pricing: React.FC = () => {
                 headingId="pricing-heading"
                 eyebrow="Pricing"
                 title="Pick a plan, start in a minute"
-                description="Start free. Pro at $50 a month, Team Starter at $100. Cancel any time."
+                description="Start free. Pro at $50 a month, Team Starter at $299. Cancel any time."
             />
 
             {/* Three pricing tiers. Promote to <ul>/<li> so screen
