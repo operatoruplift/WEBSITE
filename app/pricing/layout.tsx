@@ -10,11 +10,11 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
     title: 'Pricing for teams',
     description:
-        'Personal plans start free at $0 or $19/month. Team and enterprise plans for families, small businesses, and companies. Cancel any time.',
+        'Personal plans start free at $0 or $50/month. Team and enterprise plans for families, small businesses, and companies. Cancel any time.',
     openGraph: {
         title: 'Pricing for teams, Operator Uplift',
         description:
-            'Personal plans start free at $0 or $19/month. Team and enterprise plans. Cancel any time.',
+            'Personal plans start free at $0 or $50/month. Team and enterprise plans. Cancel any time.',
         url: 'https://operatoruplift.com/pricing',
         type: 'website',
     },
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
         card: 'summary_large_image',
         title: 'Pricing for teams, Operator Uplift',
         description:
-            'Personal plans start free at $0 or $19/month. Team and enterprise plans. Cancel any time.',
+            'Personal plans start free at $0 or $50/month. Team and enterprise plans. Cancel any time.',
     },
     alternates: {
         canonical: '/pricing',

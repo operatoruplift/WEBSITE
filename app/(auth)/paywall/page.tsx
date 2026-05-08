@@ -192,7 +192,7 @@ export default function PaywallPage() {
                     <Logo className="w-12 h-12 mx-auto mb-4" />
                     <h1 className="text-3xl font-semibold text-white tracking-tight">Pick a plan</h1>
                     <p className="text-sm text-[#A1A1AA] mt-2 max-w-md mx-auto">
-                        Start free. Pay $19 a month when you want it doing email and calendar for you. Cancel any time.
+                        Start free. Pay $50 a month when you want it doing email and calendar for you. Cancel any time.
                     </p>
                     <p className="text-xs text-[#52525B] mt-3">
                         Already have an account?{' '}
@@ -219,7 +219,7 @@ export default function PaywallPage() {
                         </div>
 
                         <div className="mb-3">
-                            <span className="text-4xl font-bold text-white">$19</span>
+                            <span className="text-4xl font-bold text-white">$50</span>
                             <span className="text-sm text-[#A1A1AA]">/month</span>
                             <span className="ml-2 text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]">USDC</span>
                         </div>
@@ -243,7 +243,7 @@ export default function PaywallPage() {
                                 onClick={createInvoice}
                                 className="w-full h-12 rounded-xl bg-[#F97316] hover:bg-[#F97316]/90 text-white font-bold uppercase tracking-widest text-sm transition-colors flex items-center justify-center gap-2"
                             >
-                                Pay $19 USDC <ArrowRight size={14} />
+                                Pay $50 USDC <ArrowRight size={14} />
                             </button>
                         )}
 

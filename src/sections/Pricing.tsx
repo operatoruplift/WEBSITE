@@ -30,7 +30,7 @@ const TIERS = [
     },
     {
         name: 'Pro',
-        price: '$19',
+        price: '$50',
         period: '/month',
         description: 'Real Gmail, real calendar, real receipts',
         icon: Zap,
@@ -50,23 +50,23 @@ const TIERS = [
         ctaStyle: 'bg-[#F97316] hover:bg-[#F97316]/90 text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]',
     },
     {
-        name: 'For Teams',
-        price: 'Custom',
-        period: '',
-        description: 'For families, small businesses, or companies',
+        name: 'Team Starter',
+        price: '$100',
+        period: '/month',
+        description: 'For 5-seat teams that want one assistant for everyone',
         icon: Building2,
         highlight: false,
         features: [
-            'Everything in Pro',
+            'Everything in Pro for 5 seats',
             'Shared calendar, shared inbox, shared follow-ups',
             'Custom OAuth tenant (Google, Microsoft, Okta)',
             'Per-action audit log with role-based access',
             'A real person on email and a quarterly check-in',
             '99.9% uptime SLA in writing',
-            'Custom helpers tuned to your specific workflow',
+            'Scales to bigger teams: see /pricing',
         ],
-        cta: 'Talk to us',
-        ctaLink: '/contact',
+        cta: 'Start team plan',
+        ctaLink: '/login?returnTo=/paywall',
         ctaIcon: ArrowRight,
         ctaStyle: 'bg-foreground/5 hover:bg-foreground/10 border border-border text-white',
     },
@@ -79,7 +79,7 @@ const Pricing: React.FC = () => {
                 headingId="pricing-heading"
                 eyebrow="Pricing"
                 title="Pick a plan, start in a minute"
-                description="Start free. Pay $19 a month when you want more. Cancel any time."
+                description="Start free. Pro at $50 a month, Team Starter at $100. Cancel any time."
             />
 
             {/* Three pricing tiers. Promote to <ul>/<li> so screen
