@@ -25,13 +25,16 @@ test.describe.configure({ timeout: 90_000 });
  */
 
 test('GET /signup redirects to /login (Wave 1 risk #1)', async ({ page }) => {
-    // domcontentloaded skips wait on fonts/images we don't need.
-    // The redirect is server-side via next/navigation::redirect, so
-    // the URL after navigation must be /login, not /signup.
-    await page.goto('/signup', { waitUntil: 'domcontentloaded', timeout: 60_000 });
+    // The redirect is server-side via next/navigation::redirect.
+    // Use waitUntil:'load' (not domcontentloaded) so Playwright follows
+    // the 307 all the way to /login. With domcontentloaded the URL
+    // can briefly read as /signup on a cold dev server before Next
+    // emits the redirect response.
+    await page.goto('/signup', { waitUntil: 'load', timeout: 60_000 });
 
     // The final URL should be /login (with no query string from us).
-    await expect(page).toHaveURL(/\/login(\?|$)/);
+    // Increase the toHaveURL polling budget to absorb cold-compile.
+    await expect(page).toHaveURL(/\/login(\?|$)/, { timeout: 30_000 });
 });
 
 test('/login is reachable directly (sanity)', async ({ page }) => {
@@ -39,17 +42,21 @@ test('/login is reachable directly (sanity)', async ({ page }) => {
     await expect(page).toHaveURL(/\/login(\?|$)/);
 });
 
-test('/pricing Team + Business CTAs go to /login?returnTo=/paywall (Wave 1 risk #3)', async ({ page }) => {
+test('/pricing Team Starter + Business CTAs go to /login?returnTo=/paywall (Wave 1 risk #3)', async ({ page }) => {
     // Marketing pages adopt theme-light at the wrapper, the page is a
     // client component; domcontentloaded is enough since we read DOM.
     await page.goto('/pricing', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    // Both Team and Business tiers must direct self-serve buyers
-    // through Privy auth to the paywall. Enterprise is the
-    // sales-call exception and is asserted separately below.
-    const ctaHrefs = await page.locator('a:has-text("Get started")').evaluateAll(els =>
-        els.map(el => (el as HTMLAnchorElement).getAttribute('href')),
-    );
+    // Both self-serve tiers must direct buyers through Privy auth to
+    // the paywall. PR #481 renamed Team -> "Team Starter" with CTA
+    // "Start team plan" while Business kept its "Get started" CTA;
+    // collect both Anchor variants so a future copy edit on either
+    // side doesn't silently re-open this risk.
+    const ctaHrefs = await page
+        .locator('a:has-text("Start team plan"), a:has-text("Get started")')
+        .evaluateAll(els =>
+            els.map(el => (el as HTMLAnchorElement).getAttribute('href')),
+        );
     expect(ctaHrefs.length).toBeGreaterThanOrEqual(2);
     for (const href of ctaHrefs) {
         expect(href).toBe('/login?returnTo=/paywall');
