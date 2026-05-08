@@ -20,6 +20,7 @@ const Navbar: React.FC<NavbarProps> = () => {
     // hunt through the homepage to find the relevant pitch.
     { name: 'iMESSAGE', targetId: 'imessage', href: '/imessage' },
     { name: 'PRICING', targetId: 'pricing', href: '/#pricing' },
+    { name: 'BLOG', targetId: 'blog', href: '/blog' },
     { name: 'FAQ', targetId: 'faq', href: '/#faq' },
   ];
 
