@@ -47,4 +47,10 @@ test('GET never leaks secrets in the 401 body', async ({ request }) => {
     // Supabase service-role artifact, even by accident.
     expect(body).not.toMatch(/ANTHROPIC_API_KEY|sk-ant-[A-Za-z0-9_-]+/);
     expect(body).not.toMatch(/inbound_messages/);
+    // PR #496 added a google_oauth adapter row. Its env-var names
+    // (GOOGLE_OAUTH_CLIENT_ID/CLIENT_SECRET/STATE_SECRET/REDIRECT_URI)
+    // and any embedded OAuth client secret must never surface in the
+    // unauth envelope either, even by accident.
+    expect(body).not.toMatch(/GOOGLE_OAUTH_(CLIENT_ID|CLIENT_SECRET|STATE_SECRET|REDIRECT_URI)/);
+    expect(body).not.toMatch(/GOCSPX-[A-Za-z0-9_-]+/);
 });
