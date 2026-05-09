@@ -21,14 +21,11 @@ export const dynamic = 'force-dynamic';
  *                because PHOTON_PROJECT_ID or PHOTON_API_KEY is
  *                missing.
  *
- * Authed-user-allowed (any logged-in Privy user, not admin-only).
- * The sibling `/api/health/adapters` route surfaces detailed env-var
- * status to admins; this endpoint is the user-facing equivalent and
- * deliberately leaks no env-var names.
- *
- * Public allowlist is NOT extended for this route. The middleware
- * gates anonymous callers via Privy. We don't want a public uptime
- * probe to telegraph operational state to scanners.
+ * Public-allowlisted via the existing `/api/health` middleware prefix
+ * (middleware.ts:43 matches with startsWith), so anonymous uptime
+ * probes work. The response deliberately leaks no env-var names so a
+ * scanner can't fingerprint missing credentials. The detailed env-var
+ * view lives at `/api/health/adapters`, which is admin-gated.
  */
 export async function GET(request: Request) {
     const meta = withRequestMeta(request, 'health.imessage');
