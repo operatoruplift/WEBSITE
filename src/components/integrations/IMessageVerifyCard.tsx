@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Phone, Check, Loader2, MessageSquare, Save, Trash2, Send } from 'lucide-react';
 import { Card, CardContent } from '@/src/components/ui/Card';
 import { useToast } from '@/src/components/ui/Toast';
+import { AgentStatusPill } from '@/src/components/photon/AgentStatusPill';
 
 /**
  * iMessage phone-verification card for the dashboard /integrations page.
@@ -268,7 +269,15 @@ export function IMessageVerifyCard() {
                                 <Check size={18} className="text-emerald-400" />
                             </div>
                             <div>
-                                <h3 className="text-sm font-semibold text-white">iMessage verified</h3>
+                                <div className="flex items-center gap-2">
+                                    <h3 className="text-sm font-semibold text-white">iMessage verified</h3>
+                                    {/* Sanitized server status. Dot turns amber if the
+                                        LLM key is missing on Vercel (bot replies with the
+                                        canned ack), red if Photon adapter env vars are
+                                        missing (bot can't reply at all). Renders nothing
+                                        while loading or on a network error. */}
+                                    <AgentStatusPill />
+                                </div>
                                 <span className="text-[10px] font-mono text-gray-500">Phone {phone}</span>
                             </div>
                         </div>
