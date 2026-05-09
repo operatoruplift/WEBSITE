@@ -115,8 +115,8 @@ const CONTENT: Record<string, React.ReactNode> = {
             <ul>
                 <li><strong>iMessage</strong> via the Photon gRPC SDK (<code>@photon-ai/advanced-imessage</code>). Set <code>PHOTON_ADDRESS</code> (e.g. <code>your-instance.imsg.photon.codes:443</code>) and <code>PHOTON_TOKEN</code> from the Photon dashboard. <code>PHOTON_PROJECT_ID</code> is accepted as the subdomain and <code>PHOTON_API_KEY</code> as a token alias for legacy setups. The route 503s honestly if either is missing.</li>
             </ul>
-            <h2>Post-May-15 (registered, coming soon)</h2>
-            <p>Slack, Linear, Jira, Notion, GitHub, Drive, Stripe checkout, SMS. All listed in the tool registry as <code>comingSoon: true</code> so they appear in the picker with Approve disabled until we ship them.</p>
+            <h2>Roadmap channels (not on /integrations today)</h2>
+            <p>Slack, Linear, Jira, Notion, GitHub, Drive, Stripe checkout, SMS. None of these are wired right now and they intentionally do not appear in the <a href="/integrations">/integrations</a> grid &mdash; per the &ldquo;make work or remove&rdquo; rule, channels with no end-to-end execution stay off the marketing surface until they ship. They&apos;ll re-appear here as Shipped when wired.</p>
         </>
     ),
     'troubleshooting': (
@@ -124,8 +124,6 @@ const CONTENT: Record<string, React.ReactNode> = {
             <p className="lead">If something isn&apos;t working, this is where to start.</p>
             <h2>&ldquo;Demo rate limit reached&rdquo; on /chat</h2>
             <p>Anonymous visitors are capped at 10 requests per hour per IP. Sign in with Google or add an API key to move to the authenticated limits.</p>
-            <h2>Approval modal is greyed out with &ldquo;Coming post-May-15&rdquo;</h2>
-            <p>You hit a Tier 2 tool that&apos;s registered but not yet wired (Slack, Linear, etc). Pick a Tier 1 tool or wait for the post-launch drop.</p>
             <h2>&ldquo;Google not connected&rdquo; after I connected it</h2>
             <p>The refresh token may have expired or been revoked. Go to <a href="/integrations">/integrations</a> and click Reconnect. If it still fails, check the Google security page for revoked app access.</p>
             <h2>I don&apos;t see my receipt on /security</h2>
