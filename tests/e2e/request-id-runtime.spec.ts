@@ -43,13 +43,16 @@ const PROBES: Probe[] = [
     { name: 'health.llm', method: 'GET', path: '/api/health/llm', expectStatus: [200, 503] },
     { name: 'waitlist validation', method: 'POST', path: '/api/waitlist', body: {}, expectStatus: [400] },
     { name: 'auth.login validation', method: 'POST', path: '/api/auth/login', body: {}, expectStatus: [400] },
+    // Public-allowlisted in PR #501 so judges can independently verify
+    // receipts. Anonymous always 200s (or 500 on a signing-key load
+    // failure). Header still required either way.
+    { name: 'receipts.public-key', method: 'GET', path: '/api/receipts/public-key', expectStatus: [200, 500] },
 
     // Auth-gated routes: middleware returns 401 with X-Request-Id (the
     // fix this PR ships). Either we hit the middleware 401 OR the route
     // handler envelope, both must carry the header.
     { name: 'whoami', method: 'GET', path: '/api/whoami', expectStatus: [401, 403] },
     { name: 'dashboard.stats', method: 'GET', path: '/api/dashboard/stats', expectStatus: [200, 401, 403] },
-    { name: 'receipts.public-key', method: 'GET', path: '/api/receipts/public-key', expectStatus: [200, 401, 500] },
     { name: 'subscription.post fall-through', method: 'POST', path: '/api/subscription', body: { action: 'unknown_action' }, expectStatus: [401, 410] },
     { name: 'x402 charge (410 gone)', method: 'POST', path: '/api/tools/x402', body: { action: 'charge', params: { amount: 1 } }, expectStatus: [401, 410] },
     { name: 'tools.web', method: 'POST', path: '/api/tools/web', body: { action: 'search', params: { query: 'x' } }, expectStatus: [401, 403] },
