@@ -2,7 +2,7 @@
 
 **Track**: ERC-8004 + x402
 **Network**: Solana devnet
-**Live demo**: https://operatoruplift.com/demo
+**Live demo**: https://operatoruplift.com/demo/hackathon (or `/demo`, which redirects)
 
 ---
 
@@ -85,7 +85,7 @@ Anyone — judge, user, auditor — can verify:
 
 Judge needs: a Google account connected to operatoruplift.com. No Solana wallet required (devnet is server-simulated).
 
-1. Open `https://operatoruplift.com/demo` — walks you through the flow with a diagram.
+1. Open `https://operatoruplift.com/demo/hackathon` (or `/demo`, redirects there) — walks you through the flow with a diagram.
 2. Log in via Privy Google at `/login`.
 3. Go to `/integrations` → Connect Google Calendar & Gmail.
 4. Go to `/chat`. Type: **"Schedule a 30-minute coffee chat tomorrow at 3 PM called 'Loops House demo'"**.
