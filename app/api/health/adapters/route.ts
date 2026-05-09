@@ -61,6 +61,7 @@ export async function GET(request: Request) {
         const mbEr = magicBlockSurfaceStatus();
         const mbPaymentsActive = paymentsEnabled();
         const anthropic = anthropicStatus();
+        const google = googleOAuthStatus();
         const photonInbox = await photonInboxStatus();
 
         const adapters = [
@@ -79,6 +80,12 @@ export async function GET(request: Request) {
                 active: anthropic.active,
                 reason: anthropic.reason,
                 details: { model: anthropic.model },
+            },
+            {
+                name: 'google_oauth',
+                active: google.active,
+                reason: google.reason,
+                details: google.details,
             },
             {
                 name: 'photon_inbox',
@@ -134,6 +141,56 @@ function anthropicStatus(): AnthropicStatus {
         active: false,
         reason: 'ANTHROPIC_API_KEY missing; iMessage agent will fall back to a fixed-string ack.',
         model,
+    };
+}
+
+interface GoogleOAuthStatus {
+    active: boolean;
+    reason: string;
+    details: {
+        clientIdConfigured: boolean;
+        clientSecretConfigured: boolean;
+        stateSecretConfigured: boolean;
+        redirectUriConfigured: boolean;
+    };
+}
+
+/**
+ * Checks Google OAuth env vars without importing lib/google so this
+ * route stays a pure read of `process.env`. Reports the four vars
+ * needed for the connect flow + agent's iMessage YES executor:
+ *   GOOGLE_OAUTH_CLIENT_ID
+ *   GOOGLE_OAUTH_CLIENT_SECRET
+ *   GOOGLE_OAUTH_STATE_SECRET
+ *   GOOGLE_OAUTH_REDIRECT_URI
+ *
+ * Without all four, the iMessage agent receives the YES, hits the
+ * Google bridge, and returns a `google_not_connected` reply to the
+ * user, even when the user expects the Gmail draft to materialize.
+ */
+function googleOAuthStatus(): GoogleOAuthStatus {
+    const clientIdConfigured = Boolean(process.env.GOOGLE_OAUTH_CLIENT_ID?.trim());
+    const clientSecretConfigured = Boolean(process.env.GOOGLE_OAUTH_CLIENT_SECRET?.trim());
+    const stateSecretConfigured = Boolean(process.env.GOOGLE_OAUTH_STATE_SECRET?.trim());
+    const redirectUriConfigured = Boolean(process.env.GOOGLE_OAUTH_REDIRECT_URI?.trim());
+    const allSet = clientIdConfigured && clientSecretConfigured && stateSecretConfigured && redirectUriConfigured;
+
+    if (allSet) {
+        return {
+            active: true,
+            reason: 'Google OAuth wired: clients can Connect Google and the iMessage YES path can fire Gmail/Calendar tools.',
+            details: { clientIdConfigured, clientSecretConfigured, stateSecretConfigured, redirectUriConfigured },
+        };
+    }
+    const missing: string[] = [];
+    if (!clientIdConfigured) missing.push('GOOGLE_OAUTH_CLIENT_ID');
+    if (!clientSecretConfigured) missing.push('GOOGLE_OAUTH_CLIENT_SECRET');
+    if (!stateSecretConfigured) missing.push('GOOGLE_OAUTH_STATE_SECRET');
+    if (!redirectUriConfigured) missing.push('GOOGLE_OAUTH_REDIRECT_URI');
+    return {
+        active: false,
+        reason: `Google OAuth incomplete: missing ${missing.join(', ')}. Connect Google flow will fail, and the iMessage YES path will reply google_not_connected.`,
+        details: { clientIdConfigured, clientSecretConfigured, stateSecretConfigured, redirectUriConfigured },
     };
 }
 
