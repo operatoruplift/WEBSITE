@@ -52,12 +52,11 @@ test('homepage Channels section does NOT include Slack, Discord, or Phone', asyn
     // fires before the regression hits the deck.
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    // Scope to the Channels section by aria-labelledby pattern. The
+    // Scope to the Channels section by id="channels" anchor. The
     // homepage has many other sections that may legitimately mention
-    // these brand names (e.g. blog teasers).
-    const channelsSection = page.locator('section').filter({
-        has: page.getByRole('heading', { level: 2, name: /channels/i }).first(),
-    }).first();
+    // these brand names (e.g. blog teasers); we only want to assert
+    // about the Channels grid itself.
+    const channelsSection = page.locator('section#channels');
     await expect(channelsSection).toBeVisible({ timeout: 10_000 });
 
     const text = (await channelsSection.innerText()).toLowerCase();
