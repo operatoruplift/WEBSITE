@@ -86,6 +86,7 @@ export function PhotonHealthCard({ className }: Props) {
 
     const photon = data?.adapters?.find(a => a.name === 'photon');
     const inbox = data?.adapters?.find(a => a.name === 'photon_inbox');
+    const anthropic = data?.adapters?.find(a => a.name === 'anthropic');
 
     return (
         <div className={`p-3 rounded-xl border border-white/10 bg-white/[0.02] ${className ?? ''}`}>
@@ -109,6 +110,16 @@ export function PhotonHealthCard({ className }: Props) {
                     label="Photon inbox (Supabase)"
                     active={inbox?.active ?? false}
                     reason={inbox?.reason}
+                />
+                <Row
+                    label="Anthropic LLM (replies)"
+                    active={anthropic?.active ?? false}
+                    reason={anthropic?.reason}
+                    hint={
+                        anthropic && !anthropic.active
+                            ? 'ANTHROPIC_API_KEY not set; agent falls back to a fixed-string ack'
+                            : undefined
+                    }
                 />
             </div>
             <p className="text-[10px] font-mono text-gray-600 mt-2">
