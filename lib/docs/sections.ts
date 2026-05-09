@@ -48,7 +48,7 @@ export const DOC_SECTIONS: DocEntry[] = [
     {
         slug: 'integrations',
         title: 'Integrations',
-        summary: 'Google Calendar + Gmail today. Slack, Linear, Notion, GitHub post-May-15.',
+        summary: 'Google Calendar + Gmail wired today. Roadmap channels return to /integrations once they ship.',
         group: 'Integrations',
     },
     {
