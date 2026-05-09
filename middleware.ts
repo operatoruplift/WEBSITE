@@ -41,6 +41,12 @@ const PUBLIC_ROUTES = [
     '/api/sns/resolve',
     // /api/health is expected to be probeable by uptime checks without auth
     '/api/health',
+    // /api/receipts/public-key returns the ed25519 pubkey used to sign
+    // receipts. The whole point of an asymmetric verification primitive
+    // is that anyone can fetch it. Hackathon judges use this to verify
+    // a receipt's signature independently — see /docs/receipts. The
+    // sibling /api/receipts route (user receipt list) stays auth-gated.
+    '/api/receipts/public-key',
     // Inbound webhooks from external services (Photon Spectrum, etc.)
     // have their own signature-based auth. Privy tokens don't apply.
     '/api/webhooks/',
