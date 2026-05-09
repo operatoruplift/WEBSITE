@@ -28,7 +28,7 @@ Steps 4 and 5 use `executeToolCall` from `lib/toolCalls.ts` — the **same funct
 ## What the runner is NOT
 
 - **Not an auto-login.** Sign in at `/login` first; the runner only verifies the session.
-- **Not a wallet auto-sign.** The $19/month USDC subscription (step 3) is paid through `/paywall` with Phantom. The runner only *checks* whether it landed.
+- **Not a wallet auto-sign.** The $50/month USDC subscription (step 3) is paid through `/paywall` with Phantom. The runner only *checks* whether it landed.
 - **Not a replacement for `/chat`.** It's diagnostic. `/chat` is the product.
 
 ## How to run
@@ -37,7 +37,7 @@ Steps 4 and 5 use `executeToolCall` from `lib/toolCalls.ts` — the **same funct
 2. Sign in at `/login` with the admin Google account.
 3. Navigate to `/settings/part2-runner`.
 4. Click through steps 1 → 2 → 3 → 4 → 5 in order.
-5. If step 3 fails (subscription not active), use the **Open paywall** link that appears, complete the $19 USDC payment, then come back and re-click **Check subscription**.
+5. If step 3 fails (subscription not active), use the **Open paywall** link that appears, complete the $50 USDC payment, then come back and re-click **Check subscription**.
 6. Steps 4 and 5 cost **$0.01 USDC each** (x402, server-settled on Solana devnet). A `Ref: req_…` shows for every attempt, pass or fail, with a Copy button.
 
 ## Reading the result panel

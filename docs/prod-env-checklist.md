@@ -40,7 +40,7 @@ Follow this in `Vercel → Project → Settings → Environment Variables` (scop
 
 **Confirm via:** `GET /api/health/llm` returns `{ok:true, upCount ≥ 1}` → LLM keys fine. `/settings → Diagnostics` (signed-in) shows `Google: Connected` after a successful Connect flow → Google OAuth triplet fine. `GET /api/health/adapters` (admin) shows `photon.active: true` → iMessage send path is wired.
 
-## Column 2 — Required for Payments ($19 subscription + $0.01 per write)
+## Column 2 — Required for Payments ($50 subscription + $0.01 per write)
 
 | Env | Label | Used in | Breaks if missing | Safe default |
 |---|---|---|---|---|
@@ -104,10 +104,10 @@ curl -s https://www.operatoruplift.com/api/health/llm \
 - `Google: Not connected` after consent → one of `GOOGLE_OAUTH_CLIENT_ID / GOOGLE_OAUTH_CLIENT_SECRET / GOOGLE_OAUTH_STATE_SECRET` missing.
 - `redirect_uri_mismatch` → `GOOGLE_OAUTH_REDIRECT_URI` doesn't match Google Cloud Console's authorized URI, or the Google Console hasn't been updated to include the prod URL.
 
-### Minute 4–7 — paywall (real $19)
+### Minute 4–7 — paywall (real $50)
 
-1. Visit `/paywall`. Clarifier line "Unlocks **Real Mode**..." visible under `$19/month`.
-2. Click **Pay $19 USDC**.
+1. Visit `/paywall`. Clarifier line "Unlocks **Real Mode**..." visible under `$50/month`.
+2. Click **Pay $50 USDC**.
 3. Scan the Solana Pay URL or copy the recipient address into Phantom.
 4. Pay. Poll flips to `active` within ~30s.
 5. Redirects to `/chat?subscribed=1`, toast "Subscription active. Real Mode ready." fires, URL strips the param.
