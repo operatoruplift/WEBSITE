@@ -18,6 +18,10 @@ interface AdapterDetails {
     path?: string;
     projectIdConfigured?: boolean;
     secretConfigured?: boolean;
+    clientIdConfigured?: boolean;
+    clientSecretConfigured?: boolean;
+    stateSecretConfigured?: boolean;
+    redirectUriConfigured?: boolean;
 }
 
 interface AdapterStatus {
@@ -87,6 +91,19 @@ export function PhotonHealthCard({ className }: Props) {
     const photon = data?.adapters?.find(a => a.name === 'photon');
     const inbox = data?.adapters?.find(a => a.name === 'photon_inbox');
     const anthropic = data?.adapters?.find(a => a.name === 'anthropic');
+    const google = data?.adapters?.find(a => a.name === 'google_oauth');
+
+    // Surface the FIRST missing Google env var as the hint, since
+    // showing four "missing" toasts would be noisy. Operator fixes
+    // them one at a time.
+    const googleHint = google && !google.active ? (() => {
+        const d = google.details;
+        if (!d?.clientIdConfigured) return 'GOOGLE_OAUTH_CLIENT_ID not set';
+        if (!d?.clientSecretConfigured) return 'GOOGLE_OAUTH_CLIENT_SECRET not set';
+        if (!d?.stateSecretConfigured) return 'GOOGLE_OAUTH_STATE_SECRET not set';
+        if (!d?.redirectUriConfigured) return 'GOOGLE_OAUTH_REDIRECT_URI not set';
+        return undefined;
+    })() : undefined;
 
     return (
         <div className={`p-3 rounded-xl border border-white/10 bg-white/[0.02] ${className ?? ''}`}>
@@ -120,6 +137,12 @@ export function PhotonHealthCard({ className }: Props) {
                             ? 'ANTHROPIC_API_KEY not set; agent falls back to a fixed-string ack'
                             : undefined
                     }
+                />
+                <Row
+                    label="Google OAuth (Gmail/Calendar)"
+                    active={google?.active ?? false}
+                    reason={google?.reason}
+                    hint={googleHint}
                 />
             </div>
             <p className="text-[10px] font-mono text-gray-600 mt-2">
