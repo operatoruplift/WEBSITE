@@ -49,23 +49,30 @@ const CONTENT: Record<string, React.ReactNode> = {
         <>
             <p className="lead">A receipt is a small signed JSON blob that proves a specific action happened with specific parameters on a specific account at a specific time.</p>
             <h2>Shape</h2>
+            <p>Two layers: an inner <code>ReceiptPayload</code> (what gets signed) and an outer <code>SignedReceipt</code> envelope (the signature + the pubkey beside it).</p>
             <pre><code>{`{
-  "user_id": "did:privy:...",
-  "tool": "calendar",
-  "action": "create",
-  "params_hash": "sha256:...",
-  "invoice_reference": "inv_cal_...",
-  "payment_tx": "devnet_sim_...",
-  "executed_at": "2026-04-17T09:15:22Z",
-  "receipt_id": "rec_...",
-  "signature": "<ed25519 over canonical JSON>",
-  "public_key": "<server pubkey>"
+  "receipt": {
+    "receipt_reference": "rcpt_cal_1700000000000_abcd1234",
+    "timestamp": "2026-04-17T09:15:22.000Z",
+    "user_id": "did:privy:...",
+    "agent_id": null,
+    "tool": "calendar",
+    "action": "create",
+    "params_hash": "sha256-...",
+    "result_hash": "sha256-...",
+    "invoice_reference": "inv_cal_...",
+    "amount_usdc": 0.01,
+    "chain": "solana-devnet",
+    "payment_tx": "devnet-sim"
+  },
+  "signature": "<base64 ed25519 over canonical JSON of receipt>",
+  "public_key": "<base64 raw 32-byte ed25519 pubkey>"
 }`}</code></pre>
             <h2>Verifying a receipt</h2>
             <ol>
-                <li>Fetch the public key from <a href="/api/receipts/public-key">/api/receipts/public-key</a>.</li>
-                <li>Canonicalise the receipt (everything except the <code>signature</code> field).</li>
-                <li>Verify the ed25519 signature of the canonical JSON with that public key.</li>
+                <li>Fetch the public key from <a href="/api/receipts/public-key">/api/receipts/public-key</a> (returns the same base64 32-byte pubkey as the <code>public_key</code> field).</li>
+                <li>Canonicalise the inner <code>receipt</code> object (sort keys, no whitespace). Don&apos;t include <code>signature</code> or <code>public_key</code> &mdash; only the inner payload.</li>
+                <li>Verify the ed25519 signature of the canonical JSON with that public key. The <code>signature</code> field is base64-encoded.</li>
                 <li>If the signature checks, the receipt is authentic. If it doesn&apos;t, we faked it and you caught us.</li>
             </ol>
             <h2>Merkle root and Solana devnet</h2>
