@@ -17,7 +17,7 @@ export const maxDuration = 30;
  * per-character, so anonymous access would let scanners burn the
  * quota. Non-admin signed-in users CAN call this (so a non-admin
  * editor could regenerate narration if needed) but the deck note
- * about voice not being a product pillar still applies — this
+ * about voice not being a product pillar still applies, so this
  * endpoint never appears in /chat or any other consumer flow.
  *
  * Request:

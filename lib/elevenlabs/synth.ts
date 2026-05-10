@@ -5,7 +5,7 @@
  * feature. The demo voiceover may use ElevenLabs but that is
  * presentation, not pillar." This module backs the
  * `/api/voice/synth` route used to generate the demo recording's
- * narration MP3 — not a runtime user feature.
+ * narration MP3 (not a runtime user feature).
  *
  * Single env: ELEVENLABS_API_KEY. Optional: ELEVENLABS_VOICE_ID
  * (defaults to "Rachel", ElevenLabs' canonical clear-narration

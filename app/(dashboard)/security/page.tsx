@@ -29,8 +29,8 @@ interface SignedReceiptRow {
     created_at: string;
     /** PR #515: present once the cron at /api/cron/filecoin-anchor
      *  pushes the SignedReceipt JSON to the configured provider.
-     *  When NULL the "View on Filecoin" link is hidden — no
-     *  awkward "pending" state, no overclaim. */
+     *  When NULL the "View on Filecoin" link is hidden, so there is no
+     *  awkward "pending" state and no overclaim. */
     filecoin_cid?: string | null;
     filecoin_provider?: string | null;
 }

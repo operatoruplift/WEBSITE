@@ -36,7 +36,7 @@ test('POST /api/voice/synth returns 401 envelope when anonymous', async ({ reque
 
 test('POST /api/voice/synth never leaks ELEVENLABS_API_KEY in 401 body', async ({ request }) => {
     // The route is env-gated. Even on the unauth 401 path, the
-    // env-var name should never surface — a scanner shouldn't
+    // env-var name should never surface, so a scanner can't
     // fingerprint the missing key off this endpoint.
     const res = await request.post('/api/voice/synth', {
         headers: { 'Content-Type': 'application/json' },

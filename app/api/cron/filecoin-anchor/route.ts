@@ -29,7 +29,7 @@ export const maxDuration = 60;
  *   - 200 with `{ anchored, skipped, errors }` per run so the operator
  *     can verify the cron is doing work
  *
- * The receipt itself is not modified — `filecoin_cid` and
+ * The receipt itself is not modified. `filecoin_cid` and
  * `filecoin_provider` are external provenance metadata stored on the
  * tool_receipts row. The signed canonical JSON contract is preserved
  * (PR #510 + lib/x402/receipts.ts agree on it).

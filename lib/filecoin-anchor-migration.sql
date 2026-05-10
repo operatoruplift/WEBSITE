@@ -3,7 +3,7 @@
 -- the cron at /api/cron/filecoin-anchor can record where a receipt was
 -- pushed.
 --
--- The CID is stored OUTSIDE the signed payload — adding it to
+-- The CID is stored OUTSIDE the signed payload. Adding it to
 -- ReceiptPayload would break the canonical signature contract that
 -- /docs/receipts (PR #510) and lib/x402/receipts.ts agree on.
 -- Anchoring is provenance metadata, not part of the signed receipt.

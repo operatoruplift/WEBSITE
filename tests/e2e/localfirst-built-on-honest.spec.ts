@@ -24,7 +24,7 @@ test.describe.configure({ timeout: 90_000 });
  *
  * Project rule "make work or remove" (.claude/rules/project-overrides.md):
  * a Soon pill must accompany every roadmap item. Promoting a Soon item
- * to shipping without wiring it would overclaim — and a deck slide
+ * to shipping without wiring it would overclaim, and a deck slide
  * referencing the strip (slide 6) would then be telling a story the
  * code can't back. This spec catches that drift before it ships.
  */

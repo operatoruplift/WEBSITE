@@ -8,7 +8,7 @@
  *
  * The receipt itself is unchanged: ed25519 signature + canonical JSON
  * is already the source of truth (lib/x402/receipts.ts). Filecoin is
- * external provenance metadata — a public archive of the signed bytes.
+ * external provenance metadata, a public archive of the signed bytes.
  *
  * Three providers supported, picked via FILECOIN_PROVIDER env:
  *   - lighthouse  (default; single-token API, easiest)
@@ -18,7 +18,7 @@
  * If no provider env is set, anchorReceipt() returns { ok: false,
  * reason: 'not_configured' } and the caller should leave the
  * filecoin_cid column NULL. The /security UI hides the link when
- * NULL — no awkward "pending" state, no overclaim.
+ * NULL, so there is no awkward "pending" state and no overclaim.
  *
  * Per docs/filecoin-decision.md: this is reversible, opt-in, and
  * env-gated. The marketing pill on LocalFirst flips from "Soon" to
@@ -52,7 +52,7 @@ export function getFilecoinProvider(): ProviderConfig | null {
     const provider = (process.env.FILECOIN_PROVIDER || '').trim().toLowerCase() as FilecoinProvider | '';
 
     // Lighthouse single-token. Default if FILECOIN_PROVIDER unset but the
-    // Lighthouse key is present — convenient default for the "easy" path.
+    // Lighthouse key is present. Convenient default for the "easy" path.
     if ((!provider || provider === 'lighthouse') && process.env.LIGHTHOUSE_API_KEY) {
         return { provider: 'lighthouse', token: process.env.LIGHTHOUSE_API_KEY };
     }
