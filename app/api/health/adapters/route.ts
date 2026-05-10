@@ -5,6 +5,8 @@ import { getCapabilities } from '@/lib/capabilities';
 import { photonStatus } from '@/lib/photon/adapter';
 import { magicBlockSurfaceStatus } from '@/lib/magicblock/adapter';
 import { paymentsEnabled } from '@/lib/magicblock/payments';
+import { filecoinStatus } from '@/lib/filecoin/anchor';
+import { elevenLabsStatus } from '@/lib/elevenlabs/synth';
 
 export const runtime = 'nodejs';
 
@@ -63,6 +65,8 @@ export async function GET(request: Request) {
         const anthropic = anthropicStatus();
         const google = googleOAuthStatus();
         const photonInbox = await photonInboxStatus();
+        const filecoin = filecoinStatus();
+        const elevenlabs = elevenLabsStatus();
 
         const adapters = [
             {
@@ -105,6 +109,22 @@ export async function GET(request: Request) {
                 reason: mbPaymentsActive
                     ? 'MAGICBLOCK_PAYMENTS_ENABLED=1 and MAGICBLOCK_PAYMENTS_TOKEN present.'
                     : 'Needs MAGICBLOCK_PAYMENTS_ENABLED=1 and MAGICBLOCK_PAYMENTS_TOKEN in Vercel env.',
+            },
+            {
+                name: 'filecoin',
+                active: filecoin.active,
+                reason: filecoin.active
+                    ? `Filecoin anchoring active via ${filecoin.provider}. Cron at /api/cron/filecoin-anchor publishes signed receipts.`
+                    : 'Set FILECOIN_PROVIDER + provider token (LIGHTHOUSE_API_KEY or PINATA_JWT) in Vercel env to activate.',
+                details: { provider: filecoin.provider },
+            },
+            {
+                name: 'elevenlabs',
+                active: elevenlabs.active,
+                reason: elevenlabs.active
+                    ? `ElevenLabs TTS active via voice ${elevenlabs.voiceId}. Endpoint at /api/voice/synth.`
+                    : 'Set ELEVENLABS_API_KEY in Vercel env to activate.',
+                details: { voiceId: elevenlabs.voiceId },
             },
         ];
 

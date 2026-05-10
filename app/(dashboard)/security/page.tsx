@@ -27,6 +27,12 @@ interface SignedReceiptRow {
     signature: string;
     public_key: string;
     created_at: string;
+    /** PR #515: present once the cron at /api/cron/filecoin-anchor
+     *  pushes the SignedReceipt JSON to the configured provider.
+     *  When NULL the "View on Filecoin" link is hidden, so there is no
+     *  awkward "pending" state and no overclaim. */
+    filecoin_cid?: string | null;
+    filecoin_provider?: string | null;
 }
 
 const CATEGORY_META: Record<string, { label: string; color: string; icon: typeof Shield }> = {
@@ -279,6 +285,23 @@ export default function SecurityPage() {
                                                 <p className="text-[10px] text-gray-500 font-mono mt-1 truncate">
                                                     tx: {r.payment_tx}
                                                 </p>
+                                                {r.filecoin_cid && (
+                                                    <p className="text-[10px] font-mono mt-1 truncate">
+                                                        <span className="text-gray-500">filecoin: </span>
+                                                        <a
+                                                            href={`https://${r.filecoin_cid}.ipfs.dweb.link`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-[#F97316] hover:underline decoration-dotted"
+                                                            aria-label="View signed receipt on Filecoin via IPFS gateway"
+                                                        >
+                                                            {r.filecoin_cid.slice(0, 12)}…
+                                                        </a>
+                                                        {r.filecoin_provider && (
+                                                            <span className="text-gray-600 ml-1">({r.filecoin_provider})</span>
+                                                        )}
+                                                    </p>
+                                                )}
                                             </div>
                                             <button
                                                 onClick={() => copyReceipt(r)}

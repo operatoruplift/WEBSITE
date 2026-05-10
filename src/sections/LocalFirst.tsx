@@ -168,12 +168,25 @@ const LocalFirst: React.FC = () => {
                             <span className="inline-flex items-center gap-2 text-sm text-foreground">
                                 <Send aria-hidden className="w-4 h-4" /> Photon
                             </span>
-                            {/* Roadmap: tagged Soon so we don't overclaim. Base
-                                + Ethereum land when we add an x402 buyer client
-                                that pays paid APIs (lib/paysh roadmap).
-                                Filecoin is the receipt-anchoring path documented
-                                in docs/filecoin-decision.md. ElevenLabs is voice,
-                                gated on Phone channel work. */}
+                            {/* Filecoin: receipt anchoring path is now wired
+                                (lib/filecoin/anchor.ts + the cron at
+                                /api/cron/filecoin-anchor). Live once
+                                FILECOIN_PROVIDER + LIGHTHOUSE_API_KEY (or
+                                PINATA_JWT) are set on Vercel. The /security
+                                page renders a "View on Filecoin" link as
+                                soon as the cron fires.
+                                ElevenLabs: TTS endpoint at /api/voice/synth
+                                lives behind ELEVENLABS_API_KEY. Used for the
+                                demo voiceover, not a runtime user surface. */}
+                            <span className="inline-flex items-center gap-2 text-sm text-foreground">
+                                <Box aria-hidden className="w-4 h-4" /> Filecoin
+                            </span>
+                            <span className="inline-flex items-center gap-2 text-sm text-foreground">
+                                <AudioWaveform aria-hidden className="w-4 h-4" /> ElevenLabs
+                            </span>
+                            {/* Roadmap: Base + Ethereum still tagged Soon; they
+                                land when we add an x402 buyer client that pays
+                                paid APIs (lib/paysh roadmap). */}
                             <span className="inline-flex items-center gap-2 text-sm text-muted">
                                 <Circle aria-hidden className="w-4 h-4" /> Base
                                 <span className="text-[9px] font-mono font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border border-[#F97316]/40 text-[#F97316] bg-[#F97316]/10">
@@ -182,18 +195,6 @@ const LocalFirst: React.FC = () => {
                             </span>
                             <span className="inline-flex items-center gap-2 text-sm text-muted">
                                 <Hexagon aria-hidden className="w-4 h-4" /> Ethereum
-                                <span className="text-[9px] font-mono font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border border-[#F97316]/40 text-[#F97316] bg-[#F97316]/10">
-                                    Soon
-                                </span>
-                            </span>
-                            <span className="inline-flex items-center gap-2 text-sm text-muted">
-                                <Box aria-hidden className="w-4 h-4" /> Filecoin
-                                <span className="text-[9px] font-mono font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border border-[#F97316]/40 text-[#F97316] bg-[#F97316]/10">
-                                    Soon
-                                </span>
-                            </span>
-                            <span className="inline-flex items-center gap-2 text-sm text-muted">
-                                <AudioWaveform aria-hidden className="w-4 h-4" /> ElevenLabs
                                 <span className="text-[9px] font-mono font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border border-[#F97316]/40 text-[#F97316] bg-[#F97316]/10">
                                     Soon
                                 </span>
