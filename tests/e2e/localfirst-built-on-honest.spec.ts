@@ -7,15 +7,20 @@ test.describe.configure({ timeout: 90_000 });
 /**
  * Locks in the LocalFirst "Built on" infrastructure strip honesty.
  *
- * PR #491 replaced the old "Works with the model you already pay for"
- * provider strip with a "Built on" infrastructure strip. The strip
- * has two halves:
+ * History:
+ *   PR #491 replaced the old "Works with the model you already pay
+ *   for" provider strip with a "Built on" infrastructure strip.
+ *   PR #515 wired Filecoin receipt-anchoring (lib/filecoin/anchor.ts)
+ *   and the ElevenLabs TTS endpoint (/api/voice/synth), promoting
+ *   both from Soon -> Shipping.
  *
- *   Shipping (no pill, actually wired in the codebase today):
- *     Solana, Vercel, Supabase, Photon
+ * Current strip composition:
  *
- *   Roadmap (Soon pill, infrastructure not yet wired):
- *     Base, Ethereum, Filecoin, ElevenLabs
+ *   Shipping (no pill, wired in the codebase today):
+ *     Solana, Vercel, Supabase, Photon, Filecoin, ElevenLabs
+ *
+ *   Roadmap (Soon pill, not yet wired):
+ *     Base, Ethereum
  *
  * Project rule "make work or remove" (.claude/rules/project-overrides.md):
  * a Soon pill must accompany every roadmap item. Promoting a Soon item
@@ -38,7 +43,7 @@ test('homepage Built on strip lists the four shipping providers without Soon pil
     const builtOnSection = page.getByText('Built on').first().locator('xpath=ancestor::div[contains(@class, "rounded-2xl")][1]');
     await expect(builtOnSection).toBeVisible({ timeout: 10_000 });
 
-    for (const provider of ['Solana', 'Vercel', 'Supabase', 'Photon']) {
+    for (const provider of ['Solana', 'Vercel', 'Supabase', 'Photon', 'Filecoin', 'ElevenLabs']) {
         const item = builtOnSection.locator(`span.inline-flex:has-text("${provider}")`).first();
         await expect(item, `${provider} should appear in the Built on strip`).toBeVisible();
         // Shipping items must NOT have a Soon pill in their span.
@@ -55,7 +60,10 @@ test('homepage Built on strip flags every roadmap provider with a Soon pill', as
     const builtOnSection = page.getByText('Built on').first().locator('xpath=ancestor::div[contains(@class, "rounded-2xl")][1]');
     await expect(builtOnSection).toBeVisible({ timeout: 10_000 });
 
-    for (const provider of ['Base', 'Ethereum', 'Filecoin', 'ElevenLabs']) {
+    // After PR #515 wired Filecoin + ElevenLabs, only Base + Ethereum
+    // remain on the roadmap (gated on the lib/paysh x402 buyer-client
+    // work).
+    for (const provider of ['Base', 'Ethereum']) {
         const item = builtOnSection.locator(`span.inline-flex:has-text("${provider}")`).first();
         await expect(item, `${provider} should appear in the Built on strip`).toBeVisible();
         const text = (await item.innerText()).toLowerCase();
