@@ -67,6 +67,8 @@ Follow this in `Vercel → Project → Settings → Environment Variables` (scop
 | `SNS_EXPECTED_OWNER` | **REQUIRED LATER** (optional) | `lib/sns.ts` | Controls whether `operatoruplift.sol` renders with a "Verified" badge on `/profile`. Cosmetic. |
 | `ANTHROPIC_MODEL` / `OPENAI_MODEL` / ... | **DEV ONLY** | ad-hoc overrides | Use `mapModelId` defaults unless you have a reason. |
 | `CRON_SECRET` (if cron hooks use header auth) | **REQUIRED LATER** | `/api/cron/*` | Set if you move cron off Vercel Cron's built-in auth. |
+| `FILECOIN_PROVIDER` + `LIGHTHOUSE_API_KEY` (or `PINATA_JWT`) | **REQUIRED for Filecoin receipt anchoring (PR #515)** | `lib/filecoin/anchor.ts`, `/api/cron/filecoin-anchor` | Without these, receipts ship signed but never anchor to Filecoin. The `filecoin: <cid>...` link on `/security` stays hidden (no overclaim). Set `FILECOIN_PROVIDER=lighthouse` for the easy path; grab the token from `files.lighthouse.storage`. Then run `lib/filecoin-anchor-migration.sql` in Supabase and curl the cron once to anchor existing receipts. |
+| `ELEVENLABS_API_KEY` | **REQUIRED for /api/voice/synth (PR #515)** | `lib/elevenlabs/synth.ts`, `/api/voice/synth` | Without this, the demo voiceover endpoint returns 503 `provider_unavailable` honestly. Used to generate the recording narration via the bash loop in `docs/demo-recording-script.md`. Optional: `ELEVENLABS_VOICE_ID` (defaults to Rachel) and `ELEVENLABS_MODEL` (defaults to `eleven_turbo_v2_5`). |
 
 ---
 
