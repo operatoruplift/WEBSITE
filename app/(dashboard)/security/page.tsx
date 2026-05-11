@@ -255,13 +255,23 @@ export default function SecurityPage() {
                             can cross-check the two. The /api/sns/resolve
                             link makes the chain visible to a curious
                             user, not just to a judge. */}
-                        <p className="text-[10px] font-mono text-gray-500 mb-4">
+                        <p className="text-[10px] font-mono text-gray-500 mb-1">
                             Signed by{' '}
                             <a href="/api/sns/resolve?name=operatoruplift.sol" target="_blank" rel="noopener"
                                className="text-[#F97316] hover:underline decoration-dotted">
                                 operatoruplift.sol
                             </a>
                             {' '}, resolves on-chain to the public key above.
+                        </p>
+                        {/* Filecoin mirror sub-line. Per-row links surface only
+                            when the cron at /api/cron/filecoin-anchor has
+                            pushed the receipt to a public IPFS gateway
+                            (Lighthouse provider). The line is always visible
+                            so the user knows what the filecoin: links in each
+                            row mean, even on a fresh account with no rows. */}
+                        <p className="text-[10px] font-mono text-gray-500 mb-4">
+                            Each receipt is also mirrored to Filecoin; click any{' '}
+                            <span className="text-[#F97316]">filecoin:</span> link below to verify the bytes on a public IPFS gateway.
                         </p>
                         {receipts.length === 0 ? (
                             <p className="text-xs text-gray-500 py-6 text-center">
