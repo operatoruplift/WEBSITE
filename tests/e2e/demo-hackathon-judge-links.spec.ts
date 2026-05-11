@@ -59,3 +59,15 @@ test('/demo/hackathon Receipt public key VerifyCard points at /api/receipts/publ
         .getAttribute('href');
     expect(href).toBe('/api/receipts/public-key');
 });
+
+test('/demo/hackathon Filecoin VerifyCard points at /security', async ({ page }) => {
+    // PR #515 wired Filecoin receipt-anchoring; the demo page added
+    // a fourth VerifyCard pointing at /security so a judge can find
+    // the per-receipt filecoin_cid link after signing in.
+    await page.goto('/demo/hackathon', { waitUntil: 'domcontentloaded', timeout: 60_000 });
+
+    const href = await page
+        .getByRole('link', { name: /Signed receipts on Filecoin/i })
+        .getAttribute('href');
+    expect(href).toBe('/security');
+});

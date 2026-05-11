@@ -75,6 +75,9 @@ const CONTENT: Record<string, React.ReactNode> = {
                 <li>Verify the ed25519 signature of the canonical JSON with that public key. The <code>signature</code> field is base64-encoded.</li>
                 <li>If the signature checks, the receipt is authentic. If it doesn&apos;t, we faked it and you caught us.</li>
             </ol>
+            <h2>Independent verification via Filecoin</h2>
+            <p>Each receipt row on <a href="/security">/security</a> renders a <code>filecoin: &lt;cid&gt;</code> link (when the cron at <code>/api/cron/filecoin-anchor</code> has run). Click it to fetch the same <code>SignedReceipt</code> JSON from a public IPFS gateway at <code>https://&lt;cid&gt;.ipfs.dweb.link</code>. The bytes on Filecoin are byte-identical to the bytes our server signed; if they don&apos;t match what <a href="/api/receipts">/api/receipts</a> returns, something has been tampered with.</p>
+            <p>Filecoin is provenance, not the source of truth. The ed25519 signature in step 3 above is what proves authenticity. Filecoin proves the bytes are public + immutable + independently retrievable.</p>
             <h2>Merkle root and Solana devnet</h2>
             <p>Every five receipts, the server computes a Merkle root and publishes it via our Anchor <code>publish_root</code> program on Solana devnet. That gives you a public commitment that makes silently-rewriting history detectable. See <Link href="/blog/audit-trail">the audit-trail post</Link> for the full pipeline.</p>
         </>

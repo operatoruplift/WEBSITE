@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
-import { ExternalLink, Check, FileJson, KeyRound, Receipt, ArrowRight, Coins, Zap } from 'lucide-react';
+import { ExternalLink, Check, FileJson, KeyRound, Receipt, ArrowRight, Coins, Zap, Box } from 'lucide-react';
 import { magicBlockSurfaceStatus } from '@/lib/magicblock/adapter';
 
 /**
@@ -132,6 +132,13 @@ export default function HackathonDemoPage() {
                             title="Receipt public key"
                             description="ed25519 pubkey for verification"
                             href="/api/receipts/public-key"
+                            external
+                        />
+                        <VerifyCard
+                            icon={Box}
+                            title="Signed receipts on Filecoin"
+                            description="Open /security after signing in to see each receipt's filecoin_cid link"
+                            href="/security"
                             external
                         />
                     </div>

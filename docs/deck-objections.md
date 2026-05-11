@@ -38,12 +38,15 @@ Mapped to the brief's four parts:
 
 ## Slides to cut
 
-- **Filecoin slide**: there is no Filecoin code in the product. Don't claim what isn't shipped. (See `docs/filecoin-decision.md`.)
-- **ElevenLabs slide**: voice is not a product feature. The demo voiceover may use ElevenLabs but that is presentation, not pillar.
 - **"Trusted by" logo wall**: there is no proof of company adoption. Replace with the "Built on the model you already pay for" marquee, which is honest.
 - **Multiple consumer-vs-enterprise pillars**: lead with consumer wedge. Mention enterprise as expansion in one bullet on the monetization slide.
 - **Tauri / desktop screen**: `desktop/tauri.conf.json` exists but `src-tauri/` doesn't. Don't show a desktop binary that isn't building.
 - **Repeated model logos in the hero**: the `Built on the model you already pay for` marquee already covers the model menu. Don't double-place.
+
+## Slides now OK to ship (post PR #515)
+
+- **Filecoin slide** is back on the table. Every signed receipt anchors to a Filecoin CID via the cron at `/api/cron/filecoin-anchor`; a judge can fetch `https://<cid>.ipfs.dweb.link` and verify the bytes match what `/api/receipts/public-key` signs. See `docs/filecoin-decision.md` "Shipped" section.
+- **ElevenLabs voiceover** is also fine to use for the recording narration. The endpoint at `/api/voice/synth` is what generated it. Still NOT a product pillar; one mention max if asked.
 
 ## Final story alignment
 
@@ -58,8 +61,8 @@ Mapped to the brief's four parts:
 | Slack / Discord | not on the marketing surface (trimmed from Channels per "make work or remove" rule) | not implemented | not in demo | cut from the deck until wired |
 | Anthropic / OpenAI / Gemini / Grok / DeepSeek | `Built on the model you already pay for` marquee | `/chat` model picker | implicit | slide 1 footer ("Built on") |
 | Llama / Ollama | not on the marquee (would-be hosted-API claim, but local-only via Ollama path in `lib/llm.ts:189`) | not in `/chat` picker (desktop app required) | not in demo | one optional roadmap bullet on slide 7 only if asked |
-| Filecoin | cut from hero | not implemented | not in demo | cut |
-| ElevenLabs | cut | not implemented | demo voiceover only | cut |
+| Filecoin | LocalFirst "Built on" strip (Shipping) | `tool_receipts.filecoin_cid` + cron at `/api/cron/filecoin-anchor` + "View on Filecoin" link on `/security` | judge clicks the IPFS gateway URL from `/security` to verify bytes match `/api/receipts/public-key` | one bullet on slide 4 (durability + independence) |
+| ElevenLabs | LocalFirst "Built on" strip (Shipping) | `/api/voice/synth` endpoint, auth-gated | narration MP3 used in the recording | recording credit only; not a product slide |
 | Tauri / desktop | mentioned in `/imessage` "What's not here yet" block | `desktop/tauri.conf.json` only | not in demo | cut |
 | Base / Ethereum | not added | not added | not in demo | cut (one chain story) |
 | MagicBlock | not surfaced | flag-gated, off by default | not in demo | one optional bullet on slide 4 only if asked |
@@ -75,7 +78,7 @@ If a feature is labeled `roadmap` in code (via `src/sections/Channels.tsx` statu
 - Gmail send from iMessage: ships (PR #452). OK to claim.
 - Daily summary across model swaps: ships (PR #455). OK to claim.
 - Tauri desktop binary: does NOT ship (`src-tauri/` missing). Don't claim.
-- Filecoin storage: does NOT ship. Don't claim. See `docs/filecoin-decision.md`.
+- Filecoin storage: ships (PR #515). OK to claim. Each receipt has a `filecoin_cid` visible on `/security` once the cron has run. See `docs/filecoin-decision.md` "Shipped" section.
 
 ## What the demo will actually prove
 
