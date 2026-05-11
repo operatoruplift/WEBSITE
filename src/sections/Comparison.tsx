@@ -25,6 +25,7 @@ const features = [
   { name: 'Tap to approve before every action',          uplift: true, zo: false, poke: true,  hermes: false, openclaw: false },
   { name: 'Signed receipt for every action',             uplift: true, zo: false, poke: false, hermes: false, openclaw: false },
   { name: 'On-chain audit log (Solana)',                 uplift: true, zo: false, poke: false, hermes: false, openclaw: false },
+  { name: 'Receipts mirrored to Filecoin / IPFS',        uplift: true, zo: false, poke: false, hermes: false, openclaw: false },
   { name: 'Pick any AI you want, mid-conversation',      uplift: true, zo: true,  poke: false, hermes: true,  openclaw: true },
   { name: 'Built-in store of helpers',                   uplift: true, zo: false, poke: true,  hermes: true,  openclaw: true },
   { name: 'Helpers that work as a team',                 uplift: true, zo: false, poke: false, hermes: true,  openclaw: true },
