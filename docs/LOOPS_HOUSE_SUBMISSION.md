@@ -27,6 +27,8 @@ Every agent action in Operator Uplift that costs the user (calendar writes, emai
 
 Receipts are persisted in Supabase and visible to the user. Anyone can verify them independently using the public key at `/api/receipts/public-key`.
 
+Each receipt is also anchored to **Filecoin** via the cron at `/api/cron/filecoin-anchor` (Lighthouse provider). The resulting `filecoin_cid` is rendered next to every receipt row on `/security` as a clickable link to `https://<cid>.ipfs.dweb.link`. A judge can fetch the same `SignedReceipt` JSON from a public IPFS gateway and byte-compare against what `/api/receipts` returns — no need to trust our Supabase. The ed25519 signature still proves authenticity; Filecoin proves the bytes are public, immutable, and independently retrievable.
+
 Each live agent publishes an **ERC-8004-style registration document** at `/agents/calendar.json` and `/agents/gmail.json` — name, description, capabilities, endpoints, pricing, and a content checksum. Clients can verify the agent hasn't been tampered with before calling it.
 
 ## How it works
