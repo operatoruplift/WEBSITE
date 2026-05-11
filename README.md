@@ -31,7 +31,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - `app/api/*` - Server-side endpoints. Every route uses `withRequestMeta` from `lib/apiHelpers.ts` to propagate `X-Request-Id` headers
 - `src/sections/` - Homepage section components
 - `src/components/` - Shared UI components
-- `lib/` - Server + shared utilities (auth, capabilities, error taxonomy, receipts)
+- `lib/` - Server + shared utilities (auth, capabilities, error taxonomy, ed25519 receipts, `lib/filecoin/anchor.ts` for IPFS pinning, `lib/elevenlabs/synth.ts` for demo voiceover)
 - `tests/e2e/` - Playwright specs (run on every PR via `.github/workflows/ci.yml`)
 
 ## CI checks
