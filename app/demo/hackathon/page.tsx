@@ -245,6 +245,7 @@ const DEMO_CLICKS = [
     'Open the Network tab, observe 402, then /pay, then 200 with receipt',
     'Go to <a href="/security" class="text-[#F97316] hover:underline">/security</a> and click <strong>Copy JSON</strong> on the new receipt',
     'Verify the signature with the public key from <a href="/api/receipts/public-key" class="text-[#F97316] hover:underline">/api/receipts/public-key</a>',
+    'Click the <strong>filecoin:</strong> link on the receipt row to fetch the same bytes from a public IPFS gateway. Byte-compare to confirm we did not tamper with the row after signing.',
 ];
 
 const VERIFIABLE: Array<{ claim: string; how: string }> = [
@@ -263,6 +264,10 @@ const VERIFIABLE: Array<{ claim: string; how: string }> = [
     {
         claim: 'Payment actually happened',
         how: 'receipt.invoice_reference + receipt.payment_tx recorded server-side in tool_invoices + tool_receipts.',
+    },
+    {
+        claim: 'Receipt bytes are publicly archived',
+        how: 'Every signed receipt is also pushed to Filecoin via Lighthouse; the CID is rendered next to the receipt on /security. Fetch https://<cid>.ipfs.dweb.link and byte-compare against /api/receipts.',
     },
     {
         claim: 'Per-action consent (no blanket approvals)',
