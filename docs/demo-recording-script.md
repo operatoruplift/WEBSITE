@@ -57,7 +57,7 @@ Total runtime at human pace: 80-95 seconds.
 | `STOP` keyword | no | Stops the demo literally |
 | Multi-model picker | implied via voiceover; don't open the dropdown | Showing the menu eats 5 seconds |
 | `/dev/photon` admin panel | only in fallback (see below) | Not user-facing; only for operators |
-| The signed receipt UI on `/security` | optional 6th beat if time permits | Strong trust closer; adds 15s |
+| The signed receipt UI on `/security` | optional 6th beat if time permits | Strong trust closer; adds 15s. Show the receipt row's `filecoin: <cid>...` link as the final reveal (PR #515 added it). Click and let the public IPFS gateway render the JSON for ~2s before cutting. |
 
 ## Fallback if Photon dies during recording
 
@@ -91,3 +91,32 @@ That's 25 seconds. Loses weather, loses prefs editor, but keeps the **approval-b
 ## Hard rule
 
 Do not edit any file under `lib/photon/`, `app/api/webhooks/photon/`, `app/api/integrations/imessage/`, or `lib/google/` between now and recording. The 221 photon hermetic specs cover the green path; risk of regression is higher than the marginal benefit of any tweak.
+
+## Generating the voiceover via /api/voice/synth
+
+PR #515 wired the ElevenLabs adapter at `/api/voice/synth`. Use it to generate the narration MP3 instead of a separate ElevenLabs editor:
+
+```bash
+# Generate one MP3 per voiceover line. Logged-in admin session required;
+# grab the Privy bearer token from devtools (localStorage.token).
+TOKEN="$(pbpaste)"   # paste your token first
+
+for i in 1 2 3 4 5; do
+  case $i in
+    1) TEXT="Sign in once. Your phones on file. Edit prefs from the dashboard or your phone." ;;
+    2) TEXT="Free-form chat backed by Claude Haiku. Five-turn memory across iMessage and the web." ;;
+    3) TEXT="Approval-first. Nothing irreversible without a tap." ;;
+    4) TEXT="YES means YES. Real Gmail draft created." ;;
+    5) TEXT="Receipts signed. The action is yours to publish." ;;
+  esac
+  curl -sS -X POST https://www.operatoruplift.com/api/voice/synth \
+    -H "Authorization: Bearer $TOKEN" \
+    -H "Content-Type: application/json" \
+    -d "{\"text\":\"$TEXT\"}" \
+    -o "voiceover-step-$i.mp3"
+done
+```
+
+Stitch the five MP3s in your editor of choice with ~0.3s gaps between lines. Total runtime lines up with the 80-95s recording target.
+
+Voice defaults to Rachel (clear narration). To use a different voice, set `ELEVENLABS_VOICE_ID` in Vercel or pass `voice_id` in the POST body.
