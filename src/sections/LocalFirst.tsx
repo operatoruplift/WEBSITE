@@ -75,7 +75,7 @@ const TRUST_SIGNALS: TrustSignal[] = [
     {
         icon: FileSignature,
         headline: 'Signed audit trail',
-        body: 'Every approved action gets an ed25519 signature and a Merkle root posted to Solana. Read-only, public, immutable.',
+        body: 'Every approved action gets an ed25519 signature, a Merkle root posted to Solana, and a Filecoin mirror anyone can pull from a public IPFS gateway. Read-only, public, immutable.',
     },
     {
         icon: Cpu,
