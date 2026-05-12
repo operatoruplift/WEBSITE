@@ -140,6 +140,28 @@ node -e '
 '
 ```
 
+### Verifying a receipt externally via Filecoin (no trust in our DB)
+
+Each signed receipt is also pinned to a public IPFS gateway by the
+cron at `/api/cron/filecoin-anchor` (Lighthouse provider). The
+`tool_receipts.filecoin_cid` value renders next to each row on
+`/security` as a clickable link.
+
+```bash
+# 1. Pull the same SignedReceipt JSON from the public IPFS gateway.
+#    Use the CID rendered on /security or returned by /api/receipts.
+curl -s "https://<cid>.ipfs.dweb.link" > receipt-from-filecoin.json
+
+# 2. Byte-compare against what /api/receipts returns for the same
+#    receipt_reference. If the JSON differs, the bytes have been
+#    tampered with somewhere.
+diff <(jq -S . receipt.json) <(jq -S . receipt-from-filecoin.json)
+
+# 3. The ed25519 signature in step 3 of the previous block still
+#    proves authenticity. Filecoin proves the bytes are public,
+#    immutable, and independently retrievable.
+```
+
 ## What's NOT in Gate 2
 
 Deferred to future work (explicitly not claiming):
