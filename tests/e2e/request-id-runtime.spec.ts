@@ -53,6 +53,12 @@ const PROBES: Probe[] = [
     // handler envelope, both must carry the header.
     { name: 'whoami', method: 'GET', path: '/api/whoami', expectStatus: [401, 403] },
     { name: 'dashboard.stats', method: 'GET', path: '/api/dashboard/stats', expectStatus: [200, 401, 403] },
+    // PR #515: filecoin anchor cron uses Authorization: Bearer CRON_SECRET.
+    // Anonymous = 401 when CRON_SECRET is set, 503 when unset. Both paths
+    // must carry X-Request-Id.
+    { name: 'cron.filecoin-anchor', method: 'GET', path: '/api/cron/filecoin-anchor', expectStatus: [401, 503] },
+    // PR #515: voice/synth is Privy-gated; anonymous = 401.
+    { name: 'voice.synth', method: 'POST', path: '/api/voice/synth', body: { text: 'probe' }, expectStatus: [401] },
     { name: 'subscription.post fall-through', method: 'POST', path: '/api/subscription', body: { action: 'unknown_action' }, expectStatus: [401, 410] },
     { name: 'x402 charge (410 gone)', method: 'POST', path: '/api/tools/x402', body: { action: 'charge', params: { amount: 1 } }, expectStatus: [401, 410] },
     { name: 'tools.web', method: 'POST', path: '/api/tools/web', body: { action: 'search', params: { query: 'x' } }, expectStatus: [401, 403] },
