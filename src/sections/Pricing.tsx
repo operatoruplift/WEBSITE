@@ -41,7 +41,7 @@ const TIERS = [
             'Optional daily briefing pinned at the top of your chat every morning',
             '5-turn rolling memory in iMessage, plus a daily summary that survives across model swaps',
             'Pick the model per session: Claude, GPT, Gemini, Grok, DeepSeek',
-            'Every approved action signs an ed25519 receipt to Solana',
+            'Every approved action signs an ed25519 receipt, anchored to Solana and mirrored to Filecoin',
             'Email support, average reply under one business day',
         ],
         cta: 'Start Pro',
