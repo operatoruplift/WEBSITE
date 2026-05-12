@@ -34,7 +34,7 @@ Run top to bottom. Skip items at your own risk.
 | 17 | Pre-flight from `docs/demo-recording-script.md` | All 7 pre-flight rows in that doc verified within T-30 of recording. | **operator** |
 | 18 | Demo recorded | One `.mp4` file ≤95s with the 5-step sequence. Spliced web + iPhone halves. | **operator** |
 | 19 | ElevenLabs voiceover (optional) | Demo `.mp4` has narration overlaid generated from `docs/demo-recording-script.md` voiceover column. | **operator** |
-| 20 | Deck assembled | 7 slides max, mirrors `docs/deck-objections.md`. Filecoin / ElevenLabs / Tauri / Base / Ethereum logos NOT on slides. | **operator** |
+| 20 | Deck assembled | 7 slides max, mirrors `docs/deck-objections.md`. Filecoin OK on slide 4 (durability + independence bullet, post PR #515). ElevenLabs OK as a recording credit only. Tauri / Base / Ethereum logos NOT on slides. | **operator** |
 | 21 | Objection rehearsal | Operator can recite all 8 answers in `docs/deck-objections.md` under 30s each, on camera, without looking. | **operator** |
 | 22 | Full demo rehearsal | Demo recorded twice end-to-end. Second take ≤95s, no fumbles. | **operator** |
 | 23 | Fallback plan rehearsal | If Photon dies mid-demo, operator can switch to `/dev/photon` simulator within 10 seconds without panicking. | **operator** |
