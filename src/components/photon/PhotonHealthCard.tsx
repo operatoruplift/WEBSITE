@@ -22,6 +22,9 @@ interface AdapterDetails {
     clientSecretConfigured?: boolean;
     stateSecretConfigured?: boolean;
     redirectUriConfigured?: boolean;
+    // PR #515: filecoin + elevenlabs adapter rows
+    provider?: string | null;
+    voiceId?: string | null;
 }
 
 interface AdapterStatus {
@@ -92,6 +95,8 @@ export function PhotonHealthCard({ className }: Props) {
     const inbox = data?.adapters?.find(a => a.name === 'photon_inbox');
     const anthropic = data?.adapters?.find(a => a.name === 'anthropic');
     const google = data?.adapters?.find(a => a.name === 'google_oauth');
+    const filecoin = data?.adapters?.find(a => a.name === 'filecoin');
+    const elevenlabs = data?.adapters?.find(a => a.name === 'elevenlabs');
 
     // Surface the FIRST missing Google env var as the hint, since
     // showing four "missing" toasts would be noisy. Operator fixes
@@ -143,6 +148,26 @@ export function PhotonHealthCard({ className }: Props) {
                     active={google?.active ?? false}
                     reason={google?.reason}
                     hint={googleHint}
+                />
+                <Row
+                    label="Filecoin anchor (receipts)"
+                    active={filecoin?.active ?? false}
+                    reason={filecoin?.reason}
+                    hint={
+                        filecoin && !filecoin.active
+                            ? 'Set FILECOIN_PROVIDER + LIGHTHOUSE_API_KEY (or PINATA_JWT)'
+                            : undefined
+                    }
+                />
+                <Row
+                    label="ElevenLabs TTS (voiceover)"
+                    active={elevenlabs?.active ?? false}
+                    reason={elevenlabs?.reason}
+                    hint={
+                        elevenlabs && !elevenlabs.active
+                            ? 'ELEVENLABS_API_KEY not set; /api/voice/synth returns 503'
+                            : undefined
+                    }
                 />
             </div>
             <p className="text-[10px] font-mono text-gray-600 mt-2">
