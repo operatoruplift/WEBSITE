@@ -36,7 +36,7 @@ export const DOC_SECTIONS: DocEntry[] = [
     {
         slug: 'receipts',
         title: 'Receipts',
-        summary: 'ed25519 signatures, Merkle roots, and Solana devnet publishes.',
+        summary: 'ed25519 signatures, Merkle roots on Solana, Filecoin mirror via IPFS gateway.',
         group: 'Core concepts',
     },
     {
