@@ -22,7 +22,7 @@ const CONTENT: Record<string, React.ReactNode> = {
             <h2>What ships today</h2>
             <ul>
                 <li>Google Calendar and Gmail tools behind per-action approval.</li>
-                <li>ed25519 signed receipts on <a href="/security">/security</a>, Merkle root published to Solana devnet every five actions.</li>
+                <li>ed25519 signed receipts on <a href="/security">/security</a>, Merkle root published to Solana devnet every five actions, and a Filecoin mirror of every receipt via a public IPFS gateway.</li>
                 <li>Daily 8am calendar briefing (opt-in from <a href="/profile">/profile</a>).</li>
                 <li>Tier 1 tools that don&apos;t need Google: web search, web fetch, notes, tasks, reminders.</li>
             </ul>
