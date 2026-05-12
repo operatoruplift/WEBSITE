@@ -32,6 +32,14 @@ export const posts: BlogPost[] = [
         category: 'engineering',
     },
     {
+        id: 'sns-anchored-signer-identity',
+        title: 'The .sol Name That Proves We Signed It',
+        excerpt: 'Every Operator Uplift receipt is signed by an ed25519 key. We anchor that key to operatoruplift.sol on the Solana Name Service so the signer identity is human-readable, swappable, and verifiable from any blockchain explorer. Here is how the cross-check works and why the chain does the work.',
+        date: 'May 9, 2026',
+        readTime: '4 min read',
+        category: 'engineering',
+    },
+    {
         id: 'one-chain-now-cross-chain-soon',
         title: 'Solana Today, Base and Ethereum Next: One Chain Now, Cross-Chain Soon',
         excerpt: 'Solana is the right chain for the demo: 400ms finality, fractional-cent gas, ed25519 receipts that publish on-chain in real time. Base and Ethereum follow once we wire the x402 buyer client. Here is why we did not start cross-chain and exactly what changes when we do.',
