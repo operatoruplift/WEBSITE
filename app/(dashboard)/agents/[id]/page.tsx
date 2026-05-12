@@ -101,7 +101,7 @@ function VerifyPanel({ slug }: { slug: string }) {
                 <p className="text-[10px] text-[#52525B] leading-relaxed">
                     Verify a receipt: take the signed JSON from{' '}
                     <Link href="/security" className="text-[#F97316] hover:underline">Security</Link>
-                    , canonicalize the <code className="text-[#A1A1AA]">receipt</code> field, and ed25519-verify against the public key.
+                    , canonicalize the <code className="text-[#A1A1AA]">receipt</code> field, and ed25519-verify against the public key. The same JSON is also pinned to Filecoin per the <code className="text-[#A1A1AA]">filecoin:</code> link on each receipt row; fetch from the public IPFS gateway to byte-compare independently.
                 </p>
             </CardContent>
         </Card>
