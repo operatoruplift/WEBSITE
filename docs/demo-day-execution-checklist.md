@@ -5,7 +5,7 @@ The single ordered list of what to do before recording. Each row has a deliverab
 Companion docs:
 - `docs/demo-recording-script.md` - the click-by-click recording script.
 - `docs/deck-objections.md` - pitch + 8 objection answers.
-- `docs/filecoin-decision.md` - defer Filecoin, what to say if asked.
+- `docs/filecoin-decision.md` - shipped status post PR #515; "Shipped" section documents the actual implementation.
 - `docs/imessage-agent-runbook.md` - what the iMessage agent does, env vars required.
 - `docs/prod-env-checklist.md` - must-have Vercel env vars.
 
@@ -26,7 +26,7 @@ Run top to bottom. Skip items at your own risk.
 | 9 | SNS-anchored signer identity on /security (Wave 5 prompt 19) | PR #460 merged. "Signed by operatoruplift.sol" link to `/api/sns/resolve` next to the public-key endpoint. | done |
 | 10 | Demo recording script (Wave 4 prompts 13-16) | `docs/demo-recording-script.md` (PR #461). | done |
 | 11 | Deck + objections (Wave 7 prompts 25-27) | `docs/deck-objections.md` (PR #463). | done |
-| 12 | Filecoin defer decision (Wave 5 prompt 17) | `docs/filecoin-decision.md` (PR #463). | done |
+| 12 | Filecoin receipt anchor shipped (Wave 5 prompt 17 reversal) | PR #515 wired `lib/filecoin/anchor.ts` + cron + /security UI link + adapter row. `docs/filecoin-decision.md` "Shipped" section documents the implementation. | done |
 | 13 | Vercel env vars sweep | All "Required for Real Mode" rows in `docs/prod-env-checklist.md` confirmed in Vercel Production. | **operator** |
 | 14 | Supabase migrations applied | `psql -f` all four migrations: `lib/photon-webhook-migration.sql`, `lib/photon-optouts-migration.sql`, `lib/photon-imessage-users-migration.sql`, `lib/photon-pending-actions-migration.sql`. Plus the `tool_receipts` table for receipts and `users.briefing_enabled` column for the daily-briefing cron. | **operator** |
 | 15 | Spectrum dashboard webhook URL configured | `https://www.operatoruplift.com/api/webhooks/photon` is set in the Spectrum Webhooks tab. Secret matches `PHOTON_WEBHOOK_SECRET` in Vercel. | **operator** |
@@ -49,7 +49,7 @@ Run top to bottom. Skip items at your own risk.
 
 - Wave 6 deposit-to-credit pricing model rebuild. Recommended in `docs/deck-objections.md` but requires `/paywall` + `/api/subscription` rewrite. Multi-PR effort, not safe to ship close to demo.
 - Tauri / desktop binary. `desktop/tauri.conf.json` exists but `src-tauri/` does not. Not in the deck (per `docs/deck-objections.md`).
-- Filecoin anchoring. Deferred per `docs/filecoin-decision.md`.
+- (Was deferred, now shipped in PR #515.) Filecoin anchoring lives in `lib/filecoin/anchor.ts` + the cron at `/api/cron/filecoin-anchor` + the `filecoin: <cid>` link on `/security`. Operator action: set `FILECOIN_PROVIDER` + `LIGHTHOUSE_API_KEY` on Vercel, run `lib/filecoin-anchor-migration.sql` in Supabase, then trigger the cron once. Verify with `scripts/filecoin-smoke.mjs`.
 - Calendar timezone fix (still hardcoded MYT). Avoid free-slot calendar UI on stage.
 - localStorage encryption rollout. Disclosure in product copy is honest; full encrypt-at-rest is post-demo work.
 - Any new channel (Telegram, Slack, Discord) tool wiring. Spectrum bridge handles the platforms; per-platform code is roadmap.
