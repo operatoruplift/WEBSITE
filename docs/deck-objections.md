@@ -10,7 +10,7 @@ Mapped to the brief's four parts:
 
 1. **What you get**: drafts your email, schedules your meetings.
 2. **Why trust**: nothing irreversible without your tap; signed receipts; on-chain audit.
-3. **What integrations do**: read Gmail, write Gmail draft, create Calendar event, store receipts on Solana, identify the agent via SNS.
+3. **What integrations do**: read Gmail, write Gmail draft, create Calendar event, store receipts on Solana, mirror receipts to Filecoin via IPFS, identify the agent via SNS.
 4. **How monetization works**: $50 USDC deposit, $0.01 per write action, refundable, no subscription.
 
 ## Objection answers (under 30 words each, memorize)
