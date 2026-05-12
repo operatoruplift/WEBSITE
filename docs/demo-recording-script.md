@@ -25,6 +25,7 @@ Companion docs:
 | 5 | Calendar create path | From the demo phone, text `schedule a meeting tomorrow at 3pm about test`. Reply `yes`. Confirm an event lands in the demo Google Calendar. Delete the event. |
 | 6 | Browser cleanup | Close all unrelated tabs. Disable browser extensions that may inject UI (1Password, Grammarly). Set browser to incognito + no extensions. |
 | 7 | Phone cleanup | DND on. Wifi clean. Battery >50%. iMessage thread cleared down to the demo bot. |
+| 8 | Filecoin anchor round-trip | `LIGHTHOUSE_API_KEY=... ADMIN_TOKEN=... CRON_SECRET=... node scripts/filecoin-smoke.mjs` (PASS lines for pin + dweb.link fetch + cron trigger). PR #515 is wired but the cron only runs when triggered manually on Hobby tier. |
 
 ## The 5-step sequence
 
