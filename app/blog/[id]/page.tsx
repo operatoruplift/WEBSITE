@@ -60,6 +60,35 @@ function getArticleContent(id: string) {
                 <p>Building on iMessage instead of in a new app means we lose the ability to dictate the UI. We gain the ability to be the assistant you already had room for. That trade only makes sense if the agent is good enough that the constraint is interesting. Which is the whole reason we built the approval-gated trust layer first, before any of the channels.</p>
             </div>
         ),
+        'sns-anchored-signer-identity': (
+            <div className="space-y-6">
+                <p className="text-lg">The receipt JSON on <code>/security</code> carries a 32-byte ed25519 public key. Anyone can fetch the same key from <code>/api/receipts/public-key</code> and verify a signature locally. That works, but it leaves one question unanswered: who controls that key today?</p>
+                <p>The answer needs to be something a reader can derive without trusting our database. Database rows can be edited; on-chain records cannot. So we put the signer identity on-chain.</p>
+
+                <h2>operatoruplift.sol, the on-chain anchor</h2>
+                <p><code>operatoruplift.sol</code> is a Solana Name Service name we own. SNS is the Solana equivalent of ENS on Ethereum: a smart-contract registry that maps human-readable names to on-chain accounts. The owner of <code>operatoruplift.sol</code> is a Solana account whose public key matches the ed25519 key returned by <code>/api/receipts/public-key</code>. A judge can cross-check the two without our help:</p>
+                <p><strong>1.</strong> Fetch <code>/api/receipts/public-key</code>. Note the base64 32-byte pubkey.</p>
+                <p><strong>2.</strong> Open a Solana explorer (Solscan, solana.fm, or any RPC client) and resolve <code>operatoruplift.sol</code>.</p>
+                <p><strong>3.</strong> Compare the owner pubkey against step 1. If they match, the signer identity is anchored on-chain.</p>
+                <p>The <code>/security</code> page renders this directly: a small "Signed by operatoruplift.sol" line under the Signed Receipts header, with the link pointing at <code>/api/sns/resolve?name=operatoruplift.sol</code>. A curious user clicks through and sees the on-chain owner field; a technical user opens the explorer and re-derives the chain themselves.</p>
+
+                <h2>Why this matters more than it sounds</h2>
+                <p>The obvious objection: anyone can claim a .sol name and sign anything. True. The point is not that <code>operatoruplift.sol</code> grants us any moral authority. The point is that if we change the signer key, the name has to update on-chain too, and the update is publicly visible. We cannot quietly rotate the key and continue claiming &quot;operatoruplift.sol signed this&quot; without an explorer showing the rotation.</p>
+                <p>That gives users a single anchor point: trust the name, watch the on-chain record. If a sophisticated adversary compromises our server and starts signing fake receipts with a different key, the receipts will not check against the name&apos;s current owner. The breakage is public.</p>
+
+                <h2>What does NOT change with SNS</h2>
+                <p>SNS is not part of the signing flow. The receipt&apos;s signature is still produced server-side with the ed25519 private key. SNS does not gate execution, does not change the receipt schema, and does not affect the Filecoin mirror. It is a public anchor for the signing identity, nothing more.</p>
+                <p>It also is not a replacement for an audit. SNS confirms the name-to-key binding at a point in time. An auditor still has to inspect our server code to know that the key in use today is the one bound to the name. The trust chain is: ed25519 signature proves the receipt was signed, SNS proves the signing key is the one we publicly claim, Filecoin proves the bytes are unedited, and the Anchor program on Solana proves the receipts published in order.</p>
+                <p>Four primitives. Each adds a different kind of public re-derivation. None of them require you to trust the others.</p>
+
+                <h2>Why not ENS</h2>
+                <p>Most of the codebase is Solana-native and the receipts publish to a Solana Anchor program. Anchoring the signer identity to the same chain keeps the path single-chain: a reader does not need to bridge between two registries. ENS on Ethereum would work; it would just require tracking two chains. Cross-chain SNS / ENS mirroring is a fine roadmap item for the day we publish receipts on Base or Ethereum. Until then, one chain, one identity.</p>
+
+                <h2>Who reads this and why it matters</h2>
+                <p>If you are a developer building on x402, the SNS anchor pattern is reusable: pick a domain on whichever name service your chain has, publish the signer key as the owner, and cite the name in your receipts. Three lines of explanation in your security policy.</p>
+                <p>If you are a regulator or an enterprise buyer, the practical answer to &quot;how do we know who signed this&quot; stops being &quot;trust their server&quot; and starts being &quot;look at the explorer.&quot; The audit reads the same way whether the buyer cares about ed25519 or not. The chain does the work.</p>
+            </div>
+        ),
         'one-chain-now-cross-chain-soon': (
             <div className="space-y-6">
                 <p className="text-lg">Operator Uplift settles on Solana today. Base and Ethereum are roadmap, gated on a single piece of plumbing we have not finished. This is a more useful answer to "why Solana" than "Solana is cheap and fast", because if cheap and fast were the only ask, we would already be cross-chain.</p>
