@@ -53,4 +53,13 @@ test('GET never leaks secrets in the 401 body', async ({ request }) => {
     // unauth envelope either, even by accident.
     expect(body).not.toMatch(/GOOGLE_OAUTH_(CLIENT_ID|CLIENT_SECRET|STATE_SECRET|REDIRECT_URI)/);
     expect(body).not.toMatch(/GOCSPX-[A-Za-z0-9_-]+/);
+    // PR #515 added filecoin + elevenlabs adapter rows. Their secret
+    // env vars must never surface in the unauth envelope: Lighthouse
+    // tokens, Pinata JWTs, Storacha UCAN delegations, and the
+    // ElevenLabs API key (which has the form `sk_<...>`).
+    expect(body).not.toMatch(/LIGHTHOUSE_API_KEY/);
+    expect(body).not.toMatch(/PINATA_JWT/);
+    expect(body).not.toMatch(/FILECOIN_STORACHA_(KEY|PROOF)/);
+    expect(body).not.toMatch(/ELEVENLABS_API_KEY/);
+    expect(body).not.toMatch(/sk_[A-Za-z0-9]{20,}/); // ElevenLabs sk_ keys
 });
