@@ -33,7 +33,11 @@ test.describe('x402 pricing', () => {
     test('calendar.create costs $0.01 USDC on solana-devnet', () => {
         const price = getToolPrice('calendar', 'create');
         expect(price).not.toBeNull();
-        expect(price?.amount).toBe(0.01);
+        // PR #548: amount is now a decimal string + decimals field
+        // (ported from solana-developer-platform). Wire/DB still emit
+        // a JS number via toSafeNumber.
+        expect(price?.amount).toBe('0.01');
+        expect(price?.decimals).toBe(6);
         expect(price?.currency).toBe('USDC');
         expect(price?.chain).toBe('solana-devnet');
         expect(isGatedAction('calendar', 'create')).toBe(true);
@@ -50,7 +54,8 @@ test.describe('x402 pricing', () => {
         for (const action of ['draft', 'send', 'send_draft']) {
             const price = getToolPrice('gmail', action);
             expect(price, `gmail.${action} has price`).not.toBeNull();
-            expect(price?.amount, `gmail.${action} amount`).toBe(0.01);
+            expect(price?.amount, `gmail.${action} amount`).toBe('0.01');
+            expect(price?.decimals, `gmail.${action} decimals`).toBe(6);
             expect(isGatedAction('gmail', action), `gmail.${action} gated`).toBe(true);
         }
     });
