@@ -94,7 +94,7 @@ const CONTENT: Record<string, React.ReactNode> = {
             </ol>
             <h2>Why MCPay-compatible</h2>
             <p>We conform to MCPay (<code>github.com/microchipgnu/MCPay</code>) so any MCP-aware agent can pay our gate without custom glue. The invoice format, the pay endpoint, and the retry header are their names, not ours.</p>
-            <h2>What this enables (post-May-15)</h2>
+            <h2>What this enables next</h2>
             <p>Third-party agents can pay us per-call for privileged execution. We can pay third parties for their tools too. The plumbing is the same in both directions.</p>
         </>
     ),
