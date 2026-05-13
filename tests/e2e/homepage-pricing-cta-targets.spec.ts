@@ -8,15 +8,14 @@ test.describe.configure({ timeout: 90_000 });
  * Locks in the homepage Pricing section CTA targets so a future
  * copy sweep doesn't silently break the conversion path.
  *
- * Wave1-risks.spec.ts already covers the dedicated /pricing page
- * CTAs (Team Starter + Business -> /login?returnTo=/paywall). This
+ * Wave1-risks.spec.ts covers the dedicated /pricing page CTAs. This
  * spec covers the homepage Pricing section CTAs, which sit one
  * scroll above the Comparison table and are the primary signup
  * surface for a first-time visitor:
  *
- *   Free          -> /chat            (Try the demo)
- *   Pro           -> /paywall         (Start Pro)
- *   Team Starter  -> /login?returnTo=/paywall (Start team plan)
+ *   Free   -> /chat                  (Try the demo)
+ *   Pro    -> /paywall               (Start Pro)
+ *   Team   -> https://cal.com/...    (Book a call) -- Team pricing is custom
  *
  * If anyone reroutes "Start Pro" to /signup, /pricing, or removes
  * /paywall, the conversion path silently breaks — and the demo
@@ -41,13 +40,12 @@ test('homepage Pricing "Start Pro" CTA points at /paywall', async ({ page }) => 
     expect(href).toBe('/paywall');
 });
 
-test('homepage Pricing "Start team plan" CTA points at /login?returnTo=/paywall', async ({ page }) => {
+test('homepage Pricing "Book a call" CTA points at cal.com (Team is custom)', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    // Team Starter requires login first because the team flow needs
-    // a signed-in user to attach the seat allocation to (server-side
-    // user_subscriptions row). The deep-link returnTo=/paywall keeps
-    // the team buyer on the conversion path post-login.
-    const href = await page.getByRole('link', { name: /Start team plan/i }).first().getAttribute('href');
-    expect(href).toBe('/login?returnTo=/paywall');
+    // Team pricing is now custom (not $299/mo). The CTA goes straight
+    // to Cal.com so a team buyer can reach a human without first
+    // signing in. Previously this pointed at /login?returnTo=/paywall.
+    const href = await page.getByRole('link', { name: /Book a call/i }).first().getAttribute('href');
+    expect(href).toMatch(/cal\.com/);
 });

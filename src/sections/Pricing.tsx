@@ -50,23 +50,23 @@ const TIERS = [
         ctaStyle: 'bg-[#F97316] hover:bg-[#F97316]/90 text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]',
     },
     {
-        name: 'Team Starter',
-        price: '$299',
-        period: '/month',
-        description: 'For 5-seat teams. Pro for everyone, plus shared inbox/calendar and admin tools.',
+        name: 'Team',
+        price: 'Custom',
+        period: '',
+        description: 'For teams that need shared inbox, shared calendar, and admin controls. Pricing fits your seat count, talk to us.',
         icon: Building2,
         highlight: false,
         features: [
-            'Everything in Pro for 5 seats',
+            'Everything in Pro for every seat',
             'Shared calendar, shared inbox, shared follow-ups',
             'Custom OAuth tenant (Google, Microsoft, Okta)',
             'Per-action audit log with role-based access',
             'A real person on email and a quarterly check-in',
             '99.9% uptime SLA in writing',
-            'Scales to bigger teams: see /pricing',
+            'Pricing fit to your team size',
         ],
-        cta: 'Start team plan',
-        ctaLink: '/login?returnTo=/paywall',
+        cta: 'Book a call',
+        ctaLink: 'https://cal.com/rvaclassic',
         ctaIcon: ArrowRight,
         ctaStyle: 'bg-foreground/5 hover:bg-foreground/10 border border-border text-white',
     },
@@ -79,7 +79,7 @@ const Pricing: React.FC = () => {
                 headingId="pricing-heading"
                 eyebrow="Pricing"
                 title="Pick a plan, start in a minute"
-                description="Start free. Pro at $50 a month, Team Starter at $299. Cancel any time."
+                description="Start free. Pro at $50 a month. Team pricing is custom, book a call. Cancel any time."
             />
 
             {/* Three pricing tiers. Promote to <ul>/<li> so screen

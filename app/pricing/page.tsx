@@ -9,13 +9,13 @@ import { FadeIn } from '@/src/components/Animators';
 
 const tiers = [
     {
-        name: 'Team Starter',
-        price: '$299',
-        period: '/month',
-        description: 'For 5-seat teams. Pro for everyone, plus shared workspace and admin tools.',
-        features: ['5 seats included', 'Up to 10 helpers per seat', 'Shared inbox and calendar', 'Per-action audit log with role-based access', 'GDPR-ready privacy', 'Email support'],
-        cta: 'Start team plan',
-        ctaLink: '/login?returnTo=/paywall',
+        name: 'Team',
+        price: 'Custom',
+        period: '',
+        description: 'For small teams that need shared workspace and admin tools. Pricing fits your seat count, talk to us.',
+        features: ['Pro features for every seat', 'Shared inbox and calendar', 'Per-action audit log with role-based access', 'GDPR-ready privacy', 'Email support', 'Pricing fit to your team size'],
+        cta: 'Book a call',
+        ctaLink: '/contact',
         highlight: false,
     },
     {

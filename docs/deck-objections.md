@@ -66,7 +66,7 @@ Mapped to the brief's four parts:
 | Tauri / desktop | mentioned in `/imessage` "What's not here yet" block | `desktop/tauri.conf.json` only | not in demo | cut |
 | Base / Ethereum | not added | not added | not in demo | cut (one chain story) |
 | MagicBlock | not surfaced | flag-gated, off by default | not in demo | one optional bullet on slide 4 only if asked |
-| Pricing model | homepage Pricing section | `/paywall` (currently $50/month Pro subscription; Team Starter $299/mo for 5 seats; deposit-to-credit pivot deferred) | not in demo | slide 5 |
+| Pricing model | homepage Pricing section | `/paywall` (currently $50/month Pro subscription; Team pricing is custom via Book-a-call; deposit-to-credit pivot deferred) | not in demo | slide 5 |
 
 ## What stays "roadmap" honestly
 
