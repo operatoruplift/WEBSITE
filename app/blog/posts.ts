@@ -24,6 +24,14 @@ export const posts: BlogPost[] = [
         featured: true,
     },
     {
+        id: 'why-we-said-no-to-0g',
+        title: 'We looked at 0G this week. Here is why we are holding off.',
+        excerpt: '0G has five modules: storage, compute, persistent memory, agent ID, TEE privacy. We are a consumer app that ships when something works, not when it announces. Here is the honest read on each module and the one piece that could change our mind.',
+        date: 'May 14, 2026',
+        readTime: '5 min read',
+        category: 'guide',
+    },
+    {
         id: 'filecoin-elevenlabs-trust-stack',
         title: 'Receipts now have a public backup nobody can edit, not even us',
         excerpt: 'Your assistant has been signing receipts on Solana for months. The signature was real, but the bytes lived on our servers. Now those same bytes are also pinned to a public network anyone can fetch from. Here is what that closes, in plain English.',

@@ -10,6 +10,38 @@ import { BlogToc } from './BlogToc';
 
 function getArticleContent(id: string) {
     const content: Record<string, React.ReactNode> = {
+        'why-we-said-no-to-0g': (
+            <div className="space-y-6">
+                <p className="text-lg">A founder we respect sent us the 0G docs this week and asked which modules we should fold in. We spent an afternoon on it. The answer is &quot;none yet, and here is exactly what would have to change for us to ship it.&quot;</p>
+
+                <p>We are writing this in public because we have a rule: every infrastructure decision we make has a public record. Filecoin was a yes (we shipped it). Tauri desktop is a no (the binary does not build). 0G is a no (today), and the reasons matter more than the answer.</p>
+
+                <h2>What 0G actually offers</h2>
+                <p>Five modules, briefly. We are paraphrasing their docs into a one-line summary each so the rest of this post makes sense.</p>
+                <p><strong>0G Storage.</strong> A decentralized storage network with two layers: permanent archival (Log) plus millisecond-level key-value query (KV). Optimized for AI data.</p>
+                <p><strong>Compute Network.</strong> A decentralized GPU marketplace where providers sell inference, fine-tuning, and training. Pay-as-you-go with cryptographic settlement.</p>
+                <p><strong>Persistent Memory.</strong> Cross-session permanent memory and ultra-large context windows for AI agents. Listed as &quot;coming soon&quot; on their docs.</p>
+                <p><strong>Agent ID.</strong> A standard for tokenizing AI agents, their identity, memory, and behavior, with encrypted metadata, tradable ownership, and composability.</p>
+                <p><strong>Privacy &amp; Security.</strong> Hardware-enforced trusted execution environments for inference, plus monitoring nodes that watch for model drift and bias.</p>
+
+                <h2>Why each one is a no, in plain English</h2>
+                <p><strong>Storage.</strong> Your action receipts already get mirrored to a public storage network (Filecoin via Lighthouse, see <a href="/blog/filecoin-elevenlabs-trust-stack">last week&apos;s post</a>). Swapping that out for 0G Storage is moving from one decentralized storage provider to another. You would not see a difference. Our database (Supabase) stays where it is for the same reason: it works, it is fast, and the dependency is well understood.</p>
+                <p><strong>Compute.</strong> Our wedge is &quot;use the model you already pay for.&quot; The assistant routes your turn to Claude or GPT or Gemini using your own API key. That is the entire premise. If we add a decentralized GPU marketplace as a sixth option, either we replace your provider (breaks the &quot;your key&quot; promise) or we add a new dropdown nobody asked for. Cryptographic settlement of inference is technically interesting and unrelated to anything our users care about.</p>
+                <p><strong>Agent ID.</strong> 0G&apos;s standard is for tokenizing agents so they can be owned and traded. We are not a marketplace for agents. The agents on our platform are scripts we publish. They are not tokens, they are not owned by anyone, and nobody trades them. Adopting a standard built for a different product would muddle a story that currently works.</p>
+                <p><strong>TEE privacy.</strong> Trusted execution environments make inference private from the host machine running it. We do not run inference. Your AI provider does. We are a thin layer that proxies your prompt to a provider you chose. There is no inference for us to protect with hardware. Privacy in our model comes from BYOK plus signed receipts, not from a TEE on a node we do not run.</p>
+
+                <h2>The one piece that could change our mind</h2>
+                <p>Persistent Memory is the only module worth a second look. The reason: AI assistants forget you when you switch providers. That problem is real, our solution is currently homegrown (browser localStorage plus a Supabase table), and it has obvious limits. If our memory system started straining and 0G Persistent Memory was shipped (right now it is &quot;coming soon&quot;), and they offered either self-hosting or clear pricing, we would re-evaluate.</p>
+                <p>Three conditions, all required. Today, zero of them are true.</p>
+
+                <h2>Why we publish decisions like this</h2>
+                <p>Most infrastructure platforms have an integration story that runs &quot;we shipped support for X.&quot; The thing nobody writes is the inverse: which integrations they considered and rejected, and why. That is the more honest signal about how a team makes decisions.</p>
+                <p>If you are a founder thinking about adopting any of this kind of platform (0G, but also the various decentralized AI / wallet / agent infrastructure stacks that show up every month), the question is not &quot;do they have cool features.&quot; The question is &quot;does my product actually need what they are selling, and would I notice the difference.&quot; For us today, the answer to that question is no for everything except Persistent Memory.</p>
+                <p>If 0G ships Persistent Memory and our memory system hits a wall, this post becomes the &quot;we are integrating it&quot; post. Until then, the decision lives in this post and in <code>docs/0g-integration-decision.md</code> in our repo, where anyone can read the same reasoning we just wrote.</p>
+
+                <p>You did not buy us to learn about decentralized infrastructure. You bought us for an assistant that drafts your email and waits for your tap. Every integration we add or skip has to clear that bar. Today, 0G does not.</p>
+            </div>
+        ),
         'filecoin-elevenlabs-trust-stack': (
             <div className="space-y-6">
                 <p className="text-lg">Your assistant sent a follow-up email last Tuesday. A year from now, the recipient disputes that the email said what you remember. Where is the proof, and who controls it?</p>
