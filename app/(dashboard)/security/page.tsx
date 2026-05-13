@@ -261,7 +261,7 @@ export default function SecurityPage() {
                                className="text-[#F97316] hover:underline decoration-dotted">
                                 operatoruplift.sol
                             </a>
-                            {' '}, resolves on-chain to the public key above.
+                            , resolves on-chain to the public key above.
                         </p>
                         {/* Filecoin mirror sub-line. Per-row links surface only
                             when the cron at /api/cron/filecoin-anchor has
