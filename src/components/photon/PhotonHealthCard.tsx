@@ -72,9 +72,13 @@ export function PhotonHealthCard({ className }: Props) {
 
     if (loading) {
         return (
-            <div className={`p-3 rounded-xl border border-white/10 bg-white/[0.02] flex items-center gap-2 ${className ?? ''}`}>
-                <Loader2 size={14} className="animate-spin text-gray-400" />
-                <span className="text-xs font-mono text-gray-400">Loading adapter status…</span>
+            <div
+                className={`p-3 rounded-xl border border-white/10 bg-white/[0.02] flex items-center gap-2 ${className ?? ''}`}
+                role="status"
+                aria-live="polite"
+            >
+                <Loader2 size={14} className="animate-spin text-gray-400" aria-hidden="true" />
+                <span className="text-xs font-mono text-gray-400">Loading adapter status&hellip;</span>
             </div>
         );
     }
