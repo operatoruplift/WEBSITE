@@ -28,7 +28,8 @@ export interface ToolActionRef {
  * Hard-coded map of known actions. Key format: `${toolName}.${operation}`.
  * Any entry absent here → classifyToolAction returns 'RISKY'.
  *
- * Keep this map conservative. When in doubt, leave the action out ,  * RISKY is the safer default for an unclassified action. New tools
+ * Keep this map conservative. When in doubt, leave the action out;
+ * RISKY is the safer default for an unclassified action. New tools
  * should be added here explicitly as they ship.
  */
 const KNOWN_ACTIONS: Record<string, ToolSafety> = {
