@@ -116,7 +116,11 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
         // takes over (the dashboard layout itself stays dark for now).
         return (
             <div className="theme-light flex h-screen items-center justify-center bg-background">
-                <div className="flex flex-col items-center gap-3">
+                {/* role=status + aria-live=polite means screen readers
+                    announce "Loading..." when this gate mounts during
+                    auth resolution. Otherwise SR users hear silence
+                    while we wait on Privy. */}
+                <div className="flex flex-col items-center gap-3" role="status" aria-live="polite">
                     <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" aria-hidden="true" />
                     <span className="text-xs font-mono text-muted">Loading...</span>
                 </div>
