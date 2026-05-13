@@ -380,7 +380,7 @@ function DiagnosticsPanel({ showToast }: { showToast: ShowToast }) {
                 />
                 <DiagRow
                     label="Authenticated"
-                    hint="Signed in with a verified Privy session."
+                    hint="Signed in with a session that the server has verified."
                     value={<DiagPill ok={!!caps?.authenticated} onLabel="Yes" offLabel="No" />}
                 />
             </div>
