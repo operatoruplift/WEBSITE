@@ -134,7 +134,7 @@ export async function POST(request: Request) {
                     providerStatus: send.providerStatus,
                     requestId: meta.requestId,
                     timestamp: meta.startedAt,
-                    nextAction: 'Confirm the phone is reachable on iMessage and Spectrum credentials are correct.',
+                    nextAction: 'We could not deliver the verification code. Double-check the number is an iMessage-enabled iPhone, then try again. If it keeps failing, email support@operatoruplift.com.',
                 },
                 { status: 502, headers: meta.headers },
             );

@@ -171,7 +171,7 @@ export async function POST(request: Request) {
                     detail: send.message?.slice(0, 240),
                     requestId: meta.requestId,
                     timestamp: meta.startedAt,
-                    nextAction: 'Check the Spectrum dashboard project + API key, then retry.',
+                    nextAction: 'Could not deliver the test message. Confirm the number is still an iMessage-enabled iPhone, then try again.',
                 },
                 { status: 502, headers: meta.headers },
             );
