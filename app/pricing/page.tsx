@@ -13,7 +13,7 @@ const tiers = [
         price: 'Custom',
         period: '',
         description: 'For small teams that need shared workspace and admin tools. Pricing fits your seat count, talk to us.',
-        features: ['Pro features for every seat', 'Shared inbox and calendar', 'Per-action audit log with role-based access', 'GDPR-ready privacy', 'Email support', 'Pricing fit to your team size'],
+        features: ['Pro features for every seat', 'Up to 10 helpers per seat', 'Shared inbox and calendar', 'Per-action audit log with role-based access', 'GDPR-ready privacy', 'Email support'],
         cta: 'Book a call',
         ctaLink: '/contact',
         highlight: false,
