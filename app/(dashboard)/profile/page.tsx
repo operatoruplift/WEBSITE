@@ -224,7 +224,7 @@ export default function ProfilePage() {
                                 <p className="text-xs text-gray-500">Resolving .sol identity&hellip;</p>
                             ) : sns?.error ? (
                                 <p className="text-xs text-gray-500">
-                                    SNS lookup unavailable right now. Your identity still works from your Privy session.
+                                    SNS lookup unavailable right now. Your identity still works from your signed-in session.
                                 </p>
                             ) : (
                                 <div className="space-y-3">
