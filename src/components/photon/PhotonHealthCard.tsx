@@ -171,7 +171,7 @@ export function PhotonHealthCard({ className }: Props) {
                 />
             </div>
             <p className="text-[10px] font-mono text-gray-600 mt-2">
-                See docs/imessage-agent-runbook.md → "iMessage doesn't work" symptom map.
+                See docs/imessage-agent-runbook.md &rarr; &quot;iMessage doesn&apos;t work&quot; symptom map.
             </p>
         </div>
     );
