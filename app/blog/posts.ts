@@ -25,10 +25,10 @@ export const posts: BlogPost[] = [
     },
     {
         id: 'filecoin-elevenlabs-trust-stack',
-        title: 'Your receipts no longer live only on our servers',
-        excerpt: 'If our company disappeared tomorrow, the record of what your assistant did for you would still exist. Every action receipt is now mirrored to a public storage layer that no one company owns. Here is what that means in plain English.',
+        title: 'Receipts now have a public backup nobody can edit, not even us',
+        excerpt: 'Your assistant has been signing receipts on Solana for months. The signature was real, but the bytes lived on our servers. Now those same bytes are also pinned to a public network anyone can fetch from. Here is what that closes, in plain English.',
         date: 'May 12, 2026',
-        readTime: '4 min read',
+        readTime: '5 min read',
         category: 'update',
     },
     {

@@ -12,29 +12,34 @@ function getArticleContent(id: string) {
     const content: Record<string, React.ReactNode> = {
         'filecoin-elevenlabs-trust-stack': (
             <div className="space-y-6">
-                <p className="text-lg">Picture this. Your assistant booked a meeting with a client, sent the follow-up, and charged a small fee for the work. A year later, the client disputes that the meeting ever happened. You want to prove your version. Where does the proof live?</p>
+                <p className="text-lg">Your assistant sent a follow-up email last Tuesday. A year from now, the recipient disputes that the email said what you remember. Where is the proof, and who controls it?</p>
 
-                <p>Until last week, the answer was: on our servers. We signed every action receipt with a key only we hold, so the signature was real, but you had to trust that we did not quietly edit the record sitting in our database. If we got hacked, or if we wanted to cheat, the proof could change underneath you and nobody would know.</p>
+                <p>Here is what was already true before this week, and what changed.</p>
 
-                <p>This week we removed that single point of failure.</p>
+                <h2>What was already true</h2>
+                <p>Every action your assistant takes (drafting an email, creating a calendar event, charging a small fee for the work) produces a small record called a receipt. That receipt has been doing three jobs for a while:</p>
+                <p><strong>One.</strong> The receipt is signed with a digital key only we hold. Anyone with our matching public key can confirm the signature. If a forger tries to fake a receipt, the signature does not check out.</p>
+                <p><strong>Two.</strong> Every five receipts, we compute a fingerprint of all of them and post that fingerprint to Solana. The fingerprint cannot be quietly rewritten. So if we ever tried to delete a receipt or reorder them, the chain catches it.</p>
+                <p><strong>Three.</strong> The signing key is tied to <code>operatoruplift.sol</code>, a public name on Solana. You can see on a public blockchain explorer which key signs your receipts. If we ever rotate the key, the chain shows the rotation publicly.</p>
 
-                <h2>Where your receipts live now</h2>
-                <p>Every signed receipt is now also stored on a public network nobody owns. The same record exists in two places at once. There is the convenient copy on our side. And there is a durable copy at a public address anyone can fetch from, no account required.</p>
-                <p>That public address shows up on your <a href="/security">/security</a> page next to every receipt, as a small clickable link. Click it and a public gateway hands back the same record we signed. If anything has been edited on our side, the two copies will not match. That is the safety net.</p>
+                <h2>What was missing</h2>
+                <p>The receipt JSON itself, the actual bytes you would verify a signature against, only lived in our database. The Solana fingerprint catches deletions and reorderings, but it does not catch a single-receipt edit during a five-receipt window. In theory, between two fingerprint publications, we could edit one row, re-sign it, and the new signature would still verify against the same public key. That is the loophole.</p>
+
+                <h2>What changed this week</h2>
+                <p>Every receipt is now also pinned to a public storage network called Filecoin, fetchable from any IPFS gateway. The bytes live in two places at once. There is the convenient copy in our database. And there is a durable copy at a public address anyone can fetch from, no account required.</p>
+                <p>The public address shows up on your <a href="/security">/security</a> page next to every receipt as a small clickable link. Click it and a public gateway returns the same bytes we signed. If we edited the record on our side, the two copies would not match. That closes the loophole.</p>
 
                 <h2>What this means in practice</h2>
                 <p>Three things, in order of how often they matter.</p>
-                <p><strong>One: portability.</strong> If we shut down tomorrow, your receipts do not vanish. They are pinned on a public network with many operators. You can always show a third party what your assistant did for you.</p>
-                <p><strong>Two: dispute resolution.</strong> If a client, a vendor, or your own bookkeeper asks &quot;did this happen?&quot;, you hand over the public link. They open it without logging in. Either it matches the story you told them or it does not.</p>
-                <p><strong>Three: trust in the assistant itself.</strong> You are more willing to let an agent send an email when you know there is a tamper-evident record afterwards. That is the whole reason we bother with signatures and public storage. It is not for show. It is so the next email feels safe to approve.</p>
+                <p><strong>Portability.</strong> If we shut down tomorrow, your receipts do not vanish. The public copy is pinned on a network with many operators. You can show a third party what your assistant did for you without going through us.</p>
+                <p><strong>Dispute resolution.</strong> If a client, a vendor, or your own bookkeeper asks &quot;did this happen?&quot;, you hand over the public link. They open it without logging in. Either it matches the story you told them or it does not.</p>
+                <p><strong>Trust in the next tap.</strong> You are more willing to let an agent send an email when you know there is a tamper-evident record afterwards. The pile of primitives (signature, blockchain fingerprint, on-chain identity, public storage) is not for show. It is so the next time the assistant asks to send something, the &quot;yes&quot; feels safe.</p>
 
-                <h2>Why we waited two weeks</h2>
-                <p>Two weeks ago we said this was not in scope yet. The honest reason was that we wanted to ship it well or not at all. Half-wired public storage would have been worse than none. It works now because the full round trip works: you tap, the action runs, the receipt signs, the public copy lands, the link appears on your page. If any link in that chain breaks, the link just stays hidden until it works. We never claim it is there when it is not.</p>
+                <h2>Why we waited</h2>
+                <p>Two weeks ago we said public storage was not in scope yet. The honest reason was that we wanted to ship it well or not at all. Half-wired public storage would have been worse than none. It works now because the full round trip works: you tap, the action runs, the receipt signs, the public copy lands, the link appears on your page. If any link in the chain breaks, the link stays hidden until it works again. We never claim it is there when it is not.</p>
 
-                <h2>A small note about voice</h2>
-                <p>The narration in our latest product video was made with the same AI voice provider that powers other consumer apps. We mention this because we have a rule: anything in our marketing that looks like a product capability should be a real one we use ourselves, not a stage prop.</p>
-
-                <p>You did not buy us for voice. You bought us for an assistant that drafts your email and waits for your tap. The new layer of public storage is part of why that tap is safe.</p>
+                <h2>A footnote on the demo voice</h2>
+                <p>The narration in our latest product video was made with the same AI voice provider you can use through us. This is a marketing note, not a product pillar. We mention it because we have a rule that anything in our marketing that looks like a capability should be a real one we use ourselves, not a stage prop. The voice is one example. The receipts are the bigger one.</p>
             </div>
         ),
         'channel-agnostic-photon-spectrum': (
