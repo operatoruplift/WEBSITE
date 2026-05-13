@@ -25,6 +25,7 @@
  */
 import { NextResponse } from 'next/server';
 import { getToolPrice, TREASURY_WALLET } from './pricing';
+import { toSafeNumber } from './amount';
 import {
     createInvoice,
     hashParams,
@@ -114,12 +115,21 @@ export async function x402Gate(args: {
         };
     }
 
-    // No proof, mint an invoice and return 402
+    // No proof, mint an invoice and return 402.
+    // TOOL_PRICING stores amounts as decimal strings + `decimals` for
+    // precision; convert to a precision-checked JS number at both the
+    // DB and wire boundaries so existing clients (and the numeric
+    // amount_usdc Supabase column) keep the same shape they did before
+    // the SDP amount-helper port. Round-trip is validated by
+    // `toSafeNumber`; any new price that can't fit in a JS number
+    // throws AmountError at request time rather than silently rounding.
+    const amountNumber = toSafeNumber(price.amount, price.decimals);
+
     const invoice = await createInvoice({
         user_id: args.user_id,
         tool: args.tool,
         action: args.action,
-        amount_usdc: price.amount,
+        amount_usdc: amountNumber,
         chain: price.chain,
         params_hash: paramsHash,
     });
@@ -131,7 +141,7 @@ export async function x402Gate(args: {
                 {
                     scheme: 'solana-pay',
                     chain: price.chain,
-                    amount: price.amount,
+                    amount: amountNumber,
                     currency: price.currency,
                     recipient: TREASURY_WALLET,
                     description: price.description,
@@ -139,7 +149,7 @@ export async function x402Gate(args: {
                 },
             ],
             invoice_reference: invoice?.invoice_reference,
-            amount: price.amount,
+            amount: amountNumber,
             currency: price.currency,
             chain: price.chain,
             description: price.description,
@@ -154,7 +164,7 @@ export async function x402Gate(args: {
             'X-Payment-Required',
             JSON.stringify({
                 recipient: TREASURY_WALLET,
-                amount: price.amount,
+                amount: amountNumber,
                 currency: price.currency,
                 chain: price.chain,
                 memo: `OU ${args.tool}.${args.action}`,
