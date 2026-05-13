@@ -403,6 +403,8 @@ export default function PaywallPage() {
                                     value={waitlistEmail}
                                     onChange={e => setWaitlistEmail(e.target.value)}
                                     placeholder="your@email.com"
+                                    aria-label="Email for the waitlist"
+                                    autoComplete="email"
                                     className="w-full h-12 rounded-xl bg-[#0A0A0A] border border-[#222222] px-4 text-sm text-white placeholder-[#52525B] focus:border-[#F97316]/50 focus:outline-none transition-colors"
                                 />
                                 <button
