@@ -2,6 +2,7 @@
 
 import Navbar from '@/src/components/Navbar';
 import Hero from '@/src/sections/Hero';
+import HowItWorks from '@/src/sections/HowItWorks';
 import LocalFirst from '@/src/sections/LocalFirst';
 import Channels from '@/src/sections/Channels';
 import DemoVideo from '@/src/sections/DemoVideo';
@@ -16,16 +17,21 @@ import Footer from '@/src/components/Footer';
  * Landing composition. April 30 2026 second-pass added LocalFirst
  * directly after the Hero so the trust substance (where data lives,
  * BYOK, signed receipts) reads as soon as the user scrolls, before
- * the demo video. The earlier ordering put DemoVideo first and left
- * "what is this thing actually doing with my data" as a question.
+ * the demo video. May 13 2026 inserted HowItWorks between Hero and
+ * LocalFirst per user feedback referencing clawcage.hackyguru.com's
+ * "Zero to sandbox in 10 seconds" pattern: a time-to-value walkthrough
+ * lands before the trust narrative, then LocalFirst explains why each
+ * step is trustworthy.
  *
  * Order:
  *   Hero        , short headline + two CTAs
- *   LocalFirst  , 4-step flow + provider strip + trust grid
+ *   HowItWorks  , 4-step time-to-value walkthrough
+ *   LocalFirst  , trust pillar (where data lives, BYOK, receipts)
+ *   Channels    , iMessage shipping, Telegram + WhatsApp ready
  *   DemoVideo   , 90 s recording
- *   Comparison  , vs. ChatGPT / Claude / Gemini / Grok
+ *   Comparison  , vs. niche agent peers
  *   UseCases    , concrete jobs the agent does
- *   Pricing     , Free / Pro / Teams
+ *   Pricing     , Free / Pro / Custom Team
  *   FAQ         , objection handling
  *   FinalCta    , cream editorial closer (sully.ai-derived pattern)
  */
@@ -40,6 +46,7 @@ export default function Home() {
           outside as their own landmarks. */}
       <main>
         <Hero />
+        <HowItWorks />
         <LocalFirst />
         <Channels />
         <DemoVideo />
