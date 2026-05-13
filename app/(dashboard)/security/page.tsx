@@ -33,6 +33,9 @@ interface SignedReceiptRow {
      *  awkward "pending" state and no overclaim. */
     filecoin_cid?: string | null;
     filecoin_provider?: string | null;
+    /** 0G Storage rootHash, set when /api/cron/og-anchor pushes the
+     *  SignedReceipt JSON to 0G testnet. Same hide-when-NULL rule. */
+    og_storage_root_hash?: string | null;
 }
 
 const CATEGORY_META: Record<string, { label: string; color: string; icon: typeof Shield }> = {
@@ -305,11 +308,26 @@ export default function SecurityPage() {
                                                             className="text-[#F97316] hover:underline decoration-dotted"
                                                             aria-label="View signed receipt on Filecoin via IPFS gateway"
                                                         >
-                                                            {r.filecoin_cid.slice(0, 12)}…
+                                                            {r.filecoin_cid.slice(0, 12)}&hellip;
                                                         </a>
                                                         {r.filecoin_provider && (
                                                             <span className="text-gray-600 ml-1">({r.filecoin_provider})</span>
                                                         )}
+                                                    </p>
+                                                )}
+                                                {r.og_storage_root_hash && (
+                                                    <p className="text-[10px] font-mono mt-1 truncate">
+                                                        <span className="text-gray-500">0g: </span>
+                                                        <a
+                                                            href={`/api/og/storage/${encodeURIComponent(r.og_storage_root_hash)}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-[#F97316] hover:underline decoration-dotted"
+                                                            aria-label="View signed receipt on 0G Storage"
+                                                        >
+                                                            {r.og_storage_root_hash.slice(0, 12)}&hellip;
+                                                        </a>
+                                                        <span className="text-gray-600 ml-1">(testnet)</span>
                                                     </p>
                                                 )}
                                             </div>

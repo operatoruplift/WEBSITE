@@ -1,66 +1,87 @@
 # 0G integration decision
 
-Status: **Deferred 2026-05-14.** Re-evaluate when 0G ships Persistent
-Memory AND our in-house memory system shows real strain. Mirrors the
-template used for `docs/filecoin-decision.md` and
-`docs/paysh-solana-new-integrations.md`.
+Status: **Reversed on 2026-05-14 from deferred to partial ship.** Original
+decision was to defer all 5 modules; founder asked us to integrate for
+the 0G Labs hackathon. Scope is **Storage + Agent ID on testnet**, with
+the other three modules (Compute, Persistent Memory, TEE) still
+deferred.
 
-## Why we looked
+## What changed and why
 
-Founder shared the 0G docs (https://docs.0g.ai/) asking which modules
-to fold in. Same investigation pattern we ran for the Solana Developer
-Platform and clawcage / clawtalk-ios.
+Earlier this week we wrote "defer all" because we evaluated 0G as
+infrastructure-replacement: should it replace our Filecoin mirror, our
+hosted AI providers, our memory engine. The answer to each was no. But
+that was the wrong frame for a hackathon. For a hackathon, the right
+question is **what can 0G add on top of our existing stack as a second
+verifiable layer**, and the answer is Storage and Agent ID.
 
-## What 0G offers and how it maps to our stack
+This file replaces the earlier "defer all" record. The honest
+architectural read on each module is preserved below; what changed is
+the verdict on Storage + Agent ID.
 
-| 0G module | What it is | What it would replace or extend | Verdict |
-|---|---|---|---|
-| **0G Storage** (Log + KV) | Decentralized storage, Log permanent archival + KV millisecond query layer, optimized for AI data | Filecoin mirror via Lighthouse (`lib/filecoin/anchor.ts`) for receipts; Supabase for app data | **Skip.** Pure infrastructure migration with vendor lock-in risk and no new user value. The Filecoin mirror story is already shipped and the receipt JSON shape contract is locked. |
-| **Compute Network** | Decentralized GPU marketplace, pay-as-you-go inference, ZK-verifiable settlement | Hosted AI providers (Anthropic, OpenAI, Google, xAI, DeepSeek) that the user BYOKs into | **Skip.** Conflicts with our "use the model you already pay for" wedge. Adding 0G compute either replaces user-chosen providers (breaks BYOK) or adds a 6th option nobody asked for. ZK-verifiable settlement is interesting but our trust story is signed-receipts-on-Solana, not inference chain-of-custody. |
-| **Persistent Memory** (coming soon) | Cross-session permanent memory + ultra-large context windows for AI agents | In-house memory in `lib/memoryEngine` + localStorage + Supabase tables (`memory_nodes`, `chat_sessions`) | **Watch.** Re-evaluate when both (a) 0G ships it and (b) our memory system shows real strain (memory truncation complaints, context-window pain). Adopting a "coming soon" hosted dependency pre-ship is risky. |
-| **Agent ID** | Tokenized AI agent identity, encrypted metadata, tradable ownership, composability | Our ERC-8004-style agent registration documents (`agents/*.json` + `/api/receipts/public-key`) | **Skip.** Our wedge is approval-gated consumer assistant, not trade-your-agent marketplaces. We don't tokenize agents and users don't own/trade them on our platform. |
-| **Privacy & Security** (TEE + Alignment Nodes) | Hardware-enforced privacy during inference + real-time drift/bias monitoring | Nothing today (we proxy to user-chosen AI providers; we never see prompt content beyond the proxy hop) | **Skip.** TEE solves a problem we already solved by not having it (BYOK means the user picked their provider's privacy posture, not ours). Alignment Nodes for model drift is interesting only at scale we don't have. |
+## Module verdicts (current)
 
-## The recurring architectural mismatch
+| 0G module | Verdict | Reasoning |
+|---|---|---|
+| **Storage** | **Ship (testnet)** | Additive: every signed receipt now pinned to **two** decentralized storage networks (Filecoin via Lighthouse + 0G testnet via the indexer). Judges can verify the same bytes against either network independently. Implemented in `lib/og/storage.ts` + `/api/cron/og-anchor` + `lib/og-storage-migration.sql`. /security shows a `0g: <rootHash>` link next to the `filecoin: <cid>` link. |
+| **Agent ID** | **Ship (testnet)** | Additive: our existing ERC-8004-style agent registration documents (`agents/*.json`) get a parallel 0G Agent ID registration so the same agent identity is verifiable from a second standard. Implementation pending in a follow-up PR. |
+| **Compute Network** | Skip | Our wedge is "use the model you already pay for." Decentralized GPU marketplace replaces user-chosen providers (breaks BYOK) or adds a 6th dropdown nobody asked for. No change since the earlier decision. |
+| **Persistent Memory** | Watch | Still "coming soon" on 0G's side. Our `lib/memoryEngine` works for now. Re-evaluate when 0G ships it AND our memory system strains AND they offer clear pricing. |
+| **TEE Privacy** | Skip | We do not run inference. The TEE secures a problem we already solved by not having it (BYOK means the user picks their provider's privacy posture, not ours). |
 
-This is the **third platform-investigation in the same session** (after
-SDP, then clawcage / clawtalk-ios). All three have the same shape:
+## What "Ship Storage" actually means
 
-- 0G / SDP / clawcage are **platforms for teams building decentralized
-  AI / wallet / agent infrastructure from scratch**.
-- We are **a consumer app that integrates with existing best-of-breed
-  providers** (Anthropic + Google OAuth + Solana + Filecoin + Privy +
-  Photon Spectrum for iMessage).
+The hackathon integration is intentionally narrow:
 
-Forking from any of these or adopting their stack means rebuilding our
-app on a different substrate, not extending our existing one. The cost
-is high and the user-visible benefit is near-zero.
+1. **A new module** at `lib/og/storage.ts` that wraps the official
+   `@0gfoundation/0g-storage-ts-sdk` and `ethers` packages.
+2. **A new cron** at `/api/cron/og-anchor` that picks up un-anchored
+   receipts and pushes the canonical `SignedReceipt` JSON to 0G
+   Storage testnet. Triggered manually with the existing `CRON_SECRET`
+   pattern, same as `filecoin-anchor`.
+3. **A new column** `og_storage_root_hash` on `tool_receipts`. Migration
+   in `lib/og-storage-migration.sql`. Filecoin column stays.
+4. **A new link** on `/security` next to the existing `filecoin:` link.
+   Shows the truncated rootHash; clicks through to the verifier route.
+5. **A verifier passthrough** at `/api/og/storage/[rootHash]`. Public
+   route (allowlisted in middleware). Returns a JSON envelope with the
+   rootHash, the indexer endpoint, and verify-it-yourself instructions.
+6. **Three new env vars** for the operator to provision:
+   - `OG_PRIVATE_KEY` (a wallet on 0G testnet)
+   - `OG_RPC_URL` (defaults to `https://evmrpc-testnet.0g.ai`)
+   - `OG_INDEXER_RPC` (defaults to `https://indexer-storage-testnet-turbo.0g.ai`)
 
-## What would change our mind
+The receipt content is **unchanged**. The signed canonical JSON
+contract from PR #510 + `lib/x402/receipts.ts` is preserved. 0G Storage
+holds external provenance metadata, the same way Filecoin does.
 
-The only 0G module that could matter to us is **Persistent Memory**.
-Re-evaluate it when ALL of these are true:
+## What "Ship Agent ID" will mean (next PR)
 
-1. 0G has shipped Persistent Memory out of "coming soon" status.
-2. Our in-house memory system (`lib/memoryEngine`) is showing real
-   strain. Specifically:
-   - Users complain that the assistant forgets context across sessions
-     that should persist.
-   - We hit context-window walls on long-running conversations.
-   - We need to ship cross-device memory and our current localStorage
-     + Supabase setup makes it expensive.
-3. 0G offers either self-hosting or clear pricing. We do not adopt a
-   hosted dependency we can't model the cost of.
+Pending. Will live as `lib/og/agent-id.ts` with a registration helper
+that maps our existing `AgentRegistration` shape onto whatever 0G Agent
+ID exposes. The existing agent JSON files (`agents/calendar.json`,
+`agents/gmail.json`, etc.) get a second registration document; the
+ERC-8004-style ones stay.
 
-Until those three line up, 0G stays in this doc, not in our code.
+## What stays deferred
+
+- 0G Compute Network (would replace BYOK, no)
+- 0G Persistent Memory (still "coming soon")
+- 0G TEE Privacy (problem we already solved)
+
+If 0G ships Persistent Memory and our `lib/memoryEngine` strains, the
+matrix above gets one more "Ship" row. Until then, two modules ship,
+three modules don't.
 
 ## Cross-references
 
-- `docs/filecoin-decision.md` — Filecoin mirror that 0G Storage would
-  replace. Shipped, working, do not touch.
-- `docs/paysh-solana-new-integrations.md` — Solana payment + scaffolding
-  integration we deferred under the same logic.
-- `docs/deck-objections.md` — Final story alignment table. If 0G ever
-  ships, the new row goes here.
-- `lib/memoryEngine/` — The in-house memory subsystem that 0G
-  Persistent Memory would replace.
+- `docs/filecoin-decision.md` — Filecoin mirror that 0G Storage **does
+  not replace**. The two networks coexist per receipt.
+- `lib/og/storage.ts`, `lib/og-storage-migration.sql`,
+  `app/api/cron/og-anchor/route.ts`, `app/api/og/storage/[rootHash]/route.ts`
+  — the actual code.
+- `docs/prod-env-checklist.md` — the three OG_* env vars must be set
+  on Vercel before the cron does work.
+- `docs/HACKATHON_GATE2.md` — companion hackathon doc for x402 + signed
+  receipts. The 0G Storage anchor is the second-network extension of
+  the trust pillar described there.

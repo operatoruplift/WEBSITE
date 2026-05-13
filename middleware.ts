@@ -47,6 +47,13 @@ const PUBLIC_ROUTES = [
     // a receipt's signature independently — see /docs/receipts. The
     // sibling /api/receipts route (user receipt list) stays auth-gated.
     '/api/receipts/public-key',
+    // /api/og/storage/[rootHash] is the verifier passthrough for a
+    // signed receipt pinned to 0G Storage. Same logic as the
+    // public-key route: a judge or any third party must be able to
+    // click the `0g:` link on /security and land on a JSON envelope
+    // describing how to verify the bytes against the indexer. No
+    // user-private data is exposed; the rootHash is on-chain.
+    '/api/og/storage/',
     // Inbound webhooks from external services (Photon Spectrum, etc.)
     // have their own signature-based auth. Privy tokens don't apply.
     '/api/webhooks/',
