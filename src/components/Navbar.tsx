@@ -101,7 +101,9 @@ const Navbar: React.FC<NavbarProps> = () => {
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="lg:hidden flex flex-col items-center justify-center w-10 h-10 space-y-1.5 z-50"
-          aria-label="Toggle menu"
+          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-menu"
         >
           {/* Plain `bg-white` is not flipped by the .theme-light wrapper
               (only `bg-white/N` opacity variants are), so the bars
@@ -114,8 +116,13 @@ const Navbar: React.FC<NavbarProps> = () => {
         </button>
       </nav>
 
-      {/* Mobile + tablet menu overlay (below lg). */}
+      {/* Mobile + tablet menu overlay (below lg). The `id` ties the
+          panel to the hamburger button's `aria-controls`, and
+          `aria-hidden` matches the visible state so screen readers
+          don't announce nav links when the menu is closed. */}
       <div
+        id="mobile-menu"
+        aria-hidden={!mobileMenuOpen}
         className={`lg:hidden fixed inset-0 bg-background/98 backdrop-blur-md z-40 transition-all duration-300 ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
         style={{ top: '72px' }}
       >
