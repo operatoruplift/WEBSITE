@@ -43,7 +43,7 @@ export function MobileNav() {
                         style={{ marginBottom: 'env(safe-area-inset-bottom, 0)' }}>
                         <div className="flex items-center justify-between mb-4">
                             <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">More</span>
-                            <button onClick={() => setShowMore(false)} className="text-gray-500 hover:text-white p-1"><X size={16} /></button>
+                            <button onClick={() => setShowMore(false)} aria-label="Close menu" className="text-gray-500 hover:text-white p-1"><X size={16} /></button>
                         </div>
                         <div className="grid grid-cols-3 gap-3">
                             {moreItems.map(item => {
