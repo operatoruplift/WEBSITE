@@ -30,7 +30,7 @@ const faqs = [
   },
   {
     q: 'How much does it really cost?',
-    a: 'Pro is $50 a month, paid in USDC. Team Starter is $299/mo for 5 seats (Pro for everyone, plus shared inbox/calendar and admin tools). Cancel any time. Per-action gas (a fraction of a cent on Solana) is on us; we don\u2019t pass it through.',
+    a: 'Pro is $50 a month, paid in USDC. Team pricing is custom, book a call from the Pricing section, we shape the plan around your seat count. Cancel any time. Per-action gas (a fraction of a cent on Solana) is on us; we don\u2019t pass it through.',
   },
   {
     q: 'I\u2019m not a techie. Is this for me?',

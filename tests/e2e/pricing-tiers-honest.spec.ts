@@ -12,19 +12,20 @@ test.describe.configure({ timeout: 90_000 });
  * History:
  *   - PR #481 bumped Pro $19 -> $50/mo
  *   - PR #490 bumped Team Starter $100 -> $299/mo
- *   - Slide 5 of docs/deck-objections.md anchors on "deposit-to-credit
- *     pivot deferred; Pro $50/mo, Team Starter $299/mo for 5 seats"
+ *   - Later PR replaced Team Starter $299 with "Custom, book a call"
+ *     after user feedback that locking in a published team price
+ *     before any team customer was overcommitting.
  *
  * The two surfaces under test:
  *
  *   Homepage Pricing section (src/sections/Pricing.tsx):
  *     Free   <no price line>     (Try the demo)
  *     Pro    $50/month            highlighted, Start Pro CTA
- *     Team   $299/month           Start team plan CTA
+ *     Team   Custom               Book a call CTA -> cal.com
  *
  *   Dedicated /pricing page (app/pricing/page.tsx, TEAM-focused):
- *     Team Starter   $299/month
- *     Business       $50/seat/month  highlighted
+ *     Team           Custom         Book a call CTA -> /contact
+ *     Business       $50/seat/month highlighted
  *     Enterprise     Custom
  *
  * If anyone reverts a price, drops a tier, or rebrands without updating
@@ -42,21 +43,22 @@ test('homepage Pricing section shows Pro at $50/month', async ({ page }) => {
     await expect(proCard).toContainText('/month');
 });
 
-test('homepage Pricing section shows Team Starter at $299/month', async ({ page }) => {
+test('homepage Pricing section shows Team at Custom pricing', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    const teamCard = page.locator('li').filter({ has: page.getByText(/Team Starter/i) }).first();
+    const teamCard = page.locator('li').filter({ has: page.getByText(/^Team$/) }).first();
     await expect(teamCard).toBeVisible({ timeout: 10_000 });
-    await expect(teamCard).toContainText('$299');
-    await expect(teamCard).toContainText('/month');
+    await expect(teamCard).toContainText(/Custom/i);
+    // Description carries the "talk to us" cue + Book a call CTA.
+    await expect(teamCard).toContainText(/talk to us|book a call/i);
 });
 
-test('/pricing page shows Team Starter at $299/month', async ({ page }) => {
+test('/pricing page shows Team at Custom pricing', async ({ page }) => {
     await page.goto('/pricing', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    // The /pricing page is team-focused. Team Starter is the entry tier.
-    await expect(page.getByText('Team Starter').first()).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByText('$299').first()).toBeVisible();
+    // /pricing page Team tier is custom too, paralleling the homepage.
+    await expect(page.getByText(/^Team$/).first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(/Custom/i).first()).toBeVisible();
 });
 
 test('/pricing page shows Business at $50/seat/month (highlighted)', async ({ page }) => {

@@ -9,15 +9,17 @@ test.describe.configure({ timeout: 90_000 });
  *
  * PR #479 fixed this answer from "$19/month plus a tiny fee" to
  * "$19/month, gas on us". PR #481 then bumped Pro $19 -> $50/mo
- * and PR #490 bumped Team Starter $100 -> $299/mo. The FAQ entry
- * has had to be touched THREE times this quarter, which makes it
- * the highest-drift surface for the deck's slide 5 monetization
- * pitch.
+ * and PR #490 bumped Team Starter $100 -> $299/mo. Later, after
+ * user feedback that locking in a published team price before any
+ * team customer was overcommitting, the Team Starter $299 line was
+ * replaced with "Team pricing is custom, book a call". The FAQ
+ * entry has had to be touched several times, which makes it the
+ * highest-drift surface for the deck's slide 5 monetization pitch.
  *
  * The current honest answer pillars:
  *
  *   - Pro is $50/mo
- *   - Team Starter is $299/mo (Pro for 5 seats)
+ *   - Team pricing is custom (book a call)
  *   - USDC, not credit-card (Solana payment rail = on-chain story)
  *   - "gas on us" (no per-action surcharge)
  *
@@ -29,7 +31,7 @@ test.describe.configure({ timeout: 90_000 });
  *   - tests/e2e/wave6-copy.spec.ts (Pro tier 3-word concrete deliverables)
  */
 
-test('homepage FAQ "How much" answer surfaces $50 + $299 + USDC + gas-on-us', async ({ page }) => {
+test('homepage FAQ "How much" answer surfaces $50 + custom team + USDC + gas-on-us', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
     // Find the disclosure trigger by question text and click to expand.
@@ -44,7 +46,8 @@ test('homepage FAQ "How much" answer surfaces $50 + $299 + USDC + gas-on-us', as
     const faqSection = trigger.locator('xpath=ancestor::section[1]');
 
     await expect(faqSection).toContainText(/\$50/);
-    await expect(faqSection).toContainText(/\$299/);
+    // Team pricing is custom, no published number to lock in.
+    await expect(faqSection).toContainText(/Team pricing is custom/i);
     // USDC = Solana payment rail honesty (not credit-card billing).
     await expect(faqSection).toContainText(/USDC/);
     // "gas on us" = no per-action surcharge. PR #479 anchor phrasing.

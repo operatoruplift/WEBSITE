@@ -42,25 +42,39 @@ test('/login is reachable directly (sanity)', async ({ page }) => {
     await expect(page).toHaveURL(/\/login(\?|$)/);
 });
 
-test('/pricing Team Starter + Business CTAs go to /login?returnTo=/paywall (Wave 1 risk #3)', async ({ page }) => {
+test('/pricing Business CTA goes to /login?returnTo=/paywall (Wave 1 risk #3)', async ({ page }) => {
     // Marketing pages adopt theme-light at the wrapper, the page is a
     // client component; domcontentloaded is enough since we read DOM.
     await page.goto('/pricing', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    // Both self-serve tiers must direct buyers through Privy auth to
-    // the paywall. PR #481 renamed Team -> "Team Starter" with CTA
-    // "Start team plan" while Business kept its "Get started" CTA;
-    // collect both Anchor variants so a future copy edit on either
-    // side doesn't silently re-open this risk.
+    // Business is the self-serve per-seat tier; it must direct buyers
+    // through Privy auth to the paywall. Team is custom-priced now
+    // and routes to /contact (covered separately).
     const ctaHrefs = await page
-        .locator('a:has-text("Start team plan"), a:has-text("Get started")')
+        .locator('a:has-text("Get started")')
         .evaluateAll(els =>
             els.map(el => (el as HTMLAnchorElement).getAttribute('href')),
         );
-    expect(ctaHrefs.length).toBeGreaterThanOrEqual(2);
+    expect(ctaHrefs.length).toBeGreaterThanOrEqual(1);
     for (const href of ctaHrefs) {
         expect(href).toBe('/login?returnTo=/paywall');
     }
+});
+
+test('/pricing Team CTA goes to /contact (Team is now custom)', async ({ page }) => {
+    await page.goto('/pricing', { waitUntil: 'domcontentloaded', timeout: 60_000 });
+
+    // Team tier moved from $299/mo + "Start team plan" -> /login flow
+    // to "Custom" + "Book a call" -> /contact. The change reflects
+    // the decision to keep Team pricing negotiable until we have
+    // enough Team customers to publish a real number.
+    const teamCard = page.locator('div').filter({ hasText: /^Team$/ }).first();
+    await expect(teamCard).toBeVisible({ timeout: 10_000 });
+    const teamCtaHref = await page
+        .locator('a:has-text("Book a call")')
+        .first()
+        .getAttribute('href');
+    expect(teamCtaHref).toBe('/contact');
 });
 
 test('/pricing Enterprise CTA stays /contact (Wave 1 risk #3 exception)', async ({ page }) => {
