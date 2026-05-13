@@ -63,7 +63,7 @@ export function CommandBar() {
                 <div className="flex items-center gap-3 px-4 py-3 border-b border-white/5">
                     <Search className="w-5 h-5 text-gray-500 flex-shrink-0" />
                     <input ref={inputRef} type="text" value={query} onChange={e => { setQuery(e.target.value); setSelectedIndex(0); }} onKeyDown={handleKeyDown}
-                        placeholder="Search commands, navigate, or take action..." className="flex-1 bg-transparent text-white text-sm placeholder-gray-500 focus:outline-none" />
+                        placeholder="Search commands, navigate, or take action..." aria-label="Command palette search" className="flex-1 bg-transparent text-white text-sm placeholder-gray-500 focus:outline-none" />
                     <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] text-gray-500 border border-white/10 bg-white/5 font-mono">ESC</kbd>
                 </div>
                 <div className="max-h-80 overflow-y-auto py-2" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.05) transparent' }}>
