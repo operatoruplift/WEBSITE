@@ -43,6 +43,8 @@ Legend:
 | ed25519-signed receipts for Real tool calls | Real | `/api/receipts/*`. |
 | Public key endpoint `/api/receipts/public-key` | Real | ed25519 pubkey for independent verification. |
 | Merkle root commit to Solana devnet | Real | Anchor `publish_root` program; every 5 receipts. |
+| Filecoin mirror of every receipt | Real | `lib/filecoin/anchor.ts` + cron at `/api/cron/filecoin-anchor`. Lighthouse provider by default; the `filecoin_cid` renders as a `https://<cid>.ipfs.dweb.link` link on `/security`. Cron is manually triggered (not in `vercel.json`) but the path is wired end-to-end. |
+| ElevenLabs voiceover at `/api/voice/synth` | Real | `lib/elevenlabs/synth.ts`. Privy-gated. Returns 503 `provider_unavailable` honestly when `ELEVENLABS_API_KEY` is unset. Used for the demo recording narration. Not a runtime user surface. |
 | Demo receipts | Never | No code path produces a receipt when `simulated: true`. |
 
 ## Payment rail
