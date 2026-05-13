@@ -14,13 +14,16 @@ import { getGoogleClientForSender } from '@/lib/photon/google-bridge';
  * happy path is covered by integration tests at deploy time.
  */
 
-interface UserRow {
+// Index-signature compatible row shapes so makeRowBuilder<T extends
+// Record<string, unknown>> below accepts UserRow[] and IntegrationRow[]
+// arguments (the builder indexes rows by arbitrary column name).
+interface UserRow extends Record<string, unknown> {
     sender: string;
     privy_user_id: string | null;
     verified_at: string | null;
 }
 
-interface IntegrationRow {
+interface IntegrationRow extends Record<string, unknown> {
     user_id: string;
     provider: string;
     refresh_token: string | null;
