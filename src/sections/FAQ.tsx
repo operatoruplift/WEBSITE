@@ -17,6 +17,10 @@ const faqs = [
     a: 'Today the web app routes through our servers and the AI provider you pick (Anthropic, OpenAI, Google, xAI, DeepSeek). We don\u2019t resell any of it; the third parties are listed in the privacy policy. The roadmap includes a desktop app that runs locally with Ollama. The whole codebase is MIT-licensed so anyone technical can verify how data moves.',
   },
   {
+    q: 'What\u2019s a signed receipt and why should I care?',
+    a: 'Every action your assistant takes (sending an email, creating a calendar event) produces a small record signed with our private key. They land on your /security page. Anyone can verify the signature with our public key, and every receipt also lives on a public storage network so the proof outlives our database, even if our company goes away.',
+  },
+  {
     q: 'Which AI does it use?',
     a: 'Whichever you want. Claude, ChatGPT, Gemini, Grok, and DeepSeek are wired in today, the same five hosted providers shown in the model marquee on the homepage. Open-source models on your laptop via Ollama (Llama, Mistral) run through the desktop app on the roadmap. Switch between any of the hosted ones with one click; it picks the best one for each task by default.',
   },
