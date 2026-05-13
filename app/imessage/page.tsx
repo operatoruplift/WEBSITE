@@ -74,9 +74,9 @@ export default function IMessageLanding() {
                             </p>
                             <ol className="space-y-4 text-sm">
                                 <Step n={1} text="You send an iMessage to the bot's number." />
-                                <Step n={2} text="Photon Spectrum POSTs the message to operatoruplift.com over HTTPS with an HMAC-signed body." />
+                                <Step n={2} text="Our iMessage bridge forwards the message to operatoruplift.com over HTTPS with an HMAC-signed body so we can verify it actually came from your phone." />
                                 <Step n={3} text="The webhook checks 5 stages in order: opt-out, pending YES/NO, keyword (STOP/HELP/PING), intent (set_zodiac/weather/email_draft), and falls back to Claude Haiku 4.5 with multi-turn history." />
-                                <Step n={4} text="The reply gets stripped of any stray markdown, then handed to Photon to deliver back to your phone." />
+                                <Step n={4} text="The reply gets stripped of any stray markdown, then handed back to the iMessage bridge to deliver to your phone." />
                             </ol>
                         </div>
                     </FadeIn>
@@ -117,13 +117,13 @@ export default function IMessageLanding() {
                             <h2 className="text-xl md:text-2xl font-medium text-foreground tracking-tight mb-4">What&apos;s not here yet</h2>
                             <ul className="space-y-3 text-sm text-muted leading-relaxed">
                                 <li>
-                                    <span className="text-foreground font-medium">Slack and Discord.</span> The Spectrum bridge already speaks Telegram and WhatsApp; Slack and Discord adapters are roadmap. The current code is platform-agnostic so this is wiring, not a rewrite.
+                                    <span className="text-foreground font-medium">Slack and Discord.</span> Our message bridge already handles Telegram and WhatsApp; Slack and Discord adapters are roadmap. The agent code is platform-agnostic so this is wiring, not a rewrite.
                                 </li>
                                 <li>
                                     <span className="text-foreground font-medium">Tauri desktop binary.</span> A Tauri config exists but the native binary is not yet building. The web app is the canonical surface today.
                                 </li>
                                 <li>
-                                    <span className="text-foreground font-medium">A friendly public number.</span> The Spectrum bridge is configured per project. We&apos;ll publish the public number when iMessage onboarding is open beyond the team.
+                                    <span className="text-foreground font-medium">A friendly public number.</span> The agent number is configured per project. We&apos;ll publish the public number when iMessage onboarding is open beyond the team.
                                 </li>
                             </ul>
                         </div>

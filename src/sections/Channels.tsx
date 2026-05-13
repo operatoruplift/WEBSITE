@@ -37,13 +37,13 @@ const CHANNELS: Channel[] = [
     },
     {
         name: 'Telegram',
-        blurb: 'Same webhook, same agent. Flip it on by routing your Spectrum project to Telegram.',
+        blurb: 'Same assistant, same approval gate. Telegram chat instead of iMessage. We flip it on when traffic is rehearsed.',
         status: 'ready',
         Icon: Send,
     },
     {
         name: 'WhatsApp',
-        blurb: 'Spectrum bridges WhatsApp Business; the agent loop runs identically once the project is configured.',
+        blurb: 'WhatsApp Business is wired the same way. The agent does not know which app you texted from, only the words.',
         status: 'ready',
         Icon: MessageCircle,
     },
