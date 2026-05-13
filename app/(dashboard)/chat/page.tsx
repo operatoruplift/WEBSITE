@@ -45,7 +45,8 @@ const AGENTS = [
 /**
  * Consumer-first prompt suggestions (May 14 positioning).
  *
- * The three demo beats, daily briefing, inbox triage, reminders vibe ,  * lead. These are the first things a cold visitor sees on /chat and each
+ * The three demo beats, daily briefing, inbox triage, reminders vibe,
+ * lead. These are the first things a cold visitor sees on /chat and each
  * maps to a real workflow the product can actually run (approval modal,
  * Google tool, or Tier 1 tool in demo mode). Dev-focused prompts demoted
  * to the bottom so they don't steal the first impression.
