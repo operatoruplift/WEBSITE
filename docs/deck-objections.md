@@ -9,7 +9,7 @@ Wave 7 deliverable. The four-part pitch, eight memorized objection answers, the 
 Mapped to the brief's four parts:
 
 1. **What you get**: drafts your email, schedules your meetings.
-2. **Why trust**: nothing irreversible without your tap; signed receipts; on-chain audit.
+2. **Why trust**: nothing irreversible without your tap; signed receipts; on-chain audit; Filecoin mirror via public IPFS gateway.
 3. **What integrations do**: read Gmail, write Gmail draft, create Calendar event, store receipts on Solana, mirror receipts to Filecoin via IPFS, identify the agent via SNS.
 4. **How monetization works**: $50 USDC deposit, $0.01 per write action, refundable, no subscription.
 
@@ -31,7 +31,7 @@ Mapped to the brief's four parts:
 1. **Hero + tagline**: "AI that runs on your terms." One CTA: Sign in and connect Gmail.
 2. **Approval-before-action**: three-step diagram (You ask -> Bot drafts -> You tap, then it sends).
 3. **Tool execution today**: Gmail draft + send (live), Calendar create (live), more on the way.
-4. **Trust layer**: SNS-anchored signer identity, ed25519 receipts, public-key verification endpoint.
+4. **Trust layer**: SNS-anchored signer identity, ed25519 receipts, public-key verification endpoint, Filecoin IPFS mirror of every receipt.
 5. **Monetization**: deposit-to-credit, $50 USDC minimum, $0.01 per write action, refundable.
 6. **Channel-agnostic**: iMessage shipping, Telegram + WhatsApp ready (Spectrum). Slack + Discord aren't on the marketing surface anymore (trimmed from the Channels section per the "make work or remove" rule); they come back when wired.
 7. **Roadmap**: real-Gmail tool execution from iMessage (already shipping), enterprise OAuth tenant, audit dashboards.
