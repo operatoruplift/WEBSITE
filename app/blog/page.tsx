@@ -33,15 +33,17 @@ export default function BlogPage() {
                     <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted hover:text-foreground transition-colors mb-8">
                         <ArrowLeft size={14} /> Back to home
                     </Link>
-                    <div className="inline-flex items-center gap-3 mb-4">
-                        <span className="h-px w-16 bg-[#F97316]/40" />
-                        <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">Blog &amp; Changelog</span>
-                        <span className="h-px w-16 bg-[#F97316]/40" />
+                    <div className="flex flex-col items-center text-center mb-16">
+                        <div className="inline-flex items-center gap-3 mb-4">
+                            <span className="h-px w-16 bg-[#F97316]/40" />
+                            <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">Blog &amp; Changelog</span>
+                            <span className="h-px w-16 bg-[#F97316]/40" />
+                        </div>
+                        <h1 className="text-3xl md:text-4xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] tracking-tight mb-4">
+                            What we shipped, what we learned
+                        </h1>
+                        <p className="text-muted text-lg max-w-xl leading-relaxed">Stories from real users, product updates, and what we are building next.</p>
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] tracking-tight mb-4">
-                        What we shipped, what we learned
-                    </h1>
-                    <p className="text-muted text-lg mb-16 max-w-xl leading-relaxed">Product updates, engineering deep-dives, and guides for building with Operator Uplift.</p>
                 </FadeIn>
 
                 {/* Featured post */}
