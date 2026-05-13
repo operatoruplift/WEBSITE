@@ -91,7 +91,7 @@ const LocalFirst: React.FC = () => {
                 headingId="local-first-heading"
                 eyebrow="Local-first"
                 title="Your data, your keys, your audit log"
-                description="The wedge is continuity, not paranoia. You will switch from Claude to GPT to Gemini this year. The bot forgets you when you switch unless your context lives somewhere portable. Here is exactly what moves where, every time you ask."
+                description="The same four steps as above, viewed from the security side. Here is where each piece of data goes, who can see it, and who keeps the receipt afterwards."
             />
 
             {/* Flow strip, four steps, horizontal on desktop, stacked on
