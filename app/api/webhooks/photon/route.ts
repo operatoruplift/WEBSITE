@@ -48,7 +48,8 @@ export const maxDuration = 15;
  *      agent loop can pick it up. Safe to run even if the table
  *      doesn't exist (falls through to 200 + { logged: false } so
  *      Spectrum doesn't keep retrying).
- *   4. Always return 200 unless the signature actually fails ,  *      webhook providers aggressively retry on 5xx.
+ *   4. Always return 200 unless the signature actually fails;
+ *      webhook providers aggressively retry on 5xx.
  *
  * NOTE: This route is allowlisted in middleware.ts because Spectrum
  * doesn't know about Privy, inbound webhooks are unauthenticated
