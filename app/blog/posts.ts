@@ -24,12 +24,12 @@ export const posts: BlogPost[] = [
         featured: true,
     },
     {
-        id: 'why-we-said-no-to-0g',
-        title: 'We looked at 0G this week. Here is why we are holding off.',
-        excerpt: '0G has five modules: storage, compute, persistent memory, agent ID, TEE privacy. We are a consumer app that ships when something works, not when it announces. Here is the honest read on each module and the one piece that could change our mind.',
+        id: 'og-storage-second-mirror',
+        title: 'Receipts now anchor to two decentralized storage networks, not one',
+        excerpt: 'Last week we shipped a Filecoin mirror so receipts could outlive our database. This week we added 0G Storage alongside it. Two independent networks now hold byte-identical copies of every signed receipt. Here is why the second one matters.',
         date: 'May 14, 2026',
-        readTime: '5 min read',
-        category: 'guide',
+        readTime: '4 min read',
+        category: 'update',
     },
     {
         id: 'filecoin-elevenlabs-trust-stack',

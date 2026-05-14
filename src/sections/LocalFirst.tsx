@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Lock, KeyRound, FileSignature, Cpu, ArrowRight, Triangle, Database, Send, Zap, Circle, Hexagon, Box, AudioWaveform } from 'lucide-react';
+import { Lock, KeyRound, FileSignature, Cpu, ArrowRight, Triangle, Database, Send, Zap, Circle, Hexagon, Box, AudioWaveform, Layers } from 'lucide-react';
 import { FadeIn } from '@/src/components/Animators';
 import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
@@ -75,7 +75,7 @@ const TRUST_SIGNALS: TrustSignal[] = [
     {
         icon: FileSignature,
         headline: 'Signed audit trail',
-        body: 'Every approved action gets an ed25519 signature, a Merkle root posted to Solana, and a Filecoin mirror anyone can pull from a public IPFS gateway. Read-only, public, immutable.',
+        body: 'Every approved action gets an ed25519 signature, a Merkle root posted to Solana, and two public-storage mirrors (Filecoin + 0G testnet) anyone can fetch from independently. Read-only, public, immutable.',
     },
     {
         icon: Cpu,
@@ -180,6 +180,14 @@ const LocalFirst: React.FC = () => {
                                 demo voiceover, not a runtime user surface. */}
                             <span className="inline-flex items-center gap-2 text-sm text-foreground">
                                 <Box aria-hidden className="w-4 h-4" /> Filecoin
+                            </span>
+                            {/* 0G Storage: testnet receipt anchoring path is wired
+                                (lib/og/storage.ts + cron at /api/cron/og-anchor).
+                                Live once OG_PRIVATE_KEY is set on Vercel. The
+                                /security page renders a `0g: <rootHash>` link
+                                alongside the filecoin link. */}
+                            <span className="inline-flex items-center gap-2 text-sm text-foreground">
+                                <Layers aria-hidden className="w-4 h-4" /> 0G
                             </span>
                             <span className="inline-flex items-center gap-2 text-sm text-foreground">
                                 <AudioWaveform aria-hidden className="w-4 h-4" /> ElevenLabs

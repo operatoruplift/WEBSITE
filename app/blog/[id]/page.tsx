@@ -10,36 +10,33 @@ import { BlogToc } from './BlogToc';
 
 function getArticleContent(id: string) {
     const content: Record<string, React.ReactNode> = {
-        'why-we-said-no-to-0g': (
+        'og-storage-second-mirror': (
             <div className="space-y-6">
-                <p className="text-lg">A founder we respect sent us the 0G docs this week and asked which modules we should fold in. We spent an afternoon on it. The answer is &quot;none yet, and here is exactly what would have to change for us to ship it.&quot;</p>
+                <p className="text-lg">A founder we respect sent us the 0G docs and asked which modules we should fold in. We spent an afternoon on it, almost wrote a &quot;here is why we are holding off&quot; post, then re-read what we had written and realized we had answered the wrong question.</p>
 
-                <p>We are writing this in public because we have a rule: every infrastructure decision we make has a public record. Filecoin was a yes (we shipped it). Tauri desktop is a no (the binary does not build). 0G is a no (today), and the reasons matter more than the answer.</p>
+                <p>The question was not &quot;should 0G replace our Filecoin mirror.&quot; The answer to that is no, and it stays no. The right question for a hackathon is &quot;can 0G add a second public mirror on top of what we already have.&quot; That answer is yes, and shipping it took an afternoon.</p>
 
-                <h2>What 0G actually offers</h2>
-                <p>Five modules, briefly. We are paraphrasing their docs into a one-line summary each so the rest of this post makes sense.</p>
-                <p><strong>0G Storage.</strong> A decentralized storage network with two layers: permanent archival (Log) plus millisecond-level key-value query (KV). Optimized for AI data.</p>
-                <p><strong>Compute Network.</strong> A decentralized GPU marketplace where providers sell inference, fine-tuning, and training. Pay-as-you-go with cryptographic settlement.</p>
-                <p><strong>Persistent Memory.</strong> Cross-session permanent memory and ultra-large context windows for AI agents. Listed as &quot;coming soon&quot; on their docs.</p>
-                <p><strong>Agent ID.</strong> A standard for tokenizing AI agents, their identity, memory, and behavior, with encrypted metadata, tradable ownership, and composability.</p>
-                <p><strong>Privacy &amp; Security.</strong> Hardware-enforced trusted execution environments for inference, plus monitoring nodes that watch for model drift and bias.</p>
+                <h2>What changed this week</h2>
+                <p>Every signed receipt now gets pinned to <strong>two</strong> public storage networks instead of one. Filecoin (via Lighthouse) was already there from last week. 0G testnet is there now too.</p>
+                <p>The two networks hold byte-identical copies of the same receipt JSON. Your <a href="/security">/security</a> page shows two clickable links per receipt: one labeled <code>filecoin:</code>, one labeled <code>0g:</code>. Either link gets you back to the same bytes we signed.</p>
 
-                <h2>Why each one is a no, in plain English</h2>
-                <p><strong>Storage.</strong> Your action receipts already get mirrored to a public storage network (Filecoin via Lighthouse, see <a href="/blog/filecoin-elevenlabs-trust-stack">last week&apos;s post</a>). Swapping that out for 0G Storage is moving from one decentralized storage provider to another. You would not see a difference. Our database (Supabase) stays where it is for the same reason: it works, it is fast, and the dependency is well understood.</p>
-                <p><strong>Compute.</strong> Our wedge is &quot;use the model you already pay for.&quot; The assistant routes your turn to Claude or GPT or Gemini using your own API key. That is the entire premise. If we add a decentralized GPU marketplace as a sixth option, either we replace your provider (breaks the &quot;your key&quot; promise) or we add a new dropdown nobody asked for. Cryptographic settlement of inference is technically interesting and unrelated to anything our users care about.</p>
-                <p><strong>Agent ID.</strong> 0G&apos;s standard is for tokenizing agents so they can be owned and traded. We are not a marketplace for agents. The agents on our platform are scripts we publish. They are not tokens, they are not owned by anyone, and nobody trades them. Adopting a standard built for a different product would muddle a story that currently works.</p>
-                <p><strong>TEE privacy.</strong> Trusted execution environments make inference private from the host machine running it. We do not run inference. Your AI provider does. We are a thin layer that proxies your prompt to a provider you chose. There is no inference for us to protect with hardware. Privacy in our model comes from BYOK plus signed receipts, not from a TEE on a node we do not run.</p>
+                <h2>Why two networks instead of one</h2>
+                <p>The honest answer: not because one was failing. Filecoin via Lighthouse works fine. We added 0G because the trust story gets meaningfully stronger when nobody can break the proof by knocking out a single storage provider.</p>
+                <p>If Lighthouse changes its terms tomorrow, the Filecoin link could break. If 0G&apos;s testnet indexer goes down, the 0G link breaks. The signed bytes themselves never change, but the convenient verification path through one network could close. With two parallel networks, a judge or an auditor can pick whichever one is up.</p>
+                <p>Same principle as keeping a backup of your photos in two cloud providers, except for the cryptographic proof that your assistant did what you said it did.</p>
 
-                <h2>The one piece that could change our mind</h2>
-                <p>Persistent Memory is the only module worth a second look. The reason: AI assistants forget you when you switch providers. That problem is real, our solution is currently homegrown (browser localStorage plus a Supabase table), and it has obvious limits. If our memory system started straining and 0G Persistent Memory was shipped (right now it is &quot;coming soon&quot;), and they offered either self-hosting or clear pricing, we would re-evaluate.</p>
-                <p>Three conditions, all required. Today, zero of them are true.</p>
+                <h2>What did NOT change</h2>
+                <p>The signed receipt is the same shape it was last week. The ed25519 signature is the same. The Solana fingerprint we publish every five receipts is the same. The <a href="/api/receipts/public-key">/api/receipts/public-key</a> endpoint returns the same key.</p>
+                <p>0G Storage joined the side of the architecture that holds the bytes, not the side that signs them. Storage is provenance. Signature is authenticity. We did not move any signature work to 0G; we duplicated the public-archive step.</p>
 
-                <h2>Why we publish decisions like this</h2>
-                <p>Most infrastructure platforms have an integration story that runs &quot;we shipped support for X.&quot; The thing nobody writes is the inverse: which integrations they considered and rejected, and why. That is the more honest signal about how a team makes decisions.</p>
-                <p>If you are a founder thinking about adopting any of this kind of platform (0G, but also the various decentralized AI / wallet / agent infrastructure stacks that show up every month), the question is not &quot;do they have cool features.&quot; The question is &quot;does my product actually need what they are selling, and would I notice the difference.&quot; For us today, the answer to that question is no for everything except Persistent Memory.</p>
-                <p>If 0G ships Persistent Memory and our memory system hits a wall, this post becomes the &quot;we are integrating it&quot; post. Until then, the decision lives in this post and in <code>docs/0g-integration-decision.md</code> in our repo, where anyone can read the same reasoning we just wrote.</p>
+                <h2>What you do not have to think about</h2>
+                <p>You do not have to know what 0G is. You do not have to install a wallet. You do not have to pay a 0G testnet fee. Both mirrors are operational metadata we run on our side. The only place 0G is visible to you is the small <code>0g: bafyrei...</code> link next to each receipt on /security, and that link is one click away from a small JSON explanation page if you ever want to verify the bytes yourself.</p>
 
-                <p>You did not buy us to learn about decentralized infrastructure. You bought us for an assistant that drafts your email and waits for your tap. Every integration we add or skip has to clear that bar. Today, 0G does not.</p>
+                <h2>What we still skipped from 0G</h2>
+                <p>The hackathon scope is intentionally narrow: 0G Storage today, 0G Agent ID landing in a follow-up. The three other 0G modules (Compute, Persistent Memory, TEE Privacy) stay deferred. Decentralized GPU marketplace would break our &quot;bring your own key&quot; promise. Persistent Memory is still &quot;coming soon&quot; on their side. TEE inference privacy is a problem we already solved by not running inference ourselves.</p>
+                <p>If you are a founder evaluating any of these infrastructure platforms (0G, but also the various decentralized AI / wallet / agent stacks that show up every month), the move that worked for us was: &quot;is there a smallest possible thing I can ship that adds verifiable value without rewriting my product?&quot; The answer is usually a parallel index, a second mirror, or a redundant signer. Not a stack swap.</p>
+
+                <p>You did not buy us to learn about decentralized storage. You bought us for an assistant that drafts your email and waits for your tap. The two mirrors are part of why that tap is safe.</p>
             </div>
         ),
         'filecoin-elevenlabs-trust-stack': (

@@ -44,6 +44,7 @@ Legend:
 | Public key endpoint `/api/receipts/public-key` | Real | ed25519 pubkey for independent verification. |
 | Merkle root commit to Solana devnet | Real | Anchor `publish_root` program; every 5 receipts. |
 | Filecoin mirror of every receipt | Real | `lib/filecoin/anchor.ts` + cron at `/api/cron/filecoin-anchor`. Lighthouse provider by default; the `filecoin_cid` renders as a `https://<cid>.ipfs.dweb.link` link on `/security`. Cron is manually triggered (not in `vercel.json`) but the path is wired end-to-end. |
+| 0G Storage mirror of every receipt | Real | `lib/og/storage.ts` + cron at `/api/cron/og-anchor`. 0G testnet (Turbo indexer) via `@0gfoundation/0g-storage-ts-sdk`. The `og_storage_root_hash` renders as a `0g: <rootHash>` link on `/security`, pointing at `/api/og/storage/[rootHash]` (public verifier passthrough, allowlisted in middleware). Active when `OG_PRIVATE_KEY` is set. Returns `{ ok: false, reason: 'not_configured' }` honestly when unset; the link stays hidden. |
 | ElevenLabs voiceover at `/api/voice/synth` | Real | `lib/elevenlabs/synth.ts`. Privy-gated. Returns 503 `provider_unavailable` honestly when `ELEVENLABS_API_KEY` is unset. Used for the demo recording narration. Not a runtime user surface. |
 | Demo receipts | Never | No code path produces a receipt when `simulated: true`. |
 
