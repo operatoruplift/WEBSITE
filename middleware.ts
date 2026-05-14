@@ -54,6 +54,11 @@ const PUBLIC_ROUTES = [
     // describing how to verify the bytes against the indexer. No
     // user-private data is exposed; the rootHash is on-chain.
     '/api/og/storage/',
+    // /api/og/agent-id/[tokenId] is the verifier passthrough for an
+    // agent NFT minted as an ERC-7857 Intelligent NFT on 0G Galileo
+    // Testnet. Public for the same reasons as /api/og/storage and
+    // /api/receipts/public-key: the on-chain record itself is public.
+    '/api/og/agent-id/',
     // Inbound webhooks from external services (Photon Spectrum, etc.)
     // have their own signature-based auth. Privy tokens don't apply.
     '/api/webhooks/',
