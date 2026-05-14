@@ -35,8 +35,17 @@ export default function BlogPage() {
                     "Back to home" is absolutely-positioned in the
                     top-left so it doesn't push the centered title off
                     axis. Same pattern as /pricing and /press-kit. */}
-                <FadeIn>
-                    <div className="relative min-h-[60vh] pt-28 pb-16 flex flex-col items-center justify-center text-center mb-16">
+                {/* FadeIn renders an `inline-block` wrapper that
+                    shrinks to its content's width. That collapses
+                    the flex `items-center` below to content width,
+                    leaving the title visually left-aligned even
+                    though the inner classes say center. Wrap FadeIn
+                    in a block-level full-width container so the
+                    centering inside has the full viewport to work
+                    against. The wrapper does no animation itself. */}
+                <div className="w-full">
+                    <FadeIn>
+                        <div className="relative w-full min-h-[60vh] pt-28 pb-16 flex flex-col items-center justify-center text-center mb-16">
                         <Link
                             href="/"
                             className="absolute top-8 left-0 inline-flex items-center gap-2 text-sm text-muted hover:text-foreground transition-colors"
@@ -54,8 +63,9 @@ export default function BlogPage() {
                         <p className="text-muted text-base md:text-lg max-w-xl leading-relaxed">
                             Stories from real users, product updates, and what we are building next.
                         </p>
-                    </div>
-                </FadeIn>
+                        </div>
+                    </FadeIn>
+                </div>
 
                 {/* Featured post */}
                 {featured && (
