@@ -162,6 +162,36 @@ diff <(jq -S . receipt.json) <(jq -S . receipt-from-filecoin.json)
 #    immutable, and independently retrievable.
 ```
 
+### Verifying a receipt externally via 0G Storage (second public mirror)
+
+The same receipt is also pinned to **0G Storage testnet** via the
+sister cron at `/api/cron/og-anchor`. The `tool_receipts.og_storage_root_hash`
+renders next to each row on `/security` as a `0g: <rootHash>` link.
+Two parallel networks holding byte-identical copies of the same
+signed receipt; verify against whichever you trust more.
+
+```bash
+# 1. Click the `0g: <rootHash>` link on /security. It hits the public
+#    verifier passthrough route, which returns a JSON envelope with
+#    the rootHash + the testnet indexer endpoint + verify-it-yourself
+#    instructions.
+curl -s "https://www.operatoruplift.com/api/og/storage/<rootHash>" \
+    | jq .
+
+# 2. Verify the bytes against the indexer with the official 0G SDK:
+#    https://docs.0g.ai/developer-hub/building-on-0g/storage/sdk
+#    pnpm install @0gfoundation/0g-storage-ts-sdk ethers
+#    Then download by rootHash and diff against /api/receipts output.
+
+# 3. ed25519 still proves authenticity. 0G Storage adds a second
+#    independent public-archive path so a Filecoin gateway outage
+#    does not break the trust chain.
+```
+
+The two mirrors are intentionally **additive**, not redundant marketing.
+A judge or an auditor picks the network that is available, both should
+return byte-identical receipts.
+
 ## What's NOT in Gate 2
 
 Deferred to future work (explicitly not claiming):
