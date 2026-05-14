@@ -23,26 +23,37 @@ export default function BlogPage() {
         <div className="theme-light w-full bg-background min-h-screen">
             <Navbar currentPage="blog" />
 
-            <main className="pt-32 pb-24 px-6 md:px-12 max-w-[1200px] mx-auto">
-                {/* Header. Match the homepage section pattern, eyebrow
-                    accent + gradient h1 (the same pattern shipped on
-                    /pricing and /press-kit) so the blog landing reads
-                    as part of the same editorial system, not a generic
-                    sub-page. */}
+            <main className="pb-24 px-6 md:px-12 max-w-[1200px] mx-auto">
+                {/* Hero-style header. The header used to sit at the top
+                    of <main> with `pt-32 mb-16`, which made it read as
+                    a generic "start of page" block instead of a hero.
+                    Pinning it to a `min-h-[60vh]` flex container with
+                    items-center + justify-center gives the title block
+                    real vertical centering against the navbar above and
+                    the featured post below.
+
+                    "Back to home" is absolutely-positioned in the
+                    top-left so it doesn't push the centered title off
+                    axis. Same pattern as /pricing and /press-kit. */}
                 <FadeIn>
-                    <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted hover:text-foreground transition-colors mb-8">
-                        <ArrowLeft size={14} /> Back to home
-                    </Link>
-                    <div className="flex flex-col items-center text-center mb-16">
+                    <div className="relative min-h-[60vh] pt-28 pb-16 flex flex-col items-center justify-center text-center mb-16">
+                        <Link
+                            href="/"
+                            className="absolute top-8 left-0 inline-flex items-center gap-2 text-sm text-muted hover:text-foreground transition-colors"
+                        >
+                            <ArrowLeft size={14} aria-hidden /> Back to home
+                        </Link>
                         <div className="inline-flex items-center gap-3 mb-4">
-                            <span className="h-px w-16 bg-[#F97316]/40" />
+                            <span className="h-px w-16 bg-[#F97316]/40" aria-hidden />
                             <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">Blog &amp; Changelog</span>
-                            <span className="h-px w-16 bg-[#F97316]/40" />
+                            <span className="h-px w-16 bg-[#F97316]/40" aria-hidden />
                         </div>
-                        <h1 className="text-3xl md:text-4xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] tracking-tight mb-4">
+                        <h1 className="text-3xl md:text-5xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] tracking-tight mb-5 max-w-3xl leading-[1.1]">
                             What we shipped, what we learned
                         </h1>
-                        <p className="text-muted text-lg max-w-xl leading-relaxed">Stories from real users, product updates, and what we are building next.</p>
+                        <p className="text-muted text-base md:text-lg max-w-xl leading-relaxed">
+                            Stories from real users, product updates, and what we are building next.
+                        </p>
                     </div>
                 </FadeIn>
 
