@@ -22,7 +22,7 @@ const CONTENT: Record<string, React.ReactNode> = {
             <h2>What ships today</h2>
             <ul>
                 <li>Google Calendar and Gmail tools behind per-action approval.</li>
-                <li>ed25519 signed receipts on <a href="/security">/security</a>, Merkle root published to Solana devnet every five actions, and a Filecoin mirror of every receipt via a public IPFS gateway.</li>
+                <li>ed25519 signed receipts on <a href="/security">/security</a>, Merkle root published to Solana devnet every five actions, and two parallel public-storage mirrors (Filecoin via IPFS + 0G testnet via the indexer) so the receipt bytes outlive our database.</li>
                 <li>Daily 8am calendar briefing (opt-in from <a href="/profile">/profile</a>).</li>
                 <li>Tier 1 tools that don&apos;t need Google: web search, web fetch, notes, tasks, reminders.</li>
             </ul>
@@ -75,9 +75,15 @@ const CONTENT: Record<string, React.ReactNode> = {
                 <li>Verify the ed25519 signature of the canonical JSON with that public key. The <code>signature</code> field is base64-encoded.</li>
                 <li>If the signature checks, the receipt is authentic. If it doesn&apos;t, we faked it and you caught us.</li>
             </ol>
-            <h2>Independent verification via Filecoin</h2>
-            <p>Each receipt row on <a href="/security">/security</a> renders a <code>filecoin: &lt;cid&gt;</code> link (when the cron at <code>/api/cron/filecoin-anchor</code> has run). Click it to fetch the same <code>SignedReceipt</code> JSON from a public IPFS gateway at <code>https://&lt;cid&gt;.ipfs.dweb.link</code>. The bytes on Filecoin are byte-identical to the bytes our server signed; if they don&apos;t match what <a href="/api/receipts">/api/receipts</a> returns, something has been tampered with.</p>
-            <p>Filecoin is provenance, not the source of truth. The ed25519 signature in step 3 above is what proves authenticity. Filecoin proves the bytes are public + immutable + independently retrievable.</p>
+            <h2>Independent verification via two storage networks</h2>
+            <p>Each receipt row on <a href="/security">/security</a> renders <strong>two</strong> independent public-archive links so a single provider outage cannot break verification:</p>
+            <ul>
+                <li><code>filecoin: &lt;cid&gt;</code> via the cron at <code>/api/cron/filecoin-anchor</code> (Lighthouse provider). Click it to fetch the same <code>SignedReceipt</code> JSON at <code>https://&lt;cid&gt;.ipfs.dweb.link</code>.</li>
+                <li><code>0g: &lt;rootHash&gt;</code> via the sister cron at <code>/api/cron/og-anchor</code> (0G Storage testnet, Turbo indexer). Click it to land on <code>/api/og/storage/[rootHash]</code>, our public verifier passthrough returning a JSON envelope with the rootHash + indexer endpoint + verification instructions.</li>
+            </ul>
+            <p>The bytes on each network are byte-identical to the bytes our server signed; if either doesn&apos;t match what <a href="/api/receipts">/api/receipts</a> returns, something has been tampered with. Both networks are <strong>provenance</strong>, not the source of truth. The ed25519 signature in step 3 above is what proves authenticity. The two mirrors prove the bytes are public + immutable + independently retrievable from whichever network is up.</p>
+            <h2>Optional on-chain agent identity (ERC-7857)</h2>
+            <p>Each agent has an additional identity surface: an ERC-7857 <strong>Intelligent NFT</strong> on 0G Galileo Testnet (0G AgenticID standard). The agent JSON at <a href="/agents/calendar.json">/agents/calendar.json</a> exposes an optional <code>og_agent_id</code> field whose <code>explorer_url</code> points at the token on <code>chainscan-galileo.0g.ai</code> once a tokenId has been minted. The on-chain <code>IntelligentData[]</code> array carries SHA-256 hashes of the agent&apos;s name, description, capabilities, system prompt, and model. Until the operator funds the mint wallet at <code>https://faucet.0g.ai</code> and runs <code>scripts/og-agent-id-mint.mjs</code>, the field is omitted from the JSON: the deploy never claims a tokenId it does not have.</p>
             <h2>Merkle root and Solana devnet</h2>
             <p>Every five receipts, the server computes a Merkle root and publishes it via our Anchor <code>publish_root</code> program on Solana devnet. That gives you a public commitment that makes silently-rewriting history detectable. See <Link href="/blog/audit-trail">the audit-trail post</Link> for the full pipeline.</p>
         </>
