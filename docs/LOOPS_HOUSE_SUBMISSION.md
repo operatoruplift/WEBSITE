@@ -27,9 +27,17 @@ Every agent action in Operator Uplift that costs the user (calendar writes, emai
 
 Receipts are persisted in Supabase and visible to the user. Anyone can verify them independently using the public key at `/api/receipts/public-key`.
 
-Each receipt is also anchored to **Filecoin** via the cron at `/api/cron/filecoin-anchor` (Lighthouse provider). The resulting `filecoin_cid` is rendered next to every receipt row on `/security` as a clickable link to `https://<cid>.ipfs.dweb.link`. A judge can fetch the same `SignedReceipt` JSON from a public IPFS gateway and byte-compare against what `/api/receipts` returns — no need to trust our Supabase. The ed25519 signature still proves authenticity; Filecoin proves the bytes are public, immutable, and independently retrievable.
+Each receipt is anchored to **two decentralized storage networks** so a single provider outage cannot break verification:
 
-Each live agent publishes an **ERC-8004-style registration document** at `/agents/calendar.json` and `/agents/gmail.json` — name, description, capabilities, endpoints, pricing, and a content checksum. Clients can verify the agent hasn't been tampered with before calling it.
+- **Filecoin** via the cron at `/api/cron/filecoin-anchor` (Lighthouse provider). The resulting `filecoin_cid` is rendered next to every receipt row on `/security` as a clickable link to `https://<cid>.ipfs.dweb.link`.
+- **0G Storage testnet** via the cron at `/api/cron/og-anchor` (Turbo indexer). The resulting `og_storage_root_hash` is rendered next to each receipt as a `0g: <rootHash>` link, pointing at `/api/og/storage/[rootHash]` — our public verifier passthrough returns a JSON envelope with the rootHash + indexer endpoint + verification instructions.
+
+A judge fetches the same `SignedReceipt` JSON from either network and byte-compares against what `/api/receipts` returns — no need to trust our Supabase. The ed25519 signature still proves authenticity; the two mirrors prove the bytes are public, immutable, and independently retrievable from whichever network is up.
+
+Each live agent has two identity surfaces:
+
+1. An **ERC-8004-style registration document** at `/agents/calendar.json` and `/agents/gmail.json` — name, description, capabilities, endpoints, pricing, and a content checksum. Clients verify the agent hasn't been tampered with before calling it.
+2. An **ERC-7857 Intelligent NFT (0G AgenticID)** on 0G Galileo Testnet. The agent JSON exposes an optional `og_agent_id` field with the tokenId + chainscan URL once `scripts/og-agent-id-mint.mjs` runs against a funded testnet wallet. Until that operator step is taken, the field is omitted — the deploy never claims a tokenId it does not have.
 
 ## How it works
 
@@ -82,6 +90,8 @@ Anyone — judge, user, auditor — can verify:
 | The agent exists + hasn't been modified | GET `/agents/calendar.json` includes a `checksum` over its own content |
 | The tool call was paid | `receipt.invoice_reference` + `receipt.payment_tx` are recorded server-side in `tool_invoices`; user can export from `/security` |
 | Per-action consent, not blanket | Every action requires a fresh approval modal. No "remember this agent" — each execution stands alone |
+| The bytes survive our database | Click the `filecoin:` link on `/security` for the IPFS gateway URL; click the `0g:` link for the JSON envelope at `/api/og/storage/[rootHash]` pointing at the 0G testnet indexer. Byte-compare against `/api/receipts`. |
+| The agent identity is on-chain | Once `og_agent_id` is populated in `/agents/{slug}.json`, the `explorer_url` field points at the ERC-7857 Intelligent NFT on `chainscan-galileo.0g.ai`. The on-chain `IntelligentData[]` array carries SHA-256 hashes of name + description + capabilities + system prompt + model. |
 
 ## Demo steps (exact clicks)
 
@@ -112,12 +122,15 @@ The gate is enforced at the actual tool endpoints (`/api/tools/calendar`, `/api/
 ## What's NOT in this submission (honest)
 
 - **Mainnet payments** — devnet only today. Swap-over is replacing the simulated tx signature in `app/api/tools/x402/pay/route.ts` with an RPC call that verifies the tx landed in the treasury wallet for the right amount.
-- **On-chain agent NFT (ERC-721)** — we ship the registration document but haven't minted. An NFT mint with metadata pointing at `/agents/*.json` would close the loop.
+- **0G AgenticID tokens actually minted** — the mint scaffolding (`scripts/og-agent-id-mint.mjs`) is shipped and the persistence file (`data/og-agent-ids.json`) is committed with `null` tokenIds. Operator action is required to fund a `OG_PRIVATE_KEY` wallet at `https://faucet.0g.ai` and run the script once. Until that step happens, the `og_agent_id` field is omitted from the public agent JSON — no overclaim.
 
 ## Links
 
 - Repo: https://github.com/operatoruplift/website
 - Full technical doc: [`docs/HACKATHON_GATE2.md`](./HACKATHON_GATE2.md)
+- 0G integration decision + scope: [`docs/0g-integration-decision.md`](./0g-integration-decision.md)
 - Agent registration: `/agents/calendar.json`, `/agents/gmail.json`
+- 0G AgenticID reference contract (Galileo Testnet): [`chainscan-galileo.0g.ai/address/0x2700F6A3e505402C9daB154C5c6ab9cAEC98EF1F`](https://chainscan-galileo.0g.ai/address/0x2700F6A3e505402C9daB154C5c6ab9cAEC98EF1F)
+- 0G Storage verifier passthrough: `/api/og/storage/[rootHash]`
 - Public key (receipt verification): `/api/receipts/public-key`
 - Migration: `lib/hackathon-gate2-migration.sql`
