@@ -100,6 +100,7 @@ jobs:
             tests/e2e/agent-registration.spec.ts \
             tests/e2e/og-agent-id.spec.ts \
             tests/e2e/og-storage.spec.ts \
+            tests/e2e/blog-header-centered.spec.ts \
             tests/e2e/gmail-builders.spec.ts \
             tests/e2e/llm-mapModelId.spec.ts \
             tests/e2e/photon-send.spec.ts \
