@@ -7,6 +7,15 @@ interface FadeInProps {
   direction?: 'up' | 'down' | 'left' | 'right' | 'none';
   className?: string;
   threshold?: number;
+  /**
+   * Default FadeIn wrapper is `inline-block`, which shrinks to its
+   * content's natural width. That breaks layouts that want the child
+   * to participate in `flex` / `text-center` / `w-full` centering
+   * against the full viewport (e.g. hero headers). Set `block` to
+   * render the wrapper as `block w-full` instead. Callers that
+   * actually wanted inline-block (text spans, etc.) can omit this.
+   */
+  block?: boolean;
 }
 
 export const FadeIn: React.FC<FadeInProps> = ({
@@ -14,7 +23,8 @@ export const FadeIn: React.FC<FadeInProps> = ({
   delay = 0,
   direction = 'up',
   className = '',
-  threshold = 0.1
+  threshold = 0.1,
+  block = false,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -48,10 +58,11 @@ export const FadeIn: React.FC<FadeInProps> = ({
     }
   };
 
+  const displayClass = block ? 'block w-full' : 'inline-block';
   return (
     <div
       ref={ref}
-      className={`inline-block transition-opacity duration-1000 ease-out ${className}`}
+      className={`${displayClass} transition-opacity duration-1000 ease-out ${className}`}
       style={{
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'none' : getTransform(),
