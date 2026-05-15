@@ -7,6 +7,8 @@ import { magicBlockSurfaceStatus } from '@/lib/magicblock/adapter';
 import { paymentsEnabled } from '@/lib/magicblock/payments';
 import { filecoinStatus } from '@/lib/filecoin/anchor';
 import { elevenLabsStatus } from '@/lib/elevenlabs/synth';
+import { og0Status } from '@/lib/og/storage';
+import { og0AgentIdStatus } from '@/lib/og/agent-id';
 
 export const runtime = 'nodejs';
 
@@ -67,6 +69,8 @@ export async function GET(request: Request) {
         const photonInbox = await photonInboxStatus();
         const filecoin = filecoinStatus();
         const elevenlabs = elevenLabsStatus();
+        const og0 = og0Status();
+        const og0AgentId = og0AgentIdStatus();
 
         const adapters = [
             {
@@ -125,6 +129,26 @@ export async function GET(request: Request) {
                     ? `ElevenLabs TTS active via voice ${elevenlabs.voiceId}. Endpoint at /api/voice/synth.`
                     : 'Set ELEVENLABS_API_KEY in Vercel env to activate.',
                 details: { voiceId: elevenlabs.voiceId },
+            },
+            {
+                name: 'og_storage',
+                active: og0.active,
+                reason: og0.active
+                    ? `0G Storage anchoring active on ${og0.network}. Cron at /api/cron/og-anchor publishes signed receipts; the 0g: <rootHash> link on /security points at /api/og/storage/[rootHash].`
+                    : 'Set OG_PRIVATE_KEY in Vercel env to activate 0G Storage anchoring. Optional overrides: OG_RPC_URL, OG_INDEXER_RPC.',
+                details: og0.active
+                    ? { network: og0.network, rpcUrl: og0.rpcUrl, indexerRpc: og0.indexerRpc }
+                    : { network: og0.network },
+            },
+            {
+                name: 'og_agent_id',
+                active: og0AgentId.active,
+                reason: `0G Agent ID (ERC-7857) module wired to ${og0AgentId.contract} on ${og0AgentId.network}. Run scripts/og-agent-id-mint.mjs against a funded OG_PRIVATE_KEY wallet to mint; tokenIds persist to data/og-agent-ids.json and surface on /agents/{slug}.json.`,
+                details: {
+                    contract: og0AgentId.contract,
+                    network: og0AgentId.network,
+                    explorer: og0AgentId.explorer,
+                },
             },
         ];
 
