@@ -192,10 +192,64 @@ The two mirrors are intentionally **additive**, not redundant marketing.
 A judge or an auditor picks the network that is available, both should
 return byte-identical receipts.
 
+### Verifying an agent identity via 0G AgenticID (ERC-7857)
+
+Every agent in `/lib/agent-registration` also has an optional on-chain
+identity, minted as an ERC-7857 Intelligent NFT into the **0G Foundation
+reference AgenticID contract** on 0G Galileo Testnet:
+
+```text
+contract: 0x2700F6A3e505402C9daB154C5c6ab9cAEC98EF1F
+network:  galileo-testnet
+explorer: https://chainscan-galileo.0g.ai
+```
+
+Until the operator runs `scripts/og-agent-id-mint.mjs` against a funded
+testnet wallet, the agent JSON omits the `og_agent_id` field, so the
+deploy stays honest about what is on-chain. After mint, the JSON looks
+like:
+
+```json
+{
+  "id": "operator-uplift.calendar",
+  "name": "Calendar Agent",
+  "og_agent_id": {
+    "token_id": 42,
+    "contract": "0x2700F6A3e505402C9daB154C5c6ab9cAEC98EF1F",
+    "network": "galileo-testnet",
+    "standard": "ERC-7857",
+    "explorer_url": "https://chainscan-galileo.0g.ai/token/0x2700.../42"
+  }
+}
+```
+
+Verify from outside:
+
+```bash
+# 1. Fetch the agent JSON
+curl -s https://www.operatoruplift.com/agents/calendar.json | jq .og_agent_id
+
+# 2. Open the explorer_url. Chainscan shows the NFT in the reference
+#    AgenticID contract on Galileo Testnet, owner = our mint wallet,
+#    tokenURI pointing back at the agent JSON.
+
+# 3. Pass the tokenId through our verifier passthrough for the
+#    ERC-7857 standard reference + verification steps:
+curl -s "https://www.operatoruplift.com/api/og/agent-id/<tokenId>" | jq .
+```
+
+We mint into the 0G Foundation reference deployment (not our own
+contract) on purpose: judges already recognize that address, the
+contract's source lives at `github.com/0gfoundation/agenticID-examples`,
+and we get a verifiable on-chain identity without standing up a custom
+deployment. Owning our own contract is a future option (env-overridable
+via `OG_AGENT_ID_CONTRACT`).
+
 ## What's NOT in Gate 2
 
 Deferred to future work (explicitly not claiming):
-- **ERC-8004 agent identity registration** (next PR)
+- **ERC-8004 on-chain agent identity registration** — separate from
+  ERC-7857 above; tracking ERC-8004 (Trustless Agents) as a follow-up
 - **Mainnet payments** — devnet only right now
 - **Real on-chain Solana Pay verification** — the `/pay` endpoint
   currently marks invoices paid with a simulated tx signature. Wiring

@@ -1,0 +1,11 @@
+{
+    "_comment": "TokenIds for agents minted as ERC-7857 Intelligent NFTs on the 0G Foundation reference AgenticID contract. Populated by scripts/og-agent-id-mint.mjs after the operator funds the OG_PRIVATE_KEY wallet on Galileo testnet (faucet: https://faucet.0g.ai). Until tokens are minted, every value stays null and the agent JSON omits the og_agent_id field, so the deploy is honest about what is on-chain.",
+    "_contract": "0x2700F6A3e505402C9daB154C5c6ab9cAEC98EF1F",
+    "_network": "galileo-testnet",
+    "_explorer": "https://chainscan-galileo.0g.ai",
+    "_standard": "ERC-7857",
+    "agents": {
+        "calendar": null,
+        "gmail": null
+    }
+}
