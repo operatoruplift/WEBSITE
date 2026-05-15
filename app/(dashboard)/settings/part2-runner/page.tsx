@@ -200,7 +200,7 @@ export default function Part2RunnerPage() {
                 setSubChip('pass');
             } else {
                 setSub({ active: false });
-                const hint = data.nextAction || data.message || data.reason || 'Open /paywall and complete the $19 USDC payment.';
+                const hint = data.nextAction || data.message || data.reason || 'Open /paywall and complete the $50 USDC payment.';
                 setSubDetail(hint);
                 setSubChip('fail');
             }

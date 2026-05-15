@@ -55,13 +55,20 @@ The receipt content is **unchanged**. The signed canonical JSON
 contract from PR #510 + `lib/x402/receipts.ts` is preserved. 0G Storage
 holds external provenance metadata, the same way Filecoin does.
 
-## What "Ship Agent ID" will mean (next PR)
+## What "Ship Agent ID" turned into (shipped)
 
-Pending. Will live as `lib/og/agent-id.ts` with a registration helper
-that maps our existing `AgentRegistration` shape onto whatever 0G Agent
-ID exposes. The existing agent JSON files (`agents/calendar.json`,
-`agents/gmail.json`, etc.) get a second registration document; the
-ERC-8004-style ones stay.
+Landed across PRs #571 + #574. `lib/og/agent-id.ts` exposes the
+registration helper that maps our `AgentRegistration` shape onto the
+ERC-7857 `IntelligentData[]` payload via SHA-256 hashes of name,
+description, version, capabilities, system prompt, and model. The
+agent JSON manifests (`/agents/calendar.json`, `/agents/gmail.json`)
+gained an optional `og_agent_id` field that surfaces a chainscan
+link once `scripts/og-agent-id-mint.mjs` runs against a funded
+0G Galileo Testnet wallet (operator action). The ERC-8004-style
+registration documents stay; 0G Agent ID is **additive**, not a
+replacement, matching the same coexistence rule as Filecoin/0G
+Storage. See `docs/HACKATHON_GATE2.md` &rarr; "Verifying an agent
+identity via 0G AgenticID" for the verification flow.
 
 ## What stays deferred
 
