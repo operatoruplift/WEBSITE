@@ -25,6 +25,13 @@ interface AdapterDetails {
     // PR #515: filecoin + elevenlabs adapter rows
     provider?: string | null;
     voiceId?: string | null;
+    // PR #576: og_storage adapter row
+    network?: string | null;
+    rpcUrl?: string | null;
+    indexerRpc?: string | null;
+    // PR #576: og_agent_id adapter row
+    contract?: string | null;
+    explorer?: string | null;
 }
 
 interface AdapterStatus {
@@ -101,6 +108,8 @@ export function PhotonHealthCard({ className }: Props) {
     const google = data?.adapters?.find(a => a.name === 'google_oauth');
     const filecoin = data?.adapters?.find(a => a.name === 'filecoin');
     const elevenlabs = data?.adapters?.find(a => a.name === 'elevenlabs');
+    const ogStorage = data?.adapters?.find(a => a.name === 'og_storage');
+    const ogAgentId = data?.adapters?.find(a => a.name === 'og_agent_id');
 
     // Surface the FIRST missing Google env var as the hint, since
     // showing four "missing" toasts would be noisy. Operator fixes
@@ -170,6 +179,26 @@ export function PhotonHealthCard({ className }: Props) {
                     hint={
                         elevenlabs && !elevenlabs.active
                             ? 'ELEVENLABS_API_KEY not set; /api/voice/synth returns 503'
+                            : undefined
+                    }
+                />
+                <Row
+                    label="0G Storage anchor (receipts)"
+                    active={ogStorage?.active ?? false}
+                    reason={ogStorage?.reason}
+                    hint={
+                        ogStorage && !ogStorage.active
+                            ? 'OG_PRIVATE_KEY not set; receipts ship signed but the 0g: link on /security stays hidden'
+                            : undefined
+                    }
+                />
+                <Row
+                    label="0G Agent ID (ERC-7857)"
+                    active={ogAgentId?.active ?? false}
+                    reason={ogAgentId?.reason}
+                    hint={
+                        ogAgentId && !ogAgentId.active
+                            ? 'Module wired; run scripts/og-agent-id-mint.mjs against funded OG_PRIVATE_KEY wallet to mint'
                             : undefined
                     }
                 />
