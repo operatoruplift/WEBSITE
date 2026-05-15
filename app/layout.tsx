@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   // this template ensures their titles still carry the brand for
   // search results and social previews.
   title: {
-    default: "Operator Uplift, AI for your inbox and calendar",
+    default: "Operator Uplift, AI that runs on your terms",
     template: "%s | Operator Uplift",
   },
   description: "An AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Approval before every action; signed receipt afterward.",

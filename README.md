@@ -1,6 +1,6 @@
 # Operator Uplift
 
-**AI for your inbox and calendar. You stay in charge.**
+**AI that runs on your terms.**
 
 Operator Uplift is an AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Every action waits for your explicit tap, executes against your real Google Calendar and Gmail, gets gated by a real x402 micropayment on Solana, and produces an ed25519-signed receipt that gets mirrored to **two** independent public storage networks (Filecoin and 0G testnet) plus published as a Merkle root on Solana devnet.
 
