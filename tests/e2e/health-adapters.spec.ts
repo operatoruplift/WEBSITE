@@ -62,4 +62,14 @@ test('GET never leaks secrets in the 401 body', async ({ request }) => {
     expect(body).not.toMatch(/FILECOIN_STORACHA_(KEY|PROOF)/);
     expect(body).not.toMatch(/ELEVENLABS_API_KEY/);
     expect(body).not.toMatch(/sk_[A-Za-z0-9]{20,}/); // ElevenLabs sk_ keys
+    // PR #576 added og_storage + og_agent_id adapter rows. OG_PRIVATE_KEY
+    // is a real wallet private key on 0G testnet — leaking it would let
+    // anyone drain the testnet faucet allocation and impersonate our
+    // anchor wallet. The rpc/indexer URLs are public and OK to surface
+    // on the authenticated path; only the private key needs guarding.
+    // A 0x-prefixed 32-byte hex (64 chars) is the canonical ethers-style
+    // secp256k1 private key shape — we guard that too as a defense
+    // against accidental string-concat into the envelope.
+    expect(body).not.toMatch(/OG_PRIVATE_KEY/);
+    expect(body).not.toMatch(/\b0x[a-fA-F0-9]{64}\b/);
 });
