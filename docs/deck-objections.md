@@ -9,8 +9,8 @@ Wave 7 deliverable. The four-part pitch, eight memorized objection answers, the 
 Mapped to the brief's four parts:
 
 1. **What you get**: drafts your email, schedules your meetings.
-2. **Why trust**: nothing irreversible without your tap; signed receipts; on-chain audit; Filecoin mirror via public IPFS gateway.
-3. **What integrations do**: read Gmail, write Gmail draft, create Calendar event, store receipts on Solana, mirror receipts to Filecoin via IPFS, identify the agent via SNS.
+2. **Why trust**: nothing irreversible without your tap; signed receipts; on-chain audit; receipts mirrored to two public networks (Filecoin via IPFS + 0G testnet via the indexer).
+3. **What integrations do**: read Gmail, write Gmail draft, create Calendar event, store receipts on Solana, mirror receipts to Filecoin AND 0G Storage testnet, identify the agent via SNS + (optional) ERC-7857 Intelligent NFT on 0G Galileo Testnet.
 4. **How monetization works**: $50 USDC deposit, $0.01 per write action, refundable, no subscription.
 
 ## Objection answers (under 30 words each, memorize)
@@ -31,7 +31,7 @@ Mapped to the brief's four parts:
 1. **Hero + tagline**: "AI that runs on your terms." One CTA: Sign in and connect Gmail.
 2. **Approval-before-action**: three-step diagram (You ask -> Bot drafts -> You tap, then it sends).
 3. **Tool execution today**: Gmail draft + send (live), Calendar create (live), more on the way.
-4. **Trust layer**: SNS-anchored signer identity, ed25519 receipts, public-key verification endpoint, Filecoin IPFS mirror of every receipt.
+4. **Trust layer**: SNS-anchored signer identity, ed25519 receipts, public-key verification endpoint, **dual-network** receipt mirror (Filecoin via IPFS + 0G Storage testnet via indexer), optional ERC-7857 Intelligent NFT for on-chain agent identity.
 5. **Monetization**: deposit-to-credit, $50 USDC minimum, $0.01 per write action, refundable.
 6. **Channel-agnostic**: iMessage shipping, Telegram + WhatsApp ready (Spectrum). Slack + Discord aren't on the marketing surface anymore (trimmed from the Channels section per the "make work or remove" rule); they come back when wired.
 7. **Roadmap**: real-Gmail tool execution from iMessage (already shipping), enterprise OAuth tenant, audit dashboards.
@@ -46,6 +46,8 @@ Mapped to the brief's four parts:
 ## Slides now OK to ship (post PR #515)
 
 - **Filecoin slide** is back on the table. Every signed receipt anchors to a Filecoin CID via the cron at `/api/cron/filecoin-anchor`; a judge can fetch `https://<cid>.ipfs.dweb.link` and verify the bytes match what `/api/receipts/public-key` signs. See `docs/filecoin-decision.md` "Shipped" section.
+- **0G Storage second-mirror slide** is on the table too (post PRs #569-#577). Same per-receipt anchor pattern, second public network. Sister cron at `/api/cron/og-anchor`; public verifier passthrough at `/api/og/storage/[rootHash]`. See `docs/0g-integration-decision.md`.
+- **0G AgenticID (ERC-7857) bullet** is OK to use as an additive trust signal — say "agent identities are also wired to mint as ERC-7857 Intelligent NFTs on 0G Galileo Testnet; the `og_agent_id` field surfaces a chainscan link once we mint." Be honest that mint requires a funded faucet wallet (operator-side).
 - **ElevenLabs voiceover** is also fine to use for the recording narration. The endpoint at `/api/voice/synth` is what generated it. Still NOT a product pillar; one mention max if asked.
 
 ## Final story alignment
@@ -62,6 +64,8 @@ Mapped to the brief's four parts:
 | Anthropic / OpenAI / Gemini / Grok / DeepSeek | `Built on the model you already pay for` marquee | `/chat` model picker | implicit | slide 1 footer ("Built on") |
 | Llama / Ollama | not on the marquee (would-be hosted-API claim, but local-only via Ollama path in `lib/llm.ts:189`) | not in `/chat` picker (desktop app required) | not in demo | one optional roadmap bullet on slide 7 only if asked |
 | Filecoin | LocalFirst "Built on" strip (Shipping) | `tool_receipts.filecoin_cid` + cron at `/api/cron/filecoin-anchor` + "View on Filecoin" link on `/security` | judge clicks the IPFS gateway URL from `/security` to verify bytes match `/api/receipts/public-key` | one bullet on slide 4 (durability + independence) |
+| 0G Storage | LocalFirst "Built on" strip (Shipping) | `tool_receipts.og_storage_root_hash` + cron at `/api/cron/og-anchor` + `0g: <rootHash>` link on `/security` → `/api/og/storage/[rootHash]` | judge clicks the `0g:` link, lands on JSON envelope with indexer endpoint + verify-it-yourself instructions | same slide 4 bullet as Filecoin (two-network archive) |
+| 0G AgenticID (ERC-7857) | not yet on marketing strip | `lib/og/agent-id.ts` + `data/og-agent-ids.json` + mint script + optional `og_agent_id` field on `/agents/{slug}.json` | once minted, judge opens `chainscan-galileo.0g.ai` to see the Intelligent NFT with hashed identity data | one bullet on slide 4 (on-chain agent identity), honest about mint-pending status |
 | ElevenLabs | LocalFirst "Built on" strip (Shipping) | `/api/voice/synth` endpoint, auth-gated | narration MP3 used in the recording | recording credit only; not a product slide |
 | Tauri / desktop | mentioned in `/imessage` "What's not here yet" block | `desktop/tauri.conf.json` only | not in demo | cut |
 | Base / Ethereum | not added | not added | not in demo | cut (one chain story) |
@@ -79,6 +83,8 @@ If a feature is labeled `roadmap` in code (via `src/sections/Channels.tsx` statu
 - Daily summary across model swaps: ships (PR #455). OK to claim.
 - Tauri desktop binary: does NOT ship (`src-tauri/` missing). Don't claim.
 - Filecoin storage: ships (PR #515). OK to claim. Each receipt has a `filecoin_cid` visible on `/security` once the cron has run. See `docs/filecoin-decision.md` "Shipped" section.
+- 0G Storage mirror: ships (PR #569 + #570). OK to claim. Each receipt gets an `og_storage_root_hash` visible as a `0g:` link on `/security` once `/api/cron/og-anchor` runs (operator triggers manually with `CRON_SECRET`). See `docs/0g-integration-decision.md`.
+- 0G AgenticID (ERC-7857) Intelligent NFTs: scaffolded (PRs #571 + #574). OK to claim **conditionally** — say "the mint script is shipped, the persistence file ships with `null` tokenIds, and the JSON manifest's `og_agent_id` field is omitted until we fund a Galileo testnet wallet and run the script." Do NOT claim that tokens are already minted unless `data/og-agent-ids.json` has been updated with real tokenIds.
 
 ## What the demo will actually prove
 
