@@ -193,7 +193,10 @@ test('OG metadata leads with the daily job', async ({ page }) => {
     expect(twitterDescription, 'twitter:description').not.toContain('Runs on your computer');
 
     const title = await page.title();
-    expect(title.toLowerCase()).toContain('inbox and calendar');
+    // Canonical one-liner per docs/positioning.md: "AI that runs on your terms"
+    // (locked in PR #590). Title was previously "AI for your inbox and calendar"
+    // until that audit aligned every short-form surface to the canonical.
+    expect(title.toLowerCase()).toContain('runs on your terms');
     expect(title).not.toContain('AI Operating System');
 });
 
