@@ -51,8 +51,12 @@ test('HowItWorks step numbers render as Step 01..04 in order', async ({ page }) 
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
     const section = page.locator('#how-it-works');
-    const stepLabels = await section.locator('text=/Step 0[1-4]/').allInnerTexts();
-    expect(stepLabels.join(' ')).toMatch(/Step 01[\s\S]*Step 02[\s\S]*Step 03[\s\S]*Step 04/);
+    const stepLabels = await section.locator('text=/Step 0[1-4]/i').allInnerTexts();
+    // The labels render as uppercase ("STEP 01") via CSS text-transform.
+    // The Playwright text= locator above is case-insensitive and matches
+    // them, but allInnerTexts() returns the rendered (uppercase) form,
+    // so the final regex must also be case-insensitive.
+    expect(stepLabels.join(' ')).toMatch(/Step 01[\s\S]*Step 02[\s\S]*Step 03[\s\S]*Step 04/i);
 });
 
 test('HowItWorks sits between Hero and LocalFirst on the homepage', async ({ page }) => {
