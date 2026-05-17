@@ -113,6 +113,10 @@ jobs:
             tests/e2e/pricing-tiers-honest.spec.ts \
             tests/e2e/photon-strip-markdown.spec.ts \
             tests/e2e/photon-event-time.spec.ts \
+            tests/e2e/photon-intents.spec.ts \
+            tests/e2e/photon-keyword-replies.spec.ts \
+            tests/e2e/photon-pending-actions.spec.ts \
+            tests/e2e/photon-pending-replies.spec.ts \
             tests/e2e/gmail-builders.spec.ts \
             tests/e2e/llm-mapModelId.spec.ts \
             tests/e2e/photon-send.spec.ts \
