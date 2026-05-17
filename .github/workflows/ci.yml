@@ -130,6 +130,7 @@ jobs:
             tests/e2e/og-agent-id-route.spec.ts \
             tests/e2e/agents-manifest-publish.spec.ts \
             tests/e2e/cron-routes-unauth.spec.ts \
+            tests/e2e/truth-table-honest.spec.ts \
             tests/e2e/gmail-builders.spec.ts \
             tests/e2e/llm-mapModelId.spec.ts \
             tests/e2e/photon-send.spec.ts \
