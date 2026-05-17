@@ -34,17 +34,22 @@ test('GET /api/cron/filecoin-anchor returns 401 envelope when unauthenticated', 
     expect(requestId).toMatch(/^req_/);
 });
 
-test('GET /api/cron/filecoin-anchor never leaks Filecoin secret env-var values', async ({ request }) => {
-    // Defensive: a regression that surfaces the CRON_SECRET, the
-    // Lighthouse API key, or the Pinata JWT in an error envelope
-    // would be a real leak. None of those should ever appear in a
-    // 401 body, regardless of which provider is wired.
+test('GET /api/cron/filecoin-anchor never leaks Filecoin secret VALUES', async ({ request }) => {
+    // Defensive: a regression that surfaces the Lighthouse API key
+    // or the Pinata JWT in an error envelope would be a real leak.
+    // The error envelope IS allowed to mention env-var NAMES as
+    // operator hints (e.g. "CRON_SECRET not configured" tells the
+    // operator which var to set; "LIGHTHOUSE_API_KEY missing" would
+    // similarly be a legitimate hint). Same contract as PR #586's
+    // health-adapters leak guard: guard against secret VALUES, not
+    // documentation of which env vars exist.
     const res = await request.get('/api/cron/filecoin-anchor');
     const text = await res.text();
-    expect(text).not.toMatch(/CRON_SECRET/);
-    expect(text).not.toMatch(/LIGHTHOUSE_API_KEY/);
-    expect(text).not.toMatch(/PINATA_JWT/);
     // Pinata JWTs and Lighthouse keys both look like long base64-ish
     // tokens; bracket the most suspicious shapes.
     expect(text).not.toMatch(/eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/); // JWT
+    // Lighthouse API keys are typically ~64 hex chars (sha256-like).
+    // Reject any standalone hex string that long appearing in the
+    // envelope.
+    expect(text).not.toMatch(/\b[a-f0-9]{64}\b/);
 });
