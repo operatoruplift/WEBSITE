@@ -9,8 +9,11 @@ import { magicBlockSurfaceStatus } from '@/lib/magicblock/adapter';
 /**
  * /demo/hackathon
  *
- * Public (no auth) walkthrough of the Loops House Challenge 02
- * submission. Metadata lives in layout.tsx (server component).
+ * Public (no auth) judge walkthrough of the trust stack. Originally
+ * built for the Loops House Challenge 02 (x402 + ERC-8004); refreshed
+ * in PR #594 to surface the 0G APAC integration (Storage second
+ * mirror + ERC-7857 AgenticID) since that is the current active
+ * hackathon. Metadata lives in layout.tsx (server component).
  */
 export default function HackathonDemoPage() {
     return (
@@ -254,7 +257,7 @@ const DEMO_CLICKS = [
     'Log in via Privy at <a href="/login" class="text-[#F97316] hover:underline">/login</a>',
     'Go to <a href="/integrations" class="text-[#F97316] hover:underline">/integrations</a> and Connect Google Calendar & Gmail',
     'Go to <a href="/chat" class="text-[#F97316] hover:underline">/chat</a>',
-    'Type: <code class="text-[#F97316] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">Schedule a 30-min meeting tomorrow at 3 PM called "Loops House demo"</code>',
+    'Type: <code class="text-[#F97316] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">Schedule a 30-min meeting tomorrow at 3 PM called "trust-stack demo"</code>',
     'Click <strong>Pay &amp; Allow Once</strong> in the approval modal',
     'Open the Network tab, observe 402, then /pay, then 200 with receipt',
     'Go to <a href="/security" class="text-[#F97316] hover:underline">/security</a> and click <strong>Copy JSON</strong> on the new receipt',
