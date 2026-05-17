@@ -106,6 +106,7 @@ jobs:
             tests/e2e/marquee-honest-no-llama-ollama.spec.ts \
             tests/e2e/channels-section-composition.spec.ts \
             tests/e2e/homepage-pricing-cta-targets.spec.ts \
+            tests/e2e/howitworks-section.spec.ts \
             tests/e2e/gmail-builders.spec.ts \
             tests/e2e/llm-mapModelId.spec.ts \
             tests/e2e/photon-send.spec.ts \
