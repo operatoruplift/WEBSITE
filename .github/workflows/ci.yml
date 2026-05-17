@@ -102,6 +102,10 @@ jobs:
             tests/e2e/og-storage.spec.ts \
             tests/e2e/blog-header-centered.spec.ts \
             tests/e2e/demo-hackathon-judge-links.spec.ts \
+            tests/e2e/localfirst-built-on-honest.spec.ts \
+            tests/e2e/marquee-honest-no-llama-ollama.spec.ts \
+            tests/e2e/channels-section-composition.spec.ts \
+            tests/e2e/homepage-pricing-cta-targets.spec.ts \
             tests/e2e/gmail-builders.spec.ts \
             tests/e2e/llm-mapModelId.spec.ts \
             tests/e2e/photon-send.spec.ts \
