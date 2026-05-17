@@ -161,6 +161,11 @@ jobs:
             tests/e2e/cookie-banner-theme.spec.ts \
             tests/e2e/landmarks.spec.ts \
             tests/e2e/console-cleanliness.spec.ts \
+            tests/e2e/receipts-public-key-route.spec.ts \
+            tests/e2e/wave6-copy.spec.ts \
+            tests/e2e/x402-amount.spec.ts \
+            tests/e2e/voice-synth-route.spec.ts \
+            tests/e2e/wave1-risks.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure

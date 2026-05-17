@@ -68,8 +68,11 @@ test('/pricing Team CTA goes to /contact (Team is now custom)', async ({ page })
     // to "Custom" + "Book a call" -> /contact. The change reflects
     // the decision to keep Team pricing negotiable until we have
     // enough Team customers to publish a real number.
-    const teamCard = page.locator('div').filter({ hasText: /^Team$/ }).first();
-    await expect(teamCard).toBeVisible({ timeout: 10_000 });
+    // Tier names render in <h3>; the prior "div text === Team" locator
+    // collided with surrounding card wrappers that also contain extra
+    // copy. Anchor on the heading element instead.
+    const teamHeading = page.locator('h3').filter({ hasText: /^Team$/ }).first();
+    await expect(teamHeading).toBeVisible({ timeout: 10_000 });
     const teamCtaHref = await page
         .locator('a:has-text("Book a call")')
         .first()
