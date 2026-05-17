@@ -13,11 +13,13 @@ test.describe.configure({ timeout: 90_000 });
  *   PR #515 wired Filecoin receipt-anchoring (lib/filecoin/anchor.ts)
  *   and the ElevenLabs TTS endpoint (/api/voice/synth), promoting
  *   both from Soon -> Shipping.
+ *   PR #570 wired 0G Storage receipt-anchoring (lib/og/storage.ts)
+ *   and added a 0G pill to the Shipping side of the strip.
  *
  * Current strip composition:
  *
  *   Shipping (no pill, wired in the codebase today):
- *     Solana, Vercel, Supabase, Photon, Filecoin, ElevenLabs
+ *     Solana, Vercel, Supabase, Photon, Filecoin, 0G, ElevenLabs
  *
  *   Roadmap (Soon pill, not yet wired):
  *     Base, Ethereum
@@ -31,7 +33,13 @@ test.describe.configure({ timeout: 90_000 });
 
 test('homepage LocalFirst "Built on" header is visible', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
-    await expect(page.getByText(/Built on/i).first()).toBeVisible({ timeout: 10_000 });
+    // Anchor on the LocalFirst-specific exact-match "Built on" eyebrow.
+    // The TrustedBy marquee one screen above also contains "Built on
+    // the model you already pay for"; using getByText('Built on') with
+    // a regex or non-exact match would resolve to that header instead
+    // of the LocalFirst strip and the ancestor walk would miss the
+    // rounded-2xl container.
+    await expect(page.getByText('Built on', { exact: true })).toBeVisible({ timeout: 10_000 });
 });
 
 test('homepage Built on strip lists the four shipping providers without Soon pills', async ({ page }) => {
@@ -40,10 +48,10 @@ test('homepage Built on strip lists the four shipping providers without Soon pil
     // Find the "Built on" header, then walk up to its container so we
     // scope the assertions to this strip only (the homepage has many
     // sections that mention these brand names elsewhere).
-    const builtOnSection = page.getByText('Built on').first().locator('xpath=ancestor::div[contains(@class, "rounded-2xl")][1]');
+    const builtOnSection = page.getByText('Built on', { exact: true }).locator('xpath=ancestor::div[contains(@class, "rounded-2xl")][1]');
     await expect(builtOnSection).toBeVisible({ timeout: 10_000 });
 
-    for (const provider of ['Solana', 'Vercel', 'Supabase', 'Photon', 'Filecoin', 'ElevenLabs']) {
+    for (const provider of ['Solana', 'Vercel', 'Supabase', 'Photon', 'Filecoin', '0G', 'ElevenLabs']) {
         const item = builtOnSection.locator(`span.inline-flex:has-text("${provider}")`).first();
         await expect(item, `${provider} should appear in the Built on strip`).toBeVisible();
         // Shipping items must NOT have a Soon pill in their span.
@@ -57,16 +65,21 @@ test('homepage Built on strip flags every roadmap provider with a Soon pill', as
     // the strip silently overclaims. This test catches that regression.
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    const builtOnSection = page.getByText('Built on').first().locator('xpath=ancestor::div[contains(@class, "rounded-2xl")][1]');
+    const builtOnSection = page.getByText('Built on', { exact: true }).locator('xpath=ancestor::div[contains(@class, "rounded-2xl")][1]');
     await expect(builtOnSection).toBeVisible({ timeout: 10_000 });
 
     // After PR #515 wired Filecoin + ElevenLabs, only Base + Ethereum
     // remain on the roadmap (gated on the lib/paysh x402 buyer-client
-    // work).
+    // work). Use hasText with a word-boundary regex so "Base" does not
+    // match "Supabase" (which is in the shipping list above).
+    // Iterate inline-flex spans and match by exact-word presence so
+    // "Base" does not collide with "Supabase" from the shipping list.
+    const spans = await builtOnSection.locator('span.inline-flex').all();
+    const spanTexts = await Promise.all(spans.map(s => s.innerText()));
+
     for (const provider of ['Base', 'Ethereum']) {
-        const item = builtOnSection.locator(`span.inline-flex:has-text("${provider}")`).first();
-        await expect(item, `${provider} should appear in the Built on strip`).toBeVisible();
-        const text = (await item.innerText()).toLowerCase();
-        expect(text, `${provider} is roadmap; Soon pill required`).toContain('soon');
+        const matchIdx = spanTexts.findIndex(t => new RegExp(`\\b${provider}\\b`).test(t) && !t.includes('Supabase'));
+        expect(matchIdx, `${provider} should appear in the Built on strip`).toBeGreaterThanOrEqual(0);
+        expect(spanTexts[matchIdx].toLowerCase(), `${provider} is roadmap; Soon pill required`).toContain('soon');
     }
 });
