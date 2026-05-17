@@ -128,6 +128,7 @@ jobs:
             tests/e2e/filecoin-anchor-cron.spec.ts \
             tests/e2e/og-anchor-cron.spec.ts \
             tests/e2e/og-agent-id-route.spec.ts \
+            tests/e2e/agents-manifest-publish.spec.ts \
             tests/e2e/gmail-builders.spec.ts \
             tests/e2e/llm-mapModelId.spec.ts \
             tests/e2e/photon-send.spec.ts \
