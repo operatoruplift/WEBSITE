@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
-import { ExternalLink, Check, FileJson, KeyRound, Receipt, ArrowRight, Coins, Zap, Box } from 'lucide-react';
+import { ExternalLink, Check, FileJson, KeyRound, Receipt, ArrowRight, Coins, Zap, Box, Layers, Hexagon } from 'lucide-react';
 import { magicBlockSurfaceStatus } from '@/lib/magicblock/adapter';
 
 /**
@@ -23,14 +23,14 @@ export default function HackathonDemoPage() {
                     <div className="text-center mb-12">
                         <div className="inline-flex items-center gap-3 mb-4">
                             <span className="h-px w-16 bg-[#F97316]/40" />
-                            <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">Loops House · Challenge 02</span>
+                            <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">Trust-stack demo · x402 + 0G + Filecoin</span>
                             <span className="h-px w-16 bg-[#F97316]/40" />
                         </div>
                         <h1 className="text-3xl md:text-4xl font-medium tracking-tight mb-4">
-                            x402 + ERC-8004, working end-to-end
+                            Verifiable AI for Gmail and Calendar, working end-to-end
                         </h1>
                         <p className="text-[#A1A1AA] leading-relaxed max-w-xl mx-auto">
-                            Every calendar/gmail write goes through a real 402 gate on Solana devnet. Every successful action produces an ed25519-signed receipt a judge can export and verify independently.
+                            Every calendar and Gmail write goes through a real x402 gate on Solana devnet. Every successful action produces an ed25519-signed receipt mirrored to <strong className="text-white">two</strong> public storage networks (Filecoin and 0G testnet) plus published as a Merkle root on Solana, so a judge can verify the bytes against either mirror independently.
                         </p>
                     </div>
 
@@ -137,8 +137,22 @@ export default function HackathonDemoPage() {
                         <VerifyCard
                             icon={Box}
                             title="Signed receipts on Filecoin"
-                            description="Open /security after signing in to see each receipt's filecoin_cid link"
+                            description="Open /security to see each receipt's filecoin_cid link to a public IPFS gateway"
                             href="/security"
+                            external
+                        />
+                        <VerifyCard
+                            icon={Layers}
+                            title="Signed receipts on 0G Storage"
+                            description="Second public mirror. /api/og/storage/[rootHash] returns the JSON envelope with indexer endpoint and SDK verify steps"
+                            href="/api/og/storage/0xexample"
+                            external
+                        />
+                        <VerifyCard
+                            icon={Hexagon}
+                            title="Agent ID on 0G AgenticID"
+                            description="ERC-7857 Intelligent NFT on Galileo Testnet. Reference contract: 0x2700F6A3...EF1F"
+                            href="https://chainscan-galileo.0g.ai/address/0x2700F6A3e505402C9daB154C5c6ab9cAEC98EF1F"
                             external
                         />
                     </div>
@@ -246,6 +260,8 @@ const DEMO_CLICKS = [
     'Go to <a href="/security" class="text-[#F97316] hover:underline">/security</a> and click <strong>Copy JSON</strong> on the new receipt',
     'Verify the signature with the public key from <a href="/api/receipts/public-key" class="text-[#F97316] hover:underline">/api/receipts/public-key</a>',
     'Click the <strong>filecoin:</strong> link on the receipt row to fetch the same bytes from a public IPFS gateway. Byte-compare to confirm we did not tamper with the row after signing.',
+    'Click the <strong>0g:</strong> link on the same row. It lands on <a href="/api/og/storage/0xexample" class="text-[#F97316] hover:underline">/api/og/storage/[rootHash]</a>, our public verifier passthrough. The JSON envelope documents the 0G testnet indexer endpoint and exact SDK call needed to pull the bytes a second time, from a network we do not control.',
+    'Open <a href="/agents/calendar.json" class="text-[#F97316] hover:underline">/agents/calendar.json</a>. If <code class="text-[#F97316] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">og_agent_id</code> is present, click its <code class="text-[#F97316] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">explorer_url</code> to see the agent\'s ERC-7857 Intelligent NFT on 0G Galileo Testnet (chainscan-galileo.0g.ai). The on-chain <code class="text-[#F97316] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">IntelligentData[]</code> array carries SHA-256 hashes of the agent\'s name, capabilities, system prompt, and model.',
 ];
 
 const VERIFIABLE: Array<{ claim: string; how: string }> = [
@@ -266,8 +282,12 @@ const VERIFIABLE: Array<{ claim: string; how: string }> = [
         how: 'receipt.invoice_reference + receipt.payment_tx recorded server-side in tool_invoices + tool_receipts.',
     },
     {
-        claim: 'Receipt bytes are publicly archived',
-        how: 'Every signed receipt is also pushed to Filecoin via Lighthouse; the CID is rendered next to the receipt on /security. Fetch https://<cid>.ipfs.dweb.link and byte-compare against /api/receipts.',
+        claim: 'Receipt bytes are publicly archived on two networks',
+        how: 'Every signed receipt is anchored to BOTH Filecoin (via Lighthouse) and 0G Storage testnet (via the Turbo indexer). Both links render next to each receipt on /security. Fetch the bytes from either network and byte-compare against /api/receipts. A single-provider outage cannot break verification.',
+    },
+    {
+        claim: 'Agent identity is on-chain',
+        how: 'Each agent has an optional ERC-7857 Intelligent NFT minted into the 0G Foundation reference AgenticID contract on Galileo Testnet. The IntelligentData[] array carries SHA-256 hashes of name, description, capabilities, system prompt, and model. Recompute the hashes and verify against the chainscan record to detect drift.',
     },
     {
         claim: 'Per-action consent (no blanket approvals)',
