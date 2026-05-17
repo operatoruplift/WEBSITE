@@ -109,6 +109,8 @@ jobs:
             tests/e2e/howitworks-section.spec.ts \
             tests/e2e/faq-alignment.spec.ts \
             tests/e2e/imessage-page.spec.ts \
+            tests/e2e/health-route.spec.ts \
+            tests/e2e/pricing-tiers-honest.spec.ts \
             tests/e2e/gmail-builders.spec.ts \
             tests/e2e/llm-mapModelId.spec.ts \
             tests/e2e/photon-send.spec.ts \
