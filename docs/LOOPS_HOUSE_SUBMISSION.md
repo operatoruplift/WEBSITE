@@ -117,7 +117,7 @@ Judge needs: a Google account connected to operatoruplift.com. No Solana wallet 
 - The **client** pays using the protocol-specified fields (`recipient`, `amount`, `currency`, `chain`)
 - The **client** retries with `X-Payment-Proof` and the server verifies before executing
 
-The gate is enforced at the actual tool endpoints (`/api/tools/calendar`, `/api/tools/gmail`). Reads stay free. Writes pay per action. No subscription lock-in, no batched billing — the moment an action costs, the cost is billed, and a receipt is issued.
+The gate is enforced at the actual tool endpoints (`/api/tools/calendar`, `/api/tools/gmail`). Reads stay free. Writes fire a server-side x402 micropayment per action — paid by us, not the user. The receipt is issued the moment the gate clears. (User billing is the separate `/paywall` subscription layer: Pro is $50/month, gas on us, cancel any time.)
 
 ## What's NOT in this submission (honest)
 
