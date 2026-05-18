@@ -19,8 +19,9 @@ This is the canonical short one-liner across every surface. Do not propose repla
 | FinalCta (`src/sections/FinalCta.tsx`) | aligned | "AI that runs on your terms." |
 | OpenGraph image (`app/opengraph-image.tsx`) | aligned | "AI that runs on your terms" |
 | Deck slide 1 (`docs/deck-objections.md`) | aligned | "AI that runs on your terms." |
-| `app/layout.tsx` title default | **aligned by this PR** | "Operator Uplift, AI that runs on your terms" |
-| `README.md` hero | **aligned by this PR** | "AI that runs on your terms." |
+| `app/layout.tsx` title default | aligned | "Operator Uplift, AI that runs on your terms" |
+| `app/layout.tsx` openGraph + twitter title | aligned | "Operator Uplift, AI that runs on your terms" |
+| `README.md` hero | aligned | "AI that runs on your terms." |
 
 ## Longer descriptions (sub-canonical, vary per surface)
 
