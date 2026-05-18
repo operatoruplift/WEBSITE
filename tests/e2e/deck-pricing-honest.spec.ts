@@ -102,3 +102,19 @@ test('README pricing paragraph matches the actual subscription model', () => {
     expect(readme).toMatch(/Per-action gas[\s\S]*?is on us/i);
     expect(readme).not.toMatch(/\$50 USDC Pro tier with \$0\.01 per write action/);
 });
+
+test('LOOPS_HOUSE_SUBMISSION x402 paragraph clarifies server-side payment, not user-pay', () => {
+    // The earlier hackathon submission described x402 as "writes pay
+    // per action, no subscription lock-in." That was technically the
+    // x402 PROTOCOL description but read as a user-facing pricing
+    // claim, since the doc has no other place that mentions
+    // subscription. A judge browsing this submission alongside
+    // /paywall would see contradictory pricing stories.
+    //
+    // Fix moved the framing to "paid by us, not the user" and explicitly
+    // pointed at /paywall ($50/month Pro) for user-facing billing.
+    const loops = fs.readFileSync(path.join(repoRoot, 'docs', 'LOOPS_HOUSE_SUBMISSION.md'), 'utf-8');
+    expect(loops).toMatch(/paid by us, not the user/);
+    expect(loops).toMatch(/Pro is \$50\/month, gas on us/);
+    expect(loops).not.toMatch(/No subscription lock-in/);
+});
