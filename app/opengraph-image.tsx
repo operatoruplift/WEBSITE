@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'Operator Uplift — AI that runs on your terms. Drafts your replies, schedules your meetings, waits for your tap before sending anything.';
+export const alt = 'Operator Uplift, AI that runs on your terms. Drafts your replies, schedules your meetings, waits for your tap before sending anything.';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -18,7 +18,7 @@ export default async function Image() {
                     fontFamily: 'system-ui, -apple-system, sans-serif',
                 }}
             >
-                {/* Left column — brand + headline + subhead */}
+                {/* Left column: brand + headline + subhead */}
                 <div
                     style={{
                         flex: '1 1 58%',
@@ -109,7 +109,7 @@ export default async function Image() {
                     </div>
                 </div>
 
-                {/* Right column — iMessage-style approval card */}
+                {/* Right column: iMessage-style approval card */}
                 <div
                     style={{
                         flex: '1 1 42%',
