@@ -29,7 +29,7 @@ Operator Uplift is an AI assistant that drafts your email, schedules your meetin
 - **A signed, public-archived receipt.** Each approved action produces an ed25519-signed JSON receipt. Bytes get mirrored to Filecoin (via IPFS) **and** 0G Storage testnet (via the Turbo indexer). A Merkle root commits every five receipts to Solana devnet. A judge can verify the bytes against either mirror without trusting our database.
 - **Optional on-chain agent identity.** Each agent's identity hash (name, description, capabilities, system prompt, model) can be minted as an ERC-7857 Intelligent NFT on 0G Galileo Testnet via the 0G AgenticID standard.
 
-**Pricing.** $50 USDC Pro tier with $0.01 per write action (calendar.create, gmail.draft, gmail.send, gmail.send_draft) gated through x402. Reads are free.
+**Pricing.** Pro is $50/month in USDC. Team pricing is custom (book a call). Per-action gas (fractions of a cent on Solana devnet, fired by the x402 gate on every write: calendar.create, gmail.draft, gmail.send, gmail.send_draft) is on us — we don't pass it through. Reads are free.
 
 ## System architecture
 

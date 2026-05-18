@@ -90,3 +90,15 @@ test('homepage pricing source-of-truth still says Pro $50/month', () => {
     expect(homepagePricing).toMatch(/price:\s*'\$50'/);
     expect(homepagePricing).toMatch(/period:\s*'\/month'/);
 });
+
+test('README pricing paragraph matches the actual subscription model', () => {
+    // The README is the judge's other entry point (alongside the
+    // deck). It used to claim "$50 USDC Pro tier with $0.01 per
+    // write action gated through x402" — same deposit-to-credit
+    // fabrication-rot that surfaced in the deck. PR fixing this
+    // moved the framing to "Pro is $50/month + gas on us."
+    const readme = fs.readFileSync(path.join(repoRoot, 'README.md'), 'utf-8');
+    expect(readme).toMatch(/Pro is \$50\/month in USDC/);
+    expect(readme).toMatch(/Per-action gas[\s\S]*?is on us/i);
+    expect(readme).not.toMatch(/\$50 USDC Pro tier with \$0\.01 per write action/);
+});
