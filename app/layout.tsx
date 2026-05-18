@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   description: "An AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Approval before every action; signed receipt afterward.",
   keywords: ["AI assistant", "email AI", "calendar AI", "AI inbox", "AI scheduler", "private AI", "Gmail AI", "Google Calendar AI", "AI for productivity", "personal AI"],
   openGraph: {
-    title: "Operator Uplift",
+    title: "Operator Uplift, AI that runs on your terms",
     description: "AI that drafts your email and schedules your meetings. Approval before every action; signed receipt afterward.",
     url: "https://www.operatoruplift.com",
     siteName: "Operator Uplift",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Operator Uplift",
+    title: "Operator Uplift, AI that runs on your terms",
     description: "AI that drafts your email and schedules your meetings. Approval before every action; signed receipt afterward.",
     creator: "@OperatorUplift",
     images: ["/opengraph-image"],
