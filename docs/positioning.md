@@ -15,7 +15,7 @@ This is the canonical short one-liner across every surface. Do not propose repla
 
 | Surface | Status | Line |
 |---|---|---|
-| Hero (`src/sections/Hero.tsx`) | aligned | "AI that runs on your terms." |
+| Hero headline (`src/services/dataService.ts` → `APP_CONTENT.hero.headline`, rendered by `src/sections/Hero.tsx`) | aligned | "AI that runs on your terms." |
 | FinalCta (`src/sections/FinalCta.tsx`) | aligned | "AI that runs on your terms." |
 | OpenGraph image (`app/opengraph-image.tsx`) | aligned | "AI that runs on your terms" |
 | Deck slide 1 (`docs/deck-objections.md`) | aligned | "AI that runs on your terms." |
