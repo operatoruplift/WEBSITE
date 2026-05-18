@@ -4,14 +4,14 @@ Wave 7 deliverable. The four-part pitch, eight memorized objection answers, the 
 
 ## The pitch (under 30 seconds, read out loud)
 
-> "Operator Uplift drafts the emails and schedules the meetings you've been putting off, and never sends or books anything until you tap yes. You keep the tap. The bot keeps the receipts. And because every action is signed on Solana, you can prove what happened, even after a model swap or a tool change. Pay $50 once, get $50 of work done, refill when you want. Consumer first. Same trust layer scales to the enterprise paperwork later."
+> "Operator Uplift drafts the emails and schedules the meetings you've been putting off, and never sends or books anything until you tap yes. You keep the tap. The bot keeps the receipts. And because every action is signed on Solana, you can prove what happened, even after a model swap or a tool change. Pro is $50 a month, no per-action fees, cancel any time. Consumer first. Same trust layer scales to the enterprise paperwork later."
 
 Mapped to the brief's four parts:
 
 1. **What you get**: drafts your email, schedules your meetings.
 2. **Why trust**: nothing irreversible without your tap; signed receipts; on-chain audit; receipts mirrored to two public networks (Filecoin via IPFS + 0G testnet via the indexer).
 3. **What integrations do**: read Gmail, write Gmail draft, create Calendar event, store receipts on Solana, mirror receipts to Filecoin AND 0G Storage testnet, identify the agent via SNS + (optional) ERC-7857 Intelligent NFT on 0G Galileo Testnet.
-4. **How monetization works**: $50 USDC deposit, $0.01 per write action, refundable, no subscription.
+4. **How monetization works**: Pro is $50/month, gas on us (no per-action surcharge to the user), Team pricing is custom (book a call). Server-side every write goes through an x402 micropayment on Solana so the receipt chain is real; that cost is on us, not the user.
 
 ## Objection answers (under 30 words each, memorize)
 
@@ -20,8 +20,8 @@ Mapped to the brief's four parts:
 | Isn't this just Claude plus prompts? | Claude doesn't read your Gmail, schedule your meetings, or sign a receipt. We do, with your tap as the trigger. |
 | Why not just use ChatGPT? | ChatGPT can't fire a Gmail send, write to your Calendar, or prove what it did. Plus you can use ChatGPT inside Operator Uplift; pick GPT-5.5 in the model dropdown. |
 | Why does local-first matter? | When Anthropic ships a new Claude or you decide to switch to GPT, the bot forgets you. Local-first means the context is yours, not the model's. |
-| Why Solana? | Two reasons: $0.01 micropayments per tool call don't work on a card. And every action signs to an on-chain receipt anyone can verify, not just our database. |
-| Why would anyone pay? | Because the alternative is typing the same email twice. The deposit is $50 once, refundable, and tracks to actual work done. |
+| Why Solana? | Two reasons: server-side x402 micropayments per tool call don't work on a card (we pay them so you don't see them). And every action signs to an on-chain receipt anyone can verify, not just our database. |
+| Why would anyone pay? | Because the alternative is typing the same email twice. Pro is $50 a month, gas on us, cancel any time. Use it as much as you want; no per-action surcharge. |
 | How is this different from a plugin? | A plugin runs inside one model's UI. We run across iMessage, web, and your inbox, with one consent gate and one receipt trail. |
 | What if the model changes? | Switch the model in the dropdown. Memory, integrations, and receipts stay. That is the entire pitch. |
 | What makes the demo real? | The Gmail draft you'll see is in a real Gmail account. The phone is a real phone. The receipt has an ed25519 signature you can verify with our public-key endpoint. |
@@ -32,7 +32,7 @@ Mapped to the brief's four parts:
 2. **Approval-before-action**: three-step diagram (You ask -> Bot drafts -> You tap, then it sends).
 3. **Tool execution today**: Gmail draft + send (live), Calendar create (live), more on the way.
 4. **Trust layer**: SNS-anchored signer identity, ed25519 receipts, public-key verification endpoint, **dual-network** receipt mirror (Filecoin via IPFS + 0G Storage testnet via indexer), optional ERC-7857 Intelligent NFT for on-chain agent identity.
-5. **Monetization**: deposit-to-credit, $50 USDC minimum, $0.01 per write action, refundable.
+5. **Monetization**: Pro $50/month, gas on us, no per-action user surcharge. Team pricing is custom (book a call). Server-side x402 on Solana is what proves the receipt chain; users see a subscription, not a meter.
 6. **Channel-agnostic**: iMessage shipping, Telegram + WhatsApp ready (Spectrum). Slack + Discord aren't on the marketing surface anymore (trimmed from the Channels section per the "make work or remove" rule); they come back when wired.
 7. **Roadmap**: real-Gmail tool execution from iMessage (already shipping), enterprise OAuth tenant, audit dashboards.
 
