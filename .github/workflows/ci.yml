@@ -133,6 +133,7 @@ jobs:
             tests/e2e/truth-table-honest.spec.ts \
             tests/e2e/hackathon-gate2-honest.spec.ts \
             tests/e2e/positioning-tagline-coherence.spec.ts \
+            tests/e2e/demo-hackathon-hero-copy.spec.ts \
             tests/e2e/gmail-builders.spec.ts \
             tests/e2e/llm-mapModelId.spec.ts \
             tests/e2e/photon-send.spec.ts \
