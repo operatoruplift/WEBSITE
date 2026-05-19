@@ -59,6 +59,19 @@ const REAL_CLAIMS: RealClaim[] = [
             'app/api/voice/synth/route.ts',
         ],
     },
+    {
+        rowSubstring: 'Arkiv on-chain agent identity',
+        requiredPaths: [
+            'lib/arkiv/constants.ts',
+            'lib/arkiv/client.ts',
+            'lib/arkiv/agent.ts',
+            'lib/arkiv/memory.ts',
+            'app/api/arkiv/agents/route.ts',
+            'app/api/arkiv/memories/route.ts',
+            'app/arkiv/page.tsx',
+            'scripts/arkiv/publish-agents.mjs',
+        ],
+    },
 ];
 
 for (const claim of REAL_CLAIMS) {
