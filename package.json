@@ -13,7 +13,9 @@
     "trust-gate": "node scripts/trust-gate.mjs",
     "fabrication-rot-check": "node scripts/fabrication-rot-check.mjs",
     "check": "node scripts/check.mjs",
-    "photon:smoke": "node scripts/photon-smoke.mjs"
+    "photon:smoke": "node scripts/photon-smoke.mjs",
+    "arkiv:smoke": "node scripts/arkiv-smoke.mjs",
+    "arkiv:publish-agents": "node scripts/arkiv/publish-agents.mjs"
   },
   "dependencies": {
     "@0gfoundation/0g-storage-ts-sdk": "^1.2.9",

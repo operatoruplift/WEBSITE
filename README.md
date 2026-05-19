@@ -251,6 +251,17 @@ curl -s https://www.operatoruplift.com/agents/calendar.json | jq -r .checksum
 
 The two surfaces are independently signed: origin manifest by the deploy, Arkiv entity by the `$creator` wallet. If they disagree, tampering is detectable.
 
+**One-command smoke test (operator + reviewer):**
+
+```bash
+pnpm arkiv:smoke
+# Five checks (Braga RPC + API envelopes + PROJECT_ATTRIBUTE coherence +
+# ARKIV_PRIVATE_KEY shape). Green on production right now, with warnings
+# for "no agents published yet" and "ARKIV_PRIVATE_KEY not set locally" -
+# both expected before the operator funds the wallet. Mirrors the
+# pattern of `pnpm photon:smoke`.
+```
+
 ## Quickstart for judges
 
 This boots the app locally and surfaces the deployed live site for full functionality. The marketing pages, /demo/hackathon walkthrough, /docs, and /api/og/storage/[rootHash] all work without any env vars; the gated chat and tool routes require Privy + Supabase + Google OAuth credentials documented below.
