@@ -19,7 +19,7 @@ test.describe.configure({ timeout: 90_000 });
  * Current strip composition:
  *
  *   Shipping (no pill, wired in the codebase today):
- *     Solana, Vercel, Supabase, Photon, Filecoin, 0G, ElevenLabs
+ *     Solana, Vercel, Supabase, Photon, Filecoin, 0G, Arkiv, ElevenLabs
  *
  *   Roadmap (Soon pill, not yet wired):
  *     Base, Ethereum
@@ -51,7 +51,7 @@ test('homepage Built on strip lists the four shipping providers without Soon pil
     const builtOnSection = page.getByText('Built on', { exact: true }).locator('xpath=ancestor::div[contains(@class, "rounded-2xl")][1]');
     await expect(builtOnSection).toBeVisible({ timeout: 10_000 });
 
-    for (const provider of ['Solana', 'Vercel', 'Supabase', 'Photon', 'Filecoin', '0G', 'ElevenLabs']) {
+    for (const provider of ['Solana', 'Vercel', 'Supabase', 'Photon', 'Filecoin', '0G', 'Arkiv', 'ElevenLabs']) {
         const item = builtOnSection.locator(`span.inline-flex:has-text("${provider}")`).first();
         await expect(item, `${provider} should appear in the Built on strip`).toBeVisible();
         // Shipping items must NOT have a Soon pill in their span.

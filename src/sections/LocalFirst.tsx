@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Lock, KeyRound, FileSignature, Cpu, ArrowRight, Triangle, Database, Send, Zap, Circle, Hexagon, Box, AudioWaveform, Layers } from 'lucide-react';
+import { Lock, KeyRound, FileSignature, Cpu, ArrowRight, Triangle, Database, Send, Zap, Circle, Hexagon, Box, AudioWaveform, Layers, Archive } from 'lucide-react';
 import { FadeIn } from '@/src/components/Animators';
 import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
@@ -188,6 +188,14 @@ const LocalFirst: React.FC = () => {
                                 alongside the filecoin link. */}
                             <span className="inline-flex items-center gap-2 text-sm text-foreground">
                                 <Layers aria-hidden className="w-4 h-4" /> 0G
+                            </span>
+                            {/* Arkiv (ETHLisbon challenge entrant, AI theme):
+                                /api/arkiv/agents + /api/arkiv/memories ship
+                                public read routes; /arkiv renders the judge
+                                demo. Honest empty state until the operator
+                                funds the wallet and runs the publish script. */}
+                            <span className="inline-flex items-center gap-2 text-sm text-foreground">
+                                <Archive aria-hidden className="w-4 h-4" /> Arkiv
                             </span>
                             <span className="inline-flex items-center gap-2 text-sm text-foreground">
                                 <AudioWaveform aria-hidden className="w-4 h-4" /> ElevenLabs
