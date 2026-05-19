@@ -14,7 +14,7 @@ export const maxDuration = 30;
  * any browser without signing in.
  *
  * Honest-status: returns an empty array when Arkiv is misconfigured
- * or no agents are published yet (hide-when-NULL contract — same
+ * or no agents are published yet (hide-when-NULL contract, same
  * shape Filecoin/0G use on /security).
  *
  * The endpoint is the on-Arkiv companion to /agents/<slug>.json:
