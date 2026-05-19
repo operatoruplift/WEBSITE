@@ -13,6 +13,7 @@ Operator Uplift is an AI assistant that drafts your email, schedules your meetin
 - [Project overview](#project-overview)
 - [System architecture](#system-architecture)
 - [0G integration](#0g-integration)
+- [Arkiv integration (ETHLisbon challenge entrant)](#arkiv-integration-ethlisbon-challenge-entrant)
 - [Quickstart for judges](#quickstart-for-judges)
 - [Test accounts and testnet faucets](#test-accounts-and-testnet-faucets)
 - [CI checks](#ci-checks)
@@ -190,6 +191,65 @@ We do **not** ship pre-minted tokenIds. The persistence file ships with `null` a
 - **0G Compute Network**: would conflict with our "bring your own provider" wedge. See decision doc.
 - **0G Persistent Memory**: still "coming soon" on 0G's side. Re-evaluate when it ships.
 - **0G TEE Privacy**: we do not run inference. The user picks their own provider's privacy posture.
+
+## Arkiv integration (ETHLisbon challenge entrant)
+
+Operator Uplift is an Arkiv ETHLisbon challenge entrant under the **AI theme**: agents whose memory you actually own. Arkiv is the third public trust layer alongside Filecoin and 0G Storage, with one important difference: while Filecoin and 0G mirror our backend-signed receipts, Arkiv hosts data the user themselves can own and transfer.
+
+| Field | Value |
+|---|---|
+| Theme | AI |
+| Demo link | [operatoruplift.com/arkiv](https://operatoruplift.com/arkiv) |
+| Network | Arkiv Braga Testnet (chain id 60138453102) |
+| RPC | `https://braga.hoodi.arkiv.network/rpc` |
+| Faucet | [braga.hoodi.arkiv.network/faucet](https://braga.hoodi.arkiv.network/faucet/) |
+| Explorer | [explorer.braga.hoodi.arkiv.network](https://explorer.braga.hoodi.arkiv.network/) |
+| Code | [`lib/arkiv/`](./lib/arkiv), [`app/api/arkiv/`](./app/api/arkiv), [`app/arkiv/page.tsx`](./app/arkiv/page.tsx), [`scripts/arkiv/publish-agents.mjs`](./scripts/arkiv/publish-agents.mjs) |
+| Project attribute | `project=operatoruplift-bucharest-arkiv-7q3w` (lib/arkiv/constants.ts) |
+
+**Entrant requirements covered:**
+
+1. Unique `PROJECT_ATTRIBUTE` used on every create and every query (Arkiv best practice 1). Hermetic spec at `tests/e2e/arkiv-core.spec.ts` fails CI on any new write path that forgets to include it.
+2. **Two entity types**:
+   - `agent`: on-Arkiv mirror of `/agents/{slug}.json` (ERC-8004 identity card + sha256 checksum). Backend-written, reads filter by `.createdBy()` against the trusted creator wallet.
+   - `memory-event`: one entry of an agent's conversation memory tied to a user, agent slug, and session. `$owner` defaults to the backend writer but can be transferred to the user's wallet so the platform loses update/delete permission while `$creator` (immutable) keeps the audit trail.
+3. Open-source repo (this one), MIT-licensed via Operator Uplift's existing license.
+4. Working demo link at [/arkiv](https://operatoruplift.com/arkiv) — honest empty state when no entities are published yet (same hide-when-NULL contract as Filecoin/0G).
+5. README setup (this section + `.env.local.example`).
+
+**Publish flow (operator-side):**
+
+```bash
+# 1. Fund a Braga testnet wallet at the faucet:
+#    https://braga.hoodi.arkiv.network/faucet/
+# 2. Export the funded wallet private key + its public address:
+export ARKIV_PRIVATE_KEY=0x...
+export NEXT_PUBLIC_ARKIV_CREATOR_ADDRESS=0x...  # derive from the private key
+# 3. Run the publish script:
+node scripts/arkiv/publish-agents.mjs
+# → mirrors /agents/calendar.json + /agents/gmail.json as Arkiv entities
+# → idempotent: republishing produces a fresh entity, /arkiv shows the newest
+# → entityKey + Braga explorer link printed for each agent so a judge can
+#   click straight through to verify the on-chain card
+```
+
+Until the operator runs the script, `/arkiv` surfaces an honest "no entities yet" state and the agents API returns `{ agents: [], count: 0 }`. The page never fabricates results.
+
+**Verifying any entity independently (judge cookbook):**
+
+```bash
+# 1. List on-Arkiv agents (no auth required)
+curl https://www.operatoruplift.com/api/arkiv/agents | jq
+
+# 2. Open any entityKey in the Braga explorer
+open https://explorer.braga.hoodi.arkiv.network/entity/<entityKey>
+
+# 3. Cross-verify the on-Arkiv checksum against the origin manifest
+curl -s https://www.operatoruplift.com/agents/calendar.json | jq -r .checksum
+# Should match the checksum attribute on the Arkiv entity.
+```
+
+The two surfaces are independently signed: origin manifest by the deploy, Arkiv entity by the `$creator` wallet. If they disagree, tampering is detectable.
 
 ## Quickstart for judges
 
