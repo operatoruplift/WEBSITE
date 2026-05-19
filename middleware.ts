@@ -59,6 +59,15 @@ const PUBLIC_ROUTES = [
     // Testnet. Public for the same reasons as /api/og/storage and
     // /api/receipts/public-key: the on-chain record itself is public.
     '/api/og/agent-id/',
+    // Arkiv (ETHLisbon challenge entrant). /api/arkiv/agents lists the
+    // on-Arkiv agent identity cards published by our trusted creator
+    // wallet; /api/arkiv/memories returns memory events for a given
+    // agent + session. Same logic as the 0G + Filecoin verifier
+    // routes: the entities themselves live on a public, tamper-proof
+    // layer (Arkiv Braga testnet), so a judge or any third party must
+    // be able to GET these without a sign-in. Per-route filtering by
+    // PROJECT_ATTRIBUTE.createdBy() prevents third-party injection.
+    '/api/arkiv/',
     // Inbound webhooks from external services (Photon Spectrum, etc.)
     // have their own signature-based auth. Privy tokens don't apply.
     '/api/webhooks/',
