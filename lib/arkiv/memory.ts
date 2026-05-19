@@ -138,16 +138,14 @@ export async function recallSession(
                 e.attributes.find((a) => a.key === 'role')?.value ?? 'user',
             ) as MemoryRole;
             const ts = Number(e.attributes.find((a) => a.key === 'ts')?.value ?? 0);
-            const owner = String(e.metadata?.owner ?? '');
-            const creator = String(e.metadata?.creator ?? '');
             return {
-                entityKey: e.entityKey as string,
+                entityKey: e.key as string,
                 role,
                 content: json.content,
                 ts,
-                owner,
-                creator,
-                explorerUrl: `https://explorer.braga.hoodi.arkiv.network/entity/${e.entityKey}`,
+                owner: String(e.owner ?? ''),
+                creator: String(e.creator ?? ''),
+                explorerUrl: `https://explorer.braga.hoodi.arkiv.network/entity/${e.key}`,
             };
         })
         .sort((a, b) => b.ts - a.ts);

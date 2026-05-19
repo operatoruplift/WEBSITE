@@ -129,10 +129,10 @@ export async function getAgentBySlug(slug: string): Promise<{
     const validated = AgentPayloadSchema.parse(entity.toJson());
 
     return {
-        entityKey: entity.entityKey as string,
+        entityKey: entity.key as string,
         payload: validated,
         publishedAt: Number(entity.attributes.find((x) => x.key === 'publishedAt')?.value ?? 0),
-        explorerUrl: `https://explorer.braga.hoodi.arkiv.network/entity/${entity.entityKey}`,
+        explorerUrl: `https://explorer.braga.hoodi.arkiv.network/entity/${entity.key}`,
     };
 }
 
@@ -175,12 +175,12 @@ export async function listAgents(): Promise<
         const checksum = String(e.attributes.find((x) => x.key === 'checksum')?.value ?? '');
         const publishedAt = Number(e.attributes.find((x) => x.key === 'publishedAt')?.value ?? 0);
         return {
-            entityKey: e.entityKey as string,
+            entityKey: e.key as string,
             slug,
             version,
             checksum,
             publishedAt,
-            explorerUrl: `https://explorer.braga.hoodi.arkiv.network/entity/${e.entityKey}`,
+            explorerUrl: `https://explorer.braga.hoodi.arkiv.network/entity/${e.key}`,
         };
     });
 }
