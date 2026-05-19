@@ -9,8 +9,8 @@ Wave 7 deliverable. The four-part pitch, eight memorized objection answers, the 
 Mapped to the brief's four parts:
 
 1. **What you get**: drafts your email, schedules your meetings.
-2. **Why trust**: nothing irreversible without your tap; signed receipts; on-chain audit; receipts mirrored to two public networks (Filecoin via IPFS + 0G testnet via the indexer).
-3. **What integrations do**: read Gmail, write Gmail draft, create Calendar event, store receipts on Solana, mirror receipts to Filecoin AND 0G Storage testnet, identify the agent via SNS + (optional) ERC-7857 Intelligent NFT on 0G Galileo Testnet.
+2. **Why trust**: nothing irreversible without your tap; signed receipts; on-chain audit; receipts mirrored to two public networks (Filecoin via IPFS + 0G testnet via the indexer); agent identity cards independently published to Arkiv Braga testnet as a third tamper-proof verifier surface.
+3. **What integrations do**: read Gmail, write Gmail draft, create Calendar event, store receipts on Solana, mirror receipts to Filecoin AND 0G Storage testnet, publish agent identity cards to Arkiv (user-ownable memory entities live there too), identify the agent via SNS + (optional) ERC-7857 Intelligent NFT on 0G Galileo Testnet.
 4. **How monetization works**: Pro is $50/month, gas on us (no per-action surcharge to the user), Team pricing is custom (book a call). Server-side every write goes through an x402 micropayment on Solana so the receipt chain is real; that cost is on us, not the user.
 
 ## Objection answers (under 30 words each, memorize)
@@ -31,7 +31,7 @@ Mapped to the brief's four parts:
 1. **Hero + tagline**: "AI that runs on your terms." One CTA: Sign in and connect Gmail.
 2. **Approval-before-action**: three-step diagram (You ask -> Bot drafts -> You tap, then it sends).
 3. **Tool execution today**: Gmail draft + send (live), Calendar create (live), more on the way.
-4. **Trust layer**: SNS-anchored signer identity, ed25519 receipts, public-key verification endpoint, **dual-network** receipt mirror (Filecoin via IPFS + 0G Storage testnet via indexer), optional ERC-7857 Intelligent NFT for on-chain agent identity.
+4. **Trust layer**: SNS-anchored signer identity, ed25519 receipts, public-key verification endpoint, **three-network** trust stack (Filecoin via IPFS + 0G Storage testnet via indexer + Arkiv Braga testnet for agent identity cards and user-ownable memory entities), optional ERC-7857 Intelligent NFT for on-chain agent identity.
 5. **Monetization**: Pro $50/month, gas on us, no per-action user surcharge. Team pricing is custom (book a call). Server-side x402 on Solana is what proves the receipt chain; users see a subscription, not a meter.
 6. **Channel-agnostic**: iMessage shipping, Telegram + WhatsApp ready (Spectrum). Slack + Discord aren't on the marketing surface anymore (trimmed from the Channels section per the "make work or remove" rule); they come back when wired.
 7. **Roadmap**: real-Gmail tool execution from iMessage (already shipping), enterprise OAuth tenant, audit dashboards.
@@ -66,6 +66,7 @@ Mapped to the brief's four parts:
 | Filecoin | LocalFirst "Built on" strip (Shipping) | `tool_receipts.filecoin_cid` + cron at `/api/cron/filecoin-anchor` + "View on Filecoin" link on `/security` | judge clicks the IPFS gateway URL from `/security` to verify bytes match `/api/receipts/public-key` | one bullet on slide 4 (durability + independence) |
 | 0G Storage | LocalFirst "Built on" strip (Shipping) | `tool_receipts.og_storage_root_hash` + cron at `/api/cron/og-anchor` + `0g: <rootHash>` link on `/security` → `/api/og/storage/[rootHash]` | judge clicks the `0g:` link, lands on JSON envelope with indexer endpoint + verify-it-yourself instructions | same slide 4 bullet as Filecoin (two-network archive) |
 | 0G AgenticID (ERC-7857) | not yet on marketing strip | `lib/og/agent-id.ts` + `data/og-agent-ids.json` + mint script + optional `og_agent_id` field on `/agents/{slug}.json` | once minted, judge opens `chainscan-galileo.0g.ai` to see the Intelligent NFT with hashed identity data | one bullet on slide 4 (on-chain agent identity), honest about mint-pending status |
+| Arkiv (ETHLisbon AI theme) | LocalFirst "Built on" strip (Shipping) | `lib/arkiv/` + `/api/arkiv/agents` + `/api/arkiv/memories` + `/arkiv` demo + `scripts/arkiv/publish-agents.mjs` | judge curls `/api/arkiv/agents` (no auth) for the on-chain agent card list, then clicks any `entityKey` through to `explorer.braga.hoodi.arkiv.network` to verify the bytes match `/agents/{slug}.json` | one bullet on slide 4 (third tamper-proof verifier + user-ownable memory). Honest empty state until operator funds `ARKIV_PRIVATE_KEY` and runs the publish script. |
 | ElevenLabs | LocalFirst "Built on" strip (Shipping) | `/api/voice/synth` endpoint, auth-gated | narration MP3 used in the recording | recording credit only; not a product slide |
 | Tauri / desktop | mentioned in `/imessage` "What's not here yet" block | `desktop/tauri.conf.json` only | not in demo | cut |
 | Base / Ethereum | not added | not added | not in demo | cut (one chain story) |
