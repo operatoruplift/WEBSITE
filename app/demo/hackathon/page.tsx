@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
-import { ExternalLink, Check, FileJson, KeyRound, Receipt, ArrowRight, Coins, Zap, Box, Layers, Hexagon } from 'lucide-react';
+import { ExternalLink, Check, FileJson, KeyRound, Receipt, ArrowRight, Coins, Zap, Box, Layers, Hexagon, Archive } from 'lucide-react';
 import { magicBlockSurfaceStatus } from '@/lib/magicblock/adapter';
 
 /**
@@ -156,6 +156,13 @@ export default function HackathonDemoPage() {
                             title="Agent ID on 0G AgenticID"
                             description="ERC-7857 Intelligent NFT on Galileo Testnet. Reference contract: 0x2700F6A3...EF1F"
                             href="https://chainscan-galileo.0g.ai/address/0x2700F6A3e505402C9daB154C5c6ab9cAEC98EF1F"
+                            external
+                        />
+                        <VerifyCard
+                            icon={Archive}
+                            title="Agent cards + memory on Arkiv"
+                            description="ETHLisbon entrant (AI theme). Public Braga testnet entities; /arkiv lists agent cards and shows the memory model"
+                            href="/arkiv"
                             external
                         />
                     </div>
