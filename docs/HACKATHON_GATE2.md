@@ -245,6 +245,47 @@ and we get a verifiable on-chain identity without standing up a custom
 deployment. Owning our own contract is a future option (env-overridable
 via `OG_AGENT_ID_CONTRACT`).
 
+### Verifying agent identity + user-owned memory via Arkiv
+
+The ETHLisbon entrant (AI theme) adds a **third independent network**
+to the verifier story. Where 0G AgenticID stores the agent's hashed
+identity bytes inside an NFT, Arkiv publishes the **full agent card
+JSON + transferable session memory entities** as first-class entities
+on the Braga testnet. Same agents (Calendar, Gmail), additional
+verification surface:
+
+```text
+network:  arkiv-braga-testnet (chain id 60138453102)
+rpc:      https://braga.hoodi.arkiv.network/rpc
+explorer: https://explorer.braga.hoodi.arkiv.network/
+project:  operatoruplift-bucharest-arkiv-7q3w (PROJECT_ATTRIBUTE)
+```
+
+The /arkiv page lists every published entity with a direct link to
+the explorer. The `/api/arkiv/agents` route returns the same data as
+JSON (no auth required) with a request-id envelope and explorer URL
+embedded for one-step verification:
+
+```bash
+# 1. List all agent identity cards published under our project key
+curl -s https://www.operatoruplift.com/api/arkiv/agents | jq .
+
+# 2. List session memory entities for the Calendar agent
+curl -s "https://www.operatoruplift.com/api/arkiv/memories?agent=calendar" | jq .
+
+# 3. Click any entityKey through to explorer.braga.hoodi.arkiv.network
+#    to verify the bytes match /agents/{slug}.json (SHA-256 checksum
+#    is in the entity attributes).
+```
+
+Honest empty state: until the operator funds the Braga wallet and
+runs `pnpm arkiv:publish-agents`, both routes return `{"count": 0}`
+envelopes. We never fabricate published entities. The architecture
+distinction matters for verification: Arkiv stores **agent identity
++ memory entities**, NOT receipt mirrors. /security still renders
+exactly two mirror links per receipt (Filecoin + 0G Storage). Arkiv
+adds an orthogonal verification path for the agent layer.
+
 ## What's NOT in Gate 2
 
 Deferred to future work (explicitly not claiming):
