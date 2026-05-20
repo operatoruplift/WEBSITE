@@ -23,6 +23,7 @@ const CONTENT: Record<string, React.ReactNode> = {
             <ul>
                 <li>Google Calendar and Gmail tools behind per-action approval.</li>
                 <li>ed25519 signed receipts on <a href="/security">/security</a>, Merkle root published to Solana devnet every five actions, and two parallel public-storage mirrors (Filecoin via IPFS + 0G testnet via the indexer) so the receipt bytes outlive our database.</li>
+                <li>Agent identity cards and (opt-in) user-ownable session memories on Arkiv Braga testnet. Listed at <a href="/arkiv">/arkiv</a>; the bytes mirror <a href="/agents/calendar.json">/agents/calendar.json</a> and <a href="/agents/gmail.json">/agents/gmail.json</a>. The entity list reflects the live state and stays empty until the operator funds the Braga wallet and runs the publish script.</li>
                 <li>Daily 8am calendar briefing (opt-in from <a href="/profile">/profile</a>).</li>
                 <li>Tier 1 tools that don&apos;t need Google: web search, web fetch, notes, tasks, reminders.</li>
             </ul>
