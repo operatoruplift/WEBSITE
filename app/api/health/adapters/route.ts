@@ -9,6 +9,7 @@ import { filecoinStatus } from '@/lib/filecoin/anchor';
 import { elevenLabsStatus } from '@/lib/elevenlabs/synth';
 import { og0Status } from '@/lib/og/storage';
 import { og0AgentIdStatus } from '@/lib/og/agent-id';
+import { arkivStatus } from '@/lib/arkiv/client';
 
 export const runtime = 'nodejs';
 
@@ -71,6 +72,7 @@ export async function GET(request: Request) {
         const elevenlabs = elevenLabsStatus();
         const og0 = og0Status();
         const og0AgentId = og0AgentIdStatus();
+        const arkiv = arkivStatus();
 
         const adapters = [
             {
@@ -149,6 +151,14 @@ export async function GET(request: Request) {
                     network: og0AgentId.network,
                     explorer: og0AgentId.explorer,
                 },
+            },
+            {
+                name: 'arkiv',
+                active: arkiv.active,
+                reason: arkiv.active
+                    ? `Arkiv writes active on ${arkiv.network}. Run pnpm arkiv:publish-agents to publish agent identity cards; user-ownable session memories live at /api/arkiv/memories.`
+                    : 'Set ARKIV_PRIVATE_KEY in Vercel env to activate Arkiv writes. Reads still work without it (honest empty envelopes). Fund the wallet at https://braga.hoodi.arkiv.network/faucet/.',
+                details: arkiv.details,
             },
         ];
 

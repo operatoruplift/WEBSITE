@@ -66,3 +66,44 @@ export function getArkivWalletClient() {
 export function hasArkivWriteKey(): boolean {
     return Boolean(process.env.ARKIV_PRIVATE_KEY);
 }
+
+/**
+ * Operational status of the Arkiv adapter, mirroring the shape used
+ * by filecoinStatus() and og0Status() so /api/health/adapters can list
+ * Arkiv alongside the other public-network adapters.
+ *
+ * Reads are possible without a private key; writes require one. The
+ * `active` flag tracks write capability (the publish-agents script
+ * needs it). The `readable` flag is always true because /api/arkiv/
+ * routes return honest empty envelopes even without a configured key.
+ *
+ * Never leaks the private key value. The `details` block only carries
+ * non-sensitive config (RPC URL, explorer URL, project key, optional
+ * public creator address from NEXT_PUBLIC_ARKIV_CREATOR_ADDRESS).
+ */
+export function arkivStatus(): {
+    active: boolean;
+    readable: boolean;
+    reason: string;
+    network: 'braga-testnet';
+    details: {
+        rpcUrl: string;
+        explorer: string;
+        project: string;
+        creatorAddress: string | null;
+    };
+} {
+    const writable = hasArkivWriteKey();
+    return {
+        active: writable,
+        readable: true,
+        reason: writable ? 'configured' : 'not_configured',
+        network: 'braga-testnet',
+        details: {
+            rpcUrl: 'https://braga.hoodi.arkiv.network/rpc',
+            explorer: 'https://explorer.braga.hoodi.arkiv.network/',
+            project: 'operatoruplift-bucharest-arkiv-7q3w',
+            creatorAddress: process.env.NEXT_PUBLIC_ARKIV_CREATOR_ADDRESS || null,
+        },
+    };
+}
