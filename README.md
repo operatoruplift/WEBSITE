@@ -420,6 +420,7 @@ docs/                      ← decision docs, runbooks, judge cookbook
 
 - [`docs/HACKATHON_GATE2.md`](./docs/HACKATHON_GATE2.md) — full x402 + receipts + dual-mirror + AgenticID verification cookbook
 - [`docs/LOOPS_HOUSE_SUBMISSION.md`](./docs/LOOPS_HOUSE_SUBMISSION.md) — earlier hackathon submission (Loops House) covering the x402 + ERC-8004 wedge
+- [`docs/ARKIV_SUBMISSION.md`](./docs/ARKIV_SUBMISSION.md) — ETHLisbon Arkiv AI-theme entrant covering agent identity + user-owned session memory on Braga testnet
 - [`docs/0g-integration-decision.md`](./docs/0g-integration-decision.md) — which 0G modules we ship, which we skip, and why
 - [`docs/TRUTH_TABLE.md`](./docs/TRUTH_TABLE.md) — authoritative "what is Real, Simulated, or Stub" table for every claim on the site
 - [`docs/prod-env-checklist.md`](./docs/prod-env-checklist.md) — operator runbook for prod env vars
