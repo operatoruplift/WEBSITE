@@ -10,6 +10,34 @@ import { BlogToc } from './BlogToc';
 
 function getArticleContent(id: string) {
     const content: Record<string, React.ReactNode> = {
+        'arkiv-agent-memory-you-own': (
+            <div className="space-y-6">
+                <p className="text-lg">An assistant is only as durable as its memory. If the conversation history lives only in our database, then on the day we go away (or change our terms, or get bought, or pick a new model), your memory of working with us goes too. That is the part of the agent economy nobody likes to talk about. This week we shipped the opposite.</p>
+
+                <p>Every agent we run now has a public identity card, and every session memory the agent writes can be transferred to you as a user-owned entity on a public network called Arkiv. You do not have to download a wallet to use the assistant. But the day you want to walk away with your memory, that path now exists.</p>
+
+                <h2>What we just shipped</h2>
+                <p>Two new things live on the Arkiv Braga testnet, both under our project key so a judge or auditor can list them with one query.</p>
+                <p><strong>Agent identity cards.</strong> The Calendar agent and the Gmail agent each have a signed entity that mirrors the same JSON you can already fetch from <code>/agents/calendar.json</code> and <code>/agents/gmail.json</code>. Same scopes, same approval policy, same SHA-256 checksum. If the agent gets a new permission, we publish a new entity; the entire history of what the agent was allowed to do is visible on a public chain explorer, not just in our changelog.</p>
+                <p><strong>Session memory events.</strong> When you ask the assistant to remember something across model swaps (your default tone, the people you email most, your work-hours preference), that memory writes an entity to Arkiv. The entity is signed by us as the creator (so you can prove we wrote it) but the owner field can be transferred to your wallet. The day you want to take your memory and go, the transfer is a single transaction and we never see it again.</p>
+
+                <h2>The honest empty state</h2>
+                <p>We are not going to tell you the entity list is full when it is not. Until we fund our Braga testnet wallet and run the publish script, the <code>/arkiv</code> page shows a clean empty state and a one-line note about what will appear there. The API returns <code>{"agents": [], "count": 0}</code> with the right shape, not a fabricated row. Same rule as the rest of the trust stack: if a feature is shipped, the page reflects it. If not, the page says so.</p>
+
+                <h2>Why this is different from a usual database row</h2>
+                <p>Most assistants treat your memory as their data. They store it. They train on it (sometimes). They lose it on the day they re-architect. Your relationship with the assistant is a relationship with their database. If that database changes hands, your memory does too.</p>
+                <p>An Arkiv entity is shaped differently. There are two fields that matter here. <code>$creator</code> is who originally wrote the entity and never changes. <code>$owner</code> is who can update or delete it, and that can change. Today we are both. On the day you want to take your memory off our servers, we hand the <code>$owner</code> to your wallet and we become read-only. The creator stamp stays, so the provenance never disappears. The control stays with you.</p>
+                <p>This is closer to how property works in the physical world. The deed names the original builder. The current owner can do what they want with the building. We are saying out loud that we want to be the builder, not the landlord.</p>
+
+                <h2>What you do not have to do</h2>
+                <p>You do not have to install a wallet. You do not have to know what Arkiv is. You do not have to pay a testnet fee. The default experience is unchanged. The assistant works the same way it did yesterday.</p>
+                <p>This is opt-in by design. If you never click through to <code>/arkiv</code>, the only thing that changes for you is that the trust story gets one layer stronger. If you do click through, you see a list of every entity we have written under our project key, with a link to the public explorer for each one. The bytes are there to inspect even if you never want to own them.</p>
+
+                <h2>Why now</h2>
+                <p>Honestly, the ETHLisbon hackathon AI challenge gave us a deadline. The pitch they asked for (&quot;a web3-native application where all data lives on a public verifiable network&quot;) is almost the exact pitch we have been making for receipts since the Filecoin mirror shipped. Adding a third network alongside Filecoin and 0G was an afternoon of work because the architecture was already shaped for it. The interesting part was not the integration. It was finally writing down the &quot;memory is yours&quot; story in a way that is not just a slogan.</p>
+                <p>Your assistant will still default to keeping memory in our database, because that is what makes it fast. But the moment you want a memory you actually own, the path is there. Three networks. Three independent verifications. One assistant. Same tap.</p>
+            </div>
+        ),
         'og-storage-second-mirror': (
             <div className="space-y-6">
                 <p className="text-lg">A founder we respect sent us the 0G docs and asked which modules we should fold in. We spent an afternoon on it, almost wrote a &quot;here is why we are holding off&quot; post, then re-read what we had written and realized we had answered the wrong question.</p>
