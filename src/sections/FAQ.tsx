@@ -18,7 +18,7 @@ const faqs = [
   },
   {
     q: 'What\u2019s a signed receipt and why should I care?',
-    a: 'Every action your assistant takes (sending an email, creating a calendar event) produces a small record signed with our private key. They land on your /security page. Anyone can verify the signature with our public key, and every receipt also lives on a public storage network so the proof outlives our database, even if our company goes away.',
+    a: 'Every action your assistant takes (sending an email, creating a calendar event) produces a small record signed with our private key. They land on your /security page. Anyone can verify the signature with our public key, and every receipt also lives on two independent public storage networks (Filecoin and 0G testnet) so the proof outlives our database, even if our company goes away.',
   },
   {
     q: 'Which AI does it use?',
