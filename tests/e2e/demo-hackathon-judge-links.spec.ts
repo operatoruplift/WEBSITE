@@ -101,6 +101,20 @@ test('/demo/hackathon AgenticID VerifyCard points at chainscan-galileo contract 
     expect(href).toContain('0x2700F6A3e505402C9daB154C5c6ab9cAEC98EF1F');
 });
 
+test('/demo/hackathon Arkiv VerifyCard points at /arkiv', async ({ page }) => {
+    // The Arkiv VerifyCard surfaces the ETHLisbon entrant (AI theme)
+    // alongside the other trust pillars so a judge can verify the
+    // third tamper-proof network (Braga testnet) from the same page.
+    // /arkiv is the on-site demo route; clicking through must land
+    // on the live entity list, not a 404.
+    await page.goto('/demo/hackathon', { waitUntil: 'domcontentloaded', timeout: 60_000 });
+
+    const href = await page
+        .getByRole('link', { name: /Agent cards \+ memory on Arkiv/i })
+        .getAttribute('href');
+    expect(href).toBe('/arkiv');
+});
+
 test('/demo/hackathon eyebrow leads with the trust-stack framing, not Loops House', async ({ page }) => {
     // PR #595 retired the "Loops House · Challenge 02" eyebrow that
     // was correct for the older hackathon but stale for 0G APAC.
