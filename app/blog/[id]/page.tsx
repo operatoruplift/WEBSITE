@@ -54,20 +54,21 @@ function getArticleContent(id: string) {
                 <p>Same principle as keeping a backup of your photos in two cloud providers, except for the cryptographic proof that your assistant did what you said it did.</p>
 
                 <h2>What did NOT change</h2>
-                <p>The signed receipt is the same shape it was last week. The ed25519 signature is the same. The Solana fingerprint we publish every five receipts is the same. The <a href="/api/receipts/public-key">/api/receipts/public-key</a> endpoint returns the same key.</p>
-                <p>0G Storage joined the side of the architecture that holds the bytes, not the side that signs them. Storage is provenance. Signature is authenticity. We did not move any signature work to 0G; we duplicated the public-archive step.</p>
+                <p>The receipt itself looks the same as it did last week. The signature on it is the same. The fingerprint we put on a public chain every five receipts is the same.</p>
+                <p>The new network only holds another copy of the bytes. It is not signing anything. The signature is still us. The new copy is just a second place anyone can fetch the record from, in case the first place ever goes down.</p>
 
                 <h2>What you do not have to think about</h2>
                 <p>You do not have to know what 0G is. You do not have to install a wallet. You do not have to pay a 0G testnet fee. Both mirrors are operational metadata we run on our side. The only place 0G is visible to you is the small <code>0g: bafyrei...</code> link next to each receipt on /security, and that link is one click away from a small JSON explanation page if you ever want to verify the bytes yourself.</p>
 
-                <h2>The Agent ID follow-up landed too</h2>
-                <p>We said this was the smaller half of the integration and that 0G Agent ID was the follow-up. That follow-up is now live. Each of our agents (Calendar, Gmail) has an entry in <code>data/og-agent-ids.json</code> that points at the 0G Foundation reference AgenticID contract on Galileo Testnet. The mint script (<code>scripts/og-agent-id-mint.mjs</code>) is in the repo; once we fund a testnet wallet, each agent gets an ERC-7857 Intelligent NFT and the chainscan link surfaces on <code>/agents/calendar.json</code> + <code>/agents/gmail.json</code>. Until then, the JSON omits the field entirely, so we never claim a tokenId we have not minted.</p>
+                <h2>The agent ID follow-up landed too</h2>
+                <p>Every assistant on Operator Uplift now has its own public ID card, the same way a real employee has a badge. The badge says what the assistant is allowed to do. If we ever change the assistant, the new badge shows the change. You do not have to know any of this is happening; the badge is something you can check if you ever want to, not something you have to.</p>
 
-                <h2>What we still skipped from 0G</h2>
-                <p>Storage and Agent ID are shipped; the three other 0G modules (Compute, Persistent Memory, TEE Privacy) stay deferred. Decentralized GPU marketplace would break our &quot;bring your own key&quot; promise. Persistent Memory is still &quot;coming soon&quot; on their side. TEE inference privacy is a problem we already solved by not running inference ourselves.</p>
-                <p>If you are a founder evaluating any of these infrastructure platforms (0G, but also the various decentralized AI / wallet / agent stacks that show up every month), the move that worked for us was: &quot;is there a smallest possible thing I can ship that adds verifiable value without rewriting my product?&quot; The answer is usually a parallel index, a second mirror, or a redundant signer. Not a stack swap.</p>
+                <h2>What we skipped on purpose</h2>
+                <p>There were other things in the same toolkit we could have taken. We did not take the one that runs the actual AI brain on someone else's hardware: you should be able to pick which AI you talk to (we already let you, on the chat page). And we did not take the one that promises private memory through hardware tricks, because we do not run the brain ourselves so there is nothing to make private on our end.</p>
 
-                <p>You did not buy us to learn about decentralized storage. You bought us for an assistant that drafts your email and waits for your tap. The two mirrors are part of why that tap is safe.</p>
+                <p>If you are a founder looking at one of these toolkits, the move that worked for us was the smallest possible thing that adds something a stranger can check without trusting us. Usually that is a second mirror, a redundant signer, or a public copy of a record we already had. Not a rebuild.</p>
+
+                <p>You did not sign up to learn about storage networks. You signed up for an assistant that drafts your email and waits for your tap. The two backups are part of why that tap is safe.</p>
             </div>
         ),
         'filecoin-elevenlabs-trust-stack': (
@@ -223,8 +224,8 @@ function getArticleContent(id: string) {
                 <p>Most agent products fail in one of two directions. Either they ask for approval on everything, which makes them slower than doing the task yourself. Or they ask for nothing, which turns every LLM hallucination into a real-world action your inbox will hate you for.</p>
                 <p>Operator Uplift takes a third path. The agent is free to read, reason, and plan. It is not free to act until a human confirms. Reads like &quot;list my calendar events for tomorrow&quot; run without asking. Writes like &quot;send this email&quot; or &quot;create this calendar event&quot; pop an approval modal with the exact payload, risk level, and one-click allow-or-deny.</p>
                 <p>The modal shows: the tool being called (Calendar, Gmail, etc), the action (create event, send draft), the risk level (MEDIUM for calendar writes, HIGH for gmail sends), every parameter the agent is about to send (who, what, when), and a single primary CTA. No buried toggles, no checkboxes, no fine print. Either you approve this specific action once, or you deny it.</p>
-                <p>Every approval is logged. The audit log is hashed and the Merkle root is published to Solana devnet. If the agent acts, there is proof that a human said yes.</p>
-                <p>This is the opposite of how most SaaS approval flows work. You do not get to say &quot;always allow this agent to send email&quot; because a future prompt injection could turn that blanket permission into an exfiltration vector. Every action stands on its own.</p>
+                <p>Every Yes you tap gets a receipt that lands on a public record. The record is small, but it carries proof a human said yes at a specific time on a specific action. If the assistant ever did something you did not approve, you would see that the receipt is missing.</p>
+                <p>This is the opposite of how most SaaS approval flows work. You do not get to say &quot;always allow this assistant to send email,&quot; because a future bug or a hijacked prompt could turn that one tap into hundreds of emails. Every action stands on its own.</p>
                 <p>It is slower. On purpose. The slowness is the feature.</p>
             </div>
         ),
@@ -242,18 +243,21 @@ function getArticleContent(id: string) {
         ),
         'local-first-threat-model': (
             <div className="space-y-6">
-                <p className="text-lg">Every privacy product has a threat model. Most of them hide it. Here is ours, stated honestly.</p>
-                <p><strong>What we protect against:</strong></p>
-                <p>(1) Cloud-side data retention. The web app routes prompts through whichever AI provider you pick per turn (Anthropic, OpenAI, Google, xAI, DeepSeek). Beyond that hop, we do not store agent conversations, tool-call outputs, or attachment bodies in our own database. Chat sessions and memory live in your browser&apos;s localStorage. The desktop+Ollama path on the roadmap removes the provider hop entirely; until then, the trade-off is the one each provider documents.</p>
-                <p>(2) Silent action. Every write happens behind an approval modal. A compromised LLM cannot send an email without you clicking Allow.</p>
-                <p>(3) Tampered audit history. Two layers stack here. The on-chain Merkle root means we cannot delete or rewrite what your agent did without it being detectable. The Filecoin mirror means we cannot quietly edit a single receipt either, since the bytes are pinned to a public IPFS gateway and anyone can fetch the same JSON we signed.</p>
-                <p>(4) Credential leaks from the client. Settings &rarr; Security exposes a passphrase setup that hashes a key via Web Crypto AES-256-GCM. The encrypt/decrypt round-trip is wired up but is not yet called by the chat session and memory persistence paths, so today the data sits in localStorage as plain JSON. We disclose this state in the Settings UI itself rather than in marketing copy. Encrypt-at-rest ships once those flows call secureStore/secureRetrieve.</p>
-                <p><strong>What we do NOT protect against (yet):</strong></p>
-                <p>(1) Compromised LLM provider. If Anthropic or OpenAI is breached, and they decide to log your prompts, we cannot stop that. Use Ollama if you need full local inference.</p>
-                <p>(2) Malicious browser extensions. An extension with content-script access can read anything the page can read, including your approvals modal. This is an operating-system-level problem we inherit.</p>
-                <p>(3) Social engineering of the human. If you click Allow on every prompt without reading, we cannot save you. The approval modal is a chance to think, not a guaranteed safeguard.</p>
-                <p>(4) Nation-state adversaries. We are a beta product. Assume a sophisticated adversary can find a flaw in our stack. For anything requiring genuine state-adversary defense, use the self-hosted Tauri build on an air-gapped machine.</p>
-                <p>The point of publishing the threat model is not to claim perfection. It is to give you enough information to decide whether our guarantees match your threat profile.</p>
+                <p className="text-lg">Every privacy product has a list of who it tries to protect you from. Most companies hide that list. Here is ours, in plain English.</p>
+
+                <h2>What we try to keep you safe from</h2>
+                <p><strong>The AI company keeping a copy.</strong> When you talk to the assistant, your message goes to whichever AI you picked (Claude, ChatGPT, Gemini, Grok, DeepSeek). After that, we do not store the conversation in our own database. The chat lives in your own browser. A future desktop version will run the AI on your own machine so even the message stays with you.</p>
+                <p><strong>The assistant doing things on its own.</strong> Every send-an-email or book-a-meeting waits for your tap. Even if the AI gets confused or tricked, it cannot act without you saying yes.</p>
+                <p><strong>Someone quietly changing the record.</strong> Every action you approve gets a fingerprint that lands on a public chain plus a public backup. If we ever tried to edit history later, the public copy and the chain would no longer line up. The lie would show.</p>
+                <p><strong>Your saved data leaking off your machine.</strong> The settings page has an option to lock your local data with a passphrase. The locking part is built; we are still wiring it into every place data is saved. We tell you that on the settings page, in the same words, so you know what is locked and what is not yet.</p>
+
+                <h2>What we do NOT protect you from yet</h2>
+                <p><strong>The AI company itself being broken into.</strong> If Anthropic or OpenAI gets breached and they decide to log conversations, we cannot stop that. The desktop version that runs the AI on your own machine is the answer here.</p>
+                <p><strong>A bad browser extension.</strong> Any extension with permission to read pages can read what you see, including the approval popup. This is a problem the browser, not us, has to solve.</p>
+                <p><strong>Pressing yes without reading.</strong> If you tap Allow on every prompt out of habit, we cannot save you. The pause is a chance to think, not a force field.</p>
+                <p><strong>A government or intelligence agency that really wants in.</strong> We are not Signal. If you need that level of protection, do not rely on us alone.</p>
+
+                <p>The point of writing this down is not to claim we are perfect. It is to give you the information you need to decide whether what we built matches what you actually worry about.</p>
             </div>
         ),
         'wedge-lawyer-accountant-therapist': (
