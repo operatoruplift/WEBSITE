@@ -26,7 +26,7 @@ export const posts: BlogPost[] = [
     {
         id: 'arkiv-agent-memory-you-own',
         title: 'Agents whose memory you actually own',
-        excerpt: 'Most assistants treat your conversation history as their data. We just shipped the opposite: agent identity cards and session memories that live on a public network as entities you can transfer, archive, or burn. Here is what that gives you, in plain English.',
+        excerpt: 'Most assistants own your history with them. The day they disappear, your memory does too. This week we found a way to let you keep it. The deed stays with us; the keys move to you.',
         date: 'May 19, 2026',
         readTime: '4 min read',
         category: 'update',
