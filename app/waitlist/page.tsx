@@ -105,9 +105,13 @@ export default function WaitlistPage() {
                                     type="email"
                                     required
                                     autoComplete="email"
+                                    autoFocus
+                                    enterKeyHint="go"
+                                    inputMode="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="you@example.com"
+                                    aria-label="Email address"
                                     className="mt-2 w-full rounded-xl border border-foreground/15 bg-background px-4 py-3 text-base text-foreground placeholder:text-muted/70 focus:border-foreground/40 focus:outline-none"
                                 />
                             </label>
@@ -131,7 +135,7 @@ export default function WaitlistPage() {
                         <div className="text-center">
                             <h2 className="text-xl font-medium tracking-tight">Want to go faster?</h2>
                             <p className="text-sm text-muted mt-2 max-w-md mx-auto">
-                                Pay once to bump up the queue. We accept Phantom, Solflare, Backpack, and any wallet that supports WalletConnect.
+                                Pay once to bump up the queue. Soon you will be able to pay with Phantom, Solflare, Backpack, or any wallet that supports WalletConnect.
                             </p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -145,20 +149,17 @@ export default function WaitlistPage() {
                                         ${tier.priceUsdc} <span className="text-sm font-normal text-muted">USDC</span>
                                     </div>
                                     <p className="mt-3 text-sm text-muted flex-1">{tier.description}</p>
-                                    <button
-                                        type="button"
-                                        disabled
-                                        className="mt-5 w-full rounded-xl border border-foreground/15 bg-background py-2.5 text-sm font-medium text-foreground/60 cursor-not-allowed"
-                                        aria-disabled="true"
-                                        title="Wallet checkout opens here once you have joined the list."
+                                    <div
+                                        className="mt-5 w-full rounded-xl bg-foreground/[0.04] py-2.5 text-center text-xs font-medium uppercase tracking-wider text-foreground/50"
+                                        aria-label="Wallet checkout for this tier is not live yet"
                                     >
-                                        Pay with wallet
-                                    </button>
+                                        Coming next
+                                    </div>
                                 </div>
                             ))}
                         </div>
                         <p className="text-center text-xs text-muted">
-                            Skip-the-line checkout opens once your wallet is connected on the next step. The wallet flow ships separately; the buttons above are the pricing menu only for now.
+                            Wallet checkout opens here when the multi-wallet flow ships. The prices above are locked. We will not raise them on you.
                         </p>
                     </section>
                 </div>

@@ -230,14 +230,26 @@ function getArticleContent(id: string) {
         ),
         'audit-trail': (
             <div className="space-y-6">
-                <p className="text-lg">Every agent action in Operator Uplift is hashed, logged, and eventually published on-chain. Here is the exact pipeline.</p>
-                <p><strong>Step 1 &mdash; SHA-256 hash on the client.</strong> When an agent emits a tool_use block and the user approves it, we compute a SHA-256 digest of the action payload using the Web Crypto API. The hash covers: tool name, action, params, user ID, timestamp, outcome. This is the &quot;leaf&quot; of the audit tree.</p>
-                <p><strong>Step 2 &mdash; Dual write.</strong> The leaf hash plus the full action details are written to two places: localStorage for fast client-side lookup, and a server-side Supabase table (audit_entries) via an authenticated POST. Supabase is the source of truth. localStorage is a cache.</p>
-                <p><strong>Step 3 &mdash; Merkle root every N actions.</strong> On every 5th action, the server computes a Merkle root over all leaf hashes since the last publication. This collapses an arbitrary number of actions into a single 32-byte commitment.</p>
-                <p><strong>Step 4 &mdash; Publish on-chain.</strong> The Merkle root is passed to the Anchor publish_root instruction on our program (deployed to Solana devnet, program ID LeHntjrypUvoedo4DHdBXUNyC2gKxnRH7wzp2UE2w1P). The server wallet signs the tx. The tx signature is stored in the audit_roots Supabase table.</p>
-                <p><strong>Step 5 &mdash; Verify anywhere.</strong> To prove any single action was logged at time T, you fetch the leaf from Supabase, reconstruct the Merkle proof, and check the root matches what is on-chain. The on-chain commitment makes it impossible for us to quietly rewrite history.</p>
-                <p><strong>Step 6 &mdash; Filecoin anchor of the receipt JSON.</strong> Every signed receipt is also pushed to Filecoin via a Lighthouse provider, and the resulting CID is stored on the <code>tool_receipts</code> row. The CID surfaces on <code>/security</code> next to each receipt as a clickable IPFS gateway link. Anyone can fetch the JSON from the public gateway and byte-compare against what <code>/api/receipts</code> returns. ed25519 still proves authenticity, but Filecoin removes the &quot;trust their Supabase&quot; qualifier &mdash; the bytes are public, immutable, and independently retrievable.</p>
-                <p>The devnet deployment is the research-grade version. Mainnet is on the roadmap once the program is audited.</p>
+                <p className="text-lg">Most apps ask you to trust their database. Ours leaves a trail anyone can check, even us.</p>
+
+                <p>Here is what that means in plain English.</p>
+
+                <h2>Every tap leaves a record</h2>
+                <p>When you tap Approve on a draft email or a calendar event, the assistant writes down what just happened: which tool, what was sent, when, who asked, and what came back. That record gets a fingerprint nobody can forge. The fingerprint is small. The record is small. We keep both.</p>
+
+                <h2>Every five records, a receipt of receipts</h2>
+                <p>Every fifth action, we take all the fingerprints from the last five and roll them into one. Then we post that one to a public chain. The public chain is not ours. It costs us a fraction of a cent to post. We cannot quietly remove it.</p>
+                <p>Why this matters: if we ever tried to rewrite history by editing one of your earlier actions, the rolled-up fingerprint would no longer match the new edits. The chain catches the lie.</p>
+
+                <h2>Every record gets a public backup</h2>
+                <p>Beyond the chain, each record also lands on a public storage network the day it is signed. Anyone can fetch the same record from that network and compare it to what we have. If they differ, somebody changed something.</p>
+                <p>You can see these backups on your <a href="/security">security page</a>. The small <code>filecoin:</code> and <code>0g:</code> links next to each row open the public copy.</p>
+
+                <h2>Why we built it this way</h2>
+                <p>The simplest version of trust is "we promise." That breaks the day promises change hands. Companies get acquired. Founders leave. Databases get migrated.</p>
+                <p>The version that survives those days is a record on a network we do not own. So that is what we built.</p>
+
+                <p>This is the same plumbing that lets you prove a year from now that the email your assistant sent really did go out on the date you remember. Nothing fancier than that, but nothing weaker either.</p>
             </div>
         ),
         'local-first-threat-model': (
