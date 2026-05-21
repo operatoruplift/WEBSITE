@@ -130,7 +130,7 @@ export default function GoalsPage() {
                 <div className="mb-10 rounded-xl border border-[#F97316]/30 bg-[#F97316]/[0.05] px-5 py-4 flex items-start gap-3">
                     <Sparkles aria-hidden className="w-5 h-5 text-[#F97316] mt-0.5 shrink-0" />
                     <div className="text-sm text-foreground/90 leading-relaxed">
-                        <strong>Private beta.</strong> Every new goal gets a sensible starter questline. The AI-personalized questline + reminders land in the next release. <Link href="/waitlist" className="text-[#F97316] underline hover:no-underline">Join the waitlist for early access.</Link>
+                        <strong>Private beta.</strong> Every new goal gets an AI-built questline. Daily reminders, behavioral adaptation, and squad accountability land in the next releases. <Link href="/waitlist" className="text-[#F97316] underline hover:no-underline">Join the waitlist for early access.</Link>
                     </div>
                 </div>
 
@@ -260,6 +260,19 @@ export default function GoalsPage() {
                                                         <span className="font-bold tracking-widest uppercase text-foreground/60 mr-2">Target</span>
                                                         {g.target_date}
                                                     </p>
+                                                )}
+                                                {g.questline && g.questline.length > 0 && (
+                                                    <div className="mt-3 mb-3">
+                                                        <p className="text-[10px] font-bold tracking-widest uppercase text-foreground/60 mb-1.5">Questline</p>
+                                                        <ol className="space-y-1 list-none p-0">
+                                                            {g.questline.slice(0, 4).map((step, idx) => (
+                                                                <li key={idx} className="flex items-baseline gap-2 text-xs">
+                                                                    <span className="text-[10px] font-mono font-bold text-[#F97316]/70 shrink-0 tabular-nums">D{step.day}</span>
+                                                                    <span className="text-foreground/80">{step.action}</span>
+                                                                </li>
+                                                            ))}
+                                                        </ol>
+                                                    </div>
                                                 )}
                                                 <div className="mt-3">
                                                     <button

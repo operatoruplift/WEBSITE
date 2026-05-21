@@ -1,12 +1,12 @@
 import { createServiceSupabase } from '@/lib/supabase-server';
 import { computeStreak } from './streak';
+import { generateQuestline } from './questline';
 import type {
     Goal,
     GoalCheckin,
     GoalWithMetrics,
     CreateGoalInput,
     CreateCheckinInput,
-    QuestlineStep,
 } from './types';
 
 /**
@@ -18,14 +18,6 @@ import type {
  * a client-supplied id.
  */
 
-/** Default questline an operator gets when no AI generation runs. */
-const FALLBACK_QUESTLINE: QuestlineStep[] = [
-    { day: 1, action: 'Take the smallest possible first step', notes: '10 minutes is enough on day one.' },
-    { day: 2, action: 'Repeat day 1, slightly longer', notes: 'Consistency beats intensity here.' },
-    { day: 3, action: 'Tell one person what you are doing', notes: 'Public commitments stick better.' },
-    { day: 7, action: 'Review your first week', notes: 'What worked, what stalled, one tweak.' },
-];
-
 /** Create a new goal. Returns the persisted row. */
 export async function createGoal(
     privyId: string,
@@ -36,6 +28,11 @@ export async function createGoal(
         throw new Error('title required');
     }
 
+    // Generate the questline before the insert. generateQuestline is
+    // fail-soft: it returns FALLBACK_QUESTLINE on any error or missing
+    // API key, so the insert never blocks on the model.
+    const questline = await generateQuestline(input.title);
+
     const supabase = createServiceSupabase();
     const { data, error } = await supabase
         .from('goals')
@@ -44,7 +41,7 @@ export async function createGoal(
             title: input.title.trim(),
             stakes: input.stakes?.trim() || null,
             target_date: input.target_date || null,
-            questline: FALLBACK_QUESTLINE,
+            questline,
             status: 'active',
         })
         .select()
