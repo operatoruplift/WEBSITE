@@ -10,19 +10,23 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
     title: 'Pricing for teams',
     description:
-        'Personal plans start free at $0 or $50/month. Team and enterprise plans for families, small businesses, and companies. Cancel any time.',
+        'Operator Circle at $24/month for accountability groups. Enterprise custom pricing for orgs. Personal plans (Free, Pro $8/month) live on the homepage.',
     openGraph: {
         title: 'Pricing for teams, Operator Uplift',
         description:
-            'Personal plans start free at $0 or $50/month. Team and enterprise plans. Cancel any time.',
+            'Operator Circle at $24/month for accountability groups. Enterprise custom pricing for orgs.',
         url: 'https://operatoruplift.com/pricing',
         type: 'website',
+        // Re-state /opengraph-image: Next.js shallow-merges openGraph
+        // so the parent layout's images array would otherwise be lost.
+        images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Operator Uplift, commitment infrastructure' }],
     },
     twitter: {
         card: 'summary_large_image',
         title: 'Pricing for teams, Operator Uplift',
         description:
-            'Personal plans start free at $0 or $50/month. Team and enterprise plans. Cancel any time.',
+            'Operator Circle at $24/month for accountability groups. Enterprise custom pricing for orgs.',
+        images: ['/opengraph-image'],
     },
     alternates: {
         canonical: '/pricing',
