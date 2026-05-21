@@ -12,19 +12,19 @@ Operator-side remaining: fund Braga wallet at `https://braga.hoodi.arkiv.network
 
 ## What we did NOT ship (0 of 7 Logos tracks)
 
-The 7 Logos Press LP prizes were pasted into an earlier session and noted as out-of-scope. None of them has any code or doc artifact in this repo. To make sure nobody silently picks one up as "shipped":
+The 7 Logos Press LP prizes were pasted into an earlier session and noted as out-of-scope. **Update (2026-05-21)**: the prize text has now been captured per track. None of the tracks has shipping code in this repo, but every track has a design doc that scopes the work + names the operator inputs needed before any of them can ship.
 
-| Prize | Codename | What we know | What we need from operator |
+| Prize | Title | Recommendation | Design doc |
 |---|---|---|---|
-| LP-0002 | unknown | prize text not in repo | paste full prize requirements + check for funded LEZ wallet |
-| LP-0005 | unknown | prize text not in repo | same |
-| LP-0008 | unknown | prize text not in repo | same |
-| LP-0012 | unknown | prize text not in repo | same |
-| LP-0013 | unknown | prize text not in repo | same |
-| LP-0016 | unknown | prize text not in repo | same |
-| LP-0017 | unknown | prize text not in repo | same |
+| LP-0002 | Private M-of-N Multisig | Adjacent infra. Defer until LP-0008 needs it. | [LOGOS/LP-0002.md](./LOGOS/LP-0002.md) |
+| LP-0005 | Private Token Balance Attestation | Adjacent infra. Useful for Pro-tier gating. | [LOGOS/LP-0005.md](./LOGOS/LP-0005.md) |
+| LP-0008 | Autonomous AI Module | 🔥 Strongest fit. Direct overlap with Operator Uplift + Arkiv. | [LOGOS/LP-0008.md](./LOGOS/LP-0008.md) |
+| LP-0012 | Event/Log mechanism | Infra. Needed indirectly by LP-0008. | [LOGOS/LP-0012.md](./LOGOS/LP-0012.md) |
+| LP-0013 | Token program authorities | Infra. $600 prize, "medium" effort, video required. | [LOGOS/LP-0013.md](./LOGOS/LP-0013.md) |
+| LP-0016 | Anonymous Forum w/ Threshold Moderation | Skip. Tangential, multi-week, no overlap with wedge. | [LOGOS/LP-0016.md](./LOGOS/LP-0016.md) |
+| LP-0017 | Whistleblower app | Skip. Tangential + prize text truncated; needs re-fetch. | [LOGOS/LP-0017.md](./LOGOS/LP-0017.md) |
 
-This table is intentionally empty for the "what we know" column. We are not going to guess what each LP-XXXX maps to and write a fake submission against the guess. That is the fabrication-rot pattern this repo's marketing-honesty net is built to prevent.
+The shared blockers (no LEZ runtime in this repo, no funded LEZ wallet confirmed, no Risc0 toolchain) are still in effect for every track. The per-track docs let engineering scope a real entry once those blockers clear.
 
 ## Why nothing is built
 
