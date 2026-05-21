@@ -14,12 +14,16 @@ export const metadata: Metadata = {
             'Product updates, engineering deep-dives, and guides for building with Operator Uplift.',
         url: 'https://operatoruplift.com/blog',
         type: 'website',
+        // Re-state /opengraph-image: Next.js shallow-merges openGraph
+        // so the parent layout's images array would otherwise be lost.
+        images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Operator Uplift, commitment infrastructure' }],
     },
     twitter: {
         card: 'summary_large_image',
         title: 'Blog and changelog, Operator Uplift',
         description:
             'Product updates, engineering deep-dives, and guides for building with Operator Uplift.',
+        images: ['/opengraph-image'],
     },
     alternates: {
         canonical: '/blog',

@@ -10,12 +10,16 @@ export const metadata: Metadata = {
             'Terms governing your use of Operator Uplift, including responsibilities and limitation of liability.',
         url: 'https://operatoruplift.com/terms',
         type: 'website',
+        // Re-state /opengraph-image: Next.js shallow-merges openGraph
+        // so the parent layout's images array would otherwise be lost.
+        images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Operator Uplift, commitment infrastructure' }],
     },
     twitter: {
-        card: 'summary',
+        card: 'summary_large_image',
         title: 'Terms of service, Operator Uplift',
         description:
             'Terms governing your use of Operator Uplift, including responsibilities and limitation of liability.',
+        images: ['/opengraph-image'],
     },
     alternates: {
         canonical: '/terms',
