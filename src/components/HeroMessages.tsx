@@ -3,16 +3,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 /**
- * Hero visual: a chat mockup that auto-cycles through three Gamify
- * Your Growth scenarios. Replaces the pre-pivot AI-assistant
- * scenarios (morning briefing, inbox triage, reminder setup) that
- * sold a retired product.
+ * Hero visual: a chat mockup that auto-cycles through three v10
+ * Commitment Infrastructure scenarios. Replaces the pre-pivot
+ * AI-assistant scenarios (morning briefing, inbox triage, reminder
+ * setup) that sold a retired product.
  *
- * The three "operator beat" demos mirror the loop the rest of the
- * site pitches:
- *   1. "Set a goal"          -> AI breaks it into a questline
- *   2. "Daily check-in"      -> streak ticks up, AI adapts
- *   3. "Low-motivation day"  -> the squad pulls you back
+ * The three "operator beat" demos mirror the v10 commitment loop the
+ * rest of the site pitches (DECLARE -> STAKE -> HONOR -> WATCH):
+ *   1. "Declare a commitment" -> stake locked, plan generated
+ *   2. "Honor the check-in"   -> streak ticks up, receipt anchored
+ *   3. "Low-motivation day"   -> AI adapts, the squad pulls you back
  *
  * Each scenario plays for ~7 seconds, then the next one starts. The
  * loop pauses when the component scrolls offscreen via
@@ -42,19 +42,19 @@ interface Scenario {
 
 const SCENARIOS: Scenario[] = [
   {
-    title: 'Set a goal',
+    title: 'Declare a commitment',
     bubbles: [
-      { from: 'you',   text: 'I want to run a half marathon in 12 weeks.' },
-      { from: 'agent', text: 'On it. Three runs a week, two strength days, one long Sunday run.' },
-      { from: 'agent', text: 'Tomorrow morning: 20 minutes easy. Ready?', approval: 'pending' },
+      { from: 'you',   text: 'Half marathon in 12 weeks. $50 on the line if I miss a week.' },
+      { from: 'agent', text: 'Stake locked. Three runs a week, two strength, long Sunday run.' },
+      { from: 'agent', text: 'Tomorrow: 20 minutes easy. Confirm and the protocol starts.', approval: 'pending' },
     ],
   },
   {
-    title: 'Daily check-in',
+    title: 'Honor the check-in',
     bubbles: [
       { from: 'agent', text: 'Day 14 streak. Today is the long run, 45 minutes.' },
       { from: 'you',   text: 'done' },
-      { from: 'agent', text: 'Nice. That is your longest yet. Logged. Squad cheered.', approval: 'sent' },
+      { from: 'agent', text: 'Logged. Stake honored. Receipt anchored on-chain.', approval: 'sent' },
     ],
   },
   {
