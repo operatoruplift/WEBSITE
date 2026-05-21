@@ -190,9 +190,14 @@ test('JSON-LD structured data uses the pivot pitch', async ({ page }) => {
     // Google rich-result snippets; the description must lead with
     // the personal-development pitch, not the retired AI assistant
     // copy. Source of truth: docs/PIVOT_GAMIFY_GROWTH.md.
+    //
+    // 2026-05-22 PR #674: the homepage now also emits a FAQPage
+    // JSON-LD script (rendered inside the FAQ section). The root
+    // layout's site-wide ld+json keeps id="json-ld"; target it by
+    // ID so adding more schema.org blocks doesn't trip this spec.
     await page.goto('/');
 
-    const ldJson = await page.locator('script[type="application/ld+json"]').first().innerText();
+    const ldJson = await page.locator('script#json-ld[type="application/ld+json"]').innerText();
     expect(ldJson).toContain('Commitment infrastructure');
     expect(ldJson).toContain('Keep your word');
     expect(ldJson).toContain('AI Game Master');
@@ -202,6 +207,25 @@ test('JSON-LD structured data uses the pivot pitch', async ({ page }) => {
     expect(ldJson).not.toContain('Runs on your computer');
     // Web app, not a desktop SoftwareApplication.
     expect(ldJson).toContain('WebApplication');
+});
+
+test('FAQ section emits FAQPage JSON-LD for rich results', async ({ page }) => {
+    // PR #674 added schema.org FAQPage so Google can surface the
+    // homepage FAQ in "People also ask" rich-result placements.
+    // Lock that the schema is present, contains an expected anchor
+    // question, and does not leak any retired AI-assistant phrasing
+    // through the answer text.
+    await page.goto('/');
+
+    const scripts = await page.locator('script[type="application/ld+json"]').allInnerTexts();
+    const faqJson = scripts.find(s => s.includes('"FAQPage"'));
+    expect(faqJson, 'homepage must emit FAQPage JSON-LD').toBeTruthy();
+    expect(faqJson!).toContain('"@type":"FAQPage"');
+    expect(faqJson!).toContain('"@type":"Question"');
+    expect(faqJson!).toContain('"@type":"Answer"');
+    expect(faqJson!).toContain('What does the AI Game Master actually do?');
+    expect(faqJson!).not.toContain('drafts your email');
+    expect(faqJson!).not.toContain('AI that runs on your terms');
 });
 
 test('/login + /signup auth pages do not show "Commander"', async ({ page }) => {
