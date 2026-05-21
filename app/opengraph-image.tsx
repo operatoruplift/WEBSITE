@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'Operator Uplift, AI that runs on your terms. Drafts your replies, schedules your meetings, waits for your tap before sending anything.';
+export const alt = 'Operator Uplift, commitment infrastructure. Keep your word. Bet on yourself. Declare. Stake. Honor. Watch.';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -56,7 +56,7 @@ export default async function Image() {
                         </div>
                     </div>
 
-                    {/* AI ASSISTANT eyebrow */}
+                    {/* Commitment Infrastructure eyebrow */}
                     <div
                         style={{
                             display: 'flex',
@@ -73,9 +73,10 @@ export default async function Image() {
                                 fontWeight: 700,
                                 letterSpacing: 3,
                                 textTransform: 'uppercase',
+                                fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
                             }}
                         >
-                            AI Assistant
+                            // Commitment Infrastructure
                         </div>
                     </div>
 
@@ -89,9 +90,11 @@ export default async function Image() {
                             lineHeight: 0.95,
                             marginBottom: 30,
                             display: 'flex',
+                            flexDirection: 'column',
                         }}
                     >
-                        AI that runs on your terms.
+                        <div style={{ display: 'flex' }}>Keep your word.</div>
+                        <div style={{ display: 'flex', color: '#F97316' }}>Bet on yourself.</div>
                     </div>
 
                     {/* Subhead */}
@@ -105,7 +108,7 @@ export default async function Image() {
                             display: 'flex',
                         }}
                     >
-                        Operator Uplift drafts your replies, schedules your meetings, and waits for your tap before sending anything.
+                        Declare a commitment. Stake real money on it. An AI Game Master adjudicates every check-in. We don&apos;t sell motivation. We sell consequences.
                     </div>
                 </div>
 
@@ -131,7 +134,7 @@ export default async function Image() {
                             gap: 10,
                         }}
                     >
-                        {/* Inbox header */}
+                        {/* Card header */}
                         <div
                             style={{
                                 display: 'flex',
@@ -148,119 +151,88 @@ export default async function Image() {
                                         fontWeight: 700,
                                         letterSpacing: 2,
                                         color: '#525252',
+                                        fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
                                     }}
                                 >
-                                    INBOX
+                                    ON TRACK
                                 </div>
                             </div>
-                            <div style={{ fontSize: 13, fontWeight: 600, color: '#737373', display: 'flex' }}>Operator</div>
+                            <div style={{ fontSize: 13, fontWeight: 600, color: '#737373', display: 'flex' }}>Day 14 of 60</div>
                         </div>
 
-                        {/* User: "Reply to mom..." */}
-                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        {/* Commitment title */}
+                        <div
+                            style={{
+                                fontSize: 22,
+                                fontWeight: 700,
+                                color: '#0A0A0A',
+                                letterSpacing: -0.5,
+                                marginTop: 4,
+                                display: 'flex',
+                            }}
+                        >
+                            Run 4× this week
+                        </div>
+
+                        {/* Stake row */}
+                        <div
+                            style={{
+                                fontSize: 13,
+                                color: '#525252',
+                                marginTop: 2,
+                                display: 'flex',
+                                gap: 8,
+                                fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
+                            }}
+                        >
+                            <span style={{ color: '#F97316', display: 'flex' }}>$50</span>
+                            <span style={{ display: 'flex' }}>→ @maya</span>
+                            <span style={{ color: '#A3A3A3', display: 'flex' }}>·</span>
+                            <span style={{ display: 'flex' }}>witness</span>
+                        </div>
+
+                        {/* Streak bars */}
+                        <div style={{ display: 'flex', gap: 3, marginTop: 12 }}>
+                            {Array.from({ length: 14 }).map((_, i) => (
+                                <div key={i} style={{ display: 'flex', flex: 1, height: 20, background: '#F97316', opacity: 0.85 - (13 - i) * 0.04 }} />
+                            ))}
+                            {Array.from({ length: 6 }).map((_, i) => (
+                                <div key={'n' + i} style={{ display: 'flex', flex: 1, height: 20, border: '1px solid #E5E5E5', background: 'transparent' }} />
+                            ))}
+                        </div>
+
+                        {/* Streak count line */}
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                marginTop: 6,
+                                fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
+                                fontSize: 10,
+                                color: '#A3A3A3',
+                                letterSpacing: 1,
+                            }}
+                        >
+                            <div style={{ display: 'flex' }}>20 DAYS AGO</div>
+                            <div style={{ display: 'flex', color: '#F97316' }}>14 HONORED</div>
+                        </div>
+
+                        {/* CHECK IN pill */}
+                        <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: 14 }}>
                             <div
                                 style={{
-                                    maxWidth: 280,
-                                    background: '#3B82F6',
+                                    padding: '8px 14px',
+                                    background: '#F97316',
                                     color: 'white',
-                                    padding: '8px 14px',
-                                    borderRadius: 18,
-                                    fontSize: 15,
-                                    lineHeight: 1.3,
-                                    display: 'flex',
-                                }}
-                            >
-                                Reply to mom about Sunday dinner
-                            </div>
-                        </div>
-
-                        {/* Bot drafts reply */}
-                        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                            <div
-                                style={{
-                                    maxWidth: 290,
-                                    background: '#F4F4F5',
-                                    color: '#1A1A1A',
-                                    padding: '8px 14px',
-                                    borderRadius: 18,
-                                    fontSize: 14,
-                                    lineHeight: 1.35,
-                                    display: 'flex',
-                                }}
-                            >
-                                "Sounds great mom, see you at 6. Want me to bring dessert?", send?
-                            </div>
-                        </div>
-
-                        {/* TAP TO APPROVE pill */}
-                        <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: 2 }}>
-                            <div
-                                style={{
-                                    padding: '4px 10px',
-                                    border: '1.5px solid #F97316',
-                                    background: 'rgba(249, 115, 22, 0.06)',
-                                    borderRadius: 6,
-                                    fontSize: 10,
+                                    fontSize: 11,
                                     fontWeight: 700,
                                     letterSpacing: 2,
-                                    color: '#F97316',
                                     textTransform: 'uppercase',
+                                    fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
                                     display: 'flex',
                                 }}
                             >
-                                Tap to Approve
-                            </div>
-                        </div>
-
-                        {/* User: "send it" */}
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 6 }}>
-                            <div
-                                style={{
-                                    background: '#3B82F6',
-                                    color: 'white',
-                                    padding: '8px 14px',
-                                    borderRadius: 18,
-                                    fontSize: 15,
-                                    display: 'flex',
-                                }}
-                            >
-                                send it
-                            </div>
-                        </div>
-
-                        {/* Bot: receipt confirmation */}
-                        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                            <div
-                                style={{
-                                    background: '#F4F4F5',
-                                    color: '#1A1A1A',
-                                    padding: '8px 14px',
-                                    borderRadius: 18,
-                                    fontSize: 15,
-                                    display: 'flex',
-                                }}
-                            >
-                                Sent. Receipt saved.
-                            </div>
-                        </div>
-
-                        {/* Receipt pill */}
-                        <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: 2 }}>
-                            <div
-                                style={{
-                                    padding: '4px 10px',
-                                    border: '1.5px solid rgba(34, 197, 94, 0.45)',
-                                    background: 'rgba(34, 197, 94, 0.08)',
-                                    borderRadius: 6,
-                                    fontSize: 10,
-                                    fontWeight: 700,
-                                    letterSpacing: 2,
-                                    color: '#16A34A',
-                                    textTransform: 'uppercase',
-                                    display: 'flex',
-                                }}
-                            >
-                                Sent, Receipt #042
+                                Check in today →
                             </div>
                         </div>
                     </div>
