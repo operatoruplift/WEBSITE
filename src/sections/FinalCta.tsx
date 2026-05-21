@@ -36,13 +36,13 @@ const FinalCta: React.FC = () => {
                         AI that runs on your terms.
                     </h2>
                     <p className="text-muted leading-relaxed max-w-xl mb-10">
-                        Connect Gmail in under a minute. Every action waits for your tap. Cancel any time.
+                        We are rolling out in waves. Drop your email and we will let you know when your slot opens. Every action waits for your tap. Cancel any time.
                     </p>
                     <Link
-                        href="/login?returnTo=/integrations"
+                        href="/waitlist"
                         className="inline-flex items-center px-7 py-3.5 bg-primary text-white font-bold text-sm rounded-lg hover:bg-primary/90 transition-colors uppercase tracking-wide shadow-[0_0_24px_rgba(249,115,22,0.25)]"
                     >
-                        Start free
+                        Join the waitlist
                         <ArrowRight className="ml-2 w-4 h-4" aria-hidden="true" />
                     </Link>
                 </div>

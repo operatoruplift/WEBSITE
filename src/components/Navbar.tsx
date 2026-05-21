@@ -80,10 +80,10 @@ const Navbar: React.FC<NavbarProps> = () => {
             </a>
 
             <Link
-              href="/paywall"
+              href="/waitlist"
               className="inline-flex items-center h-9 px-4 text-xs font-bold bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors uppercase tracking-wide whitespace-nowrap"
             >
-              Try it free
+              Join the waitlist
             </Link>
 
             <Link
@@ -159,11 +159,11 @@ const Navbar: React.FC<NavbarProps> = () => {
           </a>
           
           <Link
-            href="/paywall"
+            href="/waitlist"
             className="text-sm font-bold bg-primary text-white px-4 py-3 rounded-sm hover:bg-primary/80 transition-colors uppercase tracking-wide w-full text-center shadow-[0_0_12px_rgba(231,118,48,0.3)]"
             onClick={() => setMobileMenuOpen(false)}
           >
-            Try it free
+            Join the waitlist
           </Link>
 
           <Link

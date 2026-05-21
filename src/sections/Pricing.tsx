@@ -44,8 +44,8 @@ const TIERS = [
             'Every approved action signs an ed25519 receipt, anchored to Solana and mirrored to Filecoin',
             'Email support, average reply under one business day',
         ],
-        cta: 'Start Pro',
-        ctaLink: '/paywall',
+        cta: 'Join the waitlist',
+        ctaLink: '/waitlist',
         ctaIcon: ArrowRight,
         ctaStyle: 'bg-[#F97316] hover:bg-[#F97316]/90 text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]',
     },
@@ -79,7 +79,7 @@ const Pricing: React.FC = () => {
                 headingId="pricing-heading"
                 eyebrow="Pricing"
                 title="Pick a plan, start in a minute"
-                description="Start free. Pro at $50 a month. Team pricing is custom, book a call. Cancel any time."
+                description="Pro at $50 a month once your slot opens. Team pricing is custom, book a call. Cancel any time."
             />
 
             {/* Three pricing tiers. Promote to <ul>/<li> so screen
