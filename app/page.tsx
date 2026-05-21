@@ -7,7 +7,6 @@ import LocalFirst from '@/src/sections/LocalFirst';
 import Channels from '@/src/sections/Channels';
 import DemoVideo from '@/src/sections/DemoVideo';
 import Comparison from '@/src/sections/Comparison';
-import UseCases from '@/src/sections/UseCases';
 import Pricing from '@/src/sections/Pricing';
 import FAQ from '@/src/sections/FAQ';
 import FinalCta from '@/src/sections/FinalCta';
@@ -30,8 +29,7 @@ import Footer from '@/src/components/Footer';
  *   Channels    , iMessage shipping, Telegram + WhatsApp ready
  *   DemoVideo   , 90 s recording
  *   Comparison  , vs. niche agent peers
- *   UseCases    , concrete jobs the agent does
- *   Pricing     , Free / Pro / Custom Team
+ *   Pricing     , Free / Pro / Circle
  *   FAQ         , objection handling
  *   FinalCta    , cream editorial closer (sully.ai-derived pattern)
  */
@@ -51,7 +49,6 @@ export default function Home() {
         <Channels />
         <DemoVideo />
         <Comparison />
-        <UseCases />
         <Pricing />
         <FAQ />
         <FinalCta />
