@@ -42,52 +42,28 @@ test('/login is reachable directly (sanity)', async ({ page }) => {
     await expect(page).toHaveURL(/\/login(\?|$)/);
 });
 
-test('/pricing Business CTA goes to /login?returnTo=/paywall (Wave 1 risk #3)', async ({ page }) => {
-    // Marketing pages adopt theme-light at the wrapper, the page is a
-    // client component; domcontentloaded is enough since we read DOM.
+test('/pricing Operator Circle CTA goes to /waitlist (v10 reframe)', async ({ page }) => {
+    // v10 reframes /pricing as the org/B2B entry point. The
+    // retired Team/Business/Enterprise tier grid is gone. Operator
+    // Circle is the highlighted self-serve tier and funnels into
+    // /waitlist (same as the homepage Pricing CTAs) until the
+    // paid surface ships in Phase 8.
     await page.goto('/pricing', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    // Business is the self-serve per-seat tier; it must direct buyers
-    // through Privy auth to the paywall. Team is custom-priced now
-    // and routes to /contact (covered separately).
-    const ctaHrefs = await page
-        .locator('a:has-text("Get started")')
-        .evaluateAll(els =>
-            els.map(el => (el as HTMLAnchorElement).getAttribute('href')),
-        );
-    expect(ctaHrefs.length).toBeGreaterThanOrEqual(1);
-    for (const href of ctaHrefs) {
-        expect(href).toBe('/login?returnTo=/paywall');
-    }
-});
-
-test('/pricing Team CTA goes to /contact (Team is now custom)', async ({ page }) => {
-    await page.goto('/pricing', { waitUntil: 'domcontentloaded', timeout: 60_000 });
-
-    // Team tier moved from $299/mo + "Start team plan" -> /login flow
-    // to "Custom" + "Book a call" -> /contact. The change reflects
-    // the decision to keep Team pricing negotiable until we have
-    // enough Team customers to publish a real number.
-    // Tier names render in <h3>; the prior "div text === Team" locator
-    // collided with surrounding card wrappers that also contain extra
-    // copy. Anchor on the heading element instead.
-    const teamHeading = page.locator('h3').filter({ hasText: /^Team$/ }).first();
-    await expect(teamHeading).toBeVisible({ timeout: 10_000 });
-    const teamCtaHref = await page
-        .locator('a:has-text("Book a call")')
+    const circleCtaHref = await page
+        .locator('a:has-text("Join the waitlist")')
         .first()
         .getAttribute('href');
-    expect(teamCtaHref).toBe('/contact');
+    expect(circleCtaHref).toBe('/waitlist');
 });
 
-test('/pricing Enterprise CTA stays /contact (Wave 1 risk #3 exception)', async ({ page }) => {
+test('/pricing Enterprise CTA stays /contact (org sales handoff)', async ({ page }) => {
+    // Enterprise is the explicit exception: custom pricing for orgs
+    // that want SSO + per-seat + compliance paperwork. The handoff
+    // is human, not self-serve, so this CTA must keep landing on
+    // /contact even when other tier CTAs change.
     await page.goto('/pricing', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    // Enterprise is the explicit exception: a custom-priced tier
-    // with audit/SLA/firewall requirements that needs a sales call,
-    // not a self-serve checkout. Locked in so a future "consolidate
-    // all tier CTAs" sweep doesn't accidentally route Enterprise
-    // buyers through the paywall and lose the human handoff.
     const enterpriseHref = await page
         .locator('a:has-text("Book a call")')
         .first()
