@@ -74,7 +74,7 @@ test('/goals page is honest about what does not ship yet', () => {
     // not live yet. If a future edit removes the disclaimer, the
     // page implies a feature exists that does not.
     expect(pageSrc).toMatch(/Private beta/);
-    expect(pageSrc).toMatch(/lands in the next release/);
+    expect(pageSrc).toMatch(/land(s)? in the next release/);
 });
 
 test('/goals page form field names match CreateGoalInput', () => {
