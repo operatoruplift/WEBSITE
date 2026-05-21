@@ -102,7 +102,7 @@ test('/demo/hackathon AgenticID VerifyCard points at chainscan-galileo contract 
 });
 
 test('/demo/hackathon Arkiv VerifyCard points at /arkiv', async ({ page }) => {
-    // The Arkiv VerifyCard surfaces the ETHLisbon entrant (AI theme)
+    // The Arkiv VerifyCard surfaces the Network School Ethereum Hackathon entrant (AI theme)
     // alongside the other trust pillars so a judge can verify the
     // third tamper-proof network (Braga testnet) from the same page.
     // /arkiv is the on-site demo route; clicking through must land

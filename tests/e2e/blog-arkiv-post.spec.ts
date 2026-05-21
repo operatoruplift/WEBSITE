@@ -7,7 +7,7 @@ test.describe.configure({ timeout: 30_000 });
 /**
  * Lock the existence of the Arkiv launch post on /blog.
  *
- * The Arkiv ETHLisbon integration shipped across PRs #620..#627 with
+ * The Arkiv Network School Ethereum Hackathon integration shipped across PRs #620..#627 with
  * matching surface coherence on the homepage Built-on strip, the
  * /demo/hackathon judge grid, README + TRUTH_TABLE, deck objections,
  * and operator smoke. The blog entry is the user-facing "what
@@ -33,7 +33,7 @@ test('/blog index lists the Arkiv launch post by id', () => {
 test('/blog index titles the Arkiv post around user-owned memory', () => {
     // Brand voice rule: titles speak to the user, not the vendor.
     // "Agents whose memory you actually own" is the locked phrasing
-    // and the ETHLisbon AI-theme one-liner. If a future edit swaps
+    // and the Network School Ethereum Hackathon (AI track) one-liner. If a future edit swaps
     // it for vendor-first framing ("We shipped Arkiv...") the
     // marketing-honesty net catches it.
     expect(postsSrc).toContain('Agents whose memory you actually own');

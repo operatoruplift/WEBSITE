@@ -49,7 +49,7 @@ export interface RememberOpts {
     role: MemoryRole;
     content: string;
     meta?: Record<string, unknown>;
-    /** Default 7 days; matches the Arkiv ETHLisbon Template A pattern. */
+    /** Default 7 days; matches the Arkiv Network School Ethereum Hackathon Template A pattern. */
     ttlDays?: number;
 }
 

@@ -29,7 +29,7 @@ Below the one-liner, surfaces use a longer description that varies based on spac
 
 - `app/layout.tsx` description: "An AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Approval before every action; signed receipt afterward."
 - `app/layout.tsx` openGraph + twitter description: "AI that drafts your email and schedules your meetings. Approval before every action; signed receipt afterward."
-- README hero paragraph: covers real Gmail/Calendar tool execution, per-action approval, dual-mirror receipts, 0G AgenticID, and Arkiv (ETHLisbon AI-theme entrant for user-owned agent memory).
+- README hero paragraph: covers real Gmail/Calendar tool execution, per-action approval, dual-mirror receipts, 0G AgenticID, and Arkiv (Network School Ethereum Hackathon (AI track) entrant for user-owned agent memory).
 
 These are appropriate to the surface. The canonical short line carries brand recall; the longer descriptions carry the trust-stack detail when there's room.
 

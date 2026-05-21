@@ -13,7 +13,7 @@ Operator Uplift is an AI assistant that drafts your email, schedules your meetin
 - [Project overview](#project-overview)
 - [System architecture](#system-architecture)
 - [0G integration](#0g-integration)
-- [Arkiv integration (ETHLisbon challenge entrant)](#arkiv-integration-ethlisbon-challenge-entrant)
+- [Arkiv integration (Network School Ethereum Hackathon entrant)](#arkiv-integration-network-school-ethereum-hackathon-entrant)
 - [Quickstart for judges](#quickstart-for-judges)
 - [Test accounts and testnet faucets](#test-accounts-and-testnet-faucets)
 - [CI checks](#ci-checks)
@@ -192,9 +192,9 @@ We do **not** ship pre-minted tokenIds. The persistence file ships with `null` a
 - **0G Persistent Memory**: still "coming soon" on 0G's side. Re-evaluate when it ships.
 - **0G TEE Privacy**: we do not run inference. The user picks their own provider's privacy posture.
 
-## Arkiv integration (ETHLisbon challenge entrant)
+## Arkiv integration (Network School Ethereum Hackathon entrant)
 
-Operator Uplift is an Arkiv ETHLisbon challenge entrant under the **AI theme**: agents whose memory you actually own. Arkiv is the third public trust layer alongside Filecoin and 0G Storage, with one important difference: while Filecoin and 0G mirror our backend-signed receipts, Arkiv hosts data the user themselves can own and transfer.
+Operator Uplift is an Arkiv Network School Ethereum Hackathon entrant under the **AI theme**: agents whose memory you actually own. Arkiv is the third public trust layer alongside Filecoin and 0G Storage, with one important difference: while Filecoin and 0G mirror our backend-signed receipts, Arkiv hosts data the user themselves can own and transfer.
 
 | Field | Value |
 |---|---|
@@ -420,7 +420,7 @@ docs/                      ← decision docs, runbooks, judge cookbook
 
 - [`docs/HACKATHON_GATE2.md`](./docs/HACKATHON_GATE2.md) — full x402 + receipts + dual-mirror + AgenticID verification cookbook
 - [`docs/LOOPS_HOUSE_SUBMISSION.md`](./docs/LOOPS_HOUSE_SUBMISSION.md) — earlier hackathon submission (Loops House) covering the x402 + ERC-8004 wedge
-- [`docs/ARKIV_SUBMISSION.md`](./docs/ARKIV_SUBMISSION.md) — ETHLisbon Arkiv AI-theme entrant covering agent identity + user-owned session memory on Braga testnet
+- [`docs/ARKIV_SUBMISSION.md`](./docs/ARKIV_SUBMISSION.md) — Network School Ethereum Hackathon Arkiv AI-theme entrant covering agent identity + user-owned session memory on Braga testnet
 - [`docs/0g-integration-decision.md`](./docs/0g-integration-decision.md) — which 0G modules we ship, which we skip, and why
 - [`docs/TRUTH_TABLE.md`](./docs/TRUTH_TABLE.md) — authoritative "what is Real, Simulated, or Stub" table for every claim on the site
 - [`docs/prod-env-checklist.md`](./docs/prod-env-checklist.md) — operator runbook for prod env vars

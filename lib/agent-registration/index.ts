@@ -14,7 +14,7 @@
  *
  * The same JSON is also mirrored onto the Arkiv Braga testnet as a
  * typed entity once `pnpm arkiv:publish-agents` runs (lib/arkiv/
- * agent.ts::publishAgent). That mirror is the ETHLisbon AI-theme
+ * agent.ts::publishAgent). That mirror is the Network School Ethereum Hackathon (AI track)
  * entrant's identity-card surface. The Arkiv entity carries the
  * SHA-256 checksum in its attributes so a judge can list all entities
  * under the project key, click into one, and byte-compare against

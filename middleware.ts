@@ -59,7 +59,7 @@ const PUBLIC_ROUTES = [
     // Testnet. Public for the same reasons as /api/og/storage and
     // /api/receipts/public-key: the on-chain record itself is public.
     '/api/og/agent-id/',
-    // Arkiv (ETHLisbon challenge entrant). /api/arkiv/agents lists the
+    // Arkiv (Network School Ethereum Hackathon entrant). /api/arkiv/agents lists the
     // on-Arkiv agent identity cards published by our trusted creator
     // wallet; /api/arkiv/memories returns memory events for a given
     // agent + session. Same logic as the 0G + Filecoin verifier

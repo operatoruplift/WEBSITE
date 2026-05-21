@@ -161,7 +161,7 @@ export default function HackathonDemoPage() {
                         <VerifyCard
                             icon={Archive}
                             title="Agent cards + memory on Arkiv"
-                            description="ETHLisbon entrant (AI theme). Public Braga testnet entities; /arkiv lists agent cards and shows the memory model"
+                            description="Network School Ethereum Hackathon entrant (AI theme). Public Braga testnet entities; /arkiv lists agent cards and shows the memory model"
                             href="/arkiv"
                             external
                         />

@@ -1,4 +1,4 @@
-# Operator Uplift — ETHLisbon Arkiv Challenge Submission (AI Theme)
+# Operator Uplift — Network School Ethereum Hackathon Arkiv Submission (AI Theme)
 
 **Track**: Arkiv AI challenge ("a web3-native application where all data lives on a public verifiable network")
 **Network**: Arkiv Braga testnet (chain id `60138453102`)
