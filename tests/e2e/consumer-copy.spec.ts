@@ -98,25 +98,22 @@ test('navbar uses plain-English labels', async ({ page }) => {
     await expect(page.getByText(/DOCS/).first()).toBeVisible();
 });
 
-test('/paywall sells real features, not the removed council', async ({ page }) => {
+test('/paywall sells v10 Operator Pro features', async ({ page }) => {
+    // v10 reframe: the paywall used to advertise the retired
+    // AI-assistant feature list ("Drafts your replies", model swap,
+    // signed receipts). The new list mirrors the homepage Operator
+    // Pro tier so a buyer landing on /paywall from /#pricing reads
+    // the same benefits in the same order.
     await page.goto('/paywall');
 
-    // Pro pitch must be the consumer text from #155
-    await expect(page.getByText(/Drafts your replies/i)).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(/Unlimited commitments/i)).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(/AI Game Master/i)).toBeVisible();
     await expect(page.getByRole('heading', { name: /Pick a plan/i })).toBeVisible();
 
-    // Mac app honesty (PR #324): the Free tier feature list must not
-    // claim a free Mac app exists today. The desktop binary is in
-    // development with a beta planned for Q3 2026; the bullet must
-    // include the "(beta Q3 2026)" qualifier or similar future-tense
-    // framing. Catches regressions back to the unqualified "Free Mac app".
+    // Mac-app-upcoming bullet retired with the rewrite; honesty
+    // about the desktop app lives in the public docs now.
     const body = await page.locator('body').innerText();
-    if (/Mac app/i.test(body)) {
-        // If the bullet exists, it MUST be qualified
-        expect(body, 'paywall Mac app must be qualified as upcoming, not shipping today').toMatch(
-            /Mac app[\s\S]{0,40}(beta|coming|in development|roadmap)/i,
-        );
-    }
+    expect(body, 'paywall must not claim a free Mac app').not.toMatch(/Free Mac app(?!\s*\(beta)/i);
 
     assertNoBannedPhrases(body, '/paywall');
 });
