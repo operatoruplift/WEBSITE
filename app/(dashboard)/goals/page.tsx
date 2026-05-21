@@ -115,14 +115,13 @@ export default function GoalsPage() {
                 {/* Header */}
                 <header className="mb-10">
                     <div className="inline-flex items-center gap-3 mb-3">
-                        <span className="h-px w-12 bg-[#F97316]/40" aria-hidden />
-                        <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">Goals</span>
+                        <span className="text-xs font-mono font-bold tracking-[0.12em] text-[#F97316] uppercase">// commitments</span>
                     </div>
                     <h1 className="text-3xl md:text-4xl font-medium text-foreground tracking-tight leading-[1.1]">
-                        Keep your word. Bet on yourself.
+                        Keep your word. <span className="text-[#F97316]">Bet on yourself.</span>
                     </h1>
                     <p className="text-muted leading-relaxed mt-3 max-w-2xl">
-                        Name an ambition. Tomorrow morning a small daily action will be waiting for you. Build a streak. Adjust as you learn.
+                        Declare what you will do. Stake real money on it later. Get daily check-ins judged by an AI Game Master. See progress you cannot fake.
                     </p>
                 </header>
 
@@ -130,7 +129,7 @@ export default function GoalsPage() {
                 <div className="mb-10 rounded-xl border border-[#F97316]/30 bg-[#F97316]/[0.05] px-5 py-4 flex items-start gap-3">
                     <Sparkles aria-hidden className="w-5 h-5 text-[#F97316] mt-0.5 shrink-0" />
                     <div className="text-sm text-foreground/90 leading-relaxed">
-                        <strong>Private beta.</strong> Every new goal gets an AI-built questline. Daily reminders, behavioral adaptation, and squad accountability land in the next releases. <Link href="/waitlist" className="text-[#F97316] underline hover:no-underline">Join the waitlist for early access.</Link>
+                        <strong>Private beta.</strong> Every new commitment gets an AI-built questline today. Money stakes (USDC + card), witness accountability, and on-chain settlement land in the next releases. <Link href="/waitlist" className="text-[#F97316] underline hover:no-underline">Join the waitlist for early access.</Link>
                     </div>
                 </div>
 
@@ -142,49 +141,49 @@ export default function GoalsPage() {
                 )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* New goal form */}
+                    {/* New commitment form */}
                     <section aria-labelledby="new-goal-heading" className="lg:col-span-1">
                         <div className="rounded-2xl border border-foreground/10 bg-card p-6">
                             <h2 id="new-goal-heading" className="text-base font-semibold text-foreground mb-1 flex items-center gap-2">
                                 <Target aria-hidden className="w-4 h-4 text-[#F97316]" />
-                                Name a goal
+                                Declare a commitment
                             </h2>
                             <p className="text-xs text-muted mb-5 leading-relaxed">
-                                Anything you keep saying you will start. Specific is better than vague.
+                                Write it in your own words. Specific enough that "did I do it?" is a yes or no.
                             </p>
                             <form onSubmit={submit} className="flex flex-col gap-4">
                                 <div>
-                                    <label htmlFor="goal-title" className="block text-xs font-bold tracking-widest uppercase text-foreground/70 mb-1.5">
-                                        Goal
+                                    <label htmlFor="goal-title" className="block text-xs font-mono font-bold tracking-[0.12em] uppercase text-foreground/70 mb-1.5">
+                                        // commitment
                                     </label>
                                     <input
                                         id="goal-title"
                                         type="text"
                                         value={title}
                                         onChange={(e) => setTitle(e.target.value)}
-                                        placeholder="Run a half marathon"
+                                        placeholder="Run 4 times per week for the next 8 weeks"
                                         required
                                         disabled={submitting}
                                         className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted/70 focus:outline-none focus:border-[#F97316]/50 focus:ring-1 focus:ring-[#F97316]/30 disabled:opacity-50"
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="goal-stakes" className="block text-xs font-bold tracking-widest uppercase text-foreground/70 mb-1.5">
-                                        Stakes (optional)
+                                    <label htmlFor="goal-stakes" className="block text-xs font-mono font-bold tracking-[0.12em] uppercase text-foreground/70 mb-1.5">
+                                        // stakes (optional, money stakes ship next release)
                                     </label>
                                     <input
                                         id="goal-stakes"
                                         type="text"
                                         value={stakes}
                                         onChange={(e) => setStakes(e.target.value)}
-                                        placeholder="$20 to a friend if I miss a week"
+                                        placeholder="$50 to @maya if I miss a week"
                                         disabled={submitting}
                                         className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted/70 focus:outline-none focus:border-[#F97316]/50 focus:ring-1 focus:ring-[#F97316]/30 disabled:opacity-50"
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="goal-target" className="block text-xs font-bold tracking-widest uppercase text-foreground/70 mb-1.5">
-                                        Target date (optional)
+                                    <label htmlFor="goal-target" className="block text-xs font-mono font-bold tracking-[0.12em] uppercase text-foreground/70 mb-1.5">
+                                        // target date (optional)
                                     </label>
                                     <input
                                         id="goal-target"
@@ -207,7 +206,7 @@ export default function GoalsPage() {
                                         </>
                                     ) : (
                                         <>
-                                            Add goal
+                                            Declare it
                                             <ArrowRight aria-hidden className="ml-2 w-3.5 h-3.5" />
                                         </>
                                     )}
@@ -216,21 +215,21 @@ export default function GoalsPage() {
                         </div>
                     </section>
 
-                    {/* Goal list */}
+                    {/* Commitment list */}
                     <section aria-labelledby="goal-list-heading" className="lg:col-span-2">
-                        <h2 id="goal-list-heading" className="text-xs font-bold tracking-[0.25em] uppercase text-foreground/60 mb-4">
-                            Your goals
+                        <h2 id="goal-list-heading" className="text-xs font-mono font-bold tracking-[0.12em] uppercase text-foreground/60 mb-4">
+                            // your commitments
                         </h2>
                         {loading ? (
                             <div className="rounded-2xl border border-dashed border-foreground/15 bg-foreground/[0.02] p-10 text-center" role="status" aria-live="polite">
                                 <Loader2 aria-hidden className="w-6 h-6 text-foreground/40 mx-auto mb-3 animate-spin" />
-                                <p className="text-sm text-muted">Loading your goals.</p>
+                                <p className="text-sm text-muted">Loading your commitments.</p>
                             </div>
                         ) : goals.length === 0 ? (
                             <div className="rounded-2xl border border-dashed border-foreground/15 bg-foreground/[0.02] p-10 text-center">
                                 <Flame aria-hidden className="w-8 h-8 text-foreground/30 mx-auto mb-3" />
                                 <p className="text-sm text-muted leading-relaxed max-w-md mx-auto">
-                                    No goals yet. Name one on the left and it lands here.
+                                    No commitments yet. Declare one on the left and it lands here.
                                 </p>
                             </div>
                         ) : (

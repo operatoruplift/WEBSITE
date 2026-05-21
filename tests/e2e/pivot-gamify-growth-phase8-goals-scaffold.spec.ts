@@ -63,16 +63,17 @@ test('Streak helper exports computeStreak + addDays', () => {
     expect(streakSrc).toMatch(/export function addDays/);
 });
 
-test('/goals page renders the dashboard scaffold copy', () => {
-    expect(pageSrc).toContain('Keep your word. Bet on yourself.');
-    expect(pageSrc).toContain('Name a goal');
-    expect(pageSrc).toContain('No goals yet');
+test('/goals page renders the v10 dashboard scaffold copy', () => {
+    expect(pageSrc).toContain('Keep your word.');
+    expect(pageSrc).toContain('Bet on yourself.');
+    expect(pageSrc).toContain('Declare a commitment');
+    expect(pageSrc).toContain('No commitments yet');
 });
 
 test('/goals page is honest about what does not ship yet', () => {
-    // The page must explicitly call out that the API + check-ins are
-    // not live yet. If a future edit removes the disclaimer, the
-    // page implies a feature exists that does not.
+    // The page must explicitly call out that money stakes + witnesses
+    // + on-chain settlement are not live yet. If a future edit removes
+    // the disclaimer, the page implies a feature exists that does not.
     expect(pageSrc).toMatch(/Private beta/);
     expect(pageSrc).toMatch(/land(s)? in the next release/);
 });

@@ -16,14 +16,16 @@ const sidebarSrc = fs.readFileSync(
     'utf-8',
 );
 
-test('Cockpit sidebar lists Goals as the first nav item', () => {
+test('Cockpit sidebar lists Commitments as the first nav item', () => {
     const navMatch = sidebarSrc.match(/const NAV_ITEMS[\s\S]+?];/);
     expect(navMatch).not.toBeNull();
     const items = navMatch![0];
-    // The first href in the array literal must be /goals.
+    // The first href is /goals (the route is stable while the DB
+    // noun is `goal`); the user-facing label is "Commitments" per
+    // the v10 reframe.
     const firstHref = items.match(/href:\s*'([^']+)'/);
     expect(firstHref?.[1]).toBe('/goals');
-    expect(items).toContain("label: 'Goals'");
+    expect(items).toContain("label: 'Commitments'");
 });
 
 test('Cockpit logo home link points at /goals', () => {

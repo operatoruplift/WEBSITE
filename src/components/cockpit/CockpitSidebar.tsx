@@ -25,11 +25,14 @@ interface DockItem {
 }
 
 const NAV_ITEMS: DockItem[] = [
-    // Goals leads the cockpit nav post-pivot (2026-05-21). The Gamify
-    // Your Growth dashboard is the primary surface; Chat / Swarm /
-    // Integrations stay reachable but live below it so a returning
-    // operator lands on their questline first.
-    { href: '/goals', label: 'Goals', icon: Target },
+    // Commitments leads the cockpit nav post-pivot (v10 reframe,
+    // 2026-05-21). The Commitment Infrastructure dashboard is the
+    // primary surface; Chat / Swarm / Integrations stay reachable
+    // but live below it so a returning operator lands on their
+    // active commitments first. The route stays /goals because the
+    // persisted noun in the DB is `goal`; the user-facing label is
+    // "Commitments" everywhere it surfaces.
+    { href: '/goals', label: 'Commitments', icon: Target },
     { href: '/chat', label: 'Chat', icon: MessageSquare },
     { href: '/swarm', label: 'Swarm', icon: Activity },
     { href: '/integrations', label: 'Integrations', icon: Puzzle },
