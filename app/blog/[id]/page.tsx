@@ -285,14 +285,24 @@ function getArticleContent(id: string) {
         ),
         'why-solana-for-audit-roots': (
             <div className="space-y-6">
-                <p className="text-lg">Not every blockchain is a good audit layer. We looked at several. Solana fits.</p>
-                <p>An audit-root blockchain has three constraints. <strong>Finality has to be fast</strong> because the user is waiting for the action to be provable. <strong>Writes have to be cheap</strong> because we are committing a 40-byte payload every N actions, not moving tokens. <strong>Verifiability has to be public</strong> because the whole point is that anyone &mdash; not just us &mdash; can audit the history.</p>
-                <p><strong>Solana finality is 400 ms.</strong> Bitcoin is 60 minutes. Ethereum is 12&ndash;15 minutes plus congestion. Neither is acceptable if the user is watching the approval modal. Solana&apos;s 400ms means the audit commitment lands before they have clicked away.</p>
-                <p><strong>Solana writes are ~$0.00025.</strong> Ethereum L1 is $1&ndash;$20 per write. L2 rollups are $0.01&ndash;$0.10 and add a settlement delay. At our commit cadence (every 5 actions), Solana writes cost ~$0.00005 per audited action. At that price we never pass the cost to the user.</p>
-                <p><strong>Solana verifiability is public.</strong> Every tx signature we publish can be checked by anyone on solana.fm, Solscan, or a self-run RPC node. You do not have to trust us or Solana Labs. The bytes are public.</p>
-                <p>We evaluated Ethereum L2s (Base, Arbitrum). The cost math works, but the 1&ndash;2 minute wait for full finality through the bridge adds friction that is not worth the arguably-better institutional reputation of Ethereum.</p>
-                <p>We evaluated Celestia for data availability. The DA layer is excellent, but we do not need data availability &mdash; we need a commitment register. Posting the Merkle root to a single Solana account is cheaper and simpler.</p>
-                <p>The choice of Solana is not a crypto culture statement. It is an engineering match for the constraints.</p>
+                <p className="text-lg">We post a fingerprint of every five actions on a public chain so nobody can quietly rewrite history, not even us. People ask why we picked the chain we picked. Here is the short answer.</p>
+
+                <h2>What we actually need</h2>
+                <p>Three things matter for a chain we use as a tamper-evident notebook.</p>
+                <p><strong>It has to be fast.</strong> The user just tapped Approve. If the proof takes ten minutes to land, the user is gone by then.</p>
+                <p><strong>It has to be cheap.</strong> We post a tiny fingerprint, not money. If posting costs a dollar, we cannot afford to do it for every five actions across every user.</p>
+                <p><strong>Anyone has to be able to check it.</strong> If only we can check our own notebook, the whole point is gone.</p>
+
+                <h2>Why Solana fits</h2>
+                <p>The chain we use confirms in under half a second. Bitcoin takes an hour. Ethereum takes ten or fifteen minutes. Half a second means the user is still on the page when the proof lands.</p>
+                <p>Posting costs a fraction of a cent. We never pass that to you. Reads are free.</p>
+                <p>Anyone can look up what we posted on a public explorer. You do not have to trust us. You do not have to trust the chain we picked. You can read the same bytes we did.</p>
+
+                <h2>What we looked at and did not pick</h2>
+                <p>We looked at the Ethereum side of the world. The price math works on the newer Ethereum networks, but the wait time still adds friction the user feels.</p>
+                <p>We looked at a different kind of chain built just for storing data. That one is excellent for what it does. We did not need that much. A small bookmark on a fast cheap chain was enough.</p>
+
+                <p>This is not a culture statement about which chain is best. It is the chain that matched what we actually needed.</p>
             </div>
         ),
         'why-i-built-an-ai-os': (
@@ -334,10 +344,10 @@ function getArticleContent(id: string) {
         ),
         'how-solana-changes-agent-economy': (
             <div className="space-y-6">
-                <p className="text-lg">Most people think about Solana as a place to trade tokens. That is not what we are building on it for.</p>
-                <p>We are building the Operator Uplift Agent Store on Solana because it is the only infrastructure that makes a permissionless agent marketplace economically viable.</p>
-                <p>Here is the problem with Web2: you need a payment layer, a publishing layer, and a trust layer. Those are three separate systems, Stripe, GitHub, and your reputation. They don&apos;t talk to each other. They are all controlled by someone else. They all take a cut.</p>
-                <p>On Solana, those three things collapse into one. An agent is published as a program. Payment is a transaction. Trust is the on-chain record of every interaction that agent has ever had. Permissionless, anyone can publish, anyone can pay, the history is public and auditable.</p>
+                <p className="text-lg">Most people think of the chain we use as a place to trade tokens. That is not what we use it for.</p>
+                <p>We use it because three things that are normally separate finally fit into one.</p>
+                <p>Today, if you want to publish an AI assistant other people can use, you need three different companies. One to handle payment (Stripe). One to host the code (GitHub). One to vouch that the assistant is real and works (your own reputation, or a marketplace's blessing). None of these three talk to each other. All of them take a cut. All of them can decide tomorrow that you do not get to be on the list anymore.</p>
+                <p>On a public chain, those three things become one. Publishing the assistant is one step. Paying for it is another step. The history of who used it, what it did, and whether it worked, is the chain itself. Anyone can publish. Anyone can pay. Nobody has to ask permission.</p>
                 <p>What that means in practice: a developer in Lagos can publish a Yoruba language tutor agent to the store tonight. A user in Tokyo can deploy it tomorrow morning. Transaction settles in 400 milliseconds. No app store approval. No payment processor. No middleman.</p>
                 <p>That is not a crypto pitch. That is a distribution model.</p>
             </div>
