@@ -57,8 +57,31 @@ test('Logos scoping doc exists at docs/LOGOS_TRACKS_SCOPING.md', () => {
 test('Logos scoping doc names the honest "0 of 7" state', () => {
     const src = fs.readFileSync(path.join(repoRoot, SCOPING_DOC), 'utf-8');
     // Catches a future edit that quietly claims Logos tracks shipped
-    // by changing this count.
-    expect(src).toMatch(/0 of 7|nothing built|none of them/i);
+    // by changing this count. After 2026-05-21 the doc shifted from
+    // "prize text not in repo" to "design doc per track + still 0
+    // shipping" — either honest framing is acceptable.
+    expect(src).toMatch(/0 of 7|nothing built|none of them|no shipping code|none of the tracks has shipping/i);
+});
+
+test('Each LP-XXXX track has a per-track design doc', () => {
+    const tracks = ['LP-0002', 'LP-0005', 'LP-0008', 'LP-0012', 'LP-0013', 'LP-0016', 'LP-0017'];
+    for (const t of tracks) {
+        const p = path.join(repoRoot, 'docs', 'LOGOS', `${t}.md`);
+        expect(fs.existsSync(p), `${p} should exist`).toBe(true);
+    }
+});
+
+test('Each LP-XXXX design doc declares Status: Not entered', () => {
+    // The per-track docs must state explicitly that the track has
+    // not shipped. If a future edit silently flips one to "Status:
+    // Entered" without code shipping, this catches it. To allow a
+    // real ship, replace this assertion AFTER the corresponding
+    // sibling LEZ project lands.
+    const tracks = ['LP-0002', 'LP-0005', 'LP-0008', 'LP-0012', 'LP-0013', 'LP-0016', 'LP-0017'];
+    for (const t of tracks) {
+        const src = fs.readFileSync(path.join(repoRoot, 'docs', 'LOGOS', `${t}.md`), 'utf-8');
+        expect(src, `${t} must declare Status: Not entered`).toMatch(/Status\*?\*?:\s*Not entered/i);
+    }
 });
 
 test('marketing surfaces do not mention LP-XXXX codes (yet)', () => {
