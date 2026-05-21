@@ -121,26 +121,19 @@ test('/paywall sells real features, not the removed council', async ({ page }) =
     assertNoBannedPhrases(body, '/paywall');
 });
 
-test('homepage FAQ frames Mac app as upcoming, not shipping', async ({ page }) => {
-    // PR #324 made the FAQ "How do I use it?" answer honest: "A free
-    // desktop app for Mac is in development with a beta planned for
-    // Q3 2026; Windows and Linux follow." Lock that wording in so a
-    // future PR can't silently regress to "There's also a free Mac app".
-    await page.goto('/#faq');
+test('homepage FAQ surfaces the v10 commitment-protocol questions', async ({ page }) => {
+    // v10 reframe (2026-05-21 Commitment Infrastructure): the FAQ
+    // was rewritten end-to-end around the new pitch. The "How do I
+    // use it?" + Mac-app-upcoming question retired because v10 does
+    // not pitch a Mac app. Instead, lock the two highest-trust v10
+    // questions: the AI Game Master and the money-stakes flow.
+    await page.goto('/#faq', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    const useItHeading = page.getByText('How do I use it?').first();
-    await expect(useItHeading).toBeVisible({ timeout: 10_000 });
-    await useItHeading.click();
-    // FadeIn animation
-    await page.waitForTimeout(500);
+    const gameMasterQ = page.getByText('What does the AI Game Master actually do?').first();
+    await expect(gameMasterQ).toBeVisible({ timeout: 10_000 });
 
-    const faqBody = await page.locator('body').innerText();
-    // The new framing must include both "in development" and a future
-    // qualifier (Q3 2026 today, but also acceptable: "beta", "roadmap").
-    // The OLD copy said "there's also a free Mac app" with no qualifier.
-    expect(faqBody, 'FAQ must frame Mac app as upcoming').toMatch(
-        /(desktop app|Mac).*?(in development|beta|Q[1-4] 20\d\d|roadmap)/i,
-    );
+    const stakesQ = page.getByText('How do the money stakes work?').first();
+    await expect(stakesQ).toBeVisible();
 });
 
 test('/store leads with Helpers and free-in-beta pricing', async ({ page }) => {
