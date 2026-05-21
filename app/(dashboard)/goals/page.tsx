@@ -243,7 +243,9 @@ export default function GoalsPage() {
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-start justify-between gap-3 mb-1">
-                                                    <h3 className="text-base font-semibold text-foreground">{g.title}</h3>
+                                                    <Link href={`/goals/${g.id}`} className="text-base font-semibold text-foreground hover:text-[#F97316] transition-colors">
+                                                        {g.title}
+                                                    </Link>
                                                     <div className="shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#F97316]/10 border border-[#F97316]/20 text-[10px] font-bold tracking-widest uppercase text-[#F97316]">
                                                         <Flame aria-hidden className="w-3 h-3" />
                                                         {g.streak} day{g.streak === 1 ? '' : 's'}
