@@ -95,18 +95,17 @@ test('/pricing Enterprise CTA stays /contact (Wave 1 risk #3 exception)', async 
     expect(enterpriseHref).toBe('/contact');
 });
 
-test('homepage hero CTA "Sign in and connect Gmail" deep-links to /login?returnTo=/integrations', async ({ page }) => {
-    // The deck (docs/deck-objections.md slide 1) and demo recording
-    // script (docs/demo-recording-script.md step 1) both anchor on
-    // this CTA. The text is locked in by consumer-copy.spec.ts; the
-    // href has not been asserted before. If a future PR routes this
-    // to /signup (deprecated), /pricing, or /paywall, the recording
-    // operator's first click lands on the wrong page.
+test('homepage hero CTA "Join the waitlist" deep-links to /waitlist', async ({ page }) => {
+    // 2026-05-21 Gamify Your Growth pivot. The Hero primary CTA used
+    // to be "Sign in and connect Gmail" -> /login?returnTo=/integrations
+    // for the AI-assistant product. The pivot funnels visitors into
+    // /waitlist instead until the paid surface ships in Phase 8.
+    // Source of truth: docs/PIVOT_GAMIFY_GROWTH.md.
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
     const heroCtaHref = await page
-        .getByRole('link', { name: /sign in and connect gmail/i })
+        .getByRole('link', { name: /join the waitlist/i })
         .first()
         .getAttribute('href');
-    expect(heroCtaHref).toBe('/login?returnTo=/integrations');
+    expect(heroCtaHref).toBe('/waitlist');
 });
