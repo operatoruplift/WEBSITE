@@ -46,6 +46,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // entities have been published yet.
     { url: `${HOST}/demo/hackathon`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
     { url: `${HOST}/arkiv`, lastModified: now, changeFrequency: 'weekly', priority: 0.5 },
+    { url: `${HOST}/team`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${HOST}/press-kit`, lastModified: now, changeFrequency: 'monthly', priority: 0.4 },
     { url: `${HOST}/contact`, lastModified: now, changeFrequency: 'yearly', priority: 0.4 },
 
