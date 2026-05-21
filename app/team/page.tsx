@@ -28,31 +28,25 @@ interface TeamMember {
     linkedin?: string;
 }
 
+/**
+ * v10 reframe (pitch deck v10 slide 11, "Built by an operator"):
+ * Operator Uplift is built solo by Matthew Sim. The earlier v7
+ * deck listed 5 co-founders + 1 advisor; the v10 deck retires
+ * that team in favor of the solo-founder track record.
+ *
+ * Three biography beats per the v10 deck:
+ *   1. 13-year solo founder, consumer products, behavioral loops
+ *   2. Pro esports, top 5 global, high-stakes execution
+ *   3. Military school discipline, consequence-driven accountability
+ *
+ * The "why" line is preserved verbatim from the deck because it
+ * is the founder voice we want investors and operators to hear.
+ */
 const FOUNDERS: TeamMember[] = [
     {
         name: 'Matthew Sim',
-        role: 'Founder, CEO',
-        bio: 'Built LevelUp before Operator Uplift and validated it at the Sellathon. Spends his time making sure ambitious people finish what they start.',
-    },
-    {
-        name: 'Olawale Olapo',
-        role: 'CPO',
-        bio: 'Product design and behavioral engagement. Cares about the difference between a daily habit and a daily nag.',
-    },
-    {
-        name: 'Paul Balogun',
-        role: 'CBO',
-        bio: 'Business, partnerships, and the conversations that turn pilots into contracts.',
-    },
-    {
-        name: 'Francesca Centini',
-        role: 'CCO, Communications',
-        bio: 'Brand, story, and how the product sounds when nobody is in the room.',
-    },
-    {
-        name: 'Matus Remis',
-        role: 'COO',
-        bio: 'Operations and the unglamorous infrastructure that keeps the lights on.',
+        role: 'Solo Founder, CEO',
+        bio: 'Thirteen-year solo founder with multiple consumer products shipped and scaled. Top-5 global pro esports career taught him what high-stakes execution actually costs. Military school taught him what consequences look like. Operator Uplift is the digitization of that strict, consequence-driven accountability.',
     },
 ];
 
@@ -101,25 +95,25 @@ export default function TeamPage() {
                         <div className="text-center mb-16 mx-auto max-w-2xl">
                             <div className="inline-flex items-center gap-3 mb-4">
                                 <span className="h-px w-16 bg-[#F97316]/40" aria-hidden />
-                                <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">The team</span>
+                                <span className="text-xs font-mono font-bold tracking-[0.12em] text-[#F97316] uppercase">// Built by an operator</span>
                                 <span className="h-px w-16 bg-[#F97316]/40" aria-hidden />
                             </div>
                             <h1 className="text-3xl md:text-5xl font-medium text-foreground mb-4 tracking-tight leading-[1.1]">
-                                The operators behind Operator Uplift
+                                Solo founder. Consequence-driven by design.
                             </h1>
                             <p className="text-muted leading-relaxed">
-                                A small founding team and one advisor. We are building the platform we wish existed when our own goals stalled in week two.
+                                Operator Uplift is built by one person. The product preaches forced follow-through, so the company runs on it too.
                             </p>
                         </div>
                     </FadeIn>
 
                     {/* Founders grid */}
                     <FadeIn delay={150}>
-                        <section aria-labelledby="founders-heading" className="mb-20">
-                            <h2 id="founders-heading" className="text-xs font-bold tracking-[0.25em] text-foreground/60 uppercase mb-6">
-                                Founding team
+                        <section aria-labelledby="founders-heading" className="mb-12">
+                            <h2 id="founders-heading" className="text-xs font-mono font-bold tracking-[0.12em] text-foreground/60 uppercase mb-6">
+                                // Founder
                             </h2>
-                            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none p-0">
+                            <ul className="grid grid-cols-1 max-w-2xl mx-auto gap-4 list-none p-0">
                                 {FOUNDERS.map((person) => (
                                     <li key={person.name}>
                                         <PersonCard person={person} />
@@ -129,11 +123,28 @@ export default function TeamPage() {
                         </section>
                     </FadeIn>
 
+                    {/* The "why" callout, verbatim from v10 deck slide 11. */}
+                    <FadeIn delay={200}>
+                        <section className="mb-20 max-w-2xl mx-auto">
+                            <div className="rounded-2xl border border-[#F97316]/30 bg-[#F97316]/[0.04] p-6 md:p-8">
+                                <div className="text-xs font-mono font-bold tracking-[0.12em] text-[#F97316] uppercase mb-3">
+                                    // the why
+                                </div>
+                                <blockquote className="text-base md:text-lg text-foreground leading-relaxed">
+                                    &ldquo;I built this because I was tired of lying to myself. Motivation failed me. I needed a system that punished me for missing the mark. It worked, so I productized it.&rdquo;
+                                </blockquote>
+                                <div className="mt-4 text-xs font-mono tracking-wider uppercase text-foreground/60">
+                                    Matthew Sim, founder
+                                </div>
+                            </div>
+                        </section>
+                    </FadeIn>
+
                     {/* Advisors */}
-                    <FadeIn delay={250}>
+                    <FadeIn delay={300}>
                         <section aria-labelledby="advisors-heading" className="mb-20">
-                            <h2 id="advisors-heading" className="text-xs font-bold tracking-[0.25em] text-foreground/60 uppercase mb-6">
-                                Advisors
+                            <h2 id="advisors-heading" className="text-xs font-mono font-bold tracking-[0.12em] text-foreground/60 uppercase mb-6">
+                                // Advisors
                             </h2>
                             <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none p-0">
                                 {ADVISORS.map((person) => (
@@ -148,8 +159,8 @@ export default function TeamPage() {
                     {/* Values strip */}
                     <FadeIn delay={350}>
                         <section aria-labelledby="values-heading" className="mb-16">
-                            <h2 id="values-heading" className="text-xs font-bold tracking-[0.25em] text-foreground/60 uppercase mb-6">
-                                How we work
+                            <h2 id="values-heading" className="text-xs font-mono font-bold tracking-[0.12em] text-foreground/60 uppercase mb-6">
+                                // How we work
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {VALUES.map((value) => (
