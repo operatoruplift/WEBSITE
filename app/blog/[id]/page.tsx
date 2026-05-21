@@ -73,34 +73,33 @@ function getArticleContent(id: string) {
         ),
         'filecoin-elevenlabs-trust-stack': (
             <div className="space-y-6">
-                <p className="text-lg">Your assistant sent a follow-up email last Tuesday. A year from now, the recipient disputes that the email said what you remember. Where is the proof, and who controls it?</p>
+                <p className="text-lg">Your assistant sent a follow-up email last Tuesday. A year from now, the recipient says it did not say what you remember. Where is the proof, and who controls it?</p>
 
-                <p>Here is what was already true before this week, and what changed.</p>
+                <p>Here is what was already true, and what changed this week.</p>
 
                 <h2>What was already true</h2>
-                <p>Every action your assistant takes (drafting an email, creating a calendar event, charging a small fee for the work) produces a small record called a receipt. That receipt has been doing three jobs for a while:</p>
-                <p><strong>One.</strong> The receipt is signed with a digital key only we hold. Anyone with our matching public key can confirm the signature. If a forger tries to fake a receipt, the signature does not check out.</p>
-                <p><strong>Two.</strong> Every five receipts, we compute a fingerprint of all of them and post that fingerprint to Solana. The fingerprint cannot be quietly rewritten. So if we ever tried to delete a receipt or reorder them, the chain catches it.</p>
-                <p><strong>Three.</strong> The signing key is tied to <code>operatoruplift.sol</code>, a public name on Solana. You can see on a public blockchain explorer which key signs your receipts. If we ever rotate the key, the chain shows the rotation publicly.</p>
+                <p>Every action your assistant takes produces a small record, like an itemized receipt. That receipt has been doing three jobs for a while.</p>
+                <p><strong>One.</strong> The receipt carries a stamp only we can make. Anyone can check that the stamp is ours. If someone tries to fake a receipt, the stamp does not match.</p>
+                <p><strong>Two.</strong> Every five receipts, we take a fingerprint of all five and post it on a public chain. The fingerprint cannot be quietly changed. If we ever tried to delete a receipt or reorder them, the public fingerprint and the actual records would no longer line up. The lie would show.</p>
+                <p><strong>Three.</strong> The stamp we use is tied to a public name (operatoruplift) on that chain. You can look up the public name and see which stamp it points to. If we ever change stamps, the chain shows the change.</p>
 
                 <h2>What was missing</h2>
-                <p>The receipt JSON itself, the actual bytes you would verify a signature against, only lived in our database. The Solana fingerprint catches deletions and reorderings, but it does not catch a single-receipt edit during a five-receipt window. In theory, between two fingerprint publications, we could edit one row, re-sign it, and the new signature would still verify against the same public key. That is the loophole.</p>
+                <p>The receipt itself lived only in our database. The public fingerprint catches deletions and reorderings, but it does not catch a single edit made between two fingerprint posts. In theory we could edit one receipt in the gap, restamp it, and the stamp would still look fine. That was the loophole.</p>
 
                 <h2>What changed this week</h2>
-                <p>Every receipt is now also pinned to a public storage network called Filecoin, fetchable from any IPFS gateway. The bytes live in two places at once. There is the convenient copy in our database. And there is a durable copy at a public address anyone can fetch from, no account required.</p>
-                <p>The public address shows up on your <a href="/security">/security</a> page next to every receipt as a small clickable link. Click it and a public gateway returns the same bytes we signed. If we edited the record on our side, the two copies would not match. That closes the loophole.</p>
+                <p>Every receipt now also lives on a public backup network. The same record exists in two places: the convenient copy in our database, and a permanent copy anyone can fetch without an account. The public copy shows up on your security page as a small clickable link next to each receipt. If we edited our copy, the two would no longer match. That closes the loophole.</p>
 
                 <h2>What this means in practice</h2>
                 <p>Three things, in order of how often they matter.</p>
-                <p><strong>Portability.</strong> If we shut down tomorrow, your receipts do not vanish. The public copy is pinned on a network with many operators. You can show a third party what your assistant did for you without going through us.</p>
-                <p><strong>Dispute resolution.</strong> If a client, a vendor, or your own bookkeeper asks &quot;did this happen?&quot;, you hand over the public link. They open it without logging in. Either it matches the story you told them or it does not.</p>
-                <p><strong>Trust in the next tap.</strong> You are more willing to let an agent send an email when you know there is a tamper-evident record afterwards. The pile of primitives (signature, blockchain fingerprint, on-chain identity, public storage) is not for show. It is so the next time the assistant asks to send something, the &quot;yes&quot; feels safe.</p>
+                <p><strong>It survives us.</strong> If we shut down tomorrow, your receipts do not vanish. The public copy lives on a network with many operators. You can show a third party what your assistant did for you without going through us.</p>
+                <p><strong>Disputes get easier.</strong> If a client, a vendor, or your bookkeeper asks "did this happen?", you hand over the public link. They open it without an account. Either it matches the story you told them or it does not.</p>
+                <p><strong>The next yes feels safer.</strong> You are more willing to let the assistant send an email when you know there is a record afterward that nobody can quietly change. The stack underneath, stamp + chain fingerprint + public name + public copy, is there so the next tap feels safe.</p>
 
                 <h2>Why we waited</h2>
-                <p>Two weeks ago we said public storage was not in scope yet. The honest reason was that we wanted to ship it well or not at all. Half-wired public storage would have been worse than none. It works now because the full round trip works: you tap, the action runs, the receipt signs, the public copy lands, the link appears on your page. If any link in the chain breaks, the link stays hidden until it works again. We never claim it is there when it is not.</p>
+                <p>A couple weeks ago we said the public copy was not in scope yet. The honest reason was that we wanted to ship it well or not at all. A half-wired public copy would be worse than none. It works now because the full round trip works: you tap, the action runs, the receipt is stamped, the public copy lands, the link appears on your page. If any step breaks, the link stays hidden until it works. We do not claim it is there when it is not.</p>
 
                 <h2>A footnote on the demo voice</h2>
-                <p>The narration in our latest product video was made with the same AI voice provider you can use through us. This is a marketing note, not a product pillar. We mention it because we have a rule that anything in our marketing that looks like a capability should be a real one we use ourselves, not a stage prop. The voice is one example. The receipts are the bigger one.</p>
+                <p>The narration in our latest product video was made with an AI voice service you can also reach through us. We mention it because we have a rule that anything in our marketing that looks like a feature should be a real one we use ourselves. The voice is one example. The receipts are the bigger one.</p>
             </div>
         ),
         'channel-agnostic-photon-spectrum': (
@@ -129,25 +128,25 @@ function getArticleContent(id: string) {
         ),
         'sns-anchored-signer-identity': (
             <div className="space-y-6">
-                <p className="text-lg">Imagine someone forwards you an Operator Uplift receipt and says &quot;your assistant sent this to me six months ago.&quot; You want to confirm the receipt is real and was signed by us, not by someone pretending. Here is how you can do that without needing to trust our website at all.</p>
+                <p className="text-lg">Imagine a friend forwards you a receipt from your assistant and says "this is what it did for me six months ago." You want to know it is real. Here is how you can check without trusting our website.</p>
 
-                <h2>Receipts are signed with a key. The key is published in public.</h2>
-                <p>Every receipt your assistant produces carries a digital signature. The signature is made with a private key only we hold. To check the signature, you need our matching public key.</p>
-                <p>The convenient place to find it is our website. Click a button, the key comes back, the signature checks out. That works, but it requires trusting that our website is telling the truth about which key is ours.</p>
-                <p>The durable place is a public blockchain. We own a public name on Solana, <code>operatoruplift.sol</code>. It works the same way an internet domain works, except the registry lives on a public chain instead of a private company database. The name maps to a single owner address, and that owner address matches the key we use to sign your receipts.</p>
+                <h2>Receipts carry a stamp. The stamp is registered in public.</h2>
+                <p>Every receipt your assistant produces carries a stamp. The stamp is made with something only we hold. To check the stamp, you need the matching public counterpart.</p>
+                <p>The convenient place to find the counterpart is our website. Click a button, the stamp checks out. That works, but it asks you to trust that our website is telling the truth about which stamp is ours.</p>
+                <p>The durable place is a public record. We own a public name (operatoruplift) on the same chain we use for the rest of the trust stack. It works like an internet domain, but registered on a chain anyone can read instead of in a private company's database. The name points to one address, and that address matches the stamp we sign with.</p>
 
-                <h2>Why this is useful for you</h2>
+                <h2>Why this helps you</h2>
                 <p>Three reasons, simplest first.</p>
-                <p><strong>You can verify a receipt without our website.</strong> Open any Solana blockchain explorer. Look up <code>operatoruplift.sol</code>. Read the owner address. That is the same key our receipts are signed with. If a forger tries to sign a fake receipt with a different key, the forgery does not check out.</p>
-                <p><strong>You can verify a receipt years from now.</strong> Websites change. Companies pivot. Blockchains keep the same record forever. If you keep a receipt on disk and check it in 2030, the chain still tells you the public key our name was bound to at that time.</p>
-                <p><strong>You can tell when the key has changed.</strong> Companies do rotate signing keys, for security or after staff turnover. When that happens, we update the chain too, and the update is public. Anyone watching can see the new key replaced the old one. The rotation is not silent.</p>
+                <p><strong>You can verify a receipt without our website.</strong> Open a public explorer for the chain. Look up the name. Read the address it points to. That address matches the stamp on the receipt. If somebody tried to fake a receipt with a different stamp, the lookup gives them away.</p>
+                <p><strong>You can verify a receipt years from now.</strong> Websites change. Companies pivot. Public records stay. If you keep a receipt on disk and check it in 2030, the public record still tells you which stamp our name was registered to at the time.</p>
+                <p><strong>You can tell when the stamp has changed.</strong> Companies do rotate stamps, for security or after staff changes. When we do, we update the public record. Anyone watching can see the change. It is never silent.</p>
 
-                <h2>What this looks like on your /security page</h2>
-                <p>You do not have to think about any of this to use the product. Open <a href="/security">/security</a>, you see your receipts. Under the header there is a small &quot;Signed by operatoruplift.sol&quot; line with a link. Click it and the on-chain record opens. If you are not curious, the assistant works the same way it always did. The point is that the option to check is always one click away, not buried in a developer manual.</p>
+                <h2>What this looks like on your security page</h2>
+                <p>You do not have to think about any of this to use the product. Open the security page, you see your receipts. Under the header there is a small "Signed by operatoruplift" line with a link. Click it and the public record opens. If you are not curious, the assistant works the same way it always did. The option to check is always one click away.</p>
 
-                <h2>Why a blockchain at all</h2>
-                <p>Two reasons we keep coming back to. The first is that no one company owns a blockchain, so nobody can rewrite the record after the fact. The second is that the receipt itself, the chain entry, and the public storage all sit in different places, owned by different people. To fake your assistant doing something it did not do, a bad actor would have to break all three independently. We made that hard on purpose.</p>
-                <p>You did not buy us to learn about cryptography. You bought an assistant that does the parts of your day you would rather not do. The chain is there so the assistant feels safe to trust when you are not watching.</p>
+                <h2>Why a public record at all</h2>
+                <p>Two reasons we keep coming back to. First, no single company owns the public record we use, so nobody can rewrite it after the fact. Second, the receipt itself, the record of who signs them, and the backup copy of the bytes all sit in different places, owned by different people. To fake your assistant doing something it did not do, somebody would have to break all three. We made that hard on purpose.</p>
+                <p>You did not sign up to learn about cryptography. You signed up for an assistant that does the parts of your day you would rather not do. The public record is there so the assistant feels safe to trust when you are not watching.</p>
             </div>
         ),
         'one-chain-now-cross-chain-soon': (
