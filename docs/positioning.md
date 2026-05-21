@@ -1,8 +1,12 @@
-# Positioning — canonical one-liner
+# Positioning, canonical one-liner
 
-**Locked decision: `AI that runs on your terms.`**
+> **SUPERSEDED 2026-05-21.** The canonical one-liner is now **`Keep your word. Bet on yourself.`** per the Gamify Your Growth pivot. The new source of truth is [`docs/PIVOT_GAMIFY_GROWTH.md`](./PIVOT_GAMIFY_GROWTH.md). Everything below describes the retired AI-assistant positioning. Kept as historical context so future contributors can see how the surfaces were aligned before the pivot; do not use this doc to settle current copy questions, and do not add tests that lock the retired tagline back into live surfaces.
 
-This is the canonical short one-liner across every surface. Do not propose replacements without explicit founder approval — the line has been deliberately chosen and survived multiple revision cycles. Future copy work should align to it, not relitigate it.
+---
+
+**Retired decision: `AI that runs on your terms.`**
+
+This was the canonical short one-liner across every surface during the AI-assistant era (through May 20 2026). It has been replaced by the pivot tagline; the surface coverage table below points at retired surfaces and should not be re-litigated.
 
 ## Why this line
 
