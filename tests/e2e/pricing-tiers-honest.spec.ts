@@ -57,28 +57,23 @@ test('homepage Pricing section shows Operator Circle at $24/month', async ({ pag
     await expect(circleCard).toContainText('/month');
 });
 
-test('/pricing page shows Team at Custom pricing', async ({ page }) => {
+test('/pricing page shows Operator Circle highlighted at $24/month', async ({ page }) => {
+    // v10 reframes /pricing as the org/B2B entry point. The two
+    // tiers are Operator Circle ($24/mo highlighted) and Enterprise
+    // (custom). The retired Team/Business/Enterprise grid from v7
+    // is gone.
     await page.goto('/pricing', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    // /pricing page Team tier is custom too, paralleling the homepage.
-    await expect(page.getByText(/^Team$/).first()).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByText(/Custom/i).first()).toBeVisible();
-});
-
-test('/pricing page shows Business at $50/seat/month (highlighted)', async ({ page }) => {
-    await page.goto('/pricing', { waitUntil: 'domcontentloaded', timeout: 60_000 });
-
-    // Business is the per-seat unlimited tier. Different from the
-    // homepage Pro at $50/month flat — the units matter for honesty.
-    await expect(page.getByText('Business').first()).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByText('/seat/month').first()).toBeVisible();
+    await expect(page.getByText('Operator Circle').first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText('$24').first()).toBeVisible();
 });
 
 test('/pricing page Enterprise tier shows "Custom" pricing', async ({ page }) => {
+    // Enterprise is custom for orgs that want everyone on the same
+    // accountability protocol. If anyone hard-codes a price, this
+    // catches that scope creep.
     await page.goto('/pricing', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    // Enterprise is Custom (not a number). If anyone hard-codes a price,
-    // this test catches that scope creep.
     await expect(page.getByText('Enterprise').first()).toBeVisible({ timeout: 10_000 });
     await expect(page.getByText(/^Custom$/).first()).toBeVisible();
 });

@@ -7,33 +7,50 @@ import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 import { FadeIn } from '@/src/components/Animators';
 
+/**
+ * v10 reframe (Commitment Infrastructure).
+ *
+ * The pre-pivot /pricing page advertised Team/Business/Enterprise
+ * tiers that the v10 deck does not have. v10 has three consumer
+ * tiers (Operator Free / Pro $8 / Circle $24) on the homepage and
+ * an enterprise path that quotes per-seat for orgs that want
+ * everyone on the same accountability protocol.
+ *
+ * This page reframes as the org / B2B entry point. Circle is the
+ * highlighted tier ($24/mo per operator); Enterprise is custom
+ * for larger orgs with compliance needs.
+ */
 const tiers = [
     {
-        name: 'Team',
-        price: 'Custom',
-        period: '',
-        description: 'For small teams that want their crew to grow on purpose. Pricing fits your seat count, talk to us.',
-        features: ['Pro features for every seat', 'Org-wide goals, squads, and leaderboards', 'Manager dashboards for engagement', 'Single sign-on with Google or Microsoft', 'GDPR-ready privacy', 'Email support'],
-        cta: 'Book a call',
-        ctaLink: '/contact',
-        highlight: false,
-    },
-    {
-        name: 'Business',
-        price: '$50',
-        period: '/seat/month',
-        description: 'For growing teams that need privacy paperwork and scale.',
-        features: ['Unlimited seats', 'Unlimited helpers', 'HIPAA-ready', 'SOC 2-ready', 'Priority support', 'Usage analytics'],
-        cta: 'Get started',
-        ctaLink: '/login?returnTo=/paywall',
+        name: 'Operator Circle',
+        price: '$24',
+        period: '/month',
+        description: 'For founders, athletes, and high-performance accountability groups. Skin in the game, together.',
+        features: [
+            'Group commitments and shared stakes',
+            'Shared progress board for your circle',
+            'Coach role with cohort analytics',
+            'Unlimited witnesses across the circle',
+            'Same on-chain settlement as Pro',
+            'Priority Discord and email support',
+        ],
+        cta: 'Join the waitlist',
+        ctaLink: '/waitlist',
         highlight: true,
     },
     {
         name: 'Enterprise',
         price: 'Custom',
         period: '',
-        description: 'For companies with specific privacy and compliance needs.',
-        features: ['Dedicated instance', 'Custom SLA', 'We help with audits', 'Runs inside your firewall', 'A real person on call', '24/7 support'],
+        description: 'For orgs that want everyone on the same protocol. Per-seat pricing, SSO, audit log, compliance paperwork.',
+        features: [
+            'Per-seat pricing fit to your headcount',
+            'SSO with Google, Microsoft, or Okta',
+            'Org-wide goals, squads, and leaderboards',
+            'Manager dashboards for engagement',
+            'SOC 2 + HIPAA paths on request',
+            'A real person on email plus a quarterly check-in',
+        ],
         cta: 'Book a call',
         ctaLink: '/contact',
         highlight: false,
@@ -41,9 +58,9 @@ const tiers = [
 ];
 
 const badges = [
-    { label: 'HIPAA-ready', icon: Shield },
+    { label: 'SOC 2 on request', icon: Shield },
+    { label: 'HIPAA on request', icon: Shield },
     { label: 'GDPR-ready', icon: Shield },
-    { label: 'SOC 2-ready', icon: Shield },
     { label: 'Strong encryption', icon: Shield },
 ];
 
@@ -65,20 +82,20 @@ export default function PricingPage() {
                         <FadeIn>
                             <div className="inline-flex items-center gap-3 mb-4">
                                 <span className="h-px w-16 bg-[#F97316]/40" />
-                                <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">For Teams</span>
+                                <span className="text-xs font-mono font-bold tracking-[0.12em] text-[#F97316] uppercase">// For groups + orgs</span>
                                 <span className="h-px w-16 bg-[#F97316]/40" />
                             </div>
                             <h1 className="text-3xl md:text-4xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] mb-4 tracking-tight">
-                                Pricing for teams
+                                Group accountability, on the same protocol.
                             </h1>
                             <p className="text-muted leading-relaxed">
-                                Personal plans start free or $14.99/month. Team plans are below. Free during beta.
+                                Personal commitments live at <Link href="/#pricing" className="text-[#F97316] hover:underline">Free, Pro $8/mo, or Circle $24/mo</Link>. The page below is for orgs that want every operator on the same accountability rail.
                             </p>
                         </FadeIn>
                     </div>
 
                     {/* Tiers */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16 max-w-4xl mx-auto">
                         {tiers.map((tier, i) => (
                             <FadeIn key={tier.name} delay={i * 100}>
                                 <div className={`rounded-2xl border p-8 flex flex-col h-full transition-all ${

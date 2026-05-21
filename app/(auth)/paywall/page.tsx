@@ -151,18 +151,23 @@ export default function PaywallPage() {
         setWaitlistSubmitted(true);
     };
 
+    // v10 reframe (Commitment Infrastructure). The PRO_FEATURES
+    // list used to advertise the retired AI-assistant flow. The
+    // new list mirrors the homepage Pricing section's Operator Pro
+    // tier so a buyer landing here from /#pricing reads the same
+    // benefits in the same order.
     const PRO_FEATURES = [
-        'Drafts your replies and sends them with your tap',
-        'Schedules meetings on your real Google Calendar',
-        'Wakes up before you and texts a one-minute briefing',
-        'Switches between Claude, ChatGPT, Gemini, and others, automatically',
-        'Every action gets a tamper-proof receipt you can scroll back through',
-        'Real people on email when you need help',
+        'Unlimited commitments',
+        'Money stakes in any amount (USDC or card)',
+        'AI Game Master verification + automatic slashing',
+        'Up to 5 witnesses per commitment',
+        'Full 12-week heatmap and on-chain settlement receipts',
+        'Email support with replies under one business day',
     ];
     const FREE_FEATURES = [
-        'Browse the helpers store',
-        'Mac app (beta Q3 2026)',
-        'Use your own ChatGPT or Claude key',
+        '1 active commitment',
+        'Daily check-in with the AI Game Master',
+        'Up to 1 witness, no stakes yet',
     ];
 
     return (
@@ -223,9 +228,19 @@ export default function PaywallPage() {
                             <span className="text-sm text-[#A1A1AA]">/month</span>
                             <span className="ml-2 text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]">USDC</span>
                         </div>
-                        {/* Conversion clarifier, what changes after paying */}
+                        {/* v10 reframe: this paywall is the legacy
+                            Solana-USDC invoice flow from the AI-assistant
+                            era. The v10 Operator Pro tier ships at $8/mo
+                            via card; the new paid surface and its API
+                            wire-up land in a follow-up. Until then this
+                            page stays on $50 USDC because the invoice
+                            creation API (app/api/subscription/route.ts)
+                            still settles at that amount; publishing $8
+                            here would mislead the buyer about what they
+                            actually pay. The page is no longer linked
+                            from the v10 marketing nav. */}
                         <p className="text-xs text-[#A1A1AA] mb-6 leading-relaxed">
-                            After this, it actually opens your inbox, drafts the reply, and books the meeting. Every action waits for your tap.
+                            After this, you can stake real money on every commitment. The AI Game Master adjudicates daily, on-chain settlement does the rest.
                         </p>
 
                         <ul className="space-y-3 mb-6">
