@@ -16,9 +16,12 @@ import { FadeIn } from '@/src/components/Animators';
  * wrapper, eyebrow + gradient h1 pattern, and FinalCta-style cream
  * tile that the rest of the marketing site commits to.
  *
- * Honest framing: the bot replies with Claude Haiku one-shot today.
- * Multi-turn memory and Gmail/Calendar tool-use over iMessage are
- * roadmap items called out below the fold so we don't overpromise.
+ * v10 reframe (2026-05-21 Commitment Infrastructure): the page used
+ * to lead with "ask anything" AI-assistant framing. v10 reframes
+ * iMessage as the daily honor check-in channel for the commitment
+ * protocol. The Gmail / Calendar tools still ship and stay in the
+ * "What you can text today" list (per imessage-page.spec), but the
+ * primary pitch is "honor your commitments by text" now.
  */
 export default function IMessageLanding() {
     return (
@@ -32,14 +35,14 @@ export default function IMessageLanding() {
                         <FadeIn>
                             <div className="inline-flex items-center gap-3 mb-4">
                                 <span className="h-px w-16 bg-[#F97316]/40" />
-                                <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">iMessage Agent</span>
+                                <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">// Daily check-in channel</span>
                                 <span className="h-px w-16 bg-[#F97316]/40" />
                             </div>
                             <h1 className="text-4xl md:text-5xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] mb-4 tracking-tight leading-[1.05]">
                                 Text Operator Uplift like a friend
                             </h1>
                             <p className="text-muted leading-relaxed text-lg">
-                                The bot lives in iMessage. Ask anything in plain English and get a Claude Haiku reply back in 2 to 4 seconds. No app to install. No browser tab to keep open.
+                                The AI Game Master pings you over iMessage. You reply YES, NO, or a photo, and the protocol settles your commitment. No app to install. No browser tab to keep open.
                             </p>
                         </FadeIn>
                     </div>
@@ -50,17 +53,17 @@ export default function IMessageLanding() {
                             <FeatureCard
                                 icon={<Zap className="w-5 h-5" />}
                                 title="Two-tap setup"
-                                body="Save the iMessage number once. Text it whenever. The bot answers within seconds, no sign-in or app to install."
+                                body="Save the iMessage number once. The Game Master pings you on the cadence your commitment specifies. No sign-in or app to install."
                             />
                             <FeatureCard
                                 icon={<MessageSquare className="w-5 h-5" />}
                                 title="Honors STOP"
-                                body="Standard SMS opt-out works. Send STOP to pause replies; START to resume. HELP returns a one-line orientation."
+                                body="Standard SMS opt-out works. Send STOP to pause check-ins; START to resume. HELP returns a one-line orientation."
                             />
                             <FeatureCard
                                 icon={<ShieldCheck className="w-5 h-5" />}
                                 title="Plain text only"
-                                body="iMessage doesn't render markdown, so we strip it before sending. What you see in the message bubble is exactly what the bot wrote."
+                                body="iMessage doesn't render markdown, so we strip it before sending. What you see in the message bubble is exactly what the Game Master wrote."
                             />
                         </div>
                     </FadeIn>
@@ -70,7 +73,7 @@ export default function IMessageLanding() {
                         <div className="rounded-2xl border border-foreground/[0.08] bg-foreground/[0.02] p-8 md:p-12 mb-20">
                             <h2 className="text-2xl md:text-3xl font-medium text-foreground tracking-tight mb-2">How the round trip works</h2>
                             <p className="text-muted mb-8">
-                                You text. We forward. Claude replies. You read. About 3 seconds end to end.
+                                The Game Master pings you on schedule. You reply. The protocol settles. About 3 seconds end to end on every leg.
                             </p>
                             <ol className="space-y-4 text-sm">
                                 <Step n={1} text="You send an iMessage to the bot's number." />
@@ -87,7 +90,7 @@ export default function IMessageLanding() {
                             <h2 className="text-xl md:text-2xl font-medium text-foreground tracking-tight mb-4">What you can text today</h2>
                             <ul className="space-y-3 text-sm text-muted leading-relaxed">
                                 <li>
-                                    <span className="text-foreground font-medium">Plain chat.</span> Multi-turn context is wired: the bot loads up to 5 prior turns from your conversation so the reply makes sense in context.
+                                    <span className="text-foreground font-medium">Daily check-ins.</span> The Game Master pings you on the cadence your commitment specifies. Reply YES, NO, or send a photo as evidence. Multi-turn context lets you push back, ask for an extension, or escalate to a witness.
                                 </li>
                                 <li>
                                     <span className="text-foreground font-medium">Save preferences.</span> &quot;I&apos;m a leo&quot; saves your zodiac. &quot;I&apos;m in San Francisco&quot; saves your location. &quot;Switch to sonnet&quot; changes the model. Or edit them in the dashboard at /integrations.
@@ -99,7 +102,7 @@ export default function IMessageLanding() {
                                     <span className="text-foreground font-medium">Gmail drafts.</span> &quot;Draft an email to mom@example.com saying I&apos;ll be late&quot; stages a Gmail draft, asks YES, then writes the draft into your real Gmail account.
                                 </li>
                                 <li>
-                                    <span className="text-foreground font-medium">Gmail sends.</span> &quot;Send an email to alice@team.com saying I&apos;m running late&quot; stages a draft, asks YES, then sends it from your address. Same approval gate.
+                                    <span className="text-foreground font-medium">Gmail sends.</span> &quot;Send an email to alice@team.com saying I&apos;m running late&quot; stages a draft, asks YES, then sends it from your address. Same check-in pattern as commitment honor.
                                 </li>
                                 <li>
                                     <span className="text-foreground font-medium">Calendar events.</span> &quot;Schedule a meeting tomorrow at 3pm for 30 minutes&quot; stages the event, asks YES, then writes it onto your real calendar.
