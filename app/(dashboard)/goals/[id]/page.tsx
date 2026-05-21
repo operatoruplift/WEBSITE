@@ -27,6 +27,7 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
     const [draftTitle, setDraftTitle] = useState('');
     const [draftStakes, setDraftStakes] = useState('');
     const [draftTarget, setDraftTarget] = useState('');
+    const [checkinNote, setCheckinNote] = useState('');
 
     const refresh = useCallback(async () => {
         try {
@@ -59,11 +60,15 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
         if (busy || !goal) return;
         setBusy(true);
         try {
+            const body: Record<string, string> = { status: 'done' };
+            const note = checkinNote.trim();
+            if (note.length > 0) body.note = note;
             await fetch(`/api/goals/${id}/checkin`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: 'done' }),
+                body: JSON.stringify(body),
             });
+            setCheckinNote('');
             await refresh();
         } finally {
             setBusy(false);
@@ -308,19 +313,38 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
                     </div>
                 </div>
 
-                {/* Actions */}
-                <div className="mb-10 flex flex-wrap gap-2">
-                    {isActive && (
+                {/* Check-in row with optional journal note */}
+                {isActive && (
+                    <div className="mb-6 rounded-xl border border-foreground/10 bg-card p-4 flex flex-col sm:flex-row sm:items-end gap-3">
+                        <div className="flex-1 min-w-0">
+                            <label htmlFor="checkin-note" className="block text-[10px] font-bold tracking-widest uppercase text-foreground/60 mb-1.5">
+                                Today's note (optional)
+                            </label>
+                            <input
+                                id="checkin-note"
+                                type="text"
+                                value={checkinNote}
+                                onChange={(e) => setCheckinNote(e.target.value)}
+                                placeholder="What did you do? How did it feel?"
+                                maxLength={300}
+                                disabled={busy}
+                                className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[#F97316]/50 focus:ring-1 focus:ring-[#F97316]/30 disabled:opacity-50"
+                            />
+                        </div>
                         <button
                             type="button"
                             onClick={checkIn}
                             disabled={busy}
-                            className="inline-flex items-center px-4 py-2 bg-[#F97316] hover:bg-[#F97316]/90 text-white font-bold text-xs rounded-lg uppercase tracking-widest transition-colors shadow-[0_0_20px_rgba(249,115,22,0.25)] disabled:opacity-50"
+                            className="shrink-0 inline-flex items-center px-4 py-2 bg-[#F97316] hover:bg-[#F97316]/90 text-white font-bold text-xs rounded-lg uppercase tracking-widest transition-colors shadow-[0_0_20px_rgba(249,115,22,0.25)] disabled:opacity-50"
                         >
                             Check in today
                             <CheckCircle2 aria-hidden className="ml-1.5 w-3.5 h-3.5" />
                         </button>
-                    )}
+                    </div>
+                )}
+
+                {/* Status transitions */}
+                <div className="mb-10 flex flex-wrap gap-2">
                     {isActive && (
                         <button
                             type="button"
@@ -407,17 +431,22 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
                     ) : (
                         <ul className="space-y-2 list-none p-0">
                             {goal.recent_checkins.map((c) => (
-                                <li key={c.id} className="rounded-lg border border-foreground/10 bg-foreground/[0.02] p-3 flex items-center justify-between text-sm">
-                                    <span className="font-mono text-foreground/80">{c.checkin_date}</span>
-                                    <span className={
-                                        c.status === 'done'
-                                            ? 'text-[10px] font-bold tracking-widest uppercase text-emerald-600'
-                                            : c.status === 'partial'
-                                                ? 'text-[10px] font-bold tracking-widest uppercase text-amber-600'
-                                                : 'text-[10px] font-bold tracking-widest uppercase text-foreground/40'
-                                    }>
-                                        {c.status}
-                                    </span>
+                                <li key={c.id} className="rounded-lg border border-foreground/10 bg-foreground/[0.02] p-3 text-sm">
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-mono text-foreground/80">{c.checkin_date}</span>
+                                        <span className={
+                                            c.status === 'done'
+                                                ? 'text-[10px] font-bold tracking-widest uppercase text-emerald-600'
+                                                : c.status === 'partial'
+                                                    ? 'text-[10px] font-bold tracking-widest uppercase text-amber-600'
+                                                    : 'text-[10px] font-bold tracking-widest uppercase text-foreground/40'
+                                        }>
+                                            {c.status}
+                                        </span>
+                                    </div>
+                                    {c.note && (
+                                        <p className="mt-1.5 text-xs text-muted leading-relaxed">{c.note}</p>
+                                    )}
                                 </li>
                             ))}
                         </ul>
