@@ -7,15 +7,13 @@ test.describe.configure({ timeout: 90_000 });
 /**
  * Locks in the HowItWorks section composition.
  *
- * Added per user feedback referencing clawcage.hackyguru.com's
- * "Zero to sandbox in 10 seconds" walkthrough: a time-to-value
- * 4-step explainer between Hero and LocalFirst. The LocalFirst
- * section below covers WHY each step is trustworthy; this section
- * covers WHAT the user does, in order.
+ * Rewritten 2026-05-21 for the Gamify Your Growth pivot. The section
+ * used to be a Gmail / Calendar four-step sign-in walkthrough; the
+ * pivot replaces it with the four-step ambition-to-action loop from
+ * pitch deck v7. Source of truth: docs/PIVOT_GAMIFY_GROWTH.md.
  *
- * If a future trim removes this section or rewrites a step into
- * something that no longer reads as a verb the user performs,
- * this spec catches it.
+ * This spec locks the live-page rendering. The file-scope spec at
+ * tests/e2e/pivot-gamify-growth-phase2.spec.ts locks the source code.
  */
 
 test('HowItWorks section renders on the homepage', async ({ page }) => {
@@ -30,21 +28,21 @@ test('HowItWorks section eyebrow + title + description', async ({ page }) => {
 
     const section = page.locator('#how-it-works');
     await expect(section).toContainText(/How it works/i);
-    await expect(section).toContainText(/From sign-in to first action in under a minute/i);
+    await expect(section).toContainText(/Turn your ambition into a daily habit/i);
     await expect(section).toContainText(/Four steps/i);
 });
 
-test('HowItWorks lists all four steps with concrete action verbs', async ({ page }) => {
+test('HowItWorks lists all four pivot steps as concrete verbs', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
     const section = page.locator('#how-it-works');
-    // Each step name is a verb the user actually performs. If anyone
-    // rewrites these as abstract jargon ("Authentication", "Discovery"),
-    // this fires.
-    await expect(section).toContainText(/Sign in with Google/i);
-    await expect(section).toContainText(/Ask in plain English/i);
-    await expect(section).toContainText(/Tap to approve/i);
-    await expect(section).toContainText(/It runs in your real Gmail/i);
+    // Each step name is a verb the operator actually performs. If
+    // anyone rewrites these as abstract jargon ("Discovery",
+    // "Optimization"), this fires.
+    await expect(section).toContainText(/Set your goal/i);
+    await expect(section).toContainText(/AI breaks it down/i);
+    await expect(section).toContainText(/Show up daily/i);
+    await expect(section).toContainText(/Adapt and achieve/i);
 });
 
 test('HowItWorks step numbers render as Step 01..04 in order', async ({ page }) => {
@@ -62,12 +60,12 @@ test('HowItWorks step numbers render as Step 01..04 in order', async ({ page }) 
 test('HowItWorks sits between Hero and LocalFirst on the homepage', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    // DOM order anchors the narrative: Hero (sets the pitch),
-    // HowItWorks (walks through the four steps), LocalFirst (explains
-    // the trust pillar behind each step). If a future trim moves
-    // HowItWorks after LocalFirst, the trust narrative reads before
-    // the walkthrough that motivates caring about it.
-    const heroIndex = await page.locator('section').filter({ hasText: /Operator Uplift drafts your replies/i }).first().evaluate(el =>
+    // DOM order anchors the pivot narrative: Hero (the tagline +
+    // primary waitlist CTA), HowItWorks (the four-step questline),
+    // LocalFirst (the Problem + Solution). The pre-pivot Hero locator
+    // ("Operator Uplift drafts your replies") no longer applies; we
+    // anchor to the new hero h1 instead.
+    const heroIndex = await page.locator('section').filter({ has: page.locator('h1#hero-heading') }).first().evaluate(el =>
         Array.from(document.querySelectorAll('section')).indexOf(el as HTMLElement),
     );
     const howItWorksIndex = await page.locator('#how-it-works').evaluate(el =>

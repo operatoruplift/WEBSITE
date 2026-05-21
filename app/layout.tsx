@@ -105,10 +105,10 @@ export default function RootLayout({
                 {
                   "@type": "WebApplication",
                   "name": "Operator Uplift",
-                  "applicationCategory": "ProductivityApplication",
+                  "applicationCategory": "LifestyleApplication",
                   "operatingSystem": "Web",
                   "browserRequirements": "Requires a modern browser",
-                  "description": "AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Approval before every action; signed receipt afterward.",
+                  "description": "AI-powered personal development for Gen Z and Millennials. Keep your word, bet on yourself. Turn your ambition into a daily habit with AI-built questlines, streaks, and a community that keeps you coming back.",
                   "offers": {
                     "@type": "Offer",
                     "price": "0",

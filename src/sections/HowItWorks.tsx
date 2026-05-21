@@ -1,22 +1,23 @@
 'use client';
 
 import React from 'react';
-import { Mail, MessageSquare, CheckCircle2, FileSignature } from 'lucide-react';
+import { Target, Sparkles, Trophy, TrendingUp } from 'lucide-react';
 import { FadeIn } from '@/src/components/Animators';
 import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
 
 /**
- * How it works, time-to-value framing.
+ * How it works, the four-step questline.
  *
- * Modeled on clawcage's "Zero to sandbox in 10 seconds" pattern.
- * Sits between Hero and LocalFirst so a first-time visitor sees the
- * four-step walkthrough before any architecture talk. The LocalFirst
- * section below covers WHY each step is trustworthy (BYOK, OAuth,
- * receipts); this section covers WHAT the user does, in order.
+ * Pivot 2026-05-21: this section was the four-step Gmail/Calendar
+ * sign-in flow. The Gamify Your Growth pivot replaces it with the
+ * four-step ambition-to-action loop from the pitch deck v7:
+ * set a goal, the AI breaks it down, you complete daily quests,
+ * the platform adapts. The mirror narrative on the website is
+ * captured in docs/PIVOT_GAMIFY_GROWTH.md.
  *
- * Keep the steps short and concrete. Avoid jargon. Each step is one
- * verb the user actually performs.
+ * Keep steps concrete and verb-led. No jargon (Norman door rule).
+ * Each card is one action the operator actually takes.
  */
 
 interface Step {
@@ -28,28 +29,28 @@ interface Step {
 
 const STEPS: Step[] = [
     {
-        icon: Mail,
+        icon: Target,
         n: '01',
-        title: 'Sign in with Google',
-        body: 'One tap. The assistant gets read + compose access to your Gmail and Calendar through Google’s consent screen. We never see your password.',
+        title: 'Set your goal',
+        body: 'Tell us the ambition. "Run a marathon." "Ship five days a week." "Read fourteen books this quarter." Big or small, vague or specific, the AI takes it from here.',
     },
     {
-        icon: MessageSquare,
+        icon: Sparkles,
         n: '02',
-        title: 'Ask in plain English',
-        body: 'Type into the web chat, or text our iMessage number. The same assistant answers either way: "Draft replies to my last three emails."',
+        title: 'AI breaks it down',
+        body: 'The AI turns your goal into a step-by-step questline. Small daily actions, dated, attached to the right time of day. No more staring at a blank week.',
     },
     {
-        icon: CheckCircle2,
+        icon: Trophy,
         n: '03',
-        title: 'Tap to approve',
-        body: 'Every send, draft, or booking shows you the exact action and parameters first. You tap yes. No always-allow, no surprise sends.',
+        title: 'Show up daily',
+        body: 'Complete the daily quest. Build a streak. Earn badges. Optional stakes you set for yourself. A community cheers you on so motivation does not have to be a solo sport.',
     },
     {
-        icon: FileSignature,
+        icon: TrendingUp,
         n: '04',
-        title: 'It runs in your real Gmail',
-        body: 'The email lands in your Drafts or Sent. The calendar event lands in your Calendar. A signed receipt appears on your dashboard so you can prove what happened.',
+        title: 'Adapt and achieve',
+        body: 'The platform learns what motivates you and where you stall, and adjusts. The plan gets better the longer you stick with it, until the habit becomes who you are.',
     },
 ];
 
@@ -59,8 +60,8 @@ const HowItWorks: React.FC = () => {
             <SectionHeader
                 headingId="how-it-works-heading"
                 eyebrow="How it works"
-                title="From sign-in to first action in under a minute"
-                description="Four steps. The assistant never moves faster than you do."
+                title="Turn your ambition into a daily habit"
+                description="Four steps. The AI does the planning. You do the showing up."
             />
 
             {/* Numbered step grid. `<ol>` exposes the sequence to

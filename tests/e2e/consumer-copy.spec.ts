@@ -59,35 +59,33 @@ function assertNoBannedPhrases(body: string, surface: string) {
     }
 }
 
-test('homepage hero shows the consumer pitch', async ({ page }) => {
+test('homepage hero shows the pivot pitch', async ({ page }) => {
     await page.goto('/');
 
-    // Hero headline is "AI that runs on your terms." Wave 6 briefly
-    // tested "Stop typing the same email twice." but user feedback
-    // pulled it back: "AI that runs on your terms" anchors the
-    // consent + control pitch the rest of the page commits to (BYOK,
-    // approval gate, signed receipts) better than the email-fatigue
-    // hook. The primary CTA stays "Sign in and connect Gmail".
-    await expect(page.getByText(/AI that runs on your terms/i).first()).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByRole('link', { name: /sign in and connect gmail/i }).first()).toBeVisible();
+    // 2026-05-21 Gamify Your Growth pivot. Hero headline is
+    // "Keep your word. Bet on yourself." Primary CTA is
+    // "Join the waitlist" pointing at /waitlist. Source of truth:
+    // docs/PIVOT_GAMIFY_GROWTH.md.
+    await expect(page.getByText(/Keep your word\. Bet on yourself\./i).first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole('link', { name: /join the waitlist/i }).first()).toBeVisible();
 
     const body = await page.locator('body').innerText();
     assertNoBannedPhrases(body, '/');
 });
 
-test('homepage shows the local-first flow before the demo video', async ({ page }) => {
+test('homepage shows the Problem + Solution section before the demo video', async ({ page }) => {
     await page.goto('/');
 
-    // The Local-First section anchors trust signals (BYOK, signed
-    // receipts, OAuth-not-storage) to a 4-step flow. Adding it to the
-    // homepage in PR #313 fixed the "local-first sounds powerful but
-    // abstract" feedback. This spec pins the section into place so a
-    // future trim doesn't accidentally remove it.
+    // 2026-05-21 Gamify Your Growth pivot. The #local-first section
+    // is now the Problem + Solution surface (The Motivation Cliff
+    // diagnosis + the AI Co-Pilot remedy). The id is kept stable for
+    // existing nav anchors and analytics; the file name will be
+    // renamed in Phase 4. Source of truth: docs/PIVOT_GAMIFY_GROWTH.md.
     const localFirst = page.locator('#local-first');
     await expect(localFirst).toBeVisible({ timeout: 10_000 });
-    await expect(localFirst).toContainText(/Your data, your keys, your audit log/i);
-    await expect(localFirst).toContainText(/Bring your own key/i);
-    await expect(localFirst).toContainText(/never store/i);
+    await expect(localFirst).toContainText(/The motivation cliff is real/i);
+    await expect(localFirst).toContainText(/An AI co-pilot that adapts to you/i);
+    await expect(localFirst).toContainText(/Built for the ambitious/i);
 });
 
 test('navbar uses plain-English labels', async ({ page }) => {
@@ -174,46 +172,52 @@ test('/pricing disambiguates personal vs team plans', async ({ page }) => {
     assertNoBannedPhrases(body, '/pricing');
 });
 
-test('OG metadata leads with the daily job', async ({ page }) => {
+test('OG metadata leads with the pivot pitch', async ({ page }) => {
     await page.goto('/');
 
+    // 2026-05-21 Gamify Your Growth pivot. Meta + OG + Twitter
+    // descriptions lead with the personal-development framing now.
+    // Lock both that the new pitch is present AND that the retired
+    // AI-assistant copy is gone, so a partial revert is caught.
     const description = await page.locator('meta[name="description"]').getAttribute('content');
-    expect(description, 'meta description').toContain('drafts your email');
+    expect(description, 'meta description').toContain('Keep your word');
+    expect(description, 'meta description').toContain('personal development');
+    expect(description, 'meta description').not.toContain('drafts your email');
     expect(description, 'meta description').not.toContain('Multi-agent orchestration');
-    // PR #242 retired "Runs on your computer" from meta + OG + Twitter
-    // descriptions in favor of "Approval before every action; signed
-    // receipt afterward." Both halves describe primitives the web app
-    // actually ships today.
     expect(description, 'meta description').not.toContain('Runs on your computer');
 
     const ogDescription = await page.locator('meta[property="og:description"]').getAttribute('content');
+    expect(ogDescription, 'og:description').toContain('Keep your word');
     expect(ogDescription, 'og:description').not.toContain('Runs on your computer');
 
     const twitterDescription = await page.locator('meta[name="twitter:description"]').getAttribute('content');
+    expect(twitterDescription, 'twitter:description').toContain('Keep your word');
     expect(twitterDescription, 'twitter:description').not.toContain('Runs on your computer');
 
     const title = await page.title();
-    // Canonical one-liner per docs/positioning.md: "AI that runs on your terms"
-    // (locked in PR #590). Title was previously "AI for your inbox and calendar"
-    // until that audit aligned every short-form surface to the canonical.
-    expect(title.toLowerCase()).toContain('runs on your terms');
+    // 2026-05-21 Gamify Your Growth pivot. The canonical one-liner
+    // for short-form surfaces is now "gamify your growth with AI"
+    // (see app/layout.tsx and docs/PIVOT_GAMIFY_GROWTH.md).
+    expect(title.toLowerCase()).toContain('gamify your growth');
+    expect(title.toLowerCase()).not.toContain('runs on your terms');
     expect(title).not.toContain('AI Operating System');
 });
 
-test('JSON-LD structured data uses the consumer pitch', async ({ page }) => {
-    // The schema.org SoftwareApplication blob is what Google reads for
-    // rich-result snippets. PR #190 retired the "Local-first AI agent
-    // platform" string from the description. PR #242 changed the
-    // @type to WebApplication and retired "Runs on your computer".
-    // Locking those in.
+test('JSON-LD structured data uses the pivot pitch', async ({ page }) => {
+    // 2026-05-21 Gamify Your Growth pivot. The schema.org blob feeds
+    // Google rich-result snippets; the description must lead with
+    // the personal-development pitch, not the retired AI assistant
+    // copy. Source of truth: docs/PIVOT_GAMIFY_GROWTH.md.
     await page.goto('/');
 
     const ldJson = await page.locator('script[type="application/ld+json"]').first().innerText();
-    expect(ldJson).toContain('drafts your email');
+    expect(ldJson).toContain('personal development');
+    expect(ldJson).toContain('Keep your word');
+    expect(ldJson).not.toContain('drafts your email');
     expect(ldJson).not.toContain('Local-first AI agent platform');
     expect(ldJson).not.toContain('autonomous agents');
     expect(ldJson).not.toContain('Runs on your computer');
-    // Web app, not a desktop SoftwareApplication today.
+    // Web app, not a desktop SoftwareApplication.
     expect(ldJson).toContain('WebApplication');
 });
 
