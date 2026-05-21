@@ -3,7 +3,7 @@
 import React, { use, useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Flame, CheckCircle2, AlertCircle, Loader2, Pause, Play, X, Trophy, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Flame, CheckCircle2, AlertCircle, Loader2, Pause, Play, X, Trophy, RefreshCw, Pencil } from 'lucide-react';
 import type { GoalWithMetrics, GoalStatus } from '@/lib/goals/types';
 
 /**
@@ -23,6 +23,10 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [busy, setBusy] = useState(false);
+    const [editing, setEditing] = useState(false);
+    const [draftTitle, setDraftTitle] = useState('');
+    const [draftStakes, setDraftStakes] = useState('');
+    const [draftTarget, setDraftTarget] = useState('');
 
     const refresh = useCallback(async () => {
         try {
@@ -76,6 +80,48 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
                 body: JSON.stringify({ status }),
             });
             await refresh();
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    const openEdit = () => {
+        if (!goal) return;
+        setDraftTitle(goal.title);
+        setDraftStakes(goal.stakes ?? '');
+        setDraftTarget(goal.target_date ?? '');
+        setEditing(true);
+    };
+
+    const cancelEdit = () => {
+        setEditing(false);
+    };
+
+    const saveEdit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (busy || !goal) return;
+        const title = draftTitle.trim();
+        if (!title) return;
+        setBusy(true);
+        try {
+            const payload: Record<string, string | null> = { title };
+            const stakes = draftStakes.trim();
+            payload.stakes = stakes.length === 0 ? null : stakes;
+            payload.target_date = draftTarget.length === 0 ? null : draftTarget;
+
+            const res = await fetch(`/api/goals/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            if (!res.ok) {
+                setError('Could not save your edit. Try again.');
+                return;
+            }
+            setEditing(false);
+            await refresh();
+        } catch {
+            setError('Network error while saving.');
         } finally {
             setBusy(false);
         }
@@ -142,19 +188,98 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
                         <h1 className="text-2xl md:text-3xl font-medium text-foreground tracking-tight leading-tight">
                             {goal.title}
                         </h1>
-                        <StatusBadge status={goal.status} />
+                        <div className="shrink-0 flex items-center gap-2">
+                            <StatusBadge status={goal.status} />
+                            {!isClosed && !editing && (
+                                <button
+                                    type="button"
+                                    onClick={openEdit}
+                                    disabled={busy}
+                                    className="inline-flex items-center px-2.5 py-1 rounded-full bg-foreground/5 hover:bg-foreground/10 border border-foreground/10 text-foreground/70 font-bold text-[10px] uppercase tracking-widest transition-colors disabled:opacity-50"
+                                    title="Edit goal"
+                                    aria-label="Edit goal"
+                                >
+                                    <Pencil aria-hidden className="w-3 h-3 mr-1" />
+                                    Edit
+                                </button>
+                            )}
+                        </div>
                     </div>
-                    {goal.stakes && (
+                    {!editing && goal.stakes && (
                         <p className="text-sm text-muted mb-1">
                             <span className="text-[10px] font-bold tracking-widest uppercase text-foreground/60 mr-2">Stakes</span>
                             {goal.stakes}
                         </p>
                     )}
-                    {goal.target_date && (
+                    {!editing && goal.target_date && (
                         <p className="text-xs text-muted">
                             <span className="font-bold tracking-widest uppercase text-foreground/60 mr-2">Target</span>
                             {goal.target_date}
                         </p>
+                    )}
+                    {editing && (
+                        <form onSubmit={saveEdit} className="mt-4 rounded-2xl border border-[#F97316]/20 bg-[#F97316]/[0.03] p-5 flex flex-col gap-4">
+                            <div>
+                                <label htmlFor="edit-title" className="block text-[10px] font-bold tracking-widest uppercase text-foreground/70 mb-1.5">
+                                    Title
+                                </label>
+                                <input
+                                    id="edit-title"
+                                    type="text"
+                                    value={draftTitle}
+                                    onChange={(e) => setDraftTitle(e.target.value)}
+                                    required
+                                    maxLength={200}
+                                    disabled={busy}
+                                    className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#F97316]/50 focus:ring-1 focus:ring-[#F97316]/30 disabled:opacity-50"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="edit-stakes" className="block text-[10px] font-bold tracking-widest uppercase text-foreground/70 mb-1.5">
+                                    Stakes (optional)
+                                </label>
+                                <input
+                                    id="edit-stakes"
+                                    type="text"
+                                    value={draftStakes}
+                                    onChange={(e) => setDraftStakes(e.target.value)}
+                                    maxLength={300}
+                                    placeholder="Leave blank to clear"
+                                    disabled={busy}
+                                    className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted/70 focus:outline-none focus:border-[#F97316]/50 focus:ring-1 focus:ring-[#F97316]/30 disabled:opacity-50"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="edit-target" className="block text-[10px] font-bold tracking-widest uppercase text-foreground/70 mb-1.5">
+                                    Target date (optional)
+                                </label>
+                                <input
+                                    id="edit-target"
+                                    type="date"
+                                    value={draftTarget}
+                                    onChange={(e) => setDraftTarget(e.target.value)}
+                                    disabled={busy}
+                                    className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#F97316]/50 focus:ring-1 focus:ring-[#F97316]/30 disabled:opacity-50"
+                                />
+                            </div>
+                            <div className="flex gap-2">
+                                <button
+                                    type="submit"
+                                    disabled={busy || !draftTitle.trim()}
+                                    className="inline-flex items-center px-4 py-2 bg-[#F97316] hover:bg-[#F97316]/90 text-white font-bold text-xs rounded-lg uppercase tracking-widest transition-colors disabled:opacity-50"
+                                >
+                                    Save
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={cancelEdit}
+                                    disabled={busy}
+                                    className="inline-flex items-center px-4 py-2 bg-foreground/5 hover:bg-foreground/10 border border-foreground/10 text-foreground/80 font-bold text-xs rounded-lg uppercase tracking-widest transition-colors disabled:opacity-50"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
                     )}
                 </header>
 
