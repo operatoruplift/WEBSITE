@@ -3,7 +3,7 @@
 import React, { use, useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Flame, CheckCircle2, AlertCircle, Loader2, Pause, Play, X, Trophy } from 'lucide-react';
+import { ArrowLeft, Flame, CheckCircle2, AlertCircle, Loader2, Pause, Play, X, Trophy, RefreshCw } from 'lucide-react';
 import type { GoalWithMetrics, GoalStatus } from '@/lib/goals/types';
 
 /**
@@ -76,6 +76,24 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
                 body: JSON.stringify({ status }),
             });
             await refresh();
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    const regenerate = async () => {
+        if (busy || !goal) return;
+        if (!confirm('Ask the AI for a different questline? This replaces the current plan.')) return;
+        setBusy(true);
+        try {
+            const res = await fetch(`/api/goals/${id}/regenerate`, { method: 'POST' });
+            if (!res.ok) {
+                setError('Could not regenerate the questline. Try again in a moment.');
+                return;
+            }
+            await refresh();
+        } catch {
+            setError('Network error during regenerate.');
         } finally {
             setBusy(false);
         }
@@ -227,7 +245,21 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
                 {/* Questline */}
                 {goal.questline.length > 0 && (
                     <section className="mb-10">
-                        <h2 className="text-xs font-bold tracking-[0.25em] uppercase text-foreground/60 mb-4">Questline</h2>
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-xs font-bold tracking-[0.25em] uppercase text-foreground/60">Questline</h2>
+                            {!isClosed && (
+                                <button
+                                    type="button"
+                                    onClick={regenerate}
+                                    disabled={busy}
+                                    className="inline-flex items-center px-3 py-1.5 bg-foreground/5 hover:bg-foreground/10 border border-foreground/10 text-foreground/70 font-bold text-[10px] rounded-lg uppercase tracking-widest transition-colors disabled:opacity-50"
+                                    title="Ask the AI for a different plan"
+                                >
+                                    <RefreshCw aria-hidden className={`mr-1.5 w-3 h-3 ${busy ? 'animate-spin' : ''}`} />
+                                    Regenerate
+                                </button>
+                            )}
+                        </div>
                         <ol className="space-y-2 list-none p-0">
                             {goal.questline.map((step, i) => (
                                 <li key={i} className="rounded-lg border border-foreground/10 bg-card p-4">
