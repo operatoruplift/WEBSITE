@@ -41,6 +41,8 @@ export default function robots(): MetadataRoute.Robots {
         '/profile',
         '/integrations',
         '/onboarding',
+        // Operator admin (gated by PAYWALL_BYPASS_EMAILS); never index
+        '/admin',
         // Auth flow surfaces (only useful in the funnel context)
         '/login',
         '/signup',
