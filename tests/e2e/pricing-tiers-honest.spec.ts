@@ -5,52 +5,56 @@ import { test, expect } from '@playwright/test';
 test.describe.configure({ timeout: 90_000 });
 
 /**
- * Locks in the post-trim pricing tiers across two surfaces so a price
+ * Locks in the pivot-era pricing tiers across two surfaces so a price
  * revert (intentional or accidental) doesn't quietly invalidate the
- * deck's slide 5 monetization claim.
+ * deck's slide 12 monetization claim.
  *
  * History:
- *   - PR #481 bumped Pro $19 -> $50/mo
+ *   - PR #481 bumped Pro $19 -> $50/mo  (retired AI-assistant tier)
  *   - PR #490 bumped Team Starter $100 -> $299/mo
  *   - Later PR replaced Team Starter $299 with "Custom, book a call"
- *     after user feedback that locking in a published team price
- *     before any team customer was overcommitting.
+ *   - 2026-05-21 Gamify Your Growth pivot: Pro lands at $14.99/mo
+ *     (deck v7) and the Pro CTA points at /waitlist until the paid
+ *     surface ships in Phase 8. Source of truth:
+ *     docs/PIVOT_GAMIFY_GROWTH.md.
  *
  * The two surfaces under test:
  *
  *   Homepage Pricing section (src/sections/Pricing.tsx):
- *     Free   <no price line>     (Try the demo)
- *     Pro    $50/month            highlighted, Start Pro CTA
- *     Team   Custom               Book a call CTA -> cal.com
+ *     Free   Free forever            (Join the waitlist)
+ *     Pro    $14.99/month            highlighted, Join the waitlist CTA
+ *     Team   Custom                  Book a call CTA -> cal.com
  *
  *   Dedicated /pricing page (app/pricing/page.tsx, TEAM-focused):
  *     Team           Custom         Book a call CTA -> /contact
  *     Business       $50/seat/month highlighted
  *     Enterprise     Custom
  *
- * If anyone reverts a price, drops a tier, or rebrands without updating
- * the deck, this spec catches it before merge.
+ * If anyone reverts a price, drops a tier, or rebrands without
+ * updating the deck, this spec catches it before merge.
  */
 
-test('homepage Pricing section shows Pro at $50/month', async ({ page }) => {
+test('homepage Pricing section shows Operator Pro at $8/month', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    // Find the Pro card via its name and assert price + period are visible
-    // within the same card container.
-    const proCard = page.locator('li').filter({ has: page.getByText(/^Pro$/) }).first();
+    // v10 reframe: Pro renamed to "Operator Pro" at $8/month
+    // (deck v10 slide 12). Locator filters on the full tier name so
+    // it does not collide with "Operator Circle" or "Operator Free".
+    const proCard = page.locator('li').filter({ has: page.getByText(/^Operator Pro$/) }).first();
     await expect(proCard).toBeVisible({ timeout: 10_000 });
-    await expect(proCard).toContainText('$50');
+    await expect(proCard).toContainText('$8');
     await expect(proCard).toContainText('/month');
 });
 
-test('homepage Pricing section shows Team at Custom pricing', async ({ page }) => {
+test('homepage Pricing section shows Operator Circle at $24/month', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    const teamCard = page.locator('li').filter({ has: page.getByText(/^Team$/) }).first();
-    await expect(teamCard).toBeVisible({ timeout: 10_000 });
-    await expect(teamCard).toContainText(/Custom/i);
-    // Description carries the "talk to us" cue + Book a call CTA.
-    await expect(teamCard).toContainText(/talk to us|book a call/i);
+    // v10 replaces the Custom "Team" tier with Operator Circle at
+    // $24/month for group commitments + coach role + shared progress.
+    const circleCard = page.locator('li').filter({ has: page.getByText(/^Operator Circle$/) }).first();
+    await expect(circleCard).toBeVisible({ timeout: 10_000 });
+    await expect(circleCard).toContainText('$24');
+    await expect(circleCard).toContainText('/month');
 });
 
 test('/pricing page shows Team at Custom pricing', async ({ page }) => {

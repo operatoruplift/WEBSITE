@@ -1,86 +1,72 @@
 'use client';
 
 import React from 'react';
-import { Lock, KeyRound, FileSignature, Cpu, ArrowRight, Triangle, Database, Send, Zap, Circle, Hexagon, Box, AudioWaveform, Layers, Archive } from 'lucide-react';
+import { TrendingDown, Compass, Repeat, DollarSign, Gavel, Eye } from 'lucide-react';
 import { FadeIn } from '@/src/components/Animators';
 import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
 
 /**
- * Concrete demonstration of the local-first / BYOK flow.
+ * Problem + Solution section (Phase 2 of the Gamify Your Growth pivot).
  *
- * Lives right after the Hero so a first-time visitor sees the trust
- * substance before the demo video, not buried in the FAQ. The flow
- * diagram + trust grid replace the abstract "we care about privacy"
- * paragraph that this kind of pitch usually defaults to.
+ * Replaces the prior local-first / BYOK / receipts trust-stack story
+ * that supported the retired AI-assistant product. The file keeps the
+ * `LocalFirst.tsx` name and the `local-first` section id for now so
+ * existing nav anchors and analytics keep working; Phase 4 will rename
+ * the file + id when the rest of the homepage settles.
  *
- * Honest framing per the existing honesty-sweep guard
- * (rules/fabrication-rot.md): the cloud-deployed web app today is
- * BYOK + data-light cloud, not local-execution. The desktop +
- * Ollama path is on the roadmap and is labeled "Soon" in the
- * provider strip so we don't overpromise.
+ * Source narrative: pitch deck v7 slides 2 and 3, captured in
+ * docs/PIVOT_GAMIFY_GROWTH.md.
+ *
+ *   Problem  - The Motivation Cliff. Most people start, willpower
+ *              fades, generic tools do not adapt, the goal slips.
+ *   Solution - The AI Co-Pilot. Personalization that learns what
+ *              keeps you going and adjusts the plan.
+ *
+ * Norman door rule: each card names one concrete behavior, not a
+ * vague claim. Jakob's Law rule: two-column problem / solution grid
+ * is the conventional structure consumers expect; no surprises.
  */
 
-interface FlowStep {
-    label: string;
+interface Reality {
+    icon: React.FC<{ className?: string; size?: number }>;
     title: string;
     body: string;
-    accent: string;
 }
 
-const FLOW_STEPS: FlowStep[] = [
+const PROBLEM_REALITIES: Reality[] = [
     {
-        label: '01',
-        title: 'You ask',
-        body: '"Draft replies to my last 3 emails. Ask me before sending."',
-        accent: 'border-[#F97316]/40 bg-[#F97316]/[0.04]',
+        icon: TrendingDown,
+        title: 'Motivation is a leaky bucket',
+        body: 'Day one is easy. Day fourteen is when most people quit. Push notifications and streak emojis do nothing the moment things get hard.',
     },
     {
-        label: '02',
-        title: 'We read, never store',
-        body: 'Operator Uplift reads from Gmail via your Google OAuth. Messages stay in your inbox. Nothing is copied to our servers.',
-        accent: 'border-emerald-500/40 bg-emerald-500/[0.04]',
+        icon: Compass,
+        title: 'Apps trust the honor system',
+        body: 'Passive habit trackers and wellness apps assume you will self-report honestly. You will not. Not when the work is real and the cost of lying is zero.',
     },
     {
-        label: '03',
-        title: 'Your AI, your key',
-        body: 'The prompt goes straight to Claude, GPT, or Grok using the API key you brought. We never proxy or resell.',
-        accent: 'border-sky-500/40 bg-sky-500/[0.04]',
-    },
-    {
-        label: '04',
-        title: 'You tap, then we sign',
-        body: 'Drafts wait for your approval. Once you tap, the action runs and a signed receipt is published to Solana.',
-        accent: 'border-violet-500/40 bg-violet-500/[0.04]',
+        icon: Repeat,
+        title: 'No skin, no game',
+        body: 'Without consequences, plans drift. High-intent operators are tired of failing themselves. They do not need another mood-board. They need a system that bites back.',
     },
 ];
 
-interface TrustSignal {
-    icon: React.FC<{ className?: string; size?: number }>;
-    headline: string;
-    body: string;
-}
-
-const TRUST_SIGNALS: TrustSignal[] = [
+const SOLUTION_MECHANISMS: Reality[] = [
     {
-        icon: Lock,
-        headline: 'Your accounts, not ours',
-        body: 'Gmail and Calendar data stays in your Google account. We orchestrate via OAuth, never store the contents.',
+        icon: DollarSign,
+        title: 'Financial loss aversion',
+        body: 'Stake real money on the commitment. USDC or card. Miss the mark and you lose it. Drift stops being free; follow-through stops being optional.',
     },
     {
-        icon: KeyRound,
-        headline: 'Bring your own key',
-        body: 'Anthropic, OpenAI, and xAI bill you direct. Your spend, your rate limits, your data agreement.',
+        icon: Gavel,
+        title: 'AI Game Master adjudicates',
+        body: 'An impartial AI scores every check-in, with reasoning the operator can see. The streak only counts if it is true. No more lying to yourself by accident.',
     },
     {
-        icon: FileSignature,
-        headline: 'Signed audit trail',
-        body: 'Every approved action gets an ed25519 signature, a Merkle root posted to Solana, and two public-storage mirrors (Filecoin + 0G testnet) anyone can fetch from independently. Read-only, public, immutable.',
-    },
-    {
-        icon: Cpu,
-        headline: 'Local mode, soon',
-        body: 'The desktop app routes through Ollama on your machine. Llama 4 and DeepSeek run locally; the receipt still chains.',
+        icon: Eye,
+        title: 'Verifiable, on-chain settlement',
+        body: 'Stakes settle on Solana automatically. Escrow, slashing, payout. Witnesses see the same view you do. A year from now you can prove what you actually did.',
     },
 ];
 
@@ -89,191 +75,110 @@ const LocalFirst: React.FC = () => {
         <Section id="local-first" ariaLabelledby="local-first-heading">
             <SectionHeader
                 headingId="local-first-heading"
-                eyebrow="Local-first"
-                title="Your data, your keys, your audit log"
-                description="The same four steps as above, viewed from the security side. Here is where each piece of data goes, who can see it, and who keeps the receipt afterwards."
+                eyebrow="// Post-willpower era"
+                title="The honor system is dead. The protocol is alive."
+                description="High-intent operators are drowning in options and starving for enforcement. Operator Uplift is the commitment protocol that replaces self-report and willpower with financial loss aversion, AI adjudication, and verifiable on-chain settlement."
             />
 
-            {/* Flow strip, four steps, horizontal on desktop, stacked on
-                mobile. The arrow between steps signals movement; the
-                accent color per step ties to the trust grid below.
-                `<ol>` semantics expose the four-step sequence to
-                assistive tech as an ordered list of 4 items. */}
-            <div className="w-full max-w-[1100px] mx-auto">
-                <ol className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-2 items-stretch relative list-none p-0">
-                    {FLOW_STEPS.map((step, i) => (
-                        <li key={step.label} className="relative h-full">
-                          <FadeIn delay={i * 100}>
-                            <div className="relative h-full">
-                                <div className={`relative h-full rounded-2xl border ${step.accent} p-5 flex flex-col text-left`}>
-                                    {/* Larger step number for visual rhythm,
-                                        inspired by editorial / sully.ai-style
-                                        numbered section markers. The brand
-                                        orange tint (50% opacity) keeps it
-                                        from competing with the title. */}
-                                    <span className="text-3xl font-mono font-bold tracking-tight text-[#F97316]/50 mb-2 leading-none">
-                                        {step.label}
-                                    </span>
-                                    <h3 className="text-base font-semibold text-foreground mb-2">
-                                        {step.title}
-                                    </h3>
-                                    <p className="text-sm text-muted leading-relaxed">
-                                        {step.body}
-                                    </p>
-                                </div>
-                                {/* Inter-step arrow on desktop only; placed
-                                    half-overlapping the right edge so the
-                                    flow reads continuously left-to-right. */}
-                                {i < FLOW_STEPS.length - 1 && (
-                                    <div className="hidden md:flex absolute top-1/2 -right-3 -translate-y-1/2 w-6 h-6 rounded-full bg-background border border-border items-center justify-center z-10">
-                                        <ArrowRight aria-hidden="true" size={12} className="text-foreground/50" />
-                                    </div>
-                                )}
-                            </div>
-                          </FadeIn>
-                        </li>
-                    ))}
-                </ol>
+            {/* Two-column grid: Problem on the left, Solution on the
+                right. Each column carries a label + three concrete
+                cards. The asymmetric accent colors (problem column
+                neutral-cool, solution column brand orange) signal the
+                shift from diagnosis to remedy without needing copy to
+                say so. */}
+            <div className="w-full max-w-[1100px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+                {/* Problem column */}
+                <FadeIn delay={100}>
+                    <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-6 md:p-8 h-full">
+                        <div className="flex items-center gap-3 mb-5">
+                            <span className="w-2 h-2 rounded-full bg-foreground/60" />
+                            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-foreground/70">
+                                The problem
+                            </span>
+                        </div>
+                        <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 leading-tight">
+                            Users are starving for enforcement.
+                        </h3>
+                        <p className="text-sm text-muted leading-relaxed mb-6">
+                            The intent was real. The honor system was the problem.
+                        </p>
+                        <ul className="space-y-4 list-none p-0">
+                            {PROBLEM_REALITIES.map((reality) => {
+                                const Icon = reality.icon;
+                                return (
+                                    <li key={reality.title} className="flex gap-4">
+                                        <div className="w-9 h-9 shrink-0 rounded-lg bg-foreground/5 border border-foreground/10 flex items-center justify-center">
+                                            <Icon aria-hidden size={16} className="text-foreground/70" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h4 className="text-sm font-semibold text-foreground mb-1">
+                                                {reality.title}
+                                            </h4>
+                                            <p className="text-sm text-muted leading-relaxed">
+                                                {reality.body}
+                                            </p>
+                                        </div>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                </FadeIn>
+
+                {/* Solution column */}
+                <FadeIn delay={200}>
+                    <div className="rounded-2xl border border-[#F97316]/30 bg-[#F97316]/[0.04] p-6 md:p-8 h-full">
+                        <div className="flex items-center gap-3 mb-5">
+                            <span className="w-2 h-2 rounded-full bg-[#F97316]" />
+                            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#F97316]">
+                                The fix
+                            </span>
+                        </div>
+                        <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 leading-tight">
+                            We don't sell motivation. We sell consequences.
+                        </h3>
+                        <p className="text-sm text-muted leading-relaxed mb-6">
+                            Real money. Real adjudication. Real receipts. Forced follow-through, by design.
+                        </p>
+                        <ul className="space-y-4 list-none p-0">
+                            {SOLUTION_MECHANISMS.map((mechanism) => {
+                                const Icon = mechanism.icon;
+                                return (
+                                    <li key={mechanism.title} className="flex gap-4">
+                                        <div className="w-9 h-9 shrink-0 rounded-lg bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center">
+                                            <Icon aria-hidden size={16} className="text-[#F97316]" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h4 className="text-sm font-semibold text-foreground mb-1">
+                                                {mechanism.title}
+                                            </h4>
+                                            <p className="text-sm text-muted leading-relaxed">
+                                                {mechanism.body}
+                                            </p>
+                                        </div>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                </FadeIn>
             </div>
 
-            {/* Built On strip: the infrastructure under the agent.
-                Replaces the previous "Works with the model you already
-                pay for" provider strip, which duplicated the homepage
-                TrustedBy marquee one screen above.
-
-                Each row tags a real provider used today. Roadmap
-                providers wear a "Soon" pill so we don't overclaim
-                infrastructure we haven't wired. Per the project
-                honesty rule (every roadmap is labeled or absent). */}
-            <FadeIn delay={500}>
-                <div className="w-full max-w-[1100px] mx-auto mt-12">
-                    <div className="rounded-2xl border border-border bg-card p-6 md:p-8">
-                        <div className="flex items-center gap-3 mb-5">
-                            <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted">
-                                Built on
-                            </span>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-                            {/* Shipping: actually wired in the codebase today */}
-                            <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <Zap aria-hidden className="w-4 h-4" /> Solana
-                            </span>
-                            <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <Triangle aria-hidden className="w-4 h-4" /> Vercel
-                            </span>
-                            <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <Database aria-hidden className="w-4 h-4" /> Supabase
-                            </span>
-                            <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <Send aria-hidden className="w-4 h-4" /> Photon
-                            </span>
-                            {/* Filecoin: receipt anchoring path is now wired
-                                (lib/filecoin/anchor.ts + the cron at
-                                /api/cron/filecoin-anchor). Live once
-                                FILECOIN_PROVIDER + LIGHTHOUSE_API_KEY (or
-                                PINATA_JWT) are set on Vercel. The /security
-                                page renders a "View on Filecoin" link as
-                                soon as the cron fires.
-                                ElevenLabs: TTS endpoint at /api/voice/synth
-                                lives behind ELEVENLABS_API_KEY. Used for the
-                                demo voiceover, not a runtime user surface. */}
-                            <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <Box aria-hidden className="w-4 h-4" /> Filecoin
-                            </span>
-                            {/* 0G Storage: testnet receipt anchoring path is wired
-                                (lib/og/storage.ts + cron at /api/cron/og-anchor).
-                                Live once OG_PRIVATE_KEY is set on Vercel. The
-                                /security page renders a `0g: <rootHash>` link
-                                alongside the filecoin link. */}
-                            <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <Layers aria-hidden className="w-4 h-4" /> 0G
-                            </span>
-                            {/* Arkiv (Network School Ethereum Hackathon entrant, AI theme):
-                                /api/arkiv/agents + /api/arkiv/memories ship
-                                public read routes; /arkiv renders the judge
-                                demo. Honest empty state until the operator
-                                funds the wallet and runs the publish script. */}
-                            <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <Archive aria-hidden className="w-4 h-4" /> Arkiv
-                            </span>
-                            <span className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <AudioWaveform aria-hidden className="w-4 h-4" /> ElevenLabs
-                            </span>
-                            {/* Roadmap: Base + Ethereum still tagged Soon; they
-                                land when we add an x402 buyer client that pays
-                                paid APIs (lib/paysh roadmap). */}
-                            <span className="inline-flex items-center gap-2 text-sm text-muted">
-                                <Circle aria-hidden className="w-4 h-4" /> Base
-                                <span className="text-[9px] font-mono font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border border-[#F97316]/40 text-[#F97316] bg-[#F97316]/10">
-                                    Soon
-                                </span>
-                            </span>
-                            <span className="inline-flex items-center gap-2 text-sm text-muted">
-                                <Hexagon aria-hidden className="w-4 h-4" /> Ethereum
-                                <span className="text-[9px] font-mono font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border border-[#F97316]/40 text-[#F97316] bg-[#F97316]/10">
-                                    Soon
-                                </span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </FadeIn>
-
-            {/* Trust grid: four concrete signals, each tied to a real
-                mechanism in the codebase (OAuth scope, BYOK env var,
-                ed25519 receipts, Ollama integration). Avoid generic
-                "we care about privacy" copy; tie each card to the
-                mechanism the user can verify. `<ul>` semantics expose
-                the four trust signals as an unordered list to
-                assistive tech (no inherent order between them). */}
-            <ul className="w-full max-w-[1100px] mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 list-none p-0">
-                {TRUST_SIGNALS.map((signal, i) => {
-                    const Icon = signal.icon;
-                    return (
-                      <li key={signal.headline}>
-                        <FadeIn delay={i * 80}>
-                            <div className="rounded-2xl border border-border bg-card p-6 h-full flex gap-4 text-left">
-                                <div className="w-10 h-10 shrink-0 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center">
-                                    <Icon aria-hidden size={18} className="text-[#F97316]" />
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="text-sm font-semibold text-foreground mb-1">
-                                        {signal.headline}
-                                    </h3>
-                                    <p className="text-sm text-muted leading-relaxed">
-                                        {signal.body}
-                                    </p>
-                                </div>
-                            </div>
-                        </FadeIn>
-                      </li>
-                    );
-                })}
-            </ul>
-
-            {/* Continuity callout. Sits below the trust grid because the
-                grid is the proof and this is the pitch: portability is
-                what the grid actually buys you. Plain language only,
-                no jargon, no architecture talk. */}
+            {/* Closing callout. Sits below the two columns because the
+                columns are the diagnosis + remedy and this is the
+                stake: who Operator Uplift is for. Plain language only,
+                no jargon. */}
             <FadeIn delay={400}>
                 <div className="w-full max-w-[1100px] mx-auto mt-8">
                     <div className="rounded-2xl border border-[#F97316]/20 bg-[#F97316]/[0.03] p-6 md:p-8 text-left">
                         <div className="flex items-center gap-3 mb-3">
                             <span className="w-2 h-2 rounded-full bg-[#F97316]" />
                             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-foreground/70">
-                                Why this matters tomorrow morning
+                                Built for the ambitious
                             </span>
                         </div>
                         <p className="text-sm md:text-base text-foreground/90 leading-relaxed max-w-[820px]">
-                            You are going to swap models this year. The bot
-                            forgets you when you swap unless your context
-                            lives somewhere portable. Operator Uplift
-                            remembers you because the assistant points at
-                            your Gmail, your calendar, your signed
-                            receipts. Move the API key, keep the
-                            assistant. That is the continuity benefit you
-                            will not get from a closed plugin store.
+                            Founders, athletes, operators. The people who have already tried the streak apps and the journals and the accountability calls, and want a system that costs them when they slip. Operator Uplift is the protocol where ambition finally pays for itself.
                         </p>
                     </div>
                 </div>

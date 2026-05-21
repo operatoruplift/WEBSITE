@@ -24,24 +24,24 @@ export const metadata: Metadata = {
   // this template ensures their titles still carry the brand for
   // search results and social previews.
   title: {
-    default: "Operator Uplift, AI that runs on your terms",
+    default: "Operator Uplift, commitment infrastructure",
     template: "%s | Operator Uplift",
   },
-  description: "An AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Approval before every action; signed receipt afterward.",
-  keywords: ["AI assistant", "email AI", "calendar AI", "AI inbox", "AI scheduler", "private AI", "Gmail AI", "Google Calendar AI", "AI for productivity", "personal AI"],
+  description: "Keep your word. Bet on yourself. Commitment infrastructure for high-intent operators. Declare a commitment, stake real money on it, get daily check-ins judged by an AI Game Master, and settle on-chain.",
+  keywords: ["commitment infrastructure", "accountability protocol", "loss aversion", "habit stakes", "AI accountability", "on-chain commitments", "USDC stakes", "Solana accountability", "operator", "no-bullshit habits"],
   openGraph: {
-    title: "Operator Uplift, AI that runs on your terms",
-    description: "AI that drafts your email and schedules your meetings. Approval before every action; signed receipt afterward.",
+    title: "Operator Uplift, commitment infrastructure",
+    description: "Keep your word. Bet on yourself. We don't sell motivation, we sell consequences. Stake real money on your commitments. AI Game Master adjudicates. Settles on Solana.",
     url: "https://www.operatoruplift.com",
     siteName: "Operator Uplift",
     locale: "en_US",
     type: "website",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Operator Uplift, AI that runs on your terms" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Operator Uplift, commitment infrastructure" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Operator Uplift, AI that runs on your terms",
-    description: "AI that drafts your email and schedules your meetings. Approval before every action; signed receipt afterward.",
+    title: "Operator Uplift, commitment infrastructure",
+    description: "Keep your word. Bet on yourself. We don't sell motivation, we sell consequences.",
     creator: "@OperatorUplift",
     images: ["/opengraph-image"],
   },
@@ -105,10 +105,10 @@ export default function RootLayout({
                 {
                   "@type": "WebApplication",
                   "name": "Operator Uplift",
-                  "applicationCategory": "ProductivityApplication",
+                  "applicationCategory": "LifestyleApplication",
                   "operatingSystem": "Web",
                   "browserRequirements": "Requires a modern browser",
-                  "description": "AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Approval before every action; signed receipt afterward.",
+                  "description": "Commitment infrastructure for high-intent operators. Keep your word, bet on yourself. Stake real money on your commitments, get daily check-ins adjudicated by an AI Game Master, and settle on Solana when you keep or break your word.",
                   "offers": {
                     "@type": "Offer",
                     "price": "0",

@@ -15,13 +15,21 @@ export interface BlogPost {
 
 export const posts: BlogPost[] = [
     {
+        id: 'why-we-pivoted-to-gamify-your-growth',
+        title: 'Why we pivoted: Keep your word. Bet on yourself.',
+        excerpt: 'A month ago Balaji told me to pivot. I disagreed publicly and kept building. Then I looked at the validation we already had from a different product and the math became impossible to ignore. This is what we are doing instead, and why it is the same company, just pointed at a bigger problem.',
+        date: 'May 21, 2026',
+        readTime: '5 min read',
+        category: 'announcement',
+        featured: true,
+    },
+    {
         id: 'balaji-pivot-advice',
         title: 'Balaji told me to pivot. I didn\u2019t. Here\u2019s why.',
-        excerpt: 'Three pieces of advice in five minutes. I disagreed with one, agreed with one, was already doing one. Here is the story of what changed, what did not, and why.',
+        excerpt: 'Three pieces of advice in five minutes. I disagreed with one, agreed with one, was already doing one. Five weeks later we pivoted anyway. This post is the before; the May 21 post is the after.',
         date: 'April 17, 2026',
         readTime: '4 min read',
         category: 'announcement',
-        featured: true,
     },
     {
         id: 'arkiv-agent-memory-you-own',

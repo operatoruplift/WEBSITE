@@ -1,10 +1,12 @@
 # Operator Uplift
 
-**AI that runs on your terms.**
+**Keep your word. Bet on yourself.**
 
-Operator Uplift is an AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Every action waits for your explicit tap, executes against your real Google Calendar and Gmail, gets gated by a real x402 micropayment on Solana, and produces an ed25519-signed receipt that gets mirrored to **two** independent public storage networks (Filecoin and 0G testnet) plus published as a Merkle root on Solana devnet.
+Operator Uplift is AI-powered personal development for Gen Z and Millennials. Name an ambition. The AI breaks it into a step-by-step questline. You show up daily, build a streak, and the platform adapts to what actually keeps you going.
 
-**Live at [operatoruplift.com](https://operatoruplift.com)** · Judge-facing walkthrough at [operatoruplift.com/demo/hackathon](https://operatoruplift.com/demo/hackathon)
+The repo's plumbing (Privy auth, Supabase, Solana devnet, signed receipts on two decentralized storage networks) carries forward from the prior AI-assistant product. The 2026-05-21 pivot to Gamify Your Growth is captured in [`docs/PIVOT_GAMIFY_GROWTH.md`](./docs/PIVOT_GAMIFY_GROWTH.md). Hackathon surfaces (Arkiv, 0G) and the on-chain receipt rail stay live as primitives the new product builds on.
+
+**Live at [operatoruplift.com](https://operatoruplift.com)** · Join the waitlist at [operatoruplift.com/waitlist](https://operatoruplift.com/waitlist) · Judge-facing walkthrough at [operatoruplift.com/demo/hackathon](https://operatoruplift.com/demo/hackathon)
 
 ---
 

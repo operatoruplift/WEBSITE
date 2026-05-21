@@ -12,8 +12,8 @@ const tiers = [
         name: 'Team',
         price: 'Custom',
         period: '',
-        description: 'For small teams that need shared workspace and admin tools. Pricing fits your seat count, talk to us.',
-        features: ['Pro features for every seat', 'Up to 10 helpers per seat', 'Shared inbox and calendar', 'Per-action audit log with role-based access', 'GDPR-ready privacy', 'Email support'],
+        description: 'For small teams that want their crew to grow on purpose. Pricing fits your seat count, talk to us.',
+        features: ['Pro features for every seat', 'Org-wide goals, squads, and leaderboards', 'Manager dashboards for engagement', 'Single sign-on with Google or Microsoft', 'GDPR-ready privacy', 'Email support'],
         cta: 'Book a call',
         ctaLink: '/contact',
         highlight: false,
@@ -72,7 +72,7 @@ export default function PricingPage() {
                                 Pricing for teams
                             </h1>
                             <p className="text-muted leading-relaxed">
-                                Personal plans start free at $0 or $50/month. Team plans are below. Free during beta.
+                                Personal plans start free or $14.99/month. Team plans are below. Free during beta.
                             </p>
                         </FadeIn>
                     </div>

@@ -1,22 +1,23 @@
 'use client';
 
 import React from 'react';
-import { Mail, MessageSquare, CheckCircle2, FileSignature } from 'lucide-react';
+import { Target, DollarSign, CheckCircle2, Eye } from 'lucide-react';
 import { FadeIn } from '@/src/components/Animators';
 import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
 
 /**
- * How it works, time-to-value framing.
+ * How it works, the four-step questline.
  *
- * Modeled on clawcage's "Zero to sandbox in 10 seconds" pattern.
- * Sits between Hero and LocalFirst so a first-time visitor sees the
- * four-step walkthrough before any architecture talk. The LocalFirst
- * section below covers WHY each step is trustworthy (BYOK, OAuth,
- * receipts); this section covers WHAT the user does, in order.
+ * Pivot 2026-05-21: this section was the four-step Gmail/Calendar
+ * sign-in flow. The Gamify Your Growth pivot replaces it with the
+ * four-step ambition-to-action loop from the pitch deck v7:
+ * set a goal, the AI breaks it down, you complete daily quests,
+ * the platform adapts. The mirror narrative on the website is
+ * captured in docs/PIVOT_GAMIFY_GROWTH.md.
  *
- * Keep the steps short and concrete. Avoid jargon. Each step is one
- * verb the user actually performs.
+ * Keep steps concrete and verb-led. No jargon (Norman door rule).
+ * Each card is one action the operator actually takes.
  */
 
 interface Step {
@@ -28,28 +29,28 @@ interface Step {
 
 const STEPS: Step[] = [
     {
-        icon: Mail,
+        icon: Target,
         n: '01',
-        title: 'Sign in with Google',
-        body: 'One tap. The assistant gets read + compose access to your Gmail and Calendar through Google’s consent screen. We never see your password.',
+        title: 'Declare',
+        body: 'Write the commitment in your own words. Specific enough that "did I do it?" is a yes or no. "Run four times this week." "Ship by Friday." "No alcohol for 30 days."',
     },
     {
-        icon: MessageSquare,
+        icon: DollarSign,
         n: '02',
-        title: 'Ask in plain English',
-        body: 'Type into the web chat, or text our iMessage number. The same assistant answers either way: "Draft replies to my last three emails."',
+        title: 'Stake',
+        body: 'Put real money on the line. USDC or card. If you miss, you lose it. Pick a witness who keeps you honest. The stake makes drift expensive instead of free.',
     },
     {
         icon: CheckCircle2,
         n: '03',
-        title: 'Tap to approve',
-        body: 'Every send, draft, or booking shows you the exact action and parameters first. You tap yes. No always-allow, no surprise sends.',
+        title: 'Honor',
+        body: 'Daily check-in, one tap. An AI Game Master adjudicates so the streak only counts if it is true. Miss the mark and the stake slashes automatically. The honor system is dead; the protocol is alive.',
     },
     {
-        icon: FileSignature,
+        icon: Eye,
         n: '04',
-        title: 'It runs in your real Gmail',
-        body: 'The email lands in your Drafts or Sent. The calendar event lands in your Calendar. A signed receipt appears on your dashboard so you can prove what happened.',
+        title: 'Watch',
+        body: 'Heatmap, streak history, settled stakes. Progress you cannot fake. Witnesses see the same view. Receipts are on-chain and verifiable, so a year from now you can prove what you actually did.',
     },
 ];
 
@@ -58,9 +59,9 @@ const HowItWorks: React.FC = () => {
         <Section id="how-it-works" ariaLabelledby="how-it-works-heading">
             <SectionHeader
                 headingId="how-it-works-heading"
-                eyebrow="How it works"
-                title="From sign-in to first action in under a minute"
-                description="Four steps. The assistant never moves faster than you do."
+                eyebrow="The protocol"
+                title="Declare. Stake. Honor. Watch."
+                description="Four steps for forced follow-through. We don't sell motivation. We sell consequences you choose for yourself."
             />
 
             {/* Numbered step grid. `<ol>` exposes the sequence to
