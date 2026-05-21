@@ -38,7 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Judge-facing hackathon surfaces. /demo/hackathon is the anchor
     // URL used in deck slides and outbound DMs (per
     // docs/distribution-kit.md), and /arkiv is the live entity list
-    // for the ETHLisbon Arkiv AI-theme entrant (PRs #620..#639).
+    // for the Network School Ethereum Hackathon Arkiv AI-theme entrant (PRs #620..#639).
     // Public, no auth required, returns honest empty state when no
     // entities have been published yet.
     { url: `${HOST}/demo/hackathon`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },

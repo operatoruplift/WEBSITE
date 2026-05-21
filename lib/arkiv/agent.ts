@@ -47,7 +47,7 @@ export type AgentPayload = z.infer<typeof AgentPayloadSchema>;
  * Publish (or republish) an agent identity card to Arkiv. Idempotent
  * by `slug` — if an entity already exists with the same slug under
  * our PROJECT_ATTRIBUTE, the caller should look it up first and
- * decide whether to update vs create a new one (per ETHLisbon skill
+ * decide whether to update vs create a new one (per Network School Ethereum Hackathon skill
  * pitfall 1.2, `updateEntity` is full-replace).
  *
  * Returns `{ entityKey, txHash }` so the caller can deep-link to the

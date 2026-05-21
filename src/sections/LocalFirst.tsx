@@ -189,7 +189,7 @@ const LocalFirst: React.FC = () => {
                             <span className="inline-flex items-center gap-2 text-sm text-foreground">
                                 <Layers aria-hidden className="w-4 h-4" /> 0G
                             </span>
-                            {/* Arkiv (ETHLisbon challenge entrant, AI theme):
+                            {/* Arkiv (Network School Ethereum Hackathon entrant, AI theme):
                                 /api/arkiv/agents + /api/arkiv/memories ship
                                 public read routes; /arkiv renders the judge
                                 demo. Honest empty state until the operator

@@ -39,7 +39,7 @@ test('robots.ts does NOT disallow /demo/hackathon', () => {
 });
 
 test('robots.ts does NOT disallow /arkiv', () => {
-    // The Arkiv ETHLisbon entrant demo page must be crawlable; it is
+    // The Arkiv Network School Ethereum Hackathon entrant demo page must be crawlable; it is
     // explicitly listed in app/sitemap.ts as a discoverable surface.
     expect(robotsSrc).not.toMatch(/['"]\/arkiv['"]/);
 });

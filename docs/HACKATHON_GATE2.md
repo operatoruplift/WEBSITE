@@ -247,7 +247,7 @@ via `OG_AGENT_ID_CONTRACT`).
 
 ### Verifying agent identity + user-owned memory via Arkiv
 
-The ETHLisbon entrant (AI theme) adds a **third independent network**
+The Network School Ethereum Hackathon entrant (AI theme) adds a **third independent network**
 to the verifier story. Where 0G AgenticID stores the agent's hashed
 identity bytes inside an NFT, Arkiv publishes the **full agent card
 JSON + transferable session memory entities** as first-class entities
