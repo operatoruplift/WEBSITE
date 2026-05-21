@@ -155,13 +155,12 @@ test('/store leads with Helpers and free-in-beta pricing', async ({ page }) => {
 test('/pricing disambiguates personal vs team plans', async ({ page }) => {
     await page.goto('/pricing');
 
-    await expect(page.getByRole('heading', { name: /Pricing for teams/i })).toBeVisible({ timeout: 10_000 });
-    // 2026-05-21 Gamify Your Growth pivot. Personal plans line now
-    // says "start free or $14.99/month" (Phase 3); "Up to 10
-    // helpers" copy was retired with the Team tier rewrite in
-    // favor of "Org-wide goals, squads, and leaderboards."
-    await expect(page.getByText(/Personal plans start free/i)).toBeVisible();
-    await expect(page.getByText(/\$14\.99/i)).toBeVisible();
+    // v10 reframe: /pricing is now the org/B2B entry point with
+    // Operator Circle + Enterprise tiers. The header points users
+    // back to the homepage for the personal Free/Pro/Circle tiers.
+    await expect(page.getByRole('heading', { name: /Group accountability/i })).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(/Personal commitments live at/i)).toBeVisible();
+    await expect(page.getByText(/Free, Pro \$8\/mo, or Circle \$24\/mo/i)).toBeVisible();
 
     const body = await page.locator('body').innerText();
     assertNoBannedPhrases(body, '/pricing');
