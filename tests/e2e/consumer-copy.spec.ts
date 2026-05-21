@@ -164,9 +164,12 @@ test('/pricing disambiguates personal vs team plans', async ({ page }) => {
     await page.goto('/pricing');
 
     await expect(page.getByRole('heading', { name: /Pricing for teams/i })).toBeVisible({ timeout: 10_000 });
-    // Disambiguation line shipped in #161
+    // 2026-05-21 Gamify Your Growth pivot. Personal plans line now
+    // says "start free or $14.99/month" (Phase 3); "Up to 10
+    // helpers" copy was retired with the Team tier rewrite in
+    // favor of "Org-wide goals, squads, and leaderboards."
     await expect(page.getByText(/Personal plans start free/i)).toBeVisible();
-    await expect(page.getByText(/Up to 10 helpers/i)).toBeVisible();
+    await expect(page.getByText(/\$14\.99/i)).toBeVisible();
 
     const body = await page.locator('body').innerText();
     assertNoBannedPhrases(body, '/pricing');
