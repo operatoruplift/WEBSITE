@@ -11,15 +11,20 @@ test.describe.configure({ timeout: 90_000 });
  * Wave1-risks.spec.ts covers the dedicated /pricing page CTAs. This
  * spec covers the homepage Pricing section CTAs, which sit one
  * scroll above the Comparison table and are the primary signup
- * surface for a first-time visitor:
+ * surface for a first-time visitor.
+ *
+ * Updated 2026-05-21 for the waitlist pivot (PR #656). Operator
+ * directive: users should not be able to sign up bypassing the
+ * waitlist. The Pro tier CTA flipped from "Start Pro" -> /paywall
+ * to "Join the waitlist" -> /waitlist.
  *
  *   Free   -> /chat                  (Try the demo)
- *   Pro    -> /paywall               (Start Pro)
+ *   Pro    -> /waitlist              (Join the waitlist)
  *   Team   -> https://cal.com/...    (Book a call) -- Team pricing is custom
  *
- * If anyone reroutes "Start Pro" to /signup, /pricing, or removes
- * /paywall, the conversion path silently breaks — and the demo
- * recording's signup beat collapses with it.
+ * If anyone reroutes the Pro CTA back to /paywall, /signup, or /login
+ * without a waitlist gate, the pivot silently regresses and strangers
+ * can sign up bypassing the queue.
  */
 
 test('homepage Pricing "Try the demo" CTA points at /chat', async ({ page }) => {
@@ -29,15 +34,15 @@ test('homepage Pricing "Try the demo" CTA points at /chat', async ({ page }) => 
     expect(href).toBe('/chat');
 });
 
-test('homepage Pricing "Start Pro" CTA points at /paywall', async ({ page }) => {
+test('homepage Pricing Pro tier CTA points at /waitlist', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    // /paywall is the deposit-to-credit page (app/(auth)/paywall/page.tsx)
-    // and is the canonical Pro signup surface for both anonymous and
-    // logged-in visitors. usePrivy in the (auth) layout handles the
-    // post-login redirect.
-    const href = await page.getByRole('link', { name: /Start Pro/i }).first().getAttribute('href');
-    expect(href).toBe('/paywall');
+    // /waitlist is the canonical signup surface for the consumer Pro
+    // tier after the waitlist pivot (PR #656). The /paywall page
+    // still exists for invited users + the operator-side flow; the
+    // homepage Pricing card just stops sending strangers there.
+    const href = await page.getByRole('link', { name: /Join the waitlist/i }).first().getAttribute('href');
+    expect(href).toBe('/waitlist');
 });
 
 test('homepage Pricing "Book a call" CTA points at cal.com (Team is custom)', async ({ page }) => {
