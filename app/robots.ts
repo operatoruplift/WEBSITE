@@ -3,7 +3,7 @@ import { MetadataRoute } from 'next';
 /**
  * robots.txt config.
  *
- * Allow everything public (homepage, /pricing, /store, /docs, /blog,
+ * Allow everything public (homepage, /pricing, /docs, /blog,
  * /press-kit, /contact, /privacy, /terms, /demo/hackathon, /arkiv).
  * Disallow:
  *   - Dashboard routes (need auth, no value to crawlers, no public
