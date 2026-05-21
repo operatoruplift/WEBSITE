@@ -24,7 +24,7 @@ export const DOC_SECTIONS: DocEntry[] = [
     {
         slug: 'getting-started',
         title: 'Getting started',
-        summary: 'What Operator Uplift is and how to try it in 60 seconds.',
+        summary: 'What Operator Uplift is, the four-step commitment protocol, and what ships today.',
         group: 'Start here',
     },
     {
