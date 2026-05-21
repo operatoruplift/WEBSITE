@@ -179,32 +179,42 @@ function getArticleContent(id: string) {
         'balaji-pivot-advice': (
             <div className="space-y-6">
                 <p className="text-lg">Balaji looked at what I was building and told me to walk away.</p>
-                <p>This is specific, so I&apos;ll be specific. I showed him Operator Uplift in March: an AI operator with approval-gated tool calls, ed25519-signed receipts per action, and a roadmap toward a desktop+Ollama build for full local inference. He gave three pieces of advice, back to back, in the order he gave them.</p>
-                <p><strong>One.</strong> &quot;You&apos;re competing with Perplexity, OpenAI, Anthropic, and Google. Solo founder, no funding, walk away.&quot;</p>
-                <p><strong>Two.</strong> &quot;If you stay, your wedge isn&apos;t privacy. It&apos;s a professional class that has a confidentiality obligation and no product that respects it. Lawyers. Accountants. Therapists.&quot;</p>
-                <p><strong>Three.</strong> &quot;Whatever you ship, ship it on-chain. You&apos;re on Solana. Use Solana.&quot;</p>
-                <p>I disagreed on point one. I agreed on point two. I was already doing point three. Here&apos;s the honest breakdown of what I kept, what I changed, and what stayed the same.</p>
 
-                <h2>What I disagreed with</h2>
-                <p>I am not competing with Perplexity or ChatGPT. Those products are vertical search and assistant chat, respectively. Operator Uplift is an OS layer: the thing that runs underneath an assistant to give it approval-gated tool access, signed receipts, and local memory. The LLM is a dependency, not the product.</p>
-                <p>If you frame it as &quot;build a better ChatGPT,&quot; I should walk away. A solo founder can&apos;t beat a $100B company on model quality or inference latency. But I&apos;m not trying to. I&apos;m trying to build the trust and permissions layer they&apos;ll all eventually need.</p>
-                <p>That argument either holds up or it doesn&apos;t. Balaji wasn&apos;t convinced in March. That&apos;s fair. I&apos;m building to be convincing by the Colosseum demo day on May 14.</p>
+                <p>It was March. I showed him Operator Uplift: an AI assistant that drafts your email, schedules your meetings, and waits for your tap before it sends. Five minutes in, he gave me three pieces of advice, in the order they came out.</p>
 
-                <h2>What I agreed with and changed</h2>
-                <p>He was right about the wedge. I had been pitching &quot;local AI is better for privacy&quot; as a general-purpose message. That&apos;s a weak pitch because privacy-in-general is everybody&apos;s number three concern. But privacy <em>as a statutory obligation</em> is somebody&apos;s number one concern, every single day, on pain of losing their professional license.</p>
-                <p>So I cut the general privacy copy and rewrote the wedge around three professions: lawyers, accountants, therapists. The blog post on that reasoning is still up. Whether that wedge holds or needs to be retooled for consumers will be tested publicly after May 14.</p>
-                <p>I also took his on-chain advice to its logical end. Every tool action on Operator Uplift now produces an ed25519-signed receipt. Every five receipts, the Merkle root is published via our Anchor <code>publish_root</code> program on Solana devnet. The receipts and the public key are independently verifiable. Judges can export a receipt and check the signature with the key from <code>/api/receipts/public-key</code> without trusting me.</p>
+                <p><strong>One.</strong> Walk away. Solo founder, no funding, trying to beat Perplexity and OpenAI. He told me I was going to lose.</p>
 
-                <h2>What I changed that he didn&apos;t ask for</h2>
-                <p>Three things changed independently of his advice, worth noting because they followed the same diagnostic.</p>
-                <p><strong>Consumer-first onboarding.</strong> A professional-only wedge is too narrow for a Demo Day audience. So <code>/chat</code> is now reachable with zero signup in explicit Demo mode, with every action labeled simulated, and Real mode unlocks only when you have Google connected or an API key. That way the consumer demo and the professional product share the same UI but never fake the receipt layer.</p>
-                <p><strong>Explicit capability states.</strong> The codebase now carries <code>capability_google</code>, <code>capability_key</code>, and <code>capability_real</code> as first-class server-side flags. No path produces a receipt without <code>capability_real === true</code>. No path claims real execution unless the tool actually ran.</p>
-                <p><strong>Stub adapters labeled honestly.</strong> MagicBlock was on the shortlist for a faster settlement layer. We shipped the adapter interface but flagged it clearly as <em>Inactive</em> on the hackathon page because the real gateway isn&apos;t wired. No fake claims.</p>
+                <p><strong>Two.</strong> If you stay, do not pitch &quot;privacy.&quot; Find a profession that <em>has to</em> care, where a leak ends a career. Lawyers. Accountants. Therapists.</p>
+
+                <p><strong>Three.</strong> Whatever you ship, put it on-chain. You are on Solana. Use Solana.</p>
+
+                <p>I disagreed with one of them. I agreed with one. The third I was already doing. Here is what changed, in plain English.</p>
+
+                <h2>The one I disagreed with</h2>
+
+                <p>I am not building a better ChatGPT. I never was. The piece I am building is the layer underneath: the thing that asks before it sends, signs a receipt after, and keeps your history under your name instead of theirs. The model in the middle is replaceable.</p>
+
+                <p>If you frame it as &quot;solo founder fighting OpenAI on model quality,&quot; sure, walk away. But that is not the fight. The fight is whether the next AI assistant you use leaves you with proof of what it did, or just leaves you trusting a screenshot.</p>
+
+                <p>Balaji was not convinced. That is fair. I am building so the work itself is the argument.</p>
+
+                <h2>The one I agreed with</h2>
+
+                <p>He was right about the pitch. &quot;Privacy is better&quot; lands flat because privacy is most people&apos;s third or fourth concern. But when privacy is the difference between keeping a license and losing one, it stops being optional. A lawyer cannot paste a client file into ChatGPT without a serious problem. A therapist cannot put a session note in the cloud without a HIPAA conversation. An accountant cannot share a tax return with a model that might train on it.</p>
+
+                <p>So I cut the general &quot;privacy is good&quot; copy and pointed the product at the three professions where the answer to &quot;why does this matter&quot; writes itself. The longer version of that argument is in a separate post.</p>
+
+                <h2>The one I was already doing</h2>
+
+                <p>The on-chain part. Every action the assistant takes produces a signed record. Every five records, a fingerprint of all of them lands on a public chain. If we ever tried to quietly rewrite history, the chain would catch it.</p>
+
+                <p>The point was never to be a crypto product. The point was that &quot;trust me&quot; is not a feature; a record anyone can verify is.</p>
 
                 <h2>What I kept that he would have cut</h2>
-                <p>I kept the OS-layer framing. I kept going solo. I kept Operator Uplift as the name. I kept the plan to ship a Tauri desktop wrapper that can run local Ollama. None of those are market-tested yet. They&apos;ll be tested on May 14 and in the thirty days after.</p>
-                <p>I write this honestly because Balaji&apos;s critique was honest. If it turns out he was right and I&apos;m wrong, this post gets an addendum. If it turns out the wedge is narrower than professions and the real answer is consumer, the product is already built to pivot there without a rewrite. That part is deliberate.</p>
-                <p>The takeaway isn&apos;t &quot;listen to smart people.&quot; The takeaway is: listen, write down exactly what they said, separate the parts you believe from the parts you don&apos;t, and change the things that deserve to change. Then ship.</p>
+
+                <p>I kept going solo. I kept the name. I kept the framing that the assistant&apos;s job is to wait for your tap, not to be smarter than the room. None of those are proven yet. They get tested every week by every user who decides whether to come back the next day.</p>
+
+                <p>The takeaway is not &quot;listen to smart people.&quot; The takeaway is: listen, write down exactly what they said, separate the parts you believe from the parts you do not, and change the things that deserve to change. Then ship the rest.</p>
             </div>
         ),
         'governed-approvals': (
