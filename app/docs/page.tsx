@@ -5,6 +5,24 @@ import { DOC_SECTIONS } from '@/lib/docs/sections';
 export const metadata = {
     title: 'Help',
     description: 'How to get started, what the demo does, how approvals work, what your receipts mean, integrations, and troubleshooting.',
+    openGraph: {
+        title: 'Help, Operator Uplift',
+        description: 'How to get started, what the demo does, how approvals work, what your receipts mean, integrations, and troubleshooting.',
+        url: 'https://operatoruplift.com/docs',
+        type: 'website',
+        // Re-state /opengraph-image: Next.js shallow-merges openGraph
+        // so the parent layout's images array would otherwise be lost.
+        images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Operator Uplift, commitment infrastructure' }],
+    },
+    twitter: {
+        card: 'summary_large_image' as const,
+        title: 'Help, Operator Uplift',
+        description: 'How to get started, what the demo does, how approvals work, what your receipts mean, integrations, and troubleshooting.',
+        images: ['/opengraph-image'],
+    },
+    alternates: {
+        canonical: '/docs',
+    },
 };
 
 /**
