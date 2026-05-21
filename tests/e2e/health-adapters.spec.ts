@@ -72,4 +72,9 @@ test('GET never leaks secrets in the 401 body', async ({ request }) => {
     // against accidental string-concat into the envelope.
     expect(body).not.toMatch(/OG_PRIVATE_KEY/);
     expect(body).not.toMatch(/\b0x[a-fA-F0-9]{64}\b/);
+    // PR #639 added an arkiv adapter row. ARKIV_PRIVATE_KEY is the
+    // wallet key for Braga testnet writes. Same secp256k1 shape as
+    // OG_PRIVATE_KEY (guarded above) but call it out explicitly so
+    // a future refactor of the env-var name still hits an assertion.
+    expect(body).not.toMatch(/ARKIV_PRIVATE_KEY/);
 });
