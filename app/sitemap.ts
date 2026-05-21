@@ -28,6 +28,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Public product surfaces in roughly the order a consumer follows.
     // /product was retired in #308, the homepage is now the single
     // source of truth for "what does this do?"
+    // 2026-05-21 Gamify Your Growth pivot: /waitlist is the primary
+    // conversion surface until the paid Pro page ships in Phase 8.
+    { url: `${HOST}/waitlist`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${HOST}/pricing`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     // /store surfaces the LIVE_AGENTS registry. Higher priority than
     // /docs/blog because it's a direct conversion path: each helper

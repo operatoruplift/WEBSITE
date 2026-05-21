@@ -10,15 +10,12 @@ const Navbar: React.FC<NavbarProps> = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const navItems = [
-    // April 30 2026 trim, second pass. WATCH DEMO was redundant: the
-    // homepage hero already has a "Watch 90s demo" anchor, and a nav
-    // duplicate of that just clutters the bar. Pricing + FAQ remain
-    // because they answer two distinct first-visit questions.
-    //
-    // May 2026: iMessage agent landing page (PR #407) added so a
-    // visitor who arrives via "text the bot" copy doesn't have to
-    // hunt through the homepage to find the relevant pitch.
-    { name: 'iMESSAGE', targetId: 'imessage', href: '/imessage' },
+    // 2026-05-21 Gamify Your Growth pivot. The "iMESSAGE" entry sold
+    // a retired AI-assistant surface (texting the bot to send
+    // emails); the route still resolves but does not belong on the
+    // primary nav. WAITLIST replaces it as the conversion path for
+    // a first-time visitor. See docs/PIVOT_GAMIFY_GROWTH.md Phase 5.
+    { name: 'WAITLIST', targetId: 'waitlist', href: '/waitlist' },
     { name: 'PRICING', targetId: 'pricing', href: '/#pricing' },
     { name: 'BLOG', targetId: 'blog', href: '/blog' },
     { name: 'FAQ', targetId: 'faq', href: '/#faq' },
