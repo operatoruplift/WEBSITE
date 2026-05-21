@@ -168,3 +168,80 @@ The on-chain bonded-commitment feature from the LevelUp white paper is optional 
 - Norman doors (disabled-looking-enabled buttons, hover-no-href cards) stay banned.
 - Jakob's Law: email signup with autofocus, Enter submits, no surprises.
 - Plain English everywhere. The Operator Uplift voice in this pivot is the same voice as the simpler Arkiv + Balaji blog rewrites.
+
+---
+
+## v10 reframe (2026-05-21, evening update)
+
+Pitch deck v10 sharpens the v7 framing. Same tagline, harder voice, central economic mechanism. The codebase data model still calls the row a "goal" internally so we do not break every spec at once; the user-facing vocabulary swaps to "commitment."
+
+### What changes
+
+| Surface | v7 framing | v10 framing |
+|---|---|---|
+| Category | Personal development, gamified | **Commitment infrastructure** |
+| Audience | Gen Z + Millennials self-improvers | **The Hunters** — founders, athletes, high-performers, Network School demographic, crypto-native |
+| Protocol | Set goal → AI breaks it down → Show up → Adapt | **Declare → Stake → Honor → Watch** |
+| AI role | Personalized questline generator | **AI Game Master** that adjudicates check-ins |
+| Stakes | Optional, freeform text | **Required** for paid tiers, **financial loss aversion** in USDC or card, on-chain slashing |
+| Community | Squads, leaderboards | **Witnesses** (up to 1 free, up to 5 Pro, unlimited Circle) |
+| Pricing | Free + $14.99/mo Pro + Custom Team | **Free + $8/mo Operator Pro + $24/mo Operator Circle** |
+| Pitch | "Where ambition finally wins" | **"We don't sell motivation. We sell consequences."** |
+| Ask | $2.0M pre-seed | **$1.5M pre-seed SAFE** |
+| Numbers honesty | 78% / 7500 / 50 aspirational | **53 sales in 3 hours at $5 USDC** — real wedge proof |
+| Eyebrow style | "PERSONAL DEVELOPMENT, GAMIFIED" | `// COMMITMENT INFRASTRUCTURE` (code-comment vibe) |
+| Final CTA | "Where ambition finally wins" | **"Declare. Stake. Honor. Watch."** |
+
+### Voice
+
+- "The honor system is dead. The post-willpower era."
+- "Users are starving for enforcement."
+- "We don't sell motivation. We sell consequences."
+- "No skin, no game."
+- "Operator-grade rituals, real check-ins, no guru talk."
+- "By continuing you agree to keep your word."
+
+### Vocabulary (user-facing)
+
+| Old | New |
+|---|---|
+| goal | commitment |
+| check in | check in (verb) / honor (when describing the act) |
+| questline | questline (still fine; less emphasis) |
+| AI co-pilot | **AI Game Master** |
+| squad | **witnesses** |
+| ambitious operator | **Hunter** or **operator** |
+| streak | streak (kept; central) |
+| stakes (optional text) | **stake** (real money, USDC or card) |
+
+### Honest numbers rule (still applies)
+
+The deck v10 cites real traction: **53 waitlist sales in 3 hours at $5 USDC each** before a line of code was written. That number is *real* and *defensible* — it can ship on the live site once we add the right context (target audience, what they paid for, no implication of paid product users).
+
+Deck-only aspirational figures stay off the live site. The discipline is the same as v7; only the canonical numbers are different.
+
+### Pricing column (v10)
+
+| Tier | Price | Limits |
+|---|---|---|
+| Operator Free | $0/mo | 1 active commitment, daily check-in, up to 1 witness, no stakes |
+| Operator Pro | $8/mo | Unlimited commitments + money stakes + up to 5 witnesses + heatmap + on-chain receipts |
+| Operator Circle | $24/mo | Everything in Pro + group commitments + shared progress board + coach role + analytics |
+
+Margin: 95%+ automated (AI verification + Solana settlement = no human in the loop on most flows).
+
+### Founder (v10)
+
+Matthew Sim, solo founder. 13-year solo founder track record. Top-5 global pro esports. Trained in military school environments. The "why" line that stays in interviews: "I built this because I was tired of lying to myself."
+
+The v7 deck's 4 co-founders + 1 advisor framing is retired; the live /team page should be reduced to Matthew + advisor (Lubos Brzobohaty) in a follow-up commit.
+
+### Surfaces that already absorbed v10
+
+- Hero eyebrow → `// COMMITMENT INFRASTRUCTURE`
+- Hero subhead → "The honor system is dead. Declare what you'll do. Stake real money on it..."
+- HowItWorks → DECLARE / STAKE / HONOR / WATCH
+- LocalFirst → "Users are starving for enforcement" / "We don't sell motivation, we sell consequences"
+- Pricing → Operator Free / Pro $8 / Circle $24
+- FinalCta → "Declare. Stake. Honor. Watch."
+- Meta + OG + Twitter + JSON-LD → commitment infrastructure framing

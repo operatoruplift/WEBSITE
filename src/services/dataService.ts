@@ -10,9 +10,9 @@ import { AppData } from '@/lib/types';
  */
 export const APP_CONTENT: AppData = {
   hero: {
-    visionTag: "PERSONAL DEVELOPMENT, GAMIFIED",
+    visionTag: "// COMMITMENT INFRASTRUCTURE",
     headline: "Keep your word. Bet on yourself.",
-    subhead: "AI-powered personal development for Gen Z and Millennials. Tell us the ambition. The AI breaks it into a step-by-step questline. You show up daily. Streaks, badges, and a community that keeps you coming back.",
+    subhead: "The honor system is dead. Declare what you'll do. Stake real money on it. Get daily check-ins judged by an AI Game Master. See progress you can't fake.",
   },
   contact: {
     tag: "GET IN TOUCH",

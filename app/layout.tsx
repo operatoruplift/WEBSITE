@@ -24,24 +24,24 @@ export const metadata: Metadata = {
   // this template ensures their titles still carry the brand for
   // search results and social previews.
   title: {
-    default: "Operator Uplift, gamify your growth with AI",
+    default: "Operator Uplift, commitment infrastructure",
     template: "%s | Operator Uplift",
   },
-  description: "Keep your word. Bet on yourself. AI-powered personal development for Gen Z and Millennials. Set a goal, the AI breaks it into a step-by-step questline, you show up daily, and a community keeps you coming back.",
-  keywords: ["personal development", "habit tracker", "goal setting", "accountability", "AI coach", "gamified learning", "AI personal development", "habit app", "behavioral AI", "productivity coach"],
+  description: "Keep your word. Bet on yourself. Commitment infrastructure for high-intent operators. Declare a commitment, stake real money on it, get daily check-ins judged by an AI Game Master, and settle on-chain.",
+  keywords: ["commitment infrastructure", "accountability protocol", "loss aversion", "habit stakes", "AI accountability", "on-chain commitments", "USDC stakes", "Solana accountability", "operator", "no-bullshit habits"],
   openGraph: {
-    title: "Operator Uplift, gamify your growth with AI",
-    description: "Keep your word. Bet on yourself. AI-powered personal development that turns ambition into action with commitments, check-ins, visible progress, and a community that keeps you coming back.",
+    title: "Operator Uplift, commitment infrastructure",
+    description: "Keep your word. Bet on yourself. We don't sell motivation, we sell consequences. Stake real money on your commitments. AI Game Master adjudicates. Settles on Solana.",
     url: "https://www.operatoruplift.com",
     siteName: "Operator Uplift",
     locale: "en_US",
     type: "website",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Operator Uplift, gamify your growth with AI" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Operator Uplift, commitment infrastructure" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Operator Uplift, gamify your growth with AI",
-    description: "Keep your word. Bet on yourself. AI-powered personal development that turns ambition into action.",
+    title: "Operator Uplift, commitment infrastructure",
+    description: "Keep your word. Bet on yourself. We don't sell motivation, we sell consequences.",
     creator: "@OperatorUplift",
     images: ["/opengraph-image"],
   },
@@ -108,7 +108,7 @@ export default function RootLayout({
                   "applicationCategory": "LifestyleApplication",
                   "operatingSystem": "Web",
                   "browserRequirements": "Requires a modern browser",
-                  "description": "AI-powered personal development for Gen Z and Millennials. Keep your word, bet on yourself. Turn your ambition into a daily habit with AI-built questlines, streaks, and a community that keeps you coming back.",
+                  "description": "Commitment infrastructure for high-intent operators. Keep your word, bet on yourself. Stake real money on your commitments, get daily check-ins adjudicated by an AI Game Master, and settle on Solana when you keep or break your word.",
                   "offers": {
                     "@type": "Offer",
                     "price": "0",

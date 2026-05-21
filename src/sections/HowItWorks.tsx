@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Target, Sparkles, Trophy, TrendingUp } from 'lucide-react';
+import { Target, DollarSign, CheckCircle2, Eye } from 'lucide-react';
 import { FadeIn } from '@/src/components/Animators';
 import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
@@ -31,26 +31,26 @@ const STEPS: Step[] = [
     {
         icon: Target,
         n: '01',
-        title: 'Set your goal',
-        body: 'Tell us the ambition. "Run a marathon." "Ship five days a week." "Read fourteen books this quarter." Big or small, vague or specific, the AI takes it from here.',
+        title: 'Declare',
+        body: 'Write the commitment in your own words. Specific enough that "did I do it?" is a yes or no. "Run four times this week." "Ship by Friday." "No alcohol for 30 days."',
     },
     {
-        icon: Sparkles,
+        icon: DollarSign,
         n: '02',
-        title: 'AI breaks it down',
-        body: 'The AI turns your goal into a step-by-step questline. Small daily actions, dated, attached to the right time of day. No more staring at a blank week.',
+        title: 'Stake',
+        body: 'Put real money on the line. USDC or card. If you miss, you lose it. Pick a witness who keeps you honest. The stake makes drift expensive instead of free.',
     },
     {
-        icon: Trophy,
+        icon: CheckCircle2,
         n: '03',
-        title: 'Show up daily',
-        body: 'Complete the daily quest. Build a streak. Earn badges. Optional stakes you set for yourself. A community cheers you on so motivation does not have to be a solo sport.',
+        title: 'Honor',
+        body: 'Daily check-in, one tap. An AI Game Master adjudicates so the streak only counts if it is true. Miss the mark and the stake slashes automatically. The honor system is dead; the protocol is alive.',
     },
     {
-        icon: TrendingUp,
+        icon: Eye,
         n: '04',
-        title: 'Adapt and achieve',
-        body: 'The platform learns what motivates you and where you stall, and adjusts. The plan gets better the longer you stick with it, until the habit becomes who you are.',
+        title: 'Watch',
+        body: 'Heatmap, streak history, settled stakes. Progress you cannot fake. Witnesses see the same view. Receipts are on-chain and verifiable, so a year from now you can prove what you actually did.',
     },
 ];
 
@@ -59,9 +59,9 @@ const HowItWorks: React.FC = () => {
         <Section id="how-it-works" ariaLabelledby="how-it-works-heading">
             <SectionHeader
                 headingId="how-it-works-heading"
-                eyebrow="How it works"
-                title="Turn your ambition into a daily habit"
-                description="Four steps. The AI does the planning. You do the showing up."
+                eyebrow="The protocol"
+                title="Declare. Stake. Honor. Watch."
+                description="Four steps for forced follow-through. We don't sell motivation. We sell consequences you choose for yourself."
             />
 
             {/* Numbered step grid. `<ol>` exposes the sequence to

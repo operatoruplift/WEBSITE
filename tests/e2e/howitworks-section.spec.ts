@@ -27,22 +27,22 @@ test('HowItWorks section eyebrow + title + description', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
     const section = page.locator('#how-it-works');
-    await expect(section).toContainText(/How it works/i);
-    await expect(section).toContainText(/Turn your ambition into a daily habit/i);
+    await expect(section).toContainText(/The protocol/i);
+    await expect(section).toContainText(/Declare\. Stake\. Honor\. Watch\./i);
     await expect(section).toContainText(/Four steps/i);
 });
 
-test('HowItWorks lists all four pivot steps as concrete verbs', async ({ page }) => {
+test('HowItWorks lists all four v10 protocol steps as imperative verbs', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
     const section = page.locator('#how-it-works');
-    // Each step name is a verb the operator actually performs. If
-    // anyone rewrites these as abstract jargon ("Discovery",
-    // "Optimization"), this fires.
-    await expect(section).toContainText(/Set your goal/i);
-    await expect(section).toContainText(/AI breaks it down/i);
-    await expect(section).toContainText(/Show up daily/i);
-    await expect(section).toContainText(/Adapt and achieve/i);
+    // v10 protocol: DECLARE / STAKE / HONOR / WATCH. Each is an
+    // action the operator performs. If anyone rewrites these as
+    // abstract jargon, this fires.
+    await expect(section).toContainText(/Declare/i);
+    await expect(section).toContainText(/Stake/i);
+    await expect(section).toContainText(/Honor/i);
+    await expect(section).toContainText(/Watch/i);
 });
 
 test('HowItWorks step numbers render as Step 01..04 in order', async ({ page }) => {

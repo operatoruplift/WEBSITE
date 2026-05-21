@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { TrendingDown, Compass, Brain, Heart, Users, Repeat } from 'lucide-react';
+import { TrendingDown, Compass, Repeat, DollarSign, Gavel, Eye } from 'lucide-react';
 import { FadeIn } from '@/src/components/Animators';
 import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
@@ -37,36 +37,36 @@ interface Reality {
 const PROBLEM_REALITIES: Reality[] = [
     {
         icon: TrendingDown,
-        title: 'Motivation fades fast',
-        body: 'Day one is easy. Day fourteen is when most people quit. The plan was never the issue. The follow-through was.',
+        title: 'Motivation is a leaky bucket',
+        body: 'Day one is easy. Day fourteen is when most people quit. Push notifications and streak emojis do nothing the moment things get hard.',
     },
     {
         icon: Compass,
-        title: 'Goals stay too big',
-        body: '"Get in shape." "Read more." "Launch the thing." Big ambitions never tell you what to do at 7am on a Tuesday.',
+        title: 'Apps trust the honor system',
+        body: 'Passive habit trackers and wellness apps assume you will self-report honestly. You will not. Not when the work is real and the cost of lying is zero.',
     },
     {
         icon: Repeat,
-        title: 'Generic apps do not adapt',
-        body: 'Streak counters and habit grids are the same for everyone. They do not learn what actually works for you and what does not.',
+        title: 'No skin, no game',
+        body: 'Without consequences, plans drift. High-intent operators are tired of failing themselves. They do not need another mood-board. They need a system that bites back.',
     },
 ];
 
 const SOLUTION_MECHANISMS: Reality[] = [
     {
-        icon: Brain,
-        title: 'AI that learns your patterns',
-        body: 'A behavioral model tracks what keeps you showing up and what makes you stall. The plan gets smarter the longer you use it.',
+        icon: DollarSign,
+        title: 'Financial loss aversion',
+        body: 'Stake real money on the commitment. USDC or card. Miss the mark and you lose it. Drift stops being free; follow-through stops being optional.',
     },
     {
-        icon: Heart,
-        title: 'Stakes you actually feel',
-        body: 'Optional commitments and rewards calibrated to you. Set the stakes you respond to. Make breaking the streak cost something.',
+        icon: Gavel,
+        title: 'AI Game Master adjudicates',
+        body: 'An impartial AI scores every check-in, with reasoning the operator can see. The streak only counts if it is true. No more lying to yourself by accident.',
     },
     {
-        icon: Users,
-        title: 'A community that pulls you back',
-        body: 'Squads, challenges, leaderboards. The days motivation runs out, accountability picks up. You do not have to want it every day.',
+        icon: Eye,
+        title: 'Verifiable, on-chain settlement',
+        body: 'Stakes settle on Solana automatically. Escrow, slashing, payout. Witnesses see the same view you do. A year from now you can prove what you actually did.',
     },
 ];
 
@@ -75,9 +75,9 @@ const LocalFirst: React.FC = () => {
         <Section id="local-first" ariaLabelledby="local-first-heading">
             <SectionHeader
                 headingId="local-first-heading"
-                eyebrow="The problem and the fix"
-                title="The motivation cliff is real. We built the fix."
-                description="Most people do not fail because they lack ambition. They fail because motivation fades, plans stay fuzzy, and nothing keeps them honest day after day. Operator Uplift turns intention into action with commitments, daily check-ins, visible progress, and a community that keeps you coming back."
+                eyebrow="// Post-willpower era"
+                title="The honor system is dead. The protocol is alive."
+                description="High-intent operators are drowning in options and starving for enforcement. Operator Uplift is the commitment protocol that replaces self-report and willpower with financial loss aversion, AI adjudication, and verifiable on-chain settlement."
             />
 
             {/* Two-column grid: Problem on the left, Solution on the
@@ -97,10 +97,10 @@ const LocalFirst: React.FC = () => {
                             </span>
                         </div>
                         <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 leading-tight">
-                            Most goals die in week two.
+                            Users are starving for enforcement.
                         </h3>
                         <p className="text-sm text-muted leading-relaxed mb-6">
-                            The intent was real. The system was not.
+                            The intent was real. The honor system was the problem.
                         </p>
                         <ul className="space-y-4 list-none p-0">
                             {PROBLEM_REALITIES.map((reality) => {
@@ -135,10 +135,10 @@ const LocalFirst: React.FC = () => {
                             </span>
                         </div>
                         <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 leading-tight">
-                            An AI co-pilot that adapts to you.
+                            We don't sell motivation. We sell consequences.
                         </h3>
                         <p className="text-sm text-muted leading-relaxed mb-6">
-                            The plan changes as you change. Motivation gets engineered, not wished for.
+                            Real money. Real adjudication. Real receipts. Forced follow-through, by design.
                         </p>
                         <ul className="space-y-4 list-none p-0">
                             {SOLUTION_MECHANISMS.map((mechanism) => {
@@ -178,7 +178,7 @@ const LocalFirst: React.FC = () => {
                             </span>
                         </div>
                         <p className="text-sm md:text-base text-foreground/90 leading-relaxed max-w-[820px]">
-                            If you have ever set a goal you meant, then watched it slip somewhere between week two and week six, this is for you. Operator Uplift is the platform where ambition finally wins.
+                            Founders, athletes, operators. The people who have already tried the streak apps and the journals and the accountability calls, and want a system that costs them when they slip. Operator Uplift is the protocol where ambition finally pays for itself.
                         </p>
                     </div>
                 </div>

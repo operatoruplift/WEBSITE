@@ -8,38 +8,40 @@ import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
 
 /**
- * Pricing tiers, Gamify Your Growth pivot.
+ * Pricing tiers, Commitment Infrastructure (v10).
  *
- * 2026-05-21 pivot. The B2C model from pitch deck v7 is freemium:
- * Free forever for the core loop, $14.99/month for premium coaching,
- * and Team / Enterprise quoted per seat. Source of truth:
- * docs/PIVOT_GAMIFY_GROWTH.md.
+ * 2026-05-21 pivot, v10 update. Pitch deck v10 reframes the tiers
+ * around the "Hunter" persona: high-intent operators who put real
+ * money on the line. Three tiers:
  *
- * Retired in this rewrite:
- *   - Pro $50/month AI-assistant subscription
- *   - "Real Gmail, real calendar, real receipts" framing
- *   - /paywall route as the Pro CTA target (waitlist now precedes
- *     a paid Pro page)
- *   - iMessage / model swap features (those products are dormant)
+ *   Operator Free   $0/mo   The gateway. One active commitment,
+ *                            up to 1 witness, no stakes.
+ *   Operator Pro    $8/mo   Unlimited commitments + real money
+ *                            stakes + up to 5 witnesses.
+ *   Operator Circle $24/mo  Group commitments + coach role +
+ *                            shared progress board.
  *
- * The Pro CTA points at /waitlist for now; once the operator-facing
- * dashboard ships in Phase 8 the Pro tier gets its own paid surface.
+ * Source of truth: docs/PIVOT_GAMIFY_GROWTH.md (the v7 pivot doc
+ * with a v10 appendix) and the v10 pitch deck.
+ *
+ * The Pro + Circle CTAs route to /waitlist until the operator-facing
+ * dashboard ships; the Free CTA points at /waitlist too so we capture
+ * intent on every tier.
  */
 const TIERS = [
     {
-        name: 'Free',
+        name: 'Operator Free',
         price: 'Free',
         period: 'forever',
-        description: 'The core loop, free for everyone, no card needed',
+        description: 'The gateway. Prove you can honor a single commitment before adding stakes.',
         icon: Shield,
         highlight: false,
         features: [
-            'Set a goal, the AI breaks it into a daily questline',
-            'Daily check-ins and streaks',
-            'Badges and a public progress page if you want one',
-            'Squad challenges with up to three friends',
-            'Community feed and weekly cohort posts',
-            'Friendly help on Discord',
+            '1 active commitment',
+            'Daily check-in with AI Game Master',
+            'Personal streak history',
+            'Up to 1 witness',
+            'No stakes yet, practice keeping your word before money goes on the line',
         ],
         cta: 'Join the waitlist',
         ctaLink: '/waitlist',
@@ -47,19 +49,19 @@ const TIERS = [
         ctaStyle: 'bg-foreground/5 hover:bg-foreground/10 border border-border text-white',
     },
     {
-        name: 'Pro',
-        price: '$14.99',
+        name: 'Operator Pro',
+        price: '$8',
         period: '/month',
-        description: 'Premium coaching for ambitious operators',
+        description: 'For the Hunters. Put real money on the line and track verifiable progress.',
         icon: Zap,
         highlight: true,
         features: [
-            'AI co-pilot that adapts to your behavior over time',
-            'Advanced analytics on what keeps you showing up',
-            'Personalized rewards and stakes calibrated to you',
-            'Larger squads and private cohorts up to twelve',
-            'Priority access to coaches and community challenges',
-            'Optional on-chain commitments for stake-on-yourself goals',
+            'Unlimited commitments',
+            'Money stakes in any amount (USDC or card)',
+            'AI Game Master verification + slashing',
+            'Up to 5 witnesses',
+            'Full 12-week heatmap and history',
+            'On-chain settlement receipts',
             'Email support with replies under one business day',
         ],
         cta: 'Join the waitlist',
@@ -68,23 +70,22 @@ const TIERS = [
         ctaStyle: 'bg-[#F97316] hover:bg-[#F97316]/90 text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]',
     },
     {
-        name: 'Team',
-        price: 'Custom',
-        period: '',
-        description: 'For orgs that want their team to grow on purpose. Wellness, productivity, and behavioral analytics with role-based access.',
+        name: 'Operator Circle',
+        price: '$24',
+        period: '/month',
+        description: 'For founders, athletes, and high-performance accountability groups. Skin in the game, together.',
         icon: Building2,
         highlight: false,
         features: [
-            'Everything in Pro for every seat',
-            'Org-wide goals, squads, and leaderboards',
-            'Wellness and engagement dashboards for managers',
-            'Single sign-on with Google, Microsoft, or Okta',
-            'Per-seat usage reports and admin role controls',
-            'A real person on email and a quarterly check-in',
-            'Pricing fit to your team size',
+            'Everything in Pro',
+            'Group commitments and shared stakes',
+            'Shared progress board for your circle',
+            'Coach role with cohort analytics',
+            'Unlimited witnesses across the circle',
+            'Priority Discord and email support',
         ],
-        cta: 'Book a call',
-        ctaLink: 'https://cal.com/rvaclassic',
+        cta: 'Join the waitlist',
+        ctaLink: '/waitlist',
         ctaIcon: ArrowRight,
         ctaStyle: 'bg-foreground/5 hover:bg-foreground/10 border border-border text-white',
     },
@@ -95,9 +96,9 @@ const Pricing: React.FC = () => {
         <Section id="pricing" ariaLabelledby="pricing-heading">
             <SectionHeader
                 headingId="pricing-heading"
-                eyebrow="Pricing"
-                title="Free to start. Pay when you want a coach."
-                description="The core loop is free forever. Pro is $14.99 a month for premium coaching. Team pricing is custom. Cancel any time."
+                eyebrow="// Incentivized integrity"
+                title="Free to honor your word. Pay to put money on it."
+                description="Start free and prove you can keep a single commitment. Add real stakes at $8 a month. Run a circle of operators at $24 a month. Cancel any time."
             />
 
             {/* Three pricing tiers. Promote to <ul>/<li> so screen

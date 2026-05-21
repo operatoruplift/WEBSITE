@@ -40,12 +40,16 @@ test('Hero headline is "Keep your word. Bet on yourself."', () => {
     expect(dataServiceSrc).toMatch(/headline:\s*"Keep your word\. Bet on yourself\."/);
 });
 
-test('Hero subhead names AI-powered personal development', () => {
-    expect(dataServiceSrc).toMatch(/AI-powered personal development for Gen Z and Millennials/);
+test('Hero subhead names the commitment-infrastructure protocol', () => {
+    // v10 reframe: was "AI-powered personal development for Gen Z and
+    // Millennials." Now leads with the post-willpower thesis and the
+    // four-step protocol primitives.
+    expect(dataServiceSrc).toMatch(/The honor system is dead/);
+    expect(dataServiceSrc).toMatch(/AI Game Master/);
 });
 
-test('Hero vision tag is PERSONAL DEVELOPMENT, GAMIFIED', () => {
-    expect(dataServiceSrc).toMatch(/visionTag:\s*"PERSONAL DEVELOPMENT, GAMIFIED"/);
+test('Hero vision tag is // COMMITMENT INFRASTRUCTURE', () => {
+    expect(dataServiceSrc).toMatch(/visionTag:\s*"\/\/ COMMITMENT INFRASTRUCTURE"/);
 });
 
 test('Hero primary CTA points at /waitlist (not /login or /paywall)', () => {
@@ -61,9 +65,10 @@ test('Hero no longer ships the retired AI-assistant CTAs', () => {
     expect(heroSrc).not.toContain('Watch 90s demo');
 });
 
-test('FinalCta headline reads "Where ambition finally wins."', () => {
-    expect(finalCtaSrc).toContain('Where ambition finally wins.');
+test('FinalCta headline reads "Declare. Stake. Honor. Watch."', () => {
+    expect(finalCtaSrc).toContain('Declare. Stake. Honor. Watch.');
     expect(finalCtaSrc).not.toContain('AI that runs on your terms.');
+    expect(finalCtaSrc).not.toContain('Where ambition finally wins.');
 });
 
 test('FinalCta primary CTA points at /waitlist', () => {
@@ -72,10 +77,12 @@ test('FinalCta primary CTA points at /waitlist', () => {
     expect(finalCtaSrc).not.toContain('Start free');
 });
 
-test('Root metadata leads with "gamify your growth with AI"', () => {
-    // OG + Twitter + default title all carry the new framing.
-    expect(layoutSrc).toMatch(/Operator Uplift, gamify your growth with AI/);
-    expect(layoutSrc).toContain('Keep your word. Bet on yourself.');
+test('Root metadata leads with "commitment infrastructure"', () => {
+    // v10 reframe: was "gamify your growth with AI". Now the
+    // canonical short-form one-liner is "commitment infrastructure".
+    expect(layoutSrc).toMatch(/Operator Uplift, commitment infrastructure/);
+    expect(layoutSrc).toContain('Keep your word');
+    expect(layoutSrc).not.toMatch(/gamify your growth/);
 });
 
 test('Root metadata description drops the retired Gmail/Calendar framing', () => {

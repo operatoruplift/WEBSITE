@@ -76,15 +76,14 @@ test('homepage hero shows the pivot pitch', async ({ page }) => {
 test('homepage shows the Problem + Solution section before the demo video', async ({ page }) => {
     await page.goto('/');
 
-    // 2026-05-21 Gamify Your Growth pivot. The #local-first section
-    // is now the Problem + Solution surface (The Motivation Cliff
-    // diagnosis + the AI Co-Pilot remedy). The id is kept stable for
-    // existing nav anchors and analytics; the file name will be
-    // renamed in Phase 4. Source of truth: docs/PIVOT_GAMIFY_GROWTH.md.
+    // 2026-05-21 v10 update. The #local-first section frames the
+    // problem as the post-willpower era and the solution as
+    // consequences over motivation. Source of truth:
+    // docs/PIVOT_GAMIFY_GROWTH.md (v10 reframe section).
     const localFirst = page.locator('#local-first');
     await expect(localFirst).toBeVisible({ timeout: 10_000 });
-    await expect(localFirst).toContainText(/The motivation cliff is real/i);
-    await expect(localFirst).toContainText(/An AI co-pilot that adapts to you/i);
+    await expect(localFirst).toContainText(/honor system is dead/i);
+    await expect(localFirst).toContainText(/We don't sell motivation/i);
     await expect(localFirst).toContainText(/Built for the ambitious/i);
 });
 
@@ -184,7 +183,7 @@ test('OG metadata leads with the pivot pitch', async ({ page }) => {
     // AI-assistant copy is gone, so a partial revert is caught.
     const description = await page.locator('meta[name="description"]').getAttribute('content');
     expect(description, 'meta description').toContain('Keep your word');
-    expect(description, 'meta description').toContain('personal development');
+    expect(description, 'meta description').toContain('Commitment infrastructure');
     expect(description, 'meta description').not.toContain('drafts your email');
     expect(description, 'meta description').not.toContain('Multi-agent orchestration');
     expect(description, 'meta description').not.toContain('Runs on your computer');
@@ -198,11 +197,12 @@ test('OG metadata leads with the pivot pitch', async ({ page }) => {
     expect(twitterDescription, 'twitter:description').not.toContain('Runs on your computer');
 
     const title = await page.title();
-    // 2026-05-21 Gamify Your Growth pivot. The canonical one-liner
-    // for short-form surfaces is now "gamify your growth with AI"
-    // (see app/layout.tsx and docs/PIVOT_GAMIFY_GROWTH.md).
-    expect(title.toLowerCase()).toContain('gamify your growth');
+    // 2026-05-21 v10 update. The canonical one-liner for short-form
+    // surfaces is now "commitment infrastructure" (see app/layout.tsx
+    // and docs/PIVOT_GAMIFY_GROWTH.md v10 reframe).
+    expect(title.toLowerCase()).toContain('commitment infrastructure');
     expect(title.toLowerCase()).not.toContain('runs on your terms');
+    expect(title.toLowerCase()).not.toContain('gamify your growth');
     expect(title).not.toContain('AI Operating System');
 });
 
@@ -214,8 +214,9 @@ test('JSON-LD structured data uses the pivot pitch', async ({ page }) => {
     await page.goto('/');
 
     const ldJson = await page.locator('script[type="application/ld+json"]').first().innerText();
-    expect(ldJson).toContain('personal development');
+    expect(ldJson).toContain('Commitment infrastructure');
     expect(ldJson).toContain('Keep your word');
+    expect(ldJson).toContain('AI Game Master');
     expect(ldJson).not.toContain('drafts your email');
     expect(ldJson).not.toContain('Local-first AI agent platform');
     expect(ldJson).not.toContain('autonomous agents');

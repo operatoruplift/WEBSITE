@@ -34,25 +34,27 @@ test.describe.configure({ timeout: 90_000 });
  * updating the deck, this spec catches it before merge.
  */
 
-test('homepage Pricing section shows Pro at $14.99/month', async ({ page }) => {
+test('homepage Pricing section shows Operator Pro at $8/month', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    // Find the Pro card via its name and assert price + period are visible
-    // within the same card container.
-    const proCard = page.locator('li').filter({ has: page.getByText(/^Pro$/) }).first();
+    // v10 reframe: Pro renamed to "Operator Pro" at $8/month
+    // (deck v10 slide 12). Locator filters on the full tier name so
+    // it does not collide with "Operator Circle" or "Operator Free".
+    const proCard = page.locator('li').filter({ has: page.getByText(/^Operator Pro$/) }).first();
     await expect(proCard).toBeVisible({ timeout: 10_000 });
-    await expect(proCard).toContainText('$14.99');
+    await expect(proCard).toContainText('$8');
     await expect(proCard).toContainText('/month');
 });
 
-test('homepage Pricing section shows Team at Custom pricing', async ({ page }) => {
+test('homepage Pricing section shows Operator Circle at $24/month', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    const teamCard = page.locator('li').filter({ has: page.getByText(/^Team$/) }).first();
-    await expect(teamCard).toBeVisible({ timeout: 10_000 });
-    await expect(teamCard).toContainText(/Custom/i);
-    // Description carries the "talk to us" cue + Book a call CTA.
-    await expect(teamCard).toContainText(/talk to us|book a call/i);
+    // v10 replaces the Custom "Team" tier with Operator Circle at
+    // $24/month for group commitments + coach role + shared progress.
+    const circleCard = page.locator('li').filter({ has: page.getByText(/^Operator Circle$/) }).first();
+    await expect(circleCard).toBeVisible({ timeout: 10_000 });
+    await expect(circleCard).toContainText('$24');
+    await expect(circleCard).toContainText('/month');
 });
 
 test('/pricing page shows Team at Custom pricing', async ({ page }) => {

@@ -27,16 +27,16 @@ const FinalCta: React.FC = () => {
             <FadeIn className="w-full max-w-[1100px]">
                 <div className="rounded-3xl border border-foreground/[0.08] bg-[#F7F6F0] px-8 md:px-16 py-16 md:py-24 flex flex-col items-center text-center">
                     <span className="text-xs font-mono tracking-[0.25em] text-foreground/60 uppercase mb-6">
-                        Ready when you are
+                        // By continuing you agree to keep your word
                     </span>
                     <h2
                         id="final-cta-heading"
                         className="text-3xl md:text-5xl font-medium text-foreground tracking-tight max-w-2xl mb-6 leading-[1.1]"
                     >
-                        Where ambition finally wins.
+                        Declare. Stake. Honor. Watch.
                     </h2>
                     <p className="text-muted leading-relaxed max-w-xl mb-10">
-                        Make a commitment. Set the goal. Get daily follow-up. See progress. Repeat until the habit sticks.
+                        The honor system is dead. The protocol is alive. Join the waitlist and we'll send your invite when the next batch opens.
                     </p>
                     <Link
                         href="/waitlist"
