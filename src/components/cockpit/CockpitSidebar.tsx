@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import {
-    MessageSquare, Activity, Puzzle, Shield, User, LogOut,
+    MessageSquare, Activity, Puzzle, Shield, User, LogOut, Target,
 } from 'lucide-react';
 import { Logo } from '@/src/components/Icons';
 import { cn } from '@/lib/utils';
@@ -25,6 +25,11 @@ interface DockItem {
 }
 
 const NAV_ITEMS: DockItem[] = [
+    // Goals leads the cockpit nav post-pivot (2026-05-21). The Gamify
+    // Your Growth dashboard is the primary surface; Chat / Swarm /
+    // Integrations stay reachable but live below it so a returning
+    // operator lands on their questline first.
+    { href: '/goals', label: 'Goals', icon: Target },
     { href: '/chat', label: 'Chat', icon: MessageSquare },
     { href: '/swarm', label: 'Swarm', icon: Activity },
     { href: '/integrations', label: 'Integrations', icon: Puzzle },
@@ -69,9 +74,11 @@ export function CockpitSidebar() {
 
     return (
         <aside className="w-14 flex-shrink-0 flex flex-col h-full relative z-20 border-r border-[#FAFAFA]/5 bg-[#0A0A0A]/50 hidden md:flex">
-            {/* Logo at top */}
+            {/* Logo at top. Points to /goals post-pivot so a returning
+                operator lands on their questline instead of the chat
+                surface from the retired AI-assistant product. */}
             <div className="flex items-center justify-center py-4">
-                <Link href="/chat" aria-label="Home">
+                <Link href="/goals" aria-label="Home">
                     <Logo className="w-7 h-7" />
                 </Link>
             </div>
