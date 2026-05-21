@@ -106,8 +106,8 @@ test('/paywall sells v10 Operator Pro features', async ({ page }) => {
     // the same benefits in the same order.
     await page.goto('/paywall');
 
-    await expect(page.getByText(/Unlimited commitments/i)).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByText(/AI Game Master/i)).toBeVisible();
+    await expect(page.getByText(/Unlimited commitments/i).first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(/AI Game Master/i).first()).toBeVisible();
     await expect(page.getByRole('heading', { name: /Pick a plan/i })).toBeVisible();
 
     // Mac-app-upcoming bullet retired with the rewrite; honesty
