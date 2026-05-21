@@ -3,17 +3,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 /**
- * Hero visual: an iMessage-style chat mockup that auto-cycles through
- * three consumer-facing scenarios (morning briefing, inbox triage,
- * reminder setup). Replaces the earlier canvas-driven HeroAnimation
- * which leaned developer (particles, phase labels, dashed boundaries).
+ * Hero visual: a chat mockup that auto-cycles through three Gamify
+ * Your Growth scenarios. Replaces the pre-pivot AI-assistant
+ * scenarios (morning briefing, inbox triage, reminder setup) that
+ * sold a retired product.
  *
- * Designed to mirror the three "consumer beat" demos the rest of the
- * site already pitches:
- *   1. "What's on my calendar today?"           -> morning briefing
- *   2. "Reply to mom about Sunday dinner"       -> inbox triage with
- *                                                  visible Approve tap
- *   3. "Wake me at 7 with weather + calendar"   -> reminder setup
+ * The three "operator beat" demos mirror the loop the rest of the
+ * site pitches:
+ *   1. "Set a goal"          -> AI breaks it into a questline
+ *   2. "Daily check-in"      -> streak ticks up, AI adapts
+ *   3. "Low-motivation day"  -> the squad pulls you back
  *
  * Each scenario plays for ~7 seconds, then the next one starts. The
  * loop pauses when the component scrolls offscreen via
@@ -43,28 +42,27 @@ interface Scenario {
 
 const SCENARIOS: Scenario[] = [
   {
-    title: 'Morning',
+    title: 'Set a goal',
     bubbles: [
-      { from: 'you',   text: "What's on my calendar today?" },
-      { from: 'agent', text: '9am gym. 2pm Sarah at Blue Bottle. 4pm sync with mom.' },
-      { from: 'agent', text: 'Want me to draft the agenda for the 4pm?' },
+      { from: 'you',   text: 'I want to run a half marathon in 12 weeks.' },
+      { from: 'agent', text: 'On it. Three runs a week, two strength days, one long Sunday run.' },
+      { from: 'agent', text: 'Tomorrow morning: 20 minutes easy. Ready?', approval: 'pending' },
     ],
   },
   {
-    title: 'Inbox',
+    title: 'Daily check-in',
     bubbles: [
-      { from: 'you',   text: "Reply to mom about Sunday dinner" },
-      { from: 'agent', text: '"Sounds great mom, see you at 6. Want me to bring dessert?", send?', approval: 'pending' },
-      { from: 'you',   text: 'send it' },
-      { from: 'agent', text: 'Sent. Receipt saved.', approval: 'sent' },
+      { from: 'agent', text: 'Day 14 streak. Today is the long run, 45 minutes.' },
+      { from: 'you',   text: 'done' },
+      { from: 'agent', text: 'Nice. That is your longest yet. Logged. Squad cheered.', approval: 'sent' },
     ],
   },
   {
-    title: 'Reminders',
+    title: 'Low day',
     bubbles: [
-      { from: 'you',   text: "Wake me at 7 with weather" },
-      { from: 'agent', text: 'Set for 7am tomorrow. Texting weather + your day.' },
-      { from: 'agent', text: 'Want a fun fact too? Most people say yes.' },
+      { from: 'you',   text: 'feeling rough today, want to skip' },
+      { from: 'agent', text: 'Cut it in half. 10 minutes. The streak stays alive.' },
+      { from: 'agent', text: 'Two of your squad already hit theirs. You got this.' },
     ],
   },
 ];

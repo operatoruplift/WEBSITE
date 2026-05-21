@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 import HeroMessages from '@/src/components/HeroMessages';
-import TrustedBy from '@/src/components/TrustedBy';
 import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn, GlideText } from '@/src/components/Animators';
 
@@ -87,10 +86,12 @@ const Hero: React.FC = () => {
             </div>
           </FadeIn>
 
-          {/* Works With Any Model (Marquee) */}
-          <FadeIn delay={1000}>
-            <TrustedBy />
-          </FadeIn>
+          {/* The "Built on the model you already pay for" model
+              marquee retired with the Gamify Your Growth pivot
+              (2026-05-21). The model-swap credibility signal was the
+              center of the AI-assistant pitch; the pivot leads with
+              behavioral AI as a single co-pilot, not a model menu.
+              See docs/PIVOT_GAMIFY_GROWTH.md Phase 4. */}
 
         </div>
 
