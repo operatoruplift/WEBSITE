@@ -41,18 +41,21 @@ test('/blog index titles the Arkiv post around user-owned memory', () => {
 
 test('/blog detail page renders the Arkiv article body', () => {
     expect(detailSrc).toMatch(/'arkiv-agent-memory-you-own'/);
-    expect(detailSrc).toContain('Agent identity cards');
-    expect(detailSrc).toContain('Session memory events');
+    // The simplified rewrite leads with the "found a way to let you
+    // keep your memory" hook + the deed/landlord property metaphor.
+    // These are the two phrases that carry the consumer story.
+    expect(detailSrc).toContain('keep your memory');
+    expect(detailSrc).toMatch(/deed.*builder|builder.*deed/i);
 });
 
-test('/blog Arkiv post is honest about the empty state', () => {
-    // Same rule that locks the /arkiv page: until the operator funds
-    // ARKIV_PRIVATE_KEY and runs the publish script, the entity list
-    // is empty. The blog post has to mirror that, not fabricate a
-    // launched dashboard. Catches the case where future copy edits
-    // accidentally upgrade the post from "honest empty state" to
-    // "look at all our published agents."
-    expect(detailSrc).toMatch(/honest empty state/i);
+test('/blog Arkiv post is honest about what is live today', () => {
+    // Same rule that locks the /arkiv page: until the operator flips
+    // the switch, the entity list is empty. The blog post has to
+    // mirror that, not fabricate a launched dashboard. The simplified
+    // rewrite carries this in the "Honest about what is live today"
+    // section header + the "no fake list, no placeholder rows" line.
+    expect(detailSrc).toMatch(/Honest about what is live today/i);
+    expect(detailSrc).toMatch(/no fake list/i);
 });
 
 test('/blog Arkiv post stays em-dash-free per the copy-check rule', () => {
