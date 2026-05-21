@@ -246,9 +246,17 @@ export default function GoalsPage() {
                                                     <Link href={`/goals/${g.id}`} className="text-base font-semibold text-foreground hover:text-[#F97316] transition-colors">
                                                         {g.title}
                                                     </Link>
-                                                    <div className="shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#F97316]/10 border border-[#F97316]/20 text-[10px] font-bold tracking-widest uppercase text-[#F97316]">
-                                                        <Flame aria-hidden className="w-3 h-3" />
-                                                        {g.streak} day{g.streak === 1 ? '' : 's'}
+                                                    <div className="shrink-0 flex items-center gap-2">
+                                                        {hasCheckinToday(g) && (
+                                                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-bold tracking-widest uppercase text-emerald-700">
+                                                                <CheckCircle2 aria-hidden className="w-3 h-3" />
+                                                                Today
+                                                            </span>
+                                                        )}
+                                                        <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#F97316]/10 border border-[#F97316]/20 text-[10px] font-bold tracking-widest uppercase text-[#F97316]">
+                                                            <Flame aria-hidden className="w-3 h-3" />
+                                                            {g.streak} day{g.streak === 1 ? '' : 's'}
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 {g.stakes && (
@@ -305,4 +313,16 @@ async function safeJson(res: Response): Promise<{ message?: string } | null> {
     } catch {
         return null;
     }
+}
+
+/** True when the goal has a non-skipped check-in for the local today. */
+function hasCheckinToday(goal: GoalWithMetrics): boolean {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+    return goal.recent_checkins.some(
+        (c) => c.checkin_date === todayStr && c.status !== 'skipped',
+    );
 }
