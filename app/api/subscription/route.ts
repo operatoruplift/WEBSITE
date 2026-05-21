@@ -95,7 +95,7 @@ export async function POST(request: Request) {
                 user_id: verified.userId,
                 tier: 'pro',
                 status: 'pending',
-                price_usdc: 19.00,
+                price_usdc: 50.00,
                 tx_signature: null,
                 invoice_reference: ref,
                 started_at: now.toISOString(),
@@ -107,7 +107,7 @@ export async function POST(request: Request) {
             return NextResponse.json({
                 status: 'pending',
                 invoice_reference: ref,
-                amount_usdc: 19.00,
+                amount_usdc: 50.00,
                 recipient: process.env.NEXT_PUBLIC_TREASURY_WALLET || 'UpL1ft11111111111111111111111111111111111111',
                 memo: `Operator Uplift Pro, ${verified.userId.slice(-8)}`,
             });
@@ -126,7 +126,7 @@ export async function POST(request: Request) {
                 user_id: verified.userId,
                 tier: 'pro',
                 status: 'active',
-                price_usdc: 19.00,
+                price_usdc: 50.00,
                 tx_signature: simulatedTx,
                 started_at: now.toISOString(),
                 expires_at: expiresAt.toISOString(),
