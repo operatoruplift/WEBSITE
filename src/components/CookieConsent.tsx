@@ -21,7 +21,6 @@ const MARKETING_PREFIXES = [
     '/press-kit',
     '/pricing',
     '/privacy',
-    '/store',
     '/terms',
 ];
 

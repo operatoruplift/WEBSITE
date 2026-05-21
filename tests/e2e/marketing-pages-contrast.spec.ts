@@ -106,9 +106,9 @@ test('/contact page heading reads on light surface', async ({ page }) => {
     await assertMarketingLightTheme(page, '/contact');
 });
 
-test('/store page heading reads on light surface', async ({ page }) => {
-    await assertMarketingLightTheme(page, '/store');
-});
+// /store was retired in the v10 reframe (Commitment Infrastructure
+// has no marketplace surface). If a v10 storefront surface ships
+// later, it should bring its own contrast test back.
 
 test('/not-real-route 404 reads on light surface', async ({ page }) => {
     // Triggers the global app/not-found.tsx render. The 404 page wraps
