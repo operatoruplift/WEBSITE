@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     default: "Operator Uplift, commitment infrastructure",
     template: "%s | Operator Uplift",
   },
-  description: "Keep your word. Bet on yourself. Commitment infrastructure for high-intent operators. Declare a commitment, stake real money on it, get daily check-ins judged by an AI Game Master, and settle on-chain.",
+  description: "Keep your word. Bet on yourself. Stake real money on your commitments. An AI Game Master adjudicates every check-in. Commitment infrastructure for operators.",
   keywords: ["commitment infrastructure", "accountability protocol", "loss aversion", "habit stakes", "AI accountability", "on-chain commitments", "USDC stakes", "Solana accountability", "operator", "no-bullshit habits"],
   openGraph: {
     title: "Operator Uplift, commitment infrastructure",
@@ -108,7 +108,7 @@ export default function RootLayout({
                   "applicationCategory": "LifestyleApplication",
                   "operatingSystem": "Web",
                   "browserRequirements": "Requires a modern browser",
-                  "description": "Commitment infrastructure for high-intent operators. Keep your word, bet on yourself. Stake real money on your commitments, get daily check-ins adjudicated by an AI Game Master, and settle on Solana when you keep or break your word.",
+                  "description": "Keep your word. Bet on yourself. Commitment infrastructure for operators. Stake real money on your commitments, get daily check-ins adjudicated by an AI Game Master, and settle on Solana when you keep or break your word.",
                   "offers": {
                     "@type": "Offer",
                     "price": "0",
