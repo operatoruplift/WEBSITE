@@ -17,7 +17,7 @@ export const posts: BlogPost[] = [
     {
         id: 'balaji-pivot-advice',
         title: 'Balaji told me to pivot. I didn\u2019t. Here\u2019s why.',
-        excerpt: 'He looked at what I was building and said walk away. I disagreed on the diagnosis, agreed on the wedge critique, and changed three things because of him. What I actually kept and what I actually cut.',
+        excerpt: 'Three pieces of advice in five minutes. I disagreed with one, agreed with one, was already doing one. Here is the story of what changed, what did not, and why.',
         date: 'April 17, 2026',
         readTime: '4 min read',
         category: 'announcement',
