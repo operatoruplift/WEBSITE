@@ -6,39 +6,39 @@ import { SectionHeader } from '@/src/components/SectionHeader';
 const faqs = [
   {
     q: 'What does Operator Uplift do?',
-    a: 'It\u2019s an AI assistant that handles the parts of your day you wish would just disappear, replying to email, scheduling meetings, sending follow-ups, reminding you to call your mom. Set it up once, then let it work in the background.',
+    a: 'It is commitment infrastructure for high-intent operators. You declare a commitment in your own words, stake real money on it, and an AI Game Master adjudicates every daily check-in. Honor it, your stake stays yours. Miss the mark, the stake slashes. The honor system is dead; this is what replaces it.',
   },
   {
-    q: 'How is this different from ChatGPT?',
-    a: 'ChatGPT only talks. Operator Uplift actually does things. It opens your inbox, drafts the reply, books the meeting, sends the message. Every one of those actions waits for your tap and produces a signed receipt you can scroll back through.',
+    q: 'How is this different from a habit tracker?',
+    a: 'Habit trackers trust the honor system. You self-report, push notifications nag, streaks reset, and nothing actually happens when you skip a day. Operator Uplift puts real money on the line and an AI adjudicator on the other side. Drift stops being free. Follow-through stops being optional.',
+  },
+  {
+    q: 'What does the AI Game Master actually do?',
+    a: 'It judges your check-ins. Did you do it, partially do it, or skip? Photo, GPS, integration data, or text where appropriate. Reasoning is streamed back to you so the verdict is never a black box. The point is to remove "I will be honest with myself" from the system, because most days, most operators are not.',
+  },
+  {
+    q: 'How do the money stakes work?',
+    a: 'You set the amount you can afford to lose. USDC or card. Funds sit in escrow while the commitment is active. Honor it: the money returns to you. Miss it: the stake slashes automatically and the recipient (a witness, a charity you chose, or back to the protocol) receives it. No manual chasing. No "let me just refund you this once."',
+  },
+  {
+    q: 'Who is a witness?',
+    a: 'Someone you invite to watch the commitment. Free tier gets 1 witness. Pro gets up to 5. Circle gets unlimited. Witnesses see the same dashboard you do: the streak, the check-ins, the receipts. The point is that "someone will know" is the oldest accountability mechanism and we are bringing it back, but with an AI adjudicator so you cannot lie to your friend either.',
   },
   {
     q: 'Is my data private?',
-    a: 'Today the web app routes through our servers and the AI provider you pick (Anthropic, OpenAI, Google, xAI, DeepSeek). We don\u2019t resell any of it; the third parties are listed in the privacy policy. The roadmap includes a desktop app that runs locally with Ollama. The whole codebase is MIT-licensed so anyone technical can verify how data moves.',
+    a: 'Your commitment text and check-in notes are yours. We do not sell them. The AI provider you pick (Anthropic) processes the adjudication; no training on your data. The signed-receipt rail (Solana settlement, Filecoin + 0G mirrors) is on by default for the Pro tier and proves what happened without exposing the contents. Read the privacy policy for the full breakdown.',
   },
   {
-    q: 'What\u2019s a signed receipt and why should I care?',
-    a: 'Every action your assistant takes (sending an email, creating a calendar event) produces a small record signed with our private key. They land on your /security page. Anyone can verify the signature with our public key, and every receipt also lives on two independent public storage networks (Filecoin and 0G testnet) so the proof outlives our database, even if our company goes away.',
+    q: 'How much does it cost?',
+    a: 'Free forever for 1 active commitment, 1 witness, no stakes. Operator Pro is $8 a month for unlimited commitments, money stakes, up to 5 witnesses, and on-chain settlement receipts. Operator Circle is $24 a month for group commitments, shared progress boards, and a coach role. Cancel any time.',
   },
   {
-    q: 'Which AI does it use?',
-    a: 'Whichever you want. Claude, ChatGPT, Gemini, Grok, and DeepSeek are wired in today, the same five hosted providers shown in the model marquee on the homepage. Open-source models on your laptop via Ollama (Llama, Mistral) run through the desktop app on the roadmap. Switch between any of the hosted ones with one click; it picks the best one for each task by default.',
+    q: 'What if I disagree with the AI Game Master?',
+    a: 'You appeal. The check-in flow surfaces an appeal button that lets a witness or a human operator review the disputed verdict. Stakes pause while the appeal is open. If the appeal upholds you, the streak counts. If it does not, the stake slashes as decided. The protocol is strict on purpose, but it is not a black box.',
   },
   {
-    q: 'How do I use it?',
-    a: 'Sign up on the website and you\u2019re working in about a minute. No setup files, no manuals. A free desktop app for Mac is in development with a beta planned for Q3 2026; Windows and Linux follow.',
-  },
-  {
-    q: 'What\u2019s an "agent"?',
-    a: 'A small AI helper trained for one job, like "reply to email" or "find me a hotel under $200." A "swarm" is a few helpers working together: one finds the hotel, another books it, a third adds it to your calendar. You don\u2019t think about it; it just happens.',
-  },
-  {
-    q: 'How much does it really cost?',
-    a: 'Pro is $50 a month, paid in USDC. Team pricing is custom, book a call from the Pricing section, we shape the plan around your seat count. Cancel any time. Per-action gas (a fraction of a cent on Solana) is on us; we don\u2019t pass it through.',
-  },
-  {
-    q: 'I\u2019m not a techie. Is this for me?',
-    a: 'Yes. Open it, connect your Gmail or Google Calendar, and start asking. No code, no setup, no manuals.',
+    q: 'I am not crypto-native. Can I still use this?',
+    a: 'Yes. Card payments work for stakes the same way they work anywhere else. The on-chain settlement is plumbing under the hood; you never have to touch a wallet unless you want to. The crypto-native path is there for operators who prefer USDC and self-custody, and it is opt-in only.',
   },
 ];
 
