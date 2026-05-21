@@ -150,16 +150,16 @@ The on-chain bonded-commitment feature from the LevelUp white paper is optional 
 
 ## Phased rollout
 
-| Phase | What ships | PR(s) |
+| Phase | What ships | Status |
 |---|---|---|
-| 1 | This doc + Hero copy swap + FinalCta swap + meta tags | this PR |
-| 2 | Problem / Solution / How-it-works sections rewritten | next PR |
-| 3 | Pricing section: $14.99/mo Pro, retire $50/mo, B2B + Platform API | next PR |
-| 4 | TrustedBy / LocalFirst sections rewritten or retired | next PR |
-| 5 | Retire `/chat`, `/integrations`, `/imessage` from nav + sitemap; legacy redirects | next PR |
-| 6 | Blog: pin the pivot post; retire AI-assistant posts as past-tense or remove | next PR |
-| 7 | New `/team` or `/about` page with the deck team | next PR |
-| 8 | First minimum viable "set a goal + check in" feature in the dashboard | bigger PR set |
+| 1 | This doc + Hero copy swap + FinalCta swap + meta tags | **shipped** in PR #657 |
+| 2 | HowItWorks questline + LocalFirst Problem/Solution + JSON-LD | **shipped** in PR #657 |
+| 3 | Pricing $14.99/mo coaching tier + retire $50 + freemium copy | **shipped** in PR #657 |
+| 4 | Retire TrustedBy model marquee + rewrite Hero chat scenarios | **shipped** in PR #657 |
+| 5 | Retire iMessage nav slot, surface /waitlist in nav + sitemap | **shipped** in PR #657 |
+| 6 | Pin pivot blog post, demote Balaji post, refund covenant | **shipped** in PR #657 |
+| 7 | /team page from deck v7 (founders + advisor + values + CTA) | **shipped** in PR #657 |
+| 8 | First minimum viable "set a goal + check in" dashboard feature | bigger PR set (next) |
 
 ## Honest copy rule (carried over from `UX_PRINCIPLES.md`)
 
