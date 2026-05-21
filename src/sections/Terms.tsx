@@ -12,7 +12,7 @@ const Terms: React.FC = () => {
         <div className="border-b border-foreground/10 pb-8 mb-12">
           <div className="text-xs font-bold tracking-[0.2em] text-primary uppercase mb-4">LEGAL</div>
           <h1 className="text-4xl md:text-5xl text-foreground font-medium tracking-tight">Terms of Service</h1>
-          <p className="text-muted mt-4 font-mono text-sm">Last Updated: April 2026</p>
+          <p className="text-muted mt-4 font-mono text-sm">Last Updated: May 2026</p>
         </div>
 
         <div className="space-y-6 leading-relaxed">
@@ -26,7 +26,7 @@ const Terms: React.FC = () => {
           <section>
             <h2 className="text-xl text-foreground font-bold mb-3">2. Description of Service</h2>
             <p>
-              Operator Uplift is an AI assistant that helps you with email, calendar, and similar daily work. You can install ready-made helpers or build your own. We reserve the right to modify, suspend, or discontinue the Service at any time.
+              Operator Uplift is a commitment infrastructure service that helps you set goals with financial stakes on yourself, run daily check-ins through an AI Game Master, and settle the outcome via signed receipts and on-chain anchoring. We reserve the right to modify, suspend, or discontinue the Service at any time.
             </p>
           </section>
 
