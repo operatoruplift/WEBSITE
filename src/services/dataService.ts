@@ -10,9 +10,9 @@ import { AppData } from '@/lib/types';
  */
 export const APP_CONTENT: AppData = {
   hero: {
-    visionTag: "AI ASSISTANT",
-    headline: "AI that runs on your terms.",
-    subhead: "Operator Uplift drafts your replies, schedules your meetings, and waits for your tap before sending anything.",
+    visionTag: "PERSONAL DEVELOPMENT, GAMIFIED",
+    headline: "Keep your word. Bet on yourself.",
+    subhead: "AI-powered personal development for Gen Z and Millennials. Tell us the ambition. The AI breaks it into a step-by-step questline. You show up daily. Streaks, badges, and a community that keeps you coming back.",
   },
   contact: {
     tag: "GET IN TOUCH",

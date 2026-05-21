@@ -24,24 +24,24 @@ export const metadata: Metadata = {
   // this template ensures their titles still carry the brand for
   // search results and social previews.
   title: {
-    default: "Operator Uplift, AI that runs on your terms",
+    default: "Operator Uplift, gamify your growth with AI",
     template: "%s | Operator Uplift",
   },
-  description: "An AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Approval before every action; signed receipt afterward.",
-  keywords: ["AI assistant", "email AI", "calendar AI", "AI inbox", "AI scheduler", "private AI", "Gmail AI", "Google Calendar AI", "AI for productivity", "personal AI"],
+  description: "Keep your word. Bet on yourself. AI-powered personal development for Gen Z and Millennials. Set a goal, the AI breaks it into a step-by-step questline, you show up daily, and a community keeps you coming back.",
+  keywords: ["personal development", "habit tracker", "goal setting", "accountability", "AI coach", "gamified learning", "AI personal development", "habit app", "behavioral AI", "productivity coach"],
   openGraph: {
-    title: "Operator Uplift, AI that runs on your terms",
-    description: "AI that drafts your email and schedules your meetings. Approval before every action; signed receipt afterward.",
+    title: "Operator Uplift, gamify your growth with AI",
+    description: "Keep your word. Bet on yourself. AI-powered personal development that turns ambition into action with commitments, check-ins, visible progress, and a community that keeps you coming back.",
     url: "https://www.operatoruplift.com",
     siteName: "Operator Uplift",
     locale: "en_US",
     type: "website",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Operator Uplift, AI that runs on your terms" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Operator Uplift, gamify your growth with AI" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Operator Uplift, AI that runs on your terms",
-    description: "AI that drafts your email and schedules your meetings. Approval before every action; signed receipt afterward.",
+    title: "Operator Uplift, gamify your growth with AI",
+    description: "Keep your word. Bet on yourself. AI-powered personal development that turns ambition into action.",
     creator: "@OperatorUplift",
     images: ["/opengraph-image"],
   },

@@ -33,16 +33,16 @@ const FinalCta: React.FC = () => {
                         id="final-cta-heading"
                         className="text-3xl md:text-5xl font-medium text-foreground tracking-tight max-w-2xl mb-6 leading-[1.1]"
                     >
-                        AI that runs on your terms.
+                        Where ambition finally wins.
                     </h2>
                     <p className="text-muted leading-relaxed max-w-xl mb-10">
-                        Connect Gmail in under a minute. Every action waits for your tap. Cancel any time.
+                        Make a commitment. Set the goal. Get daily follow-up. See progress. Repeat until the habit sticks.
                     </p>
                     <Link
-                        href="/login?returnTo=/integrations"
+                        href="/waitlist"
                         className="inline-flex items-center px-7 py-3.5 bg-primary text-white font-bold text-sm rounded-lg hover:bg-primary/90 transition-colors uppercase tracking-wide shadow-[0_0_24px_rgba(249,115,22,0.25)]"
                     >
-                        Start free
+                        Join the waitlist
                         <ArrowRight className="ml-2 w-4 h-4" aria-hidden="true" />
                     </Link>
                 </div>

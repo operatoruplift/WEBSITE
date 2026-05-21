@@ -74,15 +74,15 @@ const Hero: React.FC = () => {
               repetitive). Desktop installers stay reachable via /docs. */}
           <FadeIn delay={800}>
             <div className="flex flex-col sm:flex-row items-start gap-3 mb-4">
-              <Link href="/login?returnTo=/integrations"
+              <Link href="/waitlist"
                 className="inline-flex items-center px-6 py-3 bg-primary text-white font-bold text-sm rounded-lg hover:bg-primary/90 transition-colors uppercase tracking-wide shadow-[0_0_20px_rgba(249,115,22,0.25)]">
-                Sign in and connect Gmail
+                Join the waitlist
                 <svg aria-hidden="true" className="ml-2 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
               </Link>
-              <a href="#demo-video"
+              <a href="#how-it-works"
                 className="inline-flex items-center px-6 py-3 bg-foreground/5 text-foreground font-bold text-sm rounded-lg border border-foreground/10 hover:bg-foreground/10 transition-all uppercase tracking-wide">
-                <svg aria-hidden="true" className="mr-2 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3" /></svg>
-                Watch 90s demo
+                <svg aria-hidden="true" className="mr-2 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                See how it works
               </a>
             </div>
           </FadeIn>
