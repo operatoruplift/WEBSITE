@@ -11,6 +11,14 @@
  *
  * This is the static version of what would be an on-chain ERC-721
  * agent NFT, the NFT metadata would point at this URI.
+ *
+ * The same JSON is also mirrored onto the Arkiv Braga testnet as a
+ * typed entity once `pnpm arkiv:publish-agents` runs (lib/arkiv/
+ * agent.ts::publishAgent). That mirror is the ETHLisbon AI-theme
+ * entrant's identity-card surface. The Arkiv entity carries the
+ * SHA-256 checksum in its attributes so a judge can list all entities
+ * under the project key, click into one, and byte-compare against
+ * this URI. See docs/ARKIV_SUBMISSION.md for the full submission.
  */
 import crypto from 'crypto';
 import fs from 'fs';
