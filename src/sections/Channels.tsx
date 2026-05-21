@@ -31,19 +31,19 @@ interface Channel {
 const CHANNELS: Channel[] = [
     {
         name: 'iMessage',
-        blurb: 'Full agent loop, signed receipts, multi-turn memory.',
+        blurb: 'Daily check-in by text. The AI Game Master adjudicates from the thread, no app open required.',
         status: 'shipping',
         Icon: MessageSquare,
     },
     {
         name: 'Telegram',
-        blurb: 'Same assistant, same approval gate. Telegram chat instead of iMessage. We flip it on when traffic is rehearsed.',
+        blurb: 'Same adjudicator, same streak, same stakes. Telegram instead of iMessage for operators outside the Apple stack.',
         status: 'ready',
         Icon: Send,
     },
     {
         name: 'WhatsApp',
-        blurb: 'WhatsApp Business is wired the same way. The agent does not know which app you texted from, only the words.',
+        blurb: 'WhatsApp Business is wired the same way. The protocol does not know which app you checked in from, only the verdict.',
         status: 'ready',
         Icon: MessageCircle,
     },
@@ -65,9 +65,9 @@ const Channels: React.FC = () => {
         <Section id="channels" ariaLabelledby="channels-heading" innerClassName="max-w-[1100px]">
             <SectionHeader
                 headingId="channels-heading"
-                eyebrow="Channels"
-                title="Where the bot lives"
-                description="Open the messaging app you already use. The bot is whoever you text, no install, no separate inbox, no extra tab."
+                eyebrow="// Check-in channels"
+                title="Honor it wherever you are."
+                description="The check-in happens where your hands already are. Daily streak, real adjudication, no separate app to open."
             />
 
             <FadeIn className="w-full">

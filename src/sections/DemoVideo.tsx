@@ -82,13 +82,13 @@ export function DemoVideo() {
 
             <div className="flex flex-col items-center gap-3 pt-4">
                 <p className="text-xs text-muted font-mono text-center max-w-md">
-                    90 seconds. Nothing is real until you sign in.
+                    90 seconds. Money on the line, AI on the other side.
                 </p>
                 <Link
-                    href="/login?returnTo=/integrations"
+                    href="/waitlist"
                     className="inline-flex items-center h-11 px-6 bg-[#F97316] text-white rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-[#F97316]/90 transition-colors"
                 >
-                    Sign in and connect Gmail <ArrowRight aria-hidden="true" size={16} className="ml-2" />
+                    Join the waitlist <ArrowRight aria-hidden="true" size={16} className="ml-2" />
                 </Link>
             </div>
         </Section>
