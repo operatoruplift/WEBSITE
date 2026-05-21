@@ -11,21 +11,21 @@ import Link from 'next/link';
 const CONTENT: Record<string, React.ReactNode> = {
     'getting-started': (
         <>
-            <p className="lead">Operator Uplift is a personal AI operator for your inbox and calendar. Every action waits for your Approve click, and every real action leaves a signed receipt.</p>
+            <p className="lead">Operator Uplift is commitment infrastructure. You declare a goal with money on the line, an AI Game Master runs your daily check-ins, and the protocol settles your stake on-chain when you honor or miss the commitment.</p>
             <h2>Get started</h2>
             <ol>
-                <li>Sign in with Google at <a href="/integrations">/integrations</a> to connect Calendar and Gmail.</li>
-                <li>Open <a href="/chat">/chat</a> and type one of: <em>&quot;What&apos;s on my calendar today?&quot;</em>, <em>&quot;Draft replies to these 3 emails&quot;</em>, or <em>&quot;Schedule an iMessage nudge for tomorrow morning.&quot;</em></li>
-                <li>The Approve modal shows the action and its parameters. Click Approve to run.</li>
-                <li>Real actions produce a signed receipt visible at <a href="/security">/security</a>.</li>
+                <li><strong>Declare.</strong> Join the waitlist at <a href="/waitlist">/waitlist</a>. When the next cohort opens, you&apos;ll get an invite to set your first commitment with stake size and check-in cadence.</li>
+                <li><strong>Stake.</strong> Lock money against the goal. Miss a check-in and the stake is forfeit. Honor it and the stake comes back to you with the streak intact.</li>
+                <li><strong>Honor.</strong> The AI Game Master pings you over iMessage or web on the cadence you specified. Reply YES, NO, or a photo as evidence.</li>
+                <li><strong>Watch.</strong> Each settled check-in produces an ed25519-signed receipt at <a href="/security">/security</a>. Anchored on-chain so you can verify the streak record independently.</li>
             </ol>
             <h2>What ships today</h2>
             <ul>
-                <li>Google Calendar and Gmail tools behind per-action approval.</li>
-                <li>ed25519 signed receipts on <a href="/security">/security</a>, Merkle root published to Solana devnet every five actions, and two parallel public-storage mirrors (Filecoin via IPFS + 0G testnet via the indexer) so the receipt bytes outlive our database.</li>
+                <li>The protocol UI is in pre-launch. The waitlist accepts signups and the engineering primitives below are live and verifiable today.</li>
+                <li>ed25519 signed receipts on <a href="/security">/security</a>, Merkle root published to Solana devnet every five actions, and two parallel public-storage mirrors (Filecoin via IPFS + 0G testnet via the indexer) so the receipt bytes outlive our database. The same rail will carry commitment settlements when the product opens.</li>
                 <li>Agent identity cards and (opt-in) user-ownable session memories on Arkiv Braga testnet. Listed at <a href="/arkiv">/arkiv</a>; the bytes mirror <a href="/agents/calendar.json">/agents/calendar.json</a> and <a href="/agents/gmail.json">/agents/gmail.json</a>. The entity list reflects the live state and stays empty until the operator funds the Braga wallet and runs the publish script.</li>
-                <li>Daily 8am calendar briefing (opt-in from <a href="/profile">/profile</a>).</li>
-                <li>Tier 1 tools that don&apos;t need Google: web search, web fetch, notes, tasks, reminders.</li>
+                <li>iMessage check-in channel via the Photon transport with HMAC-signed webhook verification.</li>
+                <li>Legacy AI-assistant surfaces (the <a href="/chat">/chat</a>, <a href="/integrations">/integrations</a>, and Gmail/Calendar tool routes) still resolve so existing users keep working, but they are not on the marketing happy path anymore. See the May 21 pivot post for the full reframe.</li>
             </ul>
         </>
     ),
