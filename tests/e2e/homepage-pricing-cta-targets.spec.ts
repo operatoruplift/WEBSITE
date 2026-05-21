@@ -8,44 +8,48 @@ test.describe.configure({ timeout: 90_000 });
  * Locks in the homepage Pricing section CTA targets so a future
  * copy sweep doesn't silently break the conversion path.
  *
- * Wave1-risks.spec.ts covers the dedicated /pricing page CTAs. This
- * spec covers the homepage Pricing section CTAs, which sit one
- * scroll above the Comparison table and are the primary signup
- * surface for a first-time visitor:
+ * Post-pivot (2026-05-21 Gamify Your Growth) the Free and Pro
+ * tiers both funnel into /waitlist until the paid Pro surface
+ * ships in Phase 8. Team pricing is custom and goes straight to
+ * Cal.com so a team buyer can reach a human without first
+ * signing in.
  *
- *   Free   -> /chat                  (Try the demo)
- *   Pro    -> /paywall               (Start Pro)
- *   Team   -> https://cal.com/...    (Book a call) -- Team pricing is custom
+ *   Free   -> /waitlist               (Join the waitlist)
+ *   Pro    -> /waitlist               (Join the waitlist)
+ *   Team   -> https://cal.com/...     (Book a call)
  *
- * If anyone reroutes "Start Pro" to /signup, /pricing, or removes
- * /paywall, the conversion path silently breaks — and the demo
- * recording's signup beat collapses with it.
+ * Source of truth: docs/PIVOT_GAMIFY_GROWTH.md.
  */
 
-test('homepage Pricing "Try the demo" CTA points at /chat', async ({ page }) => {
+test('homepage Pricing Free tier CTA points at /waitlist', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    const href = await page.getByRole('link', { name: /Try the demo/i }).first().getAttribute('href');
-    expect(href).toBe('/chat');
+    // Scope to the homepage Pricing section so the assertion does not
+    // pick up the Hero waitlist CTA above.
+    const pricing = page.locator('#pricing');
+    await expect(pricing).toBeVisible({ timeout: 10_000 });
+
+    const freeCard = pricing.locator('li').filter({ has: page.getByText(/^Free$/) }).first();
+    const href = await freeCard.getByRole('link', { name: /Join the waitlist/i }).first().getAttribute('href');
+    expect(href).toBe('/waitlist');
 });
 
-test('homepage Pricing "Start Pro" CTA points at /paywall', async ({ page }) => {
+test('homepage Pricing Pro tier CTA points at /waitlist', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    // /paywall is the deposit-to-credit page (app/(auth)/paywall/page.tsx)
-    // and is the canonical Pro signup surface for both anonymous and
-    // logged-in visitors. usePrivy in the (auth) layout handles the
-    // post-login redirect.
-    const href = await page.getByRole('link', { name: /Start Pro/i }).first().getAttribute('href');
-    expect(href).toBe('/paywall');
+    // Pre-pivot this CTA pointed at /paywall. Phase 8 will reintroduce
+    // a paid Pro surface; until then the waitlist captures intent.
+    const pricing = page.locator('#pricing');
+    await expect(pricing).toBeVisible({ timeout: 10_000 });
+
+    const proCard = pricing.locator('li').filter({ has: page.getByText(/^Pro$/) }).first();
+    const href = await proCard.getByRole('link', { name: /Join the waitlist/i }).first().getAttribute('href');
+    expect(href).toBe('/waitlist');
 });
 
 test('homepage Pricing "Book a call" CTA points at cal.com (Team is custom)', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    // Team pricing is now custom (not $299/mo). The CTA goes straight
-    // to Cal.com so a team buyer can reach a human without first
-    // signing in. Previously this pointed at /login?returnTo=/paywall.
     const href = await page.getByRole('link', { name: /Book a call/i }).first().getAttribute('href');
     expect(href).toMatch(/cal\.com/);
 });

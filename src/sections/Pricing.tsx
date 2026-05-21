@@ -7,45 +7,63 @@ import { FadeIn } from '@/src/components/Animators';
 import { Section } from '@/src/components/Section';
 import { SectionHeader } from '@/src/components/SectionHeader';
 
+/**
+ * Pricing tiers, Gamify Your Growth pivot.
+ *
+ * 2026-05-21 pivot. The B2C model from pitch deck v7 is freemium:
+ * Free forever for the core loop, $14.99/month for premium coaching,
+ * and Team / Enterprise quoted per seat. Source of truth:
+ * docs/PIVOT_GAMIFY_GROWTH.md.
+ *
+ * Retired in this rewrite:
+ *   - Pro $50/month AI-assistant subscription
+ *   - "Real Gmail, real calendar, real receipts" framing
+ *   - /paywall route as the Pro CTA target (waitlist now precedes
+ *     a paid Pro page)
+ *   - iMessage / model swap features (those products are dormant)
+ *
+ * The Pro CTA points at /waitlist for now; once the operator-facing
+ * dashboard ships in Phase 8 the Pro tier gets its own paid surface.
+ */
 const TIERS = [
     {
         name: 'Free',
         price: 'Free',
         period: 'forever',
-        description: 'A taste of what your AI assistant can do',
+        description: 'The core loop, free for everyone, no card needed',
         icon: Shield,
         highlight: false,
         features: [
-            'Ready-made helpers for email, calendar, research, and more',
-            'Try /chat with no signup, simulated mode',
-            'Bring your own API key or sign in with Google for live mode',
-            'Approval gate before any send, draft, or booking',
-            'Free forever, no card needed',
+            'Set a goal, the AI breaks it into a daily questline',
+            'Daily check-ins and streaks',
+            'Badges and a public progress page if you want one',
+            'Squad challenges with up to three friends',
+            'Community feed and weekly cohort posts',
             'Friendly help on Discord',
         ],
-        cta: 'Try the demo',
-        ctaLink: '/chat',
+        cta: 'Join the waitlist',
+        ctaLink: '/waitlist',
         ctaIcon: ArrowRight,
         ctaStyle: 'bg-foreground/5 hover:bg-foreground/10 border border-border text-white',
     },
     {
         name: 'Pro',
-        price: '$50',
+        price: '$14.99',
         period: '/month',
-        description: 'Real Gmail, real calendar, real receipts',
+        description: 'Premium coaching for ambitious operators',
         icon: Zap,
         highlight: true,
         features: [
-            'Drafts emails from your one-line cue, you tap to send',
-            'Creates calendar events from iMessage or chat',
-            'Optional daily briefing pinned at the top of your chat every morning',
-            '5-turn rolling memory in iMessage, plus a daily summary that survives across model swaps',
-            'Pick the model per session: Claude, GPT, Gemini, Grok, DeepSeek',
-            'Every approved action signs an ed25519 receipt, anchored to Solana and mirrored to Filecoin',
-            'Email support, average reply under one business day',
+            'AI co-pilot that adapts to your behavior over time',
+            'Advanced analytics on what keeps you showing up',
+            'Personalized rewards and stakes calibrated to you',
+            'Larger squads and private cohorts up to twelve',
+            'Priority access to coaches and community challenges',
+            'Optional on-chain commitments for stake-on-yourself goals',
+            'Email support with replies under one business day',
         ],
-        cta: 'Start Pro',
-        ctaLink: '/paywall',
+        cta: 'Join the waitlist',
+        ctaLink: '/waitlist',
         ctaIcon: ArrowRight,
         ctaStyle: 'bg-[#F97316] hover:bg-[#F97316]/90 text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]',
     },
@@ -53,16 +71,16 @@ const TIERS = [
         name: 'Team',
         price: 'Custom',
         period: '',
-        description: 'For teams that need shared inbox, shared calendar, and admin controls. Pricing fits your seat count, talk to us.',
+        description: 'For orgs that want their team to grow on purpose. Wellness, productivity, and behavioral analytics with role-based access.',
         icon: Building2,
         highlight: false,
         features: [
             'Everything in Pro for every seat',
-            'Shared calendar, shared inbox, shared follow-ups',
-            'Custom OAuth tenant (Google, Microsoft, Okta)',
-            'Per-action audit log with role-based access',
+            'Org-wide goals, squads, and leaderboards',
+            'Wellness and engagement dashboards for managers',
+            'Single sign-on with Google, Microsoft, or Okta',
+            'Per-seat usage reports and admin role controls',
             'A real person on email and a quarterly check-in',
-            '99.9% uptime SLA in writing',
             'Pricing fit to your team size',
         ],
         cta: 'Book a call',
@@ -78,8 +96,8 @@ const Pricing: React.FC = () => {
             <SectionHeader
                 headingId="pricing-heading"
                 eyebrow="Pricing"
-                title="Pick a plan, start in a minute"
-                description="Start free. Pro at $50 a month. Team pricing is custom, book a call. Cancel any time."
+                title="Free to start. Pay when you want a coach."
+                description="The core loop is free forever. Pro is $14.99 a month for premium coaching. Team pricing is custom. Cancel any time."
             />
 
             {/* Three pricing tiers. Promote to <ul>/<li> so screen
@@ -127,9 +145,6 @@ const Pricing: React.FC = () => {
                                     <div className="mb-2">
                                         <span className="text-4xl font-bold text-foreground">{tier.price}</span>
                                         {tier.period && <span className="text-sm text-muted">{tier.period}</span>}
-                                        {tier.name === 'Pro' && (
-                                            <span className="ml-2 text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]">USDC</span>
-                                        )}
                                     </div>
                                     <p className="text-sm text-muted mb-6">{tier.description}</p>
 
