@@ -111,7 +111,7 @@ const Footer: React.FC = () => {
 
                 {/* Closing rule + copyright + version stamp. */}
                 <div className="mt-12 pt-6 border-t border-foreground/[0.06] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-[12px] text-muted/70 font-mono tracking-wide">
-                    <div>© 2026 Operator Uplift, Inc.</div>
+                    <div>© 2026 Operator Uplift, Inc. All rights reserved.</div>
                     <div className="flex flex-wrap gap-x-6 gap-y-2">
                         <Link href="/privacy" className="hover:text-foreground transition-colors">
                             Privacy
