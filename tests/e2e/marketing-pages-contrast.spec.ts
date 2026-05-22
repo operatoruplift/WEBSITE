@@ -82,12 +82,35 @@ async function assertMarketingLightTheme(page: import('@playwright/test').Page, 
     }
 }
 
-test('/ homepage reads on light surface', async ({ page }) => {
-    // The homepage is the primary marketing surface and the entry
-    // point most visitors land on. Cover it explicitly so a future
-    // change that drops `theme-light` from app/page.tsx (e.g. during
-    // a refactor) doesn't ship as an invisible regression.
-    await assertMarketingLightTheme(page, '/');
+// 2026-05-22 dark redesign (PR #675): the homepage flipped from the
+// light marketing palette to the design ref's dark palette (#0A0A0A
+// background, foreground white, orange primary). The light-surface
+// contrast contract no longer applies. /pricing, /press-kit, /blog,
+// /contact, /docs still ride the light marketing palette and remain
+// asserted below; when they convert to dark in follow-up PRs, drop
+// their assertions too.
+test('/ homepage uses the dark redesign palette', async ({ page }) => {
+    await page.goto('/');
+    // The homepage no longer wraps in `.theme-light`. Body computed
+    // background is the dark token (#0A0A0A) and the h1 reads in the
+    // light foreground (#FAFAFA). Lock both so a future revert to
+    // light catches.
+    const bodyBg = await page.evaluate(() => {
+        const html = document.documentElement;
+        const wrapper = html.querySelector('main')?.parentElement;
+        return wrapper ? getComputedStyle(wrapper).backgroundColor : '';
+    });
+    // Tailwind compiles `bg-background` -> the CSS var -> rgb(10, 10, 10).
+    // Allow either the rgb form or transparent (when the var resolves
+    // through inheritance from <body>).
+    expect(bodyBg, 'homepage wrapper background should be dark').toMatch(/rgb\(10,\s*10,\s*10\)|rgba\(0,\s*0,\s*0,\s*0\)/);
+
+    // Hero h1 colour. In dark mode the heading is the foreground
+    // token (#FAFAFA = rgb(250, 250, 250)).
+    const h1Color = await page.locator('#hero-heading').first().evaluate(
+        el => getComputedStyle(el).color,
+    );
+    expect(h1Color, 'hero h1 should render in the foreground token').toMatch(/rgb\(250,\s*250,\s*250\)/);
 });
 
 test('/pricing standalone page heading reads on light surface', async ({ page }) => {
