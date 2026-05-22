@@ -19,7 +19,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
         // reader users navigating by region. The red indicator SVG is
         // decorative chrome paired with the visible "Something went
         // wrong" heading; mark aria-hidden.
-        <main className="theme-light min-h-screen bg-background flex flex-col items-center justify-center px-6">
+        <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center px-6">
             <div className="text-center max-w-md">
                 <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center">
                     <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-400">
