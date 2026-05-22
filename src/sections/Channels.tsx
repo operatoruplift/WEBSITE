@@ -65,7 +65,9 @@ const Channels: React.FC = () => {
         <Section id="channels" ariaLabelledby="channels-heading" innerClassName="max-w-[1100px]">
             <SectionHeader
                 headingId="channels-heading"
-                eyebrow="// Check-in channels"
+                align="left"
+                numberPrefix="03"
+                eyebrow="Check-in channels"
                 title="Honor it wherever you are."
                 description="The check-in happens where your hands already are. Daily streak, real adjudication, no separate app to open."
             />

@@ -81,7 +81,9 @@ const Comparison: React.FC = () => {
             <div className="w-full max-w-[1100px] py-14 md:py-20 flex flex-col items-center gap-12">
                 <SectionHeader
                     headingId="comparison-heading"
-                    eyebrow="// Beyond the honor system"
+                    align="left"
+                    numberPrefix="05"
+                    eyebrow="Beyond the honor system"
                     title="Three ways to keep your word. One that works."
                     description="Passive apps trust you to self-report. Legacy stakes trust a referee and a card charge. Operator Uplift uses an AI Game Master and automated on-chain settlement. Pick your mechanism honestly."
                 />

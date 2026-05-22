@@ -75,7 +75,9 @@ const LocalFirst: React.FC = () => {
         <Section id="local-first" ariaLabelledby="local-first-heading">
             <SectionHeader
                 headingId="local-first-heading"
-                eyebrow="// Post-willpower era"
+                align="left"
+                numberPrefix="01"
+                eyebrow="The problem"
                 title="The honor system is dead. The protocol is alive."
                 description="High-intent operators are drowning in options and starving for enforcement. Operator Uplift is the commitment protocol that replaces self-report and willpower with financial loss aversion, AI adjudication, and verifiable on-chain settlement."
             />

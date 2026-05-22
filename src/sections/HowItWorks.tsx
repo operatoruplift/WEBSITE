@@ -54,42 +54,71 @@ const STEPS: Step[] = [
     },
 ];
 
+/**
+ * Each step renders a tiny ASCII transcript ("> commit \"run 4x/wk\"
+ * \n  ok") below the title + body, matching the design ref's per-step
+ * terminal echo. Keeps each step's flavour distinct even at small
+ * tile sizes.
+ */
+const STEP_ECHOES: Record<string, { cmd: string; out: string }> = {
+    '01': { cmd: '> commit "run 4×/wk"',  out: '  ok' },
+    '02': { cmd: '> stake $50 @maya',     out: '  locked' },
+    '03': { cmd: '> did you do it?',      out: '  yes / not yet' },
+    '04': { cmd: '> ██████▌░░░ 6 / 10',   out: '  honored' },
+};
+
 const HowItWorks: React.FC = () => {
     return (
         <Section id="how-it-works" ariaLabelledby="how-it-works-heading">
             <SectionHeader
                 headingId="how-it-works-heading"
+                align="left"
+                numberPrefix="02"
                 eyebrow="The protocol"
-                title="Declare. Stake. Honor. Watch."
-                description="Four steps for forced follow-through. We don't sell motivation. We sell consequences you choose for yourself."
+                title="Four steps. Repeat until the habit sticks."
+                description="The whole system fits on the back of a napkin. That is by design. We don't sell motivation. We sell consequences you choose for yourself."
             />
 
-            {/* Numbered step grid. `<ol>` exposes the sequence to
-                assistive tech as an ordered list; each `<li>` carries
-                one step's heading + body. The big oversized step
-                number is the visual anchor, the icon sits in a tinted
-                pill above the number, the heading + body follow. */}
-            <ol className="w-full max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 list-none p-0">
+            {/* Hairline grid: 1px gap on a foreground-tinted background
+                makes each step cell read as a panel inside a uniform
+                grid, exactly the design's `.steps` layout. */}
+            <ol
+                className="w-full max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 list-none p-0 mt-2"
+                style={{
+                    gap: '1px',
+                    background: 'rgba(255,255,255,0.12)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                }}
+            >
                 {STEPS.map((step, i) => {
                     const Icon = step.icon;
+                    const echo = STEP_ECHOES[step.n];
                     return (
-                        <li key={step.n}>
+                        <li key={step.n} className="bg-background min-h-[240px]">
                             <FadeIn delay={i * 80}>
-                                <div className="relative h-full rounded-2xl border border-border bg-card p-6 flex flex-col text-left">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center">
-                                            <Icon aria-hidden size={18} className="text-[#F97316]" />
-                                        </div>
-                                        <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#F97316]/70">
+                                <div className="h-full p-7 md:p-8 flex flex-col text-left">
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-mono text-[11px] tracking-[0.15em] text-primary uppercase">
                                             Step {step.n}
                                         </span>
+                                        <Icon aria-hidden size={14} className="text-primary/60" />
                                     </div>
-                                    <h3 className="text-lg font-semibold text-foreground mb-2">
+                                    <h3 className="mt-4 text-[22px] font-medium text-foreground tracking-[-0.02em] leading-snug">
                                         {step.title}
                                     </h3>
-                                    <p className="text-sm text-muted leading-relaxed">
+                                    <p className="mt-2 text-sm text-muted leading-relaxed">
                                         {step.body}
                                     </p>
+                                    {echo && (
+                                        <pre
+                                            className="mt-auto pt-5 font-mono text-[12px] leading-[1.4] text-muted/80"
+                                            aria-hidden="true"
+                                        >
+                                            <span>{echo.cmd}</span>
+                                            {'\n'}
+                                            <span className="text-primary">{echo.out}</span>
+                                        </pre>
+                                    )}
                                 </div>
                             </FadeIn>
                         </li>

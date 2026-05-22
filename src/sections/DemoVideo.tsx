@@ -37,9 +37,11 @@ export function DemoVideo() {
         <Section id="demo-video" ariaLabelledby="demo-video-heading">
             <SectionHeader
                 headingId="demo-video-heading"
+                align="left"
+                numberPrefix="04"
                 eyebrow="90 seconds"
-                title="Watch it actually work"
-                description="Three real things, your morning briefing, your inbox, your reminders. Recorded end-to-end. Every action waits for the tap."
+                title="Watch it actually work."
+                description="A real commitment, a real stake, a real check-in adjudicated by the AI Game Master. Recorded end-to-end. Every settlement signed and anchored."
             />
 
             <FadeIn>

@@ -4,9 +4,21 @@ import React from 'react';
 import { FadeIn } from '@/src/components/Animators';
 
 interface SectionHeaderProps {
+    /** Short label above the title (e.g. "The problem"). Renders in
+     * mono, accent-coloured, uppercase. */
     eyebrow?: string;
+    /** Optional zero-padded step number rendered before the eyebrow
+     * (e.g. "01" → "01 · The problem"). Mirrors the design ref's
+     * numbered section markers. */
+    numberPrefix?: string;
+    /** Main section title. */
     title: string;
+    /** Optional supporting paragraph. */
     description?: string;
+    /** Layout: "center" matches the legacy centered marketing header
+     * used across most homepage sections. "left" matches the design
+     * ref's left-aligned editorial pattern with a leading hairline. */
+    align?: 'center' | 'left';
     className?: string;
     /** Optional id for the rendered <h2>. Used by parent <section>s
      * that pair this header with `aria-labelledby="..."` to surface
@@ -15,33 +27,72 @@ interface SectionHeaderProps {
 }
 
 /**
- * Shared section header for marketing-site sections.
- * Enforces consistent max width, centering, spacing, and neutral accent.
+ * Shared section header for marketing-site sections. 2026-05-22 dark
+ * redesign: upgraded the type stack to the design ref's editorial
+ * scale (clamp 32-64px, weight 500, tight tracking) and added an
+ * optional `align="left"` + `numberPrefix` for sections that want
+ * the design's "01 · The problem" pattern. Default stays centered so
+ * existing call sites work unchanged.
+ *
+ * Source visual: /tmp/disrupt-onboarding/website.html (`.eyebrow`,
+ * `h2.section-title`, `.section-sub`).
  */
-export function SectionHeader({ eyebrow, title, description, className = '', headingId }: SectionHeaderProps) {
+export function SectionHeader({
+    eyebrow,
+    numberPrefix,
+    title,
+    description,
+    align = 'center',
+    className = '',
+    headingId,
+}: SectionHeaderProps) {
+    const isLeft = align === 'left';
     return (
         <FadeIn>
-            <div className={`text-center mb-12 mx-auto max-w-2xl ${className}`}>
+            <div
+                className={[
+                    'mb-12',
+                    isLeft ? 'text-left max-w-[1100px]' : 'text-center mx-auto max-w-2xl',
+                    className,
+                ].join(' ')}
+            >
                 {eyebrow && (
-                    <div className="inline-flex items-center gap-3 mb-4">
-                        <span className="h-px w-16 bg-[#F97316]/40" />
-                        <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">
-                            {eyebrow}
+                    <div
+                        className={[
+                            'inline-flex items-center gap-3 mb-5',
+                            'text-[13px] tracking-[0.1em] uppercase text-primary',
+                            'font-mono',
+                        ].join(' ')}
+                    >
+                        {isLeft ? (
+                            // Single leading hairline, matches the design's
+                            // .eyebrow::before pattern.
+                            <span className="h-px w-6 bg-primary inline-block" />
+                        ) : (
+                            <span className="h-px w-16 bg-primary/40" />
+                        )}
+                        <span>
+                            {numberPrefix ? `${numberPrefix} · ${eyebrow}` : eyebrow}
                         </span>
-                        <span className="h-px w-16 bg-[#F97316]/40" />
+                        {!isLeft && <span className="h-px w-16 bg-primary/40" />}
                     </div>
                 )}
-                {/* Subtle vertical gradient on the h2: foreground → 70%
-                 * opacity gives a faint depth read inspired by editorial
-                 * marketing sites (sully.ai). Falls back to the solid
-                 * `text-foreground` value for browsers that don't render
-                 * `bg-clip-text` (covered by `text-foreground` first), so
-                 * the title is never invisible. */}
-                <h2 id={headingId} className="text-3xl md:text-4xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] mb-4 tracking-tight">
+                <h2
+                    id={headingId}
+                    className={[
+                        'font-medium text-foreground tracking-[-0.035em] leading-[1.0]',
+                        'mb-5',
+                        isLeft ? '' : 'mx-auto',
+                    ].join(' ')}
+                    style={{ fontSize: 'clamp(32px, 5vw, 64px)', maxWidth: isLeft ? '900px' : undefined, textWrap: 'balance' as React.CSSProperties['textWrap'] }}
+                >
                     {title}
                 </h2>
                 {description && (
-                    <p className="text-muted leading-relaxed">
+                    <p
+                        className={['text-muted leading-relaxed', isLeft ? '' : 'mx-auto'].join(' ')}
+                        style={{ fontSize: 'clamp(15px, 1.4vw, 20px)', maxWidth: isLeft ? '720px' : undefined }}
+                    >
                         {description}
                     </p>
                 )}
