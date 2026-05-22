@@ -6,115 +6,134 @@ export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
 /**
- * Open Graph image, v10 reframe.
+ * Open Graph image, v2 design canvas refresh (2026-05-22).
  *
- * Previous version stacked a left text column + right "commitment card"
- * mockup with fake handle, day counters, streak bars, and a CTA pill.
- * At iMessage / Discord / Twitter preview sizes (~200x100, the card on
- * the right collapsed into unreadable mush, and the eyebrow `//
- * Commitment Infrastructure` dev-jargon prefix did not survive
- * downscaling either.
+ * Mirrors the OGCard board from the founder's v2 design canvas
+ * (/tmp/disrupt-onboarding-v2/index.html, lines 296-321):
  *
- * v10 OG is single-column, mega-headline first, supporting copy second.
- * Reads at any preview size:
- *   - 1200x630 social cards: clean and confident
- *   - 200x100 iMessage previews: the headline + brand still parse
- *   - LinkedIn 1200x627 cards: same
+ *   - dark bg with a square-grid masked backdrop
+ *   - soft accent radial in top-right
+ *   - brand row: OU logo + operator·uplift wordmark with accent "·"
+ *   - centered headline area: COMMITMENT INFRASTRUCTURE eyebrow +
+ *     "Keep your word. / Bet on yourself." (second line in accent)
+ *   - footer row: operatoruplift.com + iOS · ANDROID · WEB
  *
- * The four-step protocol sits at the bottom as a horizontal step strip
- * so the visual reinforces the deck story (DECLARE / STAKE / HONOR /
- * WATCH) without overloading the card.
+ * Earlier version (PR #670) carried a 4-step protocol pill strip at
+ * the bottom; v2 dropped that for simplicity. The new layout reads
+ * at any preview size (iMessage, Slack, LinkedIn, Twitter).
  */
 export default async function Image() {
     return new ImageResponse(
         (
             <div
                 style={{
-                    height: '100%',
                     width: '100%',
+                    height: '100%',
+                    background: '#0A0A0B',
+                    color: '#F4F4F5',
+                    fontFamily: 'system-ui, -apple-system, sans-serif',
+                    padding: '64px 72px',
+                    boxSizing: 'border-box',
+                    position: 'relative',
+                    overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
-                    backgroundColor: '#FAFAF9',
-                    fontFamily: 'system-ui, -apple-system, sans-serif',
-                    padding: '72px 80px',
-                    justifyContent: 'space-between',
                 }}
             >
-                {/* Top bar: logo + wordmark */}
+                {/* Square-grid backdrop with elliptical mask. */}
                 <div
                     style={{
+                        position: 'absolute',
+                        inset: 0,
+                        pointerEvents: 'none',
+                        backgroundImage:
+                            'linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)',
+                        backgroundSize: '48px 48px',
+                        maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, #000, transparent)',
+                    }}
+                />
+                {/* Soft accent radial in the top-right. */}
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '-30%',
+                        right: '-20%',
+                        width: 700,
+                        height: 700,
+                        background: 'radial-gradient(circle, rgba(249, 115, 22, 0.20), transparent 60%)',
+                        pointerEvents: 'none',
+                    }}
+                />
+
+                {/* Brand row: OU logo block + wordmark with accent "·". */}
+                <div
+                    style={{
+                        position: 'relative',
+                        zIndex: 1,
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 18,
+                        gap: 14,
                     }}
                 >
                     <div
                         style={{
-                            width: 56,
-                            height: 56,
+                            width: 44,
+                            height: 44,
                             background: '#F97316',
-                            borderRadius: 12,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            color: 'white',
+                            color: '#0A0A0B',
                             fontWeight: 900,
-                            fontSize: 26,
-                            letterSpacing: -1,
-                            boxShadow: '0 8px 24px rgba(249, 115, 22, 0.25)',
+                            fontSize: 20,
+                            letterSpacing: -0.5,
                         }}
                     >
                         OU
                     </div>
                     <div
                         style={{
+                            fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
+                            fontSize: 18,
+                            letterSpacing: '0.04em',
+                            color: '#F4F4F5',
                             display: 'flex',
-                            flexDirection: 'column',
                         }}
                     >
-                        <div
-                            style={{
-                                color: '#0A0A0A',
-                                fontSize: 22,
-                                fontWeight: 700,
-                                letterSpacing: -0.4,
-                                display: 'flex',
-                            }}
-                        >
-                            Operator Uplift
-                        </div>
-                        <div
-                            style={{
-                                color: '#737373',
-                                fontSize: 14,
-                                fontWeight: 600,
-                                letterSpacing: 2.5,
-                                textTransform: 'uppercase',
-                                fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
-                                marginTop: 2,
-                                display: 'flex',
-                            }}
-                        >
-                            Commitment Infrastructure
-                        </div>
+                        operator<span style={{ color: '#F97316', display: 'flex' }}>·</span>uplift
                     </div>
                 </div>
 
-                {/* Mega headline + subhead. Centered vertically by the
-                    parent's space-between layout. */}
+                {/* Centered headline. flex: 1 fills the space between
+                    brand row and footer row, centered vertically. */}
                 <div
                     style={{
+                        position: 'relative',
+                        zIndex: 1,
+                        flex: 1,
                         display: 'flex',
                         flexDirection: 'column',
+                        justifyContent: 'center',
                     }}
                 >
                     <div
                         style={{
-                            color: '#0A0A0A',
-                            fontSize: 108,
-                            fontWeight: 800,
-                            letterSpacing: -5,
-                            lineHeight: 0.95,
+                            fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
+                            fontSize: 16,
+                            color: '#F97316',
+                            letterSpacing: '0.14em',
+                            marginBottom: 22,
+                            display: 'flex',
+                        }}
+                    >
+                        // COMMITMENT INFRASTRUCTURE
+                    </div>
+                    <div
+                        style={{
+                            fontSize: 96,
+                            fontWeight: 500,
+                            letterSpacing: '-0.045em',
+                            lineHeight: 0.93,
                             display: 'flex',
                             flexDirection: 'column',
                         }}
@@ -122,69 +141,24 @@ export default async function Image() {
                         <div style={{ display: 'flex' }}>Keep your word.</div>
                         <div style={{ display: 'flex', color: '#F97316' }}>Bet on yourself.</div>
                     </div>
-                    <div
-                        style={{
-                            color: '#525252',
-                            fontSize: 24,
-                            fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
-                            lineHeight: 1.4,
-                            marginTop: 28,
-                            maxWidth: 920,
-                            display: 'flex',
-                        }}
-                    >
-                        Stake real money on what you say you&apos;ll do. An AI Game Master adjudicates every check-in. We don&apos;t sell motivation. We sell consequences.
-                    </div>
                 </div>
 
-                {/* Four-step protocol strip. Horizontal pills with
-                    arrows between so the deck story reads at a glance. */}
+                {/* Footer row: domain + platforms in mono. */}
                 <div
                     style={{
+                        position: 'relative',
+                        zIndex: 1,
                         display: 'flex',
-                        alignItems: 'center',
-                        gap: 10,
+                        justifyContent: 'space-between',
+                        alignItems: 'baseline',
                         fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
+                        fontSize: 17,
+                        color: '#71717A',
+                        letterSpacing: '0.06em',
                     }}
                 >
-                    {['DECLARE', 'STAKE', 'HONOR', 'WATCH'].map((step, i) => (
-                        <div
-                            key={step}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 10,
-                            }}
-                        >
-                            <div
-                                style={{
-                                    padding: '12px 22px',
-                                    background: i === 0 ? '#F97316' : 'transparent',
-                                    color: i === 0 ? 'white' : '#0A0A0A',
-                                    border: i === 0 ? 'none' : '1.5px solid #D4D4D4',
-                                    borderRadius: 999,
-                                    fontSize: 18,
-                                    fontWeight: 700,
-                                    letterSpacing: 3,
-                                    display: 'flex',
-                                }}
-                            >
-                                {step}
-                            </div>
-                            {i < 3 && (
-                                <div
-                                    style={{
-                                        color: '#A3A3A3',
-                                        fontSize: 22,
-                                        fontWeight: 700,
-                                        display: 'flex',
-                                    }}
-                                >
-                                    →
-                                </div>
-                            )}
-                        </div>
-                    ))}
+                    <div style={{ display: 'flex' }}>OPERATORUPLIFT.COM</div>
+                    <div style={{ display: 'flex', color: '#D4D4D8' }}>iOS · ANDROID · WEB · COMING SOON</div>
                 </div>
             </div>
         ),
