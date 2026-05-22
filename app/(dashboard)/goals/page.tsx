@@ -110,7 +110,7 @@ export default function GoalsPage() {
     };
 
     return (
-        <div className="theme-light min-h-screen bg-background text-foreground px-6 md:px-12 pt-10 pb-24">
+        <div className="min-h-screen bg-background text-foreground px-6 md:px-12 pt-10 pb-24">
             <div className="max-w-[1100px] mx-auto">
                 {/* Header */}
                 <header className="mb-10">

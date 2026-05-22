@@ -17,7 +17,12 @@ import { authedHeaders, requirePrivyToken, seedAuthedSession } from './_helpers'
  */
 
 test.describe('Paywall', () => {
-    test('blocks unauthenticated access to gated routes', async ({ page }) => {
+    // 2026-05-22 dashboard cleanup: /security and /chat are retired
+    // to RetiredSurface cards. They no longer gate (they render the
+    // retired card publicly) and there is no chat textarea / model
+    // selector to assert against. Skipping both. The paywall gating
+    // contract is still covered by the /paywall route's own spec.
+    test.skip('blocks unauthenticated access to gated routes', async ({ page }) => {
         // /chat is intentionally reachable in Demo mode, do NOT assert a redirect.
         // A genuinely gated route like /security must still gate.
         await page.goto('/security');
@@ -27,7 +32,7 @@ test.describe('Paywall', () => {
         });
     });
 
-    test('bypass user can access /chat directly', async ({ page, context }) => {
+    test.skip('bypass user can access /chat directly', async ({ page, context }) => {
         const token = requirePrivyToken();
         test.skip(!process.env.PLAYWRIGHT_BYPASS_EMAIL, 'PLAYWRIGHT_BYPASS_EMAIL not set');
 

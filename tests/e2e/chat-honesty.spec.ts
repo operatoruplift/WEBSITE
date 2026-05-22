@@ -43,7 +43,15 @@ const FORBIDDEN_PHRASES = [
     'payment settled',
 ];
 
-test('/chat renders no council wrapper + no fabricated tool transcripts', async ({ page }) => {
+// 2026-05-22 dashboard cleanup: /chat and /swarm were retired and
+// now render the RetiredSurface card. The chat-honesty assertions
+// below probed the live chat textarea + simulated indicator + swarm
+// preset cards, none of which exist on the retired stubs. Skipping
+// the three tests below; the broader "no LLM Council / Chairman /
+// Contrarian / Outsider on a public surface" contract is still
+// covered by tests/e2e/consumer-copy.spec.ts running against the
+// homepage and pricing routes.
+test.skip('/chat renders no council wrapper + no fabricated tool transcripts', async ({ page }) => {
     // Make /api/tools/calendar a fake 503 envelope so any accidental
     // write attempt lands on a known failure mode we can assert against.
     await page.route('**/api/tools/calendar', async (route) => {
@@ -85,7 +93,7 @@ test('/chat renders no council wrapper + no fabricated tool transcripts', async 
     }
 });
 
-test('chat header loading state does not say "5 agents debating"', async ({ page }) => {
+test.skip('chat header loading state does not say "5 agents debating"', async ({ page }) => {
     // The loading indicator used to switch between "Chat is thinking"
     // and "5 agents debating" based on a councilProcessing flag. The
     // flag is gone; the loading label must be the single model name.
@@ -118,7 +126,7 @@ test('paywall does not advertise the removed council feature', async ({ page }) 
     }
 });
 
-test('swarm presets do not include the fabricated council', async ({ page }) => {
+test.skip('swarm presets do not include the fabricated council', async ({ page }) => {
     // PR #156 removed the 'council' preset (Contrarian, First
     // Principles, Expansionist, Outsider, Chairman) from /swarm. Lock
     // it in. The page is dashboard-gated so we use the auth-bypass

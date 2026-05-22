@@ -35,7 +35,12 @@ function recordLeaks(page: import('@playwright/test').Page): string[] {
     return leaks;
 }
 
-test('simulated chat: only /api/chat is hit, exact canned briefing reply', async ({ page, context }) => {
+// 2026-05-22 dashboard cleanup: /chat retired to a RetiredSurface
+// card. The simulated-chat flow assertions below probed the live
+// chat textarea + canned briefing reply that no longer exist.
+// Skipping both tests; if a future PR resurrects /chat under the
+// commitment-infrastructure brand, restore these and re-baseline.
+test.skip('simulated chat: only /api/chat is hit, exact canned briefing reply', async ({ page, context }) => {
     // Belt-and-braces: anonymous visitor, no stale auth token. Server-side
     // canned replies arrive via /api/chat; nothing else should be called.
     await context.clearCookies();
@@ -82,7 +87,7 @@ test('simulated chat: only /api/chat is hit, exact canned briefing reply', async
     expect(leaks, `Demo mode leaked into non-/api/chat routes:\n${leaks.join('\n')}`).toEqual([]);
 });
 
-test('simulated chat: tool approval routes to executeMock (no extra network)', async ({ page }) => {
+test.skip('simulated chat: tool approval routes to executeMock (no extra network)', async ({ page }) => {
     const leaks = recordLeaks(page);
 
     await page.goto('/chat');
