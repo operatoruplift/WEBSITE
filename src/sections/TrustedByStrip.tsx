@@ -60,8 +60,8 @@ const TrustedByStrip: React.FC = () => {
         <section
             id="market-now"
             aria-labelledby="market-now-heading"
-            className="relative w-full border-y border-foreground/[0.07]"
-            style={{ padding: 'clamp(60px, 8vw, 96px) 24px' }}
+            className="relative w-full px-6 md:px-12 border-y border-foreground/[0.07]"
+            style={{ paddingTop: 'clamp(60px, 8vw, 96px)', paddingBottom: 'clamp(60px, 8vw, 96px)' }}
         >
             <div className="max-w-[1200px] mx-auto">
                 <FadeIn>

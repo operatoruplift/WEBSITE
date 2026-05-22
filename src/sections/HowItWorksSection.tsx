@@ -73,7 +73,7 @@ const HowItWorksSection: React.FC = () => {
             id="how-it-works"
             aria-labelledby="how-it-works-heading"
             className="relative w-full px-6 md:px-12 border-t border-foreground/[0.07]"
-            style={{ padding: 'clamp(80px, 12vw, 120px) 24px' }}
+            style={{ paddingTop: 'clamp(80px, 12vw, 120px)', paddingBottom: 'clamp(80px, 12vw, 120px)' }}
         >
             <div className="w-full max-w-[1280px] mx-auto">
                 <SlideHeader

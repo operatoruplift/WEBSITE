@@ -43,7 +43,7 @@ export function SlideHeader({
         <div
             className={[
                 'flex items-center justify-between',
-                'font-mono text-[10px] tracking-[0.16em] text-muted/70 uppercase',
+                'font-mono text-[11px] md:text-[12px] tracking-[0.16em] text-muted/80 uppercase',
                 'pb-6 mb-10 border-b border-foreground/[0.06]',
                 className,
             ].join(' ')}
@@ -86,7 +86,7 @@ export function SlideFooter({ section, stamp, className = '' }: SlideFooterProps
         <div
             className={[
                 'flex items-center justify-between',
-                'font-mono text-[10px] tracking-[0.16em] text-muted/55 uppercase',
+                'font-mono text-[11px] md:text-[12px] tracking-[0.16em] text-muted/65 uppercase',
                 'pt-6 mt-12 border-t border-foreground/[0.06]',
                 className,
             ].join(' ')}
