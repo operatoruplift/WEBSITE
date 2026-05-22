@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Logo } from './Icons';
+/**
+ * Brand mark uses the real hexagon-sparkle logo at
+ * /brand/operator-uplift-mark.png shipped in PR #701. The earlier
+ * `<Logo />` SVG was a generic dot placeholder. Plain <img> rather
+ * than next/image since the asset is tiny and we want zero
+ * optimization overhead in the navbar (renders on every page).
+ */
 
 interface NavbarProps {
   currentPage: string;
@@ -58,7 +64,13 @@ const Navbar: React.FC<NavbarProps> = () => {
           className="flex items-center gap-2.5 hover:opacity-90 transition-opacity z-50"
           aria-label="Operator Uplift home"
         >
-          <Logo className="w-7 h-7 md:w-8 md:h-8" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/operator-uplift-mark.png"
+            alt=""
+            aria-hidden="true"
+            className="w-7 h-7 md:w-8 md:h-8 object-contain"
+          />
           <span className="hidden sm:inline-flex items-baseline font-mono text-sm tracking-[0.02em] text-foreground">
             operator
             <span className="text-primary px-[2px]">·</span>

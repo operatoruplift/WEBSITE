@@ -1,6 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
-import { Logo } from './Icons';
+/**
+ * Brand mark uses the real hexagon-sparkle logo at
+ * /brand/operator-uplift-mark.png. The earlier `<Logo />` import
+ * was a generic dot placeholder. Plain <img> rather than next/image
+ * because the asset is small and we want zero optimization
+ * overhead in the footer.
+ */
 
 /**
  * Footer, 2026-05-22 v2-canvas refresh.
@@ -42,7 +48,13 @@ const Footer: React.FC = () => {
                             className="inline-flex items-center gap-2.5 hover:opacity-90 transition-opacity"
                             aria-label="Operator Uplift home"
                         >
-                            <Logo className="w-7 h-7" />
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src="/brand/operator-uplift-mark.png"
+                                alt=""
+                                aria-hidden="true"
+                                className="w-7 h-7 object-contain"
+                            />
                             <span className="inline-flex items-baseline font-mono text-sm tracking-[0.02em] text-foreground">
                                 operator
                                 <span className="text-primary px-[2px]">·</span>
