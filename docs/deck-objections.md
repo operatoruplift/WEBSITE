@@ -1,5 +1,7 @@
 # Demo-day deck + objection handling
 
+> **Historical artifact (2026-05-14 demo day).** This doc is the pitch + objection answers from the 0G APAC + Loops House + Network School demo-day cycle. It is the **AI-assistant brand** ("real assistant with signed receipts"), which was retired on 2026-05-22 in favour of the **commitment-infrastructure** brand. The trust-stack content (Solana audit roots, Filecoin + 0G Storage mirrors, Arkiv user-owned memory, AgenticID) is still accurate and now reads as the verifiable substrate underneath pooled-stakes accountability. For current brand voice + tagline + audience, read [`BRAND_COMMITMENT_INFRASTRUCTURE.md`](./BRAND_COMMITMENT_INFRASTRUCTURE.md) first; this doc remains as a snapshot of how the deck framed the company on demo day.
+
 Wave 7 deliverable. The four-part pitch, eight memorized objection answers, the surface map for the deck, and the final story alignment.
 
 ## The pitch (under 30 seconds, read out loud)

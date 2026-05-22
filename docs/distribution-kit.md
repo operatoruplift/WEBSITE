@@ -1,5 +1,7 @@
 # Distribution kit — first 100 users (Dragon's track #4)
 
+> **Historical artifact — AI-assistant era.** The targeting + outreach mechanics in this kit (DM 10/day, communities, manual outreach) are still useful. **The product framing is not**: the copy-paste templates pitch the retired AI-assistant brand ("real assistant with signed receipts"). Before sending any of these templates to a real person, rewrite the value prop to the current **commitment-infrastructure** brand: pooled-stakes accountability, "keep your word, bet on yourself," pooled redistribution + small protocol fee, wider audience (habit-builders, freelancers, creators, operators, service providers). See [`BRAND_COMMITMENT_INFRASTRUCTURE.md`](./BRAND_COMMITMENT_INFRASTRUCTURE.md) for the canonical voice. When this kit is rewritten end-to-end for the new brand, drop this banner.
+
 > "Early traction is won by doing things that don't scale. Go where your users already hang out, and reply one by one. DM 10 potential users a day. Drop your product where your audience is already gathered, and pull the first 100 real pieces of feedback out by hand. Boring, manual, high-leverage. Most founders skip this and wonder why nothing sticks." — Dragon
 
 This doc is **operator playbook + copy-paste assets**. I cannot post for you. I can give you the exact targets, exact templates, and the rules that keep us out of the spam bucket.

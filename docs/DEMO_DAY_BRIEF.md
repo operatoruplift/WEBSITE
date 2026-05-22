@@ -1,5 +1,7 @@
 # Demo Day — ordered build brief (P0 → P9)
 
+> **Historical artifact (Colosseum Demo Day 2026-05-14).** Brand voice = AI-assistant era. Retired 2026-05-22; current brand is commitment infrastructure, see [`BRAND_COMMITMENT_INFRASTRUCTURE.md`](./BRAND_COMMITMENT_INFRASTRUCTURE.md). Technical content (priority order, file paths, trust-stack milestones) is still accurate and useful as a build-cycle archive.
+
 Single source of truth for the May 14 Colosseum Demo Day PR. Earlier
 session notes repeated P6–P9 and P0–P5 in different orders and paired
 them with longer rationale; this file is the short, strict, ordered
