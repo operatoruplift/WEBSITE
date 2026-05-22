@@ -39,8 +39,17 @@ jobs:
 
       # Build must pass. The Next.js build is the authoritative gate
       # for "does the app compile + route-generate cleanly?"
+      #
+      # NODE_OPTIONS bumps the V8 old-space limit to 6GB. The default
+      # ~2GB heap was hitting "FATAL: Ineffective mark-compacts near
+      # heap limit Allocation failed" on PR runs as the app surface
+      # grew (~200 source files, ~50 routes). GitHub-hosted
+      # ubuntu-latest runners have 7GB total RAM, so 6GB gives the
+      # build comfortable headroom without exhausting the runner.
       - name: Build
         run: pnpm build
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
 
       # grep-guards (copy-check, capability-check, trust-gate) routed
       # through scripts/check.mjs. Blocking on master.
