@@ -216,7 +216,7 @@ Operator Uplift is an Arkiv Network School Ethereum Hackathon entrant under the 
 2. **Two entity types**:
    - `agent`: on-Arkiv mirror of `/agents/{slug}.json` (ERC-8004 identity card + sha256 checksum). Backend-written, reads filter by `.createdBy()` against the trusted creator wallet.
    - `memory-event`: one entry of an agent's conversation memory tied to a user, agent slug, and session. `$owner` defaults to the backend writer but can be transferred to the user's wallet so the platform loses update/delete permission while `$creator` (immutable) keeps the audit trail.
-3. Open-source repo (this one), MIT-licensed via Operator Uplift's existing license.
+3. Source-available repo for the hackathon judges only. The current HEAD ships under the proprietary [`LICENSE`](./LICENSE) (2026-05-22 forward); the commits dated for the Arkiv hackathon submission window are reviewable on request: email operatoruplift@gmail.com.
 4. Working demo link at [/arkiv](https://operatoruplift.com/arkiv) — honest empty state when no entities are published yet (same hide-when-NULL contract as Filecoin/0G).
 5. README setup (this section + `.env.local.example`).
 
@@ -276,9 +276,11 @@ This boots the app locally and surfaces the deployed live site for full function
 node -v   # → v20.x.x or higher
 pnpm -v   # → 9.x.x
 
-# 2. Clone + install
-git clone https://github.com/operatoruplift/website.git operatoruplift
-cd operatoruplift
+# 2. Install dependencies
+# Repo access is private (2026-05-22 forward); judges + authorized
+# reviewers receive a clone link by email after signing the
+# evaluation NDA. Operator Uplift, Inc. employees + contractors
+# already on the team should clone from the private remote as usual.
 pnpm install --frozen-lockfile
 
 # 3. Configure env vars
@@ -435,4 +437,4 @@ Pushes to `master` deploy automatically via Vercel. PR previews are generated fo
 
 ## License
 
-MIT.
+Proprietary. All rights reserved. See [`LICENSE`](./LICENSE) for the full notice. Operator Uplift, Inc. retired its prior MIT-licensed posture on 2026-05-22; the current HEAD ships under a proprietary license. Inquiries: operatoruplift@gmail.com.

@@ -214,14 +214,12 @@ export default function HackathonDemoPage() {
                             Start the demo <ArrowRight size={14} className="ml-2" />
                         </Link>
                         <p className="text-[11px] text-[#52525B] mt-3">
-                            Read the full technical writeup in{' '}
+                            Full technical writeup available on request. Email{' '}
                             <a
-                                href="https://github.com/operatoruplift/website/blob/master/docs/HACKATHON_GATE2.md"
-                                target="_blank"
-                                rel="noreferrer"
+                                href="mailto:operatoruplift@gmail.com?subject=HACKATHON_GATE2%20writeup"
                                 className="text-[#F08A4C] hover:underline"
                             >
-                                HACKATHON_GATE2.md
+                                operatoruplift@gmail.com
                             </a>
                             .
                         </p>

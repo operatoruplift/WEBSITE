@@ -1,21 +1,33 @@
-MIT License
+Operator Uplift, Inc.
+All rights reserved.
 
-Copyright (c) 2026 Operator Uplift
+Copyright (c) 2026 Operator Uplift, Inc.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This codebase is proprietary and confidential. All source files,
+configuration, documentation, design assets, and accompanying
+materials in this repository are owned by Operator Uplift, Inc.
+and are provided for internal Operator Uplift, Inc. development
+and authorized contractor use only.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+NO LICENSE IS GRANTED. The following actions are explicitly
+prohibited without prior written consent from Operator Uplift, Inc.:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+  - Public redistribution of any portion of this codebase.
+  - Use in derivative works, products, or services outside of
+    Operator Uplift, Inc.
+  - Reverse engineering, decompilation, or extraction of
+    proprietary patterns, copy, brand assets, or trust-stack
+    cryptographic infrastructure for use in competing products.
+  - Mirroring, forking, or copying to public source-hosting
+    services.
+
+Prior history of this repository (commits dated before 2026-05-22)
+that may have been published under an MIT license is superseded by
+this notice from 2026-05-22 forward. Any third party that
+previously received a copy under the MIT terms retains the rights
+granted at that time for the specific revisions they received, but
+new code, updates, and the current HEAD ship under this proprietary
+notice.
+
+For licensing inquiries, partnership conversations, or authorized
+access: operatoruplift@gmail.com.

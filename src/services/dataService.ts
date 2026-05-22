@@ -71,7 +71,11 @@ export const APP_CONTENT: AppData = {
     socials: {
       twitter: "https://x.com/OperatorUplift",
       linkedin: "https://www.linkedin.com/company/operatoruplift",
-      github: "https://github.com/operatoruplift"
+      // 2026-05-22: Operator Uplift is no longer open-source. The
+      // github org link is intentionally removed; we leave the
+      // property here as `undefined` so any code still reading
+      // `socials.github` gets a falsy value and the link is dropped.
+      github: undefined as unknown as string
     },
     sections: {
       resources: {
