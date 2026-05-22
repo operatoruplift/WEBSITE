@@ -1,24 +1,38 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { FadeIn } from '@/src/components/Animators';
 
 /**
- * Closing CTA, 2026-05-22 dark redesign.
+ * Closing CTA, 2026-05-22 v2-canvas rewrite.
  *
- * The pre-redesign version was a cream-tile (#F7F6F0) editorial close
- * that worked against a light-themed homepage. The dark redesign
- * replaces it with the design ref's "manifesto" block: a full-width
- * dark band bordered top and bottom with hairlines, a soft accent
- * radial glow behind the headline, and the same Declare/Stake/Honor/
- * Watch close.
+ * The earlier closer ("Declare. Stake. Honor. Watch.") leaned on a
+ * four-verb protocol acronym that sounded like dev-talk on a marketing
+ * page. The v2 design canvas closes the page with a direct,
+ * conversational ask:
  *
- * Source visual: /tmp/disrupt-onboarding/website.html .manifesto
- * block. Headline copy stays "Declare. Stake. Honor. Watch." so the
- * v10 protocol acronym lands at the end of the page.
+ *   - eyebrow "04 · The ask of you"
+ *   - large two-line headline ("You said you'd do the thing. Do the
+ *     thing.") with the closing fragment in the accent color
+ *   - one-sentence framing about cohort batching + first-week ritual
+ *   - an inline email form (input + Get in line button) instead of
+ *     a single "Join the waitlist" pill (the inline form is the
+ *     more decisive surface for a closer)
+ *   - a small monospace caption ("No spam · No newsletter · One
+ *     email when it's your turn")
+ *
+ * The form does not POST yet; it routes to /waitlist with the email
+ * as a query param. /waitlist is the existing intake surface and
+ * will receive the prefill once the route reads search params.
  */
 const FinalCta: React.FC = () => {
+    const [email, setEmail] = useState('');
+
+    const action = email.trim().length > 0
+        ? `/waitlist?email=${encodeURIComponent(email.trim())}`
+        : '/waitlist';
+
     return (
         <section
             id="final-cta"
@@ -39,24 +53,64 @@ const FinalCta: React.FC = () => {
                     className="mt-6 font-medium tracking-[-0.04em] leading-[0.95] text-foreground"
                     style={{ fontSize: 'clamp(40px, 7vw, 96px)' }}
                 >
-                    <span className="block">Declare. Stake.</span>
-                    <span className="block text-primary">Honor. Watch.</span>
+                    <span className="block">You said you&apos;d</span>
+                    <span className="block">
+                        do the thing.{' '}
+                        <span className="text-primary">Do the thing.</span>
+                    </span>
                 </h2>
                 <p
-                    className="mt-8 mx-auto max-w-[640px] text-foreground/80 leading-relaxed"
-                    style={{ fontSize: 'clamp(16px, 1.4vw, 20px)' }}
+                    className="mt-8 mx-auto max-w-[560px] text-foreground/75 leading-relaxed"
+                    style={{ fontSize: 'clamp(15px, 1.15vw, 18px)' }}
                 >
-                    The honor system is dead. The protocol is alive. Join the waitlist and we&apos;ll send your invite when the next batch opens.
+                    Operator Uplift opens to new operators in cohorts. Join the waitlist and we&apos;ll send your first commitment ritual within a week.
                 </p>
-                <div className="mt-10 flex justify-center">
+
+                <form
+                    action={action}
+                    method="GET"
+                    className="mt-10 mx-auto max-w-[420px] flex flex-col sm:flex-row gap-2"
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        window.location.href = action;
+                    }}
+                >
+                    <label htmlFor="final-cta-email" className="sr-only">
+                        Email address
+                    </label>
+                    <input
+                        id="final-cta-email"
+                        type="email"
+                        name="email"
+                        required
+                        placeholder="you@yourname.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="flex-1 min-w-0 px-4 py-3 font-mono text-sm text-foreground bg-foreground/[0.04] border border-foreground/[0.14] placeholder:text-muted/70 focus:border-foreground/40 focus:outline-none transition-colors"
+                    />
+                    <button
+                        type="submit"
+                        className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-foreground text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-foreground hover:bg-foreground/90 transition-colors whitespace-nowrap"
+                    >
+                        Get in line
+                        <span aria-hidden="true">→</span>
+                    </button>
+                </form>
+
+                <p className="mt-5 font-mono text-[10px] tracking-[0.16em] text-muted/70 uppercase">
+                    No spam · No newsletter · One email when it&apos;s your turn
+                </p>
+
+                {/* Visible-but-quiet fallback link for users with JS
+                    disabled or autofill-resistant browsers. */}
+                <noscript>
                     <Link
                         href="/waitlist"
-                        className="inline-flex items-center gap-2 px-7 py-3.5 bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-primary hover:shadow-[0_0_28px_rgba(249,115,22,0.45)] transition-shadow"
+                        className="mt-6 inline-block font-mono text-xs text-primary underline"
                     >
                         Join the waitlist
-                        <span className="font-mono">→</span>
                     </Link>
-                </div>
+                </noscript>
             </FadeIn>
         </section>
     );

@@ -5,6 +5,7 @@ import Hero from '@/src/sections/Hero';
 import ProblemSection from '@/src/sections/ProblemSection';
 import HowItWorksSection from '@/src/sections/HowItWorksSection';
 import MarketSection from '@/src/sections/MarketSection';
+import DownloadSection from '@/src/sections/DownloadSection';
 import FinalCta from '@/src/sections/FinalCta';
 import FaqSection from '@/src/sections/FaqSection';
 import Footer from '@/src/components/Footer';
@@ -44,6 +45,7 @@ export default function Home() {
         <ProblemSection />
         <HowItWorksSection />
         <MarketSection />
+        <DownloadSection />
         <FinalCta />
         <FaqSection />
       </main>
