@@ -12,7 +12,7 @@ export const APP_CONTENT: AppData = {
   hero: {
     visionTag: "// COMMITMENT INFRASTRUCTURE",
     headline: "Keep your word. Bet on yourself.",
-    subhead: "Stake money on your commitments. Upload proof. AI verifies follow-through. If you fail, your stake is redistributed to operators who kept theirs, minus a small protocol fee.",
+    subhead: "Operator Uplift is a commitment layer for your life. Declare what you'll do. Set the stakes. Get daily follow-up. See progress you can't fake.",
   },
   contact: {
     tag: "GET IN TOUCH",
