@@ -82,21 +82,8 @@ test('/imessage CTA tile deep-links to /login?returnTo=/integrations', async ({ 
     expect(ctaHref).toBe('/login?returnTo=/integrations');
 });
 
-test('homepage Channels section flags iMessage as shipping', async ({ page }) => {
-    // The deck (docs/deck-objections.md) anchors on iMessage being the
-    // only "shipping" channel today. The Channels section was trimmed
-    // in #483 to just iMessage (shipping) + Telegram + WhatsApp (ready)
-    // per the user's "make work or remove" rule; Slack/Discord/Phone
-    // were dropped entirely. If anyone flips iMessage to "ready" or
-    // removes the badge, the deck story collapses. Locked in.
-    await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
-
-    // Find the iMessage channel card via heading text, then assert
-    // the Shipping pill is in the same card.
-    const imessageCard = page.locator('[class*="rounded"]').filter({
-        has: page.getByRole('heading', { name: /^iMessage$/i }),
-    }).first();
-
-    await expect(imessageCard).toBeVisible({ timeout: 10_000 });
-    await expect(imessageCard).toContainText(/shipping/i);
-});
+// 2026-05-22 design-template restructure: the homepage Channels
+// section was removed when the homepage was rebuilt from the design
+// ref. iMessage as a channel still ships via the standalone
+// /imessage page (locked by the H1 + CTA tests above); the homepage
+// Channels grid no longer exists, so this assertion retired.
