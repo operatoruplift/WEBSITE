@@ -126,7 +126,7 @@ The gate is enforced at the actual tool endpoints (`/api/tools/calendar`, `/api/
 
 ## Links
 
-- Repo: https://github.com/operatoruplift/website
+- Repo: private (2026-05-22 forward). Judge access on request at operatoruplift@gmail.com.
 - Full technical doc: [`docs/HACKATHON_GATE2.md`](./HACKATHON_GATE2.md)
 - 0G integration decision + scope: [`docs/0g-integration-decision.md`](./0g-integration-decision.md)
 - Agent registration: `/agents/calendar.json`, `/agents/gmail.json`
