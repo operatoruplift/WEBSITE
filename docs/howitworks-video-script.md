@@ -1,5 +1,7 @@
 # How It Works video script — for end users
 
+> **Historical artifact — AI-assistant era.** Voice-over still pitches "real assistant with signed receipts." This script was the user-facing companion to the hackathon judge cut. For any new How-It-Works video, rewrite to the **commitment-infrastructure** brand: stake → upload proof → AI Game Master verifies → honor or redistribute. Tagline is "Keep your word. Bet on yourself." See [`BRAND_COMMITMENT_INFRASTRUCTURE.md`](./BRAND_COMMITMENT_INFRASTRUCTURE.md) for the canonical voice and the matching homepage HowItWorksSection for the five-step copy.
+
 **Runtime target:** 2:00–2:30 minutes. One cut, no shortened version.
 
 **Audience:** people who landed on `operatoruplift.com` from a tweet or a friend's recommendation. They want to know what they can do with this, not how it works under the hood. Visuals carry the explanation, voice-over is light.

@@ -1,5 +1,7 @@
 # Pitch video script — 0G APAC Hackathon (judges)
 
+> **Historical artifact — 0G APAC Hackathon submission (AI-assistant era).** Trust-stack architecture and the "verifiable bytes against either mirror" judge cookbook are still accurate. Brand framing is retired: do **not** copy the AI-assistant voice-over into anything user-facing. Current brand: commitment infrastructure, see [`BRAND_COMMITMENT_INFRASTRUCTURE.md`](./BRAND_COMMITMENT_INFRASTRUCTURE.md).
+
 **Runtime target:** 3:30–4:30 minutes. Two cuts below — a 3:00 short for tight platforms and a 4:30 long for the submission portal.
 
 **Structure (Dragon's framework):** Problem → Product → Architecture → Why 0G → Why Your Team.

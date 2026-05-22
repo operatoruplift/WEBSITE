@@ -1,5 +1,7 @@
 # Demo day walkthrough
 
+> **Historical artifact — 2026-05-14 demo day.** Surface checklist for the AI-assistant brand. Trust-stack verification steps (Filecoin CID, 0G rootHash, ed25519 pubkey) are still the right judge cookbook today. Brand-facing copy and route names ("the assistant," "drafts your email") are retired; see [`BRAND_COMMITMENT_INFRASTRUCTURE.md`](./BRAND_COMMITMENT_INFRASTRUCTURE.md) for the current brand voice if reusing any of these walkthrough beats.
+
 Use this on the day of (2026-05-14). Walks every public surface a judge
 or first-time visitor will actually touch, with the **exact** thing to
 look for, the **exact** thing that would be wrong, and the **fastest
