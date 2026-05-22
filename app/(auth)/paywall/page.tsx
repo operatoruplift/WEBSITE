@@ -201,7 +201,7 @@ export default function PaywallPage() {
                     </p>
                     <p className="text-xs text-[#52525B] mt-3">
                         Already have an account?{' '}
-                        <Link href="/login?returnTo=/chat" className="text-[#F97316] hover:underline font-medium">
+                        <Link href="/login?returnTo=/chat" className="text-[#F08A4C] hover:underline font-medium">
                             Sign in here
                         </Link>
                     </p>
@@ -209,13 +209,13 @@ export default function PaywallPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     {/* Pro Plan */}
-                    <div className="relative rounded-2xl border-2 border-[#F97316]/40 bg-[#111111] p-8 overflow-hidden">
-                        <div className="absolute top-0 right-0 px-4 py-1.5 bg-[#F97316] text-white text-[10px] font-bold uppercase tracking-widest rounded-bl-xl flex items-center gap-1.5">
+                    <div className="relative rounded-2xl border-2 border-[#F08A4C]/40 bg-[#111111] p-8 overflow-hidden">
+                        <div className="absolute top-0 right-0 px-4 py-1.5 bg-[#F08A4C] text-white text-[10px] font-bold uppercase tracking-widest rounded-bl-xl flex items-center gap-1.5">
                             <Crown size={12} /> Recommended
                         </div>
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="w-10 h-10 rounded-xl bg-[#F97316]/15 border border-[#F97316]/30 flex items-center justify-center">
-                                <Zap size={20} className="text-[#F97316]" />
+                            <div className="w-10 h-10 rounded-xl bg-[#F08A4C]/15 border border-[#F08A4C]/30 flex items-center justify-center">
+                                <Zap size={20} className="text-[#F08A4C]" />
                             </div>
                             <div>
                                 <h2 className="text-xl font-semibold text-white">Pro</h2>
@@ -226,7 +226,7 @@ export default function PaywallPage() {
                         <div className="mb-3">
                             <span className="text-4xl font-bold text-white">$50</span>
                             <span className="text-sm text-[#A1A1AA]">/month</span>
-                            <span className="ml-2 text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]">USDC</span>
+                            <span className="ml-2 text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border bg-[#F08A4C]/10 border-[#F08A4C]/30 text-[#F08A4C]">USDC</span>
                         </div>
                         {/* v10 reframe: this paywall is the legacy
                             Solana-USDC invoice flow from the AI-assistant
@@ -246,7 +246,7 @@ export default function PaywallPage() {
                         <ul className="space-y-3 mb-6">
                             {PRO_FEATURES.map(f => (
                                 <li key={f} className="flex items-start gap-2.5 text-sm text-[#FAFAFA]">
-                                    <Check size={14} className="text-[#F97316] mt-0.5 shrink-0" />
+                                    <Check size={14} className="text-[#F08A4C] mt-0.5 shrink-0" />
                                     {f}
                                 </li>
                             ))}
@@ -256,7 +256,7 @@ export default function PaywallPage() {
                         {payState === 'idle' && (
                             <button
                                 onClick={createInvoice}
-                                className="w-full h-12 rounded-xl bg-[#F97316] hover:bg-[#F97316]/90 text-white font-bold uppercase tracking-widest text-sm transition-colors flex items-center justify-center gap-2"
+                                className="w-full h-12 rounded-xl bg-[#F08A4C] hover:bg-[#F08A4C]/90 text-white font-bold uppercase tracking-widest text-sm transition-colors flex items-center justify-center gap-2"
                             >
                                 Pay $50 USDC <ArrowRight size={14} />
                             </button>
@@ -264,17 +264,17 @@ export default function PaywallPage() {
 
                         {payState === 'creating_invoice' && (
                             <div className="w-full h-12 rounded-xl bg-[#FAFAFA]/5 border border-[#222222] text-[#A1A1AA] text-sm flex items-center justify-center gap-2">
-                                <div className="w-4 h-4 border-2 border-[#F97316]/30 border-t-[#F97316] rounded-full animate-spin" />
+                                <div className="w-4 h-4 border-2 border-[#F08A4C]/30 border-t-[#F08A4C] rounded-full animate-spin" />
                                 Creating invoice...
                             </div>
                         )}
 
                         {payState === 'awaiting_payment' && invoice && (
                             <div className="space-y-3">
-                                <div className="p-4 rounded-xl bg-[#F97316]/5 border border-[#F97316]/30">
+                                <div className="p-4 rounded-xl bg-[#F08A4C]/5 border border-[#F08A4C]/30">
                                     <div className="flex items-center gap-2 mb-3">
-                                        <div className="w-2 h-2 rounded-full bg-[#F97316] animate-pulse" />
-                                        <span className="text-xs font-bold uppercase tracking-widest text-[#F97316]">Awaiting Payment</span>
+                                        <div className="w-2 h-2 rounded-full bg-[#F08A4C] animate-pulse" />
+                                        <span className="text-xs font-bold uppercase tracking-widest text-[#F08A4C]">Awaiting Payment</span>
                                     </div>
                                     <p className="text-[11px] text-[#A1A1AA] mb-3">
                                         Send <span className="font-mono text-white">{invoice.amount_usdc} USDC</span> to:
@@ -282,7 +282,7 @@ export default function PaywallPage() {
                                     <div className="flex items-center gap-2 p-2 rounded-lg bg-[#0A0A0A] border border-[#222222] mb-2">
                                         <code className="text-[10px] text-white font-mono flex-1 truncate">{invoice.recipient}</code>
                                         <button onClick={copyAddress} className="text-[#A1A1AA] hover:text-foreground" aria-label="Copy address">
-                                            {copied ? <Check size={14} className="text-[#F97316]" /> : <Copy size={14} />}
+                                            {copied ? <Check size={14} className="text-[#F08A4C]" /> : <Copy size={14} />}
                                         </button>
                                     </div>
                                     <p className="text-[10px] text-[#52525B] font-mono">Ref: {invoice.invoice_reference}</p>
@@ -293,13 +293,13 @@ export default function PaywallPage() {
 
                         {payState === 'confirming' && (
                             <div className="w-full h-12 rounded-xl bg-[#FAFAFA]/5 border border-[#222222] text-[#A1A1AA] text-sm flex items-center justify-center gap-2">
-                                <div className="w-4 h-4 border-2 border-[#F97316]/30 border-t-[#F97316] rounded-full animate-spin" />
+                                <div className="w-4 h-4 border-2 border-[#F08A4C]/30 border-t-[#F08A4C] rounded-full animate-spin" />
                                 Confirming...
                             </div>
                         )}
 
                         {payState === 'active' && (
-                            <div className="w-full h-12 rounded-xl bg-[#F97316]/10 border border-[#F97316]/30 text-[#F97316] font-bold uppercase tracking-widest text-sm flex items-center justify-center gap-2">
+                            <div className="w-full h-12 rounded-xl bg-[#F08A4C]/10 border border-[#F08A4C]/30 text-[#F08A4C] font-bold uppercase tracking-widest text-sm flex items-center justify-center gap-2">
                                 <Check size={16} /> Active, redirecting to /chat
                             </div>
                         )}
@@ -359,7 +359,7 @@ export default function PaywallPage() {
                                         localStorage.removeItem('user');
                                         router.push('/login?returnTo=/paywall');
                                     }}
-                                    className="w-full h-11 rounded-xl bg-[#F97316] hover:bg-[#F97316]/90 text-white text-sm font-bold uppercase tracking-widest transition-colors"
+                                    className="w-full h-11 rounded-xl bg-[#F08A4C] hover:bg-[#F08A4C]/90 text-white text-sm font-bold uppercase tracking-widest transition-colors"
                                 >
                                     Re-login
                                 </button>
@@ -408,7 +408,7 @@ export default function PaywallPage() {
                         </ul>
 
                         {waitlistSubmitted ? (
-                            <div className="w-full h-12 rounded-xl bg-[#F97316]/10 border border-[#F97316]/30 text-[#F97316] font-bold uppercase tracking-widest text-sm flex items-center justify-center gap-2">
+                            <div className="w-full h-12 rounded-xl bg-[#F08A4C]/10 border border-[#F08A4C]/30 text-[#F08A4C] font-bold uppercase tracking-widest text-sm flex items-center justify-center gap-2">
                                 <Check size={16} /> You&apos;re on the list
                             </div>
                         ) : (
@@ -420,7 +420,7 @@ export default function PaywallPage() {
                                     placeholder="your@email.com"
                                     aria-label="Email for the waitlist"
                                     autoComplete="email"
-                                    className="w-full h-12 rounded-xl bg-[#0A0A0A] border border-[#222222] px-4 text-sm text-white placeholder-[#52525B] focus:border-[#F97316]/50 focus:outline-none transition-colors"
+                                    className="w-full h-12 rounded-xl bg-[#0A0A0A] border border-[#222222] px-4 text-sm text-white placeholder-[#52525B] focus:border-[#F08A4C]/50 focus:outline-none transition-colors"
                                 />
                                 <button
                                     onClick={handleWaitlist}

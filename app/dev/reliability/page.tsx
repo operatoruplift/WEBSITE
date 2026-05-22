@@ -204,7 +204,7 @@ export default function ReliabilityHarnessPage() {
         return (
             <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-6">
                 <div className="max-w-md w-full p-6 rounded-2xl border border-white/10 bg-[#111111] text-center">
-                    <ShieldAlert size={28} className="text-[#F97316] mx-auto mb-3" />
+                    <ShieldAlert size={28} className="text-[#F08A4C] mx-auto mb-3" />
                     <h1 className="text-lg font-medium text-white mb-2">Admin-only</h1>
                     <p className="text-sm text-gray-400">
                         {adminStatus === 'unauthenticated'
@@ -224,8 +224,8 @@ export default function ReliabilityHarnessPage() {
             <div className="max-w-[900px] mx-auto">
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-[#F97316]/10 border border-[#F97316]/30 flex items-center justify-center">
-                            <Activity size={20} className="text-[#F97316]" />
+                        <div className="w-10 h-10 rounded-xl bg-[#F08A4C]/10 border border-[#F08A4C]/30 flex items-center justify-center">
+                            <Activity size={20} className="text-[#F08A4C]" />
                         </div>
                         <div>
                             <h1 className="text-2xl font-medium text-white tracking-tight">Reliability harness</h1>
@@ -237,7 +237,7 @@ export default function ReliabilityHarnessPage() {
                     <button
                         onClick={runAll}
                         disabled={running}
-                        className="h-10 px-4 rounded-xl bg-[#F97316] hover:bg-[#F97316]/90 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-bold uppercase tracking-widest transition-all"
+                        className="h-10 px-4 rounded-xl bg-[#F08A4C] hover:bg-[#F08A4C]/90 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-bold uppercase tracking-widest transition-all"
                     >
                         {running ? 'Running…' : 'Run all checks'}
                     </button>
@@ -266,7 +266,7 @@ export default function ReliabilityHarnessPage() {
                             : r.status === 'fail'
                                 ? <XCircle size={16} className="text-red-400" />
                                 : r.status === 'running'
-                                    ? <Loader2 size={16} className="text-[#F97316] animate-spin" />
+                                    ? <Loader2 size={16} className="text-[#F08A4C] animate-spin" />
                                     : <div className="w-4 h-4 rounded-full border border-white/20" />;
                         return (
                             <div key={check.id} className="p-4 rounded-xl bg-foreground/[0.04] border border-foreground/10">

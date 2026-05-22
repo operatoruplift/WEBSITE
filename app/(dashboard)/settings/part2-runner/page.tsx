@@ -75,7 +75,7 @@ function Pill({ chip, label }: { chip: Chip; label: string }) {
         : chip === 'fail'
             ? 'bg-red-500/15 text-red-300 border-red-500/30'
             : chip === 'running'
-                ? 'bg-[#F97316]/15 text-[#F97316] border-[#F97316]/30'
+                ? 'bg-[#F08A4C]/15 text-[#F08A4C] border-[#F08A4C]/30'
                 : 'bg-white/5 text-gray-400 border-white/10';
     return (
         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-widest border ${cls}`}>
@@ -311,7 +311,7 @@ export default function Part2RunnerPage() {
         return (
             <div className="min-h-screen flex items-center justify-center p-6">
                 <div className="max-w-md w-full p-6 rounded-2xl border border-white/10 bg-[#111111] text-center">
-                    <ShieldAlert size={28} className="text-[#F97316] mx-auto mb-3" />
+                    <ShieldAlert size={28} className="text-[#F08A4C] mx-auto mb-3" />
                     <h1 className="text-lg font-medium text-white mb-2">Admin-only</h1>
                     <p className="text-sm text-gray-400">
                         {adminStatus === 'unauthenticated'
@@ -372,7 +372,7 @@ export default function Part2RunnerPage() {
                     {!caps?.capability_google && capsChecked ? (
                         <Link
                             href="/integrations"
-                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F97316]/10 hover:bg-[#F97316]/15 border border-[#F97316]/30 text-sm text-[#F97316] transition-all"
+                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F08A4C]/10 hover:bg-[#F08A4C]/15 border border-[#F08A4C]/30 text-sm text-[#F08A4C] transition-all"
                         >
                             Connect Google <ArrowRight size={12} />
                         </Link>
@@ -398,7 +398,7 @@ export default function Part2RunnerPage() {
                         {!sub?.active && subChip !== 'pending' ? (
                             <Link
                                 href="/paywall"
-                                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F97316]/10 hover:bg-[#F97316]/15 border border-[#F97316]/30 text-sm text-[#F97316] transition-all"
+                                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F08A4C]/10 hover:bg-[#F08A4C]/15 border border-[#F08A4C]/30 text-sm text-[#F08A4C] transition-all"
                             >
                                 Open paywall <ArrowRight size={12} />
                             </Link>
@@ -428,7 +428,7 @@ export default function Part2RunnerPage() {
                                 value={senderChoice}
                                 onChange={e => setSenderChoice(e.target.value)}
                                 placeholder="name@example.com"
-                                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#F97316]/50"
+                                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#F08A4C]/50"
                             />
                             <div className="flex items-center gap-2 mt-2 flex-wrap">
                                 <button
@@ -455,7 +455,7 @@ export default function Part2RunnerPage() {
                                 type="text"
                                 value={draftSubject}
                                 onChange={e => setDraftSubject(e.target.value)}
-                                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#F97316]/50"
+                                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#F08A4C]/50"
                             />
                         </div>
                         <div>
@@ -464,13 +464,13 @@ export default function Part2RunnerPage() {
                                 value={draftBody}
                                 onChange={e => setDraftBody(e.target.value)}
                                 rows={4}
-                                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#F97316]/50 font-mono"
+                                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#F08A4C]/50 font-mono"
                             />
                         </div>
                         <button
                             onClick={runGmailDraft}
                             disabled={!senderChoice || draftChip === 'running'}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#F97316] hover:bg-[#F97316]/90 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-bold uppercase tracking-widest transition-all"
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#F08A4C] hover:bg-[#F08A4C]/90 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-bold uppercase tracking-widest transition-all"
                         >
                             {draftChip === 'running' ? <Loader2 size={14} className="animate-spin" /> : <ArrowRight size={14} />}
                             {draftChip === 'running' ? 'Running…' : 'Create draft ($0.01)'}
@@ -497,7 +497,7 @@ export default function Part2RunnerPage() {
                                 type="text"
                                 value={evTitle}
                                 onChange={e => setEvTitle(e.target.value)}
-                                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#F97316]/50"
+                                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#F08A4C]/50"
                             />
                         </div>
                         <div className="sm:col-span-2">
@@ -506,7 +506,7 @@ export default function Part2RunnerPage() {
                                 type="datetime-local"
                                 value={evStart}
                                 onChange={e => setEvStart(e.target.value)}
-                                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#F97316]/50"
+                                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#F08A4C]/50"
                             />
                         </div>
                         <div>
@@ -515,14 +515,14 @@ export default function Part2RunnerPage() {
                                 type="number"
                                 value={evDurationMin}
                                 onChange={e => setEvDurationMin(Math.max(5, Math.min(240, Number(e.target.value) || 25)))}
-                                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#F97316]/50"
+                                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#F08A4C]/50"
                             />
                         </div>
                         <div className="sm:col-span-3">
                             <button
                                 onClick={runCalendarCreate}
                                 disabled={!evTitle || !evStart || calChip === 'running'}
-                                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#F97316] hover:bg-[#F97316]/90 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-bold uppercase tracking-widest transition-all"
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#F08A4C] hover:bg-[#F08A4C]/90 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-bold uppercase tracking-widest transition-all"
                             >
                                 {calChip === 'running' ? <Loader2 size={14} className="animate-spin" /> : <ArrowRight size={14} />}
                                 {calChip === 'running' ? 'Running…' : 'Create event ($0.01)'}

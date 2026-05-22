@@ -60,7 +60,7 @@ export default async function Image() {
                         right: '-20%',
                         width: 700,
                         height: 700,
-                        background: 'radial-gradient(circle, rgba(249, 115, 22, 0.20), transparent 60%)',
+                        background: 'radial-gradient(circle, rgba(240, 138, 76, 0.20), transparent 60%)',
                         pointerEvents: 'none',
                     }}
                 />
@@ -79,7 +79,7 @@ export default async function Image() {
                         style={{
                             width: 44,
                             height: 44,
-                            background: '#F97316',
+                            background: '#F08A4C',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -100,7 +100,7 @@ export default async function Image() {
                             display: 'flex',
                         }}
                     >
-                        operator<span style={{ color: '#F97316', display: 'flex' }}>·</span>uplift
+                        operator<span style={{ color: '#F08A4C', display: 'flex' }}>·</span>uplift
                     </div>
                 </div>
 
@@ -120,7 +120,7 @@ export default async function Image() {
                         style={{
                             fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
                             fontSize: 16,
-                            color: '#F97316',
+                            color: '#F08A4C',
                             letterSpacing: '0.14em',
                             marginBottom: 22,
                             display: 'flex',
@@ -139,7 +139,7 @@ export default async function Image() {
                         }}
                     >
                         <div style={{ display: 'flex' }}>Keep your word.</div>
-                        <div style={{ display: 'flex', color: '#F97316' }}>Bet on yourself.</div>
+                        <div style={{ display: 'flex', color: '#F08A4C' }}>Bet on yourself.</div>
                     </div>
                 </div>
 

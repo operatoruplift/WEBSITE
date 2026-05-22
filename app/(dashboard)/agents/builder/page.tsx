@@ -12,12 +12,12 @@ import { useToast } from '@/src/components/ui/Toast';
 const TEMPLATES = [
     { id: 'general', name: 'General Assistant', icon: Sparkles, color: 'text-primary', desc: 'A versatile agent for everyday tasks', capabilities: ['Chat', 'Research', 'Writing'] },
     { id: 'code', name: 'Code Expert', icon: Code, color: 'text-emerald-400', desc: 'Specialized in code generation, review, and debugging', capabilities: ['Code Gen', 'Debug', 'Refactor'] },
-    { id: 'research', name: 'Research Agent', icon: Brain, color: 'text-[#F97316]', desc: 'Deep research across papers, docs, and the web', capabilities: ['Papers', 'Citations', 'Summarize'] },
-    { id: 'writer', name: 'Content Writer', icon: FileText, color: 'text-[#F97316]', desc: 'Blog posts, docs, social media, and more', capabilities: ['Blog', 'Social', 'Docs'] },
+    { id: 'research', name: 'Research Agent', icon: Brain, color: 'text-[#F08A4C]', desc: 'Deep research across papers, docs, and the web', capabilities: ['Papers', 'Citations', 'Summarize'] },
+    { id: 'writer', name: 'Content Writer', icon: FileText, color: 'text-[#F08A4C]', desc: 'Blog posts, docs, social media, and more', capabilities: ['Blog', 'Social', 'Docs'] },
     { id: 'security', name: 'Security Analyst', icon: Shield, color: 'text-red-400', desc: 'Threat detection, vulnerability scanning, compliance', capabilities: ['OWASP', 'Audit', 'Monitor'] },
     { id: 'web', name: 'Web Agent', icon: Globe, color: 'text-amber-400', desc: 'Browse, scrape, and interact with the web', capabilities: ['Browse', 'Scrape', 'API'] },
     { id: 'devops', name: 'DevOps Engineer', icon: Zap, color: 'text-emerald-400', desc: 'CI/CD pipelines, monitoring, incident response', capabilities: ['Deploy', 'Monitor', 'Alert'] },
-    { id: 'data', name: 'Data Analyst', icon: Bot, color: 'text-[#F97316]', desc: 'SQL queries, data viz, insight extraction', capabilities: ['SQL', 'Charts', 'Reports'] },
+    { id: 'data', name: 'Data Analyst', icon: Bot, color: 'text-[#F08A4C]', desc: 'SQL queries, data viz, insight extraction', capabilities: ['SQL', 'Charts', 'Reports'] },
     { id: 'support', name: 'Customer Support', icon: MessageSquare, color: 'text-primary', desc: 'Ticket triage, auto-responses, escalation workflows', capabilities: ['Triage', 'Reply', 'Escalate'] },
 ];
 
@@ -115,7 +115,7 @@ export default function AgentBuilderPage() {
         existing.push(agent);
         localStorage.setItem('custom-agents', JSON.stringify(existing));
         showToast(`Agent "${name}" saved to this browser.`, 'success');
-        addNotification({ type: 'agent', title: `Agent "${name}" deployed`, message: `${model} agent with ${selectedTools.length} tools`, icon: 'bot', color: 'text-[#F97316]' });
+        addNotification({ type: 'agent', title: `Agent "${name}" deployed`, message: `${model} agent with ${selectedTools.length} tools`, icon: 'bot', color: 'text-[#F08A4C]' });
         setStep(0); setName(''); setDescription(''); setTemplate(''); setSystemPrompt('');
     };
 
@@ -126,7 +126,7 @@ export default function AgentBuilderPage() {
                     {/* Header */}
                     <div className="animate-fadeInUp">
                         <div className="flex items-center gap-3 mb-2">
-                            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #F97316, #F97316)' }}>
+                            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #F08A4C, #F08A4C)' }}>
                                 <Sparkles size={20} className="text-white" />
                             </div>
                             <Badge variant="primary" className="text-[10px] tracking-widest font-mono">WIZARD</Badge>

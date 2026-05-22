@@ -27,7 +27,7 @@ export function PrivyWrapper({ children }: { children: React.ReactNode }) {
                     // overlay was previously dark-on-light, the most
                     // jarring surface a first-time visitor sees.
                     theme: 'light',
-                    accentColor: '#F97316',
+                    accentColor: '#F08A4C',
                     logo: '/logo.svg',
                 },
                 loginMethods: ['google', 'github', 'wallet'],

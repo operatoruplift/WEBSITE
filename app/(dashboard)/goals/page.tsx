@@ -115,10 +115,10 @@ export default function GoalsPage() {
                 {/* Header */}
                 <header className="mb-10">
                     <div className="inline-flex items-center gap-3 mb-3">
-                        <span className="text-xs font-mono font-bold tracking-[0.12em] text-[#F97316] uppercase">// commitments</span>
+                        <span className="text-xs font-mono font-bold tracking-[0.12em] text-[#F08A4C] uppercase">// commitments</span>
                     </div>
                     <h1 className="text-3xl md:text-4xl font-medium text-foreground tracking-tight leading-[1.1]">
-                        Keep your word. <span className="text-[#F97316]">Bet on yourself.</span>
+                        Keep your word. <span className="text-[#F08A4C]">Bet on yourself.</span>
                     </h1>
                     <p className="text-muted leading-relaxed mt-3 max-w-2xl">
                         Declare what you will do. Stake real money on it later. Get daily check-ins judged by an AI Game Master. See progress you cannot fake.
@@ -126,10 +126,10 @@ export default function GoalsPage() {
                 </header>
 
                 {/* Beta banner: honest about what ships today. */}
-                <div className="mb-10 rounded-xl border border-[#F97316]/30 bg-[#F97316]/[0.05] px-5 py-4 flex items-start gap-3">
-                    <Sparkles aria-hidden className="w-5 h-5 text-[#F97316] mt-0.5 shrink-0" />
+                <div className="mb-10 rounded-xl border border-[#F08A4C]/30 bg-[#F08A4C]/[0.05] px-5 py-4 flex items-start gap-3">
+                    <Sparkles aria-hidden className="w-5 h-5 text-[#F08A4C] mt-0.5 shrink-0" />
                     <div className="text-sm text-foreground/90 leading-relaxed">
-                        <strong>Private beta.</strong> Every new commitment gets an AI-built questline today. Money stakes (USDC + card), witness accountability, and on-chain settlement land in the next releases. <Link href="/waitlist" className="text-[#F97316] underline hover:no-underline">Join the waitlist for early access.</Link>
+                        <strong>Private beta.</strong> Every new commitment gets an AI-built questline today. Money stakes (USDC + card), witness accountability, and on-chain settlement land in the next releases. <Link href="/waitlist" className="text-[#F08A4C] underline hover:no-underline">Join the waitlist for early access.</Link>
                     </div>
                 </div>
 
@@ -145,7 +145,7 @@ export default function GoalsPage() {
                     <section aria-labelledby="new-goal-heading" className="lg:col-span-1">
                         <div className="rounded-2xl border border-foreground/10 bg-card p-6">
                             <h2 id="new-goal-heading" className="text-base font-semibold text-foreground mb-1 flex items-center gap-2">
-                                <Target aria-hidden className="w-4 h-4 text-[#F97316]" />
+                                <Target aria-hidden className="w-4 h-4 text-[#F08A4C]" />
                                 Declare a commitment
                             </h2>
                             <p className="text-xs text-muted mb-5 leading-relaxed">
@@ -164,7 +164,7 @@ export default function GoalsPage() {
                                         placeholder="Run 4 times per week for the next 8 weeks"
                                         required
                                         disabled={submitting}
-                                        className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted/70 focus:outline-none focus:border-[#F97316]/50 focus:ring-1 focus:ring-[#F97316]/30 disabled:opacity-50"
+                                        className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted/70 focus:outline-none focus:border-[#F08A4C]/50 focus:ring-1 focus:ring-[#F08A4C]/30 disabled:opacity-50"
                                     />
                                 </div>
                                 <div>
@@ -178,7 +178,7 @@ export default function GoalsPage() {
                                         onChange={(e) => setStakes(e.target.value)}
                                         placeholder="$50 to @maya if I miss a week"
                                         disabled={submitting}
-                                        className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted/70 focus:outline-none focus:border-[#F97316]/50 focus:ring-1 focus:ring-[#F97316]/30 disabled:opacity-50"
+                                        className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted/70 focus:outline-none focus:border-[#F08A4C]/50 focus:ring-1 focus:ring-[#F08A4C]/30 disabled:opacity-50"
                                     />
                                 </div>
                                 <div>
@@ -191,13 +191,13 @@ export default function GoalsPage() {
                                         value={targetDate}
                                         onChange={(e) => setTargetDate(e.target.value)}
                                         disabled={submitting}
-                                        className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-[#F97316]/50 focus:ring-1 focus:ring-[#F97316]/30 disabled:opacity-50"
+                                        className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-[#F08A4C]/50 focus:ring-1 focus:ring-[#F08A4C]/30 disabled:opacity-50"
                                     />
                                 </div>
                                 <button
                                     type="submit"
                                     disabled={!title.trim() || submitting}
-                                    className="inline-flex items-center justify-center px-5 py-2.5 bg-[#F97316] text-white font-bold text-xs rounded-lg uppercase tracking-widest hover:bg-[#F97316]/90 transition-colors shadow-[0_0_20px_rgba(249,115,22,0.25)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
+                                    className="inline-flex items-center justify-center px-5 py-2.5 bg-[#F08A4C] text-white font-bold text-xs rounded-lg uppercase tracking-widest hover:bg-[#F08A4C]/90 transition-colors shadow-[0_0_20px_rgba(240, 138, 76,0.25)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
                                 >
                                     {submitting ? (
                                         <>
@@ -237,12 +237,12 @@ export default function GoalsPage() {
                                 {goals.map((g) => (
                                     <li key={g.id} className="rounded-2xl border border-foreground/10 bg-card p-5">
                                         <div className="flex items-start gap-4">
-                                            <div className="w-10 h-10 shrink-0 rounded-xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center">
-                                                <CheckCircle2 aria-hidden className="w-5 h-5 text-[#F97316]" />
+                                            <div className="w-10 h-10 shrink-0 rounded-xl bg-[#F08A4C]/10 border border-[#F08A4C]/20 flex items-center justify-center">
+                                                <CheckCircle2 aria-hidden className="w-5 h-5 text-[#F08A4C]" />
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-start justify-between gap-3 mb-1">
-                                                    <Link href={`/goals/${g.id}`} className="text-base font-semibold text-foreground hover:text-[#F97316] transition-colors">
+                                                    <Link href={`/goals/${g.id}`} className="text-base font-semibold text-foreground hover:text-[#F08A4C] transition-colors">
                                                         {g.title}
                                                     </Link>
                                                     <div className="shrink-0 flex items-center gap-2">
@@ -252,7 +252,7 @@ export default function GoalsPage() {
                                                                 Today
                                                             </span>
                                                         )}
-                                                        <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#F97316]/10 border border-[#F97316]/20 text-[10px] font-bold tracking-widest uppercase text-[#F97316]">
+                                                        <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#F08A4C]/10 border border-[#F08A4C]/20 text-[10px] font-bold tracking-widest uppercase text-[#F08A4C]">
                                                             <Flame aria-hidden className="w-3 h-3" />
                                                             {g.streak} day{g.streak === 1 ? '' : 's'}
                                                         </div>
@@ -276,7 +276,7 @@ export default function GoalsPage() {
                                                         <ol className="space-y-1 list-none p-0">
                                                             {g.questline.slice(0, 4).map((step, idx) => (
                                                                 <li key={idx} className="flex items-baseline gap-2 text-xs">
-                                                                    <span className="text-[10px] font-mono font-bold text-[#F97316]/70 shrink-0 tabular-nums">D{step.day}</span>
+                                                                    <span className="text-[10px] font-mono font-bold text-[#F08A4C]/70 shrink-0 tabular-nums">D{step.day}</span>
                                                                     <span className="text-foreground/80">{step.action}</span>
                                                                 </li>
                                                             ))}

@@ -320,7 +320,7 @@ export default function DevPhotonPage() {
         return (
             <div className="min-h-screen flex items-center justify-center p-6">
                 <div className="max-w-md w-full p-6 rounded-2xl border border-white/10 bg-[#111111] text-center">
-                    <ShieldAlert size={28} className="text-[#F97316] mx-auto mb-3" />
+                    <ShieldAlert size={28} className="text-[#F08A4C] mx-auto mb-3" />
                     <h1 className="text-lg font-medium text-white mb-2">Admin-only</h1>
                     <p className="text-sm text-gray-400">
                         {adminStatus === 'unauthenticated'
@@ -433,12 +433,12 @@ export default function DevPhotonPage() {
                                 value={simSender}
                                 onChange={e => setSimSender(e.target.value)}
                                 placeholder="sender (E.164 phone)"
-                                className="px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#F97316]/50"
+                                className="px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#F08A4C]/50"
                             />
                             <select
                                 value={simPlatform}
                                 onChange={e => setSimPlatform(e.target.value as typeof simPlatform)}
-                                className="px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#F97316]/50"
+                                className="px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#F08A4C]/50"
                             >
                                 <option value="imessage">iMessage</option>
                                 <option value="telegram">Telegram</option>
@@ -447,7 +447,7 @@ export default function DevPhotonPage() {
                             <button
                                 onClick={runSimulate}
                                 disabled={simRunning || !simSender.trim() || !simText.trim()}
-                                className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#F97316] hover:bg-[#F97316]/90 text-white text-sm font-bold uppercase tracking-widest disabled:opacity-40 transition-all"
+                                className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#F08A4C] hover:bg-[#F08A4C]/90 text-white text-sm font-bold uppercase tracking-widest disabled:opacity-40 transition-all"
                             >
                                 {simRunning ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                                 {simRunning ? 'Sending' : 'Send'}
@@ -458,7 +458,7 @@ export default function DevPhotonPage() {
                             onChange={e => setSimText(e.target.value)}
                             rows={2}
                             placeholder="message text"
-                            className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#F97316]/50 font-mono"
+                            className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#F08A4C]/50 font-mono"
                         />
                         {simErr && (
                             <div className="p-3 rounded-lg border border-red-500/30 bg-red-500/5 text-xs text-red-200">

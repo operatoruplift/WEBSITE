@@ -54,8 +54,8 @@ function DockIcon({ item, isActive }: { item: DockItem; isActive: boolean }) {
             <div className={cn(
                 "flex w-10 h-10 items-center justify-center rounded-xl border transition-all duration-200",
                 isActive
-                    ? "bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]"
-                    : "bg-[#FAFAFA]/[0.04] border-[#FAFAFA]/10 text-[#FAFAFA]/60 hover:bg-[#FAFAFA]/[0.08] hover:border-[#F97316]/30 hover:text-[#F97316] hover:scale-105"
+                    ? "bg-[#F08A4C]/10 border-[#F08A4C]/30 text-[#F08A4C]"
+                    : "bg-[#FAFAFA]/[0.04] border-[#FAFAFA]/10 text-[#FAFAFA]/60 hover:bg-[#FAFAFA]/[0.08] hover:border-[#F08A4C]/30 hover:text-[#F08A4C] hover:scale-105"
             )}>
                 <Icon size={18} />
             </div>

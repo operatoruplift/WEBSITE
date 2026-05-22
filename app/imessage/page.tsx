@@ -34,9 +34,9 @@ export default function IMessageLanding() {
                     <div className="text-center mb-16 mx-auto max-w-2xl">
                         <FadeIn>
                             <div className="inline-flex items-center gap-3 mb-4">
-                                <span className="h-px w-16 bg-[#F97316]/40" />
-                                <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">// Daily check-in channel</span>
-                                <span className="h-px w-16 bg-[#F97316]/40" />
+                                <span className="h-px w-16 bg-[#F08A4C]/40" />
+                                <span className="text-xs font-bold tracking-[0.25em] text-[#F08A4C] uppercase">// Daily check-in channel</span>
+                                <span className="h-px w-16 bg-[#F08A4C]/40" />
                             </div>
                             <h1 className="text-4xl md:text-5xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] mb-4 tracking-tight leading-[1.05]">
                                 Text Operator Uplift like a friend
@@ -146,7 +146,7 @@ export default function IMessageLanding() {
                             </p>
                             <Link
                                 href="/login?returnTo=/integrations"
-                                className="inline-flex items-center px-7 py-3.5 bg-primary text-white font-bold text-sm rounded-lg hover:bg-primary/90 transition-colors uppercase tracking-wide shadow-[0_0_24px_rgba(249,115,22,0.25)]"
+                                className="inline-flex items-center px-7 py-3.5 bg-primary text-white font-bold text-sm rounded-lg hover:bg-primary/90 transition-colors uppercase tracking-wide shadow-[0_0_24px_rgba(240, 138, 76,0.25)]"
                             >
                                 Sign in to claim a number
                                 <ArrowRight className="ml-2 w-4 h-4" aria-hidden="true" />

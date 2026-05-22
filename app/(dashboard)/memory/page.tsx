@@ -80,7 +80,7 @@ export default function MemoryPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <Brain size={16} className="text-[#F97316]" />
+                                <Brain size={16} className="text-[#F08A4C]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Knowledge Base</span>
                                 <span className="text-[8px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded border bg-amber-400/10 text-amber-400 border-amber-400/20">DEMO</span>
                             </div>
@@ -133,9 +133,9 @@ export default function MemoryPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         {[
-                            { label: 'Memory Nodes', value: nodes.length, icon: Brain, color: 'text-[#F97316]' },
-                            { label: 'Vector Embeddings', value: totalVectors.toLocaleString(), icon: Sparkles, color: 'text-[#F97316]' },
-                            { label: 'Sources Indexed', value: nodes.length, icon: Link2, color: 'text-[#F97316]' },
+                            { label: 'Memory Nodes', value: nodes.length, icon: Brain, color: 'text-[#F08A4C]' },
+                            { label: 'Vector Embeddings', value: totalVectors.toLocaleString(), icon: Sparkles, color: 'text-[#F08A4C]' },
+                            { label: 'Sources Indexed', value: nodes.length, icon: Link2, color: 'text-[#F08A4C]' },
                             { label: 'Tags', value: [...new Set(nodes.flatMap(n => n.tags))].length, icon: Tag, color: 'text-emerald-400' },
                         ].map(stat => {
                             const Icon = stat.icon;

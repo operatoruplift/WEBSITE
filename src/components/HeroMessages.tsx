@@ -171,7 +171,7 @@ function Bubble({ bubble }: { bubble: Bubble }) {
 
 function ApprovalTag({ state }: { state: 'pending' | 'approved' | 'sent' }) {
   const config = {
-    pending: { text: 'Tap to approve', cls: 'bg-[#F97316]/10 text-[#F97316] border-[#F97316]/30' },
+    pending: { text: 'Tap to approve', cls: 'bg-[#F08A4C]/10 text-[#F08A4C] border-[#F08A4C]/30' },
     approved: { text: 'Approved', cls: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30' },
     sent: { text: 'Sent, receipt #042', cls: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30' },
   }[state];

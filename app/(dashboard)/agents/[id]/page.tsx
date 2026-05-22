@@ -47,9 +47,9 @@ function VerifyPanel({ slug }: { slug: string }) {
     }, [slug]);
 
     return (
-        <Card variant="glass" className="border-[#F97316]/20">
+        <Card variant="glass" className="border-[#F08A4C]/20">
             <CardHeader className="border-b border-foreground/10 pb-4">
-                <CardTitle className="flex items-center gap-2 text-sm font-mono text-[#F97316] uppercase tracking-widest">
+                <CardTitle className="flex items-center gap-2 text-sm font-mono text-[#F08A4C] uppercase tracking-widest">
                     <CheckCircle2 size={14} /> Verify Agent
                 </CardTitle>
             </CardHeader>
@@ -62,9 +62,9 @@ function VerifyPanel({ slug }: { slug: string }) {
                     href={`/agents/${slug}.json`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-start gap-3 p-3 rounded-xl bg-foreground/[0.03] border border-foreground/10 hover:border-[#F97316]/30 transition-colors"
+                    className="flex items-start gap-3 p-3 rounded-xl bg-foreground/[0.03] border border-foreground/10 hover:border-[#F08A4C]/30 transition-colors"
                 >
-                    <FileJson size={16} className="text-[#F97316] mt-0.5 shrink-0" />
+                    <FileJson size={16} className="text-[#F08A4C] mt-0.5 shrink-0" />
                     <div className="flex-1 min-w-0">
                         <div className="text-sm font-semibold text-white flex items-center gap-1.5">
                             Agent manifest <ExternalLink size={11} className="text-[#52525B]" />
@@ -82,9 +82,9 @@ function VerifyPanel({ slug }: { slug: string }) {
                     href="/api/receipts/public-key"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-start gap-3 p-3 rounded-xl bg-foreground/[0.03] border border-foreground/10 hover:border-[#F97316]/30 transition-colors"
+                    className="flex items-start gap-3 p-3 rounded-xl bg-foreground/[0.03] border border-foreground/10 hover:border-[#F08A4C]/30 transition-colors"
                 >
-                    <KeyRound size={16} className="text-[#F97316] mt-0.5 shrink-0" />
+                    <KeyRound size={16} className="text-[#F08A4C] mt-0.5 shrink-0" />
                     <div className="flex-1 min-w-0">
                         <div className="text-sm font-semibold text-white flex items-center gap-1.5">
                             Receipt public key <ExternalLink size={11} className="text-[#52525B]" />
@@ -100,7 +100,7 @@ function VerifyPanel({ slug }: { slug: string }) {
 
                 <p className="text-[10px] text-[#52525B] leading-relaxed">
                     Verify a receipt: take the signed JSON from{' '}
-                    <Link href="/security" className="text-[#F97316] hover:underline">Security</Link>
+                    <Link href="/security" className="text-[#F08A4C] hover:underline">Security</Link>
                     , canonicalize the <code className="text-[#A1A1AA]">receipt</code> field, and ed25519-verify against the public key. The same JSON is also pinned to Filecoin per the <code className="text-[#A1A1AA]">filecoin:</code> link on each receipt row; fetch from the public IPFS gateway to byte-compare independently.
                 </p>
             </CardContent>
@@ -240,8 +240,8 @@ export default function AgentDetailPage() {
                     {/* Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
-                            { label: 'Sessions', value: agent.sessions.toLocaleString(), icon: MessageSquare, color: 'text-[#F97316]' },
-                            { label: 'Memory', value: agent.memoryUsage, icon: Brain, color: 'text-[#F97316]' },
+                            { label: 'Sessions', value: agent.sessions.toLocaleString(), icon: MessageSquare, color: 'text-[#F08A4C]' },
+                            { label: 'Memory', value: agent.memoryUsage, icon: Brain, color: 'text-[#F08A4C]' },
                             { label: 'Model', value: agent.model.split(' ').pop(), icon: Zap, color: 'text-emerald-400' },
                             { label: 'Created', value: agent.createdAt, icon: Clock, color: 'text-gray-400' },
                         ].map(stat => {
@@ -263,7 +263,7 @@ export default function AgentDetailPage() {
                             <Card variant="glass">
                                 <CardHeader className="border-b border-foreground/10 pb-4">
                                     <CardTitle className="flex items-center gap-2 text-sm font-mono text-gray-400 uppercase tracking-widest">
-                                        <Settings size={14} className="text-[#F97316]" /> Configuration
+                                        <Settings size={14} className="text-[#F08A4C]" /> Configuration
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-6 space-y-6">
@@ -328,7 +328,7 @@ export default function AgentDetailPage() {
                             <Card variant="glass">
                                 <CardHeader className="border-b border-foreground/10 pb-4">
                                     <CardTitle className="flex items-center gap-2 text-sm font-mono text-gray-400 uppercase tracking-widest">
-                                        <Activity size={14} className="text-[#F97316]" /> Activity
+                                        <Activity size={14} className="text-[#F08A4C]" /> Activity
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-0">

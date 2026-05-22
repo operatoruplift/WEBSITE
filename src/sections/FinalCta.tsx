@@ -40,7 +40,7 @@ const FinalCta: React.FC = () => {
             className="relative w-full text-center border-y border-foreground/[0.07]"
             style={{
                 padding: 'clamp(80px, 14vw, 160px) 24px',
-                background: `radial-gradient(ellipse 60% 70% at 50% 50%, rgba(249, 115, 22, 0.06), transparent 70%), linear-gradient(180deg, rgba(255,255,255,0.01), transparent)`,
+                background: `radial-gradient(ellipse 60% 70% at 50% 50%, rgba(240, 138, 76, 0.06), transparent 70%), linear-gradient(180deg, rgba(255,255,255,0.01), transparent)`,
             }}
         >
             <FadeIn className="max-w-[920px] mx-auto">
