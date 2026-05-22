@@ -2,6 +2,7 @@
 
 import Navbar from '@/src/components/Navbar';
 import Hero from '@/src/sections/Hero';
+import TrustedByStrip from '@/src/sections/TrustedByStrip';
 import ProblemSection from '@/src/sections/ProblemSection';
 import AppSection from '@/src/sections/AppSection';
 import HowItWorksSection from '@/src/sections/HowItWorksSection';
@@ -43,6 +44,7 @@ export default function Home() {
       <Navbar currentPage="home" />
       <main className="relative z-10">
         <Hero />
+        <TrustedByStrip />
         <ProblemSection />
         <AppSection />
         <HowItWorksSection />
