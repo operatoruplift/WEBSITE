@@ -12,7 +12,7 @@ export const APP_CONTENT: AppData = {
   hero: {
     visionTag: "// COMMITMENT INFRASTRUCTURE",
     headline: "Keep your word. Bet on yourself.",
-    subhead: "The honor system is dead. Declare what you'll do. Stake real money on it. Get daily check-ins judged by an AI Game Master. See progress you can't fake.",
+    subhead: "Stake money on your commitments. Upload proof. AI verifies follow-through. If you fail, your stake is redistributed to operators who kept theirs, minus a small protocol fee.",
   },
   contact: {
     tag: "GET IN TOUCH",
