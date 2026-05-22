@@ -6,48 +6,57 @@ import { SectionHeader } from '@/src/components/SectionHeader';
 import { SlideHeader, SlideFooter, CallOut } from '@/src/components/SlideChrome';
 
 /**
- * Market section, 2026-05-22 homepage redesign.
+ * Market section, 2026-05-22 deck-slide-05 alignment.
  *
- * Mirrors the design ref's #market block: two-column grid with a
- * categories list on the left (the wedge highlighted in accent) and
- * an ASCII bar chart on the right showing the accountability gap
- * between people who set goals and people who actually get held to
- * them.
+ * The earlier version was a 2-col grid: category rows on the left,
+ * ASCII bar chart on the right. The pitch deck slide 05 ships a
+ * stronger pattern: three giant TAM / SAM / SOM stat cards
+ * ($60B / $1.7B / $250M) with the SOM card highlighted as the
+ * wedge. That reads as deck-scale on the homepage where the ASCII
+ * chart felt understated and dev-tooly.
  *
- * Honest: no trillion-dollar fake numbers. Just the categories where
- * the work is already happening (self-improvement, habits, coaching,
- * productivity) and the unowned accountability wedge that sits in
- * the middle.
+ * Stat sourcing (deck slide 05):
+ *   - TAM $60B: self-improvement category (wellness + habits + coaching)
+ *   - SAM $1.7B: accountability-tool buyers already paying for follow-through
+ *   - SOM $250M: operators + service providers who need trusted delivery
+ *
+ * Honesty: numbers come from the deck the founder built; the homepage
+ * reads them as analyst-style sizing, not "we will capture all of it
+ * by 2030." The closing CallOut keeps the deck's anchor sentence:
+ * "real money + visible proof + consequences people can't talk their
+ * way out of."
  */
 
-interface Row {
+interface MarketCard {
     label: string;
-    meta: string;
+    size: string;
+    title: string;
+    body: string;
+    /** Highlight as the SOM wedge. */
     wedge?: boolean;
 }
 
-const ROWS: Row[] = [
-    { label: 'Self-improvement', meta: 'books · courses · workshops' },
-    { label: 'Habits', meta: 'trackers · streaks · journals' },
-    { label: 'Coaching', meta: '1:1 · group · digital' },
-    { label: 'Productivity', meta: 'tasks · time · focus' },
-    { label: 'Accountability', meta: 'the unowned wedge ←', wedge: true },
+const CARDS: MarketCard[] = [
+    {
+        label: '// TAM',
+        size: '$60B',
+        title: 'Self-improvement.',
+        body: 'Wellness, habits, coaching. Real money chasing real outcomes.',
+    },
+    {
+        label: '// SAM',
+        size: '$1.7B',
+        title: 'Accountability tools.',
+        body: 'Users already paying for follow-through. They have not gotten it.',
+    },
+    {
+        label: '// SOM · WEDGE',
+        size: '$250M',
+        title: 'Operators + service providers.',
+        body: 'Founders, creators, freelancers who need trusted delivery.',
+        wedge: true,
+    },
 ];
-
-const ASCII_CHART = `╔═══════════════════════════════════╗
-║                                   ║
-║  people who set goals             ║
-║  ████████████████████████ 100%    ║
-║                                   ║
-║  people who track them            ║
-║  ████████████ + ░░░░░░░░  ~40%    ║
-║                                   ║
-║  people held accountable          ║
-║  ██ + ░░░░░░░░░░░░░░░░░░  <8%     ║
-║                                   ║
-║  ↑ this is what we own            ║
-║                                   ║
-╚═══════════════════════════════════╝`;
 
 const MarketSection: React.FC = () => {
     return (
@@ -76,44 +85,48 @@ const MarketSection: React.FC = () => {
                             .
                         </>
                     }
-                    description="No fake trillion-dollar numbers. Big, boring categories where the work is already happening. We route around the part everyone gives up on."
+                    description="No fake trillion-dollar numbers. The accountability wedge sits inside a $60B category where the work is already happening. We route around the part everyone gives up on."
                 />
-                <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-center mt-12">
-                    {/* Left column: category rows */}
-                    <div className="flex flex-col">
-                        {ROWS.map((row, i) => (
-                            <FadeIn key={row.label} delay={i * 50}>
-                                <div
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 mt-14">
+                    {CARDS.map((card, i) => (
+                        <FadeIn key={card.label} delay={i * 100}>
+                            <article
+                                className={[
+                                    'h-full flex flex-col p-7 md:p-8 border',
+                                    card.wedge
+                                        ? 'border-primary/55 bg-primary/[0.04]'
+                                        : 'border-foreground/[0.10] bg-foreground/[0.015]',
+                                ].join(' ')}
+                            >
+                                <span
                                     className={[
-                                        'flex justify-between items-baseline py-4',
-                                        i < ROWS.length - 1 ? 'border-b border-foreground/[0.12]' : '',
-                                        row.wedge ? 'text-primary' : '',
+                                        'font-mono text-[11px] tracking-[0.16em] uppercase',
+                                        card.wedge ? 'text-primary' : 'text-muted',
                                     ].join(' ')}
                                 >
-                                    <span
-                                        className="text-[20px] md:text-[22px] tracking-[-0.01em] font-medium"
-                                        style={row.wedge ? { color: 'var(--color-primary)' } : undefined}
-                                    >
-                                        {row.label}
-                                    </span>
-                                    <span className="font-mono text-[13px] text-muted">
-                                        {row.wedge ? <span className="text-primary">{row.meta}</span> : row.meta}
-                                    </span>
+                                    {card.label}
+                                </span>
+                                <div
+                                    className={[
+                                        'mt-5 font-medium tracking-[-0.045em] leading-[0.95]',
+                                        card.wedge ? 'text-primary' : 'text-foreground',
+                                    ].join(' ')}
+                                    style={{ fontSize: 'clamp(48px, 5.5vw, 80px)' }}
+                                >
+                                    {card.size}
                                 </div>
-                            </FadeIn>
-                        ))}
-                    </div>
-                    {/* Right column: ASCII chart */}
-                    <FadeIn delay={300}>
-                        <pre
-                            className="font-mono text-[12px] md:text-[13px] leading-[1.25] text-foreground/85 border border-foreground/[0.12] p-7 md:p-8 overflow-x-auto"
-                            style={{ background: 'rgba(255,255,255,0.015)' }}
-                            aria-hidden="true"
-                        >
-                            {ASCII_CHART}
-                        </pre>
-                    </FadeIn>
+                                <h3 className="mt-5 text-[20px] md:text-[22px] font-medium text-foreground tracking-[-0.01em] leading-tight">
+                                    {card.title}
+                                </h3>
+                                <p className="mt-3 text-[14px] md:text-[15px] text-muted leading-relaxed">
+                                    {card.body}
+                                </p>
+                            </article>
+                        </FadeIn>
+                    ))}
                 </div>
+
                 <CallOut label="The shift">
                     Real money + visible proof + consequences people can&apos;t talk their way out of.
                 </CallOut>
