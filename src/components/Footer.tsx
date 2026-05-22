@@ -1,137 +1,138 @@
 import React from 'react';
 import Link from 'next/link';
 import { Logo } from './Icons';
-import { APP_CONTENT } from '@/src/services/dataService';
-import { FadeIn } from './Animators';
 
+/**
+ * Footer, 2026-05-22 v2-canvas refresh.
+ *
+ * The earlier footer was a large dark-rounded card with corner
+ * accents, an oversized logo column, a 3-column nav block, and a
+ * Solana "powered by" badge. It pulled visual weight away from the
+ * page content and used a different design language than the rest
+ * of the v2 site.
+ *
+ * The v2 design canvas closes with a tight editorial-magazine
+ * footer:
+ *
+ *   - Left: small mark + operator·uplift wordmark + one-line
+ *     positioning + "Built in San Francisco, 2026."
+ *   - PRODUCT column: Problem · How it works · Market
+ *   - COMPANY column: Manifesto · Careers · Press kit
+ *   - REACH US column: operatoruplift@gmail.com · @operatoruplift ·
+ *     Investor deck
+ *   - Bottom rule + small © + version stamp
+ *
+ * The component reads no APP_CONTENT.footer state because the v2
+ * design canvas is the source of truth and the link list is fully
+ * static. If a future PR needs A/B copy here, lift the lists back
+ * out into dataService.ts.
+ */
 const Footer: React.FC = () => {
-  const data = APP_CONTENT.footer;
-
-  const getLinkHref = (link: { url?: string; action?: string; label: string }): string => {
-    if (link.url) return link.url;
-    if (link.action === 'contact') return '/contact';
-    if (link.action === 'terms') return '/terms';
-    if (link.action === 'privacy') return '/privacy';
-    if (link.action === 'docs') return '/docs';
-    if (link.action === 'blog') return '/blog';
-    if (link.action === 'press') return '/press-kit';
-    if (link.action === 'pricing') return '/pricing';
-    // 'product' link used to point at the standalone /product page,
-    // retired in #308. Bring users back to the homepage hero, which
-    // is the single source of truth for "what does this do?"
-    if (link.action === 'product') return '/';
-    return '/';
-  };
-
-  return (
-    <footer className="w-full bg-background pb-12 px-6 md:px-12 flex flex-col items-center">
-      {/* Subtle horizontal rule between the page body and the footer
-          card. Uses a theme-aware gradient via the `--color-border`
-          token: visible on both light (#E5E7EB) and dark (#222222)
-          surfaces. Replaces a `via-white/20` gradient that effectively
-          rendered at 6% opacity (20% white × 30% wrapper opacity) and
-          was invisible on the light marketing surface. */}
-      <div className="w-full max-w-[1600px] py-12 flex items-center justify-center">
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      </div>
-
-      <FadeIn className="w-full max-w-[1600px]" delay={100} threshold={0.05}>
-        <div className="relative w-full p-2 rounded-[32px] border border-dashed border-white/10 bg-white/[0.01]">
-         
-            <div className="absolute -top-[1px] -left-[1px] w-6 h-6 border-t border-l border-white/20 rounded-tl-2xl"></div>
-            <div className="absolute -top-[1px] -right-[1px] w-6 h-6 border-t border-r border-white/20 rounded-tr-2xl"></div>
-            <div className="absolute -bottom-[1px] -left-[1px] w-6 h-6 border-b border-l border-white/20 rounded-bl-2xl"></div>
-            <div className="absolute -bottom-[1px] -right-[1px] w-6 h-6 border-b border-r border-white/20 rounded-br-2xl"></div>
-
-            <div className="w-full bg-[#0c0c0c] rounded-[24px] border border-white/5 p-8 md:p-12 lg:p-16 relative overflow-hidden flex flex-col min-h-[400px]">
-            
-            <div className="flex items-center mb-12">
-                <span className="w-3 h-3 rounded-full bg-primary mr-4 shadow-[0_0_8px_rgba(255,85,0,0.6)] animate-pulse-slow"></span>
-                <span className="text-lg font-bold tracking-[0.2em] text-gray-400 uppercase">{data.tag}</span>
-            </div>
-
-            <div className="flex-grow grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-0">
-                
-                <div className="lg:col-span-6 flex flex-col justify-end">
-                <div className="mt-auto">
-                    <Link
-                      href="/"
-                      className="inline-block hover:opacity-80 transition-opacity"
-                      aria-label="Operator Uplift home"
-                    >
-                      <Logo className="w-16 h-16 md:w-20 md:h-20" />
-                    </Link>
-                </div>
-                </div>
-
-                <div className="lg:col-span-6 grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
-
-                {/* Three-column nav landmark wraps just the link
-                    columns; the social row + copyright that follows
-                    is sibling content (not navigation), so the nav
-                    closes after the Legal column. The parent
-                    `<footer>` is already a contentinfo landmark, and
-                    this explicit nav lets screen reader users jump
-                    straight to the footer link clusters. `contents`
-                    keeps the nav transparent to layout so the columns
-                    remain direct grid children. */}
-                <nav aria-label="Footer" className="contents">
-                <div className="flex flex-col space-y-4">
-                    <h4 className="text-white font-medium text-xl mb-2">{data.sections.resources.title}</h4>
-                    {data.sections.resources.links.map((link, i) => (
-                        <Link key={i} href={getLinkHref(link)} target={link.url ? "_blank" : undefined} className="text-muted hover:text-foreground transition-colors text-lg">{link.label}</Link>
-                    ))}
-                </div>
-
-                <div className="flex flex-col space-y-4">
-                    <h4 className="text-white font-medium text-xl mb-2">{data.sections.company.title}</h4>
-                    {data.sections.company.links.map((link, i) => (
-                        <Link key={i} href={getLinkHref(link)} target={link.url ? "_blank" : undefined} className="text-muted hover:text-foreground transition-colors text-lg">{link.label}</Link>
-                    ))}
-                </div>
-
-                <div className="flex flex-col space-y-4">
-                    <h4 className="text-white font-medium text-xl mb-2">{data.sections.legal.title}</h4>
-                    {data.sections.legal.links.map((link, i) => (
-                        <Link key={i} href={getLinkHref(link)} target={link.url ? "_blank" : undefined} className="text-muted hover:text-foreground transition-colors text-lg">{link.label}</Link>
-                    ))}
-                </div>
-                </nav>
-
-                <div className="col-span-2 md:col-span-3 mt-12 flex flex-col md:flex-row md:items-end justify-end gap-8 border-t border-white/5 pt-8">
-                    <div className="flex flex-col md:items-end space-y-4">
-                    {/* Social row. Three labels at text-lg + space-x-8 gap
-                        overflow the footer card on the smallest mobile
-                        widths (320px viewport leaves ~264px content
-                        width inside the p-8 card; "X (Twitter) +
-                        LinkedIn + GitHub" plus two 32px gaps lands
-                        around 338px). The card uses overflow-hidden,
-                        so the rightmost link was cut off. Drop to
-                        text-base + space-x-5 on mobile and let the
-                        original text-lg + space-x-8 take over at md+
-                        where the footer card is wider. */}
-                    <div className="flex items-center space-x-5 md:space-x-8 flex-wrap gap-y-2">
-                        <a href={data.socials.twitter} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-muted hover:text-foreground transition-colors group"><span className="text-base md:text-lg font-bold">X (Twitter)</span><span className="sr-only"> (opens in new tab)</span></a>
-                        <a href={data.socials.linkedin} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-muted hover:text-foreground transition-colors group"><span className="text-base md:text-lg font-bold">LinkedIn</span><span className="sr-only"> (opens in new tab)</span></a>
-                        <a href={data.socials.github} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-muted hover:text-foreground transition-colors group"><span className="text-base md:text-lg font-bold">GitHub</span><span className="sr-only"> (opens in new tab)</span></a>
+    return (
+        <footer
+            className="relative w-full border-t border-foreground/[0.07] bg-background"
+            style={{ padding: 'clamp(56px, 8vw, 96px) 24px 40px' }}
+        >
+            <div className="max-w-[1200px] mx-auto">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-14">
+                    {/* Brand column. */}
+                    <div className="col-span-2 max-w-[360px]">
+                        <Link
+                            href="/"
+                            className="inline-flex items-center gap-2.5 hover:opacity-90 transition-opacity"
+                            aria-label="Operator Uplift home"
+                        >
+                            <Logo className="w-7 h-7" />
+                            <span className="inline-flex items-baseline font-mono text-sm tracking-[0.02em] text-foreground">
+                                operator
+                                <span className="text-primary px-[2px]">·</span>
+                                uplift
+                            </span>
+                        </Link>
+                        <p className="mt-5 text-foreground/65 leading-relaxed text-[14px]">
+                            Commitment infrastructure for people who actually ship. Built in San Francisco, 2026.
+                        </p>
                     </div>
-                    <p className="text-muted text-lg font-mono">
-                        {data.copyright}
-                    </p>
-                    <a href="https://solana.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-muted hover:text-foreground transition-colors mt-2 text-sm font-mono">
-                        Powered by <span className="font-semibold">Solana</span>
-                        <span className="sr-only"> (opens in new tab)</span>
-                    </a>
+
+                    {/* PRODUCT column. */}
+                    <nav aria-label="Product" className="flex flex-col gap-3">
+                        <h4 className="font-mono text-[10px] tracking-[0.2em] text-muted/80 uppercase mb-1">
+                            Product
+                        </h4>
+                        <FooterLink href="/#problem" label="Problem" />
+                        <FooterLink href="/#how-it-works" label="How it works" />
+                        <FooterLink href="/#market" label="Market" />
+                        <FooterLink href="/pricing" label="Pricing" />
+                        <FooterLink href="/docs" label="Docs" />
+                    </nav>
+
+                    {/* COMPANY column. */}
+                    <nav aria-label="Company" className="flex flex-col gap-3">
+                        <h4 className="font-mono text-[10px] tracking-[0.2em] text-muted/80 uppercase mb-1">
+                            Company
+                        </h4>
+                        <FooterLink href="/blog" label="Blog" />
+                        <FooterLink href="/press-kit" label="Press kit" />
+                        <FooterLink href="/contact" label="Contact" />
+                        <FooterLink href="https://github.com/operatoruplift" external label="Open source" />
+                    </nav>
+                </div>
+
+                {/* REACH US row spans full width so emails + handles read
+                    in a single line on desktop. */}
+                <div className="mt-12 md:mt-16 pt-8 border-t border-foreground/[0.06] grid grid-cols-1 md:grid-cols-4 gap-6 items-baseline">
+                    <h4 className="font-mono text-[10px] tracking-[0.2em] text-muted/80 uppercase">
+                        Reach us
+                    </h4>
+                    <div className="md:col-span-3 flex flex-wrap gap-x-8 gap-y-3">
+                        <FooterLink href="mailto:operatoruplift@gmail.com" label="operatoruplift@gmail.com" />
+                        <FooterLink href="https://x.com/OperatorUplift" external label="@operatoruplift" />
+                        <FooterLink href="https://www.linkedin.com/company/operatoruplift" external label="LinkedIn" />
+                        <FooterLink href="/press-kit" label="Investor deck" />
                     </div>
                 </div>
 
+                {/* Closing rule + copyright + version stamp. */}
+                <div className="mt-12 pt-6 border-t border-foreground/[0.06] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-[12px] text-muted/70 font-mono tracking-wide">
+                    <div>© 2026 Operator Uplift, Inc.</div>
+                    <div className="flex flex-wrap gap-x-6 gap-y-2">
+                        <Link href="/privacy" className="hover:text-foreground transition-colors">
+                            Privacy
+                        </Link>
+                        <Link href="/terms" className="hover:text-foreground transition-colors">
+                            Terms
+                        </Link>
+                        <span className="text-muted/50">V.01 · COMMITMENT INFRASTRUCTURE</span>
+                    </div>
                 </div>
             </div>
-            </div>
-        </div>
-      </FadeIn>
-    </footer>
-  );
+        </footer>
+    );
 };
+
+function FooterLink({
+    href,
+    label,
+    external = false,
+}: {
+    href: string;
+    label: string;
+    external?: boolean;
+}) {
+    const className = 'text-[14px] text-foreground/70 hover:text-foreground transition-colors';
+    if (external) {
+        return (
+            <a href={href} target="_blank" rel="noreferrer" className={className}>
+                {label}
+                <span className="sr-only"> (opens in new tab)</span>
+            </a>
+        );
+    }
+    return (
+        <Link href={href} className={className}>
+            {label}
+        </Link>
+    );
+}
 
 export default Footer;
