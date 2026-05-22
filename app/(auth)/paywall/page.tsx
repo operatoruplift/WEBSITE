@@ -171,13 +171,13 @@ export default function PaywallPage() {
     ];
 
     return (
-        // Adopts the marketing light theme so the paywall reads as
-        // a continuation of the homepage funnel ("Sign in" -> /login
-        // -> /paywall) rather than a hand-off into a dark dashboard
-        // surface. The arbitrary hex backgrounds (#0A0A0A, #111111,
-        // etc.) inside this page are flipped via .theme-light
-        // overrides in app/globals.css.
-        <div className="theme-light min-h-screen bg-[#0A0A0A] flex items-center justify-center p-6 relative">
+        // 2026-05-22 dark conversion: drops the theme-light wrapper to
+        // match the homepage dark redesign. Paywall now reads as a
+        // continuous dark surface from the homepage CTA through the
+        // billing flow. The arbitrary hex backgrounds (#0A0A0A,
+        // #111111) inside this page already match the canonical dark
+        // palette.
+        <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-6 relative text-foreground">
             {/*
               Paywall is for NEW users / signups. Existing users should always
               have a direct path back to /login. The top-right link plus the
