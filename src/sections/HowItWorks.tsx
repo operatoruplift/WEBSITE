@@ -75,8 +75,8 @@ const HowItWorks: React.FC = () => {
                 align="left"
                 numberPrefix="02"
                 eyebrow="The protocol"
-                title="Four steps. Repeat until the habit sticks."
-                description="The whole system fits on the back of a napkin. That is by design. We don't sell motivation. We sell consequences you choose for yourself."
+                title="Declare. Stake. Honor. Watch."
+                description="Four steps for forced follow-through. The whole system fits on the back of a napkin, by design. We don't sell motivation. We sell consequences you choose for yourself."
             />
 
             {/* Hairline grid: 1px gap on a foreground-tinted background
