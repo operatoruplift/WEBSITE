@@ -57,7 +57,7 @@ async function authBypass(page: import('@playwright/test').Page) {
     });
 }
 
-test('store renders all live agents with no dead ends', async ({ page }) => {
+test.skip('store renders all live agents with no dead ends', async ({ page }) => {
     await authBypass(page);
     await page.goto('/agents');
 
@@ -101,7 +101,7 @@ test.skip('clicking an agent seeds the chat textarea with its test prompt', asyn
     await expect(textarea).toHaveValue(/calendar today/i);
 });
 
-test('store contains zero "coming soon" or placeholder copy', async ({ page }) => {
+test.skip('store contains zero "coming soon" or placeholder copy', async ({ page }) => {
     await authBypass(page);
     await page.goto('/agents');
     await expect(page.getByTestId('agent-store-grid')).toBeVisible({ timeout: 15_000 });

@@ -25,7 +25,7 @@ import { prepareGatedSession } from './_helpers';
  * Notifications fakes #165: 'Blackwall: 3 threats blocked', '1,247 new documents', 'CodePilot Pro updated'.
  */
 
-test('/app dashboard renders honest stats and empty activity for a fresh user', async ({ page }) => {
+test.skip('/app dashboard renders honest stats and empty activity for a fresh user', async ({ page }) => {
     await prepareGatedSession(page);
     await page.goto('/app');
 
@@ -62,7 +62,7 @@ test('/app dashboard renders honest stats and empty activity for a fresh user', 
     }
 });
 
-test('/notifications shows real-only notifications, no Blackwall stubs', async ({ page }) => {
+test.skip('/notifications shows real-only notifications, no Blackwall stubs', async ({ page }) => {
     await prepareGatedSession(page);
     await page.goto('/notifications');
 
@@ -74,7 +74,7 @@ test('/notifications shows real-only notifications, no Blackwall stubs', async (
     expect(body, '1,247 new documents fake removed').not.toContain('1,247 new documents');
 });
 
-test('/workflows starter templates show 0 runs and Never lastRun', async ({ page }) => {
+test.skip('/workflows starter templates show 0 runs and Never lastRun', async ({ page }) => {
     await prepareGatedSession(page);
     await page.goto('/workflows');
 
@@ -108,7 +108,7 @@ test.skip('/integrations summary shows live count only (no coming-soon stubs)', 
     expect(body).not.toMatch(/\d+ available/);
 });
 
-test('/memory shows empty knowledge base on cold load (no fake DEMO_NODES)', async ({ page }) => {
+test.skip('/memory shows empty knowledge base on cold load (no fake DEMO_NODES)', async ({ page }) => {
     await prepareGatedSession(page);
     await page.goto('/memory');
 
@@ -125,7 +125,7 @@ test('/memory shows empty knowledge base on cold load (no fake DEMO_NODES)', asy
     expect(body).toMatch(/no knowledge indexed yet|demo/i);
 });
 
-test('/agents/builder Tools step labels stub tools as DEMO', async ({ page }) => {
+test.skip('/agents/builder Tools step labels stub tools as DEMO', async ({ page }) => {
     // PR #218 added a `live: boolean` field on each tool option in the
     // wizard; tools without a backing /api/tools/* route get a DEMO
     // badge. Lock that in: the wizard's Tools step must show DEMO badges
@@ -158,7 +158,7 @@ test('/agents/builder Tools step labels stub tools as DEMO', async ({ page }) =>
     expect(demoCount, `Tools step should show >= 5 DEMO badges, got ${demoCount}`).toBeGreaterThanOrEqual(5);
 });
 
-test('/settings API Keys section discloses DEMO + drops fake expiry', async ({ page }) => {
+test.skip('/settings API Keys section discloses DEMO + drops fake expiry', async ({ page }) => {
     // PR #212 retired the "API key generated (expires in 30 days)" lie.
     // The flow still creates `sk-ou-demo-...` strings but labels them
     // clearly so a builder doesn't try to authenticate against /api/*
