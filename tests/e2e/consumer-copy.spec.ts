@@ -118,19 +118,18 @@ test('/paywall sells v10 Operator Pro features', async ({ page }) => {
     assertNoBannedPhrases(body, '/paywall');
 });
 
-test('homepage FAQ surfaces the v10 commitment-protocol questions', async ({ page }) => {
-    // v10 reframe (2026-05-21 Commitment Infrastructure): the FAQ
-    // was rewritten end-to-end around the new pitch. The "How do I
-    // use it?" + Mac-app-upcoming question retired because v10 does
-    // not pitch a Mac app. Instead, lock the two highest-trust v10
-    // questions: the AI Game Master and the money-stakes flow.
+test('homepage FAQ surfaces the four pooled-stakes brand questions', async ({ page }) => {
+    // 2026-05-22 pooled-stakes brand rewrite: the FAQ now anchors on
+    // the four questions the founder spec requires: how stakes work,
+    // where the money goes when someone fails, how AI verification
+    // works, and who the product is for. Lock all four so a future
+    // rewrite that drops one fires.
     await page.goto('/#faq', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
-    const gameMasterQ = page.getByText('What does the AI Game Master actually do?').first();
-    await expect(gameMasterQ).toBeVisible({ timeout: 10_000 });
-
-    const stakesQ = page.getByText('How do the money stakes work?').first();
-    await expect(stakesQ).toBeVisible();
+    await expect(page.getByText('How do the stakes work?').first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText('Where does the money go when someone fails?').first()).toBeVisible();
+    await expect(page.getByText('How does AI verification work?').first()).toBeVisible();
+    await expect(page.getByText('Who is this for?').first()).toBeVisible();
 });
 
 // v10 reframe (2026-05-21 Commitment Infrastructure): /store was a
@@ -223,7 +222,8 @@ test('FAQ section emits FAQPage JSON-LD for rich results', async ({ page }) => {
     expect(faqJson!).toContain('"@type":"FAQPage"');
     expect(faqJson!).toContain('"@type":"Question"');
     expect(faqJson!).toContain('"@type":"Answer"');
-    expect(faqJson!).toContain('What does the AI Game Master actually do?');
+    expect(faqJson!).toContain('How does AI verification work?');
+    expect(faqJson!).toContain('Where does the money go when someone fails?');
     expect(faqJson!).not.toContain('drafts your email');
     expect(faqJson!).not.toContain('AI that runs on your terms');
 });

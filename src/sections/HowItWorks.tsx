@@ -32,25 +32,25 @@ const STEPS: Step[] = [
         icon: Target,
         n: '01',
         title: 'Declare',
-        body: 'Write the commitment in your own words. Specific enough that "did I do it?" is a yes or no. "Run four times this week." "Ship by Friday." "No alcohol for 30 days."',
+        body: 'Write the commitment in your own words. Specific enough that "did I do it?" is a yes or no. Run four times this week. Ship the proposal by Friday. Practice piano twenty minutes a day.',
     },
     {
         icon: DollarSign,
         n: '02',
         title: 'Stake',
-        body: 'Put real money on the line. USDC or card. If you miss, you lose it. Pick a witness who keeps you honest. The stake makes drift expensive instead of free.',
+        body: 'Put real money on the line. USDC or card. Funds sit in escrow while the commitment is active. The stake makes drift expensive instead of free.',
     },
     {
         icon: CheckCircle2,
         n: '03',
         title: 'Honor',
-        body: 'Daily check-in, one tap. An AI Game Master adjudicates so the streak only counts if it is true. Miss the mark and the stake slashes automatically. The honor system is dead; the protocol is alive.',
+        body: 'Upload proof of the work, photo, GPS, integration data, or a short note. The AI Game Master verifies and streams reasoning back. The streak only counts if the proof holds up.',
     },
     {
         icon: Eye,
         n: '04',
         title: 'Watch',
-        body: 'Heatmap, streak history, settled stakes. Progress you cannot fake. Witnesses see the same view. Receipts are on-chain and verifiable, so a year from now you can prove what you actually did.',
+        body: 'Honor it: your stake returns and your reputation grows. Miss it: your stake is redistributed to operators who kept their word, minus a small protocol fee for operations. Failure funds the ecosystem.',
     },
 ];
 

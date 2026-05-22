@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     default: "Operator Uplift, commitment infrastructure",
     template: "%s | Operator Uplift",
   },
-  description: "Keep your word. Bet on yourself. Stake real money on your commitments. An AI Game Master adjudicates every check-in. Commitment infrastructure for operators.",
+  description: "Keep your word. Bet on yourself. Stake money on your commitments, upload proof, AI verifies follow-through. Fail and your stake redistributes to operators who kept theirs.",
   keywords: ["commitment infrastructure", "accountability protocol", "loss aversion", "habit stakes", "AI accountability", "on-chain commitments", "USDC stakes", "Solana accountability", "operator", "no-bullshit habits"],
   openGraph: {
     title: "Operator Uplift, commitment infrastructure",
