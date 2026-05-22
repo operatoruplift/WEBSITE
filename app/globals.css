@@ -105,6 +105,36 @@
     background-image: radial-gradient(#ccc 1px, transparent 1px);
     background-size: 20px 20px;
   }
+
+  /* ─── Dark redesign foundation (2026-05-22) ─────────────────────────
+   * Site-wide subtle dotted-grid backdrop with an elliptical edge fade,
+   * paired with a soft accent glow at the top of the hero. Lifted from
+   * the design ref in /tmp/disrupt-onboarding/website.html. The mask
+   * keeps the grid from reading as a hard edge; the glow keeps the
+   * hero feeling activated without lifting the global luminance. */
+  .bg-grid-dots {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.06) 1px, transparent 0);
+    background-size: 36px 36px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 90%);
+  }
+
+  .accent-glow {
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1200px;
+    height: 600px;
+    background: radial-gradient(ellipse at center, rgba(249, 115, 22, 0.10) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
 }
 
 /* Light mode overrides (dashboard only) */

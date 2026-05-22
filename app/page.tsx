@@ -13,36 +13,28 @@ import FinalCta from '@/src/sections/FinalCta';
 import Footer from '@/src/components/Footer';
 
 /**
- * Landing composition. April 30 2026 second-pass added LocalFirst
- * directly after the Hero so the trust substance (where data lives,
- * BYOK, signed receipts) reads as soon as the user scrolls, before
- * the demo video. May 13 2026 inserted HowItWorks between Hero and
- * LocalFirst per user feedback referencing clawcage.hackyguru.com's
- * "Zero to sandbox in 10 seconds" pattern: a time-to-value walkthrough
- * lands before the trust narrative, then LocalFirst explains why each
- * step is trustworthy.
+ * Landing composition. 2026-05-22 dark redesign: removed the
+ * `theme-light` wrapper so the homepage runs in the default dark
+ * palette (#0A0A0A bg, orange primary, foreground white). Source
+ * visual: /tmp/disrupt-onboarding/website.html. The dotted-grid
+ * backdrop renders behind every section via .bg-grid-dots fixed
+ * positioning.
  *
- * Order:
- *   Hero        , short headline + two CTAs
- *   HowItWorks  , 4-step time-to-value walkthrough
- *   LocalFirst  , trust pillar (where data lives, BYOK, receipts)
- *   Channels    , iMessage shipping, Telegram + WhatsApp ready
- *   DemoVideo   , 90 s recording
- *   Comparison  , vs. niche agent peers
- *   Pricing     , Free / Pro / Circle
- *   FAQ         , objection handling
- *   FinalCta    , cream editorial closer (sully.ai-derived pattern)
+ * Order kept identical to the light-theme version so the v10
+ * narrative (Hero -> protocol -> trust -> channels -> demo ->
+ * comparison -> pricing -> faq -> closer) still flows the same
+ * way; only the visual treatment flipped.
  */
 export default function Home() {
   return (
-    <div className="theme-light w-full bg-background min-h-screen">
+    <div className="relative w-full bg-background min-h-screen text-foreground">
+      {/* Site-wide dotted-grid backdrop. Fixed-position so it stays
+          parallax-still as the user scrolls. The mask in globals.css
+          fades the grid out toward the edges so it never reads as a
+          hard pattern. */}
+      <div className="bg-grid-dots" aria-hidden="true" />
       <Navbar currentPage="home" />
-      {/* Wrap content sections in <main> so the page exposes a proper
-          landmark to assistive tech and "skip to main content" UX.
-          The Hero, sections, and conversion blocks live inside;
-          Navbar (already <nav>) and Footer (already <footer>) stay
-          outside as their own landmarks. */}
-      <main>
+      <main className="relative z-10">
         <Hero />
         <HowItWorks />
         <LocalFirst />
