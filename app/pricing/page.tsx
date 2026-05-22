@@ -6,19 +6,20 @@ import { Check, Shield, ArrowRight } from 'lucide-react';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 import { FadeIn } from '@/src/components/Animators';
+import { SectionHeader } from '@/src/components/SectionHeader';
 
 /**
- * v10 reframe (Commitment Infrastructure).
+ * /pricing standalone page, 2026-05-22 dark redesign.
  *
- * The pre-pivot /pricing page advertised Team/Business/Enterprise
- * tiers that the v10 deck does not have. v10 has three consumer
- * tiers (Operator Free / Pro $8 / Circle $24) on the homepage and
- * an enterprise path that quotes per-seat for orgs that want
- * everyone on the same accountability protocol.
+ * v10 reframe: this page is the org / B2B entry point. Personal
+ * tiers (Free, Pro $8, Circle $24) live in the FAQ on the homepage
+ * now (the homepage Pricing section was retired in the design-
+ * template restructure, PR #678). This page focuses on group +
+ * enterprise.
  *
- * This page reframes as the org / B2B entry point. Circle is the
- * highlighted tier ($24/mo per operator); Enterprise is custom
- * for larger orgs with compliance needs.
+ * Visual treatment mirrors the homepage design template: site-wide
+ * dotted-grid backdrop, dark palette, SectionHeader with left-aligned
+ * "01 · ..." numbered eyebrow, hairline tier cards.
  */
 const tiers = [
     {
@@ -64,82 +65,136 @@ const badges = [
     { label: 'Strong encryption', icon: Shield },
 ];
 
+const personal = [
+    { tier: 'Free', price: '$0', body: '1 active commitment, 1 witness, no stakes.' },
+    { tier: 'Pro', price: '$8', body: 'Unlimited commitments, money stakes, up to 5 witnesses, on-chain settlement.', highlight: true },
+    { tier: 'Circle', price: '$24', body: 'Group commitments, shared progress board, coach role.' },
+];
+
 export default function PricingPage() {
     return (
-        <div className="theme-light w-full bg-background min-h-screen">
+        <div className="relative w-full bg-background min-h-screen text-foreground">
+            <div className="bg-grid-dots" aria-hidden="true" />
             <Navbar currentPage="pricing" />
 
-            <main className="pt-32 pb-24 px-6 md:px-12">
-                <div className="max-w-[1200px] mx-auto">
-                    {/* Header. Match the homepage section pattern,
-                        eyebrow accent + h1 with the same vertical
-                        gradient applied to every section h2 via
-                        SectionHeader. The standalone /pricing page
-                        used a bare h1 with no eyebrow, which read as
-                        a generic page on a site that otherwise
-                        commits to a strong editorial header pattern. */}
-                    <div className="text-center mb-16 mx-auto max-w-2xl">
-                        <FadeIn>
-                            <div className="inline-flex items-center gap-3 mb-4">
-                                <span className="h-px w-16 bg-[#F97316]/40" />
-                                <span className="text-xs font-mono font-bold tracking-[0.12em] text-[#F97316] uppercase">// For groups + orgs</span>
-                                <span className="h-px w-16 bg-[#F97316]/40" />
-                            </div>
-                            <h1 className="text-3xl md:text-4xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] mb-4 tracking-tight">
-                                Group accountability, on the same protocol.
-                            </h1>
-                            <p className="text-muted leading-relaxed">
-                                Personal commitments live at <Link href="/#pricing" className="text-[#F97316] hover:underline">Free, Pro $8/mo, or Circle $24/mo</Link>. The page below is for orgs that want every operator on the same accountability rail.
-                            </p>
-                        </FadeIn>
-                    </div>
+            <main className="relative z-10 pt-24 pb-24 px-6 md:px-12">
+                <div className="max-w-[1280px] mx-auto">
+                    <SectionHeader
+                        align="left"
+                        numberPrefix="01"
+                        eyebrow="For groups + orgs"
+                        title="Group accountability, on the same protocol."
+                        description="This page is for orgs that want every operator on the same accountability rail. Personal tiers (Free, Pro $8, Circle $24) are below."
+                    />
 
-                    {/* Tiers */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16 max-w-4xl mx-auto">
+                    {/* Org tier grid */}
+                    <ul
+                        className="grid grid-cols-1 md:grid-cols-2 list-none p-0 mt-12"
+                        style={{
+                            gap: '1px',
+                            background: 'rgba(255,255,255,0.12)',
+                            border: '1px solid rgba(255,255,255,0.12)',
+                        }}
+                    >
                         {tiers.map((tier, i) => (
-                            <FadeIn key={tier.name} delay={i * 100}>
-                                <div className={`rounded-2xl border p-8 flex flex-col h-full transition-all ${
-                                    tier.highlight
-                                        ? 'border-primary/30 bg-primary/5 shadow-[0_0_30px_rgba(231,118,48,0.1)]'
-                                        : 'border-foreground/10 bg-foreground/[0.02] hover:border-foreground/20'
-                                }`}>
-                                    {tier.highlight && (
-                                        <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-4">Recommended</span>
-                                    )}
-                                    <h3 className="text-2xl font-medium text-white mb-2">{tier.name}</h3>
-                                    <div className="mb-4">
-                                        <span className="text-4xl font-bold text-white">{tier.price}</span>
-                                        <span className="text-gray-500 text-sm">{tier.period}</span>
-                                    </div>
-                                    <p className="text-sm text-gray-400 mb-6">{tier.description}</p>
-                                    <ul className="space-y-3 mb-8 flex-1">
-                                        {tier.features.map(f => (
-                                            <li key={f} className="flex items-center gap-2 text-sm text-gray-300">
-                                                <Check size={14} className="text-emerald-400 flex-shrink-0" /> {f}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <Link href={tier.ctaLink}
-                                        className={`w-full py-3 rounded-lg text-sm font-bold text-center transition-colors flex items-center justify-center gap-2 ${
-                                            tier.highlight
-                                                ? 'bg-primary text-white hover:bg-primary/80'
-                                                : 'bg-foreground/5 text-foreground border border-foreground/10 hover:bg-foreground/10'
-                                        }`}>
-                                        {tier.cta} <ArrowRight size={14} />
-                                    </Link>
-                                </div>
-                            </FadeIn>
+                            <li key={tier.name} className="bg-background">
+                                <FadeIn delay={i * 100}>
+                                    <article
+                                        className={[
+                                            'p-8 md:p-10 flex flex-col h-full text-left',
+                                            tier.highlight ? 'bg-primary/[0.04]' : '',
+                                        ].join(' ')}
+                                    >
+                                        {tier.highlight && (
+                                            <span className="font-mono text-[11px] tracking-[0.15em] uppercase text-primary mb-5">
+                                                Recommended
+                                            </span>
+                                        )}
+                                        <h3 className="text-[28px] md:text-[32px] font-medium text-foreground tracking-[-0.02em]">
+                                            {tier.name}
+                                        </h3>
+                                        <div className="mt-3 flex items-baseline gap-2">
+                                            <span className="text-[44px] font-medium text-foreground tracking-[-0.03em]">
+                                                {tier.price}
+                                            </span>
+                                            <span className="text-muted text-sm font-mono">{tier.period}</span>
+                                        </div>
+                                        <p className="mt-4 text-[15px] text-muted leading-relaxed">{tier.description}</p>
+                                        <ul className="space-y-3 mt-6 mb-8 flex-1 list-none p-0">
+                                            {tier.features.map(f => (
+                                                <li key={f} className="flex items-start gap-3 text-[14px] text-foreground/85 leading-relaxed">
+                                                    <Check size={14} className="text-primary flex-shrink-0 mt-1.5" aria-hidden="true" /> {f}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <Link
+                                            href={tier.ctaLink}
+                                            className={[
+                                                'inline-flex items-center justify-center gap-2 py-3 px-6 font-mono text-sm font-semibold tracking-[0.02em] border transition-shadow',
+                                                tier.highlight
+                                                    ? 'bg-primary text-[#0A0A0B] border-primary hover:shadow-[0_0_28px_rgba(249,115,22,0.45)]'
+                                                    : 'bg-foreground/[0.02] text-foreground border-foreground/[0.14] hover:border-foreground/40',
+                                            ].join(' ')}
+                                        >
+                                            {tier.cta} <ArrowRight size={14} aria-hidden="true" />
+                                        </Link>
+                                    </article>
+                                </FadeIn>
+                            </li>
                         ))}
+                    </ul>
+
+                    {/* Personal tiers reference row */}
+                    <div className="mt-20 md:mt-24">
+                        <SectionHeader
+                            align="left"
+                            numberPrefix="02"
+                            eyebrow="Personal tiers"
+                            title="If you're not an org, the personal plans live here."
+                            description="Most operators start at Pro to put money on the line for their own commitments. Free is the way to test the loop without stakes."
+                        />
+                        <ul
+                            className="grid grid-cols-1 md:grid-cols-3 list-none p-0 mt-10"
+                            style={{
+                                gap: '1px',
+                                background: 'rgba(255,255,255,0.12)',
+                                border: '1px solid rgba(255,255,255,0.12)',
+                            }}
+                        >
+                            {personal.map((p) => (
+                                <li key={p.tier} className={['bg-background p-7', p.highlight ? 'bg-primary/[0.04]' : ''].join(' ')}>
+                                    <span className="font-mono text-[11px] tracking-[0.15em] text-primary uppercase">
+                                        {p.tier}
+                                    </span>
+                                    <div className="mt-3 text-[36px] font-medium text-foreground tracking-[-0.025em]">
+                                        {p.price}
+                                        <span className="text-muted text-sm font-mono"> /mo</span>
+                                    </div>
+                                    <p className="mt-3 text-sm text-muted leading-relaxed">{p.body}</p>
+                                </li>
+                            ))}
+                        </ul>
+                        <div className="mt-8">
+                            <Link
+                                href="/waitlist"
+                                className="inline-flex items-center gap-2 py-3 px-6 font-mono text-sm font-semibold tracking-[0.02em] border border-primary bg-primary text-[#0A0A0B] hover:shadow-[0_0_28px_rgba(249,115,22,0.45)] transition-shadow"
+                            >
+                                Join the waitlist <ArrowRight size={14} aria-hidden="true" />
+                            </Link>
+                        </div>
                     </div>
 
                     {/* Compliance badges */}
                     <FadeIn delay={300}>
-                        <div className="flex flex-wrap items-center justify-center gap-4">
+                        <div className="flex flex-wrap items-center gap-3 mt-16 md:mt-20">
                             {badges.map(b => {
                                 const Icon = b.icon;
                                 return (
-                                    <div key={b.label} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/5 text-gray-400 text-xs font-mono">
-                                        <Icon size={14} className="text-emerald-400" /> {b.label}
+                                    <div
+                                        key={b.label}
+                                        className="flex items-center gap-2 px-4 py-2 border border-foreground/[0.12] bg-foreground/[0.02] text-muted text-xs font-mono"
+                                    >
+                                        <Icon size={14} className="text-foreground/60" aria-hidden="true" /> {b.label}
                                     </div>
                                 );
                             })}

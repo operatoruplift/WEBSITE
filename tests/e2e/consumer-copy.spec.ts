@@ -143,12 +143,14 @@ test('homepage FAQ surfaces the four pooled-stakes brand questions', async ({ pa
 test('/pricing disambiguates personal vs team plans', async ({ page }) => {
     await page.goto('/pricing');
 
-    // v10 reframe: /pricing is now the org/B2B entry point with
-    // Operator Circle + Enterprise tiers. The header points users
-    // back to the homepage for the personal Free/Pro/Circle tiers.
+    // 2026-05-22 design-template restructure: /pricing is the
+    // org/B2B entry point with Operator Circle + Enterprise tiers
+    // on top, then a "Personal tiers" reference grid below (since
+    // the homepage Pricing section was retired). Lock the org
+    // heading + both personal reference and the Circle tier line.
     await expect(page.getByRole('heading', { name: /Group accountability/i })).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByText(/Personal commitments live at/i)).toBeVisible();
-    await expect(page.getByText(/Free, Pro \$8\/mo, or Circle \$24\/mo/i)).toBeVisible();
+    await expect(page.getByRole('heading', { name: /personal plans live here/i })).toBeVisible();
+    await expect(page.getByText(/Operator Circle/i).first()).toBeVisible();
 
     const body = await page.locator('body').innerText();
     assertNoBannedPhrases(body, '/pricing');
