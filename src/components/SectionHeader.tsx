@@ -11,8 +11,10 @@ interface SectionHeaderProps {
      * (e.g. "01" → "01 · The problem"). Mirrors the design ref's
      * numbered section markers. */
     numberPrefix?: string;
-    /** Main section title. */
-    title: string;
+    /** Main section title. Accepts a string OR JSX so per-section
+     * surfaces can compose inline accents (struck-through phrases,
+     * accent-coloured spans) without a custom header. */
+    title: React.ReactNode;
     /** Optional supporting paragraph. */
     description?: string;
     /** Layout: "center" matches the legacy centered marketing header

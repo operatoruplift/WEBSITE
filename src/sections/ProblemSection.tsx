@@ -59,7 +59,18 @@ const ProblemSection: React.FC = () => {
                     align="left"
                     numberPrefix="01"
                     eyebrow="The problem"
-                    title="People don't fail because they lack ambition."
+                    title={
+                        <>
+                            People don&apos;t fail because they{' '}
+                            <span
+                                className="text-muted/55"
+                                style={{ textDecoration: 'line-through', textDecorationThickness: '2px' }}
+                            >
+                                lack ambition
+                            </span>
+                            .
+                        </>
+                    }
                     description="They fail because motivation fades, plans get fuzzy, and nothing keeps them honest day after day."
                 />
                 <ul
