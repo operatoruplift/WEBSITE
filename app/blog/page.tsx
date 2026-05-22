@@ -9,7 +9,7 @@ import { posts } from './posts';
 
 const categoryColors: Record<string, string> = {
     update: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20',
-    engineering: 'text-[#F97316] bg-[#F97316]/10 border-[#F97316]/20',
+    engineering: 'text-[#F08A4C] bg-[#F08A4C]/10 border-[#F08A4C]/20',
     announcement: 'text-[#F59E0B] bg-[#F59E0B]/10 border-[#F59E0B]/20',
     guide: 'text-sky-400 bg-sky-400/10 border-sky-400/20',
 };
@@ -52,9 +52,9 @@ export default function BlogPage() {
                             <ArrowLeft size={14} aria-hidden /> Back to home
                         </Link>
                         <div className="inline-flex items-center gap-3 mb-4">
-                            <span className="h-px w-16 bg-[#F97316]/40" aria-hidden />
-                            <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">Blog &amp; Changelog</span>
-                            <span className="h-px w-16 bg-[#F97316]/40" aria-hidden />
+                            <span className="h-px w-16 bg-[#F08A4C]/40" aria-hidden />
+                            <span className="text-xs font-bold tracking-[0.25em] text-[#F08A4C] uppercase">Blog &amp; Changelog</span>
+                            <span className="h-px w-16 bg-[#F08A4C]/40" aria-hidden />
                         </div>
                         <h1 className="text-3xl md:text-5xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] tracking-tight mb-5 max-w-3xl leading-[1.1]">
                             What we shipped, what we learned

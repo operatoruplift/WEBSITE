@@ -3,6 +3,7 @@
 import React from 'react';
 import { FadeIn } from '@/src/components/Animators';
 import { SectionHeader } from '@/src/components/SectionHeader';
+import { SlideHeader, SlideFooter, CallOut } from '@/src/components/SlideChrome';
 
 /**
  * Market section, 2026-05-22 homepage redesign.
@@ -57,12 +58,24 @@ const MarketSection: React.FC = () => {
             style={{ padding: 'clamp(80px, 12vw, 120px) 24px' }}
         >
             <div className="w-full max-w-[1280px] mx-auto">
+                <SlideHeader section="market · why now" slideNumber="03" slideTotal="05" />
                 <SectionHeader
                     headingId="market-heading"
                     align="left"
                     numberPrefix="03"
                     eyebrow="The market"
-                    title="A real market. A simple wedge."
+                    title={
+                        <>
+                            Bigger than{' '}
+                            <span
+                                className="text-muted/55"
+                                style={{ textDecoration: 'line-through', textDecorationThickness: '2px' }}
+                            >
+                                habits
+                            </span>
+                            .
+                        </>
+                    }
                     description="No fake trillion-dollar numbers. Big, boring categories where the work is already happening. We route around the part everyone gives up on."
                 />
                 <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-center mt-12">
@@ -101,6 +114,10 @@ const MarketSection: React.FC = () => {
                         </pre>
                     </FadeIn>
                 </div>
+                <CallOut label="The shift">
+                    Real money + visible proof + consequences people can&apos;t talk their way out of.
+                </CallOut>
+                <SlideFooter section="the market expands" stamp="// COMMITMENT INFRASTRUCTURE" />
             </div>
         </section>
     );

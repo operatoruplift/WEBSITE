@@ -25,9 +25,9 @@ export default function HackathonDemoPage() {
                     {/* Header */}
                     <div className="text-center mb-12">
                         <div className="inline-flex items-center gap-3 mb-4">
-                            <span className="h-px w-16 bg-[#F97316]/40" />
-                            <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">Trust-stack demo · x402 + 0G + Filecoin</span>
-                            <span className="h-px w-16 bg-[#F97316]/40" />
+                            <span className="h-px w-16 bg-[#F08A4C]/40" />
+                            <span className="text-xs font-bold tracking-[0.25em] text-[#F08A4C] uppercase">Trust-stack demo · x402 + 0G + Filecoin</span>
+                            <span className="h-px w-16 bg-[#F08A4C]/40" />
                         </div>
                         <h1 className="text-3xl md:text-4xl font-medium tracking-tight mb-4">
                             Verifiable AI for Gmail and Calendar, working end-to-end
@@ -39,11 +39,11 @@ export default function HackathonDemoPage() {
 
                     {/* 5-step diagram */}
                     <div className="rounded-2xl border border-[#222222] bg-[#111111] p-6 md:p-8 mb-10">
-                        <div className="text-xs font-mono uppercase tracking-widest text-[#F97316] mb-5">The flow</div>
+                        <div className="text-xs font-mono uppercase tracking-widest text-[#F08A4C] mb-5">The flow</div>
                         <ol className="space-y-5">
                             {STEPS.map((step, i) => (
                                 <li key={i} className="flex gap-4">
-                                    <div className="shrink-0 w-8 h-8 rounded-full bg-[#F97316]/10 border border-[#F97316]/30 flex items-center justify-center text-[#F97316] font-bold text-sm">
+                                    <div className="shrink-0 w-8 h-8 rounded-full bg-[#F08A4C]/10 border border-[#F08A4C]/30 flex items-center justify-center text-[#F08A4C] font-bold text-sm">
                                         {i + 1}
                                     </div>
                                     <div className="flex-1 pt-0.5">
@@ -60,7 +60,7 @@ export default function HackathonDemoPage() {
 
                     {/* SVG diagram */}
                     <div className="rounded-2xl border border-[#222222] bg-[#111111] p-6 md:p-8 mb-10 overflow-x-auto">
-                        <div className="text-xs font-mono uppercase tracking-widest text-[#F97316] mb-5">Request sequence</div>
+                        <div className="text-xs font-mono uppercase tracking-widest text-[#F08A4C] mb-5">Request sequence</div>
                         <svg viewBox="0 0 600 360" className="w-full max-w-2xl mx-auto" aria-label="Sequence diagram: client → server 402 → pay → retry with proof → signed receipt">
                             {/* Vertical lanes */}
                             <line x1="100" y1="30" x2="100" y2="340" stroke="#222222" strokeWidth="1" />
@@ -73,15 +73,15 @@ export default function HackathonDemoPage() {
                             <text x="500" y="20" textAnchor="middle" fill="#FAFAFA" fontSize="11" fontFamily="ui-monospace, monospace">Google + Solana</text>
 
                             {/* 1. POST tools/calendar */}
-                            <line x1="100" y1="60" x2="300" y2="60" stroke="#F97316" strokeWidth="1.5" markerEnd="url(#arrow)" />
+                            <line x1="100" y1="60" x2="300" y2="60" stroke="#F08A4C" strokeWidth="1.5" markerEnd="url(#arrow)" />
                             <text x="200" y="54" textAnchor="middle" fill="#FAFAFA" fontSize="10" fontFamily="ui-monospace, monospace">1. POST /api/tools/calendar</text>
 
                             {/* 2. 402 */}
-                            <line x1="300" y1="95" x2="100" y2="95" stroke="#F97316" strokeWidth="1.5" markerEnd="url(#arrow)" />
-                            <text x="200" y="89" textAnchor="middle" fill="#F97316" fontSize="10" fontFamily="ui-monospace, monospace">2. 402 + invoice_reference</text>
+                            <line x1="300" y1="95" x2="100" y2="95" stroke="#F08A4C" strokeWidth="1.5" markerEnd="url(#arrow)" />
+                            <text x="200" y="89" textAnchor="middle" fill="#F08A4C" fontSize="10" fontFamily="ui-monospace, monospace">2. 402 + invoice_reference</text>
 
                             {/* 3. pay */}
-                            <line x1="100" y1="135" x2="300" y2="135" stroke="#F97316" strokeWidth="1.5" markerEnd="url(#arrow)" />
+                            <line x1="100" y1="135" x2="300" y2="135" stroke="#F08A4C" strokeWidth="1.5" markerEnd="url(#arrow)" />
                             <text x="200" y="129" textAnchor="middle" fill="#FAFAFA" fontSize="10" fontFamily="ui-monospace, monospace">3. POST /api/tools/x402/pay</text>
 
                             {/* 3b. devnet */}
@@ -89,23 +89,23 @@ export default function HackathonDemoPage() {
                             <text x="400" y="164" textAnchor="middle" fill="#A1A1AA" fontSize="10" fontFamily="ui-monospace, monospace">(devnet: simulated tx)</text>
 
                             {/* 4. retry */}
-                            <line x1="100" y1="210" x2="300" y2="210" stroke="#F97316" strokeWidth="1.5" markerEnd="url(#arrow)" />
+                            <line x1="100" y1="210" x2="300" y2="210" stroke="#F08A4C" strokeWidth="1.5" markerEnd="url(#arrow)" />
                             <text x="200" y="204" textAnchor="middle" fill="#FAFAFA" fontSize="10" fontFamily="ui-monospace, monospace">4. POST calendar + X-Payment-Proof</text>
 
                             {/* 5. Google exec */}
-                            <line x1="300" y1="245" x2="500" y2="245" stroke="#F97316" strokeWidth="1.5" markerEnd="url(#arrow)" />
+                            <line x1="300" y1="245" x2="500" y2="245" stroke="#F08A4C" strokeWidth="1.5" markerEnd="url(#arrow)" />
                             <text x="400" y="239" textAnchor="middle" fill="#FAFAFA" fontSize="10" fontFamily="ui-monospace, monospace">Google API call</text>
 
-                            <line x1="500" y1="275" x2="300" y2="275" stroke="#F97316" strokeWidth="1.5" markerEnd="url(#arrow)" />
+                            <line x1="500" y1="275" x2="300" y2="275" stroke="#F08A4C" strokeWidth="1.5" markerEnd="url(#arrow)" />
                             <text x="400" y="269" textAnchor="middle" fill="#A1A1AA" fontSize="10" fontFamily="ui-monospace, monospace">event created</text>
 
                             {/* 6. 200 + receipt */}
-                            <line x1="300" y1="315" x2="100" y2="315" stroke="#F97316" strokeWidth="1.5" markerEnd="url(#arrow)" />
-                            <text x="200" y="309" textAnchor="middle" fill="#F97316" fontSize="10" fontFamily="ui-monospace, monospace">5. 200 + signed receipt</text>
+                            <line x1="300" y1="315" x2="100" y2="315" stroke="#F08A4C" strokeWidth="1.5" markerEnd="url(#arrow)" />
+                            <text x="200" y="309" textAnchor="middle" fill="#F08A4C" fontSize="10" fontFamily="ui-monospace, monospace">5. 200 + signed receipt</text>
 
                             <defs>
                                 <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-                                    <path d="M0,0 L10,5 L0,10 z" fill="#F97316" />
+                                    <path d="M0,0 L10,5 L0,10 z" fill="#F08A4C" />
                                 </marker>
                                 <marker id="arrow-neutral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
                                     <path d="M0,0 L10,5 L0,10 z" fill="#A1A1AA" />
@@ -170,8 +170,8 @@ export default function HackathonDemoPage() {
                     {/* Exact demo steps */}
                     <div className="rounded-2xl border border-[#222222] bg-[#111111] p-6 md:p-8 mb-10">
                         <div className="flex items-center gap-2 mb-5">
-                            <Coins size={16} className="text-[#F97316]" />
-                            <span className="text-xs font-mono uppercase tracking-widest text-[#F97316]">Try it yourself</span>
+                            <Coins size={16} className="text-[#F08A4C]" />
+                            <span className="text-xs font-mono uppercase tracking-widest text-[#F08A4C]">Try it yourself</span>
                         </div>
                         <ol className="space-y-3 text-sm text-[#A1A1AA]">
                             {DEMO_CLICKS.map((click, i) => (
@@ -189,13 +189,13 @@ export default function HackathonDemoPage() {
                     {/* What's verifiable */}
                     <div className="rounded-2xl border border-[#222222] bg-[#111111] p-6 md:p-8 mb-10">
                         <div className="flex items-center gap-2 mb-5">
-                            <Receipt size={16} className="text-[#F97316]" />
-                            <span className="text-xs font-mono uppercase tracking-widest text-[#F97316]">What you can verify</span>
+                            <Receipt size={16} className="text-[#F08A4C]" />
+                            <span className="text-xs font-mono uppercase tracking-widest text-[#F08A4C]">What you can verify</span>
                         </div>
                         <ul className="space-y-3 text-sm">
                             {VERIFIABLE.map((v, i) => (
                                 <li key={i} className="flex gap-3">
-                                    <Check size={14} className="text-[#F97316] mt-1 shrink-0" />
+                                    <Check size={14} className="text-[#F08A4C] mt-1 shrink-0" />
                                     <div>
                                         <div className="text-white font-medium">{v.claim}</div>
                                         <div className="text-xs text-[#A1A1AA] mt-0.5">{v.how}</div>
@@ -209,7 +209,7 @@ export default function HackathonDemoPage() {
                     <div className="text-center">
                         <Link
                             href="/chat"
-                            className="inline-flex items-center h-11 px-6 bg-[#F97316] text-white rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-[#F97316]/90 transition-colors"
+                            className="inline-flex items-center h-11 px-6 bg-[#F08A4C] text-white rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-[#F08A4C]/90 transition-colors"
                         >
                             Start the demo <ArrowRight size={14} className="ml-2" />
                         </Link>
@@ -219,7 +219,7 @@ export default function HackathonDemoPage() {
                                 href="https://github.com/operatoruplift/website/blob/master/docs/HACKATHON_GATE2.md"
                                 target="_blank"
                                 rel="noreferrer"
-                                className="text-[#F97316] hover:underline"
+                                className="text-[#F08A4C] hover:underline"
                             >
                                 HACKATHON_GATE2.md
                             </a>
@@ -261,17 +261,17 @@ const STEPS: Array<{ title: string; description: string; network?: string }> = [
 ];
 
 const DEMO_CLICKS = [
-    'Log in via Privy at <a href="/login" class="text-[#F97316] hover:underline">/login</a>',
-    'Go to <a href="/integrations" class="text-[#F97316] hover:underline">/integrations</a> and Connect Google Calendar & Gmail',
-    'Go to <a href="/chat" class="text-[#F97316] hover:underline">/chat</a>',
-    'Type: <code class="text-[#F97316] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">Schedule a 30-min meeting tomorrow at 3 PM called "trust-stack demo"</code>',
+    'Log in via Privy at <a href="/login" class="text-[#F08A4C] hover:underline">/login</a>',
+    'Go to <a href="/integrations" class="text-[#F08A4C] hover:underline">/integrations</a> and Connect Google Calendar & Gmail',
+    'Go to <a href="/chat" class="text-[#F08A4C] hover:underline">/chat</a>',
+    'Type: <code class="text-[#F08A4C] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">Schedule a 30-min meeting tomorrow at 3 PM called "trust-stack demo"</code>',
     'Click <strong>Pay &amp; Allow Once</strong> in the approval modal',
     'Open the Network tab, observe 402, then /pay, then 200 with receipt',
-    'Go to <a href="/security" class="text-[#F97316] hover:underline">/security</a> and click <strong>Copy JSON</strong> on the new receipt',
-    'Verify the signature with the public key from <a href="/api/receipts/public-key" class="text-[#F97316] hover:underline">/api/receipts/public-key</a>',
+    'Go to <a href="/security" class="text-[#F08A4C] hover:underline">/security</a> and click <strong>Copy JSON</strong> on the new receipt',
+    'Verify the signature with the public key from <a href="/api/receipts/public-key" class="text-[#F08A4C] hover:underline">/api/receipts/public-key</a>',
     'Click the <strong>filecoin:</strong> link on the receipt row to fetch the same bytes from a public IPFS gateway. Byte-compare to confirm we did not tamper with the row after signing.',
-    'Click the <strong>0g:</strong> link on the same row. It lands on <a href="/api/og/storage/0xexample" class="text-[#F97316] hover:underline">/api/og/storage/[rootHash]</a>, our public verifier passthrough. The JSON envelope documents the 0G testnet indexer endpoint and exact SDK call needed to pull the bytes a second time, from a network we do not control.',
-    'Open <a href="/agents/calendar.json" class="text-[#F97316] hover:underline">/agents/calendar.json</a>. If <code class="text-[#F97316] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">og_agent_id</code> is present, click its <code class="text-[#F97316] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">explorer_url</code> to see the agent\'s ERC-7857 Intelligent NFT on 0G Galileo Testnet (chainscan-galileo.0g.ai). The on-chain <code class="text-[#F97316] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">IntelligentData[]</code> array carries SHA-256 hashes of the agent\'s name, capabilities, system prompt, and model.',
+    'Click the <strong>0g:</strong> link on the same row. It lands on <a href="/api/og/storage/0xexample" class="text-[#F08A4C] hover:underline">/api/og/storage/[rootHash]</a>, our public verifier passthrough. The JSON envelope documents the 0G testnet indexer endpoint and exact SDK call needed to pull the bytes a second time, from a network we do not control.',
+    'Open <a href="/agents/calendar.json" class="text-[#F08A4C] hover:underline">/agents/calendar.json</a>. If <code class="text-[#F08A4C] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">og_agent_id</code> is present, click its <code class="text-[#F08A4C] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">explorer_url</code> to see the agent\'s ERC-7857 Intelligent NFT on 0G Galileo Testnet (chainscan-galileo.0g.ai). The on-chain <code class="text-[#F08A4C] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">IntelligentData[]</code> array carries SHA-256 hashes of the agent\'s name, capabilities, system prompt, and model.',
 ];
 
 const VERIFIABLE: Array<{ claim: string; how: string }> = [
@@ -317,8 +317,8 @@ function MagicBlockCard() {
     return (
         <div className="rounded-2xl border border-[#222222] bg-[#111111] p-6 md:p-8 mb-10">
             <div className="flex items-center gap-2 mb-5">
-                <Zap size={16} className="text-[#F97316]" />
-                <span className="text-xs font-mono uppercase tracking-widest text-[#F97316]">MagicBlock adapter</span>
+                <Zap size={16} className="text-[#F08A4C]" />
+                <span className="text-xs font-mono uppercase tracking-widest text-[#F08A4C]">MagicBlock adapter</span>
                 <span className={`ml-auto inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border ${pillClass}`}>
                     {status.label}
                 </span>
@@ -326,13 +326,13 @@ function MagicBlockCard() {
             <p className="text-sm text-[#A1A1AA] leading-relaxed mb-4">
                 MagicBlock can settle receipts on an ephemeral rollup for faster
                 finality than mainnet. Our adapter interface is shipped at{' '}
-                <code className="text-[#F97316] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222] text-[11px]">lib/magicblock/adapter.ts</code>
+                <code className="text-[#F08A4C] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222] text-[11px]">lib/magicblock/adapter.ts</code>
                 {' '}and is feature-flagged behind{' '}
-                <code className="text-[#F97316] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222] text-[11px]">NEXT_PUBLIC_MAGICBLOCK_ENABLED</code>
+                <code className="text-[#F08A4C] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222] text-[11px]">NEXT_PUBLIC_MAGICBLOCK_ENABLED</code>
                 .
             </p>
             <p className="text-xs text-[#A1A1AA] leading-relaxed">
-                <strong className="text-white">Honest status:</strong> {status.reason} No receipt produced by this codebase claims <code className="text-[#F97316] bg-[#0A0A0A] px-1 py-0.5 rounded border border-[#222222] text-[11px]">executed_via: magicblock</code> unless the stub is replaced with a real implementation AND the flag is set.
+                <strong className="text-white">Honest status:</strong> {status.reason} No receipt produced by this codebase claims <code className="text-[#F08A4C] bg-[#0A0A0A] px-1 py-0.5 rounded border border-[#222222] text-[11px]">executed_via: magicblock</code> unless the stub is replaced with a real implementation AND the flag is set.
             </p>
         </div>
     );
@@ -356,10 +356,10 @@ function VerifyCard({
             href={href}
             target={external ? '_blank' : undefined}
             rel={external ? 'noopener noreferrer' : undefined}
-            className="block p-4 rounded-xl border border-[#222222] bg-[#111111] hover:border-[#F97316]/30 transition-colors"
+            className="block p-4 rounded-xl border border-[#222222] bg-[#111111] hover:border-[#F08A4C]/30 transition-colors"
         >
             <div className="flex items-center gap-2 mb-2">
-                <Icon size={14} className="text-[#F97316]" />
+                <Icon size={14} className="text-[#F08A4C]" />
                 <span className="text-xs font-bold text-white">{title}</span>
                 {external && <ExternalLink size={12} className="text-[#52525B] ml-auto" />}
             </div>

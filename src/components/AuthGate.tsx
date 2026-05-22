@@ -143,7 +143,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
                     </p>
                     <div className="flex gap-3 mt-4">
                         <Link href="/paywall"
-                            className="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-primary/90 transition-colors shadow-[0_0_20px_rgba(249,115,22,0.25)]">
+                            className="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-primary/90 transition-colors shadow-[0_0_20px_rgba(240, 138, 76,0.25)]">
                             Get Access
                         </Link>
                         <Link href="/login"

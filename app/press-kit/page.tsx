@@ -36,9 +36,9 @@ export default function PressKitPage() {
                 <div className="max-w-2xl mx-auto">
                     <div className="text-center mb-10">
                         <div className="inline-flex items-center gap-3 mb-4">
-                            <span className="h-px w-16 bg-[#F97316]/40" />
-                            <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">Press Kit</span>
-                            <span className="h-px w-16 bg-[#F97316]/40" />
+                            <span className="h-px w-16 bg-[#F08A4C]/40" />
+                            <span className="text-xs font-bold tracking-[0.25em] text-[#F08A4C] uppercase">Press Kit</span>
+                            <span className="h-px w-16 bg-[#F08A4C]/40" />
                         </div>
                         <h1 className="text-3xl md:text-4xl font-medium text-foreground bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text [-webkit-text-fill-color:transparent] tracking-tight mb-4">
                             Press &amp; media resources
@@ -49,9 +49,9 @@ export default function PressKitPage() {
                     </div>
 
                     {submitted ? (
-                        <div className="rounded-2xl border border-[#F97316]/30 bg-[#F97316]/5 p-8 text-center">
-                            <div className="w-12 h-12 rounded-xl bg-[#F97316]/15 border border-[#F97316]/30 flex items-center justify-center mx-auto mb-4">
-                                <Check size={22} className="text-[#F97316]" />
+                        <div className="rounded-2xl border border-[#F08A4C]/30 bg-[#F08A4C]/5 p-8 text-center">
+                            <div className="w-12 h-12 rounded-xl bg-[#F08A4C]/15 border border-[#F08A4C]/30 flex items-center justify-center mx-auto mb-4">
+                                <Check size={22} className="text-[#F08A4C]" />
                             </div>
                             <h2 className="text-xl font-semibold mb-2">Request received</h2>
                             <p className="text-sm text-muted">
@@ -71,17 +71,17 @@ export default function PressKitPage() {
                                     value={email}
                                     onChange={e => setEmail(e.target.value)}
                                     placeholder="journalist@outlet.com"
-                                    className="flex-1 h-11 bg-background border border-border rounded-lg px-3 text-sm text-foreground placeholder:text-muted focus:border-[#F97316]/50 focus:outline-none transition-colors"
+                                    className="flex-1 h-11 bg-background border border-border rounded-lg px-3 text-sm text-foreground placeholder:text-muted focus:border-[#F08A4C]/50 focus:outline-none transition-colors"
                                 />
                             </div>
                             <button
                                 onClick={handleSubmit}
-                                className="w-full h-11 rounded-lg bg-[#F97316] text-white font-bold uppercase tracking-widest text-sm hover:bg-[#F97316]/90 transition-colors flex items-center justify-center gap-2"
+                                className="w-full h-11 rounded-lg bg-[#F08A4C] text-white font-bold uppercase tracking-widest text-sm hover:bg-[#F08A4C]/90 transition-colors flex items-center justify-center gap-2"
                             >
                                 Request Press Kit <ArrowRight size={14} />
                             </button>
                             <p className="text-[11px] text-[#52525B] mt-4 text-center">
-                                For product inquiries, use the <Link href="/contact" className="text-[#F97316] hover:underline">contact page</Link>.
+                                For product inquiries, use the <Link href="/contact" className="text-[#F08A4C] hover:underline">contact page</Link>.
                             </p>
                         </div>
                     )}

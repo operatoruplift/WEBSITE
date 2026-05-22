@@ -4,7 +4,7 @@ import { GeistMono } from 'geist/font/mono';
 import "./globals.css";
 
 export const viewport: Viewport = {
-  themeColor: '#F97316',
+  themeColor: '#F08A4C',
   // Marketing surfaces use the light palette (PR #309) and the
   // dashboard keeps a dark palette via its own data-theme opt-in,
   // so advertise both to the UA. Forms, scrollbars, and selection

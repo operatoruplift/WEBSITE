@@ -40,9 +40,9 @@ const fetchDashboardData = async () => {
         setTimeout(() => {
             resolve({
                 stats: [
-                    { id: '1', label: 'Helpers installed', value: String(agentCount), change: agentCount === 1 ? '1 helper' : `${agentCount} helpers`, positive: true, icon: Bot, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
-                    { id: '2', label: 'Chat sessions', value: String(chatCount), change: 'In this browser', positive: true, icon: Workflow, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
-                    { id: '3', label: 'Memories saved', value: String(memoryCount), change: 'In this browser', positive: true, icon: Brain, gradient: 'from-[#F97316]/20 to-[#F97316]/10' },
+                    { id: '1', label: 'Helpers installed', value: String(agentCount), change: agentCount === 1 ? '1 helper' : `${agentCount} helpers`, positive: true, icon: Bot, gradient: 'from-[#F08A4C]/20 to-[#F08A4C]/10' },
+                    { id: '2', label: 'Chat sessions', value: String(chatCount), change: 'In this browser', positive: true, icon: Workflow, gradient: 'from-[#F08A4C]/20 to-[#F08A4C]/10' },
+                    { id: '3', label: 'Memories saved', value: String(memoryCount), change: 'In this browser', positive: true, icon: Brain, gradient: 'from-[#F08A4C]/20 to-[#F08A4C]/10' },
                 ],
                 activity: [],
                 health: [
@@ -112,7 +112,7 @@ export default function DashboardPage() {
                                 </div>
                             </div>
                             <h1 className="text-4xl lg:text-5xl font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-400">Good {greeting}.</h1>
-                            <p className="text-sm text-gray-400 mt-2 font-mono flex items-center gap-2"><Activity size={12} className="text-[#F97316]" /> Welcome back. Here&apos;s a snapshot.</p>
+                            <p className="text-sm text-gray-400 mt-2 font-mono flex items-center gap-2"><Activity size={12} className="text-[#F08A4C]" /> Welcome back. Here&apos;s a snapshot.</p>
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="text-right">
@@ -120,8 +120,8 @@ export default function DashboardPage() {
                                 <div className="text-[10px] font-mono text-gray-500 uppercase">Local Time</div>
                             </div>
                             <GlowButton onClick={() => router.push('/agents/builder')} className="h-12 px-6 bg-foreground/[0.04] hover:bg-white/10 border border-white/10 overflow-hidden relative group">
-                                <div className="absolute inset-0 bg-gradient-to-r from-[#F97316] via-[#F97316] to-[#FFEDD5] opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
-                                <Plus size={16} className="mr-2 text-[#F97316]" /><span className="font-medium tracking-wide">Build a helper</span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-[#F08A4C] via-[#F08A4C] to-[#FFEDD5] opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
+                                <Plus size={16} className="mr-2 text-[#F08A4C]" /><span className="font-medium tracking-wide">Build a helper</span>
                             </GlowButton>
                         </div>
                     </div>
@@ -157,11 +157,11 @@ export default function DashboardPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10">
                         <div className="col-span-1 lg:col-span-2 space-y-6">
                             <div className="animate-fadeInUp" style={{ animationDelay: '300ms' }}>
-                                <div className="flex items-center gap-2 mb-4 px-1"><Zap size={14} className="text-[#F97316]" /><h2 className="text-xs font-mono text-gray-400 uppercase tracking-widest">Quick actions</h2></div>
+                                <div className="flex items-center gap-2 mb-4 px-1"><Zap size={14} className="text-[#F08A4C]" /><h2 className="text-xs font-mono text-gray-400 uppercase tracking-widest">Quick actions</h2></div>
                                 <StaggerChildren delayMs={60} className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                     {QUICK_ACTIONS.map(action => { const Icon = action.icon; return (
                                         <Link key={action.label} href={action.href}>
-                                            <Spotlight className="rounded-xl" fill={action.text.includes('rose') ? '#f43f5e' : action.text.includes('emerald') ? '#34d399' : '#F97316'}>
+                                            <Spotlight className="rounded-xl" fill={action.text.includes('rose') ? '#f43f5e' : action.text.includes('emerald') ? '#34d399' : '#F08A4C'}>
                                                 <div className="relative p-4 rounded-xl border border-foreground/10 bg-black/20 hover:bg-foreground/[0.06] transition-all duration-300 overflow-hidden flex items-center gap-3 cursor-pointer">
                                                     <div className={`w-10 h-10 rounded-lg ${action.bg} flex items-center justify-center flex-shrink-0 group- transition-transform duration-300`}><Icon size={18} className={action.text} /></div>
                                                     <span className="text-sm font-medium text-gray-300 hover:text-white transition-colors">{action.label}</span>
@@ -174,7 +174,7 @@ export default function DashboardPage() {
                             <Card variant="glass" className="card-animate" style={{ animationDelay: '400ms' }}>
                                 <CardHeader className="border-b border-foreground/10 pb-4">
                                     <CardTitle className="flex items-center justify-between text-sm">
-                                        <div className="flex items-center gap-2 text-gray-300 font-mono tracking-widest uppercase"><Activity size={14} className="text-[#F97316]" /> Recent activity</div>
+                                        <div className="flex items-center gap-2 text-gray-300 font-mono tracking-widest uppercase"><Activity size={14} className="text-[#F08A4C]" /> Recent activity</div>
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-0">
@@ -208,7 +208,7 @@ export default function DashboardPage() {
                             {/* System status panel. Items here map to live product
                                 surfaces (Chat, Helpers store, Memory, Receipts) so
                                 the badge accurately reflects what's available. */}
-                            <Card variant="glass" className="border-[#F97316]/20" style={{ animationDelay: '500ms' }}>
+                            <Card variant="glass" className="border-[#F08A4C]/20" style={{ animationDelay: '500ms' }}>
                                 <CardHeader className="pb-2"><CardTitle className="flex items-center text-xs font-mono text-gray-400 uppercase tracking-widest"><span className="flex items-center gap-2"><ServerIcon /> System status</span></CardTitle></CardHeader>
                                 <CardContent>
                                     {isLoading ? <div className="space-y-3">{[1,2,3,4].map(i => <div key={i} className="h-6 bg-foreground/[0.04] rounded" />)}</div> :
@@ -236,7 +236,7 @@ export default function DashboardPage() {
 
 function ServerIcon() {
     return (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#F97316]">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#F08A4C]">
             <rect width="20" height="8" x="2" y="2" rx="2" /><rect width="20" height="8" x="2" y="14" rx="2" />
             <line x1="6" x2="6.01" y1="6" y2="6" /><line x1="6" x2="6.01" y1="18" y2="18" />
         </svg>

@@ -110,7 +110,7 @@ export default function AgentsPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <Bot size={16} className="text-[#F97316]" />
+                                <Bot size={16} className="text-[#F08A4C]" />
                                 <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Agents</span>
                                 <span className="text-[8px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
                                     {liveCount} live
@@ -191,7 +191,7 @@ export default function AgentsPage() {
                                         ) : (
                                             <button
                                                 onClick={() => openAgent(agent)}
-                                                className="flex items-center justify-between gap-2 w-full py-2 px-3 rounded-lg bg-[#F97316]/10 border border-[#F97316]/30 text-[#F97316] text-xs font-bold uppercase tracking-wider hover:bg-[#F97316]/15 transition-colors"
+                                                className="flex items-center justify-between gap-2 w-full py-2 px-3 rounded-lg bg-[#F08A4C]/10 border border-[#F08A4C]/30 text-[#F08A4C] text-xs font-bold uppercase tracking-wider hover:bg-[#F08A4C]/15 transition-colors"
                                                 data-testid={`agent-open-${agent.id}`}
                                             >
                                                 <span>Try in Chat</span>

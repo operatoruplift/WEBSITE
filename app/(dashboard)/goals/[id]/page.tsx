@@ -223,7 +223,7 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
                         </p>
                     )}
                     {editing && (
-                        <form onSubmit={saveEdit} className="mt-4 rounded-2xl border border-[#F97316]/20 bg-[#F97316]/[0.03] p-5 flex flex-col gap-4">
+                        <form onSubmit={saveEdit} className="mt-4 rounded-2xl border border-[#F08A4C]/20 bg-[#F08A4C]/[0.03] p-5 flex flex-col gap-4">
                             <div>
                                 <label htmlFor="edit-title" className="block text-[10px] font-bold tracking-widest uppercase text-foreground/70 mb-1.5">
                                     Title
@@ -236,7 +236,7 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
                                     required
                                     maxLength={200}
                                     disabled={busy}
-                                    className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#F97316]/50 focus:ring-1 focus:ring-[#F97316]/30 disabled:opacity-50"
+                                    className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#F08A4C]/50 focus:ring-1 focus:ring-[#F08A4C]/30 disabled:opacity-50"
                                 />
                             </div>
                             <div>
@@ -251,7 +251,7 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
                                     maxLength={300}
                                     placeholder="Leave blank to clear"
                                     disabled={busy}
-                                    className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted/70 focus:outline-none focus:border-[#F97316]/50 focus:ring-1 focus:ring-[#F97316]/30 disabled:opacity-50"
+                                    className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted/70 focus:outline-none focus:border-[#F08A4C]/50 focus:ring-1 focus:ring-[#F08A4C]/30 disabled:opacity-50"
                                 />
                             </div>
                             <div>
@@ -264,14 +264,14 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
                                     value={draftTarget}
                                     onChange={(e) => setDraftTarget(e.target.value)}
                                     disabled={busy}
-                                    className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#F97316]/50 focus:ring-1 focus:ring-[#F97316]/30 disabled:opacity-50"
+                                    className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[#F08A4C]/50 focus:ring-1 focus:ring-[#F08A4C]/30 disabled:opacity-50"
                                 />
                             </div>
                             <div className="flex gap-2">
                                 <button
                                     type="submit"
                                     disabled={busy || !draftTitle.trim()}
-                                    className="inline-flex items-center px-4 py-2 bg-[#F97316] hover:bg-[#F97316]/90 text-white font-bold text-xs rounded-lg uppercase tracking-widest transition-colors disabled:opacity-50"
+                                    className="inline-flex items-center px-4 py-2 bg-[#F08A4C] hover:bg-[#F08A4C]/90 text-white font-bold text-xs rounded-lg uppercase tracking-widest transition-colors disabled:opacity-50"
                                 >
                                     Save
                                 </button>
@@ -290,9 +290,9 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
 
                 {/* Stats strip */}
                 <div className="mb-8 grid grid-cols-2 md:grid-cols-3 gap-3">
-                    <div className="rounded-xl border border-[#F97316]/20 bg-[#F97316]/[0.04] p-4">
+                    <div className="rounded-xl border border-[#F08A4C]/20 bg-[#F08A4C]/[0.04] p-4">
                         <div className="flex items-center gap-2 mb-1">
-                            <Flame aria-hidden className="w-4 h-4 text-[#F97316]" />
+                            <Flame aria-hidden className="w-4 h-4 text-[#F08A4C]" />
                             <span className="text-[10px] font-bold tracking-widest uppercase text-foreground/60">Streak</span>
                         </div>
                         <p className="text-2xl font-bold text-foreground">{goal.streak} <span className="text-sm text-muted font-medium">day{goal.streak === 1 ? '' : 's'}</span></p>
@@ -328,14 +328,14 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
                                 placeholder="What did you do? How did it feel?"
                                 maxLength={300}
                                 disabled={busy}
-                                className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[#F97316]/50 focus:ring-1 focus:ring-[#F97316]/30 disabled:opacity-50"
+                                className="w-full rounded-lg border border-foreground/10 bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[#F08A4C]/50 focus:ring-1 focus:ring-[#F08A4C]/30 disabled:opacity-50"
                             />
                         </div>
                         <button
                             type="button"
                             onClick={checkIn}
                             disabled={busy}
-                            className="shrink-0 inline-flex items-center px-4 py-2 bg-[#F97316] hover:bg-[#F97316]/90 text-white font-bold text-xs rounded-lg uppercase tracking-widest transition-colors shadow-[0_0_20px_rgba(249,115,22,0.25)] disabled:opacity-50"
+                            className="shrink-0 inline-flex items-center px-4 py-2 bg-[#F08A4C] hover:bg-[#F08A4C]/90 text-white font-bold text-xs rounded-lg uppercase tracking-widest transition-colors shadow-[0_0_20px_rgba(240, 138, 76,0.25)] disabled:opacity-50"
                         >
                             Check in today
                             <CheckCircle2 aria-hidden className="ml-1.5 w-3.5 h-3.5" />
@@ -413,7 +413,7 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
                             {goal.questline.map((step, i) => (
                                 <li key={i} className="rounded-lg border border-foreground/10 bg-card p-4">
                                     <div className="flex items-baseline gap-3 mb-1">
-                                        <span className="text-[10px] font-mono font-bold text-[#F97316]/80 shrink-0 tabular-nums">DAY {step.day}</span>
+                                        <span className="text-[10px] font-mono font-bold text-[#F08A4C]/80 shrink-0 tabular-nums">DAY {step.day}</span>
                                         <span className="text-sm font-semibold text-foreground">{step.action}</span>
                                     </div>
                                     {step.notes && <p className="text-xs text-muted ml-12">{step.notes}</p>}
@@ -459,7 +459,7 @@ export default function GoalDetailPage({ params }: { params: Promise<{ id: strin
 
 function StatusBadge({ status }: { status: GoalStatus }) {
     const styles: Record<GoalStatus, string> = {
-        active: 'bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]',
+        active: 'bg-[#F08A4C]/10 border-[#F08A4C]/30 text-[#F08A4C]',
         paused: 'bg-foreground/5 border-foreground/20 text-foreground/60',
         completed: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700',
         abandoned: 'bg-foreground/5 border-foreground/20 text-foreground/40',

@@ -75,9 +75,9 @@ export default function WaitlistPage() {
                 <div className="max-w-2xl mx-auto">
                     <div className="text-center mb-10">
                         <div className="inline-flex items-center gap-3 mb-4">
-                            <span className="h-px w-16 bg-[#F97316]/40" />
-                            <span className="text-xs font-bold tracking-[0.25em] text-[#F97316] uppercase">Waitlist</span>
-                            <span className="h-px w-16 bg-[#F97316]/40" />
+                            <span className="h-px w-16 bg-[#F08A4C]/40" />
+                            <span className="text-xs font-bold tracking-[0.25em] text-[#F08A4C] uppercase">Waitlist</span>
+                            <span className="h-px w-16 bg-[#F08A4C]/40" />
                         </div>
                         <h1 className="text-3xl md:text-4xl font-medium tracking-tight mb-4">
                             Join the waitlist
@@ -182,8 +182,8 @@ function JoinedCard({
     email: string;
 }) {
     return (
-        <div className="rounded-2xl border border-[#F97316]/30 bg-[#F97316]/5 p-8 text-center space-y-4">
-            <div className="text-xs font-bold uppercase tracking-[0.25em] text-[#F97316]">
+        <div className="rounded-2xl border border-[#F08A4C]/30 bg-[#F08A4C]/5 p-8 text-center space-y-4">
+            <div className="text-xs font-bold uppercase tracking-[0.25em] text-[#F08A4C]">
                 {alreadyExisted ? 'Already on the list' : 'You are in'}
             </div>
             <div className="text-4xl md:text-5xl font-semibold tracking-tight text-foreground">

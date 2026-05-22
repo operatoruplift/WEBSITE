@@ -1,19 +1,27 @@
 @import "tailwindcss";
 
-/* ── Design tokens — mirrored from repos/UI (uplift.exe) ── */
+/* ── Design tokens, 2026-05-22 deck-design pass ──
+ *
+ * Aligned to the Operator Uplift Pitch Deck (Final · Stage Edition):
+ *   - softer peach-orange #F08A4C primary instead of the prior
+ *     highlighter #F97316. The bright orange read as a developer-tool
+ *     accent; #F08A4C reads editorial against pure-black backgrounds.
+ *   - background pulled to true #0A0A0B (matches the deck's stage tint).
+ *   - muted text bumped to a slightly cooler #71717A so the orange
+ *     pops harder against grey supporting copy. */
 @theme{
-  --color-primary: #F97316;
-  --color-primary-foreground: #FFFFFF;
-  --color-foreground: #FAFAFA;
-  --color-background: #0A0A0A;
-  --color-surface: #111111;
-  --color-surface-elevated: #1A1A1A;
-  --color-card: #111111;
-  --color-muted: #A1A1AA;
+  --color-primary: #F08A4C;
+  --color-primary-foreground: #0A0A0B;
+  --color-foreground: #F4F4F5;
+  --color-background: #0A0A0B;
+  --color-surface: #131316;
+  --color-surface-elevated: #1A1A1D;
+  --color-card: #131316;
+  --color-muted: #71717A;
   --color-muted-foreground: #A1A1AA;
-  --color-border: #222222;
-  --color-border-visible: #333333;
-  --color-ring: #F97316;
+  --color-border: #1F1F23;
+  --color-border-visible: #2A2A30;
+  --color-ring: #F08A4C;
   --color-destructive: #EF4444;
   --color-success: #22C55E;
   --color-warning: #EAB308;
@@ -131,7 +139,7 @@
     transform: translateX(-50%);
     width: 1200px;
     height: 600px;
-    background: radial-gradient(ellipse at center, rgba(249, 115, 22, 0.10) 0%, transparent 65%);
+    background: radial-gradient(ellipse at center, rgba(240, 138, 76, 0.10) 0%, transparent 65%);
     pointer-events: none;
     z-index: 0;
   }
@@ -516,7 +524,7 @@
 }
 
 .gradient-text-animated {
-  background: linear-gradient(90deg, #ffffff, #F97316, #F97316, #ffffff);
+  background: linear-gradient(90deg, #ffffff, #F08A4C, #F08A4C, #ffffff);
   background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -538,12 +546,12 @@
 .blog-content h3 { color: #FAFAFA; font-size: 1.15rem; font-weight: 500; margin-top: 1.5rem; margin-bottom: 0.75rem; }
 .blog-content ul, .blog-content ol { margin: 0 0 1.25rem 1.5rem; }
 .blog-content li { margin-bottom: 0.5rem; }
-.blog-content a { color: #F97316; text-decoration: underline; text-underline-offset: 3px; }
+.blog-content a { color: #F08A4C; text-decoration: underline; text-underline-offset: 3px; }
 .blog-content a:hover { color: #fb923c; }
-.blog-content code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: rgba(249, 115, 22, 0.08); color: #FDBA74; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.92em; border: 1px solid rgba(249, 115, 22, 0.15); }
+.blog-content code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: rgba(240, 138, 76, 0.08); color: #FDBA74; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.92em; border: 1px solid rgba(240, 138, 76, 0.15); }
 .blog-content pre { background: #0A0A0A; border: 1px solid #222222; border-radius: 10px; padding: 1rem 1.25rem; overflow-x: auto; margin: 1.5rem 0; font-size: 0.9em; line-height: 1.6; }
 .blog-content pre code { background: none; border: none; padding: 0; color: #E5E5E5; }
-.blog-content blockquote { border-left: 3px solid #F97316; padding: 0.25rem 0 0.25rem 1rem; margin: 1.5rem 0; color: #FAFAFA; font-style: italic; }
+.blog-content blockquote { border-left: 3px solid #F08A4C; padding: 0.25rem 0 0.25rem 1rem; margin: 1.5rem 0; color: #FAFAFA; font-style: italic; }
 
 /* ------------------------------------------------------------------
    Docs prose — /docs route. Same reading-first typography scale as
@@ -558,12 +566,12 @@
 .docs-prose h3 { color: #FAFAFA; font-size: 1.05rem; font-weight: 500; margin-top: 1.25rem; margin-bottom: 0.5rem; }
 .docs-prose ul, .docs-prose ol { margin: 0 0 1rem 1.5rem; }
 .docs-prose li { margin-bottom: 0.35rem; }
-.docs-prose a { color: #F97316; text-decoration: underline; text-underline-offset: 3px; }
+.docs-prose a { color: #F08A4C; text-decoration: underline; text-underline-offset: 3px; }
 .docs-prose a:hover { color: #fb923c; }
-.docs-prose code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: rgba(249, 115, 22, 0.08); color: #FDBA74; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.9em; border: 1px solid rgba(249, 115, 22, 0.15); }
+.docs-prose code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: rgba(240, 138, 76, 0.08); color: #FDBA74; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.9em; border: 1px solid rgba(240, 138, 76, 0.15); }
 .docs-prose pre { background: #0A0A0A; border: 1px solid #222222; border-radius: 10px; padding: 1rem 1.25rem; overflow-x: auto; margin: 1rem 0 1.5rem; font-size: 0.88em; line-height: 1.6; }
 .docs-prose pre code { background: none; border: none; padding: 0; color: #E5E5E5; }
-.docs-prose blockquote { border-left: 3px solid #F97316; padding: 0.25rem 0 0.25rem 1rem; margin: 1rem 0; color: #FAFAFA; font-style: italic; }
+.docs-prose blockquote { border-left: 3px solid #F08A4C; padding: 0.25rem 0 0.25rem 1rem; margin: 1rem 0; color: #FAFAFA; font-style: italic; }
 
 /* ------------------------------------------------------------------
    Light-mode overrides for prose. The base .blog-content and

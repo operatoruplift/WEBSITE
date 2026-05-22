@@ -20,14 +20,14 @@ interface ToolApprovalModalProps {
 }
 
 const TOOL_META: Record<string, { label: string; icon: typeof Calendar; color: string; risk: string }> = {
-    calendar: { label: 'Google Calendar', icon: Calendar, color: 'text-[#F97316]', risk: 'MEDIUM' },
-    gmail: { label: 'Gmail', icon: Mail, color: 'text-[#F97316]', risk: 'HIGH' },
-    reminders: { label: 'Reminders', icon: Bell, color: 'text-[#F97316]', risk: 'LOW' },
-    web: { label: 'Web', icon: Globe, color: 'text-[#F97316]', risk: 'LOW' },
-    notes: { label: 'Notes', icon: NotebookPen, color: 'text-[#F97316]', risk: 'LOW' },
-    tasks: { label: 'Tasks', icon: ListTodo, color: 'text-[#F97316]', risk: 'LOW' },
-    tokens: { label: 'Tokens API', icon: Coins, color: 'text-[#F97316]', risk: 'LOW' },
-    imessage: { label: 'iMessage (Photon)', icon: MessageCircle, color: 'text-[#F97316]', risk: 'HIGH' },
+    calendar: { label: 'Google Calendar', icon: Calendar, color: 'text-[#F08A4C]', risk: 'MEDIUM' },
+    gmail: { label: 'Gmail', icon: Mail, color: 'text-[#F08A4C]', risk: 'HIGH' },
+    reminders: { label: 'Reminders', icon: Bell, color: 'text-[#F08A4C]', risk: 'LOW' },
+    web: { label: 'Web', icon: Globe, color: 'text-[#F08A4C]', risk: 'LOW' },
+    notes: { label: 'Notes', icon: NotebookPen, color: 'text-[#F08A4C]', risk: 'LOW' },
+    tasks: { label: 'Tasks', icon: ListTodo, color: 'text-[#F08A4C]', risk: 'LOW' },
+    tokens: { label: 'Tokens API', icon: Coins, color: 'text-[#F08A4C]', risk: 'LOW' },
+    imessage: { label: 'iMessage (Photon)', icon: MessageCircle, color: 'text-[#F08A4C]', risk: 'HIGH' },
 };
 
 const ACTION_LABELS: Record<string, string> = {
@@ -129,7 +129,7 @@ export function ToolApprovalModal({
             <div className="w-full max-w-lg rounded-2xl bg-[#0c0c0c] border border-white/10 shadow-2xl overflow-hidden">
                 <div className="px-6 pt-5 pb-4 border-b border-white/5 flex items-center gap-4">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
-                        meta.risk === 'HIGH' ? 'bg-orange-500/10 border-orange-500/30' : 'bg-[#F97316]/10 border-[#F97316]/30'
+                        meta.risk === 'HIGH' ? 'bg-orange-500/10 border-orange-500/30' : 'bg-[#F08A4C]/10 border-[#F08A4C]/30'
                     }`}>
                         <Icon size={22} className={meta.color} />
                     </div>
@@ -202,9 +202,9 @@ export function ToolApprovalModal({
 
                     {/* x402 price block, only on gated actions */}
                     {isPaid && price && (
-                        <div className="flex items-center justify-between p-4 rounded-xl bg-[#F97316]/5 border border-[#F97316]/20">
+                        <div className="flex items-center justify-between p-4 rounded-xl bg-[#F08A4C]/5 border border-[#F08A4C]/20">
                             <div className="flex items-center gap-2">
-                                <Coins size={14} className="text-[#F97316]" />
+                                <Coins size={14} className="text-[#F08A4C]" />
                                 <div>
                                     <div className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-0.5">Cost</div>
                                     <div className="text-sm font-bold text-white">
@@ -213,7 +213,7 @@ export function ToolApprovalModal({
                                     <div className="text-[10px] text-gray-500 mt-0.5">on {price.chain}</div>
                                 </div>
                             </div>
-                            <span className="text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded border bg-[#F97316]/10 border-[#F97316]/30 text-[#F97316]">
+                            <span className="text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded border bg-[#F08A4C]/10 border-[#F08A4C]/30 text-[#F08A4C]">
                                 x402
                             </span>
                         </div>
@@ -260,7 +260,7 @@ export function ToolApprovalModal({
                                 type="checkbox"
                                 checked={confirmed}
                                 onChange={(e) => setConfirmed(e.target.checked)}
-                                className="mt-0.5 accent-[#F97316]"
+                                className="mt-0.5 accent-[#F08A4C]"
                             />
                             <span className="text-[11px] text-gray-300 leading-relaxed">
                                 I understand this action has real side effects and may not be reversible.
@@ -271,7 +271,7 @@ export function ToolApprovalModal({
                     {/* Phase indicator during execution */}
                     {isExecuting && (
                         <div className="flex items-center gap-2 p-3 rounded-lg bg-white/[0.03] border border-white/5">
-                            <Loader2 size={14} className="animate-spin text-[#F97316]" />
+                            <Loader2 size={14} className="animate-spin text-[#F08A4C]" />
                             <span className="text-xs text-gray-300">
                                 {phase === 'requesting' && 'Requesting invoice…'}
                                 {phase === 'paying' && 'Paying invoice on devnet…'}
@@ -293,7 +293,7 @@ export function ToolApprovalModal({
                     <button
                         onClick={handleApprove}
                         disabled={isExecuting || (isRisky && !confirmed)}
-                        className="flex-[2] h-10 rounded-xl flex items-center justify-center gap-2 bg-[#F97316] hover:bg-[#F97316]/90 text-white text-xs font-bold uppercase tracking-widest transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                        className="flex-[2] h-10 rounded-xl flex items-center justify-center gap-2 bg-[#F08A4C] hover:bg-[#F08A4C]/90 text-white text-xs font-bold uppercase tracking-widest transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                         title={isRisky && !confirmed ? 'Check the confirmation box to continue.' : undefined}
                     >
                         {isExecuting ? (

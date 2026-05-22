@@ -94,9 +94,9 @@ export default function TeamPage() {
                     <FadeIn>
                         <div className="text-center mb-16 mx-auto max-w-2xl">
                             <div className="inline-flex items-center gap-3 mb-4">
-                                <span className="h-px w-16 bg-[#F97316]/40" aria-hidden />
-                                <span className="text-xs font-mono font-bold tracking-[0.12em] text-[#F97316] uppercase">// Built by an operator</span>
-                                <span className="h-px w-16 bg-[#F97316]/40" aria-hidden />
+                                <span className="h-px w-16 bg-[#F08A4C]/40" aria-hidden />
+                                <span className="text-xs font-mono font-bold tracking-[0.12em] text-[#F08A4C] uppercase">// Built by an operator</span>
+                                <span className="h-px w-16 bg-[#F08A4C]/40" aria-hidden />
                             </div>
                             <h1 className="text-3xl md:text-5xl font-medium text-foreground mb-4 tracking-tight leading-[1.1]">
                                 Solo founder. Consequence-driven by design.
@@ -126,8 +126,8 @@ export default function TeamPage() {
                     {/* The "why" callout, verbatim from v10 deck slide 11. */}
                     <FadeIn delay={200}>
                         <section className="mb-20 max-w-2xl mx-auto">
-                            <div className="rounded-2xl border border-[#F97316]/30 bg-[#F97316]/[0.04] p-6 md:p-8">
-                                <div className="text-xs font-mono font-bold tracking-[0.12em] text-[#F97316] uppercase mb-3">
+                            <div className="rounded-2xl border border-[#F08A4C]/30 bg-[#F08A4C]/[0.04] p-6 md:p-8">
+                                <div className="text-xs font-mono font-bold tracking-[0.12em] text-[#F08A4C] uppercase mb-3">
                                     // the why
                                 </div>
                                 <blockquote className="text-base md:text-lg text-foreground leading-relaxed">
@@ -164,7 +164,7 @@ export default function TeamPage() {
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {VALUES.map((value) => (
-                                    <div key={value.title} className="rounded-2xl border border-[#F97316]/20 bg-[#F97316]/[0.03] p-6">
+                                    <div key={value.title} className="rounded-2xl border border-[#F08A4C]/20 bg-[#F08A4C]/[0.03] p-6">
                                         <h3 className="text-sm font-semibold text-foreground mb-2">{value.title}</h3>
                                         <p className="text-sm text-muted leading-relaxed">{value.body}</p>
                                     </div>
@@ -184,7 +184,7 @@ export default function TeamPage() {
                             </p>
                             <Link
                                 href="/waitlist"
-                                className="inline-flex items-center px-7 py-3.5 bg-primary text-white font-bold text-sm rounded-lg hover:bg-primary/90 transition-colors uppercase tracking-wide shadow-[0_0_24px_rgba(249,115,22,0.25)]"
+                                className="inline-flex items-center px-7 py-3.5 bg-primary text-white font-bold text-sm rounded-lg hover:bg-primary/90 transition-colors uppercase tracking-wide shadow-[0_0_24px_rgba(240, 138, 76,0.25)]"
                             >
                                 Join the waitlist
                                 <ArrowRight aria-hidden className="ml-2 w-4 h-4" />

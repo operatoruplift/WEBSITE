@@ -48,8 +48,8 @@ export default async function ArkivPage() {
         <main className="min-h-screen bg-[#0A0A0A] text-[#FAFAFA]">
             <section className="max-w-5xl mx-auto px-6 pt-16 pb-12">
                 <div className="flex items-center gap-3 mb-6">
-                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-[#F97316] bg-[#F97316]/10 border border-[#F97316]/30 px-2.5 py-1 rounded">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#F97316]" />
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-[#F08A4C] bg-[#F08A4C]/10 border border-[#F08A4C]/30 px-2.5 py-1 rounded">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#F08A4C]" />
                         Arkiv challenge entrant
                     </span>
                     <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-[#22C55E] bg-[#22C55E]/10 border border-[#22C55E]/30 px-2.5 py-1 rounded">
@@ -63,7 +63,7 @@ export default async function ArkivPage() {
                 <p className="text-[#A1A1AA] leading-relaxed max-w-2xl">
                     Every agent identity card and every memory event Operator Uplift writes lives on
                     the public Arkiv Braga testnet, scoped by a unique{' '}
-                    <code className="bg-[#1A1A1A] border border-[#222] text-[#F97316] px-1.5 py-0.5 rounded text-sm">
+                    <code className="bg-[#1A1A1A] border border-[#222] text-[#F08A4C] px-1.5 py-0.5 rounded text-sm">
                         {PROJECT_ATTRIBUTE.key}={PROJECT_ATTRIBUTE.value}
                     </code>{' '}
                     attribute. The platform never owns your memory: <code>$owner</code> can be
@@ -81,7 +81,7 @@ export default async function ArkivPage() {
 
             <section className="max-w-5xl mx-auto px-6 pb-12">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xs font-mono uppercase tracking-widest text-[#F97316]">
+                    <h2 className="text-xs font-mono uppercase tracking-widest text-[#F08A4C]">
                         Entity 1 / Agent identity cards
                     </h2>
                     <span className="text-xs text-[#525252] font-mono">
@@ -91,7 +91,7 @@ export default async function ArkivPage() {
 
                 {error ? (
                     <div className="bg-[#1A1A1A] border border-[#3A3A3A] rounded-lg p-6 text-sm text-[#A1A1AA]">
-                        <p className="text-[#F97316] font-bold mb-2">Arkiv read error</p>
+                        <p className="text-[#F08A4C] font-bold mb-2">Arkiv read error</p>
                         <p>
                             The on-Arkiv agent list could not be loaded. This is expected before the
                             operator funds the wallet and runs the publish script. Once entities are
@@ -115,12 +115,12 @@ export default async function ArkivPage() {
                                 href={a.explorerUrl}
                                 target="_blank"
                                 rel="noreferrer noopener"
-                                className="block bg-[#1A1A1A] hover:bg-[#1F1F1F] border border-[#222] hover:border-[#F97316]/40 rounded-lg p-4 transition-colors"
+                                className="block bg-[#1A1A1A] hover:bg-[#1F1F1F] border border-[#222] hover:border-[#F08A4C]/40 rounded-lg p-4 transition-colors"
                             >
                                 <div className="flex items-center justify-between gap-4 mb-2">
                                     <div className="flex items-center gap-3">
                                         <span className="text-base font-medium">{a.slug}</span>
-                                        <span className="text-[10px] font-mono uppercase tracking-widest bg-[#F97316]/10 border border-[#F97316]/30 text-[#F97316] px-1.5 py-0.5 rounded">
+                                        <span className="text-[10px] font-mono uppercase tracking-widest bg-[#F08A4C]/10 border border-[#F08A4C]/30 text-[#F08A4C] px-1.5 py-0.5 rounded">
                                             v{a.version}
                                         </span>
                                     </div>
@@ -138,13 +138,13 @@ export default async function ArkivPage() {
             </section>
 
             <section className="max-w-5xl mx-auto px-6 pb-12">
-                <h2 className="text-xs font-mono uppercase tracking-widest text-[#F97316] mb-4">
+                <h2 className="text-xs font-mono uppercase tracking-widest text-[#F08A4C] mb-4">
                     Entity 2 / Memory events
                 </h2>
                 <div className="bg-[#1A1A1A] border border-[#222] rounded-lg p-6 text-sm text-[#A1A1AA] space-y-3">
                     <p>
                         Each conversation turn between a user and one of our agents writes a{' '}
-                        <code className="bg-[#0A0A0A] border border-[#222] text-[#F97316] px-1.5 py-0.5 rounded">
+                        <code className="bg-[#0A0A0A] border border-[#222] text-[#F08A4C] px-1.5 py-0.5 rounded">
                             memory-event
                         </code>{' '}
                         entity to Arkiv. The attributes index the rows so the next turn loads
@@ -161,7 +161,7 @@ export default async function ArkivPage() {
             <section className="max-w-5xl mx-auto px-6 pb-16 flex flex-wrap gap-3">
                 <Link
                     href="/demo/hackathon"
-                    className="inline-flex items-center h-10 px-5 bg-[#F97316] text-white rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-[#F97316]/90"
+                    className="inline-flex items-center h-10 px-5 bg-[#F08A4C] text-white rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-[#F08A4C]/90"
                 >
                     Trust stack demo
                 </Link>
