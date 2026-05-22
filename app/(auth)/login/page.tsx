@@ -181,13 +181,12 @@ export default function LoginPage() {
     // --- Render ---
 
     return (
-        // Adopts the marketing light theme so users clicking
-        // "Sign in and connect Gmail" from the homepage stay in the
-        // same visual world. The dark-mode utility classes inside
-        // (text-white, bg-white/N, border-white/N, bg-black/40) are
-        // flipped automatically by the .theme-light overrides in
-        // app/globals.css; no per-element edits needed.
-        <div className="theme-light min-h-screen flex items-center justify-center relative overflow-hidden bg-background" style={{ fontFamily: '"SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
+        // 2026-05-22 dark conversion: drops the theme-light wrapper to
+        // match the homepage dark redesign. The dark-mode utility
+        // classes (text-white, bg-white/N, border-white/N, bg-black/40)
+        // now render at their original values against the canonical
+        // dark palette.
+        <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-background text-foreground" style={{ fontFamily: '"SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
             {/* Ambient glow, matches /repos/UI/ LoginScreen */}
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 rounded-full bg-[#F97316]/8 blur-[120px]" />
