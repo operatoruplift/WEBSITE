@@ -115,7 +115,7 @@ const Footer: React.FC = () => {
                         <a href={data.socials.linkedin} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-muted hover:text-foreground transition-colors group"><span className="text-base md:text-lg font-bold">LinkedIn</span><span className="sr-only"> (opens in new tab)</span></a>
                         <a href={data.socials.github} target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-muted hover:text-foreground transition-colors group"><span className="text-base md:text-lg font-bold">GitHub</span><span className="sr-only"> (opens in new tab)</span></a>
                     </div>
-                    <p className="text-gray-600 text-lg font-mono">
+                    <p className="text-muted text-lg font-mono">
                         {data.copyright}
                     </p>
                     <a href="https://solana.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-muted hover:text-foreground transition-colors mt-2 text-sm font-mono">
