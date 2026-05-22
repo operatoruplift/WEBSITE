@@ -3,6 +3,7 @@
 import Navbar from '@/src/components/Navbar';
 import Hero from '@/src/sections/Hero';
 import ProblemSection from '@/src/sections/ProblemSection';
+import AppSection from '@/src/sections/AppSection';
 import HowItWorksSection from '@/src/sections/HowItWorksSection';
 import MarketSection from '@/src/sections/MarketSection';
 import DownloadSection from '@/src/sections/DownloadSection';
@@ -43,6 +44,7 @@ export default function Home() {
       <main className="relative z-10">
         <Hero />
         <ProblemSection />
+        <AppSection />
         <HowItWorksSection />
         <MarketSection />
         <DownloadSection />
