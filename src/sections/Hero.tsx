@@ -60,9 +60,17 @@ const Hero: React.FC = () => {
             className="font-medium tracking-[-0.045em] leading-[0.92] text-foreground"
             style={{ fontSize: 'clamp(48px, 9vw, 132px)', textWrap: 'balance' as React.CSSProperties['textWrap'] }}
           >
-            <span className="block">{headlineFirst}</span>
+            {/* <br /> + interleaved whitespace so the continuous
+                textContent reads "Keep your word. Bet on yourself."
+                as one phrase (Playwright normalises whitespace).
+                Visible layout still breaks across two lines, but
+                screen readers and copy regexes see it as one. */}
+            {headlineFirst}{' '}
             {headlineSecond && (
-              <span className="block text-primary">{headlineSecond}</span>
+              <>
+                <br />
+                <span className="text-primary">{headlineSecond}</span>
+              </>
             )}
           </h1>
         </FadeIn>
