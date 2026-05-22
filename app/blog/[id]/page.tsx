@@ -10,6 +10,47 @@ import { BlogToc } from './BlogToc';
 
 function getArticleContent(id: string) {
     const content: Record<string, React.ReactNode> = {
+        'how-pooled-stakes-work': (
+            <div className="space-y-6">
+                <p className="text-lg">Operator Uplift only works if the stakes are real. This is what real means.</p>
+
+                <h2>The protocol in one paragraph</h2>
+                <p>You declare a commitment. You stake money on it. You upload proof as you go. An AI Game Master verifies the proof. Honor the commitment and your stake comes back to you, your streak grows, your reputation is on a public ledger that clients and witnesses can check. Miss the mark and your stake is redistributed to the pool of operators who kept their word during the same period. A small protocol fee covers operations.</p>
+
+                <p>That is the whole thing. The rest of this post is the why and the what-if.</p>
+
+                <h2>Where the money goes when you fail</h2>
+                <p>Failed stakes do not go to us. They go to the other operators in the same cohort who actually showed up. The company takes a small protocol fee out of the redistribution, the same way a payment processor takes a fee, to cover verification compute, settlement gas, support staff, and the people on call when something breaks at 3 in the morning.</p>
+
+                <p>That is the line we will not cross. We do not profit from your failure. The people who actually did the work do. Failure funds the ecosystem.</p>
+
+                <h2>Why pooled, not winner-takes-all</h2>
+                <p>Beeminder takes your money. StickK sends it to an anti-charity or a referee. Both end up with a model where one missed day enriches a counterparty who did nothing for you. We do not love that math.</p>
+
+                <p>A pool says the opposite. The people who paid out are the people who also showed up. The community of operators is the counterparty. If you make it, you join the pool that catches the next person who almost made it. The incentive runs in the direction of the work, not against it.</p>
+
+                <h2>How AI verification actually works</h2>
+                <p>When you check in, you upload something the AI can score. Photo of the run on your watch. GPS log. Strava ping. GitHub commit. Calendar event. A short note where the work cannot be photographed. The AI scores the evidence against the commitment text you wrote and streams the reasoning back to you. You see why it judged the way it judged. If you disagree, you appeal to a witness or a human reviewer.</p>
+
+                <p>The point of the AI is not to be infallible. The point is to remove "I will be honest with myself" from a system where most operators, most days, are not.</p>
+
+                <h2>Who this is for</h2>
+                <p>Anyone who needs trusted follow-through and is tired of trusting themselves.</p>
+
+                <p>Habits: running, language learning, no alcohol, sleep schedule, study time. Anything that is a yes-or-no day-to-day.</p>
+
+                <p>Freelancers and creators: ship dates, content cadence, response time. The stake makes the deadline real and your delivered work is verifiable to clients later.</p>
+
+                <p>Service providers and operators: reputation as a function of receipts. A track record clients can verify before they hire you. The pool catches the inevitable bad week without ending your business.</p>
+
+                <p>You do not need to be crypto-native. Card payments work the same way. The on-chain settlement is plumbing under the hood; you never touch a wallet unless you want to.</p>
+
+                <h2>What we will never do</h2>
+                <p>We will never raise the protocol fee on the redistribution side without saying so on this blog first. We will never sell the data you upload as proof. We will never hold your stake for longer than the commitment lasts. We will never use a failure model where a counterparty profits while the operator pool gets nothing.</p>
+
+                <p>This is the system we wanted to exist. If you have been waiting for one, the waitlist is at <a href="/waitlist">/waitlist</a>.</p>
+            </div>
+        ),
         'why-we-pivoted-to-gamify-your-growth': (
             <div className="space-y-6">
                 <p className="text-lg">Five weeks ago I wrote a post explaining why I disagreed with Balaji&apos;s advice to pivot. Today I am writing the opposite post. Both are true. Here is what changed.</p>
