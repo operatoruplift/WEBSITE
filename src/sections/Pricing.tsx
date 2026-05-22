@@ -96,7 +96,9 @@ const Pricing: React.FC = () => {
         <Section id="pricing" ariaLabelledby="pricing-heading">
             <SectionHeader
                 headingId="pricing-heading"
-                eyebrow="// Incentivized integrity"
+                align="left"
+                numberPrefix="06"
+                eyebrow="Pricing"
                 title="Free to honor your word. Pay to put money on it."
                 description="Start free and prove you can keep a single commitment. Add real stakes at $8 a month. Run a circle of operators at $24 a month. Cancel any time."
             />
