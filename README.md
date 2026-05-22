@@ -2,9 +2,9 @@
 
 **Keep your word. Bet on yourself.**
 
-Operator Uplift is AI-powered personal development for Gen Z and Millennials. Name an ambition. The AI breaks it into a step-by-step questline. You show up daily, build a streak, and the platform adapts to what actually keeps you going.
+Operator Uplift is **commitment infrastructure**: pooled-stakes accountability for people who need to keep their word and are tired of trusting themselves. You stake money on your commitments, upload proof when you check in, and an impartial AI Game Master verifies the evidence. Honor the commitment and your stake comes back. Miss it and your stake is redistributed to operators who kept theirs during the same period, minus a small protocol fee. The company does not profit from your failure; the people who actually showed up do.
 
-The repo's plumbing (Privy auth, Supabase, Solana devnet, signed receipts on two decentralized storage networks) carries forward from the prior AI-assistant product. The 2026-05-21 pivot to Gamify Your Growth is captured in [`docs/PIVOT_GAMIFY_GROWTH.md`](./docs/PIVOT_GAMIFY_GROWTH.md). Hackathon surfaces (Arkiv, 0G) and the on-chain receipt rail stay live as primitives the new product builds on.
+The brand canon is captured in [`docs/BRAND_COMMITMENT_INFRASTRUCTURE.md`](./docs/BRAND_COMMITMENT_INFRASTRUCTURE.md). Earlier framings (the 2026-05-21 "Gamify Your Growth" pivot, the pre-pivot AI-assistant positioning) are kept as historical context only and are marked SUPERSEDED in their respective docs. The trust-stack plumbing (Privy auth, Supabase + RLS, Solana devnet audit roots, signed receipts mirrored to Filecoin and 0G Storage, optional ERC-7857 AgenticID on 0G Galileo, user-owned session memory on Arkiv Braga) carries forward and supports the new brand: every check-in produces a signed receipt that a third party can verify against bytes the company does not control.
 
 **Live at [operatoruplift.com](https://operatoruplift.com)** · Join the waitlist at [operatoruplift.com/waitlist](https://operatoruplift.com/waitlist) · Judge-facing walkthrough at [operatoruplift.com/demo/hackathon](https://operatoruplift.com/demo/hackathon)
 
@@ -24,15 +24,16 @@ The repo's plumbing (Privy auth, Supabase, Solana devnet, signed receipts on two
 
 ## Project overview
 
-**The problem.** Today's AI assistants either (a) talk a great game but cannot touch your actual Gmail or Calendar, or (b) execute actions silently with no proof of what they did. When the model changes next quarter, when a vendor goes down, or when a recipient disputes an email a year later, there is no auditable record.
+**The problem.** Self-discipline does not scale. New-year resolutions die in February. Trainers and coaches chase no-shows. Freelancers and creators miss delivery dates and absorb reputational damage that cannot be unwritten. The accountability gap is universal; what nobody has built is a neutral rail that makes broken commitments cost something real and credits the people who actually showed up.
 
-**Our wedge.** A real assistant with:
-- **Real tool execution.** Google Calendar and Gmail through their actual APIs, behind a Privy-authenticated session.
-- **Per-action approval.** Every write action surfaces a modal showing the exact params, the cost, and the chain. One tap to confirm, one tap to cancel. No "remember this agent."
-- **A signed, public-archived receipt.** Each approved action produces an ed25519-signed JSON receipt. Bytes get mirrored to Filecoin (via IPFS) **and** 0G Storage testnet (via the Turbo indexer). A Merkle root commits every five receipts to Solana devnet. A judge can verify the bytes against either mirror without trusting our database.
-- **Optional on-chain agent identity.** Each agent's identity hash (name, description, capabilities, system prompt, model) can be minted as an ERC-7857 Intelligent NFT on 0G Galileo Testnet via the 0G AgenticID standard.
+**Our wedge.** Pooled-stakes commitment infrastructure with a verifiable trust stack underneath:
+- **Stakes in escrow.** The user picks the dollar amount they can afford to lose. USDC or card. Funds sit in escrow while the commitment is active. There is no "let me just refund you this once."
+- **Evidence-based check-ins.** The user uploads proof of follow-through: a photo, GPS data, an integration ping (Strava, GitHub, Calendar), or a short note where appropriate. An impartial AI Game Master scores the evidence and streams reasoning back to the user. If the user disagrees, they appeal to a witness or a human reviewer.
+- **Pooled redistribution.** Failed stakes are pooled and redistributed to operators who kept their word during the same period. A small protocol fee covers verification compute, settlement gas, and support. The company does not profit from user failure.
+- **A signed, public-archived receipt.** Every verdict (success, failure, appeal outcome) produces an ed25519-signed JSON receipt. Bytes mirror to Filecoin (via IPFS) **and** 0G Storage testnet (via the Turbo indexer). A Merkle root commits every five receipts to Solana devnet. A third party can verify any verdict against either mirror without trusting our database.
+- **Optional on-chain agent identity.** The Game Master agent's identity hash (name, description, capabilities, system prompt, model) can be minted as an ERC-7857 Intelligent NFT on 0G Galileo Testnet via the 0G AgenticID standard, so the rules the AI was running cannot change silently between sessions.
 
-**Pricing.** Pro is $50/month in USDC. Team pricing is custom (book a call). Per-action gas (fractions of a cent on Solana devnet, fired by the x402 gate on every write: calendar.create, gmail.draft, gmail.send, gmail.send_draft) is on us — we don't pass it through. Reads are free.
+**Pricing.** Free tier for habit builders. Pro is $8/month. Circle (for groups that stake together) is $24/month. Card or USDC. Stake amounts are separate from subscription — you only stake what you commit, and unstaked balance returns automatically. See [`docs/BRAND_COMMITMENT_INFRASTRUCTURE.md`](./docs/BRAND_COMMITMENT_INFRASTRUCTURE.md) for the full brand canon and [`src/sections/faq-data.ts`](./src/sections/faq-data.ts) for the homepage FAQ source-of-truth.
 
 ## System architecture
 
@@ -337,7 +338,7 @@ Open [operatoruplift.com/demo/hackathon](https://operatoruplift.com/demo/hackath
 4. The approval modal shows the cost (**$0.01 USDC on solana-devnet**) and the params. Click **Pay & Allow Once**.
 5. The event lands on your real Google Calendar. The signed receipt appears at `/security`.
 
-The Pro tier is $50/month; for judging we whitelist `PAYWALL_BYPASS_EMAILS` so judges do not hit the paywall — email the team to be added before testing.
+The marketing surfaces price Pro at $8/month and Circle at $24/month (USDC or card). The x402 backend paywall still settles $50 USDC per gated write until the Phase 8 migration brings the on-chain settlement layer in line with the new subscription pricing. For judge testing today, `PAYWALL_BYPASS_EMAILS` whitelists the team so judges never hit the paywall — email the team to be added before testing.
 
 ### Testnet faucets (if reproducing the cron flows locally)
 
