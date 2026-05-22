@@ -113,9 +113,8 @@ test('/ homepage uses the dark redesign palette', async ({ page }) => {
     expect(h1Color, 'hero h1 should render in the foreground token').toMatch(/rgb\(250,\s*250,\s*250\)/);
 });
 
-test('/pricing standalone page heading reads on light surface', async ({ page }) => {
-    await assertMarketingLightTheme(page, '/pricing');
-});
+// /pricing converted to the dark redesign palette in PR #679 to
+// match the homepage. The light-surface contract no longer applies.
 
 test('/press-kit page heading reads on light surface', async ({ page }) => {
     await assertMarketingLightTheme(page, '/press-kit');
