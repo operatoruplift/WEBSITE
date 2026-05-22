@@ -1,7 +1,61 @@
 import type { Metadata } from 'next';
-import { posts } from '../posts';
+import { posts, type BlogPost } from '../posts';
 
 interface Params { params: Promise<{ id: string }> }
+
+/**
+ * Convert the human-readable post.date string ("May 21, 2026") to
+ * ISO 8601 ("2026-05-21T00:00:00.000Z"). Required by both schema.org
+ * Article datePublished and the article:published_time meta tag.
+ *
+ * Returns null when the date string cannot be parsed; callers fall
+ * back to omitting the field rather than emitting a bogus timestamp.
+ */
+function toIsoDate(humanDate: string): string | null {
+    const ts = Date.parse(humanDate);
+    return Number.isNaN(ts) ? null : new Date(ts).toISOString();
+}
+
+/**
+ * Build a schema.org Article JSON-LD block for the post. Lifted out
+ * so the layout body stays readable and the schema fields can be
+ * unit-tested separately if we add tests later. Uses the canonical
+ * /opengraph-image for the image field so Google Search rich-results
+ * have a thumbnail to render.
+ *
+ * Source-of-truth: schema.org/Article + Google's article structured
+ * data guidance.
+ */
+function articleSchema(post: BlogPost) {
+    const url = `https://operatoruplift.com/blog/${post.id}`;
+    const isoDate = toIsoDate(post.date);
+    const ldJson: Record<string, unknown> = {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+        headline: post.title,
+        description: post.excerpt,
+        image: ['https://operatoruplift.com/opengraph-image'],
+        author: {
+            '@type': 'Organization',
+            name: 'Operator Uplift',
+            url: 'https://operatoruplift.com',
+        },
+        publisher: {
+            '@type': 'Organization',
+            name: 'Operator Uplift',
+            logo: {
+                '@type': 'ImageObject',
+                url: 'https://operatoruplift.com/logo.svg',
+            },
+        },
+    };
+    if (isoDate) {
+        ldJson.datePublished = isoDate;
+        ldJson.dateModified = isoDate;
+    }
+    return ldJson;
+}
 
 /**
  * Per-post metadata for SEO and social cards. The page itself is a
@@ -45,6 +99,19 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     };
 }
 
-export default function BlogPostLayout({ children }: { children: React.ReactNode }) {
-    return <>{children}</>;
+export default async function BlogPostLayout({ children, params }: { children: React.ReactNode; params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const post = posts.find(p => p.id === id);
+    const schema = post ? articleSchema(post) : null;
+    return (
+        <>
+            {schema && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+                />
+            )}
+            {children}
+        </>
+    );
 }
