@@ -16,16 +16,15 @@ const CONTENT: Record<string, React.ReactNode> = {
             <ol>
                 <li><strong>Declare.</strong> Join the waitlist at <a href="/waitlist">/waitlist</a>. When the next cohort opens, you&apos;ll get an invite to set your first commitment with stake size and check-in cadence.</li>
                 <li><strong>Stake.</strong> Lock money against the goal. Miss a check-in and the stake is forfeit. Honor it and the stake comes back to you with the streak intact.</li>
-                <li><strong>Honor.</strong> The AI Game Master pings you over iMessage or web on the cadence you specified. Reply YES, NO, or a photo as evidence.</li>
-                <li><strong>Watch.</strong> Each settled check-in produces an ed25519-signed receipt at <a href="/security">/security</a>. Anchored on-chain so you can verify the streak record independently.</li>
+                <li><strong>Honor.</strong> The AI Game Master pings you on the cadence you specified. Reply YES, NO, or upload a photo as evidence. The mobile apps (iOS + Android, coming soon) will be the primary check-in surface.</li>
+                <li><strong>Watch.</strong> Each settled check-in produces an ed25519-signed receipt. Anchored on-chain so you can verify the streak record independently.</li>
             </ol>
             <h2>What ships today</h2>
             <ul>
                 <li>The protocol UI is in pre-launch. The waitlist accepts signups and the engineering primitives below are live and verifiable today.</li>
-                <li>ed25519 signed receipts on <a href="/security">/security</a>, Merkle root published to Solana devnet every five actions, and two parallel public-storage mirrors (Filecoin via IPFS + 0G testnet via the indexer) so the receipt bytes outlive our database. The same rail will carry commitment settlements when the product opens.</li>
+                <li>ed25519 signed receipts, Merkle root published to Solana devnet every five actions, and two parallel public-storage mirrors (Filecoin via IPFS + 0G testnet via the indexer) so the receipt bytes outlive our database. The same rail will carry commitment settlements when the product opens.</li>
                 <li>Agent identity cards and (opt-in) user-ownable session memories on Arkiv Braga testnet. Listed at <a href="/arkiv">/arkiv</a>; the bytes mirror <a href="/agents/calendar.json">/agents/calendar.json</a> and <a href="/agents/gmail.json">/agents/gmail.json</a>. The entity list reflects the live state and stays empty until the operator funds the Braga wallet and runs the publish script.</li>
-                <li>iMessage check-in channel via the Photon transport with HMAC-signed webhook verification.</li>
-                <li>Legacy AI-assistant surfaces (the <a href="/chat">/chat</a>, <a href="/integrations">/integrations</a>, and Gmail/Calendar tool routes) still resolve so existing users keep working, but they are not on the marketing happy path anymore. See the May 21 pivot post for the full reframe.</li>
+                <li>The legacy AI-assistant web surfaces (chat, integrations, profile, security, swarm) and the /app, /agents, /workflows, /memory, /settings, /onboarding, /analytics, /notifications, /marketplace dashboards have all been retired (PRs #696 + #709). Each route still resolves and renders a polite retired-surface card so external links never 404, but the marketing happy path is the commitment-infrastructure homepage. The dashboard /goals route stays as the only product surface until the mobile apps ship.</li>
             </ul>
         </>
     ),
