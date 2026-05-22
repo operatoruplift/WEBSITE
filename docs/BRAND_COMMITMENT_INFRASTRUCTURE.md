@@ -1,12 +1,21 @@
 # Brand: Commitment Infrastructure
 
-**Date locked**: 2026-05-22
-**Source**: founder brief (2026-05-22)
+**Date locked**: 2026-05-22 (updated 2026-05-22 evening with the Operator Protocol consumer-product layer)
+**Source**: founder brief (2026-05-22) + Operator Uplift OS + Branding zips (2026-05-22 evening)
 **Status**: canonical. Supersedes [`PIVOT_GAMIFY_GROWTH.md`](./PIVOT_GAMIFY_GROWTH.md) (2026-05-21) and [`positioning.md`](./positioning.md) (pre-pivot AI-assistant voice).
 
 ## TL;DR
 
-Operator Uplift is **commitment infrastructure**: pooled-stakes accountability for people who need to keep their word and are tired of trusting themselves. The product wedge is consequence, accountability, and trustless follow-through, not "gamification" and not "AI personal development." Plumbing carries forward; the brand is sharper, the audience is wider, and the mechanic is named.
+Operator Uplift is **commitment infrastructure** for VCs and partners (deck v3 frame), and **Operator Uplift OS / The Operator Protocol** for end users (LevelUp app frame, Solo Leveling–inspired). Same plumbing underneath: stake → upload proof → AI Game Master verifies → settle (honor or redistribute). The investor frame leads with consequences; the consumer frame leads with hunters, quests, ranks, and a survivor pool.
+
+## Two coexisting frames
+
+| Surface | Frame | Tagline | Vocabulary |
+|---|---|---|---|
+| Investor / press / GitHub README / OG cards / deck v3 | **Commitment infrastructure** | Keep your word. Bet on yourself. | stake · proof · AI verifies · pooled redistribution · protocol fee |
+| Consumer / iOS + Android app / /goals dashboard / LevelUp landing | **Operator Uplift OS · The Operator Protocol** | Solo Leveling-inspired protocol for everyday quests. | hunter · quest · rank E→S · XP · class (scholar / hunter / envoy / monarch / tide) · AI Game Master · survivor pool · $XPER · Iron Crucible |
+
+The website (`operatoruplift.com`) ships the **investor frame** because that's what first-time visitors and press read; the consumer frame lives in the iOS + Android apps when they ship, and in any `/app`, `/goals`, or future product-tour route on the web.
 
 ## Canonical copy
 
