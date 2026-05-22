@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { FadeIn } from '@/src/components/Animators';
+import { SlideHeader, SlideFooter } from '@/src/components/SlideChrome';
 
 /**
  * App section, 2026-05-22 v2-canvas addition.
@@ -29,6 +30,7 @@ const AppSection: React.FC = () => {
             style={{ padding: 'clamp(80px, 12vw, 140px) 24px' }}
         >
             <div className="max-w-[1200px] mx-auto">
+                <SlideHeader section="the app" slideNumber="01.5" slideTotal="05" statusPill="MOBILE FIRST" />
                 <FadeIn>
                     <span className="font-mono text-[11px] tracking-[0.2em] text-primary uppercase inline-flex items-center gap-3">
                         <span className="h-px w-6 bg-primary inline-block" />
@@ -100,6 +102,7 @@ const AppSection: React.FC = () => {
                         </div>
                     </div>
                 </FadeIn>
+                <SlideFooter section="lockscreen · widget · watch" stamp="// THREE TAPS A DAY" />
             </div>
         </section>
     );

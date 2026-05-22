@@ -4,6 +4,7 @@ import React from 'react';
 import { FAQ_ITEMS } from './faq-data';
 import { FadeIn } from '@/src/components/Animators';
 import { SectionHeader } from '@/src/components/SectionHeader';
+import { SlideHeader, SlideFooter } from '@/src/components/SlideChrome';
 
 /**
  * FAQ section, 2026-05-22 homepage redesign.
@@ -44,12 +45,18 @@ const FaqSection: React.FC = () => {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
             />
             <div className="w-full max-w-[1280px] mx-auto">
+                <SlideHeader section="faq" slideNumber="05" slideTotal="05" />
                 <SectionHeader
                     headingId="faq-heading"
                     align="left"
                     numberPrefix="05"
                     eyebrow="Frequently asked"
-                    title="Questions, honestly answered."
+                    title={
+                        <>
+                            Questions,{' '}
+                            <span className="text-primary">honestly answered</span>.
+                        </>
+                    }
                 />
                 <div className="max-w-[920px] mt-12">
                     {FAQ_ITEMS.map((item, i) => {
@@ -79,6 +86,7 @@ const FaqSection: React.FC = () => {
                         );
                     })}
                 </div>
+                <SlideFooter section="frequently asked" stamp="// HONEST · BY DESIGN" />
             </div>
         </section>
     );
