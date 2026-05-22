@@ -86,7 +86,12 @@ const Footer: React.FC = () => {
                         <FooterLink href="/blog" label="Blog" />
                         <FooterLink href="/press-kit" label="Press kit" />
                         <FooterLink href="/contact" label="Contact" />
-                        <FooterLink href="https://github.com/operatoruplift" external label="Open source" />
+                        {/* 2026-05-22: Operator Uplift is no longer
+                            open-source. The previous github "Open
+                            source" link is intentionally removed from
+                            the footer; the codebase moves to a private
+                            repo. /press-kit + /contact remain the
+                            public points of contact. */}
                     </nav>
                 </div>
 
