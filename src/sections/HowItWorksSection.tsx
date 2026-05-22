@@ -3,6 +3,7 @@
 import React from 'react';
 import { FadeIn } from '@/src/components/Animators';
 import { SectionHeader } from '@/src/components/SectionHeader';
+import { SlideHeader, SlideFooter, CallOut } from '@/src/components/SlideChrome';
 
 /**
  * How it works, 2026-05-22 homepage redesign.
@@ -75,12 +76,23 @@ const HowItWorksSection: React.FC = () => {
             style={{ padding: 'clamp(80px, 12vw, 120px) 24px' }}
         >
             <div className="w-full max-w-[1280px] mx-auto">
+                <SlideHeader
+                    section="solution + product proof"
+                    slideNumber="02"
+                    slideTotal="05"
+                    statusPill="V1 LIVE"
+                />
                 <SectionHeader
                     headingId="how-it-works-heading"
                     align="left"
                     numberPrefix="02"
-                    eyebrow="How it works"
-                    title="Five steps. Repeat until the habit sticks."
+                    eyebrow="How it works · live product"
+                    title={
+                        <>
+                            Commit. Stake. Prove.{' '}
+                            <span className="text-primary">Settle.</span>
+                        </>
+                    }
                     description="The whole system fits on the back of a napkin. That is by design. We don't sell motivation. We sell consequences you choose for yourself."
                 />
                 <ol
@@ -117,6 +129,10 @@ const HowItWorksSection: React.FC = () => {
                         </li>
                     ))}
                 </ol>
+                <CallOut label="AI verification">
+                    Cost-controlled stack: rules first (EXIF, GPS, timestamp, device, cheap), then a small classifier model on the photo (cheap), and only an LLM for edge cases, disputes, and fraud signals.
+                </CallOut>
+                <SlideFooter section="commit · stake · proof · verify · settle" stamp="// VERIFIABLE FOLLOW-THROUGH" />
             </div>
         </section>
     );

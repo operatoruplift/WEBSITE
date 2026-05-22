@@ -86,7 +86,7 @@ export function SectionHeader({
                         'mb-5',
                         isLeft ? '' : 'mx-auto',
                     ].join(' ')}
-                    style={{ fontSize: 'clamp(32px, 5vw, 64px)', maxWidth: isLeft ? '900px' : undefined, textWrap: 'balance' as React.CSSProperties['textWrap'] }}
+                    style={{ fontSize: 'clamp(36px, 6.5vw, 88px)', maxWidth: isLeft ? '1000px' : undefined, textWrap: 'balance' as React.CSSProperties['textWrap'] }}
                 >
                     {title}
                 </h2>
