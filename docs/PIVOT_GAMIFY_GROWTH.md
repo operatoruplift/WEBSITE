@@ -1,8 +1,10 @@
 # Pivot: Gamify Your Growth with AI
 
+> **SUPERSEDED 2026-05-22.** The canonical brand is now **Commitment Infrastructure** — pooled-stakes accountability, with consequence + verification as the wedge. The new source of truth is [`docs/BRAND_COMMITMENT_INFRASTRUCTURE.md`](./BRAND_COMMITMENT_INFRASTRUCTURE.md). The "Gamify Your Growth" frame is retired: the audience widens beyond Gen Z and Millennials (now: habit-builders, freelancers, creators, operators, service providers), the "questline" / "ambition" vocabulary is dropped in favour of "commitment / stake / proof / verification / redistribution," and the mechanic itself (pooled redistribution + small protocol fee) is named explicitly so we never sound predatory or profit from user failure. Everything below describes the retired 2026-05-21 framing. Kept as historical context so future contributors can trace the brand arc; do not use this doc to settle current copy questions.
+
 **Date locked**: 2026-05-21
 **Source**: founder + pitch deck v7 + LevelUp Sellathon prototype
-**Status**: rolling out aggressively. Homepage hero swaps this week; old AI-assistant routes retire by end of week.
+**Status**: superseded 2026-05-22 by the commitment-infrastructure brand. See [`BRAND_COMMITMENT_INFRASTRUCTURE.md`](./BRAND_COMMITMENT_INFRASTRUCTURE.md).
 
 ## TL;DR
 
