@@ -12,7 +12,11 @@ import { test, expect } from '@playwright/test';
  * judges land here first.
  */
 test.describe('Capability — logged out', () => {
-    test('loads /chat without redirect, shows Demo pill, simulated responses', async ({ page }) => {
+    // 2026-05-22 dashboard cleanup: /chat retired to RetiredSurface
+    // card. No more Demo pill / Anonymous demo banner / composer to
+    // assert. The /api/capabilities + /api/chat backend probes below
+    // stay live — they still exercise the demo-mode contract.
+    test.skip('loads /chat without redirect, shows Demo pill, simulated responses', async ({ page }) => {
         await page.goto('/chat');
         await expect(page).toHaveURL(/\/chat/);
 

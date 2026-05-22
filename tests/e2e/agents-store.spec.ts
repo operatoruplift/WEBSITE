@@ -81,7 +81,11 @@ test('store renders all live agents with no dead ends', async ({ page }) => {
     }
 });
 
-test('clicking an agent seeds the chat textarea with its test prompt', async ({ page }) => {
+// 2026-05-22 dashboard cleanup: /chat retired to a RetiredSurface
+// card with no chat textarea. Clicking an /agents card still routes
+// to /chat but there is nothing to seed. Skipping until /agents +
+// /chat are retired together or re-designed.
+test.skip('clicking an agent seeds the chat textarea with its test prompt', async ({ page }) => {
     await authBypass(page);
     await page.goto('/agents');
 

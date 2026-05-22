@@ -86,7 +86,9 @@ test('/workflows starter templates show 0 runs and Never lastRun', async ({ page
     expect(body, 'fake 891 run count removed').not.toMatch(/\b891\b.*runs/i);
 });
 
-test('/integrations summary shows live count only (no coming-soon stubs)', async ({ page }) => {
+// 2026-05-22 dashboard cleanup: /integrations retired to a
+// RetiredSurface card. No more live/coming-soon counts to assert.
+test.skip('/integrations summary shows live count only (no coming-soon stubs)', async ({ page }) => {
     await prepareGatedSession(page);
     await page.goto('/integrations');
 
