@@ -155,7 +155,7 @@ D. **Personal stake (10–15s):** Why this problem, for you specifically? The 60
 **Cues:**
 
 - 4:00 — wordmark and tagline animate in.
-- 4:08 — two URL cards slide up: `operatoruplift.com/demo/hackathon` and `github.com/operatoruplift/website`.
+- 4:08 — single URL card slides up: `operatoruplift.com/demo/hackathon`. (Repo link retired 2026-05-22 when the codebase moved private; judges request access at operatoruplift@gmail.com.)
 - 4:18 — partner-logo strip: 0G, Filecoin, Solana, ElevenLabs (small).
 - 4:25 — fade to black.
 

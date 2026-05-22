@@ -112,7 +112,7 @@ The competitors and where their unhappy users post:
 
 ### Cold DM — crypto-native builder
 
-> [Name] — built a real-world reference for ERC-7857 + x402 + dual-mirror provenance. AI assistant on top of it, but the primitives are the interesting part. README has the full architecture: github.com/operatoruplift/website. Open to your read on the trust stack.
+> [Name] — built a real-world reference for ERC-7857 + x402 + dual-mirror provenance. AI assistant on top of it, but the primitives are the interesting part. README has the full architecture: operatoruplift.com (private repo, judge access via operatoruplift@gmail.com). Open to your read on the trust stack.
 
 ### Warm reply — someone tweeting a complaint about a competitor
 
@@ -132,7 +132,7 @@ AI that runs on your terms.
 A real assistant for your Gmail and Calendar. Every action waits for your tap. Each one ships an ed25519-signed receipt mirrored to Filecoin + 0G testnet.
 
 90-second walkthrough: operatoruplift.com/demo/hackathon
-Repo: github.com/operatoruplift/website
+Repo: operatoruplift.com (private repo, judge access via operatoruplift@gmail.com)
 ```
 
 (Replace the URLs once the pitch + how-it-works videos are uploaded; pin the how-it-works video natively if X allows.)
@@ -175,7 +175,7 @@ Repo: github.com/operatoruplift/website
 
 > Hi HN. I built Operator Uplift because every "AI assistant" today is either chat-only (can't touch your Gmail) or fully autonomous with no audit trail. This one sits in the middle: every action is proposed in chat, requires an explicit tap to approve, then executes against your real Gmail or Calendar and produces an ed25519-signed receipt. Bytes are pinned to two public storage networks (Filecoin via Lighthouse, 0G Storage testnet) plus a Merkle root on Solana devnet. Anyone can verify a receipt against either network independently of our database.
 >
-> Architecture and the full trust-stack story is in the README: github.com/operatoruplift/website
+> Architecture and the full trust-stack story is in the README: operatoruplift.com (private repo, judge access via operatoruplift@gmail.com)
 >
 > Live demo for judges/skeptics (no signup needed for the walkthrough): operatoruplift.com/demo/hackathon
 >
@@ -204,7 +204,7 @@ Three things that make it different from the autopilot generation:
 → ed25519-signed receipt for every action you approve
 → Receipt bytes mirrored to two public storage networks (Filecoin + 0G testnet) so the proof outlives our database
 
-We submitted this to the 0G APAC Hackathon. Architecture, code, and reproducible setup in the README: github.com/operatoruplift/website
+We submitted this to the 0G APAC Hackathon. Architecture, code, and reproducible setup in the README: operatoruplift.com (private repo, judge access via operatoruplift@gmail.com)
 
 90-second walkthrough: operatoruplift.com/demo/hackathon
 
@@ -232,7 +232,7 @@ What surprised me:
 
 Stack: Next.js + Privy auth + Supabase, x402 spec for the per-action micropayment gate, Filecoin + 0G Storage for receipt mirrors.
 
-Open source: github.com/operatoruplift/website
+Open source: operatoruplift.com (private repo, judge access via operatoruplift@gmail.com)
 Live: operatoruplift.com/demo/hackathon
 Happy to answer anything.
 ```
