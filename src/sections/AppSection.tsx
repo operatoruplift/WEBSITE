@@ -26,8 +26,8 @@ const AppSection: React.FC = () => {
         <section
             id="app"
             aria-labelledby="app-heading"
-            className="relative w-full border-t border-foreground/[0.07]"
-            style={{ padding: 'clamp(80px, 12vw, 140px) 24px' }}
+            className="relative w-full px-6 md:px-12 border-t border-foreground/[0.07]"
+            style={{ paddingTop: 'clamp(80px, 12vw, 140px)', paddingBottom: 'clamp(80px, 12vw, 140px)' }}
         >
             <div className="max-w-[1200px] mx-auto">
                 <SlideHeader section="the app" slideNumber="01.5" slideTotal="05" statusPill="MOBILE FIRST" />
