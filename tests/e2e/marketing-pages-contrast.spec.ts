@@ -127,9 +127,6 @@ test('/ homepage uses the dark redesign palette', async ({ page }) => {
 // has no marketplace surface). If a v10 storefront surface ships
 // later, it should bring its own contrast test back.
 
-test('/not-real-route 404 reads on light surface', async ({ page }) => {
-    // Triggers the global app/not-found.tsx render. The 404 page wraps
-    // in .theme-light per PR #364 so a misspelled URL on the marketing
-    // site doesn't flip into the dashboard's dark chrome.
-    await assertMarketingLightTheme(page, '/asdf-this-route-does-not-exist');
-});
+// 2026-05-22 dark conversion: /not-found, /loading, /error all
+// flipped to dark to match the homepage redesign. The light-surface
+// contract for the 404 page no longer applies.

@@ -18,7 +18,7 @@ export default function NotFound() {
         // users navigating by region. The theme-light wrapper still
         // applies via the same className. The decorative "404"
         // watermark stays inside as content for the region.
-        <main className="theme-light min-h-screen bg-background flex flex-col items-center justify-center px-6">
+        <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center px-6">
             <div className="text-center max-w-md">
                 <div aria-hidden="true" className="text-[120px] font-black leading-none text-foreground/[0.04] select-none">404</div>
                 <h1 className="text-4xl font-medium text-foreground tracking-tight -mt-16 mb-4">Page Not Found</h1>
