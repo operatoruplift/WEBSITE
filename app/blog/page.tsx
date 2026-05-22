@@ -20,7 +20,7 @@ export default function BlogPage() {
     const rest = posts.filter(p => !p.featured);
 
     return (
-        <div className="theme-light w-full bg-background min-h-screen">
+        <div className="relative w-full bg-background min-h-screen text-foreground">
             <Navbar currentPage="blog" />
 
             <main className="pb-24 px-6 md:px-12 max-w-[1200px] mx-auto">

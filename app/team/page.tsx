@@ -85,7 +85,7 @@ const PersonCard: React.FC<{ person: TeamMember }> = ({ person }) => (
 
 export default function TeamPage() {
     return (
-        <div className="theme-light min-h-screen bg-background text-foreground">
+        <div className="relative min-h-screen bg-background text-foreground">
             <Navbar currentPage="team" />
 
             <main className="pt-32 pb-24 px-6 md:px-12">
