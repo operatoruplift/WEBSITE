@@ -15,13 +15,21 @@ export interface BlogPost {
 
 export const posts: BlogPost[] = [
     {
+        id: 'how-pooled-stakes-work',
+        title: 'How pooled stakes work, in plain English.',
+        excerpt: 'You commit. You stake money. You upload proof. An AI verifies. Honor it and your stake comes back. Miss it and your stake is redistributed to operators who kept their word. The company does not profit from your failure. The people who actually showed up do.',
+        date: 'May 22, 2026',
+        readTime: '4 min read',
+        category: 'guide',
+        featured: true,
+    },
+    {
         id: 'why-we-pivoted-to-gamify-your-growth',
         title: 'Why we pivoted: Keep your word. Bet on yourself.',
         excerpt: 'A month ago Balaji told me to pivot. I disagreed publicly and kept building. Then I looked at the validation we already had from a different product and the math became impossible to ignore. This is what we are doing instead, and why it is the same company, just pointed at a bigger problem.',
         date: 'May 21, 2026',
         readTime: '5 min read',
         category: 'announcement',
-        featured: true,
     },
     {
         id: 'balaji-pivot-advice',
