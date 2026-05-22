@@ -46,18 +46,19 @@ const Hero: React.FC = () => {
     >
       <div className="accent-glow" />
 
-      <div className="relative z-10 max-w-[1080px] mx-auto px-6 md:px-10 flex flex-col items-center text-center">
-        {/* Eyebrow: mono uppercase tag with the // commitment-infrastructure
-            sigil. Matches the v2 canvas section-eyebrow rhythm. */}
+      <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10 flex flex-col items-start text-left">
+        {/* Deck-style eyebrow. The pitch deck (slide 01) uses
+            "// OPERATOR UPLIFT · 2026" as a left-aligned mono
+            sentinel above the giant headline. */}
         <FadeIn delay={50} direction="down">
-          <span className="font-mono text-[11px] tracking-[0.18em] text-primary uppercase mb-6">
-            {data.visionTag}
+          <span className="font-mono text-[12px] tracking-[0.18em] text-primary uppercase mb-8">
+            // operator uplift · 2026
           </span>
         </FadeIn>
 
-        {/* Badge with pulse */}
+        {/* Badge with pulse, mono-pill style at the top of the column. */}
         <FadeIn delay={150} direction="down">
-          <div className="inline-flex items-center gap-3 px-3.5 py-2 mb-8 md:mb-10 rounded-full border border-foreground/[0.12] bg-foreground/[0.02] font-mono text-xs text-muted">
+          <div className="inline-flex items-center gap-3 px-3.5 py-2 mb-10 md:mb-14 rounded-full border border-foreground/[0.12] bg-foreground/[0.02] font-mono text-xs text-muted">
             <span className="relative flex w-1.5 h-1.5">
               <span className="absolute inline-flex w-full h-full rounded-full bg-primary opacity-75 animate-ping" />
               <span className="relative inline-flex rounded-full w-1.5 h-1.5 bg-primary shadow-[0_0_12px_var(--color-primary)]" />
@@ -66,13 +67,14 @@ const Hero: React.FC = () => {
           </div>
         </FadeIn>
 
-        {/* Headline. The clamp tops out at 96px so the title fits the
-            1080px wrapper on retina widths and never overflows. */}
+        {/* Deck-scale headline. clamp(56px → 12vw → 168px) mirrors the
+            pitch deck cover which renders the title at roughly 160px
+            on a 1080p slide. Left-aligned to match the deck composition. */}
         <FadeIn delay={250}>
           <h1
             id="hero-heading"
-            className="font-medium tracking-[-0.045em] leading-[0.93] text-foreground"
-            style={{ fontSize: 'clamp(40px, 7.5vw, 96px)', textWrap: 'balance' as React.CSSProperties['textWrap'] }}
+            className="font-medium tracking-[-0.045em] leading-[0.9] text-foreground"
+            style={{ fontSize: 'clamp(56px, 12vw, 168px)', textWrap: 'balance' as React.CSSProperties['textWrap'] }}
           >
             {/* {' '} + <br /> keeps textContent reading as one phrase
                 for the Playwright copy spec while the visible layout
@@ -87,39 +89,51 @@ const Hero: React.FC = () => {
           </h1>
         </FadeIn>
 
-        {/* Subhead, v2 commitment-layer one-liner. */}
+        {/* Subhead, deck-style two-tone. Accent the word "consequences"
+            so the brand thesis hits visually as well as semantically. */}
         <FadeIn delay={400}>
           <p
-            className="mt-6 md:mt-7 mx-auto max-w-[620px] text-foreground/75 leading-relaxed"
-            style={{ fontSize: 'clamp(15px, 1.15vw, 18px)', textWrap: 'pretty' as React.CSSProperties['textWrap'] }}
+            className="mt-8 md:mt-10 max-w-[760px] text-foreground/80 leading-relaxed"
+            style={{ fontSize: 'clamp(17px, 1.5vw, 24px)', textWrap: 'pretty' as React.CSSProperties['textWrap'] }}
           >
-            {data.subhead}
+            Trustless follow-through for people who want{' '}
+            <span className="text-primary">consequences</span>.
           </p>
         </FadeIn>
 
         {/* Primary + secondary CTAs */}
         <FadeIn delay={550}>
-          <div className="mt-9 md:mt-10 flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center flex-wrap">
+          <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center flex-wrap">
             <Link
               href="/waitlist"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-primary hover:shadow-[0_0_28px_rgba(240, 138, 76,0.45)] transition-shadow"
+              className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-primary hover:shadow-[0_0_28px_rgba(240,138,76,0.45)] transition-shadow"
             >
               Join the waitlist
               <span className="font-mono">→</span>
             </Link>
             <a
               href="#how-it-works"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-foreground/[0.14] bg-foreground/[0.02] text-foreground font-mono text-sm tracking-[0.02em] hover:border-foreground/40 transition-all"
+              className="inline-flex items-center justify-center gap-2 px-7 py-4 border border-foreground/[0.14] bg-foreground/[0.02] text-foreground font-mono text-sm tracking-[0.02em] hover:border-foreground/40 transition-all"
             >
               See how it works
             </a>
           </div>
         </FadeIn>
 
-        {/* Terminal mock as the only inline visual under the hero. The
-            v2 canvas keeps the App Store + Google Play badges out of
-            the hero and reserves them for the /04 · DOWNLOAD/ section. */}
-        <FadeIn delay={750}>
+        {/* Deck-style metadata row. Pitch deck slide 01 carries three
+            labeled columns at the bottom (OPERATOR / RAISE / WEB).
+            We mirror the rhythm but keep it honest: status, the
+            commitment mechanic in shorthand, and the domain. */}
+        <FadeIn delay={650}>
+          <div className="mt-12 md:mt-16 w-full grid grid-cols-2 sm:grid-cols-3 gap-x-10 gap-y-6 border-t border-foreground/[0.07] pt-8">
+            <MetaCell label="Status" value="Private beta" />
+            <MetaCell label="Stack" value="commit · stake · prove · settle" accent />
+            <MetaCell label="Web" value="operatoruplift.com" mono />
+          </div>
+        </FadeIn>
+
+        {/* Terminal mock as the only inline visual under the hero. */}
+        <FadeIn delay={800}>
           <div className="mt-14 md:mt-20 w-full">
             <HeroTerminal />
           </div>
@@ -134,6 +148,40 @@ function splitHeadline(text: string): [string, string | null] {
   const m = trimmed.match(/^(.+?\.)\s+(.+)$/);
   if (!m) return [trimmed, null];
   return [m[1], m[2]];
+}
+
+interface MetaCellProps {
+  label: string;
+  value: string;
+  /** Render the value in mono (e.g. for the domain). */
+  mono?: boolean;
+  /** Render the value in the accent color. */
+  accent?: boolean;
+}
+
+/**
+ * Three-column metadata strip at the bottom of the hero. Pitch deck
+ * slide 01 uses the same pattern (OPERATOR / RAISE / WEB labels with
+ * a single value below each). Anchors the hero composition the way
+ * the deck does.
+ */
+function MetaCell({ label, value, mono = false, accent = false }: MetaCellProps) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <span className="font-mono text-[10px] tracking-[0.18em] text-muted/80 uppercase">
+        {label}
+      </span>
+      <span
+        className={[
+          mono ? 'font-mono' : 'font-medium',
+          accent ? 'text-primary' : 'text-foreground',
+          'text-[14px] md:text-[15px] tracking-[-0.005em]',
+        ].join(' ')}
+      >
+        {value}
+      </span>
+    </div>
+  );
 }
 
 export default Hero;
