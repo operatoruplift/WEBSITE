@@ -68,7 +68,7 @@ export default function WaitlistPage() {
     };
 
     return (
-        <div className="theme-light min-h-screen bg-background text-foreground">
+        <div className="relative min-h-screen bg-background text-foreground">
             <Navbar currentPage="waitlist" />
 
             <main className="pt-32 pb-20 px-6 md:px-12">

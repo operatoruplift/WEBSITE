@@ -6,9 +6,10 @@ import Footer from '@/src/components/Footer';
 
 export default function TermsPage() {
   return (
-    <div className="theme-light w-full bg-background min-h-screen">
+    <div className="relative w-full bg-background min-h-screen text-foreground">
+      <div className="bg-grid-dots" aria-hidden="true" />
       <Navbar currentPage="home" />
-      <main>
+      <main className="relative z-10">
         <Terms />
       </main>
       <Footer />

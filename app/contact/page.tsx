@@ -6,7 +6,7 @@ import Footer from '@/src/components/Footer';
 
 export default function ContactPage() {
   return (
-    <div className="theme-light w-full bg-background min-h-screen">
+    <div className="relative w-full bg-background min-h-screen text-foreground">
       <Navbar currentPage="contact" />
       <main>
         <Contact />

@@ -25,7 +25,7 @@ import { FadeIn } from '@/src/components/Animators';
  */
 export default function IMessageLanding() {
     return (
-        <div className="theme-light w-full bg-background min-h-screen">
+        <div className="relative w-full bg-background min-h-screen text-foreground">
             <Navbar currentPage="imessage" />
 
             <main className="pt-32 pb-24 px-6 md:px-12">

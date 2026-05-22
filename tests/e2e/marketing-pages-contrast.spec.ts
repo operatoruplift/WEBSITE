@@ -116,17 +116,12 @@ test('/ homepage uses the dark redesign palette', async ({ page }) => {
 // /pricing converted to the dark redesign palette in PR #679 to
 // match the homepage. The light-surface contract no longer applies.
 
-test('/press-kit page heading reads on light surface', async ({ page }) => {
-    await assertMarketingLightTheme(page, '/press-kit');
-});
-
-test('/blog landing page heading reads on light surface', async ({ page }) => {
-    await assertMarketingLightTheme(page, '/blog');
-});
-
-test('/contact page heading reads on light surface', async ({ page }) => {
-    await assertMarketingLightTheme(page, '/contact');
-});
+// 2026-05-22 dark conversion: /press-kit, /blog, /contact, /team,
+// /imessage, /docs all flipped to the dark redesign palette to
+// match the homepage + /pricing. Their light-surface contracts no
+// longer apply. /not-found below stays light because the 404 page
+// is intentionally kept on a soft palette as a separate visual
+// contract.
 
 // /store was retired in the v10 reframe (Commitment Infrastructure
 // has no marketplace surface). If a v10 storefront surface ships
