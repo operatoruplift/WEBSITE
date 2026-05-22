@@ -1,100 +1,100 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Logo, ChevronRight, GitHubIcon } from './Icons';
+import { Logo } from './Icons';
 
 interface NavbarProps {
   currentPage: string;
 }
 
+/**
+ * Navbar, 2026-05-22 v2-canvas refresh.
+ *
+ * The earlier navbar (WAITLIST · PRICING · BLOG · FAQ · DOCS + OPEN
+ * SOURCE + TRY IT FREE + CONTACT, with 8 visible items and three
+ * buttons of competing weight) was visually noisy. The founder's v2
+ * design canvas (/tmp/disrupt-onboarding-v2) shows a tighter,
+ * editorial navbar:
+ *
+ *   - small mark icon next to an "operator·uplift" mono wordmark
+ *   - five lowercase nav items pointing at homepage anchors
+ *   - a single primary "Download →" pill on the right
+ *
+ * Changes vs. the prior navbar:
+ *   - Added the wordmark next to the logo mark.
+ *   - Replaced the uppercase tracked-out nav list with the v2
+ *     lowercase mono section anchors.
+ *   - Collapsed OPEN SOURCE + TRY IT FREE + CONTACT down to a single
+ *     "Download →" button (the github link + contact form move to
+ *     the footer where they belong on a marketing page).
+ *
+ * Compatibility: the consumer-copy spec asserts that PRICING, FAQ,
+ * DOCS are reachable. PRICING is in DESKTOP_LINKS as the standalone
+ * /pricing route. FAQ is the anchor that scrolls to the homepage
+ * #faq section. DOCS is the standalone /docs route. All three
+ * remain reachable through the visible nav.
+ */
 const Navbar: React.FC<NavbarProps> = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  const navItems = [
-    // 2026-05-21 Gamify Your Growth pivot. The "iMESSAGE" entry sold
-    // a retired AI-assistant surface (texting the bot to send
-    // emails); the route still resolves but does not belong on the
-    // primary nav. WAITLIST replaces it as the conversion path for
-    // a first-time visitor. See docs/PIVOT_GAMIFY_GROWTH.md Phase 5.
-    { name: 'WAITLIST', targetId: 'waitlist', href: '/waitlist' },
-    { name: 'PRICING', targetId: 'pricing', href: '/#pricing' },
-    { name: 'BLOG', targetId: 'blog', href: '/blog' },
-    { name: 'FAQ', targetId: 'faq', href: '/#faq' },
+
+  /**
+   * v2 canvas nav items. Each renders as lowercase mono with no
+   * heavy tracking. Homepage-anchor entries use `/#…` hashes so the
+   * link still works when a user is on a non-home route.
+   */
+  const navItems: ReadonlyArray<{ label: string; href: string }> = [
+    { label: 'problem', href: '/#problem' },
+    { label: 'how it works', href: '/#how-it-works' },
+    { label: 'pricing', href: '/pricing' },
+    { label: 'faq', href: '/#faq' },
+    { label: 'docs', href: '/docs' },
   ];
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 py-4 sm:py-6 md:px-12 flex items-center justify-between bg-background/95 backdrop-blur-sm transition-all duration-300">
+      <nav className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 md:px-10 py-4 sm:py-5 flex items-center justify-between bg-background/95 backdrop-blur-sm transition-all duration-300">
+        {/* Brand: mark + mono wordmark with accent center-dot. */}
         <Link
           href="/"
-          className="flex items-center hover:opacity-80 transition-opacity z-50"
+          className="flex items-center gap-2.5 hover:opacity-90 transition-opacity z-50"
           aria-label="Operator Uplift home"
         >
-          <Logo className="w-8 h-8 md:w-10 md:h-10" />
+          <Logo className="w-7 h-7 md:w-8 md:h-8" />
+          <span className="hidden sm:inline-flex items-baseline font-mono text-sm tracking-[0.02em] text-foreground">
+            operator
+            <span className="text-primary px-[2px]">·</span>
+            uplift
+          </span>
         </Link>
 
-        {/* Desktop Navigation: lg and above. Below lg, the hamburger
-            menu surfaces the same items so tablet (md) users still
-            have a way to reach Pricing / FAQ / Docs. */}
-        <div className="hidden lg:flex items-center space-x-3 lg:space-x-4">
-          <div className="hidden lg:flex items-center gap-8 mr-6">
-            {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href || `/#${item.targetId}`}
-                className="group flex items-center text-xs font-bold text-muted hover:text-foreground transition-colors tracking-[0.15em] px-1"
-              >
-                {item.name}
-                {item.name === 'PRODUCT' && (
-                  <ChevronRight className="ml-0.5 w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                )}
-              </a>
-            ))}
-            {/* /docs is the in-repo GitBook-style site (P9). Keeps the
-                nav flow on-site and docs in sync with shipped behavior. */}
-            <Link
-              href="/docs"
-              className="group flex items-center text-xs font-bold text-muted hover:text-foreground transition-colors tracking-[0.15em] px-1"
-            >
-              DOCS
-            </Link>
-          </div>
-          
-          <div className="flex items-center gap-3">
+        {/* Desktop nav (lg and up). Mobile + tablet use the hamburger. */}
+        <div className="hidden lg:flex items-center gap-8">
+          {navItems.map((item) => (
             <a
-              href="https://github.com/operatoruplift/"
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-2 h-9 px-3 text-xs font-bold bg-foreground/5 text-foreground border border-foreground/10 rounded-sm hover:bg-foreground/10 transition-colors uppercase tracking-wide"
+              key={item.href}
+              href={item.href}
+              className="font-mono text-[13px] text-muted hover:text-foreground transition-colors"
             >
-              <GitHubIcon aria-hidden className="w-4 h-4" />
-              {/* `sr-only xl:not-sr-only` keeps the label in the
-                  accessibility tree at all breakpoints. At < xl the
-                  GitHubIcon would otherwise be the only child of the
-                  link, leaving screen readers with no accessible name.
-                  At xl+ the label paints normally next to the icon. */}
-              <span className="sr-only xl:not-sr-only">Open Source</span>
-              <span className="sr-only"> (opens in new tab)</span>
+              {item.label}
             </a>
-
-            <Link
-              href="/paywall"
-              className="inline-flex items-center h-9 px-4 text-xs font-bold bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors uppercase tracking-wide whitespace-nowrap"
-            >
-              Try it free
-            </Link>
-
-            <Link
-              href="/contact"
-              className="inline-flex items-center h-9 px-4 text-xs font-bold bg-foreground/10 text-foreground border border-foreground/10 rounded-sm hover:bg-foreground/20 transition-colors uppercase tracking-wide whitespace-nowrap"
-            >
-              Contact
-            </Link>
-          </div>
+          ))}
         </div>
 
-        {/* Hamburger menu button: shows on mobile + tablet (below lg)
-            so tablet users can reach the nav items that the desktop
-            bar would otherwise hide. */}
+        {/* Single primary CTA on the right. v2 uses "Download →" in
+            an outline pill. The link points at /waitlist because the
+            iOS + Android apps are not shipped yet (badge in the hero
+            says "iOS & Android coming soon"); /waitlist is the
+            honest path. When the apps ship, swap the href + label. */}
+        <div className="hidden lg:flex items-center">
+          <Link
+            href="/waitlist"
+            className="inline-flex items-center gap-2 px-4 py-2 font-mono text-[13px] text-foreground border border-foreground/[0.16] bg-foreground/[0.02] hover:border-foreground/40 hover:bg-foreground/[0.06] transition-all"
+          >
+            Download
+            <span className="text-primary">→</span>
+          </Link>
+        </div>
+
+        {/* Hamburger (below lg). */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="lg:hidden flex flex-col items-center justify-center w-10 h-10 space-y-1.5 z-50"
@@ -102,73 +102,40 @@ const Navbar: React.FC<NavbarProps> = () => {
           aria-expanded={mobileMenuOpen}
           aria-controls="mobile-menu"
         >
-          {/* Plain `bg-white` is not flipped by the .theme-light wrapper
-              (only `bg-white/N` opacity variants are), so the bars
-              rendered as white-on-white on the light marketing pages
-              and were effectively invisible. `bg-foreground` follows
-              the theme token, dark on light surfaces, white on dark. */}
           <span className={`w-6 h-0.5 bg-foreground transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
           <span className={`w-6 h-0.5 bg-foreground transition-all duration-300 ${mobileMenuOpen ? 'opacity-0' : ''}`} />
           <span className={`w-6 h-0.5 bg-foreground transition-all duration-300 ${mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
         </button>
       </nav>
 
-      {/* Mobile + tablet menu overlay (below lg). The `id` ties the
-          panel to the hamburger button's `aria-controls`, and
-          `aria-hidden` matches the visible state so screen readers
-          don't announce nav links when the menu is closed. */}
+      {/* Mobile + tablet menu overlay. */}
       <div
         id="mobile-menu"
         aria-hidden={!mobileMenuOpen}
         className={`lg:hidden fixed inset-0 bg-background/98 backdrop-blur-md z-40 transition-all duration-300 ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-        style={{ top: '72px' }}
+        style={{ top: '64px' }}
       >
         <div className="flex flex-col items-start px-6 py-8 space-y-6">
           {navItems.map((item) => (
             <a
-              key={item.name}
-              href={item.href || `/#${item.targetId}`}
+              key={item.href}
+              href={item.href}
               onClick={() => setMobileMenuOpen(false)}
-              className="text-lg font-bold text-white hover:text-primary transition-colors tracking-wide"
+              className="font-mono text-lg text-foreground hover:text-primary transition-colors"
             >
-              {item.name}
+              {item.label}
             </a>
           ))}
-          <Link
-            href="/docs"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-lg font-bold text-white hover:text-primary transition-colors tracking-wide"
-          >
-            DOCS
-          </Link>
-          
-          <div className="w-full h-px bg-white/10 my-4" />
-          
-          <a 
-            href="https://github.com/operatoruplift/" 
-            target="_blank" 
-            rel="noreferrer"
-            className="flex items-center space-x-2 text-sm font-bold bg-foreground/5 text-foreground border border-foreground/10 px-4 py-3 rounded-sm hover:bg-foreground/10 transition-all uppercase tracking-wide w-full justify-center"
-          >
-            <GitHubIcon aria-hidden className="w-4 h-4" />
-            <span>Open Source</span>
-            <span className="sr-only"> (opens in new tab)</span>
-          </a>
-          
-          <Link
-            href="/paywall"
-            className="text-sm font-bold bg-primary text-white px-4 py-3 rounded-sm hover:bg-primary/80 transition-colors uppercase tracking-wide w-full text-center shadow-[0_0_12px_rgba(231,118,48,0.3)]"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            Try it free
-          </Link>
+
+          <div className="w-full h-px bg-foreground/10 my-3" />
 
           <Link
-            href="/contact"
-            className="text-sm font-bold bg-foreground/10 text-foreground border border-foreground/10 px-4 py-3 rounded-sm hover:bg-foreground/20 transition-all uppercase tracking-wide w-full text-center"
+            href="/waitlist"
             onClick={() => setMobileMenuOpen(false)}
+            className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 font-mono text-sm text-foreground border border-foreground/[0.16] bg-foreground/[0.02] hover:border-foreground/40 transition-all"
           >
-            Contact
+            Download
+            <span className="text-primary">→</span>
           </Link>
         </div>
       </div>

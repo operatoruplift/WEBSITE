@@ -92,12 +92,13 @@ test('homepage shows the Problem section (DRIFT / FOG / SILENCE)', async ({ page
 test('navbar uses plain-English labels', async ({ page }) => {
     await page.goto('/');
 
-    // April 30 2026 trim, second pass: WATCH DEMO removed from nav
-    // (Hero already has a "Watch 90s demo" anchor), HELP relabeled to
-    // DOCS so it points users to docs explicitly.
-    await expect(page.getByText(/PRICING/).first()).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByText(/FAQ/).first()).toBeVisible();
-    await expect(page.getByText(/DOCS/).first()).toBeVisible();
+    // 2026-05-22 v2-canvas navbar refresh. Nav labels flipped from
+    // uppercase tracked-out ("PRICING") to lowercase mono
+    // ("pricing"), so the regex is case-insensitive. Pricing, FAQ,
+    // and Docs must all remain reachable from the homepage nav.
+    await expect(page.getByText(/pricing/i).first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(/faq/i).first()).toBeVisible();
+    await expect(page.getByText(/docs/i).first()).toBeVisible();
 });
 
 test('/paywall sells v10 Operator Pro features', async ({ page }) => {
