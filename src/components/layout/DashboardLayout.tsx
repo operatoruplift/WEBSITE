@@ -2,42 +2,46 @@
 
 import { AgentProvider } from '@/src/components/providers/AgentProvider';
 import { AuthGate } from '@/src/components/AuthGate';
-import { CockpitSidebar } from '@/src/components/cockpit/CockpitSidebar';
-import { CommandBar } from '@/src/components/ui/CommandBar';
-import { UserHeader } from '@/src/components/ui/UserHeader';
 import { ToastProvider } from '@/src/components/ui/Toast';
-import { MobileNav } from '@/src/components/mobile';
-import { DecTopbar } from '@/src/components/dec/DecTopbar';
-import { isDecUiEnabled } from '@/lib/flags';
 
-function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
-    const decUi = isDecUiEnabled();
-
-    return (
-        <div className="dashboard-content flex flex-col h-screen overflow-hidden relative bg-background">
-            {/* Dec-style topbar, flag-gated. Always at the very top, above dock+content */}
-            {decUi && <DecTopbar />}
-
-            <div className="flex flex-1 overflow-hidden relative">
-                <CommandBar />
-                <CockpitSidebar />
-                <div className="flex-1 flex flex-col overflow-hidden relative z-10">
-                    {/* Hide UserHeader when Dec topbar is on, avoid double header */}
-                    {!decUi && <UserHeader />}
-                    <div className="flex-1 overflow-y-auto">{children}</div>
-                </div>
-                <MobileNav />
-            </div>
-        </div>
-    );
-}
-
+/**
+ * DashboardLayout, 2026-05-22 chrome removal.
+ *
+ * Previously wrapped every dashboard route in a heavy sidebar +
+ * topbar shell (CockpitSidebar + UserHeader / DecTopbar +
+ * CommandBar + MobileNav). The user flagged the chrome as visually
+ * incoherent with the v2 commitment-infrastructure marketing site:
+ *
+ *   > "the interface for the pages is using the old operator uplift
+ *      ui ux like side bar and top bar and looks terrible and should
+ *      not be"
+ *
+ * The mobile-first commitment app will live on iOS + Android when
+ * those ship. The web dashboard is a leftover from the AI-assistant
+ * product and does not need its own nav scaffolding.
+ *
+ * This component now keeps only the runtime guarantees:
+ *
+ *   - AuthGate: gates the dashboard routes behind a verified Privy
+ *     session. Auth + paywall behavior is unchanged.
+ *   - AgentProvider: dashboard-scoped agent registry.
+ *   - ToastProvider: in-page toast surface.
+ *
+ * Pages can render their own headers, footers, or navigation in
+ * their own `page.tsx` if they need one. The retired pages
+ * (/chat, /integrations, /swarm, /profile, /security) keep their
+ * route-group `layout.tsx` overrides that bypass this wrapper
+ * entirely, so AuthGate doesn't fire for them either (they're
+ * publicly readable retirement notices).
+ */
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (
         <AuthGate>
             <AgentProvider>
                 <ToastProvider>
-                    <DashboardLayoutContent>{children}</DashboardLayoutContent>
+                    <div className="dashboard-content min-h-screen bg-background text-foreground">
+                        {children}
+                    </div>
                 </ToastProvider>
             </AgentProvider>
         </AuthGate>
