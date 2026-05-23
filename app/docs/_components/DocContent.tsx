@@ -106,26 +106,14 @@ const CONTENT: Record<string, React.ReactNode> = {
     ),
     'integrations': (
         <>
-            <p className="lead">What you can connect today. What&apos;s coming next.</p>
-            <h2>Shipped</h2>
-            <ul>
-                <li><strong>Google Calendar</strong>, list events, find free slots, create events.</li>
-                <li><strong>Gmail</strong>, list messages, draft replies, send on approval.</li>
-            </ul>
-            <p>Connect both at <a href="/integrations">/integrations</a>. We store the refresh token in <code>user_integrations</code> on Supabase; the service-role key never leaves the server.</p>
-            <h2>Tier 1 tools (no connection needed)</h2>
-            <ul>
-                <li>Web search (via server-held Serper or Brave key).</li>
-                <li>Web fetch (reads any public URL, strips scripts and returns readable text).</li>
-                <li>Notes, tasks, reminders, stored in Supabase per user.</li>
-                <li>Tokens API (<code>tokens.search</code>, <code>tokens.price</code>, <code>tokens.risk</code>, <code>tokens.markets</code>), Solana market + risk data via <code>api.tokens.xyz/v1</code>, server-held key.</li>
-            </ul>
-            <h2>Tier 2 tools (server-configured)</h2>
-            <ul>
-                <li><strong>iMessage</strong> via the Photon gRPC SDK (<code>@photon-ai/advanced-imessage</code>). Set <code>PHOTON_ADDRESS</code> (e.g. <code>your-instance.imsg.photon.codes:443</code>) and <code>PHOTON_TOKEN</code> from the Photon dashboard. <code>PHOTON_PROJECT_ID</code> is accepted as the subdomain and <code>PHOTON_API_KEY</code> as a token alias for legacy setups. The route 503s honestly if either is missing.</li>
-            </ul>
-            <h2>Roadmap channels (not on /integrations today)</h2>
-            <p>Slack, Linear, Jira, Notion, GitHub, Drive, Stripe checkout, SMS. None of these are wired right now and they intentionally do not appear in the <a href="/integrations">/integrations</a> grid &mdash; per the &ldquo;make work or remove&rdquo; rule, channels with no end-to-end execution stay off the marketing surface until they ship. They&apos;ll re-appear here as Shipped when wired.</p>
+            <p className="lead">Integrations are retired. This page stays as a historical reference; the live product no longer connects to Gmail, Calendar, iMessage, or other third-party tools.</p>
+            <h2>What changed</h2>
+            <p>The Operator Uplift AI-assistant product (May 2026 and earlier) wired Google Calendar + Gmail behind a Privy-authenticated session, with per-action approval modals and ed25519-signed receipts. The commitment-infrastructure product that replaced it on 2026-05-22 uses uploaded proof (photo, GPS, integration ping, short note) as the verification surface, not server-side tool execution.</p>
+            <p>The dashboard route that hosted Gmail + Calendar connections was retired in PR #696. The route still resolves and renders a polite retired-surface card so external links never 404.</p>
+            <h2>What you connect today</h2>
+            <p>Nothing on the web. Check-ins happen in the iOS and Android apps when they ship; until then, the homepage waitlist captures your interest. The mobile apps will host any future integrations.</p>
+            <h2>For developers + reviewers</h2>
+            <p>The trust-stack primitives are unchanged: ed25519 signed receipts, Solana devnet Merkle roots every five receipts, Filecoin + 0G Storage mirrors, Arkiv user-owned agent memory. See the verifier cookbook at <a href="/demo/hackathon">/demo/hackathon</a>.</p>
         </>
     ),
     'troubleshooting': (
