@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn } from '@/src/components/Animators';
+import HeroPreview from '@/src/components/HeroPreview';
 
 /**
  * Hero, 2026-05-22 v2-canvas alignment pass.
@@ -141,6 +142,16 @@ const Hero: React.FC = () => {
           </div>
         </FadeIn>
 
+        {/* Static product UI preview. PR #726 removed the cycling
+            terminal mock; PR #727 replaces the bare inline slot with
+            a single deliberate frame showing the actual commitment
+            card UI so a visitor can see what the product looks like
+            without animations distracting from the headline. */}
+        <FadeIn delay={800}>
+          <div className="mt-14 md:mt-20 w-full">
+            <HeroPreview />
+          </div>
+        </FadeIn>
       </div>
     </section>
   );
