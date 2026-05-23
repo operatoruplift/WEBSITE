@@ -80,7 +80,7 @@ export default function PricingPage() {
             <main className="relative z-10 pt-24 pb-24 px-6 md:px-12">
                 <div className="max-w-[1280px] mx-auto">
                     <SectionHeader
-                        align="left"
+                        align="center"
                         numberPrefix="01"
                         eyebrow="For groups + orgs"
                         title="Group accountability, on the same protocol."
@@ -147,7 +147,7 @@ export default function PricingPage() {
                     {/* Personal tiers reference row */}
                     <div className="mt-20 md:mt-24">
                         <SectionHeader
-                            align="left"
+                            align="center"
                             numberPrefix="02"
                             eyebrow="Personal tiers"
                             title="If you're not an org, the personal plans live here."
