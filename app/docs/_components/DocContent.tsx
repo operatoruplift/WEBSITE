@@ -30,19 +30,12 @@ const CONTENT: Record<string, React.ReactNode> = {
     ),
     'approvals': (
         <>
-            <p className="lead">Every write action stands alone. The agent reads freely. It cannot act until you click Approve.</p>
-            <h2>What triggers a modal</h2>
-            <p>Anything the agent emits as a <code>&lt;tool_use&gt;</code> block with a side-effect. Create calendar event, draft or send email, schedule a reminder, post to Slack (when that ships). Reads are automatic. Writes are gated.</p>
-            <h2>What the modal shows</h2>
-            <ul>
-                <li>The tool and action being called.</li>
-                <li>A risk pill: LOW, MEDIUM, HIGH. Gmail sends are always HIGH.</li>
-                <li>Every parameter the agent wants to send, recipient, subject, body, event time, attendees.</li>
-                <li>In Real mode with a paid tool: a Cost block showing the USDC amount and the chain.</li>
-                <li>In Demo mode: a gray Simulated chip and footer text explaining nothing will actually run.</li>
-            </ul>
-            <h2>Why no &ldquo;always allow&rdquo; option</h2>
-            <p>A blanket approval can be weaponised by a future prompt injection. Every action stands on its own. You approve once, then again next time. The friction is the feature.</p>
+            <p className="lead">Approvals are retired. This page documents the per-action consent modal that shipped with the prior AI-assistant product; the commitment-infrastructure product has a different consent surface.</p>
+            <h2>What was built (historical)</h2>
+            <p>The AI-assistant product surfaced a modal for every write action (calendar event create, gmail draft, gmail send). The modal showed the tool name, action, risk pill (LOW/MEDIUM/HIGH), every parameter, and a Cost block in Real mode. Approval was per-call: no &ldquo;always allow&rdquo; option, because a blanket approval can be weaponised by a future prompt injection.</p>
+            <h2>How the new product handles consent</h2>
+            <p>The commitment-infrastructure product asks for consent twice: once when you set the commitment + lock the stake, and once when you upload proof for a check-in. There is no agent emitting write actions on your behalf, the user is the actor, the AI Game Master only adjudicates uploaded evidence and streams reasoning back. The escrow lock and the upload step are both deliberate, single-click actions in the mobile app when it ships.</p>
+            <p>The trust-stack guarantees (ed25519 signed verdicts, Solana audit roots, Filecoin + 0G mirrors) survive the brand reframe.</p>
         </>
     ),
     'receipts': (
@@ -90,18 +83,18 @@ const CONTENT: Record<string, React.ReactNode> = {
     ),
     'x402': (
         <>
-            <p className="lead">x402 is an HTTP payment standard. A server can answer <code>402 Payment Required</code> with an invoice; the client pays, then retries with proof. We use it for paid tool calls.</p>
-            <h2>Flow</h2>
+            <p className="lead">x402 is an HTTP payment standard: a server answers <code>402 Payment Required</code> with an invoice, the client pays, then retries with proof. Operator Uplift shipped an x402 gate as part of the prior AI-assistant product. This page documents what was built; the commitment-infrastructure product uses a different settlement path.</p>
+            <h2>What was built (historical, AI-assistant era)</h2>
             <ol>
-                <li><code>POST /api/tools/calendar</code>, server returns <code>402</code> with <code>invoice_reference</code> and pay endpoint.</li>
-                <li><code>POST /api/tools/x402/pay</code> with that reference, devnet simulates the on-chain transfer and marks the invoice paid.</li>
-                <li>Client retries the original request with <code>X-Payment-Proof</code> header.</li>
-                <li>Server validates the proof and executes the tool. Receipt lands in <a href="/security">/security</a>.</li>
+                <li><code>POST /api/tools/calendar</code> or <code>/api/tools/gmail</code>, server returns <code>402</code> with an <code>invoice_reference</code> and pay endpoint.</li>
+                <li><code>POST /api/tools/x402/pay</code> with that reference, devnet simulated the on-chain transfer and marked the invoice paid.</li>
+                <li>Client retried the original request with <code>X-Payment-Proof</code> header.</li>
+                <li>Server validated the proof and executed the tool. Receipt anchored as a signed ed25519 envelope.</li>
             </ol>
-            <h2>Why MCPay-compatible</h2>
-            <p>We conform to MCPay (<code>github.com/microchipgnu/MCPay</code>) so any MCP-aware agent can pay our gate without custom glue. The invoice format, the pay endpoint, and the retry header are their names, not ours.</p>
-            <h2>What this enables next</h2>
-            <p>Third-party agents can pay us per-call for privileged execution. We can pay third parties for their tools too. The plumbing is the same in both directions.</p>
+            <p>The flow was MCPay-compatible so MCP-aware agents could pay the gate without custom glue.</p>
+            <h2>How commitment-infrastructure settles instead</h2>
+            <p>The new product locks user stakes in escrow when a commitment is declared, then either returns the stake or redistributes it to the pool when the AI Game Master adjudicates a check-in. There is no per-tool-call invoice; there is a per-commitment settlement at the end of the cycle. The same ed25519 signing + Solana Merkle root + Filecoin/0G mirroring primitives carry forward as the trust stack.</p>
+            <p>The retired x402 tool routes (<code>/api/tools/calendar</code>, <code>/api/tools/gmail</code>, <code>/api/tools/x402/pay</code>) still exist in the codebase but are no longer the marketing happy path. The retired dashboard surfaces (PR #696, PR #709) bypass them entirely.</p>
         </>
     ),
     'integrations': (
@@ -119,17 +112,17 @@ const CONTENT: Record<string, React.ReactNode> = {
     'troubleshooting': (
         <>
             <p className="lead">If something isn&apos;t working, this is where to start.</p>
-            <h2>&ldquo;Demo rate limit reached&rdquo; on /chat</h2>
-            <p>Anonymous visitors are capped at 10 requests per hour per IP. Sign in with Google or add an API key to move to the authenticated limits.</p>
-            <h2>&ldquo;Google not connected&rdquo; after I connected it</h2>
-            <p>The refresh token may have expired or been revoked. Go to <a href="/integrations">/integrations</a> and click Reconnect. If it still fails, check the Google security page for revoked app access.</p>
-            <h2>I don&apos;t see my receipt on /security</h2>
-            <p>Receipts only exist for real tool executions. If you approved a Simulated call, nothing will appear. Also: Merkle roots publish every five receipts, so a newly-created receipt may take a moment to show a root.</p>
+            <h2>&ldquo;I can&apos;t connect Google / I can&apos;t use the chat&rdquo;</h2>
+            <p>The /chat, /integrations, and related AI-assistant dashboards were retired on 2026-05-22. The routes resolve to a polite retired-surface card so external links never 404, but they no longer expose the connect flow. The commitment-infrastructure product replaces them; join the waitlist at <a href="/waitlist">/waitlist</a> for early access to the mobile apps.</p>
+            <h2>&ldquo;Where did my agent / workflow / memory go?&rdquo;</h2>
+            <p>The /app, /agents, /workflows, /memory, /settings, /onboarding, /analytics, /notifications, /marketplace dashboards were retired in PR #709. The only remaining product surface is /goals, dark-themed, while the iOS + Android apps are built.</p>
+            <h2>Verifying a receipt independently</h2>
+            <p>The trust-stack primitives are unchanged. For the full verifier cookbook, see <a href="/demo/hackathon">/demo/hackathon</a>: ed25519 signed receipts, Solana devnet Merkle root every five receipts, Filecoin (via Lighthouse) + 0G Storage (via Turbo indexer) mirrors.</p>
             <h2>Where are the logs?</h2>
             <ul>
                 <li>Vercel: <code>vercel logs &lt;deployment&gt;</code>.</li>
                 <li>Supabase: <code>logs</code> schema via the dashboard.</li>
-                <li>Client: browser console + <code>localStorage[&quot;ou-audit-log&quot;]</code>.</li>
+                <li>Client: browser console + <code>localStorage[&quot;ou-audit-log&quot;]</code> (legacy AI-assistant audit log).</li>
             </ul>
         </>
     ),
