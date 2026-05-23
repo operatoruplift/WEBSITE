@@ -84,7 +84,7 @@ const HowItWorksSection: React.FC = () => {
                 />
                 <SectionHeader
                     headingId="how-it-works-heading"
-                    align="left"
+                    align="center"
                     numberPrefix="02"
                     eyebrow="How it works · live product"
                     title={

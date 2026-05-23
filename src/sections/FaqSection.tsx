@@ -48,7 +48,7 @@ const FaqSection: React.FC = () => {
                 <SlideHeader section="faq" slideNumber="05" slideTotal="05" />
                 <SectionHeader
                     headingId="faq-heading"
-                    align="left"
+                    align="center"
                     numberPrefix="05"
                     eyebrow="Frequently asked"
                     title={

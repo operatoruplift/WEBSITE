@@ -32,24 +32,27 @@ const AppSection: React.FC = () => {
             <div className="max-w-[1200px] mx-auto">
                 <SlideHeader section="the app" slideNumber="01.5" slideTotal="05" statusPill="MOBILE FIRST" />
                 <FadeIn>
-                    <span className="font-mono text-[11px] tracking-[0.2em] text-primary uppercase inline-flex items-center gap-3">
-                        <span className="h-px w-6 bg-primary inline-block" />
-                        02.5 · The app
-                    </span>
-                    <h2
-                        id="app-heading"
-                        className="mt-6 max-w-[800px] font-medium tracking-[-0.04em] leading-[0.98] text-foreground"
-                        style={{ fontSize: 'clamp(36px, 5.5vw, 72px)' }}
-                    >
-                        Three taps.<br />
-                        One honest answer a day.
-                    </h2>
-                    <p
-                        className="mt-6 max-w-[640px] text-foreground/75 leading-relaxed"
-                        style={{ fontSize: 'clamp(15px, 1.15vw, 18px)' }}
-                    >
-                        Built natively for iOS and Android. The whole thing fits on one screen, because the work is in your life, not in the app.
-                    </p>
+                    <div className="text-center">
+                        <span className="font-mono text-[11px] tracking-[0.2em] text-primary uppercase inline-flex items-center gap-3">
+                            <span className="h-px w-6 bg-primary inline-block" />
+                            02.5 · The app
+                            <span className="h-px w-6 bg-primary inline-block" />
+                        </span>
+                        <h2
+                            id="app-heading"
+                            className="mt-6 mx-auto max-w-[800px] font-medium tracking-[-0.04em] leading-[0.98] text-foreground"
+                            style={{ fontSize: 'clamp(36px, 5.5vw, 72px)' }}
+                        >
+                            Three taps.<br />
+                            One honest answer a day.
+                        </h2>
+                        <p
+                            className="mt-6 mx-auto max-w-[640px] text-foreground/75 leading-relaxed"
+                            style={{ fontSize: 'clamp(15px, 1.15vw, 18px)' }}
+                        >
+                            Built natively for iOS and Android. The whole thing fits on one screen, because the work is in your life, not in the app.
+                        </p>
+                    </div>
                 </FadeIn>
 
                 <FadeIn delay={150}>
