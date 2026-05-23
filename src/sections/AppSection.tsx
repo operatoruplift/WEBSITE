@@ -33,7 +33,7 @@ const AppSection: React.FC = () => {
                     <div className="text-center">
                         <span className="font-mono text-[11px] tracking-[0.2em] text-primary uppercase inline-flex items-center gap-3">
                             <span className="h-px w-6 bg-primary inline-block" />
-                            02.5 · The app
+                            02 · The app
                             <span className="h-px w-6 bg-primary inline-block" />
                         </span>
                         <h2

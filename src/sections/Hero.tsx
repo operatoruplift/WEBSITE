@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import HeroTerminal from '@/src/components/HeroTerminal';
 import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn } from '@/src/components/Animators';
 
@@ -32,8 +31,12 @@ import { FadeIn } from '@/src/components/Animators';
  * soon"), the canonical headline split (white "Keep your word." +
  * accent "Bet on yourself."), the v2 subhead copy from
  * dataService.ts, primary CTA "Join the waitlist", secondary CTA
- * "See how it works", and the HeroTerminal CLI mock as the only
- * visual under the hero.
+ * "See how it works", and the metadata strip with status, mechanic,
+ * and domain.
+ *
+ * 2026-05-23: HeroTerminal CLI mock removed per founder feedback
+ * ("the terminal animation should be removed"); the AppSection
+ * phone mockups carry the product-preview load now.
  */
 const Hero: React.FC = () => {
   const data = APP_CONTENT.hero;
@@ -138,12 +141,6 @@ const Hero: React.FC = () => {
           </div>
         </FadeIn>
 
-        {/* Terminal mock as the only inline visual under the hero. */}
-        <FadeIn delay={800}>
-          <div className="mt-14 md:mt-20 w-full">
-            <HeroTerminal />
-          </div>
-        </FadeIn>
       </div>
     </section>
   );

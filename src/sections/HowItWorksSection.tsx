@@ -78,8 +78,8 @@ const HowItWorksSection: React.FC = () => {
                 <SectionHeader
                     headingId="how-it-works-heading"
                     align="center"
-                    numberPrefix="02"
-                    eyebrow="How it works · live product"
+                    numberPrefix="03"
+                    eyebrow="How it works"
                     title={
                         <>
                             Commit. Stake. Prove.{' '}

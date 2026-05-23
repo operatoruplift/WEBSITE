@@ -6,7 +6,6 @@ import TrustedByStrip from '@/src/sections/TrustedByStrip';
 import ProblemSection from '@/src/sections/ProblemSection';
 import AppSection from '@/src/sections/AppSection';
 import HowItWorksSection from '@/src/sections/HowItWorksSection';
-import MarketSection from '@/src/sections/MarketSection';
 import DownloadSection from '@/src/sections/DownloadSection';
 import FinalCta from '@/src/sections/FinalCta';
 import FaqSection from '@/src/sections/FaqSection';
@@ -48,7 +47,6 @@ export default function Home() {
         <ProblemSection />
         <AppSection />
         <HowItWorksSection />
-        <MarketSection />
         <DownloadSection />
         <FinalCta />
         <FaqSection />

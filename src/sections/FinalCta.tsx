@@ -46,7 +46,8 @@ const FinalCta: React.FC = () => {
             <FadeIn className="max-w-[920px] mx-auto">
                 <span className="font-mono text-[11px] tracking-[0.2em] text-primary uppercase inline-flex items-center gap-3">
                     <span className="h-px w-6 bg-primary inline-block" />
-                    04 · The ask of you
+                    The ask of you
+                    <span className="h-px w-6 bg-primary inline-block" />
                 </span>
                 <h2
                     id="final-cta-heading"
