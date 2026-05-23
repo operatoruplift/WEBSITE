@@ -47,8 +47,8 @@ export const DOC_SECTIONS: DocEntry[] = [
     },
     {
         slug: 'integrations',
-        title: 'Integrations',
-        summary: 'Google Calendar + Gmail wired today. Roadmap channels return to /integrations once they ship.',
+        title: 'Integrations (retired)',
+        summary: 'Historical reference. The /integrations dashboard was retired in PR #696. The commitment-infrastructure product verifies follow-through through uploaded proof, not by writing into your tools.',
         group: 'Integrations',
     },
     {
