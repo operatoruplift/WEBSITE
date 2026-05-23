@@ -46,10 +46,16 @@ const Hero: React.FC = () => {
     >
       <div className="accent-glow" />
 
-      <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10 flex flex-col items-start text-left">
-        {/* Deck-style eyebrow. The pitch deck (slide 01) uses
-            "// OPERATOR UPLIFT · 2026" as a left-aligned mono
-            sentinel above the giant headline. */}
+      <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-10 flex flex-col items-center text-center">
+        {/* Deck-style eyebrow. PR #700 left-aligned the column to
+            mirror the pitch deck's slide 01 composition; user
+            feedback (2026-05-22) flipped it back to centered:
+            "site should be centered vertically not to the left."
+            Center alignment keeps the deck's editorial type and
+            two-tone headline but puts the whole column on the
+            visual axis of the page instead of pushing it to the
+            left edge. The metadata row below the CTAs follows
+            the same centered axis. */}
         <FadeIn delay={50} direction="down">
           <span className="font-mono text-[12px] tracking-[0.18em] text-primary uppercase mb-8">
             // operator uplift · 2026
@@ -93,7 +99,7 @@ const Hero: React.FC = () => {
             so the brand thesis hits visually as well as semantically. */}
         <FadeIn delay={400}>
           <p
-            className="mt-8 md:mt-10 max-w-[760px] text-foreground/80 leading-relaxed"
+            className="mt-8 md:mt-10 max-w-[760px] mx-auto text-foreground/80 leading-relaxed"
             style={{ fontSize: 'clamp(17px, 1.5vw, 24px)', textWrap: 'pretty' as React.CSSProperties['textWrap'] }}
           >
             Trustless follow-through for people who want{' '}
@@ -103,7 +109,7 @@ const Hero: React.FC = () => {
 
         {/* Primary + secondary CTAs */}
         <FadeIn delay={550}>
-          <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center flex-wrap">
+          <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center flex-wrap">
             <Link
               href="/waitlist"
               className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-primary hover:shadow-[0_0_28px_rgba(240,138,76,0.45)] transition-shadow"
@@ -125,7 +131,7 @@ const Hero: React.FC = () => {
             We mirror the rhythm but keep it honest: status, the
             commitment mechanic in shorthand, and the domain. */}
         <FadeIn delay={650}>
-          <div className="mt-12 md:mt-16 w-full grid grid-cols-2 sm:grid-cols-3 gap-x-10 gap-y-6 border-t border-foreground/[0.07] pt-8">
+          <div className="mt-12 md:mt-16 w-full max-w-[860px] mx-auto grid grid-cols-2 sm:grid-cols-3 gap-x-10 gap-y-6 border-t border-foreground/[0.07] pt-8 text-center sm:text-left">
             <MetaCell label="Status" value="Private beta" />
             <MetaCell label="Stack" value="commit · stake · prove · settle" accent />
             <MetaCell label="Web" value="operatoruplift.com" mono />
