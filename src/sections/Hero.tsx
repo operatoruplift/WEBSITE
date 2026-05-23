@@ -80,7 +80,7 @@ const Hero: React.FC = () => {
           <h1
             id="hero-heading"
             className="font-medium tracking-[-0.045em] leading-[0.9] text-foreground"
-            style={{ fontSize: 'clamp(56px, 12vw, 168px)', textWrap: 'balance' as React.CSSProperties['textWrap'] }}
+            style={{ fontSize: 'clamp(44px, 7vw, 104px)', textWrap: 'balance' as React.CSSProperties['textWrap'] }}
           >
             {/* {' '} + <br /> keeps textContent reading as one phrase
                 for the Playwright copy spec while the visible layout
@@ -131,7 +131,7 @@ const Hero: React.FC = () => {
             We mirror the rhythm but keep it honest: status, the
             commitment mechanic in shorthand, and the domain. */}
         <FadeIn delay={650}>
-          <div className="mt-12 md:mt-16 w-full max-w-[860px] mx-auto grid grid-cols-2 sm:grid-cols-3 gap-x-10 gap-y-6 border-t border-foreground/[0.07] pt-8 text-center sm:text-left">
+          <div className="mt-12 md:mt-16 w-full max-w-[860px] mx-auto grid grid-cols-2 sm:grid-cols-3 gap-x-10 gap-y-6 border-t border-foreground/[0.07] pt-8 text-center">
             <MetaCell label="Status" value="Private beta" />
             <MetaCell label="Stack" value="commit · stake · prove · settle" accent />
             <MetaCell label="Web" value="operatoruplift.com" mono />
@@ -173,7 +173,7 @@ interface MetaCellProps {
  */
 function MetaCell({ label, value, mono = false, accent = false }: MetaCellProps) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col items-center gap-1.5">
       <span className="font-mono text-[10px] tracking-[0.18em] text-muted/80 uppercase">
         {label}
       </span>
