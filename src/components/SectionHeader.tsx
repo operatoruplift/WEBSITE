@@ -54,7 +54,13 @@ export function SectionHeader({
             <div
                 className={[
                     'mb-12',
-                    isLeft ? 'text-left max-w-[1100px]' : 'text-center mx-auto max-w-2xl',
+                    // Center variant 2026-05-22: bumped max-width from
+                    // 2xl (672px) to 1000px so centered headlines have
+                    // breathing room equal to the card grids underneath.
+                    // The earlier cap was making the header look
+                    // narrow + visually left-shifted next to wider
+                    // sibling content.
+                    isLeft ? 'text-left max-w-[1100px]' : 'text-center mx-auto max-w-[1000px]',
                     className,
                 ].join(' ')}
             >
@@ -86,7 +92,7 @@ export function SectionHeader({
                         'mb-5',
                         isLeft ? '' : 'mx-auto',
                     ].join(' ')}
-                    style={{ fontSize: 'clamp(36px, 6.5vw, 88px)', maxWidth: isLeft ? '1000px' : undefined, textWrap: 'balance' as React.CSSProperties['textWrap'] }}
+                    style={{ fontSize: 'clamp(36px, 6.5vw, 88px)', maxWidth: '1000px', textWrap: 'balance' as React.CSSProperties['textWrap'] }}
                 >
                     {title}
                 </h2>
