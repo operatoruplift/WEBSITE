@@ -16,7 +16,14 @@ import { test, expect } from '@playwright/test';
  * stays stable when the hero scrolls offscreen.
  */
 
-test('hero messages cycle when in view and pause when offscreen', async ({ page }) => {
+// PR #726 (v3 restructure): the cycling chat mockup was removed
+// from the hero. The hero is now a clean centered column with
+// headline, subhead, CTAs, and a metadata strip — no inline
+// animated visual. The aria-live="polite" bubble container the
+// assertions below depended on no longer exists. Skip until a
+// new hero-visual perf guard is written for whatever inline
+// visual the v3 hero ends up shipping (phase 2 follow-up).
+test.skip('hero messages cycle when in view and pause when offscreen', async ({ page }) => {
     await page.goto('/', { waitUntil: 'load', timeout: 60_000 });
     await page.setViewportSize({ width: 1440, height: 900 });
 

@@ -43,7 +43,13 @@ test.describe('prefers-reduced-motion', () => {
         }
     });
 
-    test('HeroMessages renders all bubbles immediately', async ({ page }) => {
+    // PR #726 (v3 restructure): HeroMessages chat mockup was removed
+    // from the homepage hero. No aria-live="polite" bubble container
+    // exists anymore. Skip until phase 2 replaces the inline hero
+    // visual with whatever the new v3 design ships (phone mockup
+    // or framer-motion preview) — the new component will need its
+    // own reduced-motion check.
+    test.skip('HeroMessages renders all bubbles immediately', async ({ page }) => {
         // PR #393 swap: with reduced-motion, HeroMessages should
         // render the first scenario's full bubble list at mount
         // instead of revealing one bubble at a time.
