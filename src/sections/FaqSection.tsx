@@ -58,29 +58,27 @@ const FaqSection: React.FC = () => {
                         </>
                     }
                 />
-                <div className="max-w-[920px] mt-12">
+                <div className="max-w-[920px] mx-auto mt-12">
                     {FAQ_ITEMS.map((item, i) => {
                         const n = String(i + 1).padStart(2, '0');
                         return (
                             <FadeIn key={item.q} delay={i * 40}>
                                 <div
                                     className={[
-                                        'grid grid-cols-[64px_1fr] sm:grid-cols-[88px_1fr] gap-6 sm:gap-8 py-7',
+                                        'flex flex-col items-center text-center gap-3 py-8',
                                         'border-t border-foreground/[0.12]',
                                         i === FAQ_ITEMS.length - 1 ? 'border-b border-foreground/[0.12]' : '',
                                     ].join(' ')}
                                 >
-                                    <div className="font-mono text-[12px] sm:text-[13px] text-muted tracking-[0.1em]">
+                                    <div className="font-mono text-[12px] sm:text-[13px] text-primary tracking-[0.14em] uppercase">
                                         Q · {n}
                                     </div>
-                                    <div>
-                                        <h3 className="text-[18px] sm:text-[20px] font-medium text-foreground tracking-[-0.01em] leading-snug">
-                                            {item.q}
-                                        </h3>
-                                        <p className="mt-3 text-[15px] text-muted leading-relaxed">
-                                            {item.a}
-                                        </p>
-                                    </div>
+                                    <h3 className="text-[18px] sm:text-[20px] font-medium text-foreground tracking-[-0.01em] leading-snug">
+                                        {item.q}
+                                    </h3>
+                                    <p className="mt-1 mx-auto max-w-[640px] text-[15px] text-muted leading-relaxed">
+                                        {item.a}
+                                    </p>
                                 </div>
                             </FadeIn>
                         );

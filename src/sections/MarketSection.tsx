@@ -93,7 +93,7 @@ const MarketSection: React.FC = () => {
                         <FadeIn key={card.label} delay={i * 100}>
                             <article
                                 className={[
-                                    'h-full flex flex-col p-7 md:p-8 border',
+                                    'h-full flex flex-col items-center text-center p-7 md:p-8 border',
                                     card.wedge
                                         ? 'border-primary/55 bg-primary/[0.04]'
                                         : 'border-foreground/[0.10] bg-foreground/[0.015]',

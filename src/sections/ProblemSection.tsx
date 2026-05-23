@@ -82,21 +82,22 @@ const ProblemSection: React.FC = () => {
                         <li key={card.num}>
                             <FadeIn delay={i * 80}>
                                 <article
-                                    className="relative border border-foreground/[0.12] p-8 h-full"
+                                    className="relative border border-foreground/[0.12] p-8 h-full text-center"
                                     style={{
                                         background: 'linear-gradient(180deg, rgba(255,255,255,0.02), transparent)',
                                     }}
                                 >
-                                    {/* Top accent hairline matches the design's
-                                        ::before pseudo. */}
-                                    <span className="absolute top-0 left-0 h-px w-6 bg-primary" aria-hidden="true" />
+                                    {/* Centered accent hairline above the
+                                        eyebrow so the now-centered card has a
+                                        symmetric anchor. */}
+                                    <span className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-12 bg-primary" aria-hidden="true" />
                                     <div className="font-mono text-xs tracking-[0.1em] text-muted">
                                         {card.num} · {card.label}
                                     </div>
                                     <h3 className="mt-4 text-[26px] md:text-[28px] font-medium text-foreground tracking-[-0.02em] leading-tight">
                                         {card.title}
                                     </h3>
-                                    <p className="mt-3 text-[15px] text-muted leading-relaxed">
+                                    <p className="mt-3 mx-auto max-w-[300px] text-[15px] text-muted leading-relaxed">
                                         {card.body}
                                     </p>
                                 </article>

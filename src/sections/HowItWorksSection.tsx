@@ -106,7 +106,7 @@ const HowItWorksSection: React.FC = () => {
                     {STEPS.map((step, i) => (
                         <li key={step.n} className="bg-background min-h-[220px]">
                             <FadeIn delay={i * 60}>
-                                <div className="h-full p-7 md:p-7 flex flex-col text-left">
+                                <div className="h-full p-7 md:p-7 flex flex-col items-center text-center">
                                     <div className="font-mono text-[11px] tracking-[0.15em] text-primary uppercase">
                                         Step {step.n}
                                     </div>
