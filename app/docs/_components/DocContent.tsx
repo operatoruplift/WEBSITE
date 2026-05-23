@@ -69,7 +69,7 @@ const CONTENT: Record<string, React.ReactNode> = {
                 <li>If the signature checks, the receipt is authentic. If it doesn&apos;t, we faked it and you caught us.</li>
             </ol>
             <h2>Independent verification via two storage networks</h2>
-            <p>Each receipt row on <a href="/security">/security</a> renders <strong>two</strong> independent public-archive links so a single provider outage cannot break verification:</p>
+            <p>Each receipt row on <a href="/demo/hackathon">/demo/hackathon</a> renders <strong>two</strong> independent public-archive links so a single provider outage cannot break verification:</p>
             <ul>
                 <li><code>filecoin: &lt;cid&gt;</code> via the cron at <code>/api/cron/filecoin-anchor</code> (Lighthouse provider). Click it to fetch the same <code>SignedReceipt</code> JSON at <code>https://&lt;cid&gt;.ipfs.dweb.link</code>.</li>
                 <li><code>0g: &lt;rootHash&gt;</code> via the sister cron at <code>/api/cron/og-anchor</code> (0G Storage testnet, Turbo indexer). Click it to land on <code>/api/og/storage/[rootHash]</code>, our public verifier passthrough returning a JSON envelope with the rootHash + indexer endpoint + verification instructions.</li>
