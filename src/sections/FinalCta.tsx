@@ -51,7 +51,7 @@ const FinalCta: React.FC = () => {
                 <h2
                     id="final-cta-heading"
                     className="mt-6 font-medium tracking-[-0.04em] leading-[0.95] text-foreground"
-                    style={{ fontSize: 'clamp(40px, 7vw, 96px)' }}
+                    style={{ fontSize: 'clamp(32px, 5vw, 72px)' }}
                 >
                     <span className="block">You said you&apos;d</span>
                     <span className="block">

@@ -42,7 +42,7 @@ const DownloadSection: React.FC = () => {
                 <h2
                     id="download-heading"
                     className="mt-6 font-medium tracking-[-0.04em] leading-[0.95] text-foreground"
-                    style={{ fontSize: 'clamp(40px, 7vw, 88px)' }}
+                    style={{ fontSize: 'clamp(32px, 5vw, 72px)' }}
                 >
                     <span className="block">Don&apos;t read about it.</span>
                     <span className="block text-primary">Install it.</span>

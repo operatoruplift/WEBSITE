@@ -112,7 +112,7 @@ const MarketSection: React.FC = () => {
                                         'mt-5 font-medium tracking-[-0.045em] leading-[0.95]',
                                         card.wedge ? 'text-primary' : 'text-foreground',
                                     ].join(' ')}
-                                    style={{ fontSize: 'clamp(48px, 5.5vw, 80px)' }}
+                                    style={{ fontSize: 'clamp(40px, 4.4vw, 64px)' }}
                                 >
                                     {card.size}
                                 </div>

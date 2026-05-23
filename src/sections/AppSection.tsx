@@ -41,7 +41,7 @@ const AppSection: React.FC = () => {
                         <h2
                             id="app-heading"
                             className="mt-6 mx-auto max-w-[800px] font-medium tracking-[-0.04em] leading-[0.98] text-foreground"
-                            style={{ fontSize: 'clamp(36px, 5.5vw, 72px)' }}
+                            style={{ fontSize: 'clamp(30px, 4.6vw, 64px)' }}
                         >
                             Three taps.<br />
                             One honest answer a day.
@@ -70,16 +70,16 @@ const AppSection: React.FC = () => {
                 </FadeIn>
 
                 <FadeIn delay={300}>
-                    <div className="mt-14 md:mt-20 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
-                        <div className="max-w-[520px]">
+                    <div className="mt-14 md:mt-20 flex flex-col items-center text-center gap-8">
+                        <div className="max-w-[640px]">
                             <span className="font-mono text-[10px] tracking-[0.18em] text-primary uppercase">
                                 Designed for iOS · Android · Watch
                             </span>
-                            <p className="mt-3 text-foreground/75 leading-relaxed" style={{ fontSize: '15px' }}>
+                            <p className="mt-3 mx-auto text-foreground/75 leading-relaxed" style={{ fontSize: '15px' }}>
                                 Lockscreen widgets. A watch complication. One-tap check-ins. Wherever you already are, that&apos;s where the commitment lives.
                             </p>
                         </div>
-                        <div className="flex flex-col sm:flex-row gap-3">
+                        <div className="flex flex-col sm:flex-row gap-3 justify-center">
                             <Link
                                 href="/waitlist"
                                 aria-label="Download on the App Store, coming soon. Joins the waitlist."
