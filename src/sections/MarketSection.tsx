@@ -70,7 +70,7 @@ const MarketSection: React.FC = () => {
                 <SlideHeader section="market · why now" slideNumber="03" slideTotal="05" />
                 <SectionHeader
                     headingId="market-heading"
-                    align="left"
+                    align="center"
                     numberPrefix="03"
                     eyebrow="The market"
                     title={
