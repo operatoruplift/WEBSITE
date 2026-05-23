@@ -3,7 +3,6 @@
 import React from 'react';
 import { FadeIn } from '@/src/components/Animators';
 import { SectionHeader } from '@/src/components/SectionHeader';
-import { SlideHeader, SlideFooter, CallOut } from '@/src/components/SlideChrome';
 
 /**
  * How it works, 2026-05-22 homepage redesign.
@@ -76,12 +75,6 @@ const HowItWorksSection: React.FC = () => {
             style={{ paddingTop: 'clamp(80px, 12vw, 120px)', paddingBottom: 'clamp(80px, 12vw, 120px)' }}
         >
             <div className="w-full max-w-[1280px] mx-auto">
-                <SlideHeader
-                    section="solution + product proof"
-                    slideNumber="02"
-                    slideTotal="05"
-                    statusPill="V1 LIVE"
-                />
                 <SectionHeader
                     headingId="how-it-works-heading"
                     align="center"
@@ -129,10 +122,17 @@ const HowItWorksSection: React.FC = () => {
                         </li>
                     ))}
                 </ol>
-                <CallOut label="AI verification">
-                    Cost-controlled stack: rules first (EXIF, GPS, timestamp, device, cheap), then a small classifier model on the photo (cheap), and only an LLM for edge cases, disputes, and fraud signals.
-                </CallOut>
-                <SlideFooter section="commit · stake · proof · verify · settle" stamp="// VERIFIABLE FOLLOW-THROUGH" />
+                <FadeIn delay={300}>
+                    <p
+                        className="mt-14 md:mt-16 mx-auto max-w-[820px] text-center text-foreground/95 leading-relaxed"
+                        style={{ fontSize: 'clamp(15px, 1.3vw, 19px)' }}
+                    >
+                        <span className="font-mono text-[11px] tracking-[0.18em] text-primary uppercase block mb-3">
+                            AI verification
+                        </span>
+                        Cost-controlled stack: rules first (EXIF, GPS, timestamp, device, cheap), then a small classifier model on the photo (cheap), and only an LLM for edge cases, disputes, and fraud signals.
+                    </p>
+                </FadeIn>
             </div>
         </section>
     );
