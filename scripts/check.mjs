@@ -35,6 +35,7 @@ const CHECKS = [
     { name: 'capability-check', script: 'scripts/capability-check.mjs' },
     { name: 'trust-gate', script: 'scripts/trust-gate.mjs' },
     { name: 'fabrication-rot', script: 'scripts/fabrication-rot-check.mjs' },
+    { name: 'centering-guard', script: 'scripts/centering-guard.mjs' },
 ];
 
 const failFast = !process.argv.includes('--all');

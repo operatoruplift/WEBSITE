@@ -12,6 +12,7 @@
     "capability-check": "node scripts/capability-check.mjs",
     "trust-gate": "node scripts/trust-gate.mjs",
     "fabrication-rot-check": "node scripts/fabrication-rot-check.mjs",
+    "centering-guard": "node scripts/centering-guard.mjs",
     "check": "node scripts/check.mjs",
     "photon:smoke": "node scripts/photon-smoke.mjs",
     "arkiv:smoke": "node scripts/arkiv-smoke.mjs",
