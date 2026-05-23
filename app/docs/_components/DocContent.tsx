@@ -90,18 +90,18 @@ const CONTENT: Record<string, React.ReactNode> = {
     ),
     'x402': (
         <>
-            <p className="lead">x402 is an HTTP payment standard. A server can answer <code>402 Payment Required</code> with an invoice; the client pays, then retries with proof. We use it for paid tool calls.</p>
-            <h2>Flow</h2>
+            <p className="lead">x402 is an HTTP payment standard: a server answers <code>402 Payment Required</code> with an invoice, the client pays, then retries with proof. Operator Uplift shipped an x402 gate as part of the prior AI-assistant product. This page documents what was built; the commitment-infrastructure product uses a different settlement path.</p>
+            <h2>What was built (historical, AI-assistant era)</h2>
             <ol>
-                <li><code>POST /api/tools/calendar</code>, server returns <code>402</code> with <code>invoice_reference</code> and pay endpoint.</li>
-                <li><code>POST /api/tools/x402/pay</code> with that reference, devnet simulates the on-chain transfer and marks the invoice paid.</li>
-                <li>Client retries the original request with <code>X-Payment-Proof</code> header.</li>
-                <li>Server validates the proof and executes the tool. Receipt lands in <a href="/security">/security</a>.</li>
+                <li><code>POST /api/tools/calendar</code> or <code>/api/tools/gmail</code>, server returns <code>402</code> with an <code>invoice_reference</code> and pay endpoint.</li>
+                <li><code>POST /api/tools/x402/pay</code> with that reference, devnet simulated the on-chain transfer and marked the invoice paid.</li>
+                <li>Client retried the original request with <code>X-Payment-Proof</code> header.</li>
+                <li>Server validated the proof and executed the tool. Receipt anchored as a signed ed25519 envelope.</li>
             </ol>
-            <h2>Why MCPay-compatible</h2>
-            <p>We conform to MCPay (<code>github.com/microchipgnu/MCPay</code>) so any MCP-aware agent can pay our gate without custom glue. The invoice format, the pay endpoint, and the retry header are their names, not ours.</p>
-            <h2>What this enables next</h2>
-            <p>Third-party agents can pay us per-call for privileged execution. We can pay third parties for their tools too. The plumbing is the same in both directions.</p>
+            <p>The flow was MCPay-compatible so MCP-aware agents could pay the gate without custom glue.</p>
+            <h2>How commitment-infrastructure settles instead</h2>
+            <p>The new product locks user stakes in escrow when a commitment is declared, then either returns the stake or redistributes it to the pool when the AI Game Master adjudicates a check-in. There is no per-tool-call invoice; there is a per-commitment settlement at the end of the cycle. The same ed25519 signing + Solana Merkle root + Filecoin/0G mirroring primitives carry forward as the trust stack.</p>
+            <p>The retired x402 tool routes (<code>/api/tools/calendar</code>, <code>/api/tools/gmail</code>, <code>/api/tools/x402/pay</code>) still exist in the codebase but are no longer the marketing happy path. The retired dashboard surfaces (PR #696, PR #709) bypass them entirely.</p>
         </>
     ),
     'integrations': (
