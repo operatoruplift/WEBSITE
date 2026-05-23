@@ -3,7 +3,6 @@
 import React from 'react';
 import { FadeIn } from '@/src/components/Animators';
 import { SectionHeader } from '@/src/components/SectionHeader';
-import { SlideHeader, SlideFooter } from '@/src/components/SlideChrome';
 
 /**
  * Problem section, 2026-05-22 homepage redesign.
@@ -55,7 +54,6 @@ const ProblemSection: React.FC = () => {
             style={{ paddingTop: 'clamp(80px, 12vw, 120px)', paddingBottom: 'clamp(80px, 12vw, 120px)' }}
         >
             <div className="w-full max-w-[1280px] mx-auto">
-                <SlideHeader section="problem" slideNumber="01" slideTotal="05" />
                 <SectionHeader
                     headingId="problem-heading"
                     align="center"
@@ -105,7 +103,6 @@ const ProblemSection: React.FC = () => {
                         </li>
                     ))}
                 </ul>
-                <SlideFooter section="the problem" stamp="// IGNORE · CHEAT · QUIT" />
             </div>
         </section>
     );

@@ -3,7 +3,6 @@
 import React from 'react';
 import { FadeIn } from '@/src/components/Animators';
 import { SectionHeader } from '@/src/components/SectionHeader';
-import { SlideHeader, SlideFooter, CallOut } from '@/src/components/SlideChrome';
 
 /**
  * Market section, 2026-05-22 deck-slide-05 alignment.
@@ -67,7 +66,6 @@ const MarketSection: React.FC = () => {
             style={{ paddingTop: 'clamp(80px, 12vw, 120px)', paddingBottom: 'clamp(80px, 12vw, 120px)' }}
         >
             <div className="w-full max-w-[1280px] mx-auto">
-                <SlideHeader section="market · why now" slideNumber="03" slideTotal="05" />
                 <SectionHeader
                     headingId="market-heading"
                     align="center"
@@ -127,10 +125,17 @@ const MarketSection: React.FC = () => {
                     ))}
                 </div>
 
-                <CallOut label="The shift">
-                    Real money + visible proof + consequences people can&apos;t talk their way out of.
-                </CallOut>
-                <SlideFooter section="the market expands" stamp="// COMMITMENT INFRASTRUCTURE" />
+                <FadeIn delay={300}>
+                    <p
+                        className="mt-14 md:mt-16 mx-auto max-w-[820px] text-center text-foreground/95 leading-relaxed"
+                        style={{ fontSize: 'clamp(15px, 1.3vw, 19px)' }}
+                    >
+                        <span className="font-mono text-[11px] tracking-[0.18em] text-primary uppercase block mb-3">
+                            The shift
+                        </span>
+                        Real money + visible proof + consequences people can&apos;t talk their way out of.
+                    </p>
+                </FadeIn>
             </div>
         </section>
     );
