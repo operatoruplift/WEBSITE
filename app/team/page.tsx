@@ -110,7 +110,7 @@ export default function TeamPage() {
                     {/* Founders grid */}
                     <FadeIn delay={150}>
                         <section aria-labelledby="founders-heading" className="mb-12">
-                            <h2 id="founders-heading" className="text-xs font-mono font-bold tracking-[0.12em] text-foreground/60 uppercase mb-6">
+                            <h2 id="founders-heading" className="text-xs font-mono font-bold tracking-[0.12em] text-foreground/60 uppercase mb-6 text-center">
                                 // Founder
                             </h2>
                             <ul className="grid grid-cols-1 max-w-2xl mx-auto gap-4 list-none p-0">
@@ -126,11 +126,11 @@ export default function TeamPage() {
                     {/* The "why" callout, verbatim from v10 deck slide 11. */}
                     <FadeIn delay={200}>
                         <section className="mb-20 max-w-2xl mx-auto">
-                            <div className="rounded-2xl border border-[#F08A4C]/30 bg-[#F08A4C]/[0.04] p-6 md:p-8">
+                            <div className="rounded-2xl border border-[#F08A4C]/30 bg-[#F08A4C]/[0.04] p-6 md:p-8 text-center">
                                 <div className="text-xs font-mono font-bold tracking-[0.12em] text-[#F08A4C] uppercase mb-3">
                                     // the why
                                 </div>
-                                <blockquote className="text-base md:text-lg text-foreground leading-relaxed">
+                                <blockquote className="mx-auto max-w-[640px] text-base md:text-lg text-foreground leading-relaxed">
                                     &ldquo;I built this because I was tired of lying to myself. Motivation failed me. I needed a system that punished me for missing the mark. It worked, so I productized it.&rdquo;
                                 </blockquote>
                                 <div className="mt-4 text-xs font-mono tracking-wider uppercase text-foreground/60">
@@ -143,7 +143,7 @@ export default function TeamPage() {
                     {/* Advisors */}
                     <FadeIn delay={300}>
                         <section aria-labelledby="advisors-heading" className="mb-20">
-                            <h2 id="advisors-heading" className="text-xs font-mono font-bold tracking-[0.12em] text-foreground/60 uppercase mb-6">
+                            <h2 id="advisors-heading" className="text-xs font-mono font-bold tracking-[0.12em] text-foreground/60 uppercase mb-6 text-center">
                                 // Advisors
                             </h2>
                             <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none p-0">
@@ -159,7 +159,7 @@ export default function TeamPage() {
                     {/* Values strip */}
                     <FadeIn delay={350}>
                         <section aria-labelledby="values-heading" className="mb-16">
-                            <h2 id="values-heading" className="text-xs font-mono font-bold tracking-[0.12em] text-foreground/60 uppercase mb-6">
+                            <h2 id="values-heading" className="text-xs font-mono font-bold tracking-[0.12em] text-foreground/60 uppercase mb-6 text-center">
                                 // How we work
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
