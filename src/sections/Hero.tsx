@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn } from '@/src/components/Animators';
 import HeroPreview from '@/src/components/HeroPreview';
+import HeroSpotlight from '@/src/components/HeroSpotlight';
 
 /**
  * Hero, 2026-05-22 v2-canvas alignment pass.
@@ -50,6 +51,7 @@ const Hero: React.FC = () => {
       style={{ minHeight: 'clamp(720px, 100vh, 1080px)' }}
     >
       <div className="accent-glow" />
+      <HeroSpotlight />
 
       <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-10 flex flex-col items-center text-center">
         {/* Deck-style eyebrow. PR #700 left-aligned the column to
