@@ -114,22 +114,26 @@
     background-size: 20px 20px;
   }
 
-  /* ─── Dark redesign foundation (2026-05-22) ─────────────────────────
-   * Site-wide subtle dotted-grid backdrop with an elliptical edge fade,
-   * paired with a soft accent glow at the top of the hero. Lifted from
-   * the design ref in /tmp/disrupt-onboarding/website.html. The mask
-   * keeps the grid from reading as a hard edge; the glow keeps the
-   * hero feeling activated without lifting the global luminance. */
+  /* ─── Site-wide atmospheric backdrop (2026-05-24) ──────────────────
+   * Replaces the dotted grid with the pitch-deck background language:
+   * deep black with a warm orange radial bloom from center, a softer
+   * second glow from lower-left, and a faint top-edge ambient sheen.
+   * Same .bg-grid-dots class name so existing JSX usage keeps working;
+   * the name is historical only.
+   *
+   * Reference: docs deck pages 1-7, where every slide sits on a
+   * `#0A0A0B` field with a warm radial atmosphere. NO grid lines or
+   * dots are visible on the deck; matching the deck means dropping
+   * the dotted pattern entirely. */
   .bg-grid-dots {
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    background-image:
-      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.06) 1px, transparent 0);
-    background-size: 36px 36px;
-    mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 90%);
-    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 90%);
+    background:
+      radial-gradient(ellipse 60% 55% at 50% 60%, rgba(240, 138, 76, 0.12), transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 90%, rgba(240, 138, 76, 0.06), transparent 65%),
+      radial-gradient(ellipse 80% 30% at 50% 0%, rgba(255, 255, 255, 0.025), transparent 70%);
   }
 
   .accent-glow {
