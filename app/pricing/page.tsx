@@ -132,7 +132,7 @@ export default function PricingPage() {
                                             className={[
                                                 'inline-flex items-center justify-center gap-2 py-3 px-6 font-mono text-sm font-semibold tracking-[0.02em] border transition-shadow',
                                                 tier.highlight
-                                                    ? 'bg-primary text-[#0A0A0B] border-primary hover:shadow-[0_0_28px_rgba(240, 138, 76,0.45)]'
+                                                    ? 'bg-primary text-[#0A0A0B] border-primary hover:shadow-[0_0_32px_rgba(240,138,76,0.55)] hover:-translate-y-px transition-[transform,box-shadow] duration-200'
                                                     : 'bg-foreground/[0.02] text-foreground border-foreground/[0.14] hover:border-foreground/40',
                                             ].join(' ')}
                                         >
@@ -177,7 +177,7 @@ export default function PricingPage() {
                         <div className="mt-8">
                             <Link
                                 href="/waitlist"
-                                className="inline-flex items-center gap-2 py-3 px-6 font-mono text-sm font-semibold tracking-[0.02em] border border-primary bg-primary text-[#0A0A0B] hover:shadow-[0_0_28px_rgba(240, 138, 76,0.45)] transition-shadow"
+                                className="inline-flex items-center gap-2 py-3 px-6 font-mono text-sm font-semibold tracking-[0.02em] border border-primary bg-primary text-[#0A0A0B] hover:shadow-[0_0_32px_rgba(240,138,76,0.55)] hover:-translate-y-px transition-[transform,box-shadow] duration-200"
                             >
                                 Join the waitlist <ArrowRight size={14} aria-hidden="true" />
                             </Link>

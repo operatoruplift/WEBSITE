@@ -36,7 +36,11 @@
 @layer base {
   * { margin:0; padding:0; }
   html {
-    scroll-behavior: auto;
+    /* Smooth in-page scroll for hash anchors (#problem, #how-it-works,
+     * #faq, etc). The prefers-reduced-motion override later in this
+     * file pins it back to `auto` so users with reduced-motion
+     * preferences get instant jumps. */
+    scroll-behavior: smooth;
     /* Fixed Navbar is ~72px on mobile and ~88px on desktop. Without
      * scroll-padding-top the navbar overlays the section heading when
      * a user clicks a hash anchor (e.g. /#pricing or /#faq), so the

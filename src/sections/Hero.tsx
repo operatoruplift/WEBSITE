@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn } from '@/src/components/Animators';
 import HeroPreview from '@/src/components/HeroPreview';
+import HeroSpotlight from '@/src/components/HeroSpotlight';
 
 /**
  * Hero, 2026-05-22 v2-canvas alignment pass.
@@ -50,6 +51,7 @@ const Hero: React.FC = () => {
       style={{ minHeight: 'clamp(720px, 100vh, 1080px)' }}
     >
       <div className="accent-glow" />
+      <HeroSpotlight />
 
       <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-10 flex flex-col items-center text-center">
         {/* Deck-style eyebrow. PR #700 left-aligned the column to
@@ -117,7 +119,7 @@ const Hero: React.FC = () => {
           <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center flex-wrap">
             <Link
               href="/waitlist"
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-primary hover:shadow-[0_0_28px_rgba(240,138,76,0.45)] transition-shadow"
+              className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-primary hover:shadow-[0_0_32px_rgba(240,138,76,0.55)] hover:-translate-y-px active:translate-y-0 transition-[transform,box-shadow] duration-200"
             >
               Join the waitlist
               <span className="font-mono">→</span>
