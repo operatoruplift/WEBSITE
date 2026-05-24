@@ -89,13 +89,18 @@ test.describe('DOC_SECTIONS contract', () => {
 });
 
 test.describe('DOC_GROUPS contract', () => {
-    test('exposes the documented 5 groups in the sidebar order', () => {
+    test('exposes the documented 4 groups in the sidebar order', () => {
+        // PR #734 (docs v3 cleanup): the old 5-group layout split
+        // Economics (x402) and Integrations into their own
+        // sidebar groups. Both surfaces are retired AI-assistant
+        // historical references; the v3 layout consolidates them
+        // into a single 'Historical' bucket so the user's happy
+        // path is Start here + Core concepts + Reference.
         expect(DOC_GROUPS).toEqual([
             'Start here',
             'Core concepts',
-            'Economics',
-            'Integrations',
             'Reference',
+            'Historical',
         ]);
     });
 
