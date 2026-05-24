@@ -65,7 +65,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <head>
+        {/* Anti-FOUC theme bootstrap. Runs before React hydrates so
+            the .theme-light class is applied to <html> before first
+            paint when the user has a stored light-mode preference or
+            the OS reports prefers-color-scheme: light. The runtime
+            toggle lives in ThemeToggle.tsx. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var k='op-uplift-theme';var s=localStorage.getItem(k);var t=s==='light'||s==='dark'?s:'dark';if(t==='light'){document.documentElement.classList.add('theme-light');}document.documentElement.dataset.theme=t;}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="bg-background text-foreground font-sans">
         {/* Google Analytics */}
         <Script
