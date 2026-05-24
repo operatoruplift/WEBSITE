@@ -131,6 +131,8 @@ export default function WaitlistPage() {
                         </form>
                     )}
 
+                    <FounderTierSection email={email} />
+
                     <section className="mt-16 space-y-6">
                         <div className="text-center">
                             <h2 className="text-xl font-medium tracking-tight">Want to go faster?</h2>
@@ -199,5 +201,95 @@ function JoinedCard({
                 We invite people in batches. The line moves faster when we open new capacity, which we do most weeks. Use the tiers below to jump ahead.
             </p>
         </div>
+    );
+}
+
+/**
+ * Founder Member tier card. $5 USDC at signup -> vanity badge on
+ * the dashboard + 500 XP head start. Shows the Solana payment
+ * address inline (founder spec) and a copy-to-clipboard button.
+ * Phase 2 will replace the manual-copy flow with a Solana Pay
+ * QR + Privy wallet button + tx verification.
+ */
+function FounderTierSection({ email }: { email: string }) {
+    const RECIPIENT = 'Hory1jnLvqdaiFYmSVWevVSCKzfrZLTfDizoA6veVmQ2';
+    const PRICE_USDC = 5;
+    const USDC_MINT = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
+    const solanaPayUrl = `solana:${RECIPIENT}?amount=${PRICE_USDC}&spl-token=${USDC_MINT}&label=Operator+Uplift+Waitlist&message=Founder+Member+slot+for+${encodeURIComponent(email || 'your+email')}`;
+
+    const [copied, setCopied] = useState<'addr' | 'url' | null>(null);
+    const copy = async (value: string, kind: 'addr' | 'url') => {
+        try {
+            await navigator.clipboard.writeText(value);
+            setCopied(kind);
+            setTimeout(() => setCopied(null), 1500);
+        } catch {
+            // navigator.clipboard can throw in non-secure contexts; the
+            // visible address itself stays selectable as a fallback.
+        }
+    };
+
+    return (
+        <section className="mt-16">
+            <div className="rounded-2xl border border-[#F08A4C]/40 bg-[#F08A4C]/[0.05] p-6 md:p-8 space-y-5">
+                <div className="flex items-start justify-between gap-4 flex-wrap">
+                    <div>
+                        <div className="text-xs font-bold uppercase tracking-[0.22em] text-[#F08A4C]">
+                            Founder Member, optional
+                        </div>
+                        <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
+                            $5 USDC, two perks for life
+                        </h2>
+                    </div>
+                    <div className="text-right">
+                        <div className="text-3xl font-semibold text-foreground">
+                            $5 <span className="text-sm font-normal text-muted">USDC</span>
+                        </div>
+                        <div className="text-xs text-muted mt-1">One-time, Solana</div>
+                    </div>
+                </div>
+                <ul className="text-sm text-foreground/85 space-y-2 list-disc pl-5">
+                    <li>Vanity <span className="text-[#F08A4C] font-semibold">Founder Member</span> badge on your dashboard when you sign in with the same email.</li>
+                    <li>+500 XP banked against your first session.</li>
+                    <li>You also keep your free waitlist slot. The badge is on top of, not instead of.</li>
+                </ul>
+                <div className="rounded-xl border border-foreground/10 bg-background/40 p-4 space-y-3">
+                    <div className="flex items-center justify-between gap-3 flex-wrap">
+                        <div className="text-xs font-mono tracking-[0.12em] text-muted uppercase">
+                            Send $5 USDC on Solana to
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => copy(RECIPIENT, 'addr')}
+                            className="text-xs font-mono px-2.5 py-1 rounded border border-foreground/10 bg-foreground/[0.04] hover:border-foreground/30 transition-colors"
+                        >
+                            {copied === 'addr' ? 'Copied' : 'Copy address'}
+                        </button>
+                    </div>
+                    <div className="font-mono text-[12px] md:text-[13px] text-foreground break-all select-all">
+                        {RECIPIENT}
+                    </div>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3">
+                    <a
+                        href={solanaPayUrl}
+                        className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#F08A4C] text-[#0A0A0B] text-sm font-semibold tracking-[0.02em] hover:opacity-90 transition-opacity"
+                    >
+                        Open in Solana wallet
+                        <span aria-hidden="true">→</span>
+                    </a>
+                    <button
+                        type="button"
+                        onClick={() => copy(solanaPayUrl, 'url')}
+                        className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-foreground/15 text-sm text-foreground hover:border-foreground/40 transition-colors"
+                    >
+                        {copied === 'url' ? 'Copied' : 'Copy Solana Pay URL'}
+                    </button>
+                </div>
+                <p className="text-xs text-muted leading-relaxed">
+                    After your payment confirms on-chain, drop the tx signature with the same email at <a href="mailto:operatoruplift@gmail.com" className="text-[#F08A4C] underline">operatoruplift@gmail.com</a> and we will activate your Founder Member badge before the cohort opens. Automated tx verification + Privy + EVM chain support ships in the next pass.
+                </p>
+            </div>
+        </section>
     );
 }
