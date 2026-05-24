@@ -107,18 +107,31 @@ export async function joinWaitlist(
     const supabase = getSupabase();
     const normalized = email.trim().toLowerCase();
 
-    // Check for an existing row first.
-    const { data: existing } = await supabase
+    // Check for an existing row first. Use a minimal column list +
+    // a fallback so a missing position/skip column never blocks the
+    // idempotent lookup.
+    let existing: Record<string, unknown> | null = null;
+    const { data: existingFull, error: existingErr } = await supabase
         .from('waitlist')
         .select('id, email, position, source, skip_paid_usdc, skip_tx_signature, skip_paid_at, wallet_address, created_at')
         .eq('email', normalized)
         .maybeSingle();
+    if (existingErr && /column/i.test(existingErr.message)) {
+        const { data: minimal } = await supabase
+            .from('waitlist')
+            .select('id, email, source, created_at')
+            .eq('email', normalized)
+            .maybeSingle();
+        existing = minimal as Record<string, unknown> | null;
+    } else {
+        existing = existingFull as Record<string, unknown> | null;
+    }
 
     if (existing) {
         return {
-            position: existing.position ?? 0,
+            position: (existing as { position?: number | null }).position ?? 0,
             alreadyExisted: true,
-            row: existing as WaitlistRow,
+            row: existing as unknown as WaitlistRow,
         };
     }
 
@@ -156,6 +169,26 @@ export async function joinWaitlist(
         })
         .select('id, email, position, source, skip_paid_usdc, skip_tx_signature, skip_paid_at, wallet_address, created_at')
         .single();
+
+    // If the position column doesn't exist in the schema yet (the
+    // waitlist-position-migration has not been applied), fall back
+    // to a position-less insert so signups still land. The row is
+    // recoverable later by re-running the migration + backfilling
+    // sequence values.
+    if (insertError && /column.*position/i.test(insertError.message)) {
+        const { data: minimal, error: minError } = await supabase
+            .from('waitlist')
+            .insert({ email: normalized, source: source || null })
+            .select('id, email, source, created_at')
+            .single();
+        if (!minError && minimal) {
+            return {
+                position: 0,
+                alreadyExisted: false,
+                row: { ...(minimal as object), position: null, skip_paid_usdc: 0, skip_tx_signature: null, skip_paid_at: null, wallet_address: null } as WaitlistRow,
+            };
+        }
+    }
 
     if (insertError || !inserted) {
         // Unique-constraint collision on position (extremely rare with
