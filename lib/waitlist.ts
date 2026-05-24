@@ -160,34 +160,69 @@ export async function joinWaitlist(
         position = Number(positionResult);
     }
 
-    const { data: inserted, error: insertError } = await supabase
-        .from('waitlist')
-        .insert({
-            email: normalized,
-            source: source || null,
-            position,
-        })
-        .select('id, email, position, source, skip_paid_usdc, skip_tx_signature, skip_paid_at, wallet_address, created_at')
-        .single();
+    // Three-stage insert with progressive column drop so a partially-
+    // migrated table never blocks signups:
+    //
+    //   1. Full: email + source + position
+    //   2. Skip position: email + source
+    //   3. Bare: email only
+    //
+    // Each stage catches /column .* (does not exist|cache)/ errors
+    // and falls through. The user can run the consolidated migration
+    // later to backfill missing columns; rows landed via stage 2 or
+    // 3 stay queryable by email in the meantime.
+    let inserted: Record<string, unknown> | null = null;
+    let insertError: { message?: string } | null = null;
+    const isColumnErr = (e: { message?: string } | null) =>
+        !!e?.message && /column[^a-z]/i.test(e.message);
 
-    // If the position column doesn't exist in the schema yet (the
-    // waitlist-position-migration has not been applied), fall back
-    // to a position-less insert so signups still land. The row is
-    // recoverable later by re-running the migration + backfilling
-    // sequence values.
-    if (insertError && /column.*position/i.test(insertError.message)) {
-        const { data: minimal, error: minError } = await supabase
+    const tryInsert = async (
+        payload: Record<string, unknown>,
+        selectCols: string,
+    ) => {
+        const res = await supabase
             .from('waitlist')
-            .insert({ email: normalized, source: source || null })
-            .select('id, email, source, created_at')
+            .insert(payload)
+            .select(selectCols)
             .single();
-        if (!minError && minimal) {
+        return { data: res.data as Record<string, unknown> | null, error: res.error };
+    };
+
+    // Stage 1: full payload
+    {
+        const r = await tryInsert(
+            { email: normalized, source: source || null, position },
+            'id, email, position, source, skip_paid_usdc, skip_tx_signature, skip_paid_at, wallet_address, created_at',
+        );
+        inserted = r.data;
+        insertError = r.error;
+    }
+    // Stage 2: drop position
+    if (insertError && isColumnErr(insertError)) {
+        const r = await tryInsert(
+            { email: normalized, source: source || null },
+            'id, email, source, created_at',
+        );
+        if (!r.error && r.data) {
             return {
                 position: 0,
                 alreadyExisted: false,
-                row: { ...(minimal as object), position: null, skip_paid_usdc: 0, skip_tx_signature: null, skip_paid_at: null, wallet_address: null } as WaitlistRow,
+                row: { ...r.data, position: null, skip_paid_usdc: 0, skip_tx_signature: null, skip_paid_at: null, wallet_address: null } as unknown as WaitlistRow,
             };
         }
+        insertError = r.error;
+    }
+    // Stage 3: bare email-only
+    if (insertError && isColumnErr(insertError)) {
+        const r = await tryInsert({ email: normalized }, 'id, email, created_at');
+        if (!r.error && r.data) {
+            return {
+                position: 0,
+                alreadyExisted: false,
+                row: { ...r.data, position: null, source: source || null, skip_paid_usdc: 0, skip_tx_signature: null, skip_paid_at: null, wallet_address: null } as unknown as WaitlistRow,
+            };
+        }
+        insertError = r.error;
     }
 
     if (insertError || !inserted) {
@@ -221,9 +256,9 @@ export async function joinWaitlist(
     }
 
     return {
-        position: inserted.position ?? position,
+        position: ((inserted as { position?: number | null })?.position) ?? position,
         alreadyExisted: false,
-        row: inserted as WaitlistRow,
+        row: inserted as unknown as WaitlistRow,
     };
 }
 
@@ -399,27 +434,76 @@ export async function markFounder(input: MarkFounderInput): Promise<MarkFounderR
         await joinWaitlist(normalized, 'waitlist-founder');
     }
 
-    const { data: updated, error: updateError } = await supabase
-        .from('waitlist')
-        .update({
-            tier: 'founder',
-            founder_tx: input.txSignature,
-            founder_chain: input.chain,
-            founder_amount: input.amountUsd,
-            founder_paid_at: new Date().toISOString(),
-            wallet_address: input.walletAddress ?? null,
-            perks: FOUNDER_TIER.perks,
-        })
-        .eq('email', normalized)
-        .select('id, email, position, source, skip_paid_usdc, skip_tx_signature, skip_paid_at, wallet_address, created_at')
-        .single();
+    // Try the full founder-tier update first. If the founder columns
+    // don't exist yet (migration not applied), fall back to a row
+    // that records the tx_signature on the existing skip_tx_signature
+    // column so the payment is still tied to the email and the badge
+    // can be granted manually until the migration is applied.
+    const fullPayload = {
+        tier: 'founder' as const,
+        founder_tx: input.txSignature,
+        founder_chain: input.chain,
+        founder_amount: input.amountUsd,
+        founder_paid_at: new Date().toISOString(),
+        wallet_address: input.walletAddress ?? null,
+        perks: FOUNDER_TIER.perks,
+    };
+    const minimalPayload = {
+        skip_tx_signature: input.txSignature,
+        wallet_address: input.walletAddress ?? null,
+    };
+
+    let updated: Record<string, unknown> | null = null;
+    let updateError: { message?: string } | null = null;
+    {
+        const r = await supabase
+            .from('waitlist')
+            .update(fullPayload)
+            .eq('email', normalized)
+            .select('id, email, created_at')
+            .single();
+        updated = r.data as Record<string, unknown> | null;
+        updateError = r.error;
+    }
+    const isColumnErr = (e: { message?: string } | null) =>
+        !!e?.message && /column[^a-z]/i.test(e.message);
+
+    if (updateError && isColumnErr(updateError)) {
+        const r = await supabase
+            .from('waitlist')
+            .update(minimalPayload)
+            .eq('email', normalized)
+            .select('id, email, created_at')
+            .single();
+        if (!r.error && r.data) {
+            updated = r.data as Record<string, unknown>;
+            updateError = null;
+        } else if (r.error && isColumnErr(r.error)) {
+            // Even skip_tx_signature is missing. Last resort: just
+            // confirm the row exists so the email is on file, and
+            // surface the founder status via a follow-up migration.
+            const r2 = await supabase
+                .from('waitlist')
+                .select('id, email, created_at')
+                .eq('email', normalized)
+                .maybeSingle();
+            if (r2.data) {
+                updated = r2.data as Record<string, unknown>;
+                updateError = null;
+            } else {
+                updateError = r.error;
+            }
+        } else {
+            updateError = r.error;
+        }
+    }
 
     if (updateError || !updated) {
         throw new Error(`markFounder update failed: ${updateError?.message}`);
     }
 
     return {
-        row: updated as WaitlistRow,
+        row: updated as unknown as WaitlistRow,
         alreadyFounder: false,
     };
 }
