@@ -119,7 +119,7 @@ const Hero: React.FC = () => {
           <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center flex-wrap">
             <Link
               href="/waitlist"
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-primary hover:shadow-[0_0_28px_rgba(240,138,76,0.45)] transition-shadow"
+              className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-primary hover:shadow-[0_0_32px_rgba(240,138,76,0.55)] hover:-translate-y-px active:translate-y-0 transition-[transform,box-shadow] duration-200"
             >
               Join the waitlist
               <span className="font-mono">→</span>
