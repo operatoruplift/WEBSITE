@@ -35,8 +35,12 @@ const FaqSection: React.FC = () => {
         <section
             id="faq"
             aria-labelledby="faq-heading"
-            className="relative w-full px-6 md:px-12 border-t border-foreground/[0.07]"
-            style={{ paddingTop: 'clamp(80px, 12vw, 120px)', paddingBottom: 'clamp(80px, 12vw, 120px)' }}
+            className="relative w-full px-6 md:px-12 border-t border-foreground/[0.07] flex flex-col justify-center"
+            style={{
+                minHeight: 'clamp(820px, 100vh, 1200px)',
+                paddingTop: 'clamp(80px, 12vw, 120px)',
+                paddingBottom: 'clamp(80px, 12vw, 120px)',
+            }}
         >
             {/* schema.org FAQPage JSON-LD for rich-result eligibility. */}
             <script

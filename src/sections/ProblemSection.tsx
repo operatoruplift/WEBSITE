@@ -50,8 +50,12 @@ const ProblemSection: React.FC = () => {
         <section
             id="problem"
             aria-labelledby="problem-heading"
-            className="relative w-full px-6 md:px-12 border-t border-foreground/[0.07]"
-            style={{ paddingTop: 'clamp(80px, 12vw, 120px)', paddingBottom: 'clamp(80px, 12vw, 120px)' }}
+            className="relative w-full px-6 md:px-12 border-t border-foreground/[0.07] flex flex-col justify-center"
+            style={{
+                minHeight: 'clamp(640px, 90vh, 920px)',
+                paddingTop: 'clamp(80px, 12vw, 120px)',
+                paddingBottom: 'clamp(80px, 12vw, 120px)',
+            }}
         >
             <div className="w-full max-w-[1280px] mx-auto">
                 <SectionHeader

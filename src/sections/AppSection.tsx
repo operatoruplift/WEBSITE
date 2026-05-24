@@ -25,10 +25,14 @@ const AppSection: React.FC = () => {
         <section
             id="app"
             aria-labelledby="app-heading"
-            className="relative w-full px-6 md:px-12 border-t border-foreground/[0.07]"
-            style={{ paddingTop: 'clamp(80px, 12vw, 140px)', paddingBottom: 'clamp(80px, 12vw, 140px)' }}
+            className="relative w-full px-6 md:px-12 border-t border-foreground/[0.07] flex flex-col justify-center"
+            style={{
+                minHeight: 'clamp(720px, 95vh, 1080px)',
+                paddingTop: 'clamp(80px, 12vw, 140px)',
+                paddingBottom: 'clamp(80px, 12vw, 140px)',
+            }}
         >
-            <div className="max-w-[1200px] mx-auto">
+            <div className="max-w-[1200px] mx-auto w-full">
                 <FadeIn>
                     <div className="text-center">
                         <span className="font-mono text-[11px] tracking-[0.2em] text-primary uppercase inline-flex items-center gap-3">
