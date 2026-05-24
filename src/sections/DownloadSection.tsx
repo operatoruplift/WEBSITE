@@ -30,8 +30,12 @@ const DownloadSection: React.FC = () => {
         <section
             id="download"
             aria-labelledby="download-heading"
-            className="relative w-full px-6 md:px-12 text-center border-t border-foreground/[0.07]"
-            style={{ paddingTop: 'clamp(80px, 12vw, 140px)', paddingBottom: 'clamp(80px, 12vw, 140px)' }}
+            className="relative w-full px-6 md:px-12 text-center border-t border-foreground/[0.07] flex flex-col justify-center"
+            style={{
+                minHeight: 'clamp(560px, 80vh, 760px)',
+                paddingTop: 'clamp(80px, 12vw, 140px)',
+                paddingBottom: 'clamp(80px, 12vw, 140px)',
+            }}
         >
             <FadeIn className="max-w-[860px] mx-auto">
                 <span className="font-mono text-[11px] tracking-[0.2em] text-primary uppercase inline-flex items-center gap-3">

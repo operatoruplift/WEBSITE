@@ -46,7 +46,8 @@ const Hero: React.FC = () => {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative w-full overflow-hidden pt-24 pb-20 md:pt-28 md:pb-28"
+      className="relative w-full overflow-hidden pt-24 pb-20 md:pt-28 md:pb-28 flex flex-col justify-center"
+      style={{ minHeight: 'clamp(720px, 100vh, 1080px)' }}
     >
       <div className="accent-glow" />
 
@@ -61,14 +62,14 @@ const Hero: React.FC = () => {
             left edge. The metadata row below the CTAs follows
             the same centered axis. */}
         <FadeIn delay={50} direction="down">
-          <span className="font-mono text-[12px] tracking-[0.18em] text-primary uppercase mb-8">
+          <span className="block font-mono text-[12px] tracking-[0.18em] text-primary uppercase mb-6 md:mb-8">
             // operator uplift · 2026
           </span>
         </FadeIn>
 
         {/* Badge with pulse, mono-pill style at the top of the column. */}
         <FadeIn delay={150} direction="down">
-          <div className="inline-flex items-center gap-3 px-3.5 py-2 mb-10 md:mb-14 rounded-full border border-foreground/[0.12] bg-foreground/[0.02] font-mono text-xs text-muted">
+          <div className="inline-flex items-center gap-3 px-3.5 py-2 mb-12 md:mb-16 rounded-full border border-foreground/[0.12] bg-foreground/[0.02] font-mono text-xs text-muted">
             <span className="relative flex w-1.5 h-1.5">
               <span className="absolute inline-flex w-full h-full rounded-full bg-primary opacity-75 animate-ping" />
               <span className="relative inline-flex rounded-full w-1.5 h-1.5 bg-primary shadow-[0_0_12px_var(--color-primary)]" />
