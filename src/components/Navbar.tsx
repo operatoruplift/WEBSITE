@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import ThemeToggle from '@/src/components/ThemeToggle';
 /**
  * Brand mark uses the real hexagon-sparkle logo at
  * /brand/operator-uplift-mark.png shipped in PR #701. The earlier
@@ -96,7 +97,8 @@ const Navbar: React.FC<NavbarProps> = () => {
             iOS + Android apps are not shipped yet (badge in the hero
             says "iOS & Android coming soon"); /waitlist is the
             honest path. When the apps ship, swap the href + label. */}
-        <div className="hidden lg:flex items-center">
+        <div className="hidden lg:flex items-center gap-3">
+          <ThemeToggle />
           <Link
             href="/waitlist"
             className="inline-flex items-center gap-2 px-4 py-2 font-mono text-[13px] text-foreground border border-foreground/[0.16] bg-foreground/[0.02] hover:border-foreground/40 hover:bg-foreground/[0.06] transition-all"
@@ -141,14 +143,17 @@ const Navbar: React.FC<NavbarProps> = () => {
 
           <div className="w-full h-px bg-foreground/10 my-3" />
 
-          <Link
-            href="/waitlist"
-            onClick={() => setMobileMenuOpen(false)}
-            className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 font-mono text-sm text-foreground border border-foreground/[0.16] bg-foreground/[0.02] hover:border-foreground/40 transition-all"
-          >
-            Download
-            <span className="text-primary">→</span>
-          </Link>
+          <div className="flex items-center gap-3 w-full">
+            <ThemeToggle />
+            <Link
+              href="/waitlist"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 font-mono text-sm text-foreground border border-foreground/[0.16] bg-foreground/[0.02] hover:border-foreground/40 transition-all"
+            >
+              Download
+              <span className="text-primary">→</span>
+            </Link>
+          </div>
         </div>
       </div>
     </>
