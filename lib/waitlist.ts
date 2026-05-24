@@ -21,6 +21,29 @@ import { getSupabase } from './supabase';
 
 export const WAITLIST_BASE_POSITION = 300;
 
+/**
+ * Founder Member tier. Optional paid signup at $5 USDC that grants
+ * the visitor two perks on top of the regular waitlist slot:
+ *
+ *   - vanity_badge: shows a "Founder Member" badge on the dashboard
+ *     once they sign in with the same email
+ *   - xp_head_start: +500 XP banked against their first session
+ *
+ * Recipient wallet is locked here so a UI bug can never route the
+ * payment somewhere else. Mirrors the SKIP_TIERS pattern above.
+ */
+export const FOUNDER_TIER = {
+    priceUsdc: 5,
+    recipientSolana: 'Hory1jnLvqdaiFYmSVWevVSCKzfrZLTfDizoA6veVmQ2',
+    label: 'Founder Member',
+    perks: {
+        vanity_badge: true,
+        xp_head_start: 500,
+    },
+} as const;
+
+export type WaitlistTier = 'free' | 'founder';
+
 export const SKIP_TIERS = {
     boost_50: {
         amountUsdc: 25,
@@ -297,5 +320,73 @@ export async function applySkipBump(args: {
         oldPosition,
         newPosition,
         row: updated as WaitlistRow,
+    };
+}
+
+export interface MarkFounderInput {
+    email: string;
+    txSignature: string;
+    chain: 'solana' | 'base' | 'arbitrum' | 'optimism' | 'polygon';
+    amountUsd: number;
+    walletAddress?: string;
+}
+
+export interface MarkFounderResult {
+    row: WaitlistRow;
+    alreadyFounder: boolean;
+}
+
+/**
+ * Mark an existing waitlist row (or create one) as a Founder Member
+ * after a confirmed on-chain payment.
+ *
+ * Caller must have already verified the tx_signature on the relevant
+ * chain RPC, this function does NOT do on-chain verification. It only
+ * writes the verdict: tier='founder', founder_tx, founder_chain,
+ * founder_amount, founder_paid_at, and the perks JSON snapshot.
+ *
+ * Idempotent: if the email is already tier='founder', returns the
+ * existing row with alreadyFounder=true rather than re-applying the
+ * perks. Prevents double-grant if the payment confirmation route is
+ * called twice.
+ *
+ * If the email is not yet on the waitlist, joinWaitlist() is called
+ * first to allocate a position, then the same row is upgraded.
+ */
+export async function markFounder(input: MarkFounderInput): Promise<MarkFounderResult> {
+    const supabase = getSupabase();
+    const normalized = input.email.trim().toLowerCase();
+
+    const existing = await lookupByEmail(normalized);
+    if (existing && (existing as WaitlistRow & { tier?: string }).tier === 'founder') {
+        return { row: existing, alreadyFounder: true };
+    }
+
+    if (!existing) {
+        await joinWaitlist(normalized, 'waitlist-founder');
+    }
+
+    const { data: updated, error: updateError } = await supabase
+        .from('waitlist')
+        .update({
+            tier: 'founder',
+            founder_tx: input.txSignature,
+            founder_chain: input.chain,
+            founder_amount: input.amountUsd,
+            founder_paid_at: new Date().toISOString(),
+            wallet_address: input.walletAddress ?? null,
+            perks: FOUNDER_TIER.perks,
+        })
+        .eq('email', normalized)
+        .select('id, email, position, source, skip_paid_usdc, skip_tx_signature, skip_paid_at, wallet_address, created_at')
+        .single();
+
+    if (updateError || !updated) {
+        throw new Error(`markFounder update failed: ${updateError?.message}`);
+    }
+
+    return {
+        row: updated as WaitlistRow,
+        alreadyFounder: false,
     };
 }
