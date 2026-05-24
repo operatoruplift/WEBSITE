@@ -286,10 +286,101 @@ function FounderTierSection({ email }: { email: string }) {
                         {copied === 'url' ? 'Copied' : 'Copy Solana Pay URL'}
                     </button>
                 </div>
-                <p className="text-xs text-muted leading-relaxed">
-                    After your payment confirms on-chain, drop the tx signature with the same email at <a href="mailto:operatoruplift@gmail.com" className="text-[#F08A4C] underline">operatoruplift@gmail.com</a> and we will activate your Founder Member badge before the cohort opens. Automated tx verification + Privy + EVM chain support ships in the next pass.
-                </p>
+                <FounderVerifyForm email={email} />
             </div>
         </section>
+    );
+}
+
+type VerifyState =
+    | { kind: 'idle' }
+    | { kind: 'loading' }
+    | { kind: 'ok'; amountUsdc: number; alreadyFounder: boolean }
+    | { kind: 'error'; message: string };
+
+/**
+ * Inline tx-signature verifier. The user pastes the Solana
+ * transaction signature their wallet returned after sending the
+ * $5 USDC payment; the backend pulls the tx from RPC, confirms
+ * the recipient + amount, and upgrades the waitlist row.
+ */
+function FounderVerifyForm({ email }: { email: string }) {
+    const [sig, setSig] = useState('');
+    const [state, setState] = useState<VerifyState>({ kind: 'idle' });
+
+    const submit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!email.includes('@')) {
+            setState({ kind: 'error', message: 'Add your email above first.' });
+            return;
+        }
+        const trimmed = sig.trim();
+        if (trimmed.length < 40) {
+            setState({ kind: 'error', message: 'Paste the full Solana tx signature.' });
+            return;
+        }
+        setState({ kind: 'loading' });
+        try {
+            const res = await fetch('/api/waitlist/founder/verify-solana', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, txSignature: trimmed }),
+            });
+            const body = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                throw new Error(body.message || body.error || `HTTP ${res.status}`);
+            }
+            setState({ kind: 'ok', amountUsdc: body.amountUsdc, alreadyFounder: Boolean(body.alreadyFounder) });
+        } catch (err) {
+            setState({
+                kind: 'error',
+                message: err instanceof Error ? err.message : 'Verification failed. Try again in a moment.',
+            });
+        }
+    };
+
+    if (state.kind === 'ok') {
+        return (
+            <div className="rounded-xl border border-[#F08A4C]/40 bg-[#F08A4C]/[0.08] p-4 space-y-2 text-center">
+                <div className="text-xs font-bold uppercase tracking-[0.22em] text-[#F08A4C]">
+                    {state.alreadyFounder ? 'Founder Member already active' : 'Founder Member activated'}
+                </div>
+                <p className="text-sm text-foreground/90">
+                    {state.amountUsdc.toFixed(2)} USDC verified on Solana. Vanity badge + 500 XP head start are queued for your account.
+                </p>
+            </div>
+        );
+    }
+
+    return (
+        <form onSubmit={submit} className="space-y-2">
+            <label className="block text-xs font-mono tracking-[0.12em] text-muted uppercase">
+                Paste Solana tx signature
+            </label>
+            <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                    type="text"
+                    value={sig}
+                    onChange={(e) => setSig(e.target.value)}
+                    placeholder="e.g. 4Ck...m9z"
+                    aria-label="Solana transaction signature"
+                    className="flex-1 min-w-0 rounded-xl border border-foreground/15 bg-background px-3 py-2.5 font-mono text-[13px] text-foreground placeholder:text-muted/70 focus:border-foreground/40 focus:outline-none"
+                />
+                <button
+                    type="submit"
+                    disabled={state.kind === 'loading'}
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-[#F08A4C] bg-[#F08A4C]/[0.08] text-[#F08A4C] text-sm font-semibold hover:bg-[#F08A4C]/[0.16] disabled:opacity-60 transition-colors"
+                >
+                    {state.kind === 'loading' ? 'Verifying...' : 'Verify + activate'}
+                </button>
+            </div>
+            {state.kind === 'error' ? (
+                <p className="text-xs text-red-400">{state.message}</p>
+            ) : (
+                <p className="text-xs text-muted leading-relaxed">
+                    After your payment confirms on-chain (10-30 seconds), paste the tx signature here. We verify the transfer against Solana RPC and activate your badge automatically.
+                </p>
+            )}
+        </form>
     );
 }
