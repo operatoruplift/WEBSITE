@@ -24,42 +24,50 @@ export const DOC_SECTIONS: DocEntry[] = [
     {
         slug: 'getting-started',
         title: 'Getting started',
-        summary: 'What Operator Uplift is, the four-step commitment protocol, and what ships today.',
+        summary: 'How the commitment + stake + check-in + settle flow works, and what ships today.',
         group: 'Start here',
     },
     {
-        slug: 'approvals',
-        title: 'Approvals',
-        summary: 'Every write action waits for a human click. How and why.',
-        group: 'Core concepts',
+        slug: 'waitlist',
+        title: 'Waitlist + Founder Member',
+        summary: 'Free signup and the optional $5 USDC Founder Member tier with vanity badge + 500 XP head start.',
+        group: 'Start here',
     },
     {
         slug: 'receipts',
         title: 'Receipts',
-        summary: 'ed25519 signatures, Merkle roots on Solana, Filecoin mirror via IPFS gateway.',
+        summary: 'ed25519 signatures + Merkle root on Solana devnet every five actions. How to verify independently.',
         group: 'Core concepts',
-    },
-    {
-        slug: 'x402',
-        title: 'x402 payment gate',
-        summary: 'MCPay-compatible payment flow for premium tool calls.',
-        group: 'Economics',
-    },
-    {
-        slug: 'integrations',
-        title: 'Integrations (retired)',
-        summary: 'Historical reference. The /integrations dashboard was retired in PR #696. The commitment-infrastructure product verifies follow-through through uploaded proof, not by writing into your tools.',
-        group: 'Integrations',
     },
     {
         slug: 'troubleshooting',
         title: 'Troubleshooting',
-        summary: 'Common errors, fixes, and where to find logs.',
+        summary: 'Waitlist errors, payment verification, common questions.',
         group: 'Reference',
+    },
+    // Historical references kept so external links never 404. Each
+    // page still resolves with a "retired" framing.
+    {
+        slug: 'approvals',
+        title: 'Approvals (retired)',
+        summary: 'Historical: per-action consent modal from the AI-assistant product.',
+        group: 'Historical',
+    },
+    {
+        slug: 'integrations',
+        title: 'Integrations (retired)',
+        summary: 'Historical: Gmail + Calendar surfaces from the AI-assistant product.',
+        group: 'Historical',
+    },
+    {
+        slug: 'x402',
+        title: 'x402 payment gate (retired)',
+        summary: 'Historical: per-tool-call payment flow from the AI-assistant product.',
+        group: 'Historical',
     },
 ];
 
-export const DOC_GROUPS = ['Start here', 'Core concepts', 'Economics', 'Integrations', 'Reference'];
+export const DOC_GROUPS = ['Start here', 'Core concepts', 'Reference', 'Historical'];
 
 export function findDoc(slug: string | undefined): DocEntry | undefined {
     if (!slug) return DOC_SECTIONS[0];

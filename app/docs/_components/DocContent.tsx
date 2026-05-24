@@ -12,19 +12,54 @@ const CONTENT: Record<string, React.ReactNode> = {
     'getting-started': (
         <>
             <p className="lead">Operator Uplift is commitment infrastructure. You declare a goal with money on the line, an AI Game Master runs your daily check-ins, and the protocol settles your stake on-chain when you honor or miss the commitment.</p>
-            <h2>Get started</h2>
+            <h2>The four-step flow</h2>
             <ol>
-                <li><strong>Declare.</strong> Join the waitlist at <a href="/waitlist">/waitlist</a>. When the next cohort opens, you&apos;ll get an invite to set your first commitment with stake size and check-in cadence.</li>
-                <li><strong>Stake.</strong> Lock money against the goal. Miss a check-in and the stake is forfeit. Honor it and the stake comes back to you with the streak intact.</li>
-                <li><strong>Honor.</strong> The AI Game Master pings you on the cadence you specified. Reply YES, NO, or upload a photo as evidence. The mobile apps (iOS + Android, coming soon) will be the primary check-in surface.</li>
-                <li><strong>Watch.</strong> Each settled check-in produces an ed25519-signed receipt. Anchored on-chain so you can verify the streak record independently.</li>
+                <li><strong>Commit.</strong> Declare what you will do, in your own words. Specific enough that &ldquo;did I do it?&rdquo; is a yes or no.</li>
+                <li><strong>Stake.</strong> Put real money on the line. USDC or card. Funds sit in escrow while the commitment is active.</li>
+                <li><strong>Upload proof.</strong> Photo, GPS, integration data, or a short note. The AI Game Master verifies follow-through and streams reasoning back.</li>
+                <li><strong>Settle.</strong> Honor the commitment, the stake returns and your streak grows. Miss it, the stake is redistributed to operators who kept their word, minus a small protocol fee.</li>
             </ol>
+            <h2>Where to start</h2>
+            <ul>
+                <li>Join the waitlist at <a href="/waitlist">/waitlist</a>. Free signup gives you a sequential slot in the next cohort.</li>
+                <li>Want a vanity badge and an XP head start? The optional <Link href="/docs/waitlist">Founder Member tier</Link> is $5 USDC paid directly on Solana.</li>
+                <li>The iOS and Android apps will be the primary check-in surface once they ship.</li>
+            </ul>
             <h2>What ships today</h2>
             <ul>
-                <li>The protocol UI is in pre-launch. The waitlist accepts signups and the engineering primitives below are live and verifiable today.</li>
-                <li>ed25519 signed receipts, Merkle root published to Solana devnet every five actions, and two parallel public-storage mirrors (Filecoin via IPFS + 0G testnet via the indexer) so the receipt bytes outlive our database. The same rail will carry commitment settlements when the product opens.</li>
-                <li>Agent identity cards and (opt-in) user-ownable session memories on Arkiv Braga testnet. Listed at <a href="/arkiv">/arkiv</a>; the bytes mirror <a href="/agents/calendar.json">/agents/calendar.json</a> and <a href="/agents/gmail.json">/agents/gmail.json</a>. The entity list reflects the live state and stays empty until the operator funds the Braga wallet and runs the publish script.</li>
-                <li>The legacy AI-assistant web surfaces (chat, integrations, profile, security, swarm) and the /app, /agents, /workflows, /memory, /settings, /onboarding, /analytics, /notifications, /marketplace dashboards have all been retired (PRs #696 + #709). Each route still resolves and renders a polite retired-surface card so external links never 404, but the marketing happy path is the commitment-infrastructure homepage. The dashboard /goals route stays as the only product surface until the mobile apps ship.</li>
+                <li>The waitlist is live and accepts both free and Founder Member signups.</li>
+                <li>ed25519-signed receipts with a Merkle root anchored to Solana devnet every five actions. See <Link href="/docs/receipts">Receipts</Link> for the full verification flow.</li>
+                <li>The mobile apps are the next surface to ship. The web is the marketing + waitlist + verifier home.</li>
+            </ul>
+        </>
+    ),
+    'waitlist': (
+        <>
+            <p className="lead">Two ways to join. Free gets you a sequential slot. Founder Member ($5 USDC) gets the slot plus a vanity badge on your dashboard and a 500 XP head start.</p>
+            <h2>Free signup</h2>
+            <ol>
+                <li>Drop your email at <a href="/waitlist">/waitlist</a>.</li>
+                <li>We store the email server-side. You get a confirmation card with your position.</li>
+                <li>When the next cohort opens, you get an invite email at the address you signed up with.</li>
+            </ol>
+            <h2>Founder Member ($5 USDC)</h2>
+            <p>Optional, paid once, no recurring charge. Perks land on your account when you sign in with the same email used at signup.</p>
+            <ul>
+                <li><strong>Vanity badge.</strong> A &ldquo;Founder Member&rdquo; mark visible on your dashboard once the mobile apps ship.</li>
+                <li><strong>+500 XP head start.</strong> Banked against your first session, so you cross the first reputation milestone faster.</li>
+                <li><strong>The free slot stays.</strong> The badge is on top of, not instead of, the regular waitlist position.</li>
+            </ul>
+            <h3>How to pay</h3>
+            <ol>
+                <li>Sign up with your email at the top of <a href="/waitlist">/waitlist</a>.</li>
+                <li>Send exactly $5 USDC on Solana to the recipient address shown in the Founder Member card. The address is locked in the source and reproduced on the page: <code>Hory1jnLvqdaiFYmSVWevVSCKzfrZLTfDizoA6veVmQ2</code>.</li>
+                <li>After the tx confirms (10-30 seconds), paste the signature into the verify field on the Founder Member card. The backend pulls the tx from Solana RPC, confirms the recipient + amount + USDC mint, and activates your badge.</li>
+            </ol>
+            <h2>Refunds and edge cases</h2>
+            <ul>
+                <li>Sent the wrong amount? Email <a href="mailto:operatoruplift@gmail.com">operatoruplift@gmail.com</a> with the tx signature. We can refund and re-issue.</li>
+                <li>Activated twice? The verifier is idempotent. The second activation returns <code>alreadyFounder: true</code> without re-granting perks.</li>
+                <li>Lost the tx signature? Open your wallet&apos;s history. The Founder Member recipient address above will identify it.</li>
             </ul>
         </>
     ),
