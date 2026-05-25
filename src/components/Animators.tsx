@@ -13,7 +13,8 @@ interface FadeInProps {
    * to participate in `flex` / `text-center` / `w-full` centering
    * against the full viewport (e.g. hero headers). Set `block` to
    * render the wrapper as `block w-full` instead. Callers that
-   * actually wanted inline-block (text spans, etc.) can omit this.
+   * actually wanted inline-block (text spans, badge pills with their
+   * own border) can omit this.
    */
   block?: boolean;
 }

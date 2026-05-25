@@ -50,7 +50,7 @@ export function SectionHeader({
 }: SectionHeaderProps) {
     const isLeft = align === 'left';
     return (
-        <FadeIn>
+        <FadeIn block>
             <div
                 className={[
                     'mb-12',

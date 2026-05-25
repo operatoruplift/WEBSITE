@@ -44,7 +44,7 @@ const FinalCta: React.FC = () => {
                 background: `radial-gradient(ellipse 60% 70% at 50% 50%, rgba(240, 138, 76, 0.06), transparent 70%), linear-gradient(180deg, rgba(255,255,255,0.01), transparent)`,
             }}
         >
-            <FadeIn className="max-w-[920px] mx-auto">
+            <FadeIn block className="max-w-[920px] mx-auto">
                 <span className="font-mono text-[11px] tracking-[0.2em] text-primary uppercase inline-flex items-center gap-3">
                     <span className="h-px w-6 bg-primary inline-block" />
                     The ask of you

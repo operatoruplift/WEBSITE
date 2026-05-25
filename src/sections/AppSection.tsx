@@ -33,7 +33,7 @@ const AppSection: React.FC = () => {
             }}
         >
             <div className="max-w-[1200px] mx-auto w-full">
-                <FadeIn>
+                <FadeIn block>
                     <div className="text-center">
                         <span className="font-mono text-[11px] tracking-[0.2em] text-primary uppercase inline-flex items-center gap-3">
                             <span className="h-px w-6 bg-primary inline-block" />
@@ -57,7 +57,7 @@ const AppSection: React.FC = () => {
                     </div>
                 </FadeIn>
 
-                <FadeIn delay={150}>
+                <FadeIn delay={150} block>
                     <div className="mt-14 md:mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 lg:gap-10">
                         <PhoneFrame label="01 · Today">
                             <TodayScreen />
@@ -71,7 +71,7 @@ const AppSection: React.FC = () => {
                     </div>
                 </FadeIn>
 
-                <FadeIn delay={300}>
+                <FadeIn delay={300} block>
                     <div className="mt-14 md:mt-20 flex flex-col items-center text-center gap-8">
                         <div className="max-w-[640px]">
                             <span className="font-mono text-[10px] tracking-[0.18em] text-primary uppercase">

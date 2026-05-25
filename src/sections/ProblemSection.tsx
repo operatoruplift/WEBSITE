@@ -82,7 +82,7 @@ const ProblemSection: React.FC = () => {
                 >
                     {CARDS.map((card, i) => (
                         <li key={card.num}>
-                            <FadeIn delay={i * 80}>
+                            <FadeIn delay={i * 80} block>
                                 <article
                                     className="relative border border-foreground/[0.12] p-8 h-full text-center"
                                     style={{

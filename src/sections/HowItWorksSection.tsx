@@ -102,7 +102,7 @@ const HowItWorksSection: React.FC = () => {
                 >
                     {STEPS.map((step, i) => (
                         <li key={step.n} className="bg-background min-h-[220px]">
-                            <FadeIn delay={i * 60}>
+                            <FadeIn delay={i * 60} block>
                                 <div className="h-full p-7 md:p-7 flex flex-col items-center text-center">
                                     <div className="font-mono text-[11px] tracking-[0.15em] text-primary uppercase">
                                         Step {step.n}
@@ -126,7 +126,7 @@ const HowItWorksSection: React.FC = () => {
                         </li>
                     ))}
                 </ol>
-                <FadeIn delay={300}>
+                <FadeIn delay={300} block>
                     <p
                         className="mt-14 md:mt-16 mx-auto max-w-[820px] text-center text-foreground/95 leading-relaxed"
                         style={{ fontSize: 'clamp(15px, 1.3vw, 19px)' }}

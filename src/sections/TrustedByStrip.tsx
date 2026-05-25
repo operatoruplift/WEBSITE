@@ -68,7 +68,7 @@ const TrustedByStrip: React.FC = () => {
             }}
         >
             <div className="max-w-[1200px] mx-auto w-full">
-                <FadeIn>
+                <FadeIn block>
                     <div className="text-center mb-12 md:mb-14">
                         <span className="font-mono text-[11px] tracking-[0.18em] text-primary uppercase inline-flex items-center gap-3">
                             <span className="h-px w-6 bg-primary inline-block" />
@@ -88,7 +88,7 @@ const TrustedByStrip: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
                     {COMPETITORS.map((c, i) => (
-                        <FadeIn key={c.name} delay={i * 100}>
+                        <FadeIn key={c.name} delay={i * 100} block>
                             <article className="h-full flex flex-col items-center text-center border border-foreground/[0.10] p-7 md:p-8 gap-5 bg-foreground/[0.015]">
                                 <div
                                     className="w-full h-[88px] rounded-md grid place-items-center overflow-hidden"
@@ -123,7 +123,7 @@ const TrustedByStrip: React.FC = () => {
                     ))}
                 </div>
 
-                <FadeIn delay={400}>
+                <FadeIn delay={400} block>
                     <p className="mt-12 text-center font-mono text-[12px] tracking-[0.14em] text-muted/70 uppercase">
                         Operator Uplift closes the gap with{' '}
                         <span className="text-foreground">staked money</span>,{' '}
