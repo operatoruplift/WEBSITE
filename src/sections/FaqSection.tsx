@@ -64,7 +64,7 @@ const FaqSection: React.FC = () => {
                     {FAQ_ITEMS.map((item, i) => {
                         const n = String(i + 1).padStart(2, '0');
                         return (
-                            <FadeIn key={item.q} delay={i * 40}>
+                            <FadeIn key={item.q} delay={i * 40} block>
                                 <div
                                     className={[
                                         'flex flex-col items-center text-center gap-3 py-8',

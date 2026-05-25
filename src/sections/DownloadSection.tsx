@@ -37,7 +37,7 @@ const DownloadSection: React.FC = () => {
                 paddingBottom: 'clamp(80px, 12vw, 140px)',
             }}
         >
-            <FadeIn className="max-w-[860px] mx-auto">
+            <FadeIn block className="max-w-[860px] mx-auto">
                 <span className="font-mono text-[11px] tracking-[0.2em] text-primary uppercase inline-flex items-center gap-3">
                     <span className="h-px w-6 bg-primary inline-block" />
                     04 · Download
