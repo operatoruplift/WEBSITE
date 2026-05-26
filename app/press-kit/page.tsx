@@ -48,7 +48,7 @@ const FACT_SHEET: FactRow[] = [
     { label: 'Positioning', value: 'Commitment infrastructure for people who actually ship.' },
     { label: 'Mechanism', value: 'commit, stake, prove, settle' },
     { label: 'Stage', value: 'Private beta. iOS + Android apps coming soon.' },
-    { label: 'Trust stack', value: 'ed25519-signed receipts, Solana devnet Merkle root every five actions.' },
+    { label: 'How it settles', value: 'User stake locks in escrow, AI Game Master adjudicates check-ins, the protocol returns or redistributes the stake on-chain.' },
     { label: 'Press email', value: 'operatoruplift@gmail.com' },
 ];
 
