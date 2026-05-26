@@ -52,7 +52,7 @@ export default function RetiredSurface({
                 <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
                     <Link
                         href="/"
-                        className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-foreground text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-foreground hover:bg-foreground/90 transition-colors"
+                        className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-foreground text-background font-mono text-sm font-semibold tracking-[0.02em] border border-foreground hover:bg-foreground/90 transition-colors"
                     >
                         Back to homepage
                         <span aria-hidden="true">→</span>
