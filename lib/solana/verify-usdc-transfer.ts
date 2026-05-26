@@ -18,7 +18,20 @@ import { Connection, PublicKey } from '@solana/web3.js';
 
 const USDC_MAINNET_MINT = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
 const USDC_DECIMALS = 6;
-const DEFAULT_RPC = 'https://api.mainnet-beta.solana.com';
+
+/**
+ * RPC endpoints to try in order. The default mainnet endpoint is
+ * heavily rate-limited (~50 RPS shared globally) so a single user
+ * verification can race with crawlers and fail. We add two free
+ * public providers as fallbacks so the founder-member verify path
+ * stays reliable without forcing every operator to provision a
+ * paid RPC key. `process.env.SOLANA_RPC` still wins when set.
+ */
+const FALLBACK_RPCS = [
+    'https://api.mainnet-beta.solana.com',
+    'https://solana-rpc.publicnode.com',
+    'https://solana-mainnet.public.blastapi.io',
+];
 
 export interface VerifyUsdcInput {
     txSignature: string;
@@ -47,7 +60,6 @@ export type VerifyUsdcResult =
 export async function verifyUsdcTransferToRecipient(
     input: VerifyUsdcInput,
 ): Promise<VerifyUsdcResult> {
-    const rpc = input.rpc || process.env.SOLANA_RPC || DEFAULT_RPC;
     const mint = input.mint || USDC_MAINNET_MINT;
 
     let recipientPubkey: PublicKey;
@@ -57,18 +69,40 @@ export async function verifyUsdcTransferToRecipient(
         return { ok: false, error: 'recipient is not a valid Solana pubkey' };
     }
 
-    const connection = new Connection(rpc, 'confirmed');
+    // Build the RPC chain: caller override > env > public fallback list.
+    // Dedupe so we don't re-hit the same endpoint when env and default
+    // point at the same URL.
+    const explicit = input.rpc || process.env.SOLANA_RPC;
+    const candidates = Array.from(new Set([
+        ...(explicit ? [explicit] : []),
+        ...FALLBACK_RPCS,
+    ]));
 
-    let tx;
-    try {
-        tx = await connection.getTransaction(input.txSignature, {
-            maxSupportedTransactionVersion: 0,
-            commitment: 'confirmed',
-        });
-    } catch (err) {
-        return { ok: false, error: 'rpc fetch failed: ' + (err instanceof Error ? err.message : 'unknown') };
+    let tx: Awaited<ReturnType<Connection['getTransaction']>> | null = null;
+    let lastErr: string | null = null;
+    for (const endpoint of candidates) {
+        const connection = new Connection(endpoint, 'confirmed');
+        try {
+            tx = await connection.getTransaction(input.txSignature, {
+                maxSupportedTransactionVersion: 0,
+                commitment: 'confirmed',
+            });
+            // `null` from getTransaction means RPC was healthy but doesn't
+            // know the signature yet (propagation lag) or the sig is bogus.
+            // Don't fall through to the next RPC; the next one would also
+            // return null and we'd surface a less-specific error. The
+            // tx-not-found branch below tells the user to wait + retry.
+            break;
+        } catch (err) {
+            lastErr = err instanceof Error ? err.message : 'unknown';
+            // Try the next endpoint on network / rate-limit failure.
+            continue;
+        }
     }
 
+    if (lastErr && !tx) {
+        return { ok: false, error: 'rpc fetch failed across all endpoints: ' + lastErr };
+    }
     if (!tx) return { ok: false, error: 'transaction not found or not yet confirmed' };
     if (tx.meta?.err) return { ok: false, error: 'transaction failed on-chain' };
     const meta = tx.meta;
