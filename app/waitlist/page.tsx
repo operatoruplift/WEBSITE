@@ -229,7 +229,15 @@ function FounderTierSection({ email }: { email: string }) {
     const RECIPIENT = 'Hory1jnLvqdaiFYmSVWevVSCKzfrZLTfDizoA6veVmQ2';
     const PRICE_USDC = 5;
     const USDC_MINT = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
-    const solanaPayUrl = `solana:${RECIPIENT}?amount=${PRICE_USDC}&spl-token=${USDC_MINT}&label=Operator+Uplift+Waitlist&message=Founder+Member+slot+for+${encodeURIComponent(email || 'your+email')}`;
+    // The memo on the Solana Pay URL needs the user's email so the
+    // founder verifier knows which waitlist row to upgrade after the
+    // payment lands. Only build the URL once we have a usable email;
+    // before then we render a "Enter email above" placeholder so the
+    // wallet doesn't pop a tx for a literal "your+email" memo.
+    const hasEmail = email.includes('@');
+    const solanaPayUrl = hasEmail
+        ? `solana:${RECIPIENT}?amount=${PRICE_USDC}&spl-token=${USDC_MINT}&label=Operator+Uplift+Waitlist&message=Founder+Member+slot+for+${encodeURIComponent(email)}`
+        : '';
 
     const [copied, setCopied] = useState<'addr' | 'url' | null>(null);
     const copy = async (value: string, kind: 'addr' | 'url') => {
@@ -284,28 +292,41 @@ function FounderTierSection({ email }: { email: string }) {
                         {RECIPIENT}
                     </div>
                 </div>
-                <FounderQrCard solanaPayUrl={solanaPayUrl} />
-                <div className="space-y-2">
-                    <div className="flex flex-col sm:flex-row gap-3">
-                        <a
-                            href={solanaPayUrl}
-                            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-[#F08A4C]/50 bg-[#F08A4C]/[0.08] text-[#F08A4C] text-sm font-semibold tracking-[0.02em] hover:bg-[#F08A4C]/[0.16] transition-colors"
-                        >
-                            Try opening installed wallet
-                            <span aria-hidden="true">→</span>
-                        </a>
-                        <button
-                            type="button"
-                            onClick={() => copy(solanaPayUrl, 'url')}
-                            className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-foreground/15 text-sm text-foreground hover:border-foreground/40 transition-colors"
-                        >
-                            {copied === 'url' ? 'Copied' : 'Copy Solana Pay URL'}
-                        </button>
+                {hasEmail ? (
+                    <>
+                        <FounderQrCard solanaPayUrl={solanaPayUrl} />
+                        <div className="space-y-2">
+                            <div className="flex flex-col sm:flex-row gap-3">
+                                <a
+                                    href={solanaPayUrl}
+                                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-[#F08A4C]/50 bg-[#F08A4C]/[0.08] text-[#F08A4C] text-sm font-semibold tracking-[0.02em] hover:bg-[#F08A4C]/[0.16] transition-colors"
+                                >
+                                    Try opening installed wallet
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                                <button
+                                    type="button"
+                                    onClick={() => copy(solanaPayUrl, 'url')}
+                                    className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-foreground/15 text-sm text-foreground hover:border-foreground/40 transition-colors"
+                                >
+                                    {copied === 'url' ? 'Copied' : 'Copy Solana Pay URL'}
+                                </button>
+                            </div>
+                            <p className="text-[11px] text-muted/80 leading-relaxed">
+                                Works only when a Solana wallet (Phantom, Solflare, Backpack) is installed and registered as a <span className="font-mono">solana:</span> handler. If nothing happens when you click, scan the QR above with your phone wallet instead.
+                            </p>
+                        </div>
+                    </>
+                ) : (
+                    <div className="rounded-xl border border-dashed border-foreground/15 bg-background/40 p-5 text-center">
+                        <p className="text-sm text-foreground/80">
+                            Add your email above to generate your founder QR + payment link.
+                        </p>
+                        <p className="mt-1 text-[11px] text-muted/80">
+                            The email goes into the Solana Pay memo so we can match the payment to your slot when it lands.
+                        </p>
                     </div>
-                    <p className="text-[11px] text-muted/80 leading-relaxed">
-                        Works only when a Solana wallet (Phantom, Solflare, Backpack) is installed and registered as a <span className="font-mono">solana:</span> handler. If nothing happens when you click, scan the QR above with your phone wallet instead.
-                    </p>
-                </div>
+                )}
                 <FounderVerifyForm email={email} />
             </div>
         </section>
@@ -372,6 +393,10 @@ function FounderVerifyForm({ email }: { email: string }) {
         );
     }
 
+    const hasEmail = email.includes('@');
+    const sigLooksValid = sig.trim().length >= 40;
+    const canSubmit = hasEmail && sigLooksValid && state.kind !== 'loading';
+
     return (
         <form onSubmit={submit} className="space-y-2">
             <label className="block text-xs font-mono tracking-[0.12em] text-muted uppercase">
@@ -388,14 +413,26 @@ function FounderVerifyForm({ email }: { email: string }) {
                 />
                 <button
                     type="submit"
-                    disabled={state.kind === 'loading'}
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-[#F08A4C] bg-[#F08A4C]/[0.08] text-[#F08A4C] text-sm font-semibold hover:bg-[#F08A4C]/[0.16] disabled:opacity-60 transition-colors"
+                    disabled={!canSubmit}
+                    aria-disabled={!canSubmit}
+                    title={
+                        !hasEmail
+                            ? 'Enter your email above first'
+                            : !sigLooksValid
+                                ? 'Paste your full Solana transaction signature'
+                                : undefined
+                    }
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-[#F08A4C] bg-[#F08A4C]/[0.08] text-[#F08A4C] text-sm font-semibold hover:bg-[#F08A4C]/[0.16] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                     {state.kind === 'loading' ? 'Verifying...' : 'Verify + activate'}
                 </button>
             </div>
             {state.kind === 'error' ? (
                 <p className="text-xs text-red-400">{state.message}</p>
+            ) : !hasEmail ? (
+                <p className="text-xs text-muted leading-relaxed">
+                    Enter your email in the box above, then paste your Solana tx signature here once your wallet confirms the $5 USDC transfer.
+                </p>
             ) : (
                 <p className="text-xs text-muted leading-relaxed">
                     After your payment confirms on-chain (10-30 seconds), paste the tx signature here. We verify the transfer against Solana RPC and activate your badge automatically.
