@@ -184,22 +184,35 @@ function JoinedCard({
     alreadyExisted: boolean;
     email: string;
 }) {
+    // position === 0 means the server inserted the row without a
+    // sequential position (graceful fallback when the position
+    // column isn't yet on the Supabase schema). Show a position-
+    // free "you are on the list" confirmation instead of "#0".
+    const hasPosition = position > 0;
     return (
         <div className="rounded-2xl border border-[#F08A4C]/30 bg-[#F08A4C]/5 p-8 text-center space-y-4">
             <div className="text-xs font-bold uppercase tracking-[0.25em] text-[#F08A4C]">
                 {alreadyExisted ? 'Already on the list' : 'You are in'}
             </div>
-            <div className="text-4xl md:text-5xl font-semibold tracking-tight text-foreground">
-                #{position}
-            </div>
-            <p className="text-sm text-muted">
-                of {count.toLocaleString()} on the waitlist
-            </p>
+            {hasPosition ? (
+                <>
+                    <div className="text-4xl md:text-5xl font-semibold tracking-tight text-foreground">
+                        #{position}
+                    </div>
+                    <p className="text-sm text-muted">
+                        of {count.toLocaleString()} on the waitlist
+                    </p>
+                </>
+            ) : (
+                <div className="text-2xl md:text-3xl font-semibold tracking-tight text-foreground">
+                    Saved.
+                </div>
+            )}
             <p className="text-xs text-muted">
                 We saved your slot for <span className="font-mono">{email}</span>.
             </p>
             <p className="text-xs text-muted leading-relaxed pt-2 border-t border-foreground/10">
-                We invite people in batches. The line moves faster when we open new capacity, which we do most weeks. Use the tiers below to jump ahead.
+                We invite people in batches. We&apos;ll email you when your cohort opens.
             </p>
         </div>
     );

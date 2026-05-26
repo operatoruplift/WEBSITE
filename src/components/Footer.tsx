@@ -73,7 +73,7 @@ const Footer: React.FC = () => {
                         </h4>
                         <FooterLink href="/#problem" label="Problem" />
                         <FooterLink href="/#how-it-works" label="How it works" />
-                        <FooterLink href="/#market" label="Market" />
+                        <FooterLink href="/#download" label="Download" />
                         <FooterLink href="/pricing" label="Pricing" />
                         <FooterLink href="/docs" label="Docs" />
                     </nav>
@@ -105,7 +105,7 @@ const Footer: React.FC = () => {
                         <FooterLink href="mailto:operatoruplift@gmail.com" label="operatoruplift@gmail.com" />
                         <FooterLink href="https://x.com/OperatorUplift" external label="@operatoruplift" />
                         <FooterLink href="https://www.linkedin.com/company/operatoruplift" external label="LinkedIn" />
-                        <FooterLink href="/press-kit" label="Investor deck" />
+                        <FooterLink href="/press-kit" label="Press kit" />
                     </div>
                 </div>
 
