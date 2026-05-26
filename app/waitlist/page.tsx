@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 
@@ -286,6 +287,7 @@ function FounderTierSection({ email }: { email: string }) {
                         {copied === 'url' ? 'Copied' : 'Copy Solana Pay URL'}
                     </button>
                 </div>
+                <FounderQrCard solanaPayUrl={solanaPayUrl} />
                 <FounderVerifyForm email={email} />
             </div>
         </section>
@@ -382,5 +384,55 @@ function FounderVerifyForm({ email }: { email: string }) {
                 </p>
             )}
         </form>
+    );
+}
+
+/**
+ * QR-code card. Renders a small "Scan with your phone wallet" toggle
+ * that expands to a 240x240 QR pointing at the Solana Pay URL.
+ *
+ * Why a toggle and not always-on: most desktop users will use the
+ * "Open in Solana wallet" button on the same device; the QR is for
+ * the cross-device case (desktop reading the page, phone scanning
+ * to pay). Hidden by default to keep the section visually quiet,
+ * available with one tap when needed.
+ */
+function FounderQrCard({ solanaPayUrl }: { solanaPayUrl: string }) {
+    const [open, setOpen] = useState(false);
+    return (
+        <div className="rounded-xl border border-foreground/10 bg-background/40 p-4">
+            <button
+                type="button"
+                onClick={() => setOpen(o => !o)}
+                aria-expanded={open}
+                className="w-full flex items-center justify-between gap-3 text-left"
+            >
+                <div>
+                    <div className="text-xs font-mono tracking-[0.12em] text-muted uppercase">
+                        Scan with phone wallet
+                    </div>
+                    <p className="text-[12px] text-muted/80 mt-1">
+                        Cross-device option. Open Phantom or Solflare on your phone, scan the QR.
+                    </p>
+                </div>
+                <span className="font-mono text-xs text-[#F08A4C] shrink-0">
+                    {open ? 'Hide QR' : 'Show QR'}
+                </span>
+            </button>
+            {open ? (
+                <div className="mt-4 flex justify-center">
+                    <div className="rounded-lg bg-white p-3" aria-label="Solana Pay QR code">
+                        <QRCodeSVG
+                            value={solanaPayUrl}
+                            size={240}
+                            level="M"
+                            includeMargin={false}
+                            fgColor="#0A0A0B"
+                            bgColor="#FFFFFF"
+                        />
+                    </div>
+                </div>
+            ) : null}
+        </div>
     );
 }
