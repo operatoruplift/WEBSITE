@@ -110,6 +110,45 @@ for (const rel of MARKETING_FILES) {
     }
 }
 
+// Rule 3: FadeIn wrappers in src/sections/* must pass the `block`
+// prop. The FadeIn component defaults to display:inline-block,
+// which collapses to its child's natural width. A child div with
+// text-center inside still centers its text, but the inline-block
+// box itself sits left-anchored against the parent column. This
+// caused 8+ rounds of "section hugs left of page" feedback before
+// PR #738 fixed every section-wrapper FadeIn. See the inline-block
+// trap memory note + tests/e2e/homepage-section-centering.spec.ts.
+// Hero is exempt: its section wrapper is `flex flex-col items-center`
+// which centers all children along the cross-axis (horizontally) by
+// flex layout, not by text-align. inline-block FadeIns inside that
+// flex parent still appear centered, and the badge pill + mono
+// eyebrow rely on inline-block to size their borders to content.
+const FADEIN_BLOCK_EXEMPT = new Set(['src/sections/Hero.tsx']);
+
+for (const file of sectionFiles) {
+    const rel = path.relative(ROOT, file);
+    if (FADEIN_BLOCK_EXEMPT.has(rel)) continue;
+    const text = fs.readFileSync(file, 'utf8');
+    // Match `<FadeIn` followed by attribute list, capture the
+    // attribute list to check for the `block` token. The closing
+    // `>` ends the start tag.
+    const re = /<FadeIn\b([^>]*)>/g;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+        const attrs = m[1];
+        if (/\bblock\b/.test(attrs)) continue;
+        const before = text.slice(0, m.index);
+        const line = before.split('\n').length;
+        violations.push({
+            file: rel,
+            line,
+            pattern: '<FadeIn> without block',
+            retiredIn: 'PR#738',
+            message: `<FadeIn> in src/sections/* defaults to display:inline-block, which collapses to the child's natural width and centers content inside a left-anchored box. Pass the \`block\` prop on every section-wrapper FadeIn so it fills the parent column. If this specific FadeIn is wrapping a single inline element (text span, badge pill with its own border) that should size to content, move it out of src/sections/ or add an inline-block exception here.`,
+        });
+    }
+}
+
 if (violations.length === 0) {
     console.log('[centering-guard] OK (no violations)');
     process.exit(0);
