@@ -5,6 +5,12 @@ export const alt = 'Operator Uplift. Keep your word. Bet on yourself. Commitment
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
+// Brand mark resolved at request time so the OG image carries the
+// real hexagon+sparkle from /brand/operator-uplift-mark.png instead
+// of a placeholder "OU" block. fetch() works in edge runtime and
+// returns an ArrayBuffer the OG renderer can <img src=...> render.
+const BRAND_MARK_PATH = '/brand/operator-uplift-mark.png';
+
 /**
  * Open Graph image, v2 design canvas refresh (2026-05-22).
  *
@@ -23,6 +29,21 @@ export const contentType = 'image/png';
  * at any preview size (iMessage, Slack, LinkedIn, Twitter).
  */
 export default async function Image() {
+    const baseUrl = process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : process.env.NEXT_PUBLIC_SITE_URL || 'https://operatoruplift.com';
+    let markDataUrl = '';
+    try {
+        const res = await fetch(`${baseUrl}${BRAND_MARK_PATH}`);
+        if (res.ok) {
+            const buf = await res.arrayBuffer();
+            const b64 = Buffer.from(buf).toString('base64');
+            markDataUrl = `data:image/png;base64,${b64}`;
+        }
+    } catch {
+        // Fall back to the placeholder block if the fetch fails so
+        // the OG image always renders.
+    }
     return new ImageResponse(
         (
             <div
@@ -75,22 +96,33 @@ export default async function Image() {
                         gap: 14,
                     }}
                 >
-                    <div
-                        style={{
-                            width: 44,
-                            height: 44,
-                            background: '#F08A4C',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: '#0A0A0B',
-                            fontWeight: 900,
-                            fontSize: 20,
-                            letterSpacing: -0.5,
-                        }}
-                    >
-                        OU
-                    </div>
+                    {markDataUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                            src={markDataUrl}
+                            alt=""
+                            width={48}
+                            height={48}
+                            style={{ display: 'block' }}
+                        />
+                    ) : (
+                        <div
+                            style={{
+                                width: 44,
+                                height: 44,
+                                background: '#F08A4C',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: '#0A0A0B',
+                                fontWeight: 900,
+                                fontSize: 20,
+                                letterSpacing: -0.5,
+                            }}
+                        >
+                            OU
+                        </div>
+                    )}
                     <div
                         style={{
                             fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',

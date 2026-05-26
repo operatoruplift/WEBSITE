@@ -47,7 +47,7 @@ const FinalCta: React.FC = () => {
             <FadeIn block className="max-w-[920px] mx-auto">
                 <span className="font-mono text-[11px] tracking-[0.2em] text-primary uppercase inline-flex items-center gap-3">
                     <span className="h-px w-6 bg-primary inline-block" />
-                    The ask of you
+                    Join the waitlist
                     <span className="h-px w-6 bg-primary inline-block" />
                 </span>
                 <h2
@@ -92,7 +92,7 @@ const FinalCta: React.FC = () => {
                     />
                     <button
                         type="submit"
-                        className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-foreground text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-foreground hover:bg-foreground/90 transition-colors whitespace-nowrap"
+                        className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-foreground text-background font-mono text-sm font-semibold tracking-[0.02em] border border-foreground hover:bg-foreground/90 transition-colors whitespace-nowrap"
                     >
                         Get in line
                         <span aria-hidden="true">→</span>
