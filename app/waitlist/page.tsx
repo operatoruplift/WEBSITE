@@ -284,23 +284,28 @@ function FounderTierSection({ email }: { email: string }) {
                         {RECIPIENT}
                     </div>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                    <a
-                        href={solanaPayUrl}
-                        className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#F08A4C] text-[#0A0A0B] text-sm font-semibold tracking-[0.02em] hover:opacity-90 transition-opacity"
-                    >
-                        Open in Solana wallet
-                        <span aria-hidden="true">→</span>
-                    </a>
-                    <button
-                        type="button"
-                        onClick={() => copy(solanaPayUrl, 'url')}
-                        className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-foreground/15 text-sm text-foreground hover:border-foreground/40 transition-colors"
-                    >
-                        {copied === 'url' ? 'Copied' : 'Copy Solana Pay URL'}
-                    </button>
-                </div>
                 <FounderQrCard solanaPayUrl={solanaPayUrl} />
+                <div className="space-y-2">
+                    <div className="flex flex-col sm:flex-row gap-3">
+                        <a
+                            href={solanaPayUrl}
+                            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-[#F08A4C]/50 bg-[#F08A4C]/[0.08] text-[#F08A4C] text-sm font-semibold tracking-[0.02em] hover:bg-[#F08A4C]/[0.16] transition-colors"
+                        >
+                            Try opening installed wallet
+                            <span aria-hidden="true">→</span>
+                        </a>
+                        <button
+                            type="button"
+                            onClick={() => copy(solanaPayUrl, 'url')}
+                            className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-foreground/15 text-sm text-foreground hover:border-foreground/40 transition-colors"
+                        >
+                            {copied === 'url' ? 'Copied' : 'Copy Solana Pay URL'}
+                        </button>
+                    </div>
+                    <p className="text-[11px] text-muted/80 leading-relaxed">
+                        Works only when a Solana wallet (Phantom, Solflare, Backpack) is installed and registered as a <span className="font-mono">solana:</span> handler. If nothing happens when you click, scan the QR above with your phone wallet instead.
+                    </p>
+                </div>
                 <FounderVerifyForm email={email} />
             </div>
         </section>
@@ -401,51 +406,37 @@ function FounderVerifyForm({ email }: { email: string }) {
 }
 
 /**
- * QR-code card. Renders a small "Scan with your phone wallet" toggle
- * that expands to a 240x240 QR pointing at the Solana Pay URL.
+ * QR-code card. Always-on 220x220 QR pointing at the Solana Pay URL.
  *
- * Why a toggle and not always-on: most desktop users will use the
- * "Open in Solana wallet" button on the same device; the QR is for
- * the cross-device case (desktop reading the page, phone scanning
- * to pay). Hidden by default to keep the section visually quiet,
- * available with one tap when needed.
+ * Why always-on (no toggle): the deeplink button only fires when the
+ * browser has a `solana:` protocol handler registered. Desktop users
+ * without Phantom/Solflare/Backpack installed click and nothing
+ * happens, with no error. The QR works universally: any phone wallet
+ * scans, prefilled with recipient + $5 USDC + memo. By making the QR
+ * the primary surface and the deeplink secondary, the cross-device
+ * path no longer hides behind a toggle.
  */
 function FounderQrCard({ solanaPayUrl }: { solanaPayUrl: string }) {
-    const [open, setOpen] = useState(false);
     return (
-        <div className="rounded-xl border border-foreground/10 bg-background/40 p-4">
-            <button
-                type="button"
-                onClick={() => setOpen(o => !o)}
-                aria-expanded={open}
-                className="w-full flex items-center justify-between gap-3 text-left"
-            >
-                <div>
-                    <div className="text-xs font-mono tracking-[0.12em] text-muted uppercase">
-                        Scan with phone wallet
-                    </div>
-                    <p className="text-[12px] text-muted/80 mt-1">
-                        Cross-device option. Open Phantom or Solflare on your phone, scan the QR.
-                    </p>
+        <div className="rounded-xl border border-foreground/10 bg-background/40 p-5">
+            <div className="text-xs font-mono tracking-[0.12em] text-muted uppercase text-center mb-1">
+                Scan with phone wallet
+            </div>
+            <p className="text-[12px] text-muted/80 text-center mb-4 leading-relaxed">
+                Open Phantom, Solflare, or Backpack on your phone and scan. The amount, recipient, and memo are prefilled.
+            </p>
+            <div className="flex justify-center">
+                <div className="rounded-lg bg-white p-3" aria-label="Solana Pay QR code">
+                    <QRCodeSVG
+                        value={solanaPayUrl}
+                        size={220}
+                        level="M"
+                        includeMargin={false}
+                        fgColor="#0A0A0B"
+                        bgColor="#FFFFFF"
+                    />
                 </div>
-                <span className="font-mono text-xs text-[#F08A4C] shrink-0">
-                    {open ? 'Hide QR' : 'Show QR'}
-                </span>
-            </button>
-            {open ? (
-                <div className="mt-4 flex justify-center">
-                    <div className="rounded-lg bg-white p-3" aria-label="Solana Pay QR code">
-                        <QRCodeSVG
-                            value={solanaPayUrl}
-                            size={240}
-                            level="M"
-                            includeMargin={false}
-                            fgColor="#0A0A0B"
-                            bgColor="#FFFFFF"
-                        />
-                    </div>
-                </div>
-            ) : null}
+            </div>
         </div>
     );
 }
