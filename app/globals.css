@@ -243,6 +243,16 @@
 .theme-light .bg-\[\#111111\] { background: #FFFFFF; }
 .theme-light .bg-\[\#222222\] { background: #F3F4F6; }
 .theme-light .border-\[\#222222\] { border-color: #E5E7EB; }
+/* Arbitrary muted-gray hex text that wasn't covered by the gray-*
+ * family overrides. Without these the /demo/hackathon page (and any
+ * other surface using neutral-300/400 hex literals) renders body
+ * copy at < 3:1 contrast against #FAFAFA, which fails WCAG AA. Map
+ * each to the existing muted-foreground token so contrast clears AA. */
+.theme-light .text-\[\#A1A1AA\] { color: #6B7280; }
+.theme-light .text-\[\#D4D4D8\] { color: #6B7280; }
+.theme-light .text-\[\#737373\] { color: #4B5563; }
+.theme-light .text-\[\#525252\] { color: #3F3F46; }
+.theme-light .text-\[\#52525B\] { color: #3F3F46; }
 /* Inverse pair: #FAFAFA at small opacity is the dashboard's "very
  * faint surface". Flip to a dark wash so cards still read on light. */
 .theme-light .bg-\[\#FAFAFA\]\/5 { background: rgba(0,0,0,0.04); }
