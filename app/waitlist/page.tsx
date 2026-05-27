@@ -119,9 +119,15 @@ export default function WaitlistPage() {
                             <button
                                 type="submit"
                                 disabled={state.kind === 'loading'}
-                                className="w-full rounded-xl bg-foreground text-background py-3 text-sm font-medium hover:bg-foreground/90 disabled:opacity-60 transition-colors"
+                                className="group relative overflow-hidden w-full rounded-xl bg-foreground text-background py-3 text-sm font-medium hover:bg-foreground/90 disabled:opacity-60 transition-colors"
                             >
-                                {state.kind === 'loading' ? 'Joining...' : 'Join the waitlist'}
+                                <span
+                                    aria-hidden="true"
+                                    className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/20 to-transparent"
+                                />
+                                <span className="relative">
+                                    {state.kind === 'loading' ? 'Joining...' : 'Join the waitlist'}
+                                </span>
                             </button>
                             {state.kind === 'error' ? (
                                 <p className="text-sm text-red-600">{state.message}</p>

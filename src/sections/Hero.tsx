@@ -119,10 +119,17 @@ const Hero: React.FC = () => {
           <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center flex-wrap">
             <Link
               href="/waitlist"
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-primary hover:shadow-[0_0_32px_rgba(240,138,76,0.55)] hover:-translate-y-px active:translate-y-0 transition-[transform,box-shadow] duration-200"
+              className="group relative overflow-hidden inline-flex items-center justify-center gap-2 px-7 py-4 bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-primary hover:shadow-[0_0_32px_rgba(240,138,76,0.55)] hover:-translate-y-px active:translate-y-0 transition-[transform,box-shadow] duration-200"
             >
-              Join the waitlist
-              <span className="font-mono">→</span>
+              {/* Sheen overlay (nslevelup-style): glossy top-half
+                  gradient that gives the button a subtle 3D pill look.
+                  pointer-events-none so it never blocks the click. */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 to-transparent"
+              />
+              <span className="relative">Join the waitlist</span>
+              <span className="relative font-mono">→</span>
             </Link>
             <a
               href="#how-it-works"
