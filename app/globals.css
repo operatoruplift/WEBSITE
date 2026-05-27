@@ -118,26 +118,33 @@
     background-size: 20px 20px;
   }
 
-  /* ─── Site-wide atmospheric backdrop (2026-05-24) ──────────────────
-   * Replaces the dotted grid with the pitch-deck background language:
-   * deep black with a warm orange radial bloom from center, a softer
-   * second glow from lower-left, and a faint top-edge ambient sheen.
-   * Same .bg-grid-dots class name so existing JSX usage keeps working;
-   * the name is historical only.
+  /* ─── Site-wide atmospheric backdrop (2026-05-27) ──────────────────
+   * Two-layer composition: a faint dot grid (nslevelup-style) on the
+   * page surface plus the warm radial atmosphere on top so the page
+   * still reads as deck-style at the focal area.
    *
-   * Reference: docs deck pages 1-7, where every slide sits on a
-   * `#0A0A0B` field with a warm radial atmosphere. NO grid lines or
-   * dots are visible on the deck; matching the deck means dropping
-   * the dotted pattern entirely. */
+   * The dot pattern uses radial-gradient with var-driven color so it
+   * theme-flips automatically: in dark mode the dots are subtle white
+   * specks; in light mode they're soft slate specks. The atmosphere
+   * stays orange in both modes (intentional brand accent).
+   *
+   * Reference for the dot pattern: nslevelup.vercel.app, which carries
+   * a 24px grid of low-opacity dots throughout. The user explicitly
+   * called this out as the look they want. */
   .bg-grid-dots {
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    background:
+    background-image:
+      radial-gradient(circle at 1px 1px, var(--color-grid-dot, rgba(255, 255, 255, 0.07)) 1px, transparent 0),
       radial-gradient(ellipse 60% 55% at 50% 60%, rgba(240, 138, 76, 0.12), transparent 70%),
       radial-gradient(ellipse 40% 40% at 20% 90%, rgba(240, 138, 76, 0.06), transparent 65%),
       radial-gradient(ellipse 80% 30% at 50% 0%, rgba(255, 255, 255, 0.025), transparent 70%);
+    background-size: 24px 24px, 100% 100%, 100% 100%, 100% 100%;
+  }
+  .theme-light .bg-grid-dots {
+    --color-grid-dot: rgba(15, 23, 42, 0.06);
   }
 
   .accent-glow {
