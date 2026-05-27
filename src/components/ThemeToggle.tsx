@@ -22,14 +22,16 @@ type Theme = 'dark' | 'light';
 const STORAGE_KEY = 'op-uplift-theme';
 
 function readPreferredTheme(): Theme {
-    // Brand default is dark. Light mode is an opt-in via the toggle.
-    // prefers-color-scheme intentionally NOT honored on first load so
-    // a marketing-site visitor lands on the canonical dark palette
-    // and only flips to light if they explicitly click the toggle.
-    if (typeof window === 'undefined') return 'dark';
+    // Brand default flipped to LIGHT 2026-05-26 per founder direction:
+    // first-time visitors land on the light palette and dark mode is
+    // an opt-in via this toggle. prefers-color-scheme is intentionally
+    // not honored on first load so the brand default is consistent
+    // regardless of OS setting; the stored preference takes over once
+    // the user has clicked the toggle at least once.
+    if (typeof window === 'undefined') return 'light';
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (stored === 'light' || stored === 'dark') return stored;
-    return 'dark';
+    return 'light';
 }
 
 function applyTheme(theme: Theme) {
@@ -48,7 +50,7 @@ interface ThemeToggleProps {
 }
 
 const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
-    const [theme, setTheme] = useState<Theme>('dark');
+    const [theme, setTheme] = useState<Theme>('light');
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {

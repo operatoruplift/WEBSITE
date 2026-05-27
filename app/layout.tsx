@@ -69,12 +69,14 @@ export default function RootLayout({
       <head>
         {/* Anti-FOUC theme bootstrap. Runs before React hydrates so
             the .theme-light class is applied to <html> before first
-            paint when the user has a stored light-mode preference or
-            the OS reports prefers-color-scheme: light. The runtime
-            toggle lives in ThemeToggle.tsx. */}
+            paint. Brand default flipped to LIGHT 2026-05-26 per founder
+            direction: first-time visitors land on the light palette,
+            and dark mode is an opt-in via the toggle in
+            ThemeToggle.tsx. Stored preference still wins over the
+            default on every subsequent visit. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var k='op-uplift-theme';var s=localStorage.getItem(k);var t=s==='light'||s==='dark'?s:'dark';if(t==='light'){document.documentElement.classList.add('theme-light');}document.documentElement.dataset.theme=t;}catch(e){}})();`,
+            __html: `(function(){try{var k='op-uplift-theme';var s=localStorage.getItem(k);var t=s==='light'||s==='dark'?s:'light';if(t==='light'){document.documentElement.classList.add('theme-light');}document.documentElement.dataset.theme=t;}catch(e){document.documentElement.classList.add('theme-light');document.documentElement.dataset.theme='light';}})();`,
           }}
         />
       </head>
