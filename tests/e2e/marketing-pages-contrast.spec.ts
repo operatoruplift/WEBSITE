@@ -82,39 +82,37 @@ async function assertMarketingLightTheme(page: import('@playwright/test').Page, 
     }
 }
 
-// 2026-05-22 dark redesign (PR #675): the homepage flipped from the
-// light marketing palette to the design ref's dark palette (#0A0A0A
-// background, foreground white, orange primary). The light-surface
-// contrast contract no longer applies. /pricing, /press-kit, /blog,
-// /contact, /docs still ride the light marketing palette and remain
-// asserted below; when they convert to dark in follow-up PRs, drop
-// their assertions too.
-test('/ homepage uses the dark redesign palette', async ({ page }) => {
-    await page.goto('/');
-    // The homepage no longer wraps in `.theme-light`. Body computed
-    // background is the dark token (#0A0A0A) and the h1 reads in the
-    // light foreground (#FAFAFA). Lock both so a future revert to
-    // light catches.
-    const bodyBg = await page.evaluate(() => {
-        const html = document.documentElement;
-        const wrapper = html.querySelector('main')?.parentElement;
-        return wrapper ? getComputedStyle(wrapper).backgroundColor : '';
+// 2026-05-26 default-light flip: brand default flipped to light per
+// founder direction. The homepage now renders in the light marketing
+// palette on first paint; dark mode is opt-in via the toggle. This
+// test confirms a fresh visit (no localStorage) lands in the light
+// palette. /pricing, /press-kit, /blog, /contact, /docs continue to
+// ride the same default and remain asserted below.
+test('/ homepage defaults to the light marketing palette', async ({ page }) => {
+    // Wipe any preference from earlier tests so we measure first-time
+    // visitor behaviour. The anti-FOUC bootstrap reads localStorage and
+    // falls back to 'light' when nothing is stored.
+    await page.addInitScript(() => {
+        try { window.localStorage.removeItem('op-uplift-theme'); } catch {}
     });
-    // Tailwind compiles `bg-background` -> the CSS var. After the
-    // 2026-05-22 deck-design pass the var resolves to #0A0A0B
-    // (rgb(10, 10, 11)) rather than the previous #0A0A0A (rgb(10, 10, 10)).
-    // Allow the rgb form for either dark tone, or transparent (when the
-    // var inherits from <body>).
-    expect(bodyBg, 'homepage wrapper background should be dark').toMatch(/rgb\(10,\s*10,\s*1[01]\)|rgba\(0,\s*0,\s*0,\s*0\)/);
+    await page.goto('/');
 
-    // Hero h1 colour. In dark mode the heading is the foreground
-    // token. The 2026-05-22 deck-design pass cooled the foreground
-    // slightly from #FAFAFA (rgb 250, 250, 250) to #F4F4F5
-    // (rgb 244, 244, 245). Accept either.
+    // The inline bootstrap should have added `.theme-light` to <html>
+    // before first paint. Assert that directly; if a future refactor
+    // drops the wrapper, this regression catches before any visible
+    // dark-on-light contrast bug ships.
+    const hasThemeLight = await page.evaluate(() =>
+        document.documentElement.classList.contains('theme-light'),
+    );
+    expect(hasThemeLight, 'homepage should boot with .theme-light class on <html>').toBe(true);
+
+    // Hero h1 colour. .theme-light overrides the foreground token to
+    // #0A0A0A (rgb 10, 10, 10). Lock that so a future palette tweak
+    // can't silently invert it.
     const h1Color = await page.locator('#hero-heading').first().evaluate(
         el => getComputedStyle(el).color,
     );
-    expect(h1Color, 'hero h1 should render in the foreground token').toMatch(/rgb\(2(50|44),\s*2(50|44),\s*2(50|45)\)/);
+    expect(h1Color, 'hero h1 should render dark on the light surface').toMatch(/rgb\(10,\s*10,\s*10\)/);
 });
 
 // /pricing converted to the dark redesign palette in PR #679 to
