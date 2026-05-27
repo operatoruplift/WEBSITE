@@ -3,15 +3,14 @@ import { test, expect } from '@playwright/test';
 /**
  * Cookie banner theme regression spec.
  *
- * The CookieConsent banner (PR #311) is rendered at the root layout
- * outside any themed wrapper, so it route-switches its surface
- * explicitly. PR #335 carved /demo/hackathon out of the marketing
- * prefix list because that page is intentionally dark, and a LIGHT
- * banner over a DARK page reads as broken.
+ * The CookieConsent banner is rendered at the root layout outside any
+ * themed wrapper, so it route-switches its surface explicitly. After
+ * the 2026-05-26 default-light flip, the surface allowlist inverted:
+ * light by default, dark ONLY for the /arkiv judge terminal aesthetic.
  *
- * Without a regression test, anyone re-adding /demo to the marketing
- * prefixes (or moving CookieConsent inside a themed wrapper) would
- * silently flip the banner back to light on the hackathon page.
+ * Without a regression test, anyone moving the cookie banner inside a
+ * themed wrapper or re-adding entries to DARK_PATHS would silently
+ * flip the banner palette and create chrome/page mismatch.
  *
  * Strategy: clear localStorage to force the banner, sample the
  * computed background color, and assert which side of the light/dark
@@ -85,7 +84,32 @@ test.describe('cookie banner theme', () => {
         }
     });
 
-    test('renders DARK on /demo/hackathon (intentionally dark page)', async ({ page }) => {
+    test('renders DARK on /arkiv (intentionally dark judge terminal)', async ({ page }) => {
+        await page.context().clearCookies();
+        await page.addInitScript(() => {
+            try { localStorage.removeItem('cookie-consent'); } catch { /* noop */ }
+        });
+        await page.goto('/arkiv', { waitUntil: 'load', timeout: 60_000 });
+        await page.waitForTimeout(2_500);
+
+        const surface = await readBannerSurface(page);
+        expect(surface.found, 'cookie banner not found on /arkiv').toBe(true);
+
+        const rgb = parseRgb(surface.background);
+        expect(rgb, `unexpected background color: ${surface.background}`).not.toBeNull();
+        if (rgb) {
+            expect(
+                isDarkSurface(rgb),
+                `expected dark banner on /arkiv, got rgb(${rgb.join(', ')}) average ${(rgb[0] + rgb[1] + rgb[2]) / 3}. Did /arkiv drop out of DARK_PATHS?`,
+            ).toBe(true);
+        }
+    });
+
+    test('renders LIGHT on /demo/hackathon (now follows default-light)', async ({ page }) => {
+        // Before the 2026-05-26 flip /demo/hackathon was on the dark
+        // allowlist. Its content uses bg-background / text-foreground
+        // tokens that flip with the theme, so the banner now follows
+        // the page palette like every other marketing surface.
         await page.context().clearCookies();
         await page.addInitScript(() => {
             try { localStorage.removeItem('cookie-consent'); } catch { /* noop */ }
@@ -100,8 +124,8 @@ test.describe('cookie banner theme', () => {
         expect(rgb, `unexpected background color: ${surface.background}`).not.toBeNull();
         if (rgb) {
             expect(
-                isDarkSurface(rgb),
-                `expected dark banner on /demo/hackathon, got rgb(${rgb.join(', ')}) average ${(rgb[0] + rgb[1] + rgb[2]) / 3}. Did /demo creep back into MARKETING_PREFIXES?`,
+                isLightSurface(rgb),
+                `expected light banner on /demo/hackathon, got rgb(${rgb.join(', ')}) average ${(rgb[0] + rgb[1] + rgb[2]) / 3}`,
             ).toBe(true);
         }
     });

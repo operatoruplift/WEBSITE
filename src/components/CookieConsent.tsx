@@ -4,33 +4,32 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
 /**
- * Marketing routes use the light palette (PR #309). The dashboard
- * keeps the dark palette. The cookie banner is rendered at root
- * layout so it doesn't sit inside either themed wrapper, which
- * means we route-switch the banner's class set explicitly.
+ * The cookie banner is rendered at the root layout so it doesn't sit
+ * inside the themed wrapper. Brand default flipped to LIGHT 2026-05-26
+ * so the banner is light by default, with an explicit dark allowlist
+ * for the few surfaces that keep the dark palette regardless of the
+ * global theme toggle.
  *
- * /demo/hackathon explicitly stays dark (PR #321) because its design
- * language is dark-first, so it's intentionally NOT in this list. The
- * dark variant of the banner reads correctly there.
+ * Dark-allowlisted surfaces:
+ *   - /arkiv: judge-facing terminal aesthetic, deliberately hardcoded
+ *             dark hexes that the .theme-light overrides ignore via
+ *             a data-always-dark wrapper. The cookie banner mirrors
+ *             that opt-out so the chrome stays consistent with the page.
+ *
+ * Everything else (homepage, /pricing, /docs, /blog, /waitlist,
+ * /press-kit, /contact, /imessage, /team, /demo/hackathon, retired
+ * dashboard surfaces) gets the light banner so the chrome doesn't
+ * fight the rest of the page.
+ *
+ * /demo/hackathon used to be dark-only but its content uses the
+ * bg-background / text-foreground tokens, so it now flips with the
+ * theme like every other marketing page.
  */
-const MARKETING_PREFIXES = [
-    '/',
-    '/blog',
-    '/contact',
-    '/docs',
-    '/press-kit',
-    '/pricing',
-    '/privacy',
-    '/terms',
-];
+const DARK_PATHS = new Set(['/arkiv']);
 
-const DARK_DEMO_PATHS = new Set(['/demo/hackathon']);
-
-function isMarketingRoute(pathname: string | null): boolean {
+function shouldUseLightBanner(pathname: string | null): boolean {
     if (!pathname) return true;
-    if (pathname === '/') return true;
-    if (DARK_DEMO_PATHS.has(pathname)) return false;
-    return MARKETING_PREFIXES.some(p => p !== '/' && pathname.startsWith(p));
+    return !DARK_PATHS.has(pathname);
 }
 
 export function CookieConsent() {
@@ -63,7 +62,7 @@ export function CookieConsent() {
 
     if (!show) return null;
 
-    const lightTheme = isMarketingRoute(pathname);
+    const lightTheme = shouldUseLightBanner(pathname);
 
     const cardClass = lightTheme
         ? 'bg-white border border-zinc-200 rounded-xl p-5 shadow-2xl'

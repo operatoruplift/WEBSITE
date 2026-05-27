@@ -243,6 +243,16 @@
 .theme-light .bg-\[\#111111\] { background: #FFFFFF; }
 .theme-light .bg-\[\#222222\] { background: #F3F4F6; }
 .theme-light .border-\[\#222222\] { border-color: #E5E7EB; }
+/* Arbitrary muted-gray hex text that wasn't covered by the gray-*
+ * family overrides. Without these the /demo/hackathon page (and any
+ * other surface using neutral-300/400 hex literals) renders body
+ * copy at < 3:1 contrast against #FAFAFA, which fails WCAG AA. Map
+ * each to the existing muted-foreground token so contrast clears AA. */
+.theme-light .text-\[\#A1A1AA\] { color: #6B7280; }
+.theme-light .text-\[\#D4D4D8\] { color: #6B7280; }
+.theme-light .text-\[\#737373\] { color: #4B5563; }
+.theme-light .text-\[\#525252\] { color: #3F3F46; }
+.theme-light .text-\[\#52525B\] { color: #3F3F46; }
 /* Inverse pair: #FAFAFA at small opacity is the dashboard's "very
  * faint surface". Flip to a dark wash so cards still read on light. */
 .theme-light .bg-\[\#FAFAFA\]\/5 { background: rgba(0,0,0,0.04); }
@@ -625,3 +635,37 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────
+ * Always-dark opt-out for surfaces that keep the dark palette
+ * regardless of the global light/dark theme toggle.
+ *
+ * Added 2026-05-27 as a companion to the default-light flip. Surfaces
+ * like /arkiv (judge-facing terminal aesthetic) and /demo/hackathon
+ * lean on hardcoded dark hexes for their design language, and the
+ * .theme-light overrides in this file would otherwise flip those
+ * hexes to light tones and visually break the page.
+ *
+ * Selector specificity: `.theme-light [data-always-dark] .X` is 0,3,0
+ * which beats `.theme-light .X` (0,2,0), so the dark values win even
+ * when the wrapper sits inside a light-theme document.
+ * ───────────────────────────────────────────────────────────────── */
+.theme-light [data-always-dark] .bg-\[\#0A0A0A\] { background: #0A0A0A; }
+.theme-light [data-always-dark] .bg-\[\#0a0a0a\] { background: #0A0A0A; }
+.theme-light [data-always-dark] .bg-\[\#0A0A0B\] { background: #0A0A0B; }
+.theme-light [data-always-dark] .bg-\[\#0a0a0b\] { background: #0A0A0B; }
+.theme-light [data-always-dark] .bg-\[\#1A1A1A\] { background: #1A1A1A; }
+.theme-light [data-always-dark] .bg-\[\#1F1F1F\] { background: #1F1F1F; }
+.theme-light [data-always-dark] .bg-\[\#111111\] { background: #111111; }
+.theme-light [data-always-dark] .hover\:bg-\[\#1F1F1F\]:hover { background: #1F1F1F; }
+.theme-light [data-always-dark] .text-\[\#FAFAFA\] { color: #FAFAFA; }
+.theme-light [data-always-dark] .text-\[\#fafafa\] { color: #FAFAFA; }
+.theme-light [data-always-dark] .text-white { color: #FAFAFA; }
+.theme-light [data-always-dark] .text-\[\#A1A1AA\] { color: #A1A1AA; }
+.theme-light [data-always-dark] .text-gray-300 { color: #D4D4D8; }
+.theme-light [data-always-dark] .text-gray-400 { color: #A1A1AA; }
+.theme-light [data-always-dark] .text-gray-500 { color: #71717A; }
+.theme-light [data-always-dark] .border-\[\#222\] { border-color: #222; }
+.theme-light [data-always-dark] .border-\[\#3A3A3A\] { border-color: #3A3A3A; }
+.theme-light [data-always-dark] .border-white\/10 { border-color: rgba(255,255,255,0.1); }
+.theme-light [data-always-dark] .border-white\/5 { border-color: rgba(255,255,255,0.05); }
