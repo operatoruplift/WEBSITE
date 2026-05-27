@@ -58,7 +58,18 @@ const Navbar: React.FC<NavbarProps> = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 md:px-10 py-4 sm:py-5 flex items-center justify-between bg-background/95 backdrop-blur-sm transition-all duration-300">
+      <nav
+        className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 md:px-10 py-4 sm:py-5 flex items-center justify-between transition-all duration-300 border-b border-foreground/[0.06]"
+        style={{
+          // Glassmorphism per nslevelup.vercel.app reference: 80% bg
+          // mixed with transparent + blur(20px) + saturate(140%). The
+          // mix() form means the nav inherits whichever theme palette
+          // is active without us re-declaring per-mode styles.
+          background: 'color-mix(in oklch, var(--color-background) 80%, transparent)',
+          backdropFilter: 'blur(20px) saturate(140%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(140%)',
+        }}
+      >
         {/* Brand: mark + mono wordmark with accent center-dot. */}
         <Link
           href="/"

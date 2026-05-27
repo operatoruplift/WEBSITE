@@ -2,8 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn } from '@/src/components/Animators';
-import HeroPreview from '@/src/components/HeroPreview';
 import HeroSpotlight from '@/src/components/HeroSpotlight';
+import HeroVideo from '@/src/components/HeroVideo';
 
 /**
  * Hero, 2026-05-22 v2-canvas alignment pass.
@@ -145,14 +145,13 @@ const Hero: React.FC = () => {
           </div>
         </FadeIn>
 
-        {/* Static product UI preview. PR #726 removed the cycling
-            terminal mock; PR #727 replaces the bare inline slot with
-            a single deliberate frame showing the actual commitment
-            card UI so a visitor can see what the product looks like
-            without animations distracting from the headline. */}
+        {/* Launch video. 2026-05-27 swap from the static HeroPreview
+            frame to the autoplay-muted launch reel. The video is the
+            single hero asset now; HeroPreview is still exported and
+            available if a future revert needs it. */}
         <FadeIn delay={800}>
           <div className="mt-14 md:mt-20 w-full">
-            <HeroPreview />
+            <HeroVideo />
           </div>
         </FadeIn>
       </div>
