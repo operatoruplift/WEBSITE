@@ -45,7 +45,7 @@ export default async function ArkivPage() {
     const { agents, error } = await loadAgents();
 
     return (
-        <main className="min-h-screen bg-[#0A0A0A] text-[#FAFAFA]">
+        <main data-always-dark className="min-h-screen bg-[#0A0A0A] text-[#FAFAFA]">
             <section className="max-w-5xl mx-auto px-6 pt-16 pb-12">
                 <div className="flex items-center gap-3 mb-6">
                     <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-[#F08A4C] bg-[#F08A4C]/10 border border-[#F08A4C]/30 px-2.5 py-1 rounded">
