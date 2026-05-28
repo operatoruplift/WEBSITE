@@ -37,7 +37,7 @@ const FinalCta: React.FC = () => {
         <section
             id="final-cta"
             aria-labelledby="final-cta-heading"
-            className="relative w-full px-6 md:px-12 text-center border-y border-foreground/[0.07] flex flex-col justify-center"
+            className="relative w-full px-6 md:px-12 text-center flex flex-col justify-center"
             style={{
                 minHeight: 'clamp(620px, 88vh, 840px)',
                 paddingTop: 'clamp(80px, 14vw, 160px)', paddingBottom: 'clamp(80px, 14vw, 160px)',
