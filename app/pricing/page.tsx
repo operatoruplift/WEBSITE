@@ -130,13 +130,20 @@ export default function PricingPage() {
                                         <Link
                                             href={tier.ctaLink}
                                             className={[
-                                                'inline-flex items-center justify-center gap-2 py-3 px-6 font-mono text-sm font-semibold tracking-[0.02em] border transition-shadow',
+                                                'group relative overflow-hidden inline-flex items-center justify-center gap-2 py-3 px-6 font-mono text-sm font-semibold tracking-[0.02em] border transition-shadow',
                                                 tier.highlight
                                                     ? 'bg-primary text-[#0A0A0B] border-primary hover:shadow-[0_0_32px_rgba(240,138,76,0.55)] hover:-translate-y-px transition-[transform,box-shadow] duration-200'
                                                     : 'bg-foreground/[0.02] text-foreground border-foreground/[0.14] hover:border-foreground/40',
                                             ].join(' ')}
                                         >
-                                            {tier.cta} <ArrowRight size={14} aria-hidden="true" />
+                                            {tier.highlight ? (
+                                                <span
+                                                    aria-hidden="true"
+                                                    className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 to-transparent"
+                                                />
+                                            ) : null}
+                                            <span className="relative">{tier.cta}</span>
+                                            <ArrowRight size={14} aria-hidden="true" className="relative" />
                                         </Link>
                                     </article>
                                 </FadeIn>

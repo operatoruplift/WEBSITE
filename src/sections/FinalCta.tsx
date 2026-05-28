@@ -92,10 +92,14 @@ const FinalCta: React.FC = () => {
                     />
                     <button
                         type="submit"
-                        className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-foreground text-background font-mono text-sm font-semibold tracking-[0.02em] border border-foreground hover:bg-foreground/90 transition-colors whitespace-nowrap"
+                        className="group relative overflow-hidden inline-flex items-center justify-center gap-2 px-5 py-3 bg-foreground text-background font-mono text-sm font-semibold tracking-[0.02em] border border-foreground hover:bg-foreground/90 transition-colors whitespace-nowrap"
                     >
-                        Get in line
-                        <span aria-hidden="true">→</span>
+                        <span
+                            aria-hidden="true"
+                            className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/20 to-transparent"
+                        />
+                        <span className="relative">Get in line</span>
+                        <span className="relative" aria-hidden="true">→</span>
                     </button>
                 </form>
 
