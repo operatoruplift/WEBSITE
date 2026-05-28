@@ -69,10 +69,14 @@ export default function WaitlistPage() {
     };
 
     return (
-        <div className="relative min-h-screen bg-background text-foreground">
+        <div className="relative w-full bg-background min-h-screen text-foreground">
+            {/* Site-wide atmospheric backdrop (dot grid + warm radial)
+                applied here so /waitlist matches the look of /, /pricing,
+                /privacy, /terms instead of dropping to a flat surface. */}
+            <div className="bg-grid-dots" aria-hidden="true" />
             <Navbar currentPage="waitlist" />
 
-            <main className="pt-32 pb-20 px-6 md:px-12">
+            <main className="relative z-10 pt-32 pb-20 px-6 md:px-12">
                 <div className="max-w-2xl mx-auto">
                     <div className="text-center mb-10">
                         <div className="inline-flex items-center gap-3 mb-4">

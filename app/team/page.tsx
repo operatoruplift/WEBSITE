@@ -85,10 +85,11 @@ const PersonCard: React.FC<{ person: TeamMember }> = ({ person }) => (
 
 export default function TeamPage() {
     return (
-        <div className="relative min-h-screen bg-background text-foreground">
+        <div className="relative w-full bg-background min-h-screen text-foreground">
+            <div className="bg-grid-dots" aria-hidden="true" />
             <Navbar currentPage="team" />
 
-            <main className="pt-32 pb-24 px-6 md:px-12">
+            <main className="relative z-10 pt-32 pb-24 px-6 md:px-12">
                 <div className="max-w-[1100px] mx-auto">
                     {/* Header */}
                     <FadeIn>
