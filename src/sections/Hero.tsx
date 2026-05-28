@@ -155,11 +155,12 @@ const Hero: React.FC = () => {
         {/* Launch video. 2026-05-27 swap from the static HeroPreview
             frame to the autoplay-muted launch reel. The video is the
             single hero asset now; HeroPreview is still exported and
-            available if a future revert needs it. */}
-        <FadeIn delay={800}>
-          <div className="mt-14 md:mt-20 w-full">
-            <HeroVideo />
-          </div>
+            available if a future revert needs it.
+            `block` is required on FadeIn here so the wrapper stops
+            collapsing around the (max-width-bounded) video container.
+            See feedback memory "Bucharest FadeIn inline-block trap". */}
+        <FadeIn delay={800} block className="mt-14 md:mt-20 w-full">
+          <HeroVideo />
         </FadeIn>
       </div>
     </section>
