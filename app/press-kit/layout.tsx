@@ -1,13 +1,20 @@
 import type { Metadata } from 'next';
 
+// Description matches what the page actually surfaces (direct asset
+// downloads + fact sheet + palette + headline boilerplate). Previous
+// copy promised "past coverage" and "architecture deck on request"
+// neither of which appear on the page. Honesty rule keeps link
+// previews in iMessage / Slack / Twitter aligned with the landing
+// experience the journalist or visitor will see.
+const DESCRIPTION =
+    'Direct downloads, the company fact sheet, brand palette, and approved headline copy for Operator Uplift.';
+
 export const metadata: Metadata = {
     title: 'Press kit',
-    description:
-        'Past coverage, founder bio, product screenshots, and the architecture deck for Operator Uplift, on request.',
+    description: DESCRIPTION,
     openGraph: {
         title: 'Press kit, Operator Uplift',
-        description:
-            'Past coverage, founder bio, product screenshots, and the architecture deck for Operator Uplift, on request.',
+        description: DESCRIPTION,
         url: 'https://operatoruplift.com/press-kit',
         type: 'website',
         // Re-state /opengraph-image: Next.js shallow-merges openGraph
@@ -17,8 +24,7 @@ export const metadata: Metadata = {
     twitter: {
         card: 'summary_large_image',
         title: 'Press kit, Operator Uplift',
-        description:
-            'Past coverage, founder bio, product screenshots, and the architecture deck.',
+        description: DESCRIPTION,
         images: ['/opengraph-image'],
     },
     alternates: {

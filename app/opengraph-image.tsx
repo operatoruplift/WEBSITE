@@ -1,15 +1,18 @@
 import { ImageResponse } from 'next/og';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 
-export const runtime = 'edge';
+// Node runtime so we can readFile() the brand mark from disk
+// instead of fetching it from the same deployment. The edge-
+// runtime fetch() path (PR #670) was producing the "OU" placeholder
+// block in prod link previews because the fetch was either
+// timing out or hitting a redirect chain when the URL didn't match
+// the deployment's canonical host. Reading the file off disk gives
+// us a deterministic <img>-able base64 every time.
+export const runtime = 'nodejs';
 export const alt = 'Operator Uplift. Keep your word. Bet on yourself. Commitment infrastructure.';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
-
-// Brand mark resolved at request time so the OG image carries the
-// real hexagon+sparkle from /brand/operator-uplift-mark.png instead
-// of a placeholder "OU" block. fetch() works in edge runtime and
-// returns an ArrayBuffer the OG renderer can <img src=...> render.
-const BRAND_MARK_PATH = '/brand/operator-uplift-mark.png';
 
 /**
  * Open Graph image, v2 design canvas refresh (2026-05-22).
@@ -29,20 +32,15 @@ const BRAND_MARK_PATH = '/brand/operator-uplift-mark.png';
  * at any preview size (iMessage, Slack, LinkedIn, Twitter).
  */
 export default async function Image() {
-    const baseUrl = process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : process.env.NEXT_PUBLIC_SITE_URL || 'https://operatoruplift.com';
     let markDataUrl = '';
     try {
-        const res = await fetch(`${baseUrl}${BRAND_MARK_PATH}`);
-        if (res.ok) {
-            const buf = await res.arrayBuffer();
-            const b64 = Buffer.from(buf).toString('base64');
-            markDataUrl = `data:image/png;base64,${b64}`;
-        }
+        const buf = await readFile(
+            join(process.cwd(), 'public', 'brand', 'operator-uplift-mark.png'),
+        );
+        markDataUrl = `data:image/png;base64,${buf.toString('base64')}`;
     } catch {
-        // Fall back to the placeholder block if the fetch fails so
-        // the OG image always renders.
+        // Fall back to the placeholder block if the read fails so
+        // the OG image always renders, even if the brand asset moved.
     }
     return new ImageResponse(
         (
