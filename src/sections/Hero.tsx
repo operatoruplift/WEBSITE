@@ -145,7 +145,7 @@ const Hero: React.FC = () => {
             We mirror the rhythm but keep it honest: status, the
             commitment mechanic in shorthand, and the domain. */}
         <FadeIn delay={650}>
-          <div className="mt-12 md:mt-16 w-full max-w-[860px] mx-auto grid grid-cols-2 sm:grid-cols-3 gap-x-10 gap-y-6 border-t border-foreground/[0.07] pt-8 text-center">
+          <div className="mt-12 md:mt-16 w-full max-w-[860px] mx-auto grid grid-cols-2 sm:grid-cols-3 gap-x-10 gap-y-6 pt-4 text-center">
             <MetaCell label="Status" value="Private beta" />
             <MetaCell label="Stack" value="commit · stake · prove · settle" accent />
             <MetaCell label="Web" value="operatoruplift.com" mono />
