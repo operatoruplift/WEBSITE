@@ -105,8 +105,8 @@ export default function RootLayout({
                 {
                   "@type": "Organization",
                   "name": "Operator Uplift",
-                  "url": "https://operatoruplift.com",
-                  "logo": "https://operatoruplift.com/logo.svg",
+                  "url": "https://www.operatoruplift.com",
+                  "logo": "https://www.operatoruplift.com/logo.svg",
                   "founder": {
                     "@type": "Person",
                     "name": "Matt Sim"
