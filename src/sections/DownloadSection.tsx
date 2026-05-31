@@ -30,7 +30,7 @@ const DownloadSection: React.FC = () => {
         <section
             id="download"
             aria-labelledby="download-heading"
-            className="relative w-full px-6 md:px-12 text-center border-t border-foreground/[0.07] flex flex-col justify-center"
+            className="relative w-full px-6 md:px-12 text-center flex flex-col justify-center"
             style={{
                 minHeight: 'clamp(560px, 80vh, 760px)',
                 paddingTop: 'clamp(80px, 12vw, 140px)',
