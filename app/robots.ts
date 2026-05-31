@@ -52,6 +52,10 @@ export default function robots(): MetadataRoute.Robots {
         '/dev/',
       ],
     },
-    sitemap: 'https://operatoruplift.com/sitemap.xml',
+    // Canonical host: matches metadataBase + app/sitemap.ts. The
+    // bare domain 307s to www, so pointing crawlers directly at
+    // the www host saves a redirect.
+    sitemap: 'https://www.operatoruplift.com/sitemap.xml',
+    host: 'https://www.operatoruplift.com',
   };
 }
