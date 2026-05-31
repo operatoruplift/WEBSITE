@@ -47,8 +47,7 @@ const Hero: React.FC = () => {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative w-full overflow-hidden pt-24 pb-20 md:pt-28 md:pb-28 flex flex-col justify-center"
-      style={{ minHeight: 'clamp(720px, 100vh, 1080px)' }}
+      className="relative w-full overflow-hidden pt-24 pb-12 md:pt-28 md:pb-16 flex flex-col justify-center"
     >
       <div className="accent-glow" />
       <HeroSpotlight />
