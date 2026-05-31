@@ -39,9 +39,8 @@ const FinalCta: React.FC = () => {
             aria-labelledby="final-cta-heading"
             className="relative w-full px-6 md:px-12 text-center flex flex-col justify-center"
             style={{
-                minHeight: 'clamp(620px, 88vh, 840px)',
-                paddingTop: 'clamp(80px, 14vw, 160px)', paddingBottom: 'clamp(80px, 14vw, 160px)',
-                background: `radial-gradient(ellipse 60% 70% at 50% 50%, rgba(240, 138, 76, 0.06), transparent 70%), linear-gradient(180deg, rgba(255,255,255,0.01), transparent)`,
+                paddingTop: 'clamp(64px, 10vw, 120px)',
+                paddingBottom: 'clamp(64px, 10vw, 120px)',
             }}
         >
             <FadeIn block className="max-w-[920px] mx-auto">
