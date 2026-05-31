@@ -2,7 +2,13 @@ import { MetadataRoute } from 'next';
 import { posts } from './blog/posts';
 import { DOC_SECTIONS } from '@/lib/docs/sections';
 
-const HOST = 'https://operatoruplift.com';
+// Canonical host is www. Vercel + the apex DNS both 307 the bare
+// domain to www.operatoruplift.com, which is also what metadataBase
+// in app/layout.tsx uses. Listing the canonical host directly in
+// the sitemap saves crawlers (Googlebot, Bingbot, IndexNow) the
+// extra redirect hop per URL, which is meaningful when the sitemap
+// carries 20+ entries that all 307 today.
+const HOST = 'https://www.operatoruplift.com';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
