@@ -40,8 +40,14 @@ const FinalCta: React.FC = () => {
             className="relative w-full px-6 md:px-12 text-center flex flex-col justify-center"
             style={{
                 minHeight: 'clamp(620px, 88vh, 840px)',
-                paddingTop: 'clamp(80px, 14vw, 160px)', paddingBottom: 'clamp(80px, 14vw, 160px)',
-                background: `radial-gradient(ellipse 60% 70% at 50% 50%, rgba(240, 138, 76, 0.06), transparent 70%), linear-gradient(180deg, rgba(255,255,255,0.01), transparent)`,
+                paddingTop: 'clamp(80px, 14vw, 160px)',
+                paddingBottom: 'clamp(80px, 14vw, 160px)',
+                // No inline background gradient. The site-wide
+                // .bg-grid-dots backdrop (dot pattern + warm radial)
+                // already paints behind every section. A per-section
+                // gradient was creating a visible "envelope" around
+                // FinalCta that read as a section divider against the
+                // adjacent DownloadSection (flat bg).
             }}
         >
             <FadeIn block className="max-w-[920px] mx-auto">
