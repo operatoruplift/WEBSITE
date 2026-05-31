@@ -56,6 +56,8 @@ export const metadata: Metadata = {
 };
 
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { CookieConsent } from "@/src/components/CookieConsent";
 import { PrivyWrapper } from "@/src/components/providers/PrivyWrapper";
 
@@ -136,6 +138,13 @@ export default function RootLayout({
           {children}
         </PrivyWrapper>
         <CookieConsent />
+        {/* Vercel Web Analytics + Speed Insights. Privacy-preserving
+            (no cookies, no PII, no cross-site fingerprinting) so they
+            run before the cookie banner has a verdict. Vercel docs
+            note both packages no-op when not deployed to Vercel, so
+            local dev + non-Vercel previews stay silent. */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
