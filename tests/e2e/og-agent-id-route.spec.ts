@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test';
 
-test.describe.configure({ timeout: 90_000 });
+// 180s per test because the first hit against the dev server can
+// take 60-90 seconds for Next.js to cold-compile the route module,
+// and CI retries triple-count the cold compile. A pre-warm hit in
+// beforeAll keeps assertions fast, but the global cap stays generous
+// so flake-on-cold-cache doesn't bounce the whole CI run.
+test.describe.configure({ timeout: 180_000 });
 
 /**
  * Hermetic spec for /api/og/agent-id/[tokenId] (PR #571).
@@ -13,13 +18,26 @@ test.describe.configure({ timeout: 90_000 });
  * a judge follows to check the on-chain data themselves.
  *
  * This is the route the README + /demo/hackathon judge link + the
- * "View on 0G chainscan" link on /agents/[id] all point at — if it
+ * "View on 0G chainscan" link on /agents/[id] all point at; if it
  * regresses, every judge-facing surface that references it breaks
  * silently.
  *
  * The og-agent-id.spec.ts covers the lib-level helpers; this spec
  * covers the route surface.
  */
+
+// Pre-warm the route once so the first real assertion doesn't pay
+// the full Next.js dev cold-compile cost (60-90s). Without this,
+// PR CI was hitting per-test timeouts at the 90s mark on cold
+// runners; see PR #755 re-run for the symptom.
+test.beforeAll(async ({ request }) => {
+    try {
+        await request.get('/api/og/agent-id/warmup', { timeout: 120_000 });
+    } catch {
+        // Pre-warm is best-effort; the per-test calls do their own
+        // assertions and will fail visibly if the route stays cold.
+    }
+});
 
 const DEFAULT_CONTRACT = '0x2700F6A3e505402C9daB154C5c6ab9cAEC98EF1F';
 const DEFAULT_EXPLORER = 'https://chainscan-galileo.0g.ai';
