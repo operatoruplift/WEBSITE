@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
@@ -32,9 +32,40 @@ type JoinState =
     | { kind: 'joined'; position: number; count: number; alreadyExisted: boolean }
     | { kind: 'error'; message: string };
 
+interface Counts {
+    total: number;
+    founder: number;
+}
+
 export default function WaitlistPage() {
     const [email, setEmail] = useState('');
     const [state, setState] = useState<JoinState>({ kind: 'idle' });
+    const [counts, setCounts] = useState<Counts | null>(null);
+
+    // Pull public counts once on mount so the Founder Member card
+    // and the form header can show "N free + M founder members" as
+    // social proof before the user opts in. Best-effort; the UI
+    // hides the counter line if the fetch fails.
+    useEffect(() => {
+        let cancelled = false;
+        (async () => {
+            try {
+                const res = await fetch('/api/waitlist/counts');
+                if (!res.ok) return;
+                const body = await res.json();
+                if (cancelled) return;
+                setCounts({
+                    total: typeof body.total === 'number' ? body.total : 0,
+                    founder: typeof body.founder === 'number' ? body.founder : 0,
+                });
+            } catch {
+                // best-effort; counter just stays hidden if the fetch fails
+            }
+        })();
+        return () => {
+            cancelled = true;
+        };
+    }, []);
 
     const submit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -90,6 +121,18 @@ export default function WaitlistPage() {
                         <p className="text-muted leading-relaxed">
                             We are rolling Operator Uplift out in waves. Drop your email and we will let you know when your slot opens.
                         </p>
+                        {counts && counts.total > 0 ? (
+                            <p className="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-foreground/10 bg-foreground/[0.03] text-[11px] font-mono uppercase tracking-[0.18em] text-muted">
+                                <span className="relative flex w-1.5 h-1.5">
+                                    <span className="absolute inline-flex w-full h-full rounded-full bg-[#F08A4C] opacity-75 animate-ping" aria-hidden="true" />
+                                    <span className="relative inline-flex rounded-full w-1.5 h-1.5 bg-[#F08A4C]" aria-hidden="true" />
+                                </span>
+                                <span>
+                                    {counts.total.toLocaleString()} on the list
+                                    {counts.founder > 0 ? ` · ${counts.founder.toLocaleString()} founder member${counts.founder === 1 ? '' : 's'}` : ''}
+                                </span>
+                            </p>
+                        ) : null}
                     </div>
 
                     {state.kind === 'joined' ? (
@@ -142,7 +185,7 @@ export default function WaitlistPage() {
                         </form>
                     )}
 
-                    <FounderTierSection email={email} />
+                    <FounderTierSection email={email} founderCount={counts?.founder ?? null} />
 
                     <section className="mt-16 space-y-6">
                         <div className="text-center">
@@ -253,7 +296,7 @@ function JoinedCard({
  * Phase 2 will replace the manual-copy flow with a Solana Pay
  * QR + Privy wallet button + tx verification.
  */
-function FounderTierSection({ email }: { email: string }) {
+function FounderTierSection({ email, founderCount }: { email: string; founderCount: number | null }) {
     const RECIPIENT = 'Hory1jnLvqdaiFYmSVWevVSCKzfrZLTfDizoA6veVmQ2';
     const PRICE_USDC = 5;
     const USDC_MINT = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
@@ -287,8 +330,18 @@ function FounderTierSection({ email }: { email: string }) {
             <div className="rounded-2xl border border-[#F08A4C]/40 bg-[#F08A4C]/[0.05] p-6 md:p-8 space-y-5">
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                     <div>
-                        <div className="text-xs font-bold uppercase tracking-[0.22em] text-[#F08A4C]">
-                            Founder Member, optional
+                        <div className="flex flex-wrap items-center gap-2">
+                            <div className="text-xs font-bold uppercase tracking-[0.22em] text-[#F08A4C]">
+                                Founder Member, optional
+                            </div>
+                            {founderCount !== null && founderCount > 0 ? (
+                                <span
+                                    className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-[#F08A4C]/30 bg-[#F08A4C]/[0.08] text-[10px] font-mono uppercase tracking-[0.16em] text-[#F08A4C]"
+                                    aria-label={`${founderCount} founder ${founderCount === 1 ? 'member' : 'members'} so far`}
+                                >
+                                    {founderCount.toLocaleString()} signed up
+                                </span>
+                            ) : null}
                         </div>
                         <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
                             $5 USDC, two perks for life

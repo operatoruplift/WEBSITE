@@ -287,6 +287,28 @@ export async function totalCount(): Promise<number> {
 }
 
 /**
+ * Number of waitlist rows that completed the Founder Member payment
+ * (tier='founder'). Surfaced on /waitlist as social proof next to
+ * the Founder Member card ("38 founders signed up").
+ *
+ * Returns 0 if the `tier` column doesn't exist yet (the Supabase
+ * founder migration hasn't been applied). Same graceful fallback
+ * the position counter uses, so the UI keeps working before the
+ * SQL is run.
+ */
+export async function founderCount(): Promise<number> {
+    const supabase = getSupabase();
+    const { count, error } = await supabase
+        .from('waitlist')
+        .select('*', { count: 'exact', head: true })
+        .eq('tier', 'founder');
+    if (error && /column[^a-z]/i.test(error.message)) {
+        return 0;
+    }
+    return count ?? 0;
+}
+
+/**
  * Apply a skip-the-line bump after a confirmed on-chain payment.
  *
  * Caller must pass the verified tx_signature, the tier, the wallet
