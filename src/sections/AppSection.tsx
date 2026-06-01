@@ -27,9 +27,10 @@ const AppSection: React.FC = () => {
             aria-labelledby="app-heading"
             className="relative w-full px-6 md:px-12 flex flex-col justify-center"
             style={{
-                minHeight: 'clamp(720px, 95vh, 1080px)',
+                minHeight: '720px',
                 paddingTop: 'clamp(80px, 12vw, 140px)',
                 paddingBottom: 'clamp(80px, 12vw, 140px)',
+                // Floor only, no vh cap (see ProblemSection rationale).
             }}
         >
             <div className="max-w-[1200px] mx-auto w-full">

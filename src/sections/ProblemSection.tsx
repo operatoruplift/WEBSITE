@@ -52,9 +52,12 @@ const ProblemSection: React.FC = () => {
             aria-labelledby="problem-heading"
             className="relative w-full px-6 md:px-12 flex flex-col justify-center"
             style={{
-                minHeight: 'clamp(640px, 90vh, 920px)',
+                minHeight: '640px',
                 paddingTop: 'clamp(80px, 12vw, 120px)',
                 paddingBottom: 'clamp(80px, 12vw, 120px)',
+                // Floor only, no vh cap. The 90vh upper bound padded
+                // dead space below content on 1440x900+ viewports,
+                // reading as a section divider against the next slide.
             }}
         >
             <div className="w-full max-w-[1280px] mx-auto">

@@ -37,9 +37,10 @@ const FaqSection: React.FC = () => {
             aria-labelledby="faq-heading"
             className="relative w-full px-6 md:px-12 flex flex-col justify-center"
             style={{
-                minHeight: 'clamp(820px, 100vh, 1200px)',
+                minHeight: '820px',
                 paddingTop: 'clamp(80px, 12vw, 120px)',
                 paddingBottom: 'clamp(80px, 12vw, 120px)',
+                // Floor only, no vh cap (see ProblemSection rationale).
             }}
         >
             {/* schema.org FAQPage JSON-LD for rich-result eligibility. */}
