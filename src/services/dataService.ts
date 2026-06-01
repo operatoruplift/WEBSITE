@@ -10,9 +10,11 @@ import { AppData } from '@/lib/types';
  */
 export const APP_CONTENT: AppData = {
   hero: {
-    visionTag: "// COMMITMENT INFRASTRUCTURE",
+    // Only `headline` is rendered (Hero.tsx splitHeadline). The
+    // visionTag and subhead fields were retired with the v2 canvas
+    // hero (PR #675); the rendered eyebrow + subhead are now hardcoded
+    // inline in Hero.tsx so dataService cannot silently drift.
     headline: "Keep your word. Bet on yourself.",
-    subhead: "Operator Uplift is a commitment layer for your life. Declare what you'll do. Set the stakes. Get daily follow-up. See progress you can't fake.",
   },
   contact: {
     tag: "GET IN TOUCH",

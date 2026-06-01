@@ -4,9 +4,7 @@ export interface NavLink {
 }
 
 export interface HeroData {
-  visionTag: string;
   headline: string;
-  subhead: string;
 }
 
 export interface FooterLink {
