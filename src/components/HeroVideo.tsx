@@ -38,6 +38,41 @@ const HeroVideo: React.FC = () => {
         v.volume = 0.3;
     }, []);
 
+    // Pause when scrolled offscreen, resume when back in view.
+    // Most browsers throttle offscreen autoplay heavily, but an
+    // explicit pause is cleaner, saves battery on mobile/laptop,
+    // and respects users who want the reel paused for scroll
+    // performance. We only auto-resume if the video was playing
+    // when it left the viewport, so a user who manually paused
+    // it (via native controls) does not get re-played on scroll.
+    useEffect(() => {
+        const v = videoRef.current;
+        if (!v || typeof IntersectionObserver === 'undefined') return;
+
+        let wasPlayingWhenLeft = false;
+
+        const io = new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting) {
+                        if (wasPlayingWhenLeft && v.paused) {
+                            // Promise rejection ignored: autoplay can fail
+                            // (user-gesture policies, fullscreen), no need
+                            // to surface those.
+                            v.play().catch(() => {});
+                        }
+                    } else {
+                        wasPlayingWhenLeft = !v.paused;
+                        if (!v.paused) v.pause();
+                    }
+                }
+            },
+            { threshold: 0.1 },
+        );
+        io.observe(v);
+        return () => io.disconnect();
+    }, []);
+
     return (
         <div className="relative w-full max-w-[1080px] mx-auto">
             <div className="relative rounded-2xl overflow-hidden border border-foreground/[0.08] bg-foreground/[0.02] shadow-[0_24px_80px_-24px_rgba(0,0,0,0.4)]">
