@@ -41,6 +41,12 @@ const FinalCta: React.FC = () => {
             style={{
                 paddingTop: 'clamp(64px, 10vw, 120px)',
                 paddingBottom: 'clamp(64px, 10vw, 120px)',
+                // No inline background gradient and no min-height. The
+                // site-wide .bg-grid-dots backdrop already paints behind
+                // every section, and a per-section min-height of 88vh
+                // padded ~80-200px of empty space below the form on
+                // 1440x900+ viewports, reading as a section divider
+                // between FinalCta and the adjacent flat-bg DownloadSection.
             }}
         >
             <FadeIn block className="max-w-[920px] mx-auto">
