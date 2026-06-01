@@ -73,9 +73,10 @@ const HowItWorksSection: React.FC = () => {
             aria-labelledby="how-it-works-heading"
             className="relative w-full px-6 md:px-12 flex flex-col justify-center"
             style={{
-                minHeight: 'clamp(720px, 95vh, 1000px)',
+                minHeight: '720px',
                 paddingTop: 'clamp(80px, 12vw, 120px)',
                 paddingBottom: 'clamp(80px, 12vw, 120px)',
+                // Floor only, no vh cap (see ProblemSection rationale).
             }}
         >
             <div className="w-full max-w-[1280px] mx-auto">
