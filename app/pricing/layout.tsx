@@ -15,7 +15,7 @@ export const metadata: Metadata = {
         title: 'Pricing for teams, Operator Uplift',
         description:
             'Operator Circle at $24/month for accountability groups. Enterprise custom pricing for orgs.',
-        url: 'https://operatoruplift.com/pricing',
+        url: 'https://www.operatoruplift.com/pricing',
         type: 'website',
         // Re-state /opengraph-image: Next.js shallow-merges openGraph
         // so the parent layout's images array would otherwise be lost.

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
         title: 'Team, Operator Uplift',
         description:
             'Solo-founder build. Matthew Sim, ten years shipping software, tired of lying to himself.',
-        url: 'https://operatoruplift.com/team',
+        url: 'https://www.operatoruplift.com/team',
         type: 'website',
         images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Operator Uplift, commitment infrastructure' }],
     },

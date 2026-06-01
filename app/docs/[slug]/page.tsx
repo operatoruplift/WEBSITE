@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
             title: ogTitle,
             description: doc.summary,
             type: 'article',
-            url: `https://operatoruplift.com/docs/${doc.slug}`,
+            url: `https://www.operatoruplift.com/docs/${doc.slug}`,
             // Re-state /opengraph-image: Next.js shallow-merges
             // openGraph objects, so without this every docs page
             // would render with no preview image when shared.

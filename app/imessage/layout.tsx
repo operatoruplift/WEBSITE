@@ -8,7 +8,7 @@ export const metadata: Metadata = {
         title: 'iMessage check-in channel, Operator Uplift',
         description:
             'The AI Game Master pings you over iMessage for your daily commitment check-in. Reply YES, NO, or a photo.',
-        url: 'https://operatoruplift.com/imessage',
+        url: 'https://www.operatoruplift.com/imessage',
         type: 'website',
         // Re-state /opengraph-image: Next.js shallow-merges openGraph
         // so the parent layout's images array would otherwise be lost.

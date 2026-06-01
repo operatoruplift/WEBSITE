@@ -18,7 +18,7 @@ export const metadata: Metadata = {
         title: 'Arkiv ETHLisbon entrant, Operator Uplift',
         description:
             'Live agent registry on Arkiv Braga testnet. AI-theme entrant for the Network School Ethereum Hackathon.',
-        url: 'https://operatoruplift.com/arkiv',
+        url: 'https://www.operatoruplift.com/arkiv',
         type: 'website',
         images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Operator Uplift, commitment infrastructure' }],
     },

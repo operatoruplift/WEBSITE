@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Press kit, Operator Uplift',
         description: DESCRIPTION,
-        url: 'https://operatoruplift.com/press-kit',
+        url: 'https://www.operatoruplift.com/press-kit',
         type: 'website',
         // Re-state /opengraph-image: Next.js shallow-merges openGraph
         // so the parent layout's images array would otherwise be lost.
