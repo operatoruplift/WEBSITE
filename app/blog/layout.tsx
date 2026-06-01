@@ -12,7 +12,7 @@ export const metadata: Metadata = {
         title: 'Blog and changelog, Operator Uplift',
         description:
             'Product updates, engineering deep-dives, and guides for building with Operator Uplift.',
-        url: 'https://operatoruplift.com/blog',
+        url: 'https://www.operatoruplift.com/blog',
         type: 'website',
         // Re-state /opengraph-image: Next.js shallow-merges openGraph
         // so the parent layout's images array would otherwise be lost.

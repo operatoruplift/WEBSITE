@@ -8,7 +8,7 @@ export const metadata: Metadata = {
         title: 'Privacy policy, Operator Uplift',
         description:
             'How Operator Uplift handles your account data, AI provider routing, audit log, and third parties.',
-        url: 'https://operatoruplift.com/privacy',
+        url: 'https://www.operatoruplift.com/privacy',
         type: 'website',
         // Re-state /opengraph-image: Next.js shallow-merges openGraph
         // so the parent layout's images array would otherwise be lost.

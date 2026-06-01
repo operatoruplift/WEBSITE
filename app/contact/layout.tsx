@@ -8,7 +8,7 @@ export const metadata: Metadata = {
         title: 'Contact, Operator Uplift',
         description:
             'Talk to the Operator Uplift team. Pick whichever channel you prefer.',
-        url: 'https://operatoruplift.com/contact',
+        url: 'https://www.operatoruplift.com/contact',
         type: 'website',
         // Re-state /opengraph-image because Next.js shallow-merges
         // openGraph objects: without this line the parent's images

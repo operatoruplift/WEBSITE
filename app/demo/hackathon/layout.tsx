@@ -13,7 +13,7 @@ export const metadata: Metadata = {
         title: 'Trust-stack demo (judge walkthrough), Operator Uplift',
         description:
             'Five-step judge walkthrough: tool_use, approve, x402 invoice, pay, signed receipt. Verifiable from your phone.',
-        url: 'https://operatoruplift.com/demo/hackathon',
+        url: 'https://www.operatoruplift.com/demo/hackathon',
         type: 'website',
         // Re-state /opengraph-image: Next.js shallow-merges openGraph
         // so the parent layout's images array would otherwise be lost.

@@ -27,7 +27,7 @@ function toIsoDate(humanDate: string): string | null {
  * data guidance.
  */
 function articleSchema(post: BlogPost) {
-    const url = `https://operatoruplift.com/blog/${post.id}`;
+    const url = `https://www.operatoruplift.com/blog/${post.id}`;
     const isoDate = toIsoDate(post.date);
     const ldJson: Record<string, unknown> = {
         '@context': 'https://schema.org',
@@ -35,18 +35,18 @@ function articleSchema(post: BlogPost) {
         mainEntityOfPage: { '@type': 'WebPage', '@id': url },
         headline: post.title,
         description: post.excerpt,
-        image: ['https://operatoruplift.com/opengraph-image'],
+        image: ['https://www.operatoruplift.com/opengraph-image'],
         author: {
             '@type': 'Organization',
             name: 'Operator Uplift',
-            url: 'https://operatoruplift.com',
+            url: 'https://www.operatoruplift.com',
         },
         publisher: {
             '@type': 'Organization',
             name: 'Operator Uplift',
             logo: {
                 '@type': 'ImageObject',
-                url: 'https://operatoruplift.com/logo.svg',
+                url: 'https://www.operatoruplift.com/logo.svg',
             },
         },
     };
@@ -80,7 +80,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
             description: post.excerpt,
             type: 'article',
             publishedTime: post.date,
-            url: `https://operatoruplift.com/blog/${post.id}`,
+            url: `https://www.operatoruplift.com/blog/${post.id}`,
             // Re-state /opengraph-image: Next.js shallow-merges
             // openGraph objects, so without this every blog post
             // would render with no preview image in iMessage, Slack,

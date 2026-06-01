@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
  * Bridges the canonical "live demo" URL to the actual demo page.
  *
  * The Loops House Challenge 02 submission (docs/LOOPS_HOUSE_SUBMISSION.md)
- * advertises `https://operatoruplift.com/demo` as the live-demo URL,
+ * advertises `https://www.operatoruplift.com/demo` as the live-demo URL,
  * and the page that actually walks the judge through the 5-step
  * x402 + ERC-8004 flow lives at /demo/hackathon. Without this
  * redirect, a judge clicking the submission link would hit a 404

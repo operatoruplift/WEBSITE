@@ -21,7 +21,7 @@ export const metadata: Metadata = {
         title: 'Join the waitlist, Operator Uplift',
         description:
             'Get an invite to the next Operator Uplift cohort. Skip the line with USDC, or sit in the free queue.',
-        url: 'https://operatoruplift.com/waitlist',
+        url: 'https://www.operatoruplift.com/waitlist',
         type: 'website',
         images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Operator Uplift, commitment infrastructure' }],
     },
