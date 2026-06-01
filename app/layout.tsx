@@ -125,9 +125,12 @@ export default function RootLayout({
                   "browserRequirements": "Requires a modern browser",
                   "description": "Keep your word. Bet on yourself. Commitment infrastructure for operators. Stake real money on your commitments, get daily check-ins adjudicated by an AI Game Master, and settle on Solana when you keep or break your word.",
                   "offers": {
-                    "@type": "Offer",
-                    "price": "0",
-                    "priceCurrency": "USD"
+                    "@type": "AggregateOffer",
+                    "priceCurrency": "USD",
+                    "lowPrice": "0",
+                    "highPrice": "24",
+                    "offerCount": "3",
+                    "description": "Free / Pro $8 / Circle $24 monthly tiers"
                   }
                 }
               ]
