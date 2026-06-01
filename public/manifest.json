@@ -1,11 +1,11 @@
 {
   "name": "Operator Uplift",
   "short_name": "Operator Uplift",
-  "description": "AI assistant that drafts your email, schedules your meetings, and sends your follow-ups. Approval before every action; signed receipt afterward.",
+  "description": "Commitment infrastructure for operators. Keep your word. Bet on yourself. Stake real money on what you say you'll do, get daily check-ins adjudicated by an AI Game Master, and settle on Solana.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FAFAFA",
-  "theme_color": "#F97316",
+  "theme_color": "#F08A4C",
   "orientation": "portrait",
   "icons": [
     {
