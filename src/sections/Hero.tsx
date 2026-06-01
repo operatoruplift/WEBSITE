@@ -4,6 +4,7 @@ import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn } from '@/src/components/Animators';
 import HeroSpotlight from '@/src/components/HeroSpotlight';
 import HeroVideo from '@/src/components/HeroVideo';
+import HeroCountsPill from '@/src/components/HeroCountsPill';
 
 /**
  * Hero, 2026-05-22 v2-canvas alignment pass.
@@ -78,6 +79,14 @@ const Hero: React.FC = () => {
             <span>Now in private beta · iOS &amp; Android coming soon</span>
           </div>
         </FadeIn>
+
+        {/* Social proof: live waitlist + founder member count.
+            HeroCountsPill returns null when total === 0 so this
+            wrapper collapses cleanly without leaving an empty FadeIn
+            slot. The pill itself carries the negative-margin pull-up
+            so it sits closer to the badge without affecting the
+            badge's bottom margin when counts are absent. */}
+        <HeroCountsPill />
 
         {/* Deck-scale headline. clamp(56px → 12vw → 168px) mirrors the
             pitch deck cover which renders the title at roughly 160px
