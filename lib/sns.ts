@@ -136,7 +136,7 @@ export function mockSolDomain(rawName: string): SnsResolution {
         owner: 'Demo1111111111111111111111111111111111111111',
         records: [
             { type: 'twitter', value: 'operatoruplift' },
-            { type: 'url', value: 'https://operatoruplift.com' },
+            { type: 'url', value: 'https://www.operatoruplift.com' },
             { type: 'github', value: 'operatoruplift' },
         ],
         verified: false,
