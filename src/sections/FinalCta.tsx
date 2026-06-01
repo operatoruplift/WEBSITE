@@ -39,15 +39,15 @@ const FinalCta: React.FC = () => {
             aria-labelledby="final-cta-heading"
             className="relative w-full px-6 md:px-12 text-center flex flex-col justify-center"
             style={{
-                minHeight: 'clamp(620px, 88vh, 840px)',
-                paddingTop: 'clamp(80px, 14vw, 160px)',
-                paddingBottom: 'clamp(80px, 14vw, 160px)',
-                // No inline background gradient. The site-wide
-                // .bg-grid-dots backdrop (dot pattern + warm radial)
-                // already paints behind every section. A per-section
-                // gradient was creating a visible "envelope" around
-                // FinalCta that read as a section divider against the
-                // adjacent DownloadSection (flat bg).
+                paddingTop: 'clamp(64px, 10vw, 120px)',
+                paddingBottom: 'clamp(64px, 10vw, 120px)',
+                // No inline background gradient and no min-height.
+                // The site-wide .bg-grid-dots backdrop already paints
+                // behind every section, and a per-section min-height
+                // of 88vh padded ~80-200px of empty space below the
+                // form on 1440x900+ viewports, reading as a section
+                // divider between FinalCta and the adjacent flat-bg
+                // DownloadSection.
             }}
         >
             <FadeIn block className="max-w-[920px] mx-auto">
