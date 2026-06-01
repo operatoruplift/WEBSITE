@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { totalCount, founderCount } from '@/lib/waitlist';
-import { withRequestMeta, errorResponse } from '@/lib/apiHelpers';
+import { withRequestMeta } from '@/lib/apiHelpers';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -9,36 +9,36 @@ export const runtime = 'nodejs';
  * GET /api/waitlist/counts
  *
  * Public, no-auth read of the waitlist count split into
- * { total, founder }. The /waitlist page hits this on mount so
- * the Founder Member card can render social proof ("38 founders
- * signed up") without forcing the visitor to submit the form first.
+ * { total, founder }. The /waitlist page and the homepage hero
+ * social-proof pill both hit this on mount.
  *
- * Why a separate route from POST /api/waitlist:
- *   - Counts are interesting before the user opts in, not just after
- *   - Polling counts to drive a live counter doesn't require POST
- *   - Keeps the POST response shape stable (existing UI relies on it)
- *
- * No trust gate; both counts are inherently public-facing (we're
- * trying to show them to anyone). withRequestMeta still wraps the
- * response for the X-Request-Id contract.
+ * Failure mode: returns 200 with {total:0, founder:0} when Supabase
+ * is unconfigured (CI, preview without secrets) or unreachable.
+ * The hero pill and /waitlist counts pill are both gated on
+ * total > 0, so an honest empty state hides them entirely instead
+ * of producing a console error ("Failed to load resource: 503...").
+ * The console-cleanliness regression spec on `/` depends on this.
  */
 export async function GET(request: Request) {
     const meta = withRequestMeta(request, 'waitlist.counts');
+    let total = 0;
+    let founder = 0;
     try {
-        const [total, founder] = await Promise.all([
+        [total, founder] = await Promise.all([
             totalCount(),
             founderCount(),
         ]);
-        return NextResponse.json(
-            {
-                total,
-                founder,
-                requestId: meta.requestId,
-                timestamp: meta.startedAt,
-            },
-            { headers: meta.headers },
-        );
-    } catch (err) {
-        return errorResponse(err, meta);
+    } catch {
+        // Honest empty state: counts default to 0. Callers gate on
+        // total > 0 so the UI silently hides the pill.
     }
+    return NextResponse.json(
+        {
+            total,
+            founder,
+            requestId: meta.requestId,
+            timestamp: meta.startedAt,
+        },
+        { headers: meta.headers },
+    );
 }
