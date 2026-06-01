@@ -120,7 +120,7 @@ function ogAgentIdFor(slug: string): AgentRegistration['og_agent_id'] {
     };
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://operatoruplift.com';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.operatoruplift.com';
 const UPDATED_AT = '2026-04-16T00:00:00Z';
 
 /** Build an agent registration and compute its checksum. The og_agent_id
