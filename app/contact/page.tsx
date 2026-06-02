@@ -9,7 +9,7 @@ export default function ContactPage() {
     <div className="relative w-full bg-background min-h-screen text-foreground">
       <div className="bg-grid-dots" aria-hidden="true" />
       <Navbar currentPage="contact" />
-      <main className="relative z-10">
+      <main id="main" className="relative z-10">
         <Contact />
       </main>
       <Footer />

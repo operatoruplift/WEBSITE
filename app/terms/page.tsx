@@ -9,7 +9,7 @@ export default function TermsPage() {
     <div className="relative w-full bg-background min-h-screen text-foreground">
       <div className="bg-grid-dots" aria-hidden="true" />
       <Navbar currentPage="home" />
-      <main className="relative z-10">
+      <main id="main" className="relative z-10">
         <Terms />
       </main>
       <Footer />

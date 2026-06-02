@@ -77,7 +77,7 @@ export default function PricingPage() {
             <div className="bg-grid-dots" aria-hidden="true" />
             <Navbar currentPage="pricing" />
 
-            <main className="relative z-10 pt-24 pb-24 px-6 md:px-12">
+            <main id="main" className="relative z-10 pt-24 pb-24 px-6 md:px-12">
                 <div className="max-w-[1280px] mx-auto">
                     <SectionHeader
                         align="center"
