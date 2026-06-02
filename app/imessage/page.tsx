@@ -22,7 +22,7 @@ export default function IMessagePage() {
     return (
         <div className="relative w-full bg-background min-h-screen text-foreground">
             <Navbar currentPage="imessage" />
-            <main className="relative z-10">
+            <main id="main" className="relative z-10">
                 <RetiredSurface
                     title="The iMessage check-in surface is retired."
                     body="Operator Uplift used to pitch iMessage as the daily check-in channel for the AI-assistant product. That product was retired on 2026-05-22 in favour of the commitment-infrastructure brand. The new product is mobile-first; the iOS and Android apps will be the primary check-in surface when they ship. Join the waitlist for early access."

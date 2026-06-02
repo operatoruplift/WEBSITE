@@ -49,7 +49,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
                         })}
                     </nav>
                 </aside>
-                <main className="flex-1 min-w-0 pb-24">
+                <main id="main" className="flex-1 min-w-0 pb-24">
                     {children}
                 </main>
             </div>

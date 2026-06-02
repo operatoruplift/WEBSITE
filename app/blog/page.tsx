@@ -24,7 +24,7 @@ export default function BlogPage() {
             <div className="bg-grid-dots" aria-hidden="true" />
             <Navbar currentPage="blog" />
 
-            <main className="relative z-10 pb-24 px-6 md:px-12 max-w-[1200px] mx-auto">
+            <main id="main" className="relative z-10 pb-24 px-6 md:px-12 max-w-[1200px] mx-auto">
                 {/* Hero-style header. The header used to sit at the top
                     of <main> with `pt-32 mb-16`, which made it read as
                     a generic "start of page" block instead of a hero.

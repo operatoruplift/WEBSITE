@@ -71,7 +71,7 @@ export default function PressKitPage() {
             <div className="bg-grid-dots" aria-hidden="true" />
             <Navbar currentPage="press-kit" />
 
-            <main className="relative z-10 pt-32 pb-20 px-6 md:px-12">
+            <main id="main" className="relative z-10 pt-32 pb-20 px-6 md:px-12">
                 <div className="max-w-3xl mx-auto">
                     <div className="text-center mb-12">
                         <div className="inline-flex items-center gap-3 mb-4">

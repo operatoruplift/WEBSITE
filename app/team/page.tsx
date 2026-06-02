@@ -89,7 +89,7 @@ export default function TeamPage() {
             <div className="bg-grid-dots" aria-hidden="true" />
             <Navbar currentPage="team" />
 
-            <main className="relative z-10 pt-32 pb-24 px-6 md:px-12">
+            <main id="main" className="relative z-10 pt-32 pb-24 px-6 md:px-12">
                 <div className="max-w-[1100px] mx-auto">
                     {/* Header */}
                     <FadeIn>

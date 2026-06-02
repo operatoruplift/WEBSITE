@@ -20,7 +20,7 @@ export default function HackathonDemoPage() {
         <div className="min-h-screen bg-background text-foreground">
             <Navbar currentPage="demo-hackathon" />
 
-            <main className="pt-32 pb-20 px-6 md:px-12">
+            <main id="main" className="pt-32 pb-20 px-6 md:px-12">
                 <div className="max-w-3xl mx-auto">
                     {/* Header */}
                     <div className="text-center mb-12">

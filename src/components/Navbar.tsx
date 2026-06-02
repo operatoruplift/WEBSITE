@@ -58,6 +58,19 @@ const Navbar: React.FC<NavbarProps> = () => {
 
   return (
     <>
+      {/* Skip-to-main accessibility link. Off-screen by default,
+          slides into view when focused via Tab so keyboard /
+          screen-reader users can bypass the navbar and the rest of
+          the page chrome to jump straight to the main landmark.
+          Pairs with <main id="main"> on every page that uses
+          Navbar. Targets the page's first interactive content
+          which is the hero CTA. */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-3 focus:py-2 focus:rounded-md focus:bg-foreground focus:text-background focus:font-mono focus:text-xs focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary"
+      >
+        Skip to main content
+      </a>
       <nav
         className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 md:px-10 py-4 sm:py-5 flex items-center justify-between transition-all duration-300 border-b border-foreground/[0.06]"
         style={{
