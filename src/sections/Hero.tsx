@@ -86,6 +86,18 @@ const Hero: React.FC = () => {
             slot. The pill itself carries the negative-margin pull-up
             so it sits closer to the badge without affecting the
             badge's bottom margin when counts are absent. */}
+        {/* Traction counter: prominent 53/100 stat */}
+        <FadeIn delay={200} direction="down">
+          <div className="inline-flex items-center gap-3 px-6 py-3 mb-8 md:mb-10 rounded-xl border border-primary/20 bg-primary/[0.04] font-mono">
+            <span className="text-2xl md:text-3xl font-bold text-primary tracking-tight">53/100</span>
+            <div className="h-8 w-px bg-primary/20" />
+            <div className="text-left">
+              <p className="text-sm font-bold text-foreground leading-tight">Private Beta Spots Claimed</p>
+              <p className="text-[11px] text-muted leading-tight">Join 53 early adopters. 47 spots remaining.</p>
+            </div>
+          </div>
+        </FadeIn>
+
         <HeroCountsPill />
 
         {/* Deck-scale headline. clamp(56px → 12vw → 168px) mirrors the
