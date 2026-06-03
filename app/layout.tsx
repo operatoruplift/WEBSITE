@@ -83,12 +83,18 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-background text-foreground font-sans">
-        {/* Google Analytics */}
+        {/* Google Analytics. strategy="lazyOnload" so gtag.js loads
+            after the window 'load' event, dropping the
+            auto-emitted <link rel="preload"> for gtag.js that
+            afterInteractive injects and competes with first-paint
+            resources. Analytics still records the page view because
+            the inline init script also uses lazyOnload and runs
+            after gtag.js is on the page. */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-9VBF7HTRBJ"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
