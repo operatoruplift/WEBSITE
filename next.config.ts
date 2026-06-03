@@ -26,6 +26,23 @@ const baseConfig: NextConfig = isDesktop
                           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
                       ],
                   },
+                  // Long-cache static media in /public. Vercel defaults
+                  // unhashed public assets to cache-control: max-age=0,
+                  // so every visit re-downloads the 235KB brand mark,
+                  // 3.3MB hero MP4, and 3.9MB hero WebM. Cap at 30 days
+                  // (immutable) and ship a new filename when we need to
+                  // swap content. Hashed Next-emitted chunks under
+                  // /_next/static already cache for 1 year so they are
+                  // not affected by this rule.
+                  {
+                      source: '/:path*.:ext(png|jpg|jpeg|webp|avif|svg|ico|woff|woff2|mp4|webm|m4v|mov)',
+                      headers: [
+                          {
+                              key: 'Cache-Control',
+                              value: 'public, max-age=2592000, immutable',
+                          },
+                      ],
+                  },
               ];
           },
           async redirects() {

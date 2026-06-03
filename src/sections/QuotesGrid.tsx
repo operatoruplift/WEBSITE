@@ -7,7 +7,7 @@ export default function QuotesGrid() {
 
   return (
     <Section id="quotes">
-      <FadeIn>
+      <FadeIn block>
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block text-[10px] sm:text-xs font-mono font-bold uppercase tracking-[0.2em] text-primary mb-4">
             FROM THE COMMUNITY
@@ -20,7 +20,7 @@ export default function QuotesGrid() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
         {quotes.map((quote, i) => (
-          <FadeIn key={`quote-${i}`} delay={(i % 12) * 40}>
+          <FadeIn key={`quote-${i}`} delay={(i % 12) * 40} block>
             <div className="group relative bg-surface border border-white/[0.06] rounded-xl p-5 hover:border-white/10 transition-all duration-300 h-full flex flex-col">
               <div className="flex-1">
                 <svg className="w-5 h-5 text-primary/30 mb-3" fill="currentColor" viewBox="0 0 24 24">

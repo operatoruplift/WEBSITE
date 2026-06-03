@@ -56,7 +56,7 @@ export default function ProofFeed() {
             {visibleEvents.map((event, i) => {
               const cfg = statusConfig[event.type];
               return (
-                <FadeIn key={`event-${i}`} delay={i * 30}>
+                <FadeIn key={`event-${i}`} delay={i * 30} block>
                   <div className="flex items-start gap-3 sm:gap-4 px-5 py-3.5 hover:bg-white/[0.02] transition-colors">
                     <span className={`shrink-0 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider border ${cfg?.color || 'text-muted bg-white/5 border-white/10'}`}>
                       {cfg?.label || event.type}
