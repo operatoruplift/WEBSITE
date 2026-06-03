@@ -212,17 +212,16 @@ test('JSON-LD structured data uses the pivot pitch', async ({ page }) => {
     expect(ldJson).toContain('WebApplication');
 });
 
-test('FAQ section emits FAQPage JSON-LD for rich results', async ({ page }) => {
+test('/faq emits FAQPage JSON-LD for rich results', async ({ page }) => {
     // PR #674 added schema.org FAQPage so Google can surface the
-    // homepage FAQ in "People also ask" rich-result placements.
-    // Lock that the schema is present, contains an expected anchor
-    // question, and does not leak any retired AI-assistant phrasing
-    // through the answer text.
-    await page.goto('/');
+    // FAQ in "People also ask" rich-result placements. 2026-06-03
+    // trim moved the section off the homepage to its own /faq
+    // route. The FAQPage JSON-LD moved with it.
+    await page.goto('/faq');
 
     const scripts = await page.locator('script[type="application/ld+json"]').allInnerTexts();
     const faqJson = scripts.find(s => s.includes('"FAQPage"'));
-    expect(faqJson, 'homepage must emit FAQPage JSON-LD').toBeTruthy();
+    expect(faqJson, '/faq must emit FAQPage JSON-LD').toBeTruthy();
     expect(faqJson!).toContain('"@type":"FAQPage"');
     expect(faqJson!).toContain('"@type":"Question"');
     expect(faqJson!).toContain('"@type":"Answer"');
