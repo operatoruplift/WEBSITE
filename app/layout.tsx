@@ -60,6 +60,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { CookieConsent } from "@/src/components/CookieConsent";
 import { PrivyWrapper } from "@/src/components/providers/PrivyWrapper";
+import CursorSpotlight from "@/src/components/CursorSpotlight";
 
 export default function RootLayout({
   children,
@@ -143,6 +144,10 @@ export default function RootLayout({
             }
           `}
         </Script>
+        {/* Global cursor spotlight. Fixed-position layer that sits
+            behind every page surface and tracks the pointer with an
+            orange radial gradient. Skipped on touch + reduced-motion. */}
+        <CursorSpotlight />
         <PrivyWrapper>
           {children}
         </PrivyWrapper>

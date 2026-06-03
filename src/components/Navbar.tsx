@@ -52,7 +52,7 @@ const Navbar: React.FC<NavbarProps> = () => {
     { label: 'problem', href: '/#problem' },
     { label: 'how it works', href: '/#how-it-works' },
     { label: 'pricing', href: '/pricing' },
-    { label: 'faq', href: '/#faq' },
+    { label: 'faq', href: '/faq' },
     { label: 'docs', href: '/docs' },
   ];
 

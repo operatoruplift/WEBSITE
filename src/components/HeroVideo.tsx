@@ -11,11 +11,17 @@ import React, { useEffect, useRef } from 'react';
  * UI so users get scrubber, play/pause, mute toggle, volume
  * slider, and fullscreen in one familiar bar.
  *
- * Files: public/video/launch-1280.mp4 (h264 + aac 96k) and
- * public/video/launch-1280.webm (vp9 + opus 96k). Both autoplay
- * muted (the only way modern browsers allow inline autoplay).
- * A jpg poster paints before the first frame so we never flash
- * black during decode.
+ * Files: public/video/launch-1280.mp4 (h264 + aac 96k). The
+ * WebM source was dropped 2026-06-03 because two-pass VP9 ended
+ * up larger than the MP4 for this specific content (heavy text
+ * + simple graphics, where H.264 has no efficiency disadvantage),
+ * meaning every WebM-preferring browser was paying a larger
+ * download. H.264 has universal browser support so a single
+ * source is fine.
+ *
+ * Autoplay muted (the only way modern browsers allow inline
+ * autoplay). A jpg poster paints before the first frame so we
+ * never flash black during decode.
  *
  * Default volume is 0.3 (30%) so when the user clicks unmute the
  * reel doesn't blast their speakers, a soft default that they
@@ -92,7 +98,6 @@ const HeroVideo: React.FC = () => {
                         poster="/video/launch-poster.jpg"
                         aria-label="Operator Uplift launch reel"
                     >
-                        <source src="/video/launch-1280.webm" type="video/webm" />
                         <source src="/video/launch-1280.mp4" type="video/mp4" />
                         Your browser does not support inline video. Visit{' '}
                         <a href="/video/launch-1280.mp4">the launch reel</a> directly.

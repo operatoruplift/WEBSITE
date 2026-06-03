@@ -121,13 +121,12 @@ test('/paywall sells v10 Operator Pro features', async ({ page }) => {
     assertNoBannedPhrases(body, '/paywall');
 });
 
-test('homepage FAQ surfaces the four pooled-stakes brand questions', async ({ page }) => {
-    // 2026-05-22 pooled-stakes brand rewrite: the FAQ anchors on the
-    // four founder-spec questions (how stakes work, where the money
-    // goes when someone fails, how AI verification works, who the
-    // product is for). Lock all four so a future rewrite that drops
-    // one fires.
-    await page.goto('/#faq', { waitUntil: 'domcontentloaded', timeout: 60_000 });
+test('/faq surfaces the four pooled-stakes brand questions', async ({ page }) => {
+    // 2026-06-03 trim: FAQ moved off the homepage to its own /faq
+    // route (linked from the footer). Section content + JSON-LD
+    // are unchanged; only the URL moved. The four pooled-stakes
+    // brand questions still anchor a future rewrite.
+    await page.goto('/faq', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
     await expect(page.getByText('How do the stakes work?').first()).toBeVisible({ timeout: 10_000 });
     await expect(page.getByText('Where does the money go when someone fails?').first()).toBeVisible();
@@ -213,17 +212,16 @@ test('JSON-LD structured data uses the pivot pitch', async ({ page }) => {
     expect(ldJson).toContain('WebApplication');
 });
 
-test('FAQ section emits FAQPage JSON-LD for rich results', async ({ page }) => {
+test('/faq emits FAQPage JSON-LD for rich results', async ({ page }) => {
     // PR #674 added schema.org FAQPage so Google can surface the
-    // homepage FAQ in "People also ask" rich-result placements.
-    // Lock that the schema is present, contains an expected anchor
-    // question, and does not leak any retired AI-assistant phrasing
-    // through the answer text.
-    await page.goto('/');
+    // FAQ in "People also ask" rich-result placements. 2026-06-03
+    // trim moved the section off the homepage to its own /faq
+    // route. The FAQPage JSON-LD moved with it.
+    await page.goto('/faq');
 
     const scripts = await page.locator('script[type="application/ld+json"]').allInnerTexts();
     const faqJson = scripts.find(s => s.includes('"FAQPage"'));
-    expect(faqJson, 'homepage must emit FAQPage JSON-LD').toBeTruthy();
+    expect(faqJson, '/faq must emit FAQPage JSON-LD').toBeTruthy();
     expect(faqJson!).toContain('"@type":"FAQPage"');
     expect(faqJson!).toContain('"@type":"Question"');
     expect(faqJson!).toContain('"@type":"Answer"');

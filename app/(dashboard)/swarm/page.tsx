@@ -15,7 +15,7 @@ export default function SwarmPage() {
             title="Multi-agent swarm is retired."
             body='The "LLM Council" debate UI was an experimental feature of the prior AI-assistant product. The new product uses a single impartial AI Game Master that scores uploaded proof and streams its reasoning back to you. If you disagree, you appeal to a witness or a human reviewer, not to a second model.'
             relatedLabel="How AI verification works"
-            relatedHref="/#faq"
+            relatedHref="/faq"
         />
     );
 }

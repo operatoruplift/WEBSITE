@@ -24,12 +24,14 @@ import { test, expect } from '@playwright/test';
  * incarnation of the same bug on /blog, fixed in PR #587).
  */
 
+// 2026-06-03: trimmed to match the live homepage. market-now
+// (TrustedByStrip) was removed earlier, faq moved to /faq, and
+// FaqSection no longer mounts on the homepage. ProblemSection,
+// AppSection, and HowItWorksSection remain.
 const SECTIONS = [
-    { id: 'market-now', name: 'TrustedByStrip (accountability market today)' },
     { id: 'problem', name: 'ProblemSection (01 - The problem)' },
     { id: 'app', name: 'AppSection (02 - The app)' },
     { id: 'how-it-works', name: 'HowItWorksSection (03)' },
-    { id: 'faq', name: 'FaqSection (05)' },
 ];
 
 test.describe('homepage section h2 centering', () => {
