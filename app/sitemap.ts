@@ -29,7 +29,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     // Top of the funnel: homepage. Highest priority for crawlers.
-    { url: HOST, lastModified: now, changeFrequency: 'weekly', priority: 1 },
+    // Trailing slash matches the rendered <link rel="canonical">
+    // in app/layout.tsx (alternates.canonical = '/'), so crawlers
+    // hit a single normalized URL.
+    { url: `${HOST}/`, lastModified: now, changeFrequency: 'weekly', priority: 1 },
 
     // Public product surfaces in roughly the order a consumer follows.
     // /product was retired in #308, the homepage is now the single
