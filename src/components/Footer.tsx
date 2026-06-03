@@ -50,9 +50,11 @@ const Footer: React.FC = () => {
                         >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
-                                src="/brand/operator-uplift-mark.png"
+                                src="/brand/operator-uplift-mark-64.png"
                                 alt=""
                                 aria-hidden="true"
+                                width={28}
+                                height={28}
                                 className="w-7 h-7 object-contain"
                             />
                             <span className="inline-flex items-baseline font-mono text-sm tracking-[0.02em] text-foreground">

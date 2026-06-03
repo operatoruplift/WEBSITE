@@ -91,9 +91,11 @@ const Navbar: React.FC<NavbarProps> = () => {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/brand/operator-uplift-mark.png"
+            src="/brand/operator-uplift-mark-64.png"
             alt=""
             aria-hidden="true"
+            width={32}
+            height={32}
             className="w-7 h-7 md:w-8 md:h-8 object-contain"
           />
           <span className="hidden sm:inline-flex items-baseline font-mono text-sm tracking-[0.02em] text-foreground">
