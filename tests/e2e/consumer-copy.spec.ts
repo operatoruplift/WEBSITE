@@ -121,13 +121,12 @@ test('/paywall sells v10 Operator Pro features', async ({ page }) => {
     assertNoBannedPhrases(body, '/paywall');
 });
 
-test('homepage FAQ surfaces the four pooled-stakes brand questions', async ({ page }) => {
-    // 2026-05-22 pooled-stakes brand rewrite: the FAQ anchors on the
-    // four founder-spec questions (how stakes work, where the money
-    // goes when someone fails, how AI verification works, who the
-    // product is for). Lock all four so a future rewrite that drops
-    // one fires.
-    await page.goto('/#faq', { waitUntil: 'domcontentloaded', timeout: 60_000 });
+test('/faq surfaces the four pooled-stakes brand questions', async ({ page }) => {
+    // 2026-06-03 trim: FAQ moved off the homepage to its own /faq
+    // route (linked from the footer). Section content + JSON-LD
+    // are unchanged; only the URL moved. The four pooled-stakes
+    // brand questions still anchor a future rewrite.
+    await page.goto('/faq', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
     await expect(page.getByText('How do the stakes work?').first()).toBeVisible({ timeout: 10_000 });
     await expect(page.getByText('Where does the money go when someone fails?').first()).toBeVisible();

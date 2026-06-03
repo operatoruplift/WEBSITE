@@ -5,14 +5,15 @@ import Hero from '@/src/sections/Hero';
 import ProblemSection from '@/src/sections/ProblemSection';
 import AppSection from '@/src/sections/AppSection';
 import HowItWorksSection from '@/src/sections/HowItWorksSection';
-import WhySolanaSection from '@/src/sections/WhySolanaSection';
-import QuotesGrid from '@/src/sections/QuotesGrid';
-import ProofFeed from '@/src/sections/ProofFeed';
 import DownloadSection from '@/src/sections/DownloadSection';
 import FinalCta from '@/src/sections/FinalCta';
-import FaqSection from '@/src/sections/FaqSection';
 import Footer from '@/src/components/Footer';
-
+// 2026-06-03 trim: removed FaqSection, WhySolanaSection, QuotesGrid,
+// and ProofFeed from the homepage per founder direction. FAQ moves
+// to /faq (linked from the footer). The other three retired surfaces
+// were doing more visual work than conversion work and crowded the
+// "join the waitlist" CTA. The page-wide CursorSpotlight effect now
+// lives in app/layout.tsx so every route gets it.
 export default function Home() {
   return (
     <div className="relative w-full bg-background min-h-screen text-foreground">
@@ -23,12 +24,8 @@ export default function Home() {
         <ProblemSection />
         <AppSection />
         <HowItWorksSection />
-        <WhySolanaSection />
-        <QuotesGrid />
-        <ProofFeed />
         <DownloadSection />
         <FinalCta />
-        <FaqSection />
       </main>
       <Footer />
     </div>

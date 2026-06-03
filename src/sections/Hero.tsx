@@ -4,7 +4,7 @@ import { APP_CONTENT } from '@/src/services/dataService';
 import { FadeIn } from '@/src/components/Animators';
 import HeroSpotlight from '@/src/components/HeroSpotlight';
 import HeroVideo from '@/src/components/HeroVideo';
-import HeroCountsPill from '@/src/components/HeroCountsPill';
+import FoundingMemberCounter from '@/src/components/FoundingMemberCounter';
 
 /**
  * Hero, 2026-05-22 v2-canvas alignment pass.
@@ -80,25 +80,13 @@ const Hero: React.FC = () => {
           </div>
         </FadeIn>
 
-        {/* Social proof: live waitlist + founder member count.
-            HeroCountsPill returns null when total === 0 so this
-            wrapper collapses cleanly without leaving an empty FadeIn
-            slot. The pill itself carries the negative-margin pull-up
-            so it sits closer to the badge without affecting the
-            badge's bottom margin when counts are absent. */}
-        {/* Traction counter: prominent 53/100 stat */}
+        {/* Live founding-member counter. Reads /api/waitlist/counts
+            on mount and counts up from 0 to the live total with a
+            short tween. No "X of N" cap, no "spots remaining":
+            founder direction (2026-06-03) is to keep the door open. */}
         <FadeIn delay={200} direction="down">
-          <div className="inline-flex items-center gap-3 px-6 py-3 mb-8 md:mb-10 rounded-xl border border-primary/20 bg-primary/[0.04] font-mono">
-            <span className="text-2xl md:text-3xl font-bold text-primary tracking-tight">53/100</span>
-            <div className="h-8 w-px bg-primary/20" />
-            <div className="text-left">
-              <p className="text-sm font-bold text-foreground leading-tight">Private Beta Spots Claimed</p>
-              <p className="text-[11px] text-muted leading-tight">Join 53 early adopters. 47 spots remaining.</p>
-            </div>
-          </div>
+          <FoundingMemberCounter />
         </FadeIn>
-
-        <HeroCountsPill />
 
         {/* Deck-scale headline. clamp(56px → 12vw → 168px) mirrors the
             pitch deck cover which renders the title at roughly 160px

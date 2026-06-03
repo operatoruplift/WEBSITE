@@ -78,6 +78,7 @@ const Footer: React.FC = () => {
                         <FooterLink href="/#download" label="Download" />
                         <FooterLink href="/pricing" label="Pricing" />
                         <FooterLink href="/docs" label="Docs" />
+                        <FooterLink href="/faq" label="FAQ" />
                     </nav>
 
                     {/* COMPANY column. */}

@@ -39,6 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${HOST}/waitlist`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${HOST}/pricing`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${HOST}/docs`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
+    { url: `${HOST}/faq`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${HOST}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
     // Judge-facing hackathon surfaces. /demo/hackathon is the anchor
     // URL used in deck slides and outbound DMs (per

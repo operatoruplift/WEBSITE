@@ -7,44 +7,6 @@ export interface HeroData {
   headline: string;
 }
 
-export interface WhySolanaFeature {
-  title: string;
-  description: string;
-}
-
-export interface WhySolanaData {
-  tag: string;
-  title: string;
-  description: string;
-  features: WhySolanaFeature[];
-}
-
-export interface Quote {
-  text: string;
-  author: string;
-  role: string;
-}
-
-export interface QuotesData {
-  tag: string;
-  title: string;
-  quotes: Quote[];
-}
-
-export interface ProofEvent {
-  type: 'committed' | 'proof_submitted' | 'verified' | 'settled' | 'expired' | 'redistributed';
-  description: string;
-  user: string;
-  timeAgo: string;
-}
-
-export interface ProofFeedData {
-  tag: string;
-  title: string;
-  description: string;
-  events: ProofEvent[];
-}
-
 export interface FooterLink {
   label: string;
   url?: string;
@@ -90,9 +52,6 @@ export interface ContactData {
 
 export interface AppData {
   hero: HeroData;
-  whySolana: WhySolanaData;
-  quotes: QuotesData;
-  proofFeed: ProofFeedData;
   contact: ContactData;
   footer: FooterData;
 }
