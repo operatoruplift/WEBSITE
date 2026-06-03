@@ -21,7 +21,7 @@ export default function WhySolanaSection() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 max-w-4xl mx-auto">
         {features.map((feature, i) => (
-          <FadeIn key={feature.title} delay={i * 80}>
+          <FadeIn key={feature.title} delay={i * 80} block>
             <div className="group relative bg-surface border border-white/[0.06] rounded-xl p-6 sm:p-8 hover:border-primary/20 transition-all duration-500">
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="relative z-10">

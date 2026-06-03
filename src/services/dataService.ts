@@ -7,7 +7,7 @@ export const APP_CONTENT: AppData = {
   whySolana: {
     tag: "WHY SOLANA",
     title: "Commitments that settle themselves",
-    description: "Every commitment, proof, and payout runs on Solana. The chain handles the escrow, the verification logic, and the settlement so you don't need to trust a middleman — just the code.",
+    description: "Every commitment, proof, and payout runs on Solana. The chain handles the escrow, the verification logic, and the settlement so you don't need to trust a middleman , just the code.",
     features: [
       {
         title: "Penny-fraction escrow",
@@ -15,11 +15,11 @@ export const APP_CONTENT: AppData = {
       },
       {
         title: "Verifiable receipts",
-        description: "Every proof submission and verification is recorded on-chain. Anyone can audit the outcome — no he-said-she-said, no deleted messages."
+        description: "Every proof submission and verification is recorded on-chain. Anyone can audit the outcome , no he-said-she-said, no deleted messages."
       },
       {
         title: "Programmable payouts",
-        description: "When a commitment is verified, the stake is returned automatically — minus a 5% platform fee that funds the verification pool. No invoices, no chasing payments."
+        description: "When a commitment is verified, the stake is returned automatically , minus a 5% platform fee that funds the verification pool. No invoices, no chasing payments."
       },
       {
         title: "Auditable reputation",
@@ -64,21 +64,21 @@ export const APP_CONTENT: AppData = {
     title: "Real commitments. Real follow-through.",
     description: "Every item below is a real commitment made by real users on Operator Uplift.",
     events: [
-      { type: 'settled', description: 'Completed design system audit — stake returned + fee', user: 'alice.eth', timeAgo: '2 min ago' },
-      { type: 'verified', description: 'Proof verified for sprint commitment — payout released', user: 'jordan.eth', timeAgo: '5 min ago' },
-      { type: 'committed', description: 'Committed to ship API v2 by Friday — staked 0.5 SOL', user: 'raj.eth', timeAgo: '8 min ago' },
+      { type: 'settled', description: 'Completed design system audit , stake returned + fee', user: 'alice.eth', timeAgo: '2 min ago' },
+      { type: 'verified', description: 'Proof verified for sprint commitment , payout released', user: 'jordan.eth', timeAgo: '5 min ago' },
+      { type: 'committed', description: 'Committed to ship API v2 by Friday , staked 0.5 SOL', user: 'raj.eth', timeAgo: '8 min ago' },
       { type: 'proof_submitted', description: 'Submitted deployment logs for verification', user: 'buildoor.eth', timeAgo: '12 min ago' },
-      { type: 'expired', description: 'Missed deadline for documentation PR — stake forfeited', user: '0x_deadline', timeAgo: '15 min ago' },
-      { type: 'settled', description: 'Completed load testing milestone — stake returned + fee', user: 'emily.eth', timeAgo: '18 min ago' },
+      { type: 'expired', description: 'Missed deadline for documentation PR , stake forfeited', user: '0x_deadline', timeAgo: '15 min ago' },
+      { type: 'settled', description: 'Completed load testing milestone , stake returned + fee', user: 'emily.eth', timeAgo: '18 min ago' },
       { type: 'redistributed', description: 'Failed commitment stake redistributed to active verifiers', user: 'protocol', timeAgo: '20 min ago' },
-      { type: 'committed', description: 'Committed to review 5 PRs by EOD — staked 0.25 SOL', user: 'ninacodes.eth', timeAgo: '22 min ago' },
-      { type: 'verified', description: 'Proof verified for contract deployment — payout released', user: 'carlos.eth', timeAgo: '25 min ago' },
+      { type: 'committed', description: 'Committed to review 5 PRs by EOD , staked 0.25 SOL', user: 'ninacodes.eth', timeAgo: '22 min ago' },
+      { type: 'verified', description: 'Proof verified for contract deployment , payout released', user: 'carlos.eth', timeAgo: '25 min ago' },
       { type: 'proof_submitted', description: 'Submitted test coverage report for verification', user: 'yuki.eth', timeAgo: '30 min ago' },
-      { type: 'settled', description: 'Completed onboarding guide — stake returned + fee', user: 'sophie.eth', timeAgo: '35 min ago' },
-      { type: 'committed', description: 'Committed to publish case study by Monday — staked 1 SOL', user: 'marcus.eth', timeAgo: '40 min ago' },
-      { type: 'expired', description: 'Missed deadline for bug fix — 0.5 SOL forfeited', user: '0x_late', timeAgo: '45 min ago' },
+      { type: 'settled', description: 'Completed onboarding guide , stake returned + fee', user: 'sophie.eth', timeAgo: '35 min ago' },
+      { type: 'committed', description: 'Committed to publish case study by Monday , staked 1 SOL', user: 'marcus.eth', timeAgo: '40 min ago' },
+      { type: 'expired', description: 'Missed deadline for bug fix , 0.5 SOL forfeited', user: '0x_late', timeAgo: '45 min ago' },
       { type: 'redistributed', description: 'Expired commitment stake redistributed to verifiers', user: 'protocol', timeAgo: '48 min ago' },
-      { type: 'verified', description: 'Proof verified for mobile app build — payout released', user: 'lena.eth', timeAgo: '50 min ago' }
+      { type: 'verified', description: 'Proof verified for mobile app build , payout released', user: 'lena.eth', timeAgo: '50 min ago' }
     ]
   },
   contact: {
