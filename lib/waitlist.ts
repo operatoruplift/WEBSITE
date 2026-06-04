@@ -108,8 +108,21 @@ export async function joinWaitlist(
     const normalized = email.trim().toLowerCase();
 
     // Check for an existing row first. Use a minimal column list +
-    // a fallback so a missing position/skip column never blocks the
-    // idempotent lookup.
+    // a fallback so a missing position/skip/source column never
+    // blocks the idempotent lookup.
+    //
+    // 2026-06-04: the production Supabase schema only ships email +
+    // id + created_at right now (the position + source + founder
+    // migrations have not been applied). The earlier fallback at
+    // this layer still SELECTed `source`, which also failed and
+    // left existing=null on every repeat signup — sending us into
+    // the insert path where stage 1+2 column-errored, stage 3 hit
+    // the email unique constraint, and the retry handler threw
+    // "Could not find the 'source' column" back to the client.
+    //
+    // The fix is to keep the fallback SELECT to the columns we are
+    // sure exist (id, email, created_at) and treat anything else as
+    // missing data we'll synthesize at return time.
     let existing: Record<string, unknown> | null = null;
     const { data: existingFull, error: existingErr } = await supabase
         .from('waitlist')
@@ -119,7 +132,7 @@ export async function joinWaitlist(
     if (existingErr && /column/i.test(existingErr.message)) {
         const { data: minimal } = await supabase
             .from('waitlist')
-            .select('id, email, source, created_at')
+            .select('id, email, created_at')
             .eq('email', normalized)
             .maybeSingle();
         existing = minimal as Record<string, unknown> | null;
@@ -226,9 +239,44 @@ export async function joinWaitlist(
     }
 
     if (insertError || !inserted) {
-        // Unique-constraint collision on position (extremely rare with
-        // the sequence; possible with the fallback path). Retry once
-        // with the latest MAX+1 before giving up.
+        // The most common reason we reach this branch on a real
+        // database is a unique-constraint collision on `email`,
+        // which happens whenever the same email signs up twice and
+        // the earlier minimal-fallback lookup couldn't see the
+        // existing row (because the prod schema is missing the
+        // columns the lookup SELECT requested). Try a bare lookup
+        // by email; if a row exists, treat this as an idempotent
+        // re-submit instead of a hard failure.
+        const isUniqueErr = (e: { message?: string } | null) =>
+            !!e?.message &&
+            /(duplicate key|already exists|unique constraint)/i.test(e.message);
+        if (isUniqueErr(insertError)) {
+            const { data: bare } = await supabase
+                .from('waitlist')
+                .select('id, email, created_at')
+                .eq('email', normalized)
+                .maybeSingle();
+            if (bare) {
+                return {
+                    position: 0,
+                    alreadyExisted: true,
+                    row: {
+                        ...bare,
+                        position: null,
+                        source: source || null,
+                        skip_paid_usdc: 0,
+                        skip_tx_signature: null,
+                        skip_paid_at: null,
+                        wallet_address: null,
+                    } as unknown as WaitlistRow,
+                };
+            }
+        }
+        // Otherwise: collision on position (extremely rare with the
+        // sequence; possible with the fallback path). Retry once
+        // with MAX+1. If that ALSO fails for column reasons, fall
+        // through to a bare email-only retry so the signup lands
+        // even on a partially-migrated table.
         const { data: maxRow } = await supabase
             .from('waitlist')
             .select('position')
@@ -245,14 +293,61 @@ export async function joinWaitlist(
             })
             .select('id, email, position, source, skip_paid_usdc, skip_tx_signature, skip_paid_at, wallet_address, created_at')
             .single();
-        if (retryError || !retried) {
-            throw new Error(`waitlist insert failed: ${retryError?.message || insertError?.message}`);
+        if (!retryError && retried) {
+            return {
+                position: retried.position ?? retryPosition,
+                alreadyExisted: false,
+                row: retried as WaitlistRow,
+            };
         }
-        return {
-            position: retried.position ?? retryPosition,
-            alreadyExisted: false,
-            row: retried as WaitlistRow,
-        };
+        // Final fallback: bare email-only insert. If THIS hits a
+        // unique-constraint, the email is on file from a prior
+        // attempt and we return alreadyExisted=true.
+        if (isColumnErr(retryError)) {
+            const { data: bareIns, error: bareErr } = await supabase
+                .from('waitlist')
+                .insert({ email: normalized })
+                .select('id, email, created_at')
+                .single();
+            if (!bareErr && bareIns) {
+                return {
+                    position: 0,
+                    alreadyExisted: false,
+                    row: {
+                        ...bareIns,
+                        position: null,
+                        source: source || null,
+                        skip_paid_usdc: 0,
+                        skip_tx_signature: null,
+                        skip_paid_at: null,
+                        wallet_address: null,
+                    } as unknown as WaitlistRow,
+                };
+            }
+            if (isUniqueErr(bareErr)) {
+                const { data: bare } = await supabase
+                    .from('waitlist')
+                    .select('id, email, created_at')
+                    .eq('email', normalized)
+                    .maybeSingle();
+                if (bare) {
+                    return {
+                        position: 0,
+                        alreadyExisted: true,
+                        row: {
+                            ...bare,
+                            position: null,
+                            source: source || null,
+                            skip_paid_usdc: 0,
+                            skip_tx_signature: null,
+                            skip_paid_at: null,
+                            wallet_address: null,
+                        } as unknown as WaitlistRow,
+                    };
+                }
+            }
+        }
+        throw new Error(`waitlist insert failed: ${retryError?.message || insertError?.message}`);
     }
 
     return {
@@ -262,16 +357,38 @@ export async function joinWaitlist(
     };
 }
 
-/** Read-only lookup. Returns null when the email is not on the list. */
+/** Read-only lookup. Returns null when the email is not on the list.
+ *  Falls back to a bare email lookup when the prod schema is missing
+ *  the extended columns (position, source, founder_*, etc.) so the
+ *  founder-verify route still works on a partially-migrated table. */
 export async function lookupByEmail(email: string): Promise<WaitlistRow | null> {
     const supabase = getSupabase();
     const normalized = email.trim().toLowerCase();
-    const { data } = await supabase
+    const { data, error } = await supabase
         .from('waitlist')
         .select('id, email, position, source, skip_paid_usdc, skip_tx_signature, skip_paid_at, wallet_address, created_at')
         .eq('email', normalized)
         .maybeSingle();
-    return (data as WaitlistRow) || null;
+    if (data) return data as WaitlistRow;
+    if (error && /column/i.test(error.message || '')) {
+        const { data: bare } = await supabase
+            .from('waitlist')
+            .select('id, email, created_at')
+            .eq('email', normalized)
+            .maybeSingle();
+        if (bare) {
+            return {
+                ...(bare as Record<string, unknown>),
+                position: null,
+                source: null,
+                skip_paid_usdc: 0,
+                skip_tx_signature: null,
+                skip_paid_at: null,
+                wallet_address: null,
+            } as unknown as WaitlistRow;
+        }
+    }
+    return null;
 }
 
 /**
