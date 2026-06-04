@@ -50,6 +50,15 @@ export const metadata: Metadata = {
     apple: "/logo.svg",
   },
   manifest: "/manifest.json",
+  // Self-referencing canonical for the root layout. Per-route layouts
+  // that set their own alternates.canonical override this on /pricing,
+  // /faq, etc. Without this, the rendered homepage HTML carried no
+  // <link rel="canonical">, exposing the root URL to duplicate-URL
+  // dilution (/, /?ref=..., bare host vs canonical host) when search
+  // engines crawl tracked / fragment variants.
+  alternates: {
+    canonical: "/",
+  },
   other: {
     "base:app_id": "69e244243bb010cd08cfdb7f",
   },
