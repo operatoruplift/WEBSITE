@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import { FadeIn } from '@/src/components/Animators';
 
 /**
@@ -72,8 +71,16 @@ const AppSection: React.FC = () => {
                     </div>
                 </FadeIn>
 
+                {/* Designed-for line stays as a feature preview; the
+                    App Store + Google Play badge row was removed
+                    2026-06-04 because DownloadSection (the dedicated
+                    "/04 · DOWNLOAD/" surface further down the page)
+                    already ships the same two badges with the same
+                    /waitlist destination. Two identical badge rows
+                    within 200px of each other diluted the primary
+                    CTA; one canonical surface is cleaner. */}
                 <FadeIn delay={300} block>
-                    <div className="mt-14 md:mt-20 flex flex-col items-center text-center gap-8">
+                    <div className="mt-14 md:mt-20 flex flex-col items-center text-center gap-4">
                         <div className="max-w-[640px]">
                             <span className="font-mono text-[10px] tracking-[0.18em] text-primary uppercase">
                                 Designed for iOS · Android · Watch
@@ -81,30 +88,6 @@ const AppSection: React.FC = () => {
                             <p className="mt-3 mx-auto text-foreground/75 leading-relaxed" style={{ fontSize: '15px' }}>
                                 Lockscreen widgets. A watch complication. One-tap check-ins. Wherever you already are, that&apos;s where the commitment lives.
                             </p>
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                            <Link
-                                href="/waitlist"
-                                aria-label="Download on the App Store, coming soon. Joins the waitlist."
-                                className="inline-flex items-center gap-3 px-4 py-2.5 border border-foreground/[0.16] bg-foreground/[0.02] hover:border-foreground/40 transition-colors"
-                            >
-                                <AppleGlyph className="w-5 h-5 text-foreground" />
-                                <span className="text-left leading-tight">
-                                    <span className="block text-[9px] font-mono text-muted uppercase tracking-wider">Coming soon to</span>
-                                    <span className="block text-sm font-medium text-foreground">App Store</span>
-                                </span>
-                            </Link>
-                            <Link
-                                href="/waitlist"
-                                aria-label="Get it on Google Play, coming soon. Joins the waitlist."
-                                className="inline-flex items-center gap-3 px-4 py-2.5 border border-foreground/[0.16] bg-foreground/[0.02] hover:border-foreground/40 transition-colors"
-                            >
-                                <PlayGlyph className="w-5 h-5 text-foreground" />
-                                <span className="text-left leading-tight">
-                                    <span className="block text-[9px] font-mono text-muted uppercase tracking-wider">Get it on</span>
-                                    <span className="block text-sm font-medium text-foreground">Google Play</span>
-                                </span>
-                            </Link>
                         </div>
                     </div>
                 </FadeIn>
@@ -238,23 +221,6 @@ function ProgressScreen() {
                 <div className="flex justify-between"><span className="text-foreground/80">No alcohol</span><span className="text-primary">94%</span></div>
             </div>
         </div>
-    );
-}
-
-function AppleGlyph({ className = '' }: { className?: string }) {
-    return (
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
-            <path d="M17.05 12.04c-.02-2.13 1.74-3.16 1.82-3.21-.99-1.45-2.54-1.65-3.09-1.67-1.31-.13-2.56.77-3.23.77-.68 0-1.7-.75-2.79-.73-1.43.02-2.76.83-3.5 2.11-1.5 2.6-.38 6.43 1.07 8.53.71 1.03 1.55 2.18 2.65 2.14 1.07-.04 1.47-.69 2.76-.69 1.28 0 1.65.69 2.78.66 1.15-.02 1.87-1.04 2.57-2.07.81-1.19 1.14-2.34 1.16-2.4-.03-.01-2.22-.85-2.24-3.38ZM14.94 5.6c.59-.71.99-1.7.88-2.69-.85.03-1.88.57-2.49 1.28-.54.62-1.02 1.63-.9 2.6.95.07 1.92-.48 2.51-1.19Z" />
-        </svg>
-    );
-}
-
-function PlayGlyph({ className = '' }: { className?: string }) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className={className}>
-            <path d="M4 3.5v17l13-8.5L4 3.5Z" fill="currentColor" opacity="0.85" />
-            <path d="M4 3.5l9 8.5M4 20.5l9-8.5" stroke="currentColor" strokeWidth="0.5" opacity="0.4" />
-        </svg>
     );
 }
 
