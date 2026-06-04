@@ -62,16 +62,19 @@ test('/demo/hackathon Receipt public key VerifyCard points at /api/receipts/publ
     expect(href).toBe('/api/receipts/public-key');
 });
 
-test('/demo/hackathon Filecoin VerifyCard points at /security', async ({ page }) => {
-    // PR #515 wired Filecoin receipt-anchoring; the demo page added
-    // a fourth VerifyCard pointing at /security so a judge can find
-    // the per-receipt filecoin_cid link after signing in.
+test('/demo/hackathon Filecoin VerifyCard points at the public receipts API', async ({ page }) => {
+    // PR #515 wired Filecoin receipt-anchoring with this card
+    // originally pointing at /security. PR #791 (retired-surface
+    // CTA cleanup, 2026-06-04) repointed it at /api/receipts/public-key
+    // because /security is now a RetiredSurface that judges can't
+    // sign into. The per-receipt filecoin_cid is exposed through
+    // the public receipts JSON the API serves, not a dashboard.
     await page.goto('/demo/hackathon', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
     const href = await page
         .getByRole('link', { name: /Signed receipts on Filecoin/i })
         .getAttribute('href');
-    expect(href).toBe('/security');
+    expect(href).toBe('/api/receipts/public-key');
 });
 
 test('/demo/hackathon 0G Storage VerifyCard points at the public verifier route', async ({ page }) => {

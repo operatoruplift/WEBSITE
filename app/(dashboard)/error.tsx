@@ -16,8 +16,12 @@ export default function DashboardError({ error, reset }: { error: Error; reset: 
                     <button onClick={reset} className="px-5 py-2.5 bg-primary text-white rounded-lg text-xs font-bold uppercase tracking-wide hover:bg-primary/80 transition-colors">
                         Retry
                     </button>
-                    <a href="/app" className="px-5 py-2.5 bg-foreground/[0.04] border border-white/10 text-gray-300 rounded-lg text-xs font-bold uppercase tracking-wide hover:bg-white/10 transition-colors">
-                        Dashboard Home
+                    {/* /app is a retired RetiredSurface route. Point
+                        the fallback at /waitlist, the active conversion
+                        surface today. When the dashboard moves to a
+                        canonical landing route, swap the href here. */}
+                    <a href="/waitlist" className="px-5 py-2.5 bg-foreground/[0.04] border border-white/10 text-gray-300 rounded-lg text-xs font-bold uppercase tracking-wide hover:bg-white/10 transition-colors">
+                        Back to waitlist
                     </a>
                 </div>
             </div>
