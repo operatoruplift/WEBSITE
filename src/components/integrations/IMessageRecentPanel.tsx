@@ -93,31 +93,39 @@ export function IMessageRecentPanel() {
     return (
         <Card variant="glass" className="border-white/10">
             <CardContent className="p-0">
-                <button
-                    type="button"
-                    onClick={() => setOpen(o => !o)}
-                    className="w-full p-4 flex items-center justify-between gap-3 hover:bg-white/[0.02] transition-all"
-                >
-                    <div className="flex items-center gap-3">
-                        {open ? <ChevronDown size={14} className="text-gray-400" /> : <ChevronRight size={14} className="text-gray-400" />}
-                        <MessageSquare size={14} className="text-primary" />
+                {/* 2026-06-03 a11y: split the toggle and refresh into
+                    sibling <button>s. The prior layout nested a
+                    role="button" <span> inside the toggle <button>,
+                    which is invalid HTML (interactive-in-interactive)
+                    and confuses screen readers about what the outer
+                    button activates. The refresh button now sits
+                    outside the toggle and renders only when open. */}
+                <div className="w-full p-4 flex items-center justify-between gap-3 hover:bg-white/[0.02] transition-all">
+                    <button
+                        type="button"
+                        onClick={() => setOpen(o => !o)}
+                        aria-expanded={open}
+                        className="flex items-center gap-3 flex-1 text-left -m-2 p-2 rounded hover:bg-white/[0.02]"
+                    >
+                        {open ? <ChevronDown size={14} aria-hidden="true" className="text-gray-400" /> : <ChevronRight size={14} aria-hidden="true" className="text-gray-400" />}
+                        <MessageSquare size={14} aria-hidden="true" className="text-primary" />
                         <h3 className="text-sm font-semibold text-white">Recent messages</h3>
                         {hasFetched && rows.length > 0 && (
                             <span className="text-[10px] font-mono text-gray-500">{rows.length} rows</span>
                         )}
-                    </div>
+                    </button>
                     {open && (
-                        <span
-                            role="button"
+                        <button
+                            type="button"
                             aria-label="Refresh recent messages"
-                            onClick={(e) => { e.stopPropagation(); void refresh(); }}
+                            onClick={() => { void refresh(); }}
                             className="inline-flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-mono uppercase tracking-widest text-gray-400 hover:text-white border border-white/10 hover:bg-white/5 transition-all"
                         >
                             {loading ? <Loader2 size={10} className="animate-spin" aria-hidden="true" /> : <RefreshCw size={10} aria-hidden="true" />}
                             Refresh
-                        </span>
+                        </button>
                     )}
-                </button>
+                </div>
 
                 {open && (
                     <div className="px-4 pb-4 space-y-2">

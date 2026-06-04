@@ -84,7 +84,11 @@ export function CookieConsent() {
                     <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a>.
                 </p>
                 <div className="flex gap-3">
-                    <button onClick={accept} className="flex-1 px-4 py-2 bg-primary text-white text-xs font-bold rounded-lg hover:bg-primary/80 transition-colors uppercase tracking-wide">
+                    {/* 2026-06-03 a11y: text-white on bg-primary (#F08A4C
+                        peach) is ~2.3:1 contrast, well below WCAG AA's
+                        4.5:1 for text-xs. text-[#0A0A0B] (near-black) on
+                        the same peach is ~8.5:1, easily AA-compliant. */}
+                    <button onClick={accept} className="flex-1 px-4 py-2 bg-primary text-[#0A0A0B] text-xs font-bold rounded-lg hover:bg-primary/85 transition-colors uppercase tracking-wide">
                         Accept
                     </button>
                     <button onClick={decline} className={declineClass}>
