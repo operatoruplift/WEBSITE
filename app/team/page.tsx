@@ -180,12 +180,21 @@ export default function TeamPage() {
                             <h2 className="text-2xl md:text-3xl font-medium text-foreground mb-3 tracking-tight">
                                 Want in?
                             </h2>
+                            {/* 2026-06-04: dropped 'or build with us' from
+                                the email pitch because the team page itself
+                                documents that the team is solo with one
+                                advisor; we are not hiring yet. 'invest' +
+                                'advise' is honest because the founder will
+                                actually take those notes. */}
                             <p className="text-muted leading-relaxed max-w-xl mx-auto mb-8">
-                                Join the waitlist for the next release. Drop a note at <a className="text-primary hover:underline" href="mailto:operatoruplift@gmail.com">operatoruplift@gmail.com</a> if you want to invest, advise, or build with us.
+                                Join the waitlist for the next release. Drop a note at <a className="text-primary hover:underline" href="mailto:operatoruplift@gmail.com">operatoruplift@gmail.com</a> if you want to invest or advise.
                             </p>
+                            {/* text-white on bg-primary peach is 2.3:1 (AA fail).
+                                Switch to text-[#0A0A0B] for ~8.5:1 (matches the
+                                cookie banner fix from #783 and blog CTA fix). */}
                             <Link
                                 href="/waitlist"
-                                className="inline-flex items-center px-7 py-3.5 bg-primary text-white font-bold text-sm rounded-lg hover:bg-primary/90 transition-colors uppercase tracking-wide shadow-[0_0_24px_rgba(240, 138, 76,0.25)]"
+                                className="inline-flex items-center px-7 py-3.5 bg-primary text-[#0A0A0B] font-bold text-sm rounded-lg hover:bg-primary/90 transition-colors uppercase tracking-wide shadow-[0_0_24px_rgba(240, 138, 76,0.25)]"
                             >
                                 Join the waitlist
                                 <ArrowRight aria-hidden className="ml-2 w-4 h-4" />
