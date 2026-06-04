@@ -59,8 +59,15 @@ const Contact: React.FC = () => {
     </div>
   );
 
+  // 2026-06-04: drop the opaque bg-background that was painting over
+  // the page-level .bg-grid-dots backdrop (and CursorSpotlight) from
+  // app/contact/page.tsx + app/layout.tsx, so /contact looked flat
+  // compared to /, /pricing, /faq, etc. Drop the redundant
+  // min-h-screen (the page wrapper already sets it). Add relative
+  // z-10 to match the other section wrappers and let the global
+  // backdrop layers paint behind.
   return (
-    <section className="w-full min-h-screen bg-background pt-32 pb-24 px-6 md:px-12 flex flex-col items-center selection:bg-primary/30 selection:text-white overflow-hidden">
+    <section className="relative z-10 w-full pt-32 pb-24 px-6 md:px-12 flex flex-col items-center selection:bg-primary/30 selection:text-white overflow-hidden">
       
       <div 
         className={`w-full max-w-[1200px] flex flex-col items-center transition-all duration-1000 delay-100 transform

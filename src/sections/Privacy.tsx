@@ -6,8 +6,13 @@ const Privacy: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // 2026-06-04: drop bg-background + min-h-screen so the page's
+  // dot-grid backdrop + CursorSpotlight (mounted in
+  // app/layout.tsx) show through, matching every other public
+  // page. Add relative z-10 so content paints above the
+  // backdrop. Mirrors the Contact.tsx fix in the same PR.
   return (
-    <section className="w-full min-h-screen bg-background pt-32 pb-24 px-6 md:px-12 flex justify-center">
+    <section className="relative z-10 w-full pt-32 pb-24 px-6 md:px-12 flex justify-center">
       <div className="w-full max-w-[800px] text-foreground/85 space-y-8">
         <div className="border-b border-foreground/10 pb-8 mb-12">
           <div className="text-xs font-bold tracking-[0.2em] text-primary uppercase mb-4">LEGAL</div>
