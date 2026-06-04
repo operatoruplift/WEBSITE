@@ -58,11 +58,17 @@ const tiers = [
     },
 ];
 
+// 2026-06-04: dropped 'Strong encryption' badge. The original
+// AES-256 local-storage encryption module was orphaned with the
+// 2026-05-22 pivot; the badge implied a capability the current
+// web app does not run. SOC 2 / HIPAA / GDPR claims remain because
+// they are on-request commitments backed by the standard cloud
+// stack (Vercel + Supabase + Privy + Anthropic/OpenAI), not the
+// retired local-first / Ollama path.
 const badges = [
     { label: 'SOC 2 on request', icon: Shield },
     { label: 'HIPAA on request', icon: Shield },
     { label: 'GDPR-ready', icon: Shield },
-    { label: 'Strong encryption', icon: Shield },
 ];
 
 const personal = [

@@ -430,7 +430,7 @@ function getArticleContent(id: string) {
     return content[id] || (
         <div className="space-y-6">
             <p className="text-lg">{posts.find(p => p.id === id)?.excerpt}</p>
-            <p>This is part of our ongoing development of Operator Uplift, the approval-gated AI agent platform with a local-first desktop build on the roadmap. We ship updates constantly and share our progress transparently.</p>
+            <p>This is part of our ongoing development of Operator Uplift, commitment infrastructure for operators who stake real money on what they say they will do. We ship updates constantly and share our progress transparently.</p>
             <p>Follow us on <a href="https://x.com/OperatorUplift" target="_blank" rel="noreferrer" className="text-primary hover:underline">X</a> and join our <a href="https://discord.gg/eka7hqJcAY" target="_blank" rel="noreferrer" className="text-primary hover:underline">Discord</a> for the latest updates.</p>
         </div>
     );

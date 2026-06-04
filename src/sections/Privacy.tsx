@@ -43,9 +43,6 @@ const Privacy: React.FC = () => {
             <p className="mt-3">
               Your local settings, custom-agent configs, and chat session cache are stored in your browser&apos;s localStorage. Server-side, we store: your account record (Privy DID + email), subscription state, audit-log entries, and uploaded knowledge. To export or delete this data, email <a href="mailto:operatoruplift@gmail.com" className="text-[#F08A4C] hover:underline">operatoruplift@gmail.com</a> and we will action it within 30 days.
             </p>
-            <p className="mt-3">
-              Our roadmap includes a desktop app that runs on your machine and can route to local Ollama for the AI step. That capability is in development; this Privacy Policy will be updated to describe it accurately when it ships.
-            </p>
           </section>
 
           <section>

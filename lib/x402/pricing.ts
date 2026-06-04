@@ -5,8 +5,9 @@
  * Non-null = gated, the middleware requires X-Payment-Proof before
  * executing, and the modal shows the price before the user approves.
  *
- * Loops House hackathon (Challenge 02): $0.01 USDC per write action
- * on Solana devnet. Reads stay free so list + search don't cost money.
+ * Demo / testnet phase: $0.01 USDC per gated write action on Solana
+ * devnet. Reads stay free so list + search don't cost money.
+ * Production mainnet pricing is decided separately at Phase 8 cutover.
  *
  * Amounts are stored as decimal strings (e.g. '0.01') plus a token
  * `decimals` field. This avoids JS float precision loss the moment
