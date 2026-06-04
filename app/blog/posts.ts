@@ -120,14 +120,6 @@ export const posts: BlogPost[] = [
         category: 'engineering',
     },
     {
-        id: 'why-i-built-an-ai-os',
-        title: 'Why I Built an AI OS Instead of Pivoting',
-        excerpt: 'The earlier version of the Balaji post, on why the OS-layer framing won over the "build a better ChatGPT" critique. See the April 17 post for the specific breakdown.',
-        date: 'April 6, 2026',
-        readTime: '5 min read',
-        category: 'announcement',
-    },
-    {
         id: 'what-93-percent-retention-looks-like',
         title: 'What 93% Retention Actually Looks Like at 300 Users',
         excerpt: 'Everyone talks about retention like it\'s a number. It\'s not. It\'s a behavior. 93% retention means 93 out of 100 people came back. Not because of push notifications. Because the thing worked.',
