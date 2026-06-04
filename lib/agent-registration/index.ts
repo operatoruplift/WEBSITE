@@ -12,13 +12,10 @@
  * This is the static version of what would be an on-chain ERC-721
  * agent NFT, the NFT metadata would point at this URI.
  *
- * The same JSON is also mirrored onto the Arkiv Braga testnet as a
- * typed entity once `pnpm arkiv:publish-agents` runs (lib/arkiv/
- * agent.ts::publishAgent). That mirror is the Network School Ethereum Hackathon (AI track)
- * entrant's identity-card surface. The Arkiv entity carries the
- * SHA-256 checksum in its attributes so a judge can list all entities
- * under the project key, click into one, and byte-compare against
- * this URI. See docs/ARKIV_SUBMISSION.md for the full submission.
+ * 2026-06-04: the Arkiv Braga mirror was retired with the
+ * post-pivot residue prune. The Filecoin + 0G mirrors continue to
+ * carry the trust-stack guarantee (signed receipts byte-comparable
+ * against two public networks); the third Arkiv mirror is removed.
  */
 import crypto from 'crypto';
 import fs from 'fs';

@@ -40,14 +40,6 @@ export const posts: BlogPost[] = [
         category: 'announcement',
     },
     {
-        id: 'arkiv-agent-memory-you-own',
-        title: 'Agents whose memory you actually own',
-        excerpt: 'Most assistants own your history with them. The day they disappear, your memory does too. This week we found a way to let you keep it. The deed stays with us; the keys move to you.',
-        date: 'May 19, 2026',
-        readTime: '4 min read',
-        category: 'update',
-    },
-    {
         id: 'og-storage-second-mirror',
         title: 'Receipts now anchor to two decentralized storage networks, not one',
         excerpt: 'Last week we shipped a Filecoin mirror so receipts could outlive our database. This week we added 0G Storage alongside it. Two independent networks now hold byte-identical copies of every signed receipt. Here is why the second one matters.',

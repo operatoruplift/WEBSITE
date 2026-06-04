@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
-import { ExternalLink, Check, FileJson, KeyRound, Receipt, ArrowRight, Coins, Zap, Box, Layers, Hexagon, Archive } from 'lucide-react';
+import { ExternalLink, Check, FileJson, KeyRound, Receipt, ArrowRight, Coins, Zap, Box, Layers, Hexagon } from 'lucide-react';
 import { magicBlockSurfaceStatus } from '@/lib/magicblock/adapter';
 
 /**
@@ -166,13 +166,10 @@ export default function HackathonDemoPage() {
                             href="https://chainscan-galileo.0g.ai/address/0x2700F6A3e505402C9daB154C5c6ab9cAEC98EF1F"
                             external
                         />
-                        <VerifyCard
-                            icon={Archive}
-                            title="Agent cards + memory on Arkiv"
-                            description="Network School Ethereum Hackathon entrant (AI theme). Public Braga testnet entities; /arkiv lists agent cards and shows the memory model"
-                            href="/arkiv"
-                            external
-                        />
+                        {/* The Arkiv VerifyCard was retired 2026-06-04
+                            with the post-pivot residue prune. The
+                            Network School Ethereum Hackathon entrant
+                            page (/arkiv) is no longer live. */}
                     </div>
 
                     {/* Exact demo steps */}

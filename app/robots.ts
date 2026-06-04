@@ -4,7 +4,7 @@ import { MetadataRoute } from 'next';
  * robots.txt config.
  *
  * Allow everything public (homepage, /pricing, /docs, /blog,
- * /press-kit, /contact, /privacy, /terms, /demo/hackathon, /arkiv).
+ * /press-kit, /contact, /privacy, /terms, /demo/hackathon).
  * Disallow:
  *   - Dashboard routes (need auth, no value to crawlers, no public
  *     copy to index)
