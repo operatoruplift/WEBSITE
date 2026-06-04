@@ -21,6 +21,10 @@ import RetiredSurface from '@/src/components/RetiredSurface';
 export default function IMessagePage() {
     return (
         <div className="relative w-full bg-background min-h-screen text-foreground">
+            {/* Page-level dot grid + warm radial. Was missing on this
+                route while every other public page mounts it, so
+                /imessage rendered as a flat bg-background slab. */}
+            <div className="bg-grid-dots" aria-hidden="true" />
             <Navbar currentPage="imessage" />
             <main id="main" className="relative z-10">
                 <RetiredSurface

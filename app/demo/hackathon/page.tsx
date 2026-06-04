@@ -17,10 +17,14 @@ import { magicBlockSurfaceStatus } from '@/lib/magicblock/adapter';
  */
 export default function HackathonDemoPage() {
     return (
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="relative w-full min-h-screen bg-background text-foreground">
+            {/* Page-level dot grid + warm radial, was missing on this
+                route so /demo/hackathon rendered as a flat slab while
+                every other public page shows the grid. */}
+            <div className="bg-grid-dots" aria-hidden="true" />
             <Navbar currentPage="demo-hackathon" />
 
-            <main id="main" className="pt-32 pb-20 px-6 md:px-12">
+            <main id="main" className="relative z-10 pt-32 pb-20 px-6 md:px-12">
                 <div className="max-w-3xl mx-auto">
                     {/* Header */}
                     <div className="text-center mb-12">
