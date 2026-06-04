@@ -194,7 +194,7 @@ export default function WaitlistPage() {
                                 </span>
                             </button>
                             {state.kind === 'error' ? (
-                                <p className="text-sm text-red-600">{state.message}</p>
+                                <p role="alert" className="text-sm text-red-500">{state.message}</p>
                             ) : null}
                             <p className="text-xs text-muted leading-relaxed">
                                 We only use your email to invite you in. No marketing blasts. Unsubscribe is a reply away.
@@ -523,7 +523,7 @@ function FounderVerifyForm({ email }: { email: string }) {
                 </button>
             </div>
             {state.kind === 'error' ? (
-                <p className="text-xs text-red-400">{state.message}</p>
+                <p role="alert" className="text-xs text-red-500">{state.message}</p>
             ) : !hasEmail ? (
                 <p className="text-xs text-muted leading-relaxed">
                     Enter your email in the box above, then paste your Solana tx signature here once your wallet confirms the $5 USDC transfer.
