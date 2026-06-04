@@ -521,12 +521,15 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
                 <BlogToc />
 
 
-                {/* CTA */}
+                {/* CTA. 2026-06-04: copy + destination flipped from
+                    "Try it free" -> /login to match the waitlist-only
+                    brand. /login is gated behind the closed beta;
+                    the public path today is /waitlist. */}
                 <div className="mt-16 p-8 rounded-2xl border border-white/10 bg-white/[0.02] text-center">
-                    <h3 className="text-xl font-medium text-white mb-3">Want to try it?</h3>
+                    <h3 className="text-xl font-medium text-white mb-3">Want in?</h3>
                     <p className="text-gray-400 text-sm mb-6">Operator Uplift is in private beta. Join the waitlist and we&apos;ll let you in.</p>
-                    <Link href="/login" className="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-primary/80 transition-colors">
-                        Try it free
+                    <Link href="/waitlist" className="inline-flex items-center bg-primary text-[#0A0A0B] px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-primary/80 transition-colors">
+                        Join the waitlist
                     </Link>
                 </div>
             </article>
