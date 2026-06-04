@@ -137,11 +137,15 @@ export default function HackathonDemoPage() {
                             href="/api/receipts/public-key"
                             external
                         />
+                        {/* 2026-06-04: /security is a retired
+                            RetiredSurface. Point judges at the public
+                            receipts API which returns the same JSON
+                            including filecoin_cid + 0g links. */}
                         <VerifyCard
                             icon={Box}
                             title="Signed receipts on Filecoin"
-                            description="Open /security to see each receipt's filecoin_cid link to a public IPFS gateway"
-                            href="/security"
+                            description="GET /api/receipts/public-key + an individual receipt to read its filecoin_cid; fetch from any IPFS gateway and byte-compare"
+                            href="/api/receipts/public-key"
                             external
                         />
                         <VerifyCard
@@ -205,13 +209,16 @@ export default function HackathonDemoPage() {
                         </ul>
                     </div>
 
-                    {/* CTA */}
+                    {/* CTA. 2026-06-04: /chat is a retired
+                        RetiredSurface. The dashboard is closed-beta
+                        only; the public, no-auth verifier path is
+                        /api/receipts + the public-key route. */}
                     <div className="text-center">
                         <Link
-                            href="/chat"
+                            href="/api/receipts/public-key"
                             className="inline-flex items-center h-11 px-6 bg-[#F08A4C] text-white rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-[#F08A4C]/90 transition-colors"
                         >
-                            Start the demo <ArrowRight size={14} className="ml-2" />
+                            View public key <ArrowRight size={14} className="ml-2" />
                         </Link>
                         <p className="text-[11px] text-[#52525B] mt-3">
                             Full technical writeup available on request. Email{' '}
@@ -258,16 +265,16 @@ const STEPS: Array<{ title: string; description: string; network?: string }> = [
     },
 ];
 
+// 2026-06-04: /integrations, /chat, /security retired with the
+// 2026-05-22 pivot. The judge happy path now bypasses the
+// dashboard entirely. Replace the walk-through with a curl-only
+// path against the public APIs that produced the same receipts.
 const DEMO_CLICKS = [
-    'Log in via Privy at <a href="/login" class="text-[#F08A4C] hover:underline">/login</a>',
-    'Go to <a href="/integrations" class="text-[#F08A4C] hover:underline">/integrations</a> and Connect Google Calendar & Gmail',
-    'Go to <a href="/chat" class="text-[#F08A4C] hover:underline">/chat</a>',
-    'Type: <code class="text-[#F08A4C] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">Schedule a 30-min meeting tomorrow at 3 PM called "trust-stack demo"</code>',
-    'Click <strong>Pay &amp; Allow Once</strong> in the approval modal',
-    'Open the Network tab, observe 402, then /pay, then 200 with receipt',
-    'Go to <a href="/security" class="text-[#F08A4C] hover:underline">/security</a> and click <strong>Copy JSON</strong> on the new receipt',
-    'Verify the signature with the public key from <a href="/api/receipts/public-key" class="text-[#F08A4C] hover:underline">/api/receipts/public-key</a>',
-    'Click the <strong>filecoin:</strong> link on the receipt row to fetch the same bytes from a public IPFS gateway. Byte-compare to confirm we did not tamper with the row after signing.',
+    'GET <a href="/api/receipts/public-key" class="text-[#F08A4C] hover:underline">/api/receipts/public-key</a> to fetch the ed25519 verification key',
+    'GET an individual receipt URL (we will paste a sample in the email at the bottom) to read its <code class="text-[#F08A4C] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">filecoin_cid</code> + <code class="text-[#F08A4C] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">og_storage_root</code>',
+    'Fetch the same JSON from any IPFS gateway using the filecoin_cid, byte-compare against the receipt body, then verify the ed25519 signature with the public key from step 1',
+    'Verify the on-chain anchor at <a href="https://explorer.solana.com/?cluster=devnet" class="text-[#F08A4C] hover:underline">explorer.solana.com</a> by looking up the published Merkle root for the date range',
+    'Confirm by inspecting the open-source receipt format docs and the canonicalJson signing algorithm at <a href="/docs/receipts" class="text-[#F08A4C] hover:underline">/docs/receipts</a>',
     'Click the <strong>0g:</strong> link on the same row. It lands on <a href="/api/og/storage/0xexample" class="text-[#F08A4C] hover:underline">/api/og/storage/[rootHash]</a>, our public verifier passthrough. The JSON envelope documents the 0G testnet indexer endpoint and exact SDK call needed to pull the bytes a second time, from a network we do not control.',
     'Open <a href="/agents/calendar.json" class="text-[#F08A4C] hover:underline">/agents/calendar.json</a>. If <code class="text-[#F08A4C] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">og_agent_id</code> is present, click its <code class="text-[#F08A4C] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">explorer_url</code> to see the agent\'s ERC-7857 Intelligent NFT on 0G Galileo Testnet (chainscan-galileo.0g.ai). The on-chain <code class="text-[#F08A4C] bg-[#0A0A0A] px-1.5 py-0.5 rounded border border-[#222222]">IntelligentData[]</code> array carries SHA-256 hashes of the agent\'s name, capabilities, system prompt, and model.',
 ];

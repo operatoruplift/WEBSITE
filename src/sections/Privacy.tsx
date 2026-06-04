@@ -41,7 +41,7 @@ const Privacy: React.FC = () => {
               When you use the web app at operatoruplift.com, your chat content is processed by our servers (Vercel + Supabase) and forwarded to whichever AI provider you select (Anthropic, OpenAI, Google, xAI, DeepSeek). Privy handles authentication. Each link is a real third party we contract with; we don&apos;t resell your data.
             </p>
             <p className="mt-3">
-              Your local settings, custom-agent configs, and chat session cache are stored in your browser&apos;s localStorage. Server-side, we store: your account record (Privy DID + email), subscription state, audit-log entries, and uploaded knowledge. You can export or delete this data at any time from <a href="/settings" className="text-[#F08A4C] hover:underline">Settings → Data</a>.
+              Your local settings, custom-agent configs, and chat session cache are stored in your browser&apos;s localStorage. Server-side, we store: your account record (Privy DID + email), subscription state, audit-log entries, and uploaded knowledge. To export or delete this data, email <a href="mailto:operatoruplift@gmail.com" className="text-[#F08A4C] hover:underline">operatoruplift@gmail.com</a> and we will action it within 30 days.
             </p>
             <p className="mt-3">
               Our roadmap includes a desktop app that runs on your machine and can route to local Ollama for the AI step. That capability is in development; this Privacy Policy will be updated to describe it accurately when it ships.

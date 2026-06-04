@@ -53,10 +53,12 @@ export default async function AdminOverviewPage() {
                     href="/admin/waitlist"
                     description="Total rows in the waitlist table"
                 />
+                {/* /security is a retired RetiredSurface route.
+                    Drop the href and show the tile as a stat-only card
+                    until a replacement admin receipts surface ships. */}
                 <Tile
                     label="Signed receipts"
                     value={fmt(tiles.receipts)}
-                    href="/security"
                     description="Lifetime tool_receipts written"
                 />
                 <Tile

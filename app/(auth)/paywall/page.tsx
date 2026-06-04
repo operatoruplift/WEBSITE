@@ -433,9 +433,14 @@ export default function PaywallPage() {
                     </div>
                 </div>
 
+                {/* 2026-06-04: /marketplace is a retired RetiredSurface
+                    route. The "free Agent Marketplace" pitch is a
+                    pre-pivot artifact. Repoint the secondary link at
+                    /faq so a paywall visitor who isn't ready to pay
+                    has somewhere honest to land. */}
                 <div className="text-center">
-                    <Link href="/marketplace" className="text-sm text-[#A1A1AA] hover:text-foreground transition-colors">
-                        Or browse the Agent Marketplace for free →
+                    <Link href="/faq" className="text-sm text-[#A1A1AA] hover:text-foreground transition-colors">
+                        Or check the FAQ first →
                     </Link>
                 </div>
             </div>

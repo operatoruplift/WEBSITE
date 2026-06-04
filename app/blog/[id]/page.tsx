@@ -130,7 +130,7 @@ function getArticleContent(id: string) {
 
                 <h2>What changed this week</h2>
                 <p>Every signed receipt now gets pinned to <strong>two</strong> public storage networks instead of one. Filecoin (via Lighthouse) was already there from last week. 0G testnet is there now too.</p>
-                <p>The two networks hold byte-identical copies of the same receipt JSON. Your <a href="/security">/security</a> page shows two clickable links per receipt: one labeled <code>filecoin:</code>, one labeled <code>0g:</code>. Either link gets you back to the same bytes we signed.</p>
+                <p>The two networks hold byte-identical copies of the same receipt JSON. Each settled receipt carries two clickable links: one labeled <code>filecoin:</code>, one labeled <code>0g:</code>. Either link gets you back to the same bytes we signed.</p>
 
                 <h2>Why two networks instead of one</h2>
                 <p>The honest answer: not because one was failing. Filecoin via Lighthouse works fine. We added 0G because the trust story gets meaningfully stronger when nobody can break the proof by knocking out a single storage provider.</p>
@@ -327,7 +327,7 @@ function getArticleContent(id: string) {
 
                 <h2>Every record gets a public backup</h2>
                 <p>Beyond the chain, each record also lands on a public storage network the day it is signed. Anyone can fetch the same record from that network and compare it to what we have. If they differ, somebody changed something.</p>
-                <p>You can see these backups on your <a href="/security">security page</a>. The small <code>filecoin:</code> and <code>0g:</code> links next to each row open the public copy.</p>
+                <p>Each settled receipt carries two clickable links to those public backups: <code>filecoin:</code> and <code>0g:</code>. Either one opens the same bytes we signed.</p>
 
                 <h2>Why we built it this way</h2>
                 <p>The simplest version of trust is "we promise." That breaks the day promises change hands. Companies get acquired. Founders leave. Databases get migrated.</p>
