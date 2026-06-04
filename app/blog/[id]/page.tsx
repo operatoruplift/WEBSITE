@@ -94,34 +94,12 @@ function getArticleContent(id: string) {
                 <p>If you are reading this and thinking about your own product, I will tell you what I wish someone had told me. The market is louder than your conviction. If three different signals point the same direction, listen.</p>
             </div>
         ),
-        'arkiv-agent-memory-you-own': (
-            <div className="space-y-6">
-                <p className="text-lg">Here is the problem nobody likes to talk about. Your AI assistant remembers things about you. Your tone. The people you email most. The hours you prefer to work. The day that assistant gets sold, swapped, or shut down, all of that goes too. You start over.</p>
-
-                <p>We found a way to let you keep your memory.</p>
-
-                <h2>What changed this week</h2>
-                <p>The assistant still remembers things the same way it did yesterday. The difference is what happens to that memory when you want to leave.</p>
-                <p>Today, when the assistant writes down something about you, we also save a copy on a public record nobody can quietly edit, not even us. Think of it as a notarized version of your memory. Our name is on it as the place that wrote it down. But you can take the key.</p>
-                <p>If a day comes when you want your memory off our servers, you take it. The notarized copy stays, with our name as the original writer, but the control moves to you. We become read-only on your own history. You can move it, archive it, or burn it. The choice is yours.</p>
-
-                <h2>Like a deed, not a rental</h2>
-                <p>It is closer to how property works in the real world. The deed names the original builder. The current owner can do what they want with the building. We are saying out loud that we want to be the builder, not the landlord.</p>
-                <p>Most assistants are the landlord. Your relationship with them is a relationship with their database. The day that database changes hands, your memory does too. We do not want that to be the deal here.</p>
-
-                <h2>What you do not have to do</h2>
-                <p>Nothing changes about how you use the assistant. You do not install anything new. You do not learn a new word. You do not pay a fee. The default experience is unchanged.</p>
-                <p>The new option is opt-in. If you never want to think about it, you never have to. The day you do want your memory under your own name, the path is there.</p>
-
-                <h2>Why now</h2>
-                <p>A hackathon gave us a deadline. The brief was almost the exact pitch we have been making for receipts since last month: build something where the important data lives on a public record, not just on our servers. Receipts (proof of what the assistant did for you) already live in two public places. This week we added a third, and used it for the part that hurts the most when an AI assistant disappears, your own history with it.</p>
-                <p>The interesting part was not the technology. It was finally writing down the &quot;memory is yours&quot; promise in a way that is not just a slogan.</p>
-
-                <h2>Honest about what is live today</h2>
-                <p>We are not going to tell you the page is full when it is not. The notarized copies start landing the day we flip a switch on our side. Until then, the dashboard at <a href="/arkiv">/arkiv</a> says exactly that, in plain English. No fake list, no placeholder rows. If a feature is shipped, the page reflects it. If not, the page says so.</p>
-                <p>Your assistant will still default to keeping memory in our database, because that is what makes it fast. But the moment you want a memory you actually own, the path is there. Same assistant. Same tap. Just yours.</p>
-            </div>
-        ),
+        // 'arkiv-agent-memory-you-own' was retired 2026-06-04 with
+        // the post-pivot residue prune. The Arkiv hackathon entrant
+        // surface is gone; the trust-stack (signed receipts, Filecoin
+        // + 0G mirrors) carries forward into the commitment-
+        // infrastructure product. The remaining mention in the
+        // "we held the line" post stays as historical context.
         'og-storage-second-mirror': (
             <div className="space-y-6">
                 <p className="text-lg">A founder we respect sent us the 0G docs and asked which modules we should fold in. We spent an afternoon on it, almost wrote a &quot;here is why we are holding off&quot; post, then re-read what we had written and realized we had answered the wrong question.</p>

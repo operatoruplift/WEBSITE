@@ -46,12 +46,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${HOST}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
     // Judge-facing hackathon surfaces. /demo/hackathon is the anchor
     // URL used in deck slides and outbound DMs (per
-    // docs/distribution-kit.md), and /arkiv is the live entity list
-    // for the Network School Ethereum Hackathon Arkiv AI-theme entrant (PRs #620..#639).
-    // Public, no auth required, returns honest empty state when no
-    // entities have been published yet.
+    // docs/distribution-kit.md). The /arkiv entrant page was
+    // retired 2026-06-04 with the post-pivot residue prune.
     { url: `${HOST}/demo/hackathon`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
-    { url: `${HOST}/arkiv`, lastModified: now, changeFrequency: 'weekly', priority: 0.5 },
     { url: `${HOST}/team`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${HOST}/press-kit`, lastModified: now, changeFrequency: 'monthly', priority: 0.4 },
     { url: `${HOST}/contact`, lastModified: now, changeFrequency: 'yearly', priority: 0.4 },

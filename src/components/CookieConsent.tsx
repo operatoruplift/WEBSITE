@@ -6,26 +6,15 @@ import { usePathname } from 'next/navigation';
 /**
  * The cookie banner is rendered at the root layout so it doesn't sit
  * inside the themed wrapper. Brand default flipped to LIGHT 2026-05-26
- * so the banner is light by default, with an explicit dark allowlist
- * for the few surfaces that keep the dark palette regardless of the
- * global theme toggle.
+ * so the banner is light by default.
  *
- * Dark-allowlisted surfaces:
- *   - /arkiv: judge-facing terminal aesthetic, deliberately hardcoded
- *             dark hexes that the .theme-light overrides ignore via
- *             a data-always-dark wrapper. The cookie banner mirrors
- *             that opt-out so the chrome stays consistent with the page.
- *
- * Everything else (homepage, /pricing, /docs, /blog, /waitlist,
- * /press-kit, /contact, /imessage, /team, /demo/hackathon, retired
- * dashboard surfaces) gets the light banner so the chrome doesn't
- * fight the rest of the page.
- *
- * /demo/hackathon used to be dark-only but its content uses the
- * bg-background / text-foreground tokens, so it now flips with the
- * theme like every other marketing page.
+ * 2026-06-04: the dark-only allowlist (formerly carrying /arkiv) is
+ * empty now because /arkiv was retired with the post-pivot residue
+ * prune. Every public page uses the same light banner. Keeping the
+ * Set + helper so a future dark-only surface can be added back
+ * without re-introducing the conditional render shape.
  */
-const DARK_PATHS = new Set(['/arkiv']);
+const DARK_PATHS = new Set<string>();
 
 function shouldUseLightBanner(pathname: string | null): boolean {
     if (!pathname) return true;
