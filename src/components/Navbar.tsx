@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ThemeToggle from '@/src/components/ThemeToggle';
 /**
@@ -42,6 +42,36 @@ interface NavbarProps {
  */
 const Navbar: React.FC<NavbarProps> = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Body scroll lock + ESC-to-close while the mobile overlay is
+  // open. Without the scroll lock, iOS Safari lets the underlying
+  // page scroll behind the overlay (the menu uses position:fixed
+  // but the body keeps its scroll context), which means tapping
+  // close lands the user at a different scroll position than where
+  // they opened the menu. ESC-to-close matches desktop dialog
+  // conventions and helps keyboard users escape without hunting
+  // for the visible X.
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    const prevPaddingRight = document.body.style.paddingRight;
+    // Compensate for the now-absent scrollbar so the page doesn't
+    // shift horizontally when overflow flips to hidden.
+    const scrollbar = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = 'hidden';
+    if (scrollbar > 0) document.body.style.paddingRight = `${scrollbar}px`;
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.body.style.paddingRight = prevPaddingRight;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [mobileMenuOpen]);
 
   /**
    * v2 canvas nav items. Each renders as lowercase mono with no
@@ -149,12 +179,22 @@ const Navbar: React.FC<NavbarProps> = () => {
         </button>
       </nav>
 
-      {/* Mobile + tablet menu overlay. */}
+      {/* Mobile + tablet menu overlay. 2026-06-04:
+            - dropped the hardcoded top: '64px' (didn't match actual
+              navbar height on small viewports, leaving a strip of
+              underlying page visible above the overlay). The navbar
+              itself sits at z-50 with its own glass background; the
+              overlay at z-40 + inset-0 sits cleanly underneath.
+            - added `inert` when closed so the now-pointer-disabled
+              links no longer remain in the tab order. Without this,
+              keyboard users tabbing through the closed menu hit five
+              invisible items + the Download Link before reaching the
+              page body. */}
       <div
         id="mobile-menu"
         aria-hidden={!mobileMenuOpen}
-        className={`lg:hidden fixed inset-0 bg-background/98 backdrop-blur-md z-40 transition-all duration-300 ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-        style={{ top: '64px' }}
+        inert={!mobileMenuOpen}
+        className={`lg:hidden fixed inset-0 pt-20 bg-background/98 backdrop-blur-md z-40 transition-all duration-300 ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       >
         <div className="flex flex-col items-start px-6 py-8 space-y-6">
           {navItems.map((item) => (
