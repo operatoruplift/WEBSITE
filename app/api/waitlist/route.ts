@@ -27,6 +27,18 @@ export async function POST(request: Request) {
                 { missing: !email ? ['email'] : ['email_format'] },
             );
         }
+        // RFC 5321 maximum local-part + domain length is 254 chars.
+        // Reject longer values to prevent a payload-bloat vector
+        // through Supabase (and to keep arbitrary strings out of the
+        // unique-index column).
+        if (email.length > 254) {
+            return validationError(
+                'Email too long',
+                'Use an email under 254 characters (RFC 5321).',
+                meta,
+                { emailLength: email.length },
+            );
+        }
 
         const result = await joinWaitlist(email, typeof source === 'string' ? source : undefined);
         const count = await totalCount();

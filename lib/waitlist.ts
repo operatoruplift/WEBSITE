@@ -440,12 +440,44 @@ export interface MarkFounderResult {
  * perks. Prevents double-grant if the payment confirmation route is
  * called twice.
  *
+ * Replay protection: each tx signature can only grant Founder status
+ * to ONE email. Before applying the upgrade, we look up any prior
+ * row whose founder_tx matches this signature. If found and assigned
+ * to a different email, we throw — the same on-chain payment cannot
+ * upgrade multiple accounts. (Gracefully skipped when the founder_tx
+ * column does not exist yet, which means the migration has not run
+ * and no prior tx is on record anyway.)
+ *
  * If the email is not yet on the waitlist, joinWaitlist() is called
  * first to allocate a position, then the same row is upgraded.
  */
 export async function markFounder(input: MarkFounderInput): Promise<MarkFounderResult> {
     const supabase = getSupabase();
     const normalized = input.email.trim().toLowerCase();
+
+    // Replay guard: has this tx already claimed Founder status for a
+    // different email? If so, refuse to grant a second time. The
+    // existing per-email idempotency check (below) catches the
+    // legitimate "user re-submits the same form" case; this catches
+    // the "phisher replays one $5 payment across many emails" case.
+    {
+        const { data: priorClaim, error: priorErr } = await supabase
+            .from('waitlist')
+            .select('email, tier')
+            .eq('founder_tx', input.txSignature)
+            .maybeSingle();
+        // Column-not-found errors are non-fatal: the migration may
+        // not have run yet, in which case no replay is possible
+        // because nothing is recorded. Other errors are surfaced.
+        if (priorErr && !/column[^a-z]/i.test(priorErr.message || '')) {
+            throw new Error(`markFounder replay-check failed: ${priorErr.message}`);
+        }
+        if (priorClaim && (priorClaim as { email?: string }).email !== normalized) {
+            throw new Error(
+                `tx_signature already claimed for a different email; one on-chain payment can only upgrade one account`,
+            );
+        }
+    }
 
     const existing = await lookupByEmail(normalized);
     if (existing && (existing as WaitlistRow & { tier?: string }).tier === 'founder') {

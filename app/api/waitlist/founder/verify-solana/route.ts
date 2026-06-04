@@ -36,7 +36,15 @@ export async function POST(request: Request) {
         if (!email || typeof email !== 'string' || !email.includes('@')) {
             return validationError('Valid email required', 'Send the email used to sign up.', meta);
         }
-        if (!txSignature || typeof txSignature !== 'string' || txSignature.length < 40) {
+        if (email.length > 254) {
+            return validationError(
+                'Email too long',
+                'Use an email under 254 characters (RFC 5321).',
+                meta,
+                { emailLength: email.length },
+            );
+        }
+        if (!txSignature || typeof txSignature !== 'string' || txSignature.length < 40 || txSignature.length > 128) {
             return validationError(
                 'Valid Solana tx signature required',
                 'Paste the full transaction signature returned by your wallet after the payment.',

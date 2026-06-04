@@ -54,7 +54,13 @@ export default function WaitlistPage() {
         if (typeof window === 'undefined') return;
         const params = new URLSearchParams(window.location.search);
         const fromQuery = params.get('email');
-        if (fromQuery && fromQuery.includes('@')) {
+        // Cap at 254 chars (RFC 5321) to match the API-side limit so
+        // a long phishing URL can't paste 10KB into the input.
+        if (
+            fromQuery &&
+            fromQuery.length <= 254 &&
+            fromQuery.includes('@')
+        ) {
             setEmail(fromQuery);
         }
     }, []);
@@ -169,6 +175,7 @@ export default function WaitlistPage() {
                                 <input
                                     type="email"
                                     required
+                                    maxLength={254}
                                     autoComplete="email"
                                     autoFocus
                                     enterKeyHint="go"
