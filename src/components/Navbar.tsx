@@ -118,18 +118,19 @@ const Navbar: React.FC<NavbarProps> = () => {
           ))}
         </div>
 
-        {/* Single primary CTA on the right. v2 uses "Download →" in
-            an outline pill. The link points at /waitlist because the
-            iOS + Android apps are not shipped yet (badge in the hero
-            says "iOS & Android coming soon"); /waitlist is the
-            honest path. When the apps ship, swap the href + label. */}
+        {/* Single primary CTA on the right. 2026-06-04: relabeled
+            from "Download →" to "Join the waitlist →" per founder
+            direction. The iOS + Android apps are not shipped yet
+            (hero badge: "iOS & Android coming soon"), so "Download"
+            mismatched the destination (/waitlist) and the action it
+            actually triggers. When the apps ship, swap label + href. */}
         <div className="hidden lg:flex items-center gap-3">
           <ThemeToggle />
           <Link
             href="/waitlist"
             className="inline-flex items-center gap-2 px-4 py-2 font-mono text-[13px] text-foreground border border-foreground/[0.16] bg-foreground/[0.02] hover:border-foreground/40 hover:bg-foreground/[0.06] transition-all"
           >
-            Download
+            Join the waitlist
             <span className="text-primary">→</span>
           </Link>
         </div>
@@ -176,7 +177,7 @@ const Navbar: React.FC<NavbarProps> = () => {
               onClick={() => setMobileMenuOpen(false)}
               className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 font-mono text-sm text-foreground border border-foreground/[0.16] bg-foreground/[0.02] hover:border-foreground/40 transition-all"
             >
-              Download
+              Join the waitlist
               <span className="text-primary">→</span>
             </Link>
           </div>
