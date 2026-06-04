@@ -193,7 +193,7 @@ const Navbar: React.FC<NavbarProps> = () => {
       <div
         id="mobile-menu"
         aria-hidden={!mobileMenuOpen}
-        {...(mobileMenuOpen ? {} : { inert: '' as unknown as boolean })}
+        inert={!mobileMenuOpen}
         className={`lg:hidden fixed inset-0 pt-20 bg-background/98 backdrop-blur-md z-40 transition-all duration-300 ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       >
         <div className="flex flex-col items-start px-6 py-8 space-y-6">
