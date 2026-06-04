@@ -42,6 +42,23 @@ export default function WaitlistPage() {
     const [state, setState] = useState<JoinState>({ kind: 'idle' });
     const [counts, setCounts] = useState<Counts | null>(null);
 
+    // Prefill the email input from ?email= when present. The
+    // homepage FinalCta posts the email as a query param and
+    // navigates here (src/sections/FinalCta.tsx:32-34) so the user
+    // does not have to retype between the closer's inline form and
+    // /waitlist. We validate that it's a string containing '@'
+    // before populating, so a malformed query value doesn't tank
+    // form state. Runs on mount only; subsequent edits use
+    // setEmail through the input's onChange.
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const params = new URLSearchParams(window.location.search);
+        const fromQuery = params.get('email');
+        if (fromQuery && fromQuery.includes('@')) {
+            setEmail(fromQuery);
+        }
+    }, []);
+
     // Pull public counts once on mount so the Founder Member card
     // and the form header can show "N free + M founder members" as
     // social proof before the user opts in. Best-effort; the UI
