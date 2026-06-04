@@ -50,12 +50,15 @@ interface ContractReference {
     label: string;
 }
 
+// 2026-06-05: dropped HACKATHON_GATE2.md + LOOPS_HOUSE_SUBMISSION.md
+// from the cohort. Both docs were retired with the post-pivot maybe
+// prune. The remaining references continue to lock the contract
+// address against drift across the surfaces that judges + operators
+// still hit.
 const REFERENCES: ContractReference[] = [
     { file: 'README.md', label: 'README hackathon submission section' },
     { file: 'app/demo/hackathon/page.tsx', label: 'demo hackathon page chainscan link' },
-    { file: 'docs/HACKATHON_GATE2.md', label: 'HACKATHON_GATE2 verifier cookbook' },
     { file: 'docs/prod-env-checklist.md', label: 'prod-env-checklist mint instructions' },
-    { file: 'docs/LOOPS_HOUSE_SUBMISSION.md', label: 'LOOPS_HOUSE_SUBMISSION reference' },
     { file: 'docs/pitch-video-script.md', label: 'pitch-video script chainscan cut' },
 ];
 

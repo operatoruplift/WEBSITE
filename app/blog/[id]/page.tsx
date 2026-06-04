@@ -366,20 +366,12 @@ function getArticleContent(id: string) {
                 <p>This is not a culture statement about which chain is best. It is the chain that matched what we actually needed.</p>
             </div>
         ),
-        'why-i-built-an-ai-os': (
-            <div className="space-y-6">
-                <p className="text-lg">Balaji told me to pivot.</p>
-                <p>He is one of the smartest people in tech. He looked at what I was building, an AI operating layer with approval-gated tool access and a local-first roadmap, and said: you are competing with Perplexity, OpenAI, Anthropic, and Google. Solo founder. No funding. Walk away.</p>
-                <p>I didn&apos;t.</p>
-                <p>Not because I think I am smarter than Balaji. I don&apos;t. But because the thing he was describing, competing on model quality, on inference speed, on benchmark scores, isn&apos;t what I am building.</p>
-                <p>I am not building a better ChatGPT. I am building the OS layer that runs underneath all of them.</p>
-                <p>Here is the distinction that matters: every AI assistant you use today is a tenant. It lives on someone else&apos;s server. It reads your data, stores your context, and makes decisions about what to remember and what to forget, on their terms, not yours. You don&apos;t own any of it.</p>
-                <p>Operator Uplift is the landlord. The web app today is approval-gated: every tool call, every email, every booking pauses for your tap and emits a signed receipt. The desktop build on the roadmap pulls inference local via Ollama so even the prompt never leaves your machine. The model underneath can be Claude, Llama, GPT, anything. We don&apos;t compete with the models. We are the environment they run in, with the trust and audit primitives the cloud assistants leave out.</p>
-                <p>The pivot Balaji suggested would have made me a better-funded version of something that already exists. Staying the course means building something that doesn&apos;t.</p>
-                <p>I have been homeless. I have built from nothing before. The only thing that has ever worked for me is building something I actually believe in, not something that is easier to explain to investors.</p>
-                <p>So I didn&apos;t pivot. And I am still building.</p>
-            </div>
-        ),
+        // 'why-i-built-an-ai-os' retired 2026-06-05 with the post-
+        // pivot maybe-prune. The "I am building the OS layer, not a
+        // better ChatGPT" framing was the explicit thesis the 2026-05-22
+        // pivot retired. The April 17 'balaji-pivot-advice' post +
+        // the May 21 'why-we-pivoted-to-gamify-your-growth' post still
+        // tell the same story from before-and-after vantage points.
         'what-93-percent-retention-looks-like': (
             <div className="space-y-6">
                 <p className="text-lg">Everyone talks about retention like it is a number. It is not. It is a behavior.</p>
