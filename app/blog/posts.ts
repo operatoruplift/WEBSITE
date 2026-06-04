@@ -146,7 +146,7 @@ export const posts: BlogPost[] = [
     {
         id: 'local-ai-vs-cloud-ai',
         title: 'Local AI vs Cloud AI: The Privacy Case Nobody\'s Making',
-        excerpt: 'The privacy argument for local AI is usually made wrong. It\'s not about surveillance, it\'s about control. The web app routes through whichever provider you pick per turn; the desktop+Ollama path on the roadmap pulls inference fully local. Both layers get the same approval gate and signed receipts.',
+        excerpt: 'Historical post from before the 2026-05-22 pivot. The privacy argument made here informed the current trust-stack design (signed receipts on a public chain, two-network mirroring) but the local-first / Ollama framing has been retired.',
         date: 'April 4, 2026',
         readTime: '4 min read',
         category: 'engineering',

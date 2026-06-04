@@ -1,9 +1,7 @@
 /**
- * Audit log, append-only local record of every tool action taken by agents.
- *
- * Stored in localStorage. When encryption is configured, entries are
- * encrypted at rest via lib/encryption.ts. Used by the Security page and
- * the Security page to show cryptographic proof of actions.
+ * Audit log, append-only local record of every tool action taken by
+ * agents. Stored in localStorage and surfaced server-side through
+ * /api/audit/log + /api/audit/publish-root.
  */
 import { safeWarn, safeError } from './safeLog';
 

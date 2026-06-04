@@ -227,7 +227,7 @@ export default function HackathonDemoPage() {
                         <p className="text-[11px] text-[#52525B] mt-3">
                             Full technical writeup available on request. Email{' '}
                             <a
-                                href="mailto:operatoruplift@gmail.com?subject=HACKATHON_GATE2%20writeup"
+                                href="mailto:operatoruplift@gmail.com?subject=Trust-stack%20writeup"
                                 className="text-[#F08A4C] hover:underline"
                             >
                                 operatoruplift@gmail.com

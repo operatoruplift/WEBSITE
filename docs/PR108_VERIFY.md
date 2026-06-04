@@ -111,7 +111,7 @@ WHERE user_id = 'did:privy:YOUR_ID'
 ## Step 5 — End-to-end paid tool call
 
 1. Go to `/chat`
-2. Type: **"Schedule a 30-minute coffee chat with me tomorrow at 3 PM called 'Loops House demo'"**
+2. Type: **"Schedule a 30-minute coffee chat with me tomorrow at 3 PM called 'trust-stack demo'"**
 3. Approve the tool modal. You should see:
    - Cost badge: `$0.01 USDC · solana-devnet`
    - Click **Pay & Allow Once**
