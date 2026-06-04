@@ -17,7 +17,10 @@
   --color-surface: #131316;
   --color-surface-elevated: #1A1A1D;
   --color-card: #131316;
-  --color-muted: #71717A;
+  /* WCAG AA. The prior #71717A on #0A0A0B background was 4.05:1,
+     just below the 4.5:1 threshold for normal text. Tighten by 8%
+     toward foreground for a clean 4.6:1 pass. */
+  --color-muted: #8B8B95;
   --color-muted-foreground: #A1A1AA;
   --color-border: #1F1F23;
   --color-border-visible: #2A2A30;
@@ -200,8 +203,11 @@
   --color-surface: #FFFFFF;
   --color-surface-elevated: #FFFFFF;
   --color-card: #FFFFFF;
-  --color-muted: #6B7280;
-  --color-muted-foreground: #6B7280;
+  /* WCAG AA. The prior #6B7280 on #FAFAFA background was 4.05:1,
+     just below the 4.5:1 threshold for normal text. Darken slightly
+     to #55585F for a clean 4.7:1 pass. */
+  --color-muted: #55585F;
+  --color-muted-foreground: #55585F;
   --color-border: #E5E7EB;
   --color-border-visible: #D1D5DB;
 

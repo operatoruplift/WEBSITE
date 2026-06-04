@@ -44,6 +44,24 @@ const HeroVideo: React.FC = () => {
         v.volume = 0.3;
     }, []);
 
+    // Respect prefers-reduced-motion: pause autoplay on mount so a
+    // user with the OS-level motion-reduction preference doesn't get
+    // a looping video they didn't ask for. The poster still paints
+    // and the native controls let them play on demand. The global
+    // CSS reduced-motion block only neutralizes CSS transitions, so
+    // we need a JS guard for HTMLMediaElement playback specifically.
+    useEffect(() => {
+        const v = videoRef.current;
+        if (!v) return;
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const apply = () => {
+            if (reduced.matches && !v.paused) v.pause();
+        };
+        apply();
+        reduced.addEventListener('change', apply);
+        return () => reduced.removeEventListener('change', apply);
+    }, []);
+
     // Pause when scrolled offscreen, resume when back in view.
     // Most browsers throttle offscreen autoplay heavily, but an
     // explicit pause is cleaner, saves battery on mobile/laptop,
@@ -51,9 +69,14 @@ const HeroVideo: React.FC = () => {
     // performance. We only auto-resume if the video was playing
     // when it left the viewport, so a user who manually paused
     // it (via native controls) does not get re-played on scroll.
+    // Reduced-motion users never auto-resume since wasPlayingWhenLeft
+    // stays false (the prior effect paused them on mount).
     useEffect(() => {
         const v = videoRef.current;
         if (!v || typeof IntersectionObserver === 'undefined') return;
+
+        const reducedMotion =
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         let wasPlayingWhenLeft = false;
 
@@ -61,7 +84,7 @@ const HeroVideo: React.FC = () => {
             (entries) => {
                 for (const entry of entries) {
                     if (entry.isIntersecting) {
-                        if (wasPlayingWhenLeft && v.paused) {
+                        if (wasPlayingWhenLeft && v.paused && !reducedMotion) {
                             // Promise rejection ignored: autoplay can fail
                             // (user-gesture policies, fullscreen), no need
                             // to surface those.
