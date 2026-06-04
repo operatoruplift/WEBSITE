@@ -472,8 +472,10 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
     if (!post) {
         return (
             <div className="relative w-full bg-background min-h-screen text-foreground">
+                {/* Page-level dot grid, was missing here while /blog index has it. */}
+                <div className="bg-grid-dots" aria-hidden="true" />
                 <Navbar currentPage="blog" />
-                <div className="pt-32 pb-24 px-6 md:px-12 max-w-[800px] mx-auto text-center">
+                <div className="relative z-10 pt-32 pb-24 px-6 md:px-12 max-w-[800px] mx-auto text-center">
                     <h1 className="text-3xl font-medium text-white mb-4">Post not found</h1>
                     <Link href="/blog" className="text-primary hover:underline">Back to blog</Link>
                 </div>
@@ -484,9 +486,11 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
 
     return (
         <div className="relative w-full bg-background min-h-screen text-foreground">
+            {/* Page-level dot grid, was missing here while /blog index has it. */}
+            <div className="bg-grid-dots" aria-hidden="true" />
             <Navbar currentPage="blog" />
 
-            <article id="main" className="pt-32 pb-24 px-6 md:px-12 max-w-[720px] mx-auto">
+            <article id="main" className="relative z-10 pt-32 pb-24 px-6 md:px-12 max-w-[720px] mx-auto">
                 <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-muted hover:text-foreground transition-colors mb-8">
                     <ArrowLeft size={14} /> Back to blog
                 </Link>
