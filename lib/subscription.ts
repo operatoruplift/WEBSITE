@@ -106,11 +106,29 @@ export async function checkSubscription(userId: string, email?: string): Promise
     };
 }
 
-/** Routes that require Pro subscription */
-export const GATED_ROUTES = ['/chat', '/swarm', '/security', '/app', '/agents', '/workflows', '/memory', '/integrations', '/analytics', '/notifications', '/profile'];
+/** Routes that require Pro subscription.
+ *
+ * 2026-06-04: Trimmed from 11 routes to 1 because the other 10
+ * (/chat, /swarm, /security, /app, /agents, /workflows, /memory,
+ * /integrations, /analytics, /notifications, /profile) all render
+ * RetiredSurface cards post-2026-05-22 pivot. Gating a retired
+ * surface to a paid subscription is theatre, the user buys Pro
+ * and still gets a "this surface is retired" card. Drop the gating
+ * so retired surfaces render their honest message to anyone.
+ *
+ * /goals is the only dashboard surface still wired to real product
+ * logic (commitment list + detail), so it remains gated.
+ */
+export const GATED_ROUTES = ['/goals'];
 
-/** Routes accessible on free tier (read-only marketplace) */
-export const FREE_ROUTES = ['/marketplace', '/settings', '/onboarding'];
+/** Routes accessible on free tier.
+ *
+ * 2026-06-04: Emptied because /marketplace, /settings, /onboarding
+ * are all RetiredSurface cards now. There is no free tier surfacing
+ * a read-only marketplace anymore. Leaving the export in place so
+ * any consumer that still imports it gets a stable empty result.
+ */
+export const FREE_ROUTES: string[] = [];
 
 export function isGatedRoute(pathname: string): boolean {
     return GATED_ROUTES.some(r => pathname === r || pathname.startsWith(r + '/'));
