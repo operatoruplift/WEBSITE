@@ -68,8 +68,15 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { CookieConsent } from "@/src/components/CookieConsent";
-import { PrivyWrapper } from "@/src/components/providers/PrivyWrapper";
 import CursorSpotlight from "@/src/components/CursorSpotlight";
+
+// 2026-06-03: PrivyWrapper no longer mounts at the root. The
+// 367KB-brotli @privy-io/react-auth bundle + Solana wallet connectors
+// were loading on every marketing page (homepage, /pricing, /docs,
+// /blog, /faq, etc.) even though none of those pages call usePrivy.
+// Privy now mounts on (auth)/layout.tsx and (dashboard)/layout.tsx,
+// the only routes where its hooks are actually consumed. Audit
+// finding: critical, single largest perf win on the homepage.
 
 export default function RootLayout({
   children,
@@ -157,9 +164,7 @@ export default function RootLayout({
             behind every page surface and tracks the pointer with an
             orange radial gradient. Skipped on touch + reduced-motion. */}
         <CursorSpotlight />
-        <PrivyWrapper>
-          {children}
-        </PrivyWrapper>
+        {children}
         <CookieConsent />
         {/* Vercel Web Analytics + Speed Insights. Privacy-preserving
             (no cookies, no PII, no cross-site fingerprinting) so they
