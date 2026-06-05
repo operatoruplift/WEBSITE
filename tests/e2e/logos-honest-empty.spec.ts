@@ -39,6 +39,11 @@ const MARKETING_SURFACES = [
 
 const SCOPING_DOC = 'docs/LOGOS_TRACKS_SCOPING.md';
 
+// 2026-06-05: LP-0017 dropped from the track list. Its per-track
+// design doc (docs/LOGOS/LP-0017.md) was retired with the post-pivot
+// maybe-prune (#799) because it pitched the wedge as "consumer AI
+// assistant" in present tense. The remaining six tracks still lock
+// the honest "nothing shipped" empty state.
 const LOGOS_TERMS = [
     'LP-0002',
     'LP-0005',
@@ -46,7 +51,6 @@ const LOGOS_TERMS = [
     'LP-0012',
     'LP-0013',
     'LP-0016',
-    'LP-0017',
 ];
 
 test('Logos scoping doc exists at docs/LOGOS_TRACKS_SCOPING.md', () => {
@@ -64,7 +68,7 @@ test('Logos scoping doc names the honest "0 of 7" state', () => {
 });
 
 test('Each LP-XXXX track has a per-track design doc', () => {
-    const tracks = ['LP-0002', 'LP-0005', 'LP-0008', 'LP-0012', 'LP-0013', 'LP-0016', 'LP-0017'];
+    const tracks = ['LP-0002', 'LP-0005', 'LP-0008', 'LP-0012', 'LP-0013', 'LP-0016'];
     for (const t of tracks) {
         const p = path.join(repoRoot, 'docs', 'LOGOS', `${t}.md`);
         expect(fs.existsSync(p), `${p} should exist`).toBe(true);
@@ -77,7 +81,7 @@ test('Each LP-XXXX design doc declares Status: Not entered', () => {
     // Entered" without code shipping, this catches it. To allow a
     // real ship, replace this assertion AFTER the corresponding
     // sibling LEZ project lands.
-    const tracks = ['LP-0002', 'LP-0005', 'LP-0008', 'LP-0012', 'LP-0013', 'LP-0016', 'LP-0017'];
+    const tracks = ['LP-0002', 'LP-0005', 'LP-0008', 'LP-0012', 'LP-0013', 'LP-0016'];
     for (const t of tracks) {
         const src = fs.readFileSync(path.join(repoRoot, 'docs', 'LOGOS', `${t}.md`), 'utf-8');
         expect(src, `${t} must declare Status: Not entered`).toMatch(/Status\*?\*?:\s*Not entered/i);
