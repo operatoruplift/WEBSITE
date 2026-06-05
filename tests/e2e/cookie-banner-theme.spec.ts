@@ -6,11 +6,14 @@ import { test, expect } from '@playwright/test';
  * The CookieConsent banner is rendered at the root layout outside any
  * themed wrapper, so it route-switches its surface explicitly. After
  * the 2026-05-26 default-light flip, the surface allowlist inverted:
- * light by default, dark ONLY for the /arkiv judge terminal aesthetic.
+ * light by default.
  *
- * Without a regression test, anyone moving the cookie banner inside a
- * themed wrapper or re-adding entries to DARK_PATHS would silently
- * flip the banner palette and create chrome/page mismatch.
+ * 2026-06-05: DARK_PATHS is now empty. /arkiv was the only dark-only
+ * surface and it was retired with the post-pivot cleanup (#797), so
+ * every public route now shows the light banner. The "renders DARK
+ * on /arkiv" test was removed with the route. The remaining tests
+ * lock that marketing routes stay LIGHT, which still catches anyone
+ * moving the banner inside a themed wrapper or re-darkening it.
  *
  * Strategy: clear localStorage to force the banner, sample the
  * computed background color, and assert which side of the light/dark
@@ -51,11 +54,6 @@ function parseRgb(rgbString: string): [number, number, number] | null {
     return [Number(match[1]), Number(match[2]), Number(match[3])];
 }
 
-function isDarkSurface(rgb: [number, number, number]): boolean {
-    // Average channel intensity below 60 is unambiguously a dark surface.
-    return (rgb[0] + rgb[1] + rgb[2]) / 3 < 60;
-}
-
 function isLightSurface(rgb: [number, number, number]): boolean {
     // Average channel intensity above 200 is unambiguously a light surface.
     return (rgb[0] + rgb[1] + rgb[2]) / 3 > 200;
@@ -80,27 +78,6 @@ test.describe('cookie banner theme', () => {
             expect(
                 isLightSurface(rgb),
                 `expected light banner on /, got rgb(${rgb.join(', ')}) average ${(rgb[0] + rgb[1] + rgb[2]) / 3}`,
-            ).toBe(true);
-        }
-    });
-
-    test('renders DARK on /arkiv (intentionally dark judge terminal)', async ({ page }) => {
-        await page.context().clearCookies();
-        await page.addInitScript(() => {
-            try { localStorage.removeItem('cookie-consent'); } catch { /* noop */ }
-        });
-        await page.goto('/arkiv', { waitUntil: 'load', timeout: 60_000 });
-        await page.waitForTimeout(2_500);
-
-        const surface = await readBannerSurface(page);
-        expect(surface.found, 'cookie banner not found on /arkiv').toBe(true);
-
-        const rgb = parseRgb(surface.background);
-        expect(rgb, `unexpected background color: ${surface.background}`).not.toBeNull();
-        if (rgb) {
-            expect(
-                isDarkSurface(rgb),
-                `expected dark banner on /arkiv, got rgb(${rgb.join(', ')}) average ${(rgb[0] + rgb[1] + rgb[2]) / 3}. Did /arkiv drop out of DARK_PATHS?`,
             ).toBe(true);
         }
     });

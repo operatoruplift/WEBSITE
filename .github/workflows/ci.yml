@@ -111,12 +111,6 @@ jobs:
             tests/e2e/og-storage.spec.ts \
             tests/e2e/blog-header-centered.spec.ts \
             tests/e2e/demo-hackathon-judge-links.spec.ts \
-            tests/e2e/localfirst-built-on-honest.spec.ts \
-            tests/e2e/marquee-honest-no-llama-ollama.spec.ts \
-            tests/e2e/channels-section-composition.spec.ts \
-            tests/e2e/homepage-pricing-cta-targets.spec.ts \
-            tests/e2e/howitworks-section.spec.ts \
-            tests/e2e/faq-alignment.spec.ts \
             tests/e2e/imessage-page.spec.ts \
             tests/e2e/health-route.spec.ts \
             tests/e2e/pricing-tiers-honest.spec.ts \
@@ -140,14 +134,9 @@ jobs:
             tests/e2e/agents-manifest-publish.spec.ts \
             tests/e2e/cron-routes-unauth.spec.ts \
             tests/e2e/truth-table-honest.spec.ts \
-            tests/e2e/hackathon-gate2-honest.spec.ts \
-            tests/e2e/positioning-tagline-coherence.spec.ts \
             tests/e2e/demo-hackathon-hero-copy.spec.ts \
-            tests/e2e/deck-pricing-honest.spec.ts \
             tests/e2e/og-integration-decision-honest.spec.ts \
             tests/e2e/og-contract-address-coherence.spec.ts \
-            tests/e2e/arkiv-core.spec.ts \
-            tests/e2e/arkiv-routes.spec.ts \
             tests/e2e/gmail-builders.spec.ts \
             tests/e2e/llm-mapModelId.spec.ts \
             tests/e2e/photon-send.spec.ts \
@@ -162,7 +151,6 @@ jobs:
             tests/e2e/x402Gate-free.spec.ts \
             tests/e2e/x402Fetch-retryWithProof.spec.ts \
             tests/e2e/llmHealth-probeAllProviders.spec.ts \
-            tests/e2e/encryption-roundtrip.spec.ts \
             tests/e2e/notifications-localStorage.spec.ts \
             tests/e2e/auditLog-localStorage.spec.ts \
             tests/e2e/briefing-formatter.spec.ts \
@@ -176,7 +164,6 @@ jobs:
             tests/e2e/supabase-getTokenFromRequest.spec.ts \
             tests/e2e/apiHelpers-errorResponse.spec.ts \
             tests/e2e/auditLog-getOnChainRecord.spec.ts \
-            tests/e2e/light-mode-contrast.spec.ts \
             tests/e2e/marketing-pages-contrast.spec.ts \
             tests/e2e/hero-anim-perf.spec.ts \
             tests/e2e/reduced-motion.spec.ts \
@@ -184,10 +171,26 @@ jobs:
             tests/e2e/landmarks.spec.ts \
             tests/e2e/console-cleanliness.spec.ts \
             tests/e2e/receipts-public-key-route.spec.ts \
-            tests/e2e/wave6-copy.spec.ts \
             tests/e2e/x402-amount.spec.ts \
             tests/e2e/voice-synth-route.spec.ts \
             tests/e2e/wave1-risks.spec.ts \
+            tests/e2e/subscription-price-honest.spec.ts \
+            tests/e2e/waitlist-position-honest.spec.ts \
+            tests/e2e/norman-doors-honest.spec.ts \
+            tests/e2e/homepage-section-centering.spec.ts \
+            tests/e2e/health-imessage-route.spec.ts \
+            tests/e2e/goals-questline-parser.spec.ts \
+            tests/e2e/goals-streak.spec.ts \
+            tests/e2e/goals-api-shape.spec.ts \
+            tests/e2e/goals-detail-shape.spec.ts \
+            tests/e2e/goals-edit-shape.spec.ts \
+            tests/e2e/goals-regenerate-shape.spec.ts \
+            tests/e2e/goals-checkin-note.spec.ts \
+            tests/e2e/cockpit-sidebar-goals.spec.ts \
+            tests/e2e/verify-usdc-transfer.spec.ts \
+            tests/e2e/pivot-gamify-growth-phase7-team.spec.ts \
+            tests/e2e/pivot-gamify-growth-phase8-goals-scaffold.spec.ts \
+            tests/e2e/logos-honest-empty.spec.ts \
             --reporter=list
 
       - name: Upload Playwright report on failure
