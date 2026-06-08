@@ -9,12 +9,13 @@ import { isGatedRoute, isFreeRoute } from '@/lib/subscription';
 type SubTier = 'free' | 'pro' | 'enterprise';
 
 /**
- * Routes reachable without auth. Anonymous visitors see these in Demo mode
- * (simulated tool calls, canned chat responses, no Supabase writes). The
- * page itself is responsible for fetching /api/capabilities and rendering
- * the correct Demo/Real badge.
+ * Routes reachable without auth. Anonymous visitors would see these in
+ * Demo mode. Emptied 2026-06-08: /chat was the only auth-optional
+ * surface and it was deleted in the dashboard prune, so every remaining
+ * dashboard route goes through the gate. Kept as a list so re-adding a
+ * public dashboard surface later is a one-line change.
  */
-const AUTH_OPTIONAL_ROUTES = ['/chat'];
+const AUTH_OPTIONAL_ROUTES: string[] = [];
 
 function isAuthOptional(pathname: string | null): boolean {
     if (!pathname) return false;
@@ -35,9 +36,9 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     }, []);
 
     useEffect(() => {
-        // Auth-optional routes (e.g., /chat) render in Demo mode when
-        // unauthenticated. Skip the gate entirely, the page decides
-        // what to show based on /api/capabilities.
+        // Auth-optional routes render without the gate (none today, see
+        // AUTH_OPTIONAL_ROUTES). Kept so a future public surface can opt
+        // out of the gate without restructuring this effect.
         if (authOptional) {
             setChecked(true);
             setHasAccess(true);

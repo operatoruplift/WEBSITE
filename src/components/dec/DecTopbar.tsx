@@ -14,7 +14,7 @@ export function DecTopbar() {
     return (
         <div className="flex z-10 relative items-center justify-between h-8 bg-[#0A0A0A] border-b border-[#222222] px-3 gap-2 shrink-0">
             <div className="flex items-center gap-2">
-                <Link href="/chat" className="flex items-center gap-2" aria-label="Home">
+                <Link href="/goals" className="flex items-center gap-2" aria-label="Home">
                     <Logo className="w-4 h-4" />
                     <span className="text-[11px] font-semibold text-[#FAFAFA]/80 tracking-tight">
                         Operator Uplift
