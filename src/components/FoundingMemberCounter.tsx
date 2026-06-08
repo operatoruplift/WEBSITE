@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { WAITLIST_OFFPLATFORM_BASE } from '@/lib/waitlist-constants';
 
 /**
  * FoundingMemberCounter , live founding-member count rendered as a
@@ -15,30 +16,13 @@ import React, { useEffect, useRef, useState } from 'react';
  *   - Tween respects prefers-reduced-motion: AT users and people
  *     who set that media query see the final number immediately.
  *
- * Display value: max(realWaitlistTotal, MIN_FOUNDING_MEMBERS).
- *
- * Why a floor and not the raw Supabase total?
- *   - The Supabase `waitlist` table only counts email submissions
- *     on this site. The real founding-member cohort also includes
- *     people who pledged via Discord, X DMs, founder direct
- *     outreach, and the earliest pilot cohort that predates the
- *     /waitlist page. The user-flagged count was "at least 53"
- *     (2026-06-04) but the Supabase row count was 19, so the
- *     pre-launch tile under-counted real interest by ~3x.
- *   - The floor is published in MIN_FOUNDING_MEMBERS below. Update
- *     it whenever the founder confirms new off-platform commits.
- *   - Once the Supabase count exceeds the floor, the floor stops
- *     mattering: real signups always win.
+ * Display value: whatever /api/waitlist/counts returns for `total`,
+ * which the server already computes as the off-platform base plus the
+ * live Supabase table count (see lib/waitlist-constants.ts). So the
+ * hero reads 585+ and grows by one with every new web signup. On a
+ * network error we fall back to the off-platform base alone so the
+ * trust signal still works when the counts endpoint is down.
  */
-
-/**
- * Conservative floor for the founding-member display. Reflects
- * pledges that exist outside the `waitlist` table (Discord, founder
- * outreach, early pilot). Bumped 2026-06-04 from 19 (Supabase row
- * count at the time) to 53 per the founder's count of confirmed
- * founding members across all surfaces.
- */
-const MIN_FOUNDING_MEMBERS = 53;
 
 const FoundingMemberCounter: React.FC = () => {
     const [target, setTarget] = useState<number | null>(null);
@@ -51,17 +35,19 @@ const FoundingMemberCounter: React.FC = () => {
             .then((r) => (r.ok ? r.json() : null))
             .then((data) => {
                 if (cancelled) return;
-                const real = data && typeof data.total === 'number' ? data.total : 0;
-                // Take the higher of the real Supabase total and the
-                // published floor. So the tile always reflects at
-                // least the founder-confirmed count, and naturally
-                // grows past it as new signups come in.
-                setTarget(Math.max(real, MIN_FOUNDING_MEMBERS));
+                // The server already folds the off-platform base into
+                // `total`, so use it directly. Fall back to the base
+                // alone if the payload is missing/malformed.
+                const total =
+                    data && typeof data.total === 'number'
+                        ? data.total
+                        : WAITLIST_OFFPLATFORM_BASE;
+                setTarget(total);
             })
             .catch(() => {
-                // Network error: still show the floor so the trust
-                // signal works even when the counts endpoint is down.
-                if (!cancelled) setTarget(MIN_FOUNDING_MEMBERS);
+                // Network error: still show the off-platform base so the
+                // trust signal works even when the counts endpoint is down.
+                if (!cancelled) setTarget(WAITLIST_OFFPLATFORM_BASE);
             });
         return () => {
             cancelled = true;

@@ -60,9 +60,10 @@ jobs:
         run: pnpm exec playwright install chromium --with-deps
 
       # Hermetic Playwright specs. Only the network-free specs run here.
-      # Specs that need real tokens (bypass, paywall, x402-gate,
-      # capability/*) are kept out — they live in a separate workflow
-      # with secrets.
+      # Specs that need real tokens (bypass, paywall, x402-gate) are kept
+      # out — they live in a separate workflow with secrets. The
+      # capability/* demo specs were removed in the 2026-06-08 prune along
+      # with the /chat surface they exercised.
       #
       # Two halves below: the original 17 e2e specs that exercise the
       # dev-server URL contract, and the 17 unit-style specs added in
@@ -80,11 +81,7 @@ jobs:
             tests/e2e/health-adapters.spec.ts \
             tests/e2e/magicblock-honest-status.spec.ts \
             tests/e2e/consumer-copy.spec.ts \
-            tests/e2e/chat-honesty.spec.ts \
-            tests/e2e/dashboard-honesty.spec.ts \
             tests/e2e/request-id-runtime.spec.ts \
-            tests/e2e/agents-store.spec.ts \
-            tests/e2e/demo-flow.spec.ts \
             tests/e2e/photon-webhook.spec.ts \
             tests/e2e/toolSafety.spec.ts \
             tests/e2e/auth-diagnoseJws.spec.ts \
@@ -154,7 +151,6 @@ jobs:
             tests/e2e/notifications-localStorage.spec.ts \
             tests/e2e/auditLog-localStorage.spec.ts \
             tests/e2e/briefing-formatter.spec.ts \
-            tests/e2e/chat-helpers.spec.ts \
             tests/e2e/llm-providerRouting.spec.ts \
             tests/e2e/photon-webhook-helpers.spec.ts \
             tests/e2e/memoryEngine-localStorage.spec.ts \
@@ -188,6 +184,7 @@ jobs:
             tests/e2e/goals-checkin-note.spec.ts \
             tests/e2e/cockpit-sidebar-goals.spec.ts \
             tests/e2e/verify-usdc-transfer.spec.ts \
+            tests/e2e/usdc-transfer-validation.spec.ts \
             tests/e2e/pivot-gamify-growth-phase7-team.spec.ts \
             tests/e2e/pivot-gamify-growth-phase8-goals-scaffold.spec.ts \
             tests/e2e/logos-honest-empty.spec.ts \
