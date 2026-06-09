@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { joinWaitlist, totalCount } from '@/lib/waitlist';
+import { toDisplayTotal } from '@/lib/waitlist-constants';
 import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export const dynamic = 'force-dynamic';
@@ -11,8 +12,10 @@ export const dynamic = 'force-dynamic';
  * Response: { position, alreadyExisted, count, requestId, timestamp }.
  *
  * Position is sequential starting at 301 (see lib/waitlist-position-migration.sql).
- * Repeat signups return the existing position; the field also includes
- * a stable count of total signups so the UI can render "You are #X of Y."
+ * Repeat signups return the existing position; `count` is the public
+ * display total (off-platform base + live table count, see
+ * lib/waitlist-constants.ts) so the UI can render "You are #X of Y" and
+ * the figure ticks up in real time as the just-joined signup lands.
  */
 export async function POST(request: Request) {
     const meta = withRequestMeta(request, 'waitlist.join');
@@ -41,7 +44,7 @@ export async function POST(request: Request) {
         }
 
         const result = await joinWaitlist(email, typeof source === 'string' ? source : undefined);
-        const count = await totalCount();
+        const count = toDisplayTotal(await totalCount());
 
         return NextResponse.json(
             {

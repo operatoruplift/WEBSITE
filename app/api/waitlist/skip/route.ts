@@ -5,9 +5,12 @@ import {
     type SkipTier,
     skipTierByAmount,
 } from '@/lib/waitlist';
+import { verifyUsdcTransferToRecipient } from '@/lib/solana/verify-usdc-transfer';
+import { WAITLIST_PAYMENT_RECIPIENT } from '@/lib/waitlist-constants';
 import { withRequestMeta, errorResponse, validationError } from '@/lib/apiHelpers';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 /**
  * POST /api/waitlist/skip
@@ -21,14 +24,12 @@ export const dynamic = 'force-dynamic';
  *     walletAddress: string (signer, base58)
  *   }
  *
- * Verifies the tier matches the amount + a tx_signature is provided,
- * then bumps the row's position via lib/waitlist.ts::applySkipBump.
- *
- * On-chain verification: the tx_signature must reference the operator
- * treasury wallet. For demo-grade we record the signature but don't
- * yet call back to Solana RPC to confirm the transfer. That live-verify
- * is the next thing to land (it lives in lib/solana/verify-transfer.ts
- * which is queued).
+ * Verifies the tier matches the amount, then confirms the on-chain USDC
+ * transfer (`verifyUsdcTransferToRecipient`: re-reads the tx from Solana
+ * RPC and checks recipient + amount) before bumping the row's position
+ * via lib/waitlist.ts::applySkipBump. The client-supplied tx signature
+ * is untrusted input, so a fabricated or reused signature can never move
+ * someone up the queue without a real payment to the treasury.
  *
  * The route returns the old + new position so the client can render
  * the bump animation.
@@ -78,6 +79,27 @@ export async function POST(request: Request) {
                     .join(', ')}.`,
                 meta,
                 { missing: ['tier', 'amountUsdc'] },
+            );
+        }
+
+        // On-chain verification: confirm the signature really moved at
+        // least the tier price in USDC to the treasury. Reuses the same
+        // verifier as the Founder flow.
+        const verify = await verifyUsdcTransferToRecipient({
+            txSignature,
+            recipient: WAITLIST_PAYMENT_RECIPIENT,
+            minAmountUsdc: Number(amountUsdc),
+        });
+        if (!verify.ok) {
+            return validationError(
+                'Payment not verified',
+                verify.error,
+                meta,
+                {
+                    txSignature,
+                    recipient: WAITLIST_PAYMENT_RECIPIENT,
+                    minAmountUsdc: Number(amountUsdc),
+                },
             );
         }
 

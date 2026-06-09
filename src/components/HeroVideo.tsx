@@ -104,7 +104,12 @@ const HeroVideo: React.FC = () => {
 
     return (
         <div className="relative w-full max-w-[1080px] mx-auto">
-            <div className="relative rounded-2xl overflow-hidden border border-foreground/[0.08] bg-foreground/[0.02] shadow-[0_24px_80px_-24px_rgba(0,0,0,0.4)]">
+            {/* No hard bottom edge: the frame keeps its rounded top + side
+                borders but the bottom is borderless so the video can melt
+                into the page below. The gradient scrim (further down) fades
+                the dark reel into --background, so the hero merges into the
+                problem section with no visible dividing line. */}
+            <div className="relative rounded-2xl rounded-b-none overflow-hidden border border-b-0 border-foreground/[0.08] bg-foreground/[0.02] shadow-[0_24px_80px_-24px_rgba(0,0,0,0.4)]">
                 {/* aspect-ratio holds the box at 16:9 (1080p source) so
                     nothing shifts when the video metadata lands. */}
                 <div className="relative w-full" style={{ aspectRatio: '16 / 9' }}>
@@ -125,6 +130,14 @@ const HeroVideo: React.FC = () => {
                         Your browser does not support inline video. Visit{' '}
                         <a href="/video/launch-1280.mp4">the launch reel</a> directly.
                     </video>
+                    {/* Bottom fade scrim: transparent -> page background so the
+                        dark reel dissolves into the section below instead of
+                        ending in a hard horizontal edge. pointer-events-none
+                        keeps the native controls clickable through it. */}
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-background"
+                    />
                 </div>
             </div>
         </div>

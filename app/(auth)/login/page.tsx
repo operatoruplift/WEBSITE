@@ -37,15 +37,16 @@ export default function LoginPage() {
     }, [ready, authenticated]);
 
     const checkAccess = useCallback(async () => {
-        // Read ?returnTo= for post-login redirect (defaults to /chat).
+        // Read ?returnTo= for post-login redirect (defaults to /goals,
+        // the only live dashboard surface after the 2026-06-08 prune).
         // Only allow same-origin paths to prevent open-redirect.
         const params = typeof window !== 'undefined'
             ? new URLSearchParams(window.location.search)
             : new URLSearchParams();
-        const rawReturnTo = params.get('returnTo') || '/chat';
+        const rawReturnTo = params.get('returnTo') || '/goals';
         const returnTo = rawReturnTo.startsWith('/') && !rawReturnTo.startsWith('//')
             ? rawReturnTo
-            : '/chat';
+            : '/goals';
 
         // Check if user already has local access
         const token = localStorage.getItem('token');
@@ -168,7 +169,7 @@ export default function LoginPage() {
                     id: user?.id || 'anon',
                 }));
                 setView('pay-success');
-                setTimeout(() => router.push('/chat'), 1500);
+                setTimeout(() => router.push('/goals'), 1500);
             } else {
                 setError(data.error || 'Payment not confirmed yet. Please wait and try again.');
             }

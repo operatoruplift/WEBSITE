@@ -98,8 +98,8 @@ export default function PaywallPage() {
                 if (data.active) {
                     localStorage.setItem('subscription_tier', 'pro');
                     setPayState('active');
-                    // ?subscribed=1 triggers the "Real Mode ready" toast on /chat
-                    setTimeout(() => router.push('/chat?subscribed=1'), 1500);
+                    // ?subscribed=1 carries the "subscription ready" intent to /goals
+                    setTimeout(() => router.push('/goals?subscribed=1'), 1500);
                     return;
                 }
             } catch { /* keep polling */ }
@@ -125,7 +125,7 @@ export default function PaywallPage() {
             }
             localStorage.setItem('subscription_tier', 'pro');
             setPayState('active');
-            setTimeout(() => router.push('/chat?subscribed=1'), 1000);
+            setTimeout(() => router.push('/goals?subscribed=1'), 1000);
         } catch (err) {
             setErrorMsg(err instanceof Error ? err.message : 'Simulator error');
             setPayState('failed');

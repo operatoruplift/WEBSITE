@@ -1,9 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { QRCodeSVG } from 'qrcode.react';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
+import type { CheckoutPayment, CheckoutSuccess } from '@/src/components/waitlist/WalletCheckout';
+
+// Lazy-load the wallet checkout (and the Privy bundle it pulls in) only
+// when a visitor starts a payment, so the marketing /waitlist page stays
+// light. ssr:false because Privy + wallet adapters are browser-only.
+const WalletCheckout = dynamic(
+    () => import('@/src/components/waitlist/WalletCheckout'),
+    { ssr: false },
+);
 
 const SKIP_TIERS = [
     {
@@ -41,6 +51,16 @@ export default function WaitlistPage() {
     const [email, setEmail] = useState('');
     const [state, setState] = useState<JoinState>({ kind: 'idle' });
     const [counts, setCounts] = useState<Counts | null>(null);
+    const [checkout, setCheckout] = useState<CheckoutPayment | null>(null);
+
+    // After a verified on-chain payment, reflect it on the page. Founder
+    // payments bump the visible founder count; skip payments change the
+    // user's queue position (shown in the checkout modal itself).
+    const handleCheckoutSuccess = (result: CheckoutSuccess) => {
+        if (result.payment.kind === 'founder') {
+            setCounts((prev) => (prev ? { ...prev, founder: prev.founder + 1 } : prev));
+        }
+    };
 
     // Prefill the email input from ?email= when present. The
     // homepage FinalCta posts the email as a query param and
@@ -108,6 +128,16 @@ export default function WaitlistPage() {
                 throw new Error(body.message || body.error || `HTTP ${res.status}`);
             }
             const body = await res.json();
+            // Reflect the just-joined signup live: the POST returns the
+            // public display total (off-platform base + live table count),
+            // so the social-proof pill ticks up by one the moment you join
+            // instead of waiting for a refresh.
+            if (typeof body.count === 'number') {
+                setCounts((prev) => ({
+                    total: body.count,
+                    founder: prev?.founder ?? 0,
+                }));
+            }
             setState({
                 kind: 'joined',
                 position: body.position,
@@ -209,13 +239,17 @@ export default function WaitlistPage() {
                         </form>
                     )}
 
-                    <FounderTierSection email={email} founderCount={counts?.founder ?? null} />
+                    <FounderTierSection
+                        email={email}
+                        founderCount={counts?.founder ?? null}
+                        onPay={() => setCheckout({ kind: 'founder', amountUsdc: 5 })}
+                    />
 
                     <section className="mt-16 space-y-6">
                         <div className="text-center">
                             <h2 className="text-xl font-medium tracking-tight">Want to go faster?</h2>
                             <p className="text-sm text-muted mt-2 max-w-md mx-auto">
-                                Pay once to bump up the queue. Soon you will be able to pay with Phantom, Solflare, Backpack, or any wallet that supports WalletConnect.
+                                Pay once to bump up the queue. Connect Phantom, Solflare, Backpack, or any wallet that supports WalletConnect.
                             </p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -229,23 +263,33 @@ export default function WaitlistPage() {
                                         ${tier.priceUsdc} <span className="text-sm font-normal text-muted">USDC</span>
                                     </div>
                                     <p className="mt-3 text-sm text-muted flex-1">{tier.description}</p>
-                                    <div
-                                        className="mt-5 w-full rounded-xl bg-foreground/[0.04] py-2.5 text-center text-xs font-medium uppercase tracking-wider text-foreground/50"
-                                        aria-label="Wallet checkout for this tier is not live yet"
+                                    <button
+                                        type="button"
+                                        onClick={() => setCheckout({ kind: 'skip', tier: tier.id, amountUsdc: tier.priceUsdc })}
+                                        className="mt-5 w-full rounded-xl bg-foreground text-background py-2.5 text-center text-xs font-semibold uppercase tracking-wider hover:bg-foreground/90 transition-colors"
                                     >
-                                        Coming next
-                                    </div>
+                                        Pay with wallet
+                                    </button>
                                 </div>
                             ))}
                         </div>
                         <p className="text-center text-xs text-muted">
-                            Wallet checkout opens here when the multi-wallet flow ships. The prices above are locked. We will not raise them on you.
+                            Pay in USDC on Solana; we verify the transfer on-chain before moving you up. The prices above are locked. We will not raise them on you.
                         </p>
                     </section>
                 </div>
             </main>
 
             <Footer />
+
+            {checkout ? (
+                <WalletCheckout
+                    email={email}
+                    payment={checkout}
+                    onClose={() => setCheckout(null)}
+                    onSuccess={handleCheckoutSuccess}
+                />
+            ) : null}
         </div>
     );
 }
@@ -315,12 +359,20 @@ function JoinedCard({
 
 /**
  * Founder Member tier card. $5 USDC at signup -> vanity badge on
- * the dashboard + 500 XP head start. Shows the Solana payment
- * address inline (founder spec) and a copy-to-clipboard button.
- * Phase 2 will replace the manual-copy flow with a Solana Pay
- * QR + Privy wallet button + tx verification.
+ * the dashboard + 500 XP head start. Primary path is the one-click
+ * wallet checkout (onPay -> WalletCheckout); the Solana Pay QR +
+ * copy-address + manual tx-signature flow stays below as a fallback
+ * for anyone who would rather pay by hand.
  */
-function FounderTierSection({ email, founderCount }: { email: string; founderCount: number | null }) {
+function FounderTierSection({
+    email,
+    founderCount,
+    onPay,
+}: {
+    email: string;
+    founderCount: number | null;
+    onPay: () => void;
+}) {
     const RECIPIENT = 'Hory1jnLvqdaiFYmSVWevVSCKzfrZLTfDizoA6veVmQ2';
     const PRICE_USDC = 5;
     const USDC_MINT = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
@@ -383,6 +435,18 @@ function FounderTierSection({ email, founderCount }: { email: string; founderCou
                     <li>+500 XP banked against your first session.</li>
                     <li>You also keep your free waitlist slot. The badge is on top of, not instead of.</li>
                 </ul>
+                <button
+                    type="button"
+                    onClick={onPay}
+                    className="w-full rounded-xl bg-[#F08A4C] text-white py-3 text-sm font-semibold hover:bg-[#F08A4C]/90 transition-colors"
+                >
+                    Pay $5 USDC with wallet
+                </button>
+                <div className="flex items-center gap-3 text-[11px] font-mono uppercase tracking-[0.16em] text-muted/70">
+                    <span className="h-px flex-1 bg-foreground/10" />
+                    or pay manually
+                    <span className="h-px flex-1 bg-foreground/10" />
+                </div>
                 <div className="rounded-xl border border-foreground/10 bg-background/40 p-4 space-y-3">
                     <div className="flex items-center justify-between gap-3 flex-wrap">
                         <div className="text-xs font-mono tracking-[0.12em] text-muted uppercase">

@@ -50,12 +50,39 @@ const baseConfig: NextConfig = isDesktop
               // so it resolves locally without redirect. /changelog still
               // redirects to /blog because we never built a separate
               // changelog route.
+              //
+              // The 14 retired dashboard routes were deleted in the
+              // 2026-06-08 prune (already RetiredSurface stubs left over
+              // from the AI-assistant product). Redirect their old URLs
+              // to the homepage so inbound links and bookmarks never 404.
+              // /goals is the only surviving dashboard surface.
+              const retiredDashboardRoutes = [
+                  '/chat',
+                  '/swarm',
+                  '/memory',
+                  '/workflows',
+                  '/marketplace',
+                  '/integrations',
+                  '/agents',
+                  '/app',
+                  '/analytics',
+                  '/notifications',
+                  '/onboarding',
+                  '/profile',
+                  '/security',
+                  '/settings',
+              ];
               return [
                   {
                       source: '/changelog',
                       destination: '/blog',
                       permanent: false,
                   },
+                  ...retiredDashboardRoutes.map((source) => ({
+                      source,
+                      destination: '/',
+                      permanent: false,
+                  })),
               ];
           },
       };
