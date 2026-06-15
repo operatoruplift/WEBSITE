@@ -11,7 +11,7 @@ import { WAITLIST_OFFPLATFORM_BASE } from '@/lib/waitlist-constants';
  *
  * Visual: large mono numeral on the left, label on the right.
  *   - Counts up from 0 to the displayed total over ~900ms on mount.
- *   - "founding member spots claimed" stays static while the
+ *   - "people on the waitlist" stays static while the
  *     numeral animates.
  *   - Tween respects prefers-reduced-motion: AT users and people
  *     who set that media query see the final number immediately.
@@ -93,7 +93,7 @@ const FoundingMemberCounter: React.FC = () => {
     return (
         <div
             className="inline-flex items-center gap-3 px-6 py-3 mb-8 md:mb-10 rounded-xl border border-primary/20 bg-primary/[0.04] font-mono"
-            aria-label={`${target} founding member ${target === 1 ? 'spot' : 'spots'} claimed`}
+            aria-label={`${target} people ${target === 1 ? 'is' : 'are'} on the waitlist`}
         >
             <span
                 aria-hidden="true"
@@ -104,7 +104,7 @@ const FoundingMemberCounter: React.FC = () => {
             <div aria-hidden="true" className="h-8 w-px bg-primary/20" />
             <div className="text-left">
                 <p className="text-sm font-bold text-foreground leading-tight">
-                    founding member spots claimed
+                    people on the waitlist
                 </p>
                 <p className="text-[11px] text-muted leading-tight">
                     Join early. Lock in founding pricing forever.
