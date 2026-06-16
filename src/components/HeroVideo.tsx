@@ -11,12 +11,9 @@ import React, { useEffect, useRef } from 'react';
  * UI so users get scrubber, play/pause, mute toggle, volume
  * slider, and fullscreen in one familiar bar.
  *
- * Files: public/video/launch-1280.mp4 (h264 + aac 96k). The
- * WebM source was dropped 2026-06-03 because two-pass VP9 ended
- * up larger than the MP4 for this specific content (heavy text
- * + simple graphics, where H.264 has no efficiency disadvantage),
- * meaning every WebM-preferring browser was paying a larger
- * download. H.264 has universal browser support so a single
+ * Files: public/video/trailer-v5-1280.mp4 (h264 + aac 96k,
+ * compressed from the 51MB 1920x1080 50fps source to 1280px wide
+ * 30fps CRF 28). H.264 has universal browser support so a single
  * source is fine.
  *
  * Autoplay muted (the only way modern browsers allow inline
@@ -109,7 +106,7 @@ const HeroVideo: React.FC = () => {
                 into the page below. The gradient scrim (further down) fades
                 the dark reel into --background, so the hero merges into the
                 problem section with no visible dividing line. */}
-            <div className="relative rounded-2xl rounded-b-none overflow-hidden border border-b-0 border-foreground/[0.08] bg-foreground/[0.02] shadow-[0_24px_80px_-24px_rgba(0,0,0,0.4)]">
+            <div className="relative rounded-2xl rounded-b-none overflow-hidden border border-b-0 border-foreground/[0.08] bg-foreground/[0.02]">
                 {/* aspect-ratio holds the box at 16:9 (1080p source) so
                     nothing shifts when the video metadata lands. */}
                 <div className="relative w-full" style={{ aspectRatio: '16 / 9' }}>
@@ -123,12 +120,12 @@ const HeroVideo: React.FC = () => {
                         controls
                         controlsList="nodownload"
                         preload="metadata"
-                        poster="/video/launch-poster.jpg"
+                        poster="/video/trailer-v5-poster.jpg"
                         aria-label="Operator Uplift launch reel"
                     >
-                        <source src="/video/launch-1280.mp4" type="video/mp4" />
+                        <source src="/video/trailer-v5-1280.mp4" type="video/mp4" />
                         Your browser does not support inline video. Visit{' '}
-                        <a href="/video/launch-1280.mp4">the launch reel</a> directly.
+                        <a href="/video/trailer-v5-1280.mp4">the launch reel</a> directly.
                     </video>
                     {/* Bottom fade scrim: transparent -> page background so the
                         dark reel dissolves into the section below instead of
@@ -136,7 +133,7 @@ const HeroVideo: React.FC = () => {
                         keeps the native controls clickable through it. */}
                     <div
                         aria-hidden="true"
-                        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-background"
+                        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background"
                     />
                 </div>
             </div>
