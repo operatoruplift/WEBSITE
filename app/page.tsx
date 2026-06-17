@@ -4,7 +4,7 @@ import Navbar from '@/src/components/Navbar';
 import Hero from '@/src/sections/Hero';
 import ProblemSection from '@/src/sections/ProblemSection';
 import AppSection from '@/src/sections/AppSection';
-import HowItWorksSection from '@/src/sections/HowItWorksSection';
+import PhaseScrollySection from '@/src/sections/PhaseScrollySection';
 import DownloadSection from '@/src/sections/DownloadSection';
 import FinalCta from '@/src/sections/FinalCta';
 import Footer from '@/src/components/Footer';
@@ -23,7 +23,7 @@ export default function Home() {
         <Hero />
         <ProblemSection />
         <AppSection />
-        <HowItWorksSection />
+        <PhaseScrollySection />
         <DownloadSection />
         <FinalCta />
       </main>
