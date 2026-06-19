@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { X } from 'lucide-react';
 import ThemeToggle from '@/src/components/ThemeToggle';
 /**
  * Brand mark uses the real hexagon-sparkle logo at
@@ -179,48 +180,106 @@ const Navbar: React.FC<NavbarProps> = () => {
         </button>
       </nav>
 
-      {/* Mobile + tablet menu overlay. 2026-06-04:
-            - dropped the hardcoded top: '64px' (didn't match actual
-              navbar height on small viewports, leaving a strip of
-              underlying page visible above the overlay). The navbar
-              itself sits at z-50 with its own glass background; the
-              overlay at z-40 + inset-0 sits cleanly underneath.
-            - added `inert` when closed so the now-pointer-disabled
-              links no longer remain in the tab order. Without this,
-              keyboard users tabbing through the closed menu hit five
-              invisible items + the Download Link before reaching the
-              page body. */}
+      {/* Backdrop: dims and blurs the page behind the sheet.
+          Clicking the backdrop closes the menu. */}
+      <div
+        aria-hidden="true"
+        onClick={() => setMobileMenuOpen(false)}
+        className={`lg:hidden fixed inset-0 bg-background/60 backdrop-blur-sm z-40 transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+      />
+
+      {/* Slide-in sheet from the right. Sheet slides in from
+          translateX(100%) to translateX(0) with a snappy
+          cubic-bezier, matching the premium fintech sheet pattern.
+          The backdrop above handles close-on-tap outside the sheet. */}
       <div
         id="mobile-menu"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
         aria-hidden={!mobileMenuOpen}
         inert={!mobileMenuOpen}
-        className={`lg:hidden fixed inset-0 pt-20 bg-background/98 backdrop-blur-md z-40 transition-all duration-300 ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        className={`lg:hidden fixed right-0 top-0 h-full w-[min(88vw,340px)] flex flex-col z-50 transition-transform duration-[420ms] ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        style={{
+          background: 'color-mix(in oklch, var(--color-surface) 96%, transparent)',
+          backdropFilter: 'blur(24px) saturate(160%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(160%)',
+          borderLeft: '1px solid color-mix(in oklch, var(--color-foreground) 8%, transparent)',
+          transitionTimingFunction: mobileMenuOpen ? 'cubic-bezier(0.22,1,0.36,1)' : 'cubic-bezier(0.55,0,1,0.45)',
+        }}
       >
-        <div className="flex flex-col items-start px-6 py-8 space-y-6">
-          {navItems.map((item) => (
+        {/* Sheet header: logo + close button */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-foreground/[0.06]">
+          <Link
+            href="/"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-2.5"
+            aria-label="Operator Uplift home"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/operator-uplift-mark-64.png"
+              alt=""
+              aria-hidden="true"
+              width={28}
+              height={28}
+              className="w-7 h-7 object-contain"
+            />
+            <span className="font-mono text-sm tracking-[0.02em] text-foreground">
+              operator<span className="text-primary px-[2px]">·</span>uplift
+            </span>
+          </Link>
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="w-10 h-10 rounded-full bg-foreground/[0.06] flex items-center justify-center hover:bg-foreground/[0.1] transition-colors"
+            aria-label="Close menu"
+          >
+            <X size={18} className="text-foreground" />
+          </button>
+        </div>
+
+        {/* Nav links with stagger-in animation */}
+        <nav className="flex-1 flex flex-col px-3 py-5 gap-1 overflow-y-auto">
+          {navItems.map((item, i) => (
             <a
               key={item.href}
               href={item.href}
               onClick={() => setMobileMenuOpen(false)}
-              className="font-mono text-lg text-foreground hover:text-primary transition-colors"
+              className="font-mono text-base text-foreground hover:text-primary px-4 py-3 rounded-lg hover:bg-foreground/[0.04] transition-colors"
+              style={{
+                opacity: mobileMenuOpen ? 1 : 0,
+                transform: mobileMenuOpen ? 'none' : 'translateX(12px)',
+                transition: mobileMenuOpen
+                  ? `opacity 0.35s ease ${170 + i * 45}ms, transform 0.35s cubic-bezier(0.16,1,0.3,1) ${170 + i * 45}ms`
+                  : 'none',
+              }}
             >
               {item.label}
             </a>
           ))}
+        </nav>
 
-          <div className="w-full h-px bg-foreground/10 my-3" />
-
-          <div className="flex items-center gap-3 w-full">
+        {/* Footer CTA */}
+        <div
+          className="px-4 pb-6 pt-4 border-t border-foreground/[0.06] flex flex-col gap-3"
+          style={{
+            opacity: mobileMenuOpen ? 1 : 0,
+            transform: mobileMenuOpen ? 'none' : 'translateY(8px)',
+            transition: mobileMenuOpen ? 'opacity 0.4s ease 380ms, transform 0.4s ease 380ms' : 'none',
+          }}
+        >
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-[11px] tracking-[0.14em] text-muted uppercase">Theme</span>
             <ThemeToggle />
-            <Link
-              href="/waitlist"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 font-mono text-sm text-foreground border border-foreground/[0.16] bg-foreground/[0.02] hover:border-foreground/40 transition-all"
-            >
-              Join the waitlist
-              <span className="text-primary">→</span>
-            </Link>
           </div>
+          <Link
+            href="/waitlist"
+            onClick={() => setMobileMenuOpen(false)}
+            className="inline-flex items-center justify-center gap-2 px-4 py-3 font-mono text-sm text-foreground border border-foreground/[0.16] bg-foreground/[0.02] hover:border-foreground/40 transition-all"
+          >
+            Join the waitlist
+            <span className="text-primary">→</span>
+          </Link>
         </div>
       </div>
     </>
