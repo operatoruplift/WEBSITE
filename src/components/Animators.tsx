@@ -1,5 +1,78 @@
 import React, { useEffect, useState, useRef } from 'react';
 
+// --- SPLIT TEXT ANIMATION ---
+// Word-by-word stagger. Each word slides up from translateY(18px) into place
+// with a cascading delay. Inspired by editorial heading patterns from fintech
+// landing pages. Reduced-motion: skips animation and shows text immediately.
+interface SplitTextProps {
+  text: string;
+  className?: string;
+  baseDelay?: number;
+  wordDelay?: number;
+}
+
+export const SplitText: React.FC<SplitTextProps> = ({
+  text,
+  className = '',
+  baseDelay = 0,
+  wordDelay = 65,
+}) => {
+  const [triggered, setTriggered] = useState(false);
+  const [prefersReduced, setPrefersReduced] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReduced(mq.matches);
+    if (mq.matches) setTriggered(true);
+    const onChange = (e: MediaQueryListEvent) => {
+      setPrefersReduced(e.matches);
+      if (e.matches) setTriggered(true);
+    };
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  useEffect(() => {
+    if (prefersReduced) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTriggered(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => { if (ref.current) observer.unobserve(ref.current); };
+  }, [prefersReduced]);
+
+  const words = text.trim().split(/\s+/);
+
+  return (
+    <span ref={ref} className={className} aria-label={text}>
+      {words.map((word, i) => (
+        <span
+          key={i}
+          aria-hidden="true"
+          style={{
+            display: 'inline-block',
+            opacity: triggered ? 1 : 0,
+            transform: triggered ? 'none' : 'translateY(18px)',
+            transition: prefersReduced
+              ? 'none'
+              : `opacity 0.55s cubic-bezier(0.16,1,0.3,1) ${baseDelay + i * wordDelay}ms, transform 0.55s cubic-bezier(0.16,1,0.3,1) ${baseDelay + i * wordDelay}ms`,
+          }}
+        >
+          {word}{i < words.length - 1 ? ' ' : ''}
+        </span>
+      ))}
+    </span>
+  );
+};
+
+
 // --- FADE IN ANIMATION ---
 interface FadeInProps {
   children: React.ReactNode;

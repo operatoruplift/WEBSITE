@@ -1,7 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { APP_CONTENT } from '@/src/services/dataService';
-import { FadeIn } from '@/src/components/Animators';
+import { FadeIn, SplitText } from '@/src/components/Animators';
 import HeroSpotlight from '@/src/components/HeroSpotlight';
 import HeroVideo from '@/src/components/HeroVideo';
 import FoundingMemberCounter from '@/src/components/FoundingMemberCounter';
@@ -91,24 +92,19 @@ const Hero: React.FC = () => {
         {/* Deck-scale headline. clamp(56px → 12vw → 168px) mirrors the
             pitch deck cover which renders the title at roughly 160px
             on a 1080p slide. Left-aligned to match the deck composition. */}
-        <FadeIn delay={250}>
-          <h1
-            id="hero-heading"
-            className="font-medium tracking-[-0.045em] leading-[0.9] text-foreground"
-            style={{ fontSize: 'clamp(44px, 7vw, 104px)', textWrap: 'balance' as React.CSSProperties['textWrap'] }}
-          >
-            {/* {' '} + <br /> keeps textContent reading as one phrase
-                for the Playwright copy spec while the visible layout
-                still breaks at the sentence boundary. */}
-            {headlineFirst}{' '}
-            {headlineSecond && (
-              <>
-                <br />
-                <span className="text-primary">{headlineSecond}</span>
-              </>
-            )}
-          </h1>
-        </FadeIn>
+        <h1
+          id="hero-heading"
+          className="font-medium tracking-[-0.045em] leading-[0.9] text-foreground"
+          style={{ fontSize: 'clamp(44px, 7vw, 104px)', textWrap: 'balance' as React.CSSProperties['textWrap'] }}
+        >
+          <SplitText text={headlineFirst} baseDelay={250} wordDelay={70} />
+          {headlineSecond && (
+            <>
+              <br />
+              <SplitText text={headlineSecond} className="text-primary" baseDelay={520} wordDelay={70} />
+            </>
+          )}
+        </h1>
 
         {/* Subhead, deck-style two-tone. Accent the word "consequences"
             so the brand thesis hits visually as well as semantically. */}
@@ -127,17 +123,19 @@ const Hero: React.FC = () => {
           <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center flex-wrap">
             <Link
               href="/waitlist"
-              className="group relative overflow-hidden inline-flex items-center justify-center gap-2 px-7 py-4 bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-primary hover:shadow-[0_0_32px_rgba(240,138,76,0.55)] hover:-translate-y-px active:translate-y-0 transition-[transform,box-shadow] duration-200"
+              className="group relative overflow-hidden inline-flex items-center gap-3 pl-7 pr-2 py-2 bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-primary hover:shadow-[0_0_32px_rgba(240,138,76,0.55)] hover:-translate-y-px active:translate-y-0 transition-[transform,box-shadow] duration-200"
             >
-              {/* Sheen overlay (nslevelup-style): glossy top-half
-                  gradient that gives the button a subtle 3D pill look.
-                  pointer-events-none so it never blocks the click. */}
               <span
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 to-transparent"
               />
               <span className="relative">Join the waitlist</span>
-              <span className="relative font-mono">→</span>
+              <span
+                aria-hidden="true"
+                className="relative w-9 h-9 rounded-full bg-[#0A0A0B]/20 flex items-center justify-center group-hover:bg-[#0A0A0B]/30 transition-colors duration-200"
+              >
+                <ArrowRight size={14} className="text-[#0A0A0B]" />
+              </span>
             </Link>
             <a
               href="#how-it-works"
