@@ -1,8 +1,10 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import { APP_CONTENT } from '@/src/services/dataService';
-import { FadeIn, SplitText } from '@/src/components/Animators';
+import { FadeIn, SplitChars } from '@/src/components/Animators';
 import HeroSpotlight from '@/src/components/HeroSpotlight';
 import HeroVideo from '@/src/components/HeroVideo';
 import FoundingMemberCounter from '@/src/components/FoundingMemberCounter';
@@ -42,9 +44,65 @@ import FoundingMemberCounter from '@/src/components/FoundingMemberCounter';
  * ("the terminal animation should be removed"); the AppSection
  * phone mockups carry the product-preview load now.
  */
+type CtaState = 'idle' | 'form' | 'done';
+
 const Hero: React.FC = () => {
   const data = APP_CONTENT.hero;
   const [headlineFirst, headlineSecond] = splitHeadline(data.headline);
+
+  // Email capture CTA state machine (Asme inline-capture pattern).
+  // idle  -> click "Join the waitlist" -> form
+  // form  -> valid submit             -> done  (or redirect to /waitlist on error)
+  // ESC while form is open            -> idle
+  const [ctaState, setCtaState] = useState<CtaState>('idle');
+  const [emailVal, setEmailVal] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [signupResult, setSignupResult] = useState<{ position: number; count: number } | null>(null);
+  const [typedPlaceholder, setTypedPlaceholder] = useState('');
+  const emailInputRef = useRef<HTMLInputElement>(null);
+
+  // Typewriter effect on the email input placeholder (Asme pattern).
+  useEffect(() => {
+    if (ctaState !== 'form') { setTypedPlaceholder(''); return; }
+    const target = 'your@email.com';
+    let i = 0;
+    const id = setInterval(() => {
+      if (i >= target.length) { clearInterval(id); return; }
+      setTypedPlaceholder(target.slice(0, ++i));
+    }, 55);
+    setTimeout(() => emailInputRef.current?.focus(), 80);
+    return () => clearInterval(id);
+  }, [ctaState]);
+
+  // ESC closes the form.
+  useEffect(() => {
+    if (ctaState !== 'form') return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setCtaState('idle'); setEmailVal(''); }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [ctaState]);
+
+  async function handleWaitlistSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailVal, source: 'hero-cta' }),
+      });
+      const data = await res.json();
+      setSignupResult({ position: data.position, count: data.count });
+      setCtaState('done');
+    } catch {
+      window.location.href = '/waitlist';
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <section
@@ -70,14 +128,26 @@ const Hero: React.FC = () => {
           </span>
         </FadeIn>
 
-        {/* Badge with pulse, mono-pill style at the top of the column. */}
+        {/* Badge: glassmorphism pill with inner "BETA" chip.
+            Asme "New | text" pattern adapted to OU colors.
+            backdrop-blur gives a subtle depth against the dot-grid. */}
         <FadeIn delay={150} direction="down">
-          <div className="inline-flex items-center gap-3 px-3.5 py-2 mb-12 md:mb-16 rounded-full border border-foreground/[0.12] bg-foreground/[0.02] font-mono text-xs text-muted">
-            <span className="relative flex w-1.5 h-1.5">
-              <span className="absolute inline-flex w-full h-full rounded-full bg-primary opacity-75 animate-ping" />
-              <span className="relative inline-flex rounded-full w-1.5 h-1.5 bg-primary shadow-[0_0_12px_var(--color-primary)]" />
+          <div
+            className="inline-flex items-center gap-2.5 pl-1.5 pr-4 py-1.5 mb-12 md:mb-16 rounded-full border border-foreground/[0.12] font-mono text-xs text-muted"
+            style={{
+              background: 'rgba(240,138,76,0.05)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+            }}
+          >
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary text-[#0A0A0B] text-[9px] tracking-[0.14em] font-semibold">
+              <span className="relative flex w-1 h-1">
+                <span className="absolute inline-flex w-full h-full rounded-full bg-[#0A0A0B]/40 animate-ping" />
+                <span className="relative inline-flex rounded-full w-1 h-1 bg-[#0A0A0B]" />
+              </span>
+              BETA
             </span>
-            <span>Now in private beta · iOS &amp; Android coming soon</span>
+            <span>private beta · iOS &amp; Android coming soon</span>
           </div>
         </FadeIn>
 
@@ -97,11 +167,11 @@ const Hero: React.FC = () => {
           className="font-medium tracking-[-0.045em] leading-[0.9] text-foreground"
           style={{ fontSize: 'clamp(44px, 7vw, 104px)', textWrap: 'balance' as React.CSSProperties['textWrap'] }}
         >
-          <SplitText text={headlineFirst} baseDelay={250} wordDelay={70} />
+          <SplitChars text={headlineFirst} baseDelay={250} charDelay={22} />
           {headlineSecond && (
             <>
               <br />
-              <SplitText text={headlineSecond} className="text-primary" baseDelay={520} wordDelay={70} />
+              <SplitChars text={headlineSecond} className="text-primary" baseDelay={490} charDelay={22} />
             </>
           )}
         </h1>
@@ -118,25 +188,79 @@ const Hero: React.FC = () => {
           </p>
         </FadeIn>
 
-        {/* Primary + secondary CTAs */}
+        {/* Primary + secondary CTAs.
+            Primary cycles through three states (Asme inline-capture pattern):
+            idle  -> shows "Join the waitlist" button
+            form  -> inline email pill with typewriter placeholder
+            done  -> position confirmation with link to full /waitlist page */}
         <FadeIn delay={550}>
-          <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center flex-wrap">
-            <Link
-              href="/waitlist"
-              className="group relative overflow-hidden inline-flex items-center gap-3 pl-7 pr-2 py-2 bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-primary hover:shadow-[0_0_32px_rgba(240,138,76,0.55)] hover:-translate-y-px active:translate-y-0 transition-[transform,box-shadow] duration-200"
-            >
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 to-transparent"
-              />
-              <span className="relative">Join the waitlist</span>
-              <span
-                aria-hidden="true"
-                className="relative w-9 h-9 rounded-full bg-[#0A0A0B]/20 flex items-center justify-center group-hover:bg-[#0A0A0B]/30 transition-colors duration-200"
+          <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-3 justify-center items-center flex-wrap">
+
+            {/* idle: standard CTA button; click shows the inline form */}
+            {ctaState === 'idle' && (
+              <Link
+                href="/waitlist"
+                onClick={(e) => { e.preventDefault(); setCtaState('form'); }}
+                className="group relative overflow-hidden inline-flex items-center gap-3 pl-7 pr-2 py-2 bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-primary hover:shadow-[0_0_32px_rgba(240,138,76,0.55)] hover:-translate-y-px active:translate-y-0 transition-[transform,box-shadow] duration-200"
               >
-                <ArrowRight size={14} className="text-[#0A0A0B]" />
-              </span>
-            </Link>
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 to-transparent"
+                />
+                <span className="relative">Join the waitlist</span>
+                <span
+                  aria-hidden="true"
+                  className="relative w-9 h-9 rounded-full bg-[#0A0A0B]/20 flex items-center justify-center group-hover:bg-[#0A0A0B]/30 transition-colors duration-200"
+                >
+                  <ArrowRight size={14} className="text-[#0A0A0B]" />
+                </span>
+              </Link>
+            )}
+
+            {/* form: email input pill. ESC or submit exits. */}
+            {ctaState === 'form' && (
+              <form
+                onSubmit={handleWaitlistSubmit}
+                className="inline-flex items-center gap-2 pl-5 pr-1.5 py-1.5 border border-primary/60 focus-within:border-primary bg-primary/[0.04] font-mono text-sm transition-colors duration-200"
+                style={{ minWidth: 264 }}
+              >
+                <input
+                  ref={emailInputRef}
+                  type="email"
+                  value={emailVal}
+                  onChange={(e) => setEmailVal(e.target.value)}
+                  placeholder={typedPlaceholder}
+                  required
+                  autoComplete="email"
+                  className="flex-1 bg-transparent text-foreground placeholder-muted/40 outline-none text-sm font-mono tracking-[0.02em]"
+                  aria-label="Email address for waitlist"
+                />
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  aria-label="Submit"
+                  className="w-9 h-9 rounded-full bg-primary flex items-center justify-center hover:bg-primary/85 transition-colors duration-200 disabled:opacity-40 shrink-0"
+                >
+                  <ArrowRight size={14} className="text-[#0A0A0B]" />
+                </button>
+              </form>
+            )}
+
+            {/* done: position confirmation */}
+            {ctaState === 'done' && signupResult && (
+              <div className="inline-flex items-center gap-3 pl-3 pr-4 py-2 border border-primary/30 bg-primary/[0.04] font-mono text-sm text-foreground">
+                <span className="w-7 h-7 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
+                  <Check size={13} className="text-primary" />
+                </span>
+                <span className="text-foreground/80">
+                  #{signupResult.position} of {signupResult.count} on the list
+                </span>
+                <Link href="/waitlist" className="text-primary text-xs hover:underline shrink-0">
+                  more →
+                </Link>
+              </div>
+            )}
+
             <a
               href="#how-it-works"
               className="inline-flex items-center justify-center gap-2 px-7 py-4 border border-foreground/[0.14] bg-foreground/[0.02] text-foreground font-mono text-sm tracking-[0.02em] hover:border-foreground/40 transition-all"
