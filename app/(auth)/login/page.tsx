@@ -244,9 +244,9 @@ export default function LoginPage() {
 
                         {/* Gate view */}
                         {view === 'gate' && (
-                            <div className="space-y-6">
-                                <div className="space-y-3">
-                                    <p className="text-xs text-muted/50 uppercase tracking-widest font-mono mb-3">Sign in to continue</p>
+                            <div className="space-y-5">
+                                {/* Social sign-in */}
+                                <div className="space-y-2.5">
                                     <button
                                         onClick={() => login({ loginMethods: ['google'] })}
                                         className="w-full flex items-center justify-center gap-3 h-12 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 text-white text-sm font-medium transition-all"
@@ -270,9 +270,24 @@ export default function LoginPage() {
                                     </button>
                                 </div>
 
+                                {/* OR divider + amber email CTA (wintel pattern) */}
                                 <div className="relative">
-                                    <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/5" /></div>
-                                    <div className="relative flex justify-center"><span className="bg-background px-3 text-[10px] text-muted/40 font-mono uppercase tracking-widest">then choose access</span></div>
+                                    <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/[0.06]" /></div>
+                                    <div className="relative flex justify-center"><span className="bg-background px-3 text-[10px] text-muted/40 font-mono uppercase tracking-widest">OR</span></div>
+                                </div>
+                                <button
+                                    onClick={() => login({ loginMethods: ['email'] })}
+                                    className="w-full flex items-center justify-center gap-2.5 h-12 rounded-xl bg-primary text-[#0A0A0B] text-sm font-semibold tracking-[0.01em] hover:bg-primary/90 hover:shadow-[0_0_24px_rgba(240,138,76,0.4)] transition-all"
+                                >
+                                    <Mail size={15} />
+                                    Continue with email
+                                    <ArrowRight size={14} />
+                                </button>
+
+                                {/* Access tier choice */}
+                                <div className="relative">
+                                    <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/[0.06]" /></div>
+                                    <div className="relative flex justify-center"><span className="bg-background px-3 text-[10px] text-muted/40 font-mono uppercase tracking-widest">or choose access</span></div>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-3">
