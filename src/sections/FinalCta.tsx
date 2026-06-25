@@ -25,6 +25,7 @@ const FinalCta: React.FC = () => {
             const data = await res.json();
             setSignupResult({ position: data.position, count: data.count });
             setCtaState('done');
+            window.dispatchEvent(new CustomEvent('waitlist:joined'));
         } catch {
             window.location.href = `/waitlist?email=${encodeURIComponent(email.trim())}`;
         }
@@ -119,8 +120,8 @@ const FinalCta: React.FC = () => {
                             <Check size={13} className="text-primary" />
                         </span>
                         <span className="text-foreground/80 text-left flex-1">
-                            {signupResult && (
-                                <>#{ signupResult.position} of {signupResult.count} </>
+                            {signupResult && signupResult.position > 0 && (
+                                <>#{signupResult.position} of {signupResult.count} </>
                             )}
                             on the list
                         </span>
