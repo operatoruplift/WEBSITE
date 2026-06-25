@@ -187,12 +187,24 @@ export default function PhaseScrollySection() {
                             ))}
                         </div>
 
-                        {/* 3D Coin */}
+                        {/* 3D Logo spin */}
                         <div
                             className="relative mx-auto lg:mx-0 mb-8"
-                            style={{ width: 120, height: 120, perspective: '600px' }}
+                            style={{ width: 100, height: 100, perspective: '600px' }}
                             aria-hidden="true"
                         >
+                            {/* Glow ring: stays fixed, doesn't rotate */}
+                            <div
+                                style={{
+                                    position: 'absolute',
+                                    inset: 0,
+                                    borderRadius: '50%',
+                                    border: '1.5px solid rgba(240,138,76,0.28)',
+                                    boxShadow: '0 0 32px rgba(240,138,76,0.22)',
+                                    pointerEvents: 'none',
+                                }}
+                            />
+                            {/* Spinning logo: no disc background */}
                             <div
                                 style={{
                                     width: '100%',
@@ -201,67 +213,52 @@ export default function PhaseScrollySection() {
                                     animation: reducedMotion ? 'none' : 'coinSpin 5s linear infinite',
                                 }}
                             >
-                                {/* Front face: dark disc + OU logo */}
-                                <div
+                                {/* Front */}
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                    src="/brand/operator-uplift-mark.png"
+                                    alt=""
                                     style={{
                                         position: 'absolute',
                                         inset: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'contain',
                                         backfaceVisibility: 'hidden',
-                                        borderRadius: '50%',
-                                        background:
-                                            'radial-gradient(circle at 35% 35%, #1a1a1c, #0A0A0B 70%)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        boxShadow:
-                                            '0 0 0 2px rgba(240,138,76,0.3), 0 0 40px rgba(240,138,76,0.25)',
+                                        userSelect: 'none',
+                                        pointerEvents: 'none',
                                     }}
-                                >
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                        src="/brand/operator-uplift-mark-64.png"
-                                        alt=""
-                                        width={56}
-                                        height={56}
-                                        style={{ userSelect: 'none', pointerEvents: 'none' }}
-                                    />
-                                </div>
-                                {/* Back face: darker disc + faded logo */}
-                                <div
+                                />
+                                {/* Back */}
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                    src="/brand/operator-uplift-mark.png"
+                                    alt=""
                                     style={{
                                         position: 'absolute',
                                         inset: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'contain',
                                         backfaceVisibility: 'hidden',
                                         transform: 'rotateY(180deg)',
-                                        borderRadius: '50%',
-                                        background:
-                                            'radial-gradient(circle at 65% 35%, #111113, #0A0A0B)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
+                                        opacity: 0.35,
+                                        userSelect: 'none',
+                                        pointerEvents: 'none',
                                     }}
-                                >
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                        src="/brand/operator-uplift-mark-64.png"
-                                        alt=""
-                                        width={56}
-                                        height={56}
-                                        style={{ opacity: 0.4, userSelect: 'none', pointerEvents: 'none' }}
-                                    />
-                                </div>
+                                />
                             </div>
-                            {/* Coin shadow */}
+                            {/* Ground shadow */}
                             <div
                                 style={{
                                     position: 'absolute',
-                                    bottom: -16,
+                                    bottom: -14,
                                     left: '50%',
                                     transform: 'translateX(-50%)',
-                                    width: 80,
-                                    height: 12,
+                                    width: 64,
+                                    height: 10,
                                     borderRadius: '50%',
-                                    background: 'rgba(240,138,76,0.15)',
+                                    background: 'rgba(240,138,76,0.12)',
                                     filter: 'blur(8px)',
                                 }}
                             />

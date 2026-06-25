@@ -213,7 +213,7 @@ const Hero: React.FC = () => {
             {ctaState === 'form' && (
               <form
                 onSubmit={handleWaitlistSubmit}
-                className="inline-flex items-center gap-2 pl-5 pr-1.5 py-1.5 border border-primary/60 focus-within:border-primary bg-primary/[0.04] font-mono text-sm transition-colors duration-200"
+                className="inline-flex items-center gap-2 pl-5 pr-1.5 py-1.5 rounded-full border border-primary/60 focus-within:border-primary bg-primary/[0.04] font-mono text-sm transition-colors duration-200"
                 style={{ minWidth: 264 }}
               >
                 <input
@@ -253,14 +253,25 @@ const Hero: React.FC = () => {
               </div>
             )}
 
-            <a
-              href="#how-it-works"
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 border border-foreground/[0.14] bg-foreground/[0.02] text-foreground font-mono text-sm tracking-[0.02em] hover:border-foreground/40 transition-all"
-            >
-              See how it works
-            </a>
+            {ctaState === 'idle' && (
+              <a
+                href="#how-it-works"
+                className="inline-flex items-center gap-1.5 text-foreground/40 font-mono text-sm tracking-[0.02em] hover:text-foreground/70 transition-colors duration-200"
+              >
+                See how it works <span aria-hidden="true">↓</span>
+              </a>
+            )}
           </div>
         </FadeIn>
+
+        {/* Wintel-pattern trust caption below CTAs */}
+        {ctaState === 'idle' && (
+          <FadeIn delay={620}>
+            <p className="mt-4 font-mono text-[11px] tracking-[0.14em] text-muted/45 uppercase">
+              Non-custodial · Trustless · Solana-settled
+            </p>
+          </FadeIn>
+        )}
 
         {/* Deck-style metadata row. Pitch deck slide 01 carries three
             labeled columns at the bottom (OPERATOR / RAISE / WEB).
