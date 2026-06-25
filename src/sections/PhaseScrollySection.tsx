@@ -201,7 +201,7 @@ export default function PhaseScrollySection() {
                                     animation: reducedMotion ? 'none' : 'coinSpin 5s linear infinite',
                                 }}
                             >
-                                {/* Front face */}
+                                {/* Front face: dark disc + OU logo */}
                                 <div
                                     style={{
                                         position: 'absolute',
@@ -209,7 +209,7 @@ export default function PhaseScrollySection() {
                                         backfaceVisibility: 'hidden',
                                         borderRadius: '50%',
                                         background:
-                                            'radial-gradient(circle at 35% 35%, #f9a76c, #F08A4C 60%, #c4621e)',
+                                            'radial-gradient(circle at 35% 35%, #1a1a1c, #0A0A0B 70%)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
@@ -217,20 +217,16 @@ export default function PhaseScrollySection() {
                                             '0 0 0 2px rgba(240,138,76,0.3), 0 0 40px rgba(240,138,76,0.25)',
                                     }}
                                 >
-                                    <span
-                                        style={{
-                                            fontFamily: 'monospace',
-                                            fontSize: 36,
-                                            fontWeight: 700,
-                                            color: '#0A0A0B',
-                                            letterSpacing: '-0.04em',
-                                            userSelect: 'none',
-                                        }}
-                                    >
-                                        {activePhase.coinLabel}
-                                    </span>
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src="/brand/operator-uplift-mark-64.png"
+                                        alt=""
+                                        width={56}
+                                        height={56}
+                                        style={{ userSelect: 'none', pointerEvents: 'none' }}
+                                    />
                                 </div>
-                                {/* Back face */}
+                                {/* Back face: darker disc + faded logo */}
                                 <div
                                     style={{
                                         position: 'absolute',
@@ -239,24 +235,20 @@ export default function PhaseScrollySection() {
                                         transform: 'rotateY(180deg)',
                                         borderRadius: '50%',
                                         background:
-                                            'radial-gradient(circle at 65% 35%, #c4621e, #8a3f0e)',
+                                            'radial-gradient(circle at 65% 35%, #111113, #0A0A0B)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                     }}
                                 >
-                                    <span
-                                        style={{
-                                            fontFamily: 'monospace',
-                                            fontSize: 20,
-                                            fontWeight: 700,
-                                            color: 'rgba(255,255,255,0.4)',
-                                            letterSpacing: '0.1em',
-                                            userSelect: 'none',
-                                        }}
-                                    >
-                                        OU
-                                    </span>
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src="/brand/operator-uplift-mark-64.png"
+                                        alt=""
+                                        width={56}
+                                        height={56}
+                                        style={{ opacity: 0.4, userSelect: 'none', pointerEvents: 'none' }}
+                                    />
                                 </div>
                             </div>
                             {/* Coin shadow */}

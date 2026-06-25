@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { WAITLIST_OFFPLATFORM_BASE } from '@/lib/waitlist-constants';
 
 /**
@@ -29,15 +29,10 @@ const FoundingMemberCounter: React.FC = () => {
     const [displayed, setDisplayed] = useState(0);
     const rafRef = useRef<number | null>(null);
 
-    useEffect(() => {
-        let cancelled = false;
+    const fetchCount = useCallback(() => {
         fetch('/api/waitlist/counts', { cache: 'no-store' })
             .then((r) => (r.ok ? r.json() : null))
             .then((data) => {
-                if (cancelled) return;
-                // The server already folds the off-platform base into
-                // `total`, so use it directly. Fall back to the base
-                // alone if the payload is missing/malformed.
                 const total =
                     data && typeof data.total === 'number'
                         ? data.total
@@ -45,14 +40,20 @@ const FoundingMemberCounter: React.FC = () => {
                 setTarget(total);
             })
             .catch(() => {
-                // Network error: still show the off-platform base so the
-                // trust signal works even when the counts endpoint is down.
-                if (!cancelled) setTarget(WAITLIST_OFFPLATFORM_BASE);
+                setTarget((prev) => prev ?? WAITLIST_OFFPLATFORM_BASE);
             });
-        return () => {
-            cancelled = true;
-        };
     }, []);
+
+    useEffect(() => {
+        fetchCount();
+    }, [fetchCount]);
+
+    // Re-fetch when a waitlist signup completes anywhere on the page
+    // so the hero counter ticks up immediately after the CTA is used.
+    useEffect(() => {
+        window.addEventListener('waitlist:joined', fetchCount);
+        return () => window.removeEventListener('waitlist:joined', fetchCount);
+    }, [fetchCount]);
 
     useEffect(() => {
         if (target == null) return;

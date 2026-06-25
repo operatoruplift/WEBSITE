@@ -97,6 +97,7 @@ const Hero: React.FC = () => {
       const data = await res.json();
       setSignupResult({ position: data.position, count: data.count });
       setCtaState('done');
+      window.dispatchEvent(new CustomEvent('waitlist:joined'));
     } catch {
       window.location.href = '/waitlist';
     } finally {
@@ -196,24 +197,15 @@ const Hero: React.FC = () => {
         <FadeIn delay={550}>
           <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-3 justify-center items-center flex-wrap">
 
-            {/* idle: standard CTA button; click shows the inline form */}
+            {/* idle: pill CTA (wintel pattern) */}
             {ctaState === 'idle' && (
               <Link
                 href="/waitlist"
                 onClick={(e) => { e.preventDefault(); setCtaState('form'); }}
-                className="group relative overflow-hidden inline-flex items-center gap-3 pl-7 pr-2 py-2 bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] border border-primary hover:shadow-[0_0_32px_rgba(240,138,76,0.55)] hover:-translate-y-px active:translate-y-0 transition-[transform,box-shadow] duration-200"
+                className="group inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-primary text-[#0A0A0B] font-mono text-sm font-semibold tracking-[0.02em] hover:shadow-[0_0_36px_rgba(240,138,76,0.6)] hover:-translate-y-px active:translate-y-0 transition-[transform,box-shadow] duration-200"
               >
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 to-transparent"
-                />
-                <span className="relative">Join the waitlist</span>
-                <span
-                  aria-hidden="true"
-                  className="relative w-9 h-9 rounded-full bg-[#0A0A0B]/20 flex items-center justify-center group-hover:bg-[#0A0A0B]/30 transition-colors duration-200"
-                >
-                  <ArrowRight size={14} className="text-[#0A0A0B]" />
-                </span>
+                <span>Join the waitlist</span>
+                <ArrowRight size={14} className="text-[#0A0A0B] group-hover:translate-x-0.5 transition-transform duration-200" />
               </Link>
             )}
 
@@ -253,7 +245,7 @@ const Hero: React.FC = () => {
                   <Check size={13} className="text-primary" />
                 </span>
                 <span className="text-foreground/80">
-                  #{signupResult.position} of {signupResult.count} on the list
+                  {signupResult.position > 0 ? `#${signupResult.position} of ${signupResult.count} ` : ''}on the list
                 </span>
                 <Link href="/waitlist" className="text-primary text-xs hover:underline shrink-0">
                   more →
@@ -275,7 +267,7 @@ const Hero: React.FC = () => {
             We mirror the rhythm but keep it honest: status, the
             commitment mechanic in shorthand, and the domain. */}
         <FadeIn delay={650}>
-          <div className="mt-12 md:mt-16 w-full max-w-[860px] mx-auto grid grid-cols-2 sm:grid-cols-3 gap-x-10 gap-y-6 pt-4 text-center">
+          <div className="mt-12 md:mt-16 w-full max-w-[860px] mx-auto flex flex-row flex-wrap justify-center gap-x-10 gap-y-6 pt-4">
             <MetaCell label="Status" value="Private beta" />
             <MetaCell label="Stack" value="commit · stake · prove · settle" accent />
             <MetaCell label="Web" value="operatoruplift.com" mono />
