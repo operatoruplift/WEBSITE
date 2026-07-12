@@ -80,10 +80,10 @@ const Navbar: React.FC<NavbarProps> = () => {
    * link still works when a user is on a non-home route.
    */
   const navItems: ReadonlyArray<{ label: string; href: string }> = [
-    { label: 'problem', href: '/#problem' },
     { label: 'how it works', href: '/#how-it-works' },
-    { label: 'pricing', href: '/pricing' },
-    { label: 'faq', href: '/faq' },
+    { label: 'the app', href: '/#app' },
+    { label: 'pricing', href: '/#pricing' },
+    { label: 'faq', href: '/#faq' },
     { label: 'docs', href: '/docs' },
   ];
 

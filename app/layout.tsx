@@ -1,7 +1,22 @@
 import type { Metadata, Viewport } from "next";
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
+import { Nunito, Baloo_2 } from 'next/font/google';
 import "./globals.css";
+
+const nunito = Nunito({
+  subsets: ['latin'],
+  variable: '--font-nunito',
+  weight: ['400', '500', '600', '700', '800', '900'],
+  display: 'swap',
+});
+
+const baloo2 = Baloo_2({
+  subsets: ['latin'],
+  variable: '--font-baloo2',
+  weight: ['500', '600', '700', '800'],
+  display: 'swap',
+});
 
 export const viewport: Viewport = {
   themeColor: '#F08A4C',
@@ -84,7 +99,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable} ${nunito.variable} ${baloo2.variable}`}>
       <head>
         {/* Anti-FOUC theme bootstrap. Runs before React hydrates so
             the .theme-light class is applied to <html> before first
