@@ -3,116 +3,84 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { WAITLIST_OFFPLATFORM_BASE } from '@/lib/waitlist-constants';
 
-/**
- * FoundingMemberCounter , live founding-member count rendered as a
- * hero trust signal. Replaces the static "53/100 Private Beta Spots
- * Claimed" tile (no real 100-person cap; founder direction
- * 2026-06-03 was to keep the door open and let the number grow).
- *
- * Visual: large mono numeral on the left, label on the right.
- *   - Counts up from 0 to the displayed total over ~900ms on mount.
- *   - "people on the waitlist" stays static while the
- *     numeral animates.
- *   - Tween respects prefers-reduced-motion: AT users and people
- *     who set that media query see the final number immediately.
- *
- * Display value: whatever /api/waitlist/counts returns for `total`,
- * which the server already computes as the off-platform base plus the
- * live Supabase table count (see lib/waitlist-constants.ts). So the
- * hero reads 585+ and grows by one with every new web signup. On a
- * network error we fall back to the off-platform base alone so the
- * trust signal still works when the counts endpoint is down.
- */
-
 const FoundingMemberCounter: React.FC = () => {
-    const [target, setTarget] = useState<number | null>(null);
-    const [displayed, setDisplayed] = useState(0);
-    const rafRef = useRef<number | null>(null);
+  const [target, setTarget] = useState<number | null>(null);
+  const [displayed, setDisplayed] = useState(0);
+  const rafRef = useRef<number | null>(null);
 
-    const fetchCount = useCallback(() => {
-        fetch('/api/waitlist/counts', { cache: 'no-store' })
-            .then((r) => (r.ok ? r.json() : null))
-            .then((data) => {
-                const total =
-                    data && typeof data.total === 'number'
-                        ? data.total
-                        : WAITLIST_OFFPLATFORM_BASE;
-                setTarget(total);
-            })
-            .catch(() => {
-                setTarget((prev) => prev ?? WAITLIST_OFFPLATFORM_BASE);
-            });
-    }, []);
+  const fetchCount = useCallback(() => {
+    fetch('/api/waitlist/counts', { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const total =
+          data && typeof data.total === 'number'
+            ? data.total
+            : WAITLIST_OFFPLATFORM_BASE;
+        setTarget(total);
+      })
+      .catch(() => {
+        setTarget((prev) => prev ?? WAITLIST_OFFPLATFORM_BASE);
+      });
+  }, []);
 
-    useEffect(() => {
-        fetchCount();
-    }, [fetchCount]);
+  useEffect(() => { fetchCount(); }, [fetchCount]);
 
-    // Re-fetch when a waitlist signup completes anywhere on the page
-    // so the hero counter ticks up immediately after the CTA is used.
-    useEffect(() => {
-        window.addEventListener('waitlist:joined', fetchCount);
-        return () => window.removeEventListener('waitlist:joined', fetchCount);
-    }, [fetchCount]);
+  useEffect(() => {
+    window.addEventListener('waitlist:joined', fetchCount);
+    return () => window.removeEventListener('waitlist:joined', fetchCount);
+  }, [fetchCount]);
 
-    useEffect(() => {
-        if (target == null) return;
+  useEffect(() => {
+    if (target == null) return;
+    const reducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) { setDisplayed(target); return; }
 
-        const reducedMotion =
-            typeof window !== 'undefined' &&
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (reducedMotion) {
-            setDisplayed(target);
-            return;
-        }
+    const durationMs = 900;
+    const start = performance.now();
 
-        const durationMs = 900;
-        const start = performance.now();
-        const startValue = 0;
+    const tick = (now: number) => {
+      const elapsed = now - start;
+      const t = Math.min(1, elapsed / durationMs);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setDisplayed(Math.round(target * eased));
+      if (t < 1) rafRef.current = requestAnimationFrame(tick);
+    };
 
-        const tick = (now: number) => {
-            const elapsed = now - start;
-            const t = Math.min(1, elapsed / durationMs);
-            // ease-out cubic: starts fast, slows into the final value
-            const eased = 1 - Math.pow(1 - t, 3);
-            const next = Math.round(startValue + (target - startValue) * eased);
-            setDisplayed(next);
-            if (t < 1) {
-                rafRef.current = requestAnimationFrame(tick);
-            }
-        };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => { if (rafRef.current != null) cancelAnimationFrame(rafRef.current); };
+  }, [target]);
 
-        rafRef.current = requestAnimationFrame(tick);
+  if (target == null || target <= 0) return null;
 
-        return () => {
-            if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
-        };
-    }, [target]);
-
-    if (target == null || target <= 0) return null;
-
-    return (
-        <div
-            className="inline-flex items-center gap-3 px-6 py-3 mb-8 md:mb-10 rounded-xl border border-primary/20 bg-primary/[0.04] font-mono"
-            aria-label={`${target} people ${target === 1 ? 'is' : 'are'} on the waitlist`}
-        >
-            <span
-                aria-hidden="true"
-                className="text-2xl md:text-3xl font-bold text-primary tracking-tight tabular-nums"
-            >
-                {displayed.toLocaleString()}
-            </span>
-            <div aria-hidden="true" className="h-8 w-px bg-primary/20" />
-            <div className="text-left">
-                <p className="text-sm font-bold text-foreground leading-tight">
-                    people on the waitlist
-                </p>
-                <p className="text-[11px] text-muted leading-tight">
-                    Join early. Lock in founding pricing forever.
-                </p>
-            </div>
-        </div>
-    );
+  return (
+    <div
+      className="inline-flex items-center gap-2.5 mb-8 md:mb-10 rounded-full px-4 py-2"
+      style={{
+        background: 'var(--color-card, #fff)',
+        border: '1.5px solid var(--color-border, #EDE6DA)',
+        boxShadow: 'var(--shadow-card, 0 8px 22px -12px rgba(120,90,50,0.20))',
+        fontWeight: 800,
+        fontSize: 13.5,
+        color: 'var(--color-muted)',
+      }}
+      aria-label={`Waitlist open, ${target} joined`}
+    >
+      <span
+        className="w-2.5 h-2.5 rounded-full flex-shrink-0 animate-pulse-ring"
+        style={{ background: '#34D399', boxShadow: '0 0 0 4px rgba(52,211,153,0.18)' }}
+        aria-hidden="true"
+      />
+      <span>
+        Waitlist open &middot;{' '}
+        <strong style={{ color: 'var(--color-foreground)' }}>
+          {displayed.toLocaleString()}
+        </strong>{' '}
+        joined
+      </span>
+    </div>
+  );
 };
 
 export default FoundingMemberCounter;

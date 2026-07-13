@@ -2,145 +2,160 @@
 
 import React from 'react';
 import { FadeIn } from '@/src/components/Animators';
-import { SectionHeader } from '@/src/components/SectionHeader';
 
-/**
- * How it works, 2026-05-22 homepage redesign.
- *
- * Mirrors the design ref's #how section: a 5-step hairline grid
- * (commit → stake → check in → see progress → repeat). Each cell
- * is a hairline panel inside a 1px-gap grid with a foreground-tinted
- * background showing through, plus a small ASCII echo at the bottom.
- *
- * The five-step framing carries the brand spec: stake on commitments,
- * upload proof, AI verifies, success builds reputation, failure
- * redistributes pooled stakes to operators who kept theirs. The
- * "Repeat" step closes the loop so the system reads as iterative,
- * not one-shot.
- */
-
-interface Step {
-    n: string;
-    title: string;
-    body: string;
-    /** Tiny terminal echo rendered at the bottom of each cell. */
-    cmd: string;
-    out: string;
-}
-
-const STEPS: Step[] = [
-    {
-        n: '01',
-        title: 'Commit',
-        body: 'Declare what you will do, in your own words. Specific enough that "did I do it?" is a yes or no.',
-        cmd: '> commit "run 4×/wk"',
-        out: '  ok',
-    },
-    {
-        n: '02',
-        title: 'Stake',
-        body: 'Put real money on the line. USDC or card. Funds sit in escrow while the commitment is active.',
-        cmd: '> stake $50',
-        out: '  locked',
-    },
-    {
-        n: '03',
-        title: 'Upload proof',
-        body: 'Photo, GPS, integration data, or a short note. The AI Game Master verifies follow-through and streams reasoning back.',
-        cmd: '> check-in 07',
-        out: '  yes / not yet',
-    },
-    {
-        n: '04',
-        title: 'Build reputation',
-        body: 'Honor the commitment: your stake returns and your streak grows. Verifiable history you can point clients and witnesses at.',
-        cmd: '> streak +1',
-        out: '  honored',
-    },
-    {
-        n: '05',
-        title: 'Or redistribute',
-        body: 'Miss the mark: your stake is redistributed to operators who kept their word, minus a small protocol fee. Failure funds the ecosystem.',
-        cmd: '> settle',
-        out: '  pool ←  forfeit',
-    },
+const STEPS = [
+  {
+    n: '01',
+    icon: '🎯',
+    iconBg: 'rgba(167,139,250,0.16)',
+    title: 'Commit',
+    body: 'Pick a goal that matters: workouts, deep work, early mornings. One tap to join a batch.',
+  },
+  {
+    n: '02',
+    icon: '🔒',
+    iconBg: 'rgba(240,138,76,0.16)',
+    title: 'Stake',
+    body: 'Lock a small daily amount in escrow. It stays completely safe while you show up.',
+  },
+  {
+    n: '03',
+    icon: '📸',
+    iconBg: 'rgba(56,189,248,0.16)',
+    title: 'Prove',
+    body: 'Snap a quick photo each day. AI checks it in seconds, no forms required.',
+  },
+  {
+    n: '04',
+    icon: '🎁',
+    iconBg: 'rgba(52,211,153,0.16)',
+    title: 'Settle',
+    body: "Finish and get 100% back, plus a cut of everyone who quit. Miss it and your day's stake moves on.",
+  },
 ];
 
 const HowItWorksSection: React.FC = () => {
-    return (
-        <section
-            id="how-it-works"
-            aria-labelledby="how-it-works-heading"
-            className="relative w-full px-6 md:px-12 flex flex-col justify-center"
-            style={{
-                minHeight: '720px',
-                paddingTop: 'clamp(80px, 12vw, 120px)',
-                paddingBottom: 'clamp(80px, 12vw, 120px)',
-                // Floor only, no vh cap (see ProblemSection rationale).
-            }}
-        >
-            <div className="w-full max-w-[1280px] mx-auto">
-                <SectionHeader
-                    headingId="how-it-works-heading"
-                    align="center"
-                    numberPrefix="03"
-                    eyebrow="How it works"
-                    title={
-                        <>
-                            Commit. Stake. Prove.{' '}
-                            <span className="text-primary">Settle.</span>
-                        </>
-                    }
-                    description="The whole system fits on the back of a napkin. That is by design. We don't sell motivation. We sell consequences you choose for yourself."
-                />
-                <ol
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 list-none p-0 mt-12"
-                    style={{
-                        gap: '1px',
-                        background: 'rgba(255,255,255,0.12)',
-                        border: '1px solid rgba(255,255,255,0.12)',
-                    }}
+  return (
+    <section
+      id="how-it-works"
+      aria-labelledby="how-heading"
+      className="relative w-full"
+      style={{
+        paddingTop: 'clamp(80px, 10vw, 120px)',
+        paddingBottom: 'clamp(80px, 10vw, 120px)',
+      }}
+    >
+      <div className="max-w-[1180px] mx-auto px-6 md:px-10">
+        {/* Header */}
+        <FadeIn block className="text-center">
+          <div className="inline-flex items-center gap-2.5 mb-4">
+            <span className="h-px w-6 inline-block" style={{ background: 'var(--color-primary)' }} />
+            <span className="text-xs font-bold uppercase tracking-[0.12em]" style={{ color: 'var(--color-primary)' }}>
+              How it works
+            </span>
+            <span className="h-px w-6 inline-block" style={{ background: 'var(--color-primary)' }} />
+          </div>
+          <h2
+            id="how-heading"
+            className="text-[clamp(34px,5vw,52px)] tracking-[-0.02em] max-w-[760px] mx-auto"
+          >
+            Four steps. Repeat until it sticks.
+          </h2>
+          <p
+            className="mt-4 max-w-[620px] mx-auto font-semibold leading-relaxed"
+            style={{ fontSize: 'clamp(16px,2vw,19px)', color: 'var(--color-muted)' }}
+          >
+            The whole system fits on a napkin. No jargon, no setup maze, no crypto wallet to figure out.
+          </p>
+        </FadeIn>
+
+        {/* Step cards grid */}
+        <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {STEPS.map((step, i) => (
+            <FadeIn key={step.n} delay={i * 60} block>
+              <div className="warm-card p-6 h-full relative" style={{ minHeight: 200 }}>
+                <span
+                  className="absolute top-5 right-5 text-sm font-bold"
+                  style={{ color: 'var(--color-muted-foreground, #A8A29E)', fontFamily: 'var(--font-baloo2, inherit)' }}
                 >
-                    {STEPS.map((step, i) => (
-                        <li key={step.n} className="bg-background min-h-[220px]">
-                            <FadeIn delay={i * 60} block>
-                                <div className="h-full p-7 md:p-7 flex flex-col items-center text-center">
-                                    <div className="font-mono text-[11px] tracking-[0.15em] text-primary uppercase">
-                                        Step {step.n}
-                                    </div>
-                                    <h3 className="mt-4 text-[22px] font-medium text-foreground tracking-[-0.02em] leading-snug">
-                                        {step.title}
-                                    </h3>
-                                    <p className="mt-2 text-[14px] text-muted leading-relaxed">
-                                        {step.body}
-                                    </p>
-                                    <pre
-                                        className="mt-auto pt-5 font-mono text-[12px] leading-[1.4] text-muted/80"
-                                        aria-hidden="true"
-                                    >
-                                        <span>{step.cmd}</span>
-                                        {'\n'}
-                                        <span className="text-primary">{step.out}</span>
-                                    </pre>
-                                </div>
-                            </FadeIn>
-                        </li>
-                    ))}
-                </ol>
-                <FadeIn delay={300} block>
-                    <p
-                        className="mt-14 md:mt-16 mx-auto max-w-[820px] text-center text-foreground/95 leading-relaxed"
-                        style={{ fontSize: 'clamp(15px, 1.3vw, 19px)' }}
-                    >
-                        <span className="font-mono text-[11px] tracking-[0.18em] text-primary uppercase block mb-3">
-                            AI verification
-                        </span>
-                        Cost-controlled stack: rules first (EXIF, GPS, timestamp, device, cheap), then a small classifier model on the photo (cheap), and only an LLM for edge cases, disputes, and fraud signals.
-                    </p>
-                </FadeIn>
+                  {step.n}
+                </span>
+                <div
+                  className="w-14 h-14 rounded-[18px] flex items-center justify-center text-3xl mb-4"
+                  style={{ background: step.iconBg }}
+                >
+                  {step.icon}
+                </div>
+                <h3 className="text-xl mb-2" style={{ fontFamily: 'var(--font-baloo2, inherit)' }}>
+                  {step.title}
+                </h3>
+                <p className="text-sm font-semibold leading-relaxed" style={{ color: 'var(--color-muted)' }}>
+                  {step.body}
+                </p>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+
+        {/* Settle outcome cards */}
+        <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <FadeIn delay={300} block>
+            <div
+              className="rounded-[28px] p-7"
+              style={{ background: 'rgba(52,211,153,0.10)', border: '1.5px solid rgba(52,211,153,0.40)' }}
+            >
+              <h3 className="text-xl flex items-center gap-2.5" style={{ fontFamily: 'var(--font-baloo2, inherit)' }}>
+                <span>✅</span> You showed up
+              </h3>
+              <div
+                className="text-[40px] font-extrabold my-3.5"
+                style={{ color: '#10B981', fontFamily: 'var(--font-baloo2, inherit)' }}
+              >
+                +$55.40
+              </div>
+              <p className="text-sm font-semibold" style={{ color: 'var(--color-muted)' }}>
+                Your full $50 stake back, plus a $5.40 bonus from the pool.
+              </p>
+              <div className="mt-4 flex flex-col gap-2">
+                {['Stake refunded: $50.00', 'Pool bonus: +$5.40', 'Reputation grows'].map((line) => (
+                  <span key={line} className="flex items-center gap-2 text-sm font-bold">
+                    <span style={{ color: '#10B981' }}>✓</span> {line}
+                  </span>
+                ))}
+              </div>
             </div>
-        </section>
-    );
+          </FadeIn>
+
+          <FadeIn delay={360} block>
+            <div
+              className="rounded-[28px] p-7"
+              style={{ background: 'rgba(251,113,133,0.09)', border: '1.5px solid rgba(251,113,133,0.40)' }}
+            >
+              <h3 className="text-xl flex items-center gap-2.5" style={{ fontFamily: 'var(--font-baloo2, inherit)' }}>
+                <span>💔</span> Missed the day
+              </h3>
+              <div
+                className="text-[40px] font-extrabold my-3.5"
+                style={{ color: '#FB7185', fontFamily: 'var(--font-baloo2, inherit)' }}
+              >
+                &minus;$2.00
+              </div>
+              <p className="text-sm font-semibold" style={{ color: 'var(--color-muted)' }}>
+                Just that day&apos;s slice moves to the people still going. The rest stays protected.
+              </p>
+              <div className="mt-4 flex flex-col gap-2">
+                {["That day's stake redistributed", 'Rest of your money still locked', 'Jump back in tomorrow'].map((line) => (
+                  <span key={line} className="flex items-center gap-2 text-sm font-bold">
+                    <span style={{ color: '#FB7185' }}>→</span> {line}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default HowItWorksSection;

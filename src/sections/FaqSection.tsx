@@ -1,95 +1,113 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { FAQ_ITEMS } from './faq-data';
 import { FadeIn } from '@/src/components/Animators';
-import { SectionHeader } from '@/src/components/SectionHeader';
-
-/**
- * FAQ section, 2026-05-22 homepage redesign.
- *
- * Mirrors the design ref's #faq block: a numbered grid where each
- * row carries a left-column "Q · 01" label and a right-column
- * question + answer. No accordion. Every answer is visible so a
- * visitor can scan in one pass.
- *
- * Pairs with src/sections/faq-data.ts (single source of truth used
- * by both this component and the schema.org FAQPage JSON-LD).
- */
 
 const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: FAQ_ITEMS.map(item => ({
-        '@type': 'Question',
-        name: item.q,
-        acceptedAnswer: {
-            '@type': 'Answer',
-            text: item.a,
-        },
-    })),
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ_ITEMS.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
 };
 
 const FaqSection: React.FC = () => {
-    return (
-        <section
-            id="faq"
-            aria-labelledby="faq-heading"
-            className="relative w-full px-6 md:px-12 flex flex-col justify-center"
-            style={{
-                minHeight: '820px',
-                paddingTop: 'clamp(80px, 12vw, 120px)',
-                paddingBottom: 'clamp(80px, 12vw, 120px)',
-                // Floor only, no vh cap (see ProblemSection rationale).
-            }}
-        >
-            {/* schema.org FAQPage JSON-LD for rich-result eligibility. */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-            />
-            <div className="w-full max-w-[1280px] mx-auto">
-                <SectionHeader
-                    headingId="faq-heading"
-                    align="center"
-                    numberPrefix="05"
-                    eyebrow="Frequently asked"
-                    title={
-                        <>
-                            Questions,{' '}
-                            <span className="text-primary">honestly answered</span>.
-                        </>
-                    }
-                />
-                <div className="max-w-[920px] mx-auto mt-12">
-                    {FAQ_ITEMS.map((item, i) => {
-                        const n = String(i + 1).padStart(2, '0');
-                        return (
-                            <FadeIn key={item.q} delay={i * 40} block>
-                                <div
-                                    className={[
-                                        'flex flex-col items-center text-center gap-3 py-8',
-                                        'border-t border-foreground/[0.12]',
-                                        i === FAQ_ITEMS.length - 1 ? 'border-b border-foreground/[0.12]' : '',
-                                    ].join(' ')}
-                                >
-                                    <div className="font-mono text-[12px] sm:text-[13px] text-primary tracking-[0.14em] uppercase">
-                                        Q · {n}
-                                    </div>
-                                    <h3 className="text-[18px] sm:text-[20px] font-medium text-foreground tracking-[-0.01em] leading-snug">
-                                        {item.q}
-                                    </h3>
-                                    <p className="mt-1 mx-auto max-w-[640px] text-[15px] text-muted leading-relaxed">
-                                        {item.a}
-                                    </p>
-                                </div>
-                            </FadeIn>
-                        );
-                    })}
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+
+  return (
+    <section
+      id="faq"
+      aria-labelledby="faq-heading"
+      className="relative w-full"
+      style={{
+        paddingTop: 'clamp(80px, 10vw, 120px)',
+        paddingBottom: 'clamp(80px, 10vw, 120px)',
+        background: 'var(--color-background-alt, #F4EEE4)',
+      }}
+    >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <div className="max-w-[840px] mx-auto px-6 md:px-10">
+        {/* Header */}
+        <FadeIn block className="text-center">
+          <div className="inline-flex items-center gap-2.5 mb-4">
+            <span className="h-px w-6 inline-block" style={{ background: 'var(--color-primary)' }} />
+            <span className="text-xs font-bold uppercase tracking-[0.12em]" style={{ color: 'var(--color-primary)' }}>
+              Frequently asked
+            </span>
+            <span className="h-px w-6 inline-block" style={{ background: 'var(--color-primary)' }} />
+          </div>
+          <h2
+            id="faq-heading"
+            className="text-[clamp(34px,5vw,52px)] tracking-[-0.02em]"
+          >
+            Questions, honestly answered.
+          </h2>
+        </FadeIn>
+
+        {/* Accordion items */}
+        <div className="mt-11 flex flex-col gap-3">
+          {FAQ_ITEMS.map((item, i) => {
+            const isOpen = openIdx === i;
+            return (
+              <FadeIn key={item.q} delay={i * 40} block>
+                <div
+                  className="rounded-[20px] overflow-hidden"
+                  style={{
+                    background: 'var(--color-card, #fff)',
+                    border: '1.5px solid var(--color-border, #EDE6DA)',
+                  }}
+                >
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    onClick={() => setOpenIdx(isOpen ? null : i)}
+                    className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left cursor-pointer"
+                    style={{
+                      fontFamily: 'var(--font-baloo2, inherit)',
+                      fontWeight: 700,
+                      fontSize: 18,
+                      color: 'var(--color-foreground)',
+                    }}
+                  >
+                    <span>{item.q}</span>
+                    <span
+                      className="text-xl shrink-0 transition-transform duration-200"
+                      style={{
+                        color: 'var(--color-primary)',
+                        transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
+                      }}
+                    >
+                      +
+                    </span>
+                  </button>
+                  <div
+                    style={{
+                      maxHeight: isOpen ? 400 : 0,
+                      overflow: 'hidden',
+                      transition: 'max-height 0.28s ease',
+                    }}
+                  >
+                    <p
+                      className="px-6 pb-5 font-semibold leading-relaxed"
+                      style={{ fontSize: 15.5, color: 'var(--color-muted)' }}
+                    >
+                      {item.a}
+                    </p>
+                  </div>
                 </div>
-            </div>
-        </section>
-    );
+              </FadeIn>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default FaqSection;

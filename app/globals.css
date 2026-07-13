@@ -55,7 +55,16 @@
     background: var(--color-background);
     color: var(--color-foreground);
     overflow-x: hidden;
-    font-family: var(--font-geist-sans, 'SF Pro Display'), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--font-nunito, var(--font-geist-sans, 'Nunito')), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-baloo2, var(--font-geist-sans, 'Baloo 2')), system-ui, sans-serif;
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
   }
 
   code, pre, .font-mono {
@@ -147,7 +156,7 @@
     background-size: 24px 24px, 100% 100%, 100% 100%, 100% 100%;
   }
   .theme-light .bg-grid-dots {
-    --color-grid-dot: rgba(15, 23, 42, 0.06);
+    --color-grid-dot: rgba(120, 90, 50, 0.10);
   }
 
   .accent-glow {
@@ -198,39 +207,39 @@
  *      component JSX and would not be picked up by token swaps alone.
  * ───────────────────────────────────────────────────────────────── */
 .theme-light {
-  --color-background: #FAFAFA;
-  --color-foreground: #0A0A0A;
+  /* Warm cream palette: redesign 2026-07 */
+  --color-background: #FDFBF7;
+  --color-background-alt: #F4EEE4;
+  --color-foreground: #1C1917;
   --color-surface: #FFFFFF;
   --color-surface-elevated: #FFFFFF;
   --color-card: #FFFFFF;
-  /* WCAG AA. The prior #6B7280 on #FAFAFA background was 4.05:1,
-     just below the 4.5:1 threshold for normal text. Darken slightly
-     to #55585F for a clean 4.7:1 pass. */
-  --color-muted: #55585F;
-  --color-muted-foreground: #55585F;
-  --color-border: #E5E7EB;
-  --color-border-visible: #D1D5DB;
+  --color-card-alt: #FBF6EE;
+  --color-muted: #57534E;
+  --color-muted-foreground: #A8A29E;
+  --color-border: #EDE6DA;
+  --color-border-visible: #E2D9CB;
+  --shadow-card: 0 8px 22px -12px rgba(120, 90, 50, 0.20);
+  --shadow-card-hover: 0 18px 44px -20px rgba(120, 90, 50, 0.28);
 
   background: var(--color-background);
   color: var(--color-foreground);
 }
 
-/* Inverted text family. Most marketing components use text-white as the
- * primary copy color, gray-300/400/500 for secondary, gray-600/700 as
- * dim accents. Map them so reading order survives in light mode. */
-.theme-light .text-white { color: #0A0A0A; }
-.theme-light .text-gray-100 { color: #18181B; }
-.theme-light .text-gray-200 { color: #27272A; }
-.theme-light .text-gray-300 { color: #3F3F46; }
-.theme-light .text-gray-400 { color: #4B5563; }
-.theme-light .text-gray-500 { color: #6B7280; }
-.theme-light .text-gray-600 { color: #6B7280; }
-.theme-light .text-gray-700 { color: #9CA3AF; }
-.theme-light .text-muted { color: #6B7280; }
+/* Inverted text family: warm ink scale */
+.theme-light .text-white { color: #1C1917; }
+.theme-light .text-gray-100 { color: #1C1917; }
+.theme-light .text-gray-200 { color: #292524; }
+.theme-light .text-gray-300 { color: #44403C; }
+.theme-light .text-gray-400 { color: #57534E; }
+.theme-light .text-gray-500 { color: #78716C; }
+.theme-light .text-gray-600 { color: #78716C; }
+.theme-light .text-gray-700 { color: #A8A29E; }
+.theme-light .text-muted { color: #57534E; }
 
 /* Inverted backgrounds: bg-white/N is the dark-mode "lift" pattern.
  * Translate to a thin black wash so cards still read as elevated. */
-.theme-light .bg-background { background: #FAFAFA; }
+.theme-light .bg-background { background: #FDFBF7; }
 .theme-light .bg-white\/5 { background: rgba(0,0,0,0.04); }
 .theme-light .bg-white\/10 { background: rgba(0,0,0,0.06); }
 .theme-light .bg-white\/\[0\.02\] { background: rgba(0,0,0,0.02); }
@@ -248,10 +257,10 @@
 .theme-light .bg-\[\#0c0c0c\] { background: #FFFFFF; }
 .theme-light .bg-\[\#0c0c0f\] { background: #FFFFFF; }
 .theme-light .bg-\[\#050508\] { background: #FAFAFA; }
-.theme-light .bg-\[\#0A0A0A\] { background: #FAFAFA; }
-.theme-light .bg-\[\#0a0a0a\] { background: #FAFAFA; }
-.theme-light .bg-\[\#0A0A0B\] { background: #FAFAFA; }
-.theme-light .bg-\[\#0a0a0b\] { background: #FAFAFA; }
+.theme-light .bg-\[\#0A0A0A\] { background: #FDFBF7; }
+.theme-light .bg-\[\#0a0a0a\] { background: #FDFBF7; }
+.theme-light .bg-\[\#0A0A0B\] { background: #FDFBF7; }
+.theme-light .bg-\[\#0a0a0b\] { background: #FDFBF7; }
 .theme-light .bg-\[\#0d0d0e\] { background: #FFFFFF; }
 .theme-light .bg-\[\#111111\] { background: #FFFFFF; }
 .theme-light .bg-\[\#222222\] { background: #F3F4F6; }
@@ -583,6 +592,39 @@
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
+  }
+
+  /* Warm card: light-mode card with tan border + warm shadow */
+  .warm-card {
+    background: var(--color-card, #fff);
+    border: 1.5px solid var(--color-border, #EDE6DA);
+    border-radius: 26px;
+    box-shadow: var(--shadow-card, 0 8px 22px -12px rgba(120,90,50,0.20));
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .warm-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover, 0 18px 44px -20px rgba(120,90,50,0.28));
+  }
+
+  /* Alt section bg */
+  .bg-alt { background: var(--color-background-alt, #F4EEE4); }
+
+  /* Dark rounded section block (mirrors design ref .dark-sec) */
+  .dark-block {
+    background: #1C1917;
+    border-radius: 46px;
+    margin: 0 18px;
+    color: #fff;
+  }
+
+  /* Pulse ring animation for live-dot badges */
+  @keyframes pulseRing {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+  }
+  .animate-pulse-ring {
+    animation: pulseRing 2s ease-out infinite;
   }
 
   /* Additional responsive utilities */

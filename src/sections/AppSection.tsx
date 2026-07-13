@@ -3,225 +3,425 @@
 import React from 'react';
 import { FadeIn } from '@/src/components/Animators';
 
-/**
- * App section, 2026-05-22 v2-canvas addition.
- *
- * The v2 design canvas places a dedicated /02.5 · THE APP/ board
- * between the problem section and the how-it-works section. It
- * demonstrates the product UI with three side-by-side phone
- * mockups (Today / The daily yes-no / Progress), the
- * "designed for iOS, Android, watch" frame, and the one-liner on
- * lockscreen widgets + one-tap check-ins.
- *
- * The mockups are CSS-only phone frames with mono text content. No
- * raster app screenshots are shipped because the iOS + Android apps
- * are not built yet (the homepage badge says "Now in private beta ·
- * iOS & Android coming soon"). The mockups are clearly stylized as
- * conceptual previews, not pixel-faithful product captures.
- */
+/* ------------------------------------------------------------------ */
+/* Inline phone screen components                                       */
+/* ------------------------------------------------------------------ */
+
+const HomeScreen: React.FC = () => (
+  <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#FDFBF7', overflowY: 'auto' }}>
+    {/* Orange header */}
+    <div style={{
+      background: 'linear-gradient(160deg, #F08A4C, #E0742F)',
+      padding: '14px 16px 18px',
+      position: 'relative', overflow: 'hidden', flexShrink: 0,
+    }}>
+      <div aria-hidden="true" style={{ position: 'absolute', right: -22, top: -22, width: 90, height: 90, borderRadius: '50%', background: 'rgba(255,255,255,0.14)', pointerEvents: 'none' }} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 11, position: 'relative', zIndex: 2 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 11, background: 'rgba(255,255,255,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 14, color: '#E0742F', fontFamily: 'var(--font-baloo2, sans-serif)' }}>K</div>
+          <div>
+            <div style={{ fontWeight: 800, fontSize: 12, color: '#fff', lineHeight: 1.2, fontFamily: 'var(--font-baloo2, sans-serif)' }}>Kai</div>
+            <div style={{ fontWeight: 700, fontSize: 9, color: 'rgba(255,255,255,0.88)' }}>Level 12 Operator</div>
+          </div>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+          <span style={{ fontSize: 12 }}>🔥</span>
+          <span style={{ fontWeight: 800, fontSize: 12, color: '#fff', fontFamily: 'var(--font-baloo2, sans-serif)' }}>12</span>
+        </div>
+      </div>
+      <div style={{ fontWeight: 700, fontSize: 9, color: 'rgba(255,255,255,0.82)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 5, position: 'relative', zIndex: 2 }}>Active batch</div>
+      <div style={{ background: 'rgba(255,255,255,0.18)', borderRadius: 14, padding: '10px 12px', position: 'relative', zIndex: 2 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 7 }}>
+          <div>
+            <span style={{ fontSize: 16 }}>🌅</span>
+            <div style={{ fontWeight: 800, fontSize: 12, color: '#fff', marginTop: 2, fontFamily: 'var(--font-baloo2, sans-serif)' }}>The 6 AM Club</div>
+            <div style={{ fontWeight: 600, fontSize: 9, color: 'rgba(255,255,255,0.85)' }}>Wake up 6 AM for 28 days</div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontWeight: 800, fontSize: 10, color: 'rgba(255,255,255,0.9)', fontFamily: 'var(--font-baloo2, sans-serif)' }}>Day 3/28</div>
+            <div style={{ fontWeight: 700, fontSize: 9, color: 'rgba(255,255,255,0.7)' }}>$1.50/day</div>
+          </div>
+        </div>
+        <div style={{ height: 5, borderRadius: 99, background: 'rgba(255,255,255,0.25)' }}>
+          <div style={{ height: '100%', width: '10.7%', borderRadius: 99, background: '#fff' }} />
+        </div>
+      </div>
+      <div style={{
+        width: '100%', marginTop: 10, height: 38,
+        background: '#fff', borderRadius: 12,
+        fontWeight: 800, fontSize: 13, color: '#E0742F',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+        fontFamily: 'var(--font-baloo2, sans-serif)',
+        position: 'relative', zIndex: 2,
+        boxShadow: '0 6px 16px -8px rgba(100,40,0,0.45)',
+      }}>
+        📸 Prove It
+      </div>
+    </div>
+
+    {/* Discover */}
+    <div style={{ padding: '12px 14px 8px', flexShrink: 0 }}>
+      <div style={{ fontWeight: 800, fontSize: 11, color: '#1C1917', marginBottom: 9, fontFamily: 'var(--font-baloo2, sans-serif)' }}>Discover batches</div>
+      <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 3 }}>
+        {[
+          { emoji: '🏃', name: 'Jumpstart', bg: 'rgba(52,211,153,0.12)', price: '$0.50' },
+          { emoji: '🏋️', name: 'Iron Month', bg: 'rgba(96,165,250,0.12)', price: '$2.00' },
+          { emoji: '🧠', name: 'Deep Work', bg: 'rgba(167,139,250,0.12)', price: '$1.00' },
+        ].map((b) => (
+          <div key={b.name} style={{ flexShrink: 0, width: 86, borderRadius: 13, overflow: 'hidden', border: '1.5px solid #EDE6DA', background: '#fff' }}>
+            <div style={{ background: b.bg, padding: '8px 8px 4px', borderBottom: '1.5px solid #EDE6DA' }}>
+              <span style={{ fontSize: 18 }}>{b.emoji}</span>
+            </div>
+            <div style={{ padding: '6px 8px 8px' }}>
+              <div style={{ fontWeight: 800, fontSize: 9.5, color: '#1C1917', lineHeight: 1.2, fontFamily: 'var(--font-baloo2, sans-serif)' }}>{b.name}</div>
+              <div style={{ fontWeight: 700, fontSize: 9, color: '#A8A29E', marginTop: 2 }}>{b.price}/day</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* Category grid */}
+    <div style={{ padding: '8px 14px 12px', flex: 1 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 7 }}>
+        {[
+          { emoji: '🧠', label: 'Focus' },
+          { emoji: '🏋️', label: 'Fitness' },
+          { emoji: '🌅', label: 'Mornings' },
+          { emoji: '🧘', label: 'Mindful' },
+          { emoji: '📚', label: 'Learning' },
+          { emoji: '💰', label: 'Finance' },
+        ].map((cat) => (
+          <div key={cat.label} style={{ background: '#F4EEE4', borderRadius: 11, padding: '8px 6px', textAlign: 'center', border: '1.5px solid #EDE6DA' }}>
+            <div style={{ fontSize: 16 }}>{cat.emoji}</div>
+            <div style={{ fontWeight: 700, fontSize: 8.5, color: '#57534E', marginTop: 2 }}>{cat.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+const ProofScreen: React.FC = () => (
+  <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#1C1917', overflow: 'hidden' }}>
+    <div style={{ padding: '13px 16px 10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+      <div>
+        <div style={{ fontWeight: 800, fontSize: 14, color: '#fff', fontFamily: 'var(--font-baloo2, sans-serif)' }}>Snap your proof</div>
+        <div style={{ fontWeight: 600, fontSize: 10, color: 'rgba(255,255,255,0.6)', marginTop: 2 }}>The 6 AM Club - Day 3</div>
+      </div>
+      <span style={{ fontSize: 20 }}>🌅</span>
+    </div>
+
+    {/* Viewfinder */}
+    <div style={{ flex: 1, margin: '0 14px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 0 }}>
+      <div style={{
+        width: '100%', aspectRatio: '3/4', borderRadius: 18,
+        background: '#2A2420', position: 'relative', overflow: 'hidden',
+        boxShadow: '0 0 0 1.5px rgba(240,138,76,0.35)',
+        maxHeight: '100%',
+      }}>
+        {/* Corner brackets */}
+        {([
+          { top: '10px', left: '10px' as string } as React.CSSProperties,
+          { top: '10px', right: '10px' as string } as React.CSSProperties,
+          { bottom: '10px', left: '10px' as string } as React.CSSProperties,
+          { bottom: '10px', right: '10px' as string } as React.CSSProperties,
+        ] as Array<{ top?: string; left?: string; right?: string; bottom?: string }>).map((pos, idx) => (
+          <div key={idx} style={{
+            position: 'absolute',
+            width: 18, height: 18,
+            border: '2px solid #F08A4C',
+            borderRadius: 3,
+            borderRight: pos.right !== undefined ? '2px solid #F08A4C' : 'none',
+            borderLeft: pos.left !== undefined ? '2px solid #F08A4C' : 'none',
+            borderTop: pos.top !== undefined ? '2px solid #F08A4C' : 'none',
+            borderBottom: pos.bottom !== undefined ? '2px solid #F08A4C' : 'none',
+            ...pos,
+          }} />
+        ))}
+        {/* Scene pill */}
+        <div style={{ position: 'absolute', bottom: 36, left: 0, right: 0, textAlign: 'center' }}>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 5,
+            background: 'rgba(240,138,76,0.22)', borderRadius: 99,
+            padding: '5px 13px', border: '1.5px solid rgba(240,138,76,0.5)',
+          }}>
+            <span style={{ fontSize: 13 }}>🌅</span>
+            <span style={{ fontWeight: 700, fontSize: 10.5, color: 'rgba(255,255,255,0.9)' }}>Morning scene</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Shutter */}
+    <div style={{ padding: '12px 16px 18px', textAlign: 'center', flexShrink: 0 }}>
+      <div style={{ fontWeight: 600, fontSize: 10, color: 'rgba(255,255,255,0.55)', marginBottom: 12 }}>
+        AI confirms in seconds
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{
+          width: 58, height: 58, borderRadius: '50%',
+          background: '#F08A4C',
+          border: '3px solid rgba(240,138,76,0.35)',
+          boxShadow: '0 0 0 5px rgba(240,138,76,0.12)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 22,
+        }}>
+          📸
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const JourneyScreen: React.FC = () => (
+  <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#FDFBF7', overflowY: 'auto' }}>
+    <div style={{
+      background: 'linear-gradient(160deg, #F08A4C, #E0742F)',
+      padding: '14px 16px 18px',
+      position: 'relative', overflow: 'hidden', flexShrink: 0,
+    }}>
+      <div aria-hidden="true" style={{ position: 'absolute', right: -22, top: -22, width: 90, height: 90, borderRadius: '50%', background: 'rgba(255,255,255,0.14)' }} />
+      <div style={{ fontWeight: 800, fontSize: 14, color: '#fff', marginBottom: 12, fontFamily: 'var(--font-baloo2, sans-serif)', position: 'relative', zIndex: 2 }}>My Journey</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 11, position: 'relative', zIndex: 2 }}>
+        <div style={{ position: 'relative' }}>
+          <div style={{ width: 50, height: 50, borderRadius: 16, background: 'rgba(255,255,255,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 22, color: '#E0742F', fontFamily: 'var(--font-baloo2, sans-serif)' }}>K</div>
+          <div style={{ position: 'absolute', bottom: -5, right: -6, background: '#FBBF24', color: '#5A3A00', fontWeight: 800, fontSize: 9, padding: '1px 6px', borderRadius: 99, border: '2px solid #fff' }}>12</div>
+        </div>
+        <div>
+          <div style={{ fontWeight: 800, fontSize: 18, color: '#fff', fontFamily: 'var(--font-baloo2, sans-serif)' }}>Kai</div>
+          <div style={{ fontWeight: 700, fontSize: 10, color: 'rgba(255,255,255,0.88)' }}>Level 12 Operator</div>
+        </div>
+      </div>
+      <div style={{ marginTop: 11, position: 'relative', zIndex: 2 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+          <span style={{ fontWeight: 700, fontSize: 9.5, color: 'rgba(255,255,255,0.88)' }}>720 XP</span>
+          <span style={{ fontWeight: 700, fontSize: 9.5, color: 'rgba(255,255,255,0.88)' }}>1000 XP - Lvl 13</span>
+        </div>
+        <div style={{ height: 6, borderRadius: 99, background: 'rgba(255,255,255,0.25)' }}>
+          <div style={{ height: '100%', width: '72%', borderRadius: 99, background: '#fff' }} />
+        </div>
+      </div>
+    </div>
+
+    {/* Stat chips */}
+    <div style={{ display: 'flex', gap: 7, padding: '11px 12px 0', flexShrink: 0 }}>
+      {[
+        { emoji: '🔥', val: '12', label: 'Streak', color: '#F08A4C' },
+        { emoji: '🏆', val: '3', label: 'Badges', color: '#FBBF24' },
+        { emoji: '✅', val: '47', label: 'Proven', color: '#34D399' },
+      ].map((s) => (
+        <div key={s.label} style={{ flex: 1, background: '#fff', borderRadius: 13, padding: '8px 5px', textAlign: 'center', border: '1.5px solid #EDE6DA' }}>
+          <div style={{ fontSize: 15 }}>{s.emoji}</div>
+          <div style={{ fontWeight: 800, fontSize: 14, color: s.color, fontFamily: 'var(--font-baloo2, sans-serif)' }}>{s.val}</div>
+          <div style={{ fontWeight: 700, fontSize: 8.5, color: '#A8A29E' }}>{s.label}</div>
+        </div>
+      ))}
+    </div>
+
+    {/* Attributes */}
+    <div style={{ padding: '11px 12px 0', flexShrink: 0 }}>
+      <div style={{ fontWeight: 800, fontSize: 11, color: '#1C1917', marginBottom: 8, fontFamily: 'var(--font-baloo2, sans-serif)' }}>Your stats</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+        {[
+          { key: 'Focus', emoji: '🧠', val: 78, color: '#A78BFA' },
+          { key: 'Vitality', emoji: '💪', val: 64, color: '#34D399' },
+          { key: 'Consistency', emoji: '🔥', val: 91, color: '#F08A4C' },
+        ].map((a) => (
+          <div key={a.key}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
+              <span style={{ fontWeight: 700, fontSize: 10, color: '#1C1917', display: 'flex', alignItems: 'center', gap: 3 }}>
+                {a.emoji} {a.key}
+              </span>
+              <span style={{ fontWeight: 800, fontSize: 10, color: a.color, fontFamily: 'var(--font-baloo2, sans-serif)' }}>{a.val}</span>
+            </div>
+            <div style={{ height: 5, borderRadius: 99, background: '#EDE6DA' }}>
+              <div style={{ height: '100%', width: `${a.val}%`, borderRadius: 99, background: a.color }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* Trophy room */}
+    <div style={{ padding: '11px 12px 12px', flex: 1 }}>
+      <div style={{ fontWeight: 800, fontSize: 11, color: '#1C1917', marginBottom: 8, fontFamily: 'var(--font-baloo2, sans-serif)' }}>
+        Trophy room{' '}
+        <span style={{ fontWeight: 700, fontSize: 9, color: '#A8A29E' }}>3/6</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 7 }}>
+        {[
+          { emoji: '🌅', got: true, bg: 'linear-gradient(150deg, #F08A4C, #E0742F)', name: 'Early Riser' },
+          { emoji: '🎯', got: true, bg: 'linear-gradient(150deg, #A78BFA, #7C3AED)', name: 'Perfect Week' },
+          { emoji: '🔥', got: true, bg: 'linear-gradient(150deg, #FB923C, #DC2626)', name: '30-Day Streak' },
+          { emoji: null, got: false, bg: '#F4EEE4', name: 'Iron Will' },
+          { emoji: null, got: false, bg: '#F4EEE4', name: 'Summit' },
+          { emoji: null, got: false, bg: '#F4EEE4', name: 'Unstoppable' },
+        ].map((b, i) => (
+          <div key={i} style={{ textAlign: 'center' }}>
+            <div style={{
+              aspectRatio: '1', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: b.bg,
+              border: b.got ? 'none' : '1.5px dashed #EDE6DA',
+              opacity: b.got ? 1 : 0.5,
+              fontSize: b.got ? 20 : 13,
+            }}>
+              {b.got ? b.emoji : '🔒'}
+            </div>
+            <div style={{ fontWeight: 700, fontSize: 8, color: b.got ? '#1C1917' : '#A8A29E', marginTop: 3, lineHeight: 1.2 }}>{b.name}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+/* ------------------------------------------------------------------ */
+/* Screen definitions                                                   */
+/* ------------------------------------------------------------------ */
+
+const SCREENS = [
+  {
+    id: 'home',
+    label: 'Your daily home',
+    description: 'Active batch, streak, and fresh challenges to discover.',
+    dark: false,
+    Component: HomeScreen,
+  },
+  {
+    id: 'proof',
+    label: 'Snap your proof',
+    description: 'Point and shoot. AI confirms you showed up in seconds.',
+    dark: true,
+    Component: ProofScreen,
+  },
+  {
+    id: 'journey',
+    label: 'Level up for real',
+    description: 'Track attributes, collect badges, and watch yourself grow.',
+    dark: false,
+    Component: JourneyScreen,
+  },
+] as const;
+
+/* ------------------------------------------------------------------ */
+/* Section                                                              */
+/* ------------------------------------------------------------------ */
+
 const AppSection: React.FC = () => {
-    return (
-        <section
-            id="app"
-            aria-labelledby="app-heading"
-            className="relative w-full px-6 md:px-12 flex flex-col justify-center"
-            style={{
-                minHeight: '720px',
-                paddingTop: 'clamp(80px, 12vw, 140px)',
-                paddingBottom: 'clamp(80px, 12vw, 140px)',
-                // Floor only, no vh cap (see ProblemSection rationale).
-            }}
-        >
-            <div className="max-w-[1200px] mx-auto w-full">
-                <FadeIn block>
-                    <div className="text-center">
-                        <span className="font-mono text-[11px] tracking-[0.2em] text-primary uppercase inline-flex items-center gap-3">
-                            <span className="h-px w-6 bg-primary inline-block" />
-                            02 · The app
-                            <span className="h-px w-6 bg-primary inline-block" />
-                        </span>
-                        <h2
-                            id="app-heading"
-                            className="mt-6 mx-auto max-w-[800px] font-medium tracking-[-0.04em] leading-[0.98] text-foreground"
-                            style={{ fontSize: 'clamp(30px, 4.6vw, 64px)' }}
-                        >
-                            Three taps.<br />
-                            One honest answer a day.
-                        </h2>
-                        <p
-                            className="mt-6 mx-auto max-w-[640px] text-foreground/75 leading-relaxed"
-                            style={{ fontSize: 'clamp(15px, 1.15vw, 18px)' }}
-                        >
-                            Built natively for iOS and Android. The whole thing fits on one screen, because the work is in your life, not in the app.
-                        </p>
-                    </div>
-                </FadeIn>
-
-                <FadeIn delay={150} block>
-                    <div className="mt-14 md:mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 lg:gap-10">
-                        <PhoneFrame label="01 · Today">
-                            <TodayScreen />
-                        </PhoneFrame>
-                        <PhoneFrame label="02 · The daily yes/no">
-                            <CheckInScreen />
-                        </PhoneFrame>
-                        <PhoneFrame label="03 · Progress">
-                            <ProgressScreen />
-                        </PhoneFrame>
-                    </div>
-                </FadeIn>
-
-                {/* Designed-for line stays as a feature preview; the
-                    App Store + Google Play badge row was removed
-                    2026-06-04 because DownloadSection (the dedicated
-                    "/04 · DOWNLOAD/" surface further down the page)
-                    already ships the same two badges with the same
-                    /waitlist destination. Two identical badge rows
-                    within 200px of each other diluted the primary
-                    CTA; one canonical surface is cleaner. */}
-                <FadeIn delay={300} block>
-                    <div className="mt-14 md:mt-20 flex flex-col items-center text-center gap-4">
-                        <div className="max-w-[640px]">
-                            <span className="font-mono text-[10px] tracking-[0.18em] text-primary uppercase">
-                                Designed for iOS · Android · Watch
-                            </span>
-                            <p className="mt-3 mx-auto text-foreground/75 leading-relaxed" style={{ fontSize: '15px' }}>
-                                Lockscreen widgets. A watch complication. One-tap check-ins. Wherever you already are, that&apos;s where the commitment lives.
-                            </p>
-                        </div>
-                    </div>
-                </FadeIn>
-            </div>
-        </section>
-    );
-};
-
-/**
- * Stylized phone frame. CSS-only, no raster image. The label sits
- * below as a mono caption to make it obvious these are conceptual
- * mockups, not pixel-faithful product screenshots.
- */
-function PhoneFrame({ label, children }: { label: string; children: React.ReactNode }) {
-    return (
-        <div className="flex flex-col items-center">
-            <div
-                className="relative w-full max-w-[240px] aspect-[9/19] border border-foreground/[0.16] bg-[#0d0d0e] overflow-hidden"
-                style={{ borderRadius: '34px', boxShadow: '0 24px 60px rgba(0,0,0,0.35)' }}
-            >
-                {/* Notch */}
-                <div
-                    className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 bg-[#0a0a0b] z-10"
-                    style={{ borderRadius: '14px' }}
-                    aria-hidden="true"
-                />
-                {/* Screen content */}
-                <div className="absolute inset-2 rounded-[26px] overflow-hidden">
-                    {children}
-                </div>
-            </div>
-            <span className="mt-5 font-mono text-[10px] tracking-[0.18em] text-muted uppercase">
-                {label}
+  return (
+    <section
+      id="app"
+      aria-labelledby="app-heading"
+      className="relative w-full"
+      style={{
+        paddingTop: 'clamp(80px, 10vw, 120px)',
+        paddingBottom: 'clamp(80px, 10vw, 120px)',
+        background: 'var(--color-background-alt, #F4EEE4)',
+      }}
+    >
+      <div className="max-w-[1180px] mx-auto px-6 md:px-10">
+        {/* Header */}
+        <FadeIn block className="text-center">
+          <div className="inline-flex items-center gap-2.5 mb-4">
+            <span className="h-px w-6 inline-block" style={{ background: 'var(--color-primary)' }} />
+            <span className="text-xs font-bold uppercase tracking-[0.12em]" style={{ color: 'var(--color-primary)' }}>
+              The App
             </span>
-        </div>
-    );
-}
+            <span className="h-px w-6 inline-block" style={{ background: 'var(--color-primary)' }} />
+          </div>
+          <h2
+            id="app-heading"
+            className="text-[clamp(34px,5vw,52px)] tracking-[-0.02em] max-w-[700px] mx-auto"
+            style={{ fontFamily: 'var(--font-baloo2, inherit)' }}
+          >
+            Built to keep you going
+          </h2>
+          <p
+            className="mt-4 max-w-[560px] mx-auto font-semibold leading-relaxed"
+            style={{ fontSize: 'clamp(16px,2vw,18px)', color: 'var(--color-muted)' }}
+          >
+            Three screens. One honest answer a day. Progress that actually feels like progress.
+          </p>
+        </FadeIn>
 
-function TodayScreen() {
-    return (
-        <div className="w-full h-full bg-[#0a0a0b] px-3 pt-8 pb-3 flex flex-col gap-3 font-mono text-[10px] text-foreground/85">
-            <div className="flex justify-between text-[9px] text-muted">
-                <span>Today</span>
-                <span className="w-2 h-2 rounded-full bg-foreground/20 inline-block" />
-            </div>
-            <div className="mt-1">
-                <div className="text-[28px] font-medium text-foreground leading-none">14</div>
-                <div className="text-[8px] tracking-wider text-muted uppercase mt-1">Commitments live</div>
-            </div>
-            <div className="mt-2 px-2 py-2 border border-foreground/[0.16] bg-foreground/[0.02]">
-                <div className="text-[10px] text-foreground">Run 4× this week</div>
-                <div className="text-[8px] text-muted mt-0.5">$50 staked · day 3 of 7</div>
-                <div className="mt-1.5 text-[8px] text-primary tracking-wider">CHECK IN</div>
-            </div>
-            <div className="px-2 py-2 border border-foreground/[0.16] bg-foreground/[0.02]">
-                <div className="text-[10px] text-foreground">Ship v1 by friday</div>
-                <div className="text-[8px] text-muted mt-0.5">$200 staked · day 1 of 4</div>
-                <div className="mt-1.5 text-[8px] text-primary tracking-wider">CHECK IN</div>
-            </div>
-        </div>
-    );
-}
+        {/* Phone mockups */}
+        <div className="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-8 items-start">
+          {SCREENS.map(({ id, label, description, dark, Component }, i) => (
+            <FadeIn key={id} delay={i * 80} block className="flex flex-col items-center">
+              {/* Phone frame */}
+              <div
+                style={{
+                  width: '100%',
+                  maxWidth: 220,
+                  aspectRatio: '9/19',
+                  borderRadius: 40,
+                  background: '#1C1917',
+                  padding: '11px 5px',
+                  boxShadow: '0 36px 72px -20px rgba(100,60,20,0.45), 0 0 0 2px rgba(255,255,255,0.07) inset',
+                  position: 'relative',
+                  margin: '0 auto',
+                }}
+                aria-hidden="true"
+              >
+                {/* Dynamic island */}
+                <div style={{
+                  position: 'absolute', top: 13, left: '50%', transform: 'translateX(-50%)',
+                  width: 70, height: 20, borderRadius: 10,
+                  background: '#0E0C0B', zIndex: 10,
+                  boxShadow: '0 0 0 1px rgba(255,255,255,0.06)',
+                }} />
+                {/* Side buttons */}
+                <div style={{ position: 'absolute', right: -3, top: '26%', width: 3, height: 46, borderRadius: 3, background: '#333' }} />
+                <div style={{ position: 'absolute', left: -3, top: '22%', width: 3, height: 28, borderRadius: 3, background: '#333' }} />
+                <div style={{ position: 'absolute', left: -3, top: '31%', width: 3, height: 48, borderRadius: 3, background: '#333' }} />
+                {/* Screen */}
+                <div style={{ borderRadius: 30, overflow: 'hidden', height: '100%', position: 'relative' }}>
+                  {/* Status bar */}
+                  <div style={{
+                    position: 'absolute', top: 0, left: 0, right: 0, height: 34,
+                    zIndex: 5, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between',
+                    padding: '0 14px 3px',
+                  }}>
+                    <span style={{ fontSize: 8, fontWeight: 800, color: dark ? 'rgba(255,255,255,0.7)' : 'rgba(28,25,23,0.6)' }}>9:41</span>
+                    <div style={{ width: 12, height: 5.5, borderRadius: 1.5, border: `1px solid ${dark ? 'rgba(255,255,255,0.5)' : 'rgba(28,25,23,0.4)'}`, position: 'relative', overflow: 'hidden' }}>
+                      <div style={{ position: 'absolute', inset: 1, right: 2.5, borderRadius: 0.5, background: dark ? 'rgba(255,255,255,0.5)' : 'rgba(28,25,23,0.4)' }} />
+                    </div>
+                  </div>
+                  {/* Content */}
+                  <div style={{ position: 'absolute', inset: 0, paddingTop: 34, background: dark ? '#1C1917' : '#FDFBF7' }}>
+                    <div style={{ height: '100%' }}>
+                      <Component />
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-function CheckInScreen() {
-    return (
-        <div className="w-full h-full bg-[#0a0a0b] px-3 pt-8 pb-3 flex flex-col font-mono text-[10px] text-foreground/85">
-            <div className="flex justify-between text-[9px] text-muted">
-                <span>Today</span>
-                <span>4:13 pm</span>
-            </div>
-            <div className="mt-6 text-[18px] font-medium text-foreground leading-tight">
-                Did you do it<br />today?
-            </div>
-            <div className="mt-1 text-[9px] text-muted">
-                Run 4× this week, three answers cover the next 48 hours.
-            </div>
-            <div className="mt-5 space-y-2">
-                <div className="px-2 py-2 bg-primary text-[#0a0a0b] text-[10px] flex items-center justify-between">
-                    <span>YES · DONE</span>
-                    <span>→</span>
+              {/* Caption */}
+              <div className="mt-6 text-center" style={{ maxWidth: 220 }}>
+                <div style={{ fontFamily: 'var(--font-baloo2, inherit)', fontWeight: 800, fontSize: 17, color: 'var(--color-foreground)' }}>
+                  {label}
                 </div>
-                <div className="px-2 py-2 border border-foreground/[0.16] text-[10px] flex items-center justify-between">
-                    <span>NOT YET · REMIND ME 6PM</span>
-                    <span>→</span>
+                <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--color-muted)', marginTop: 4, lineHeight: 1.45 }}>
+                  {description}
                 </div>
-                <div className="px-2 py-2 border border-foreground/[0.16] text-[10px] flex items-center justify-between text-foreground/75">
-                    <span>NO · MISSED IT</span>
-                    <span>→</span>
-                </div>
-            </div>
+              </div>
+            </FadeIn>
+          ))}
         </div>
-    );
-}
 
-function ProgressScreen() {
-    return (
-        <div className="w-full h-full bg-[#0a0a0b] px-3 pt-8 pb-3 flex flex-col font-mono text-[10px] text-foreground/85">
-            <div className="flex justify-between text-[9px] text-muted">
-                <span>Progress</span>
-                <span>30d</span>
-            </div>
-            <div className="mt-3 grid grid-cols-3 gap-1.5 text-[8px]">
-                <div>
-                    <div className="text-foreground text-[14px] font-medium">14</div>
-                    <div className="text-muted uppercase tracking-wider">Live</div>
-                </div>
-                <div>
-                    <div className="text-foreground text-[14px] font-medium">85%</div>
-                    <div className="text-muted uppercase tracking-wider">Honor</div>
-                </div>
-                <div>
-                    <div className="text-foreground text-[14px] font-medium">$0</div>
-                    <div className="text-muted uppercase tracking-wider">Forfeit</div>
-                </div>
-            </div>
-            <div className="mt-4 flex items-end gap-[3px] h-16">
-                {[40, 55, 30, 70, 60, 80, 45, 95, 70, 85, 60, 75, 90, 80].map((h, i) => (
-                    <span
-                        key={i}
-                        className={`flex-1 ${i >= 11 ? 'bg-primary' : 'bg-foreground/30'}`}
-                        style={{ height: `${h}%` }}
-                    />
-                ))}
-            </div>
-            <div className="mt-3 text-[8px] text-muted uppercase tracking-wider">
-                Last 14 days
-            </div>
-            <div className="mt-2 space-y-1 text-[9px]">
-                <div className="flex justify-between"><span className="text-foreground/80">Run 4×</span><span className="text-primary">85%</span></div>
-                <div className="flex justify-between"><span className="text-foreground/80">Ship v1</span><span className="text-foreground/60">28%</span></div>
-                <div className="flex justify-between"><span className="text-foreground/80">No alcohol</span><span className="text-primary">94%</span></div>
-            </div>
-        </div>
-    );
-}
+        {/* Platform note */}
+        <FadeIn delay={320} block className="mt-12 text-center">
+          <span
+            className="text-xs font-bold uppercase tracking-[0.14em]"
+            style={{ color: 'var(--color-muted-foreground, #A8A29E)' }}
+          >
+            iOS &middot; Android &middot; Watch coming soon
+          </span>
+        </FadeIn>
+      </div>
+    </section>
+  );
+};
 
 export default AppSection;
