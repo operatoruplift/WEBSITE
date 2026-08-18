@@ -414,7 +414,7 @@ const AppSection: React.FC = () => {
         <FadeIn delay={280} block className="mt-12 text-center">
           <a
             href="/app"
-            className="inline-flex items-center gap-2.5 h-14 px-8 rounded-[18px] font-bold text-base transition-all duration-150 hover:-translate-y-px"
+            className="inline-flex items-center gap-2.5 h-14 px-8 rounded-full font-bold text-base transition-all duration-150 hover:-translate-y-px"
             style={{
               background: 'linear-gradient(140deg, #F08A4C, #E0742F)',
               color: '#fff',

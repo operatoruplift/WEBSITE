@@ -120,7 +120,7 @@ const Hero: React.FC = () => {
                   type="email"
                   placeholder="you@email.com"
                   aria-label="Email address"
-                  className="flex-1 min-w-0 h-14 px-5 rounded-[18px] border-2 font-semibold text-base outline-none transition-all duration-150"
+                  className="flex-1 min-w-0 h-14 px-5 rounded-full border-2 font-semibold text-base outline-none transition-all duration-150"
                   style={{
                     borderColor: 'var(--color-border, #EDE6DA)',
                     background: 'var(--color-card, #fff)',
@@ -134,7 +134,7 @@ const Hero: React.FC = () => {
                 />
                 <button
                   type="submit"
-                  className="h-14 px-6 rounded-[18px] font-bold text-base text-white whitespace-nowrap transition-all duration-150 hover:-translate-y-px"
+                  className="h-14 px-6 rounded-full font-bold text-base text-white whitespace-nowrap transition-all duration-150 hover:-translate-y-px"
                   style={{
                     background: 'linear-gradient(140deg, #F08A4C, #E0742F)',
                     boxShadow: '0 8px 20px -8px rgba(240,138,76,0.7)',
@@ -159,7 +159,7 @@ const Hero: React.FC = () => {
                   required
                   autoComplete="email"
                   aria-label="Email address for waitlist"
-                  className="flex-1 min-w-0 h-14 px-5 rounded-[18px] border-2 font-semibold text-base outline-none transition-all duration-150"
+                  className="flex-1 min-w-0 h-14 px-5 rounded-full border-2 font-semibold text-base outline-none transition-all duration-150"
                   style={{
                     borderColor: 'var(--color-primary)',
                     boxShadow: '0 0 0 4px rgba(240,138,76,0.14)',
@@ -170,7 +170,7 @@ const Hero: React.FC = () => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="h-14 px-6 rounded-[18px] font-bold text-base text-white whitespace-nowrap transition-all duration-150 hover:-translate-y-px disabled:opacity-50"
+                  className="h-14 px-6 rounded-full font-bold text-base text-white whitespace-nowrap transition-all duration-150 hover:-translate-y-px disabled:opacity-50"
                   style={{
                     background: 'linear-gradient(140deg, #F08A4C, #E0742F)',
                     boxShadow: '0 8px 20px -8px rgba(240,138,76,0.7)',

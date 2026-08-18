@@ -100,7 +100,7 @@ const FinalCta: React.FC = () => {
                   placeholder="you@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 min-w-0 h-14 px-5 rounded-[18px] font-semibold text-base outline-none"
+                  className="flex-1 min-w-0 h-14 px-5 rounded-full font-semibold text-base outline-none"
                   style={{
                     border: 'none',
                     background: '#fff',
@@ -111,7 +111,7 @@ const FinalCta: React.FC = () => {
                 <button
                   type="submit"
                   disabled={ctaState === 'submitting'}
-                  className="h-14 px-6 rounded-[18px] font-bold text-base whitespace-nowrap transition-all duration-150 hover:-translate-y-px disabled:opacity-60"
+                  className="h-14 px-6 rounded-full font-bold text-base whitespace-nowrap transition-all duration-150 hover:-translate-y-px disabled:opacity-60"
                   style={{
                     background: '#1C1917',
                     color: '#fff',
