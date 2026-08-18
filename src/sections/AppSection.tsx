@@ -410,14 +410,30 @@ const AppSection: React.FC = () => {
           ))}
         </div>
 
-        {/* Platform note */}
-        <FadeIn delay={320} block className="mt-12 text-center">
-          <span
-            className="text-xs font-bold uppercase tracking-[0.14em]"
-            style={{ color: 'var(--color-muted-foreground, #A8A29E)' }}
+        {/* Try the live app */}
+        <FadeIn delay={280} block className="mt-12 text-center">
+          <a
+            href="/app"
+            className="inline-flex items-center gap-2.5 h-14 px-8 rounded-[18px] font-bold text-base transition-all duration-150 hover:-translate-y-px"
+            style={{
+              background: 'linear-gradient(140deg, #F08A4C, #E0742F)',
+              color: '#fff',
+              boxShadow: '0 14px 30px -12px rgba(224,116,47,0.65)',
+              fontFamily: 'var(--font-baloo2, inherit)',
+            }}
           >
-            iOS &middot; Android &middot; Watch coming soon
-          </span>
+            <span aria-hidden="true">&#x1F4F1;</span>
+            Try the live app
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+          <div className="mt-4">
+            <span
+              className="text-xs font-bold uppercase tracking-[0.14em]"
+              style={{ color: 'var(--color-muted-foreground, #A8A29E)' }}
+            >
+              Works in your browser &middot; installs as an app &middot; iOS + Android coming soon
+            </span>
+          </div>
         </FadeIn>
       </div>
     </section>

@@ -40,6 +40,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // 2026-05-21 Gamify Your Growth pivot: /waitlist is the primary
     // conversion surface until the paid Pro page ships in Phase 8.
     { url: `${HOST}/waitlist`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
+    // The installable Uplift PWA demo (2026-08): the product itself,
+    // playable in the browser with practice money.
+    { url: `${HOST}/app`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${HOST}/pricing`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${HOST}/docs`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
     { url: `${HOST}/faq`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },

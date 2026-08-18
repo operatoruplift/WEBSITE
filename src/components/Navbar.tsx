@@ -82,6 +82,7 @@ const Navbar: React.FC<NavbarProps> = () => {
   const navItems: ReadonlyArray<{ label: string; href: string }> = [
     { label: 'how it works', href: '/#how-it-works' },
     { label: 'the app', href: '/#app' },
+    { label: 'app demo', href: '/app' },
     { label: 'pricing', href: '/#pricing' },
     { label: 'faq', href: '/#faq' },
     { label: 'docs', href: '/docs' },

@@ -1,0 +1,108 @@
+/*
+ * Uplift app design tokens + motion, ported from the Uplift-OS
+ * reference index.css. Everything is scoped: color vars live under
+ * .ou-app (with html.ou-dark overrides) and every keyframe/utility is
+ * ou_/ou- prefixed, so the marketing site's styles are untouched.
+ */
+
+.ou-app {
+  --bg: #e9e3da;
+  --bg2: #f4eee4;
+  --card: #fffdf9;
+  --card-alt: #fbf6ee;
+  --text: #3e3226;
+  --text2: #57534e;
+  --text3: #a8a29e;
+  --border: #ede6da;
+  --border-s: #e2d9cb;
+  --shadow: 0 8px 24px -8px rgba(120, 90, 50, 0.18);
+  --shadow-soft: 0 4px 14px -6px rgba(120, 90, 50, 0.14);
+
+  --orange: #f08a4c;
+  --orange-d: #e0742f;
+  --orange-dk: #c25e1f;
+  --mint: #34d399;
+  --mint-d: #10b981;
+  --coral: #fb7185;
+  --coral-d: #f43f5e;
+  --gold: #fbbf24;
+  --violet: #a78bfa;
+  --sky: #38bdf8;
+
+  --font-app-body: var(--font-nunito), 'Nunito', system-ui, sans-serif;
+  --font-app-display: var(--font-baloo2), 'Baloo 2', 'Nunito', sans-serif;
+
+  font-family: var(--font-app-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+html.ou-dark .ou-app {
+  --bg: #211915;
+  --bg2: #2a201a;
+  --card: #2c221c;
+  --card-alt: #382b24;
+  --text: #fdfbf7;
+  --text2: #d6cfc5;
+  --text3: #8c857c;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-s: rgba(255, 255, 255, 0.14);
+  --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+  --shadow-soft: 0 6px 18px -8px rgba(0, 0, 0, 0.5);
+}
+
+/* Animations */
+@keyframes ou_pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 10px 26px -8px rgba(240, 138, 76, 0.6); }
+  50% { transform: scale(1.025); box-shadow: 0 16px 36px -8px rgba(240, 138, 76, 0.8); }
+}
+@keyframes ou_pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes ou_slideup { 0% { transform: translateY(100%); } 100% { transform: translateY(0); } }
+@keyframes ou_fadein {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes ou_float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-9px) rotate(2deg); }
+}
+@keyframes ou_spin { to { transform: rotate(360deg); } }
+@keyframes ou_confetti {
+  0% { transform: translateY(-10vh) rotate(0); opacity: 1; }
+  100% { transform: translateY(105vh) rotate(720deg); opacity: 1; }
+}
+@keyframes ou_bar { from { width: 0; } }
+@keyframes ou_bounce {
+  0%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-12px); }
+  50% { transform: translateY(0); }
+  65% { transform: translateY(-5px); }
+}
+@keyframes ou_shake {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  20% { transform: translateX(-4px) rotate(-3deg); }
+  40% { transform: translateX(4px) rotate(3deg); }
+  60% { transform: translateX(-3px) rotate(-2deg); }
+  80% { transform: translateX(3px) rotate(2deg); }
+}
+
+.ou-squish { transition: transform 0.14s cubic-bezier(0.34, 1.7, 0.5, 1); }
+.ou-squish:active { transform: scale(0.94); }
+.ou-fadein { animation: ou_fadein 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.ou-scroll { overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.ou-scroll::-webkit-scrollbar { display: none; }
+.ou-hscroll { overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; }
+.ou-hscroll::-webkit-scrollbar { display: none; }
+.ou-hscroll > * { scroll-snap-align: start; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ou-app *, .ou-app ::before, .ou-app ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
