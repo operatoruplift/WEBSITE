@@ -80,7 +80,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
             <button
                 type="button"
                 aria-label="Theme toggle"
-                className={`inline-flex items-center justify-center w-9 h-9 rounded-md border border-foreground/[0.14] bg-foreground/[0.02] text-muted ${className}`}
+                className={`inline-flex items-center justify-center w-9 h-9 rounded-full border border-foreground/[0.14] bg-foreground/[0.02] text-muted ${className}`}
                 disabled
             >
                 <span className="w-4 h-4 inline-block" aria-hidden="true" />
@@ -97,7 +97,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
             aria-pressed={isLight}
             title={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
             className={[
-                'inline-flex items-center justify-center w-9 h-9 rounded-md',
+                'inline-flex items-center justify-center w-9 h-9 rounded-full',
                 'border border-foreground/[0.14] bg-foreground/[0.02]',
                 'text-foreground hover:border-foreground/40 hover:bg-foreground/[0.06]',
                 'transition-colors',

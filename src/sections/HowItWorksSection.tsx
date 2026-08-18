@@ -81,7 +81,7 @@ const HowItWorksSection: React.FC = () => {
                   {step.n}
                 </span>
                 <div
-                  className="w-14 h-14 rounded-[18px] flex items-center justify-center text-3xl mb-4"
+                  className="w-14 h-14 rounded-[20px] flex items-center justify-center text-3xl mb-4"
                   style={{ background: step.iconBg }}
                 >
                   {step.icon}

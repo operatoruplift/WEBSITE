@@ -54,12 +54,12 @@ export function CookieConsent() {
     const lightTheme = shouldUseLightBanner(pathname);
 
     const cardClass = lightTheme
-        ? 'bg-white border border-zinc-200 rounded-xl p-5 shadow-2xl'
-        : 'bg-[#0a0a0f] border border-white/10 rounded-xl p-5 shadow-2xl backdrop-blur-xl';
+        ? 'bg-white border border-zinc-200 rounded-[28px] p-5 shadow-2xl'
+        : 'bg-[#0a0a0f] border border-white/10 rounded-[28px] p-5 shadow-2xl backdrop-blur-xl';
     const copyClass = lightTheme ? 'text-sm text-zinc-700 mb-4' : 'text-sm text-gray-300 mb-4';
     const declineClass = lightTheme
-        ? 'flex-1 px-4 py-2 bg-zinc-100 text-zinc-600 text-xs font-bold rounded-lg border border-zinc-200 hover:bg-zinc-200 transition-colors uppercase tracking-wide'
-        : 'flex-1 px-4 py-2 bg-white/5 text-gray-400 text-xs font-bold rounded-lg border border-white/10 hover:bg-white/10 transition-colors uppercase tracking-wide';
+        ? 'flex-1 px-4 py-2.5 bg-zinc-100 text-zinc-600 text-xs font-bold rounded-full border border-zinc-200 hover:bg-zinc-200 transition-colors uppercase tracking-wide'
+        : 'flex-1 px-4 py-2.5 bg-white/5 text-gray-400 text-xs font-bold rounded-full border border-white/10 hover:bg-white/10 transition-colors uppercase tracking-wide';
 
     return (
         <div
@@ -77,7 +77,7 @@ export function CookieConsent() {
                         peach) is ~2.3:1 contrast, well below WCAG AA's
                         4.5:1 for text-xs. text-[#0A0A0B] (near-black) on
                         the same peach is ~8.5:1, easily AA-compliant. */}
-                    <button onClick={accept} className="flex-1 px-4 py-2 bg-primary text-[#0A0A0B] text-xs font-bold rounded-lg hover:bg-primary/85 transition-colors uppercase tracking-wide">
+                    <button onClick={accept} className="flex-1 px-4 py-2.5 bg-primary text-[#0A0A0B] text-xs font-bold rounded-full hover:bg-primary/85 transition-colors uppercase tracking-wide">
                         Accept
                     </button>
                     <button onClick={decline} className={declineClass}>

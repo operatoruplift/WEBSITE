@@ -160,7 +160,7 @@ const Navbar: React.FC<NavbarProps> = () => {
           <ThemeToggle />
           <Link
             href="/waitlist"
-            className="inline-flex items-center gap-2 px-4 py-2 font-mono text-[13px] text-foreground border border-foreground/[0.16] bg-foreground/[0.02] hover:border-foreground/40 hover:bg-foreground/[0.06] transition-all"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-mono text-[13px] text-foreground border border-foreground/[0.16] bg-foreground/[0.02] hover:border-foreground/40 hover:bg-foreground/[0.06] transition-all"
           >
             Join the waitlist
             <span className="text-primary">→</span>
@@ -246,7 +246,7 @@ const Navbar: React.FC<NavbarProps> = () => {
               key={item.href}
               href={item.href}
               onClick={() => setMobileMenuOpen(false)}
-              className="font-mono text-base text-foreground hover:text-primary px-4 py-3 rounded-lg hover:bg-foreground/[0.04] transition-colors"
+              className="font-mono text-base text-foreground hover:text-primary px-4 py-3 rounded-2xl hover:bg-foreground/[0.04] transition-colors"
               style={{
                 opacity: mobileMenuOpen ? 1 : 0,
                 transform: mobileMenuOpen ? 'none' : 'translateX(12px)',
@@ -276,7 +276,7 @@ const Navbar: React.FC<NavbarProps> = () => {
           <Link
             href="/waitlist"
             onClick={() => setMobileMenuOpen(false)}
-            className="inline-flex items-center justify-center gap-2 px-4 py-3 font-mono text-sm text-foreground border border-foreground/[0.16] bg-foreground/[0.02] hover:border-foreground/40 transition-all"
+            className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-full font-mono text-sm text-foreground border border-foreground/[0.16] bg-foreground/[0.02] hover:border-foreground/40 transition-all"
           >
             Join the waitlist
             <span className="text-primary">→</span>

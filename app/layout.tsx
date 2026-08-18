@@ -76,6 +76,7 @@ export const metadata: Metadata = {
   },
   other: {
     "base:app_id": "69e244243bb010cd08cfdb7f",
+    "virtual-protocol-site-verification": "4e50a941cb68aa7c859407f5570dd153",
   },
 };
 

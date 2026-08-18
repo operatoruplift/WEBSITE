@@ -98,7 +98,7 @@ const WhySection: React.FC = () => {
                   }}
                 >
                   <div
-                    className="w-12 h-12 rounded-[14px] flex items-center justify-center text-2xl shrink-0"
+                    className="w-12 h-12 rounded-[18px] flex items-center justify-center text-2xl shrink-0"
                     style={{ background: 'rgba(251,113,133,0.18)' }}
                   >
                     {item.icon}
