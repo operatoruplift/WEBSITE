@@ -55,7 +55,8 @@ const baseConfig: NextConfig = isDesktop
               // 2026-06-08 prune (already RetiredSurface stubs left over
               // from the AI-assistant product). Redirect their old URLs
               // to the homepage so inbound links and bookmarks never 404.
-              // /goals is the only surviving dashboard surface.
+              // /goals is the only surviving dashboard surface. /app was
+              // in this list until 2026-08 when it became the Uplift PWA.
               const retiredDashboardRoutes = [
                   '/chat',
                   '/swarm',
@@ -64,7 +65,6 @@ const baseConfig: NextConfig = isDesktop
                   '/marketplace',
                   '/integrations',
                   '/agents',
-                  '/app',
                   '/analytics',
                   '/notifications',
                   '/onboarding',

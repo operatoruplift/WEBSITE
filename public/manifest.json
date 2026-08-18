@@ -1,18 +1,32 @@
 {
   "name": "Operator Uplift",
-  "short_name": "Operator Uplift",
-  "description": "Commitment infrastructure for operators. Keep your word. Bet on yourself. Stake real money on what you say you'll do, get daily check-ins adjudicated by an AI Game Master, and settle on Solana.",
-  "start_url": "/",
+  "short_name": "Uplift",
+  "description": "Lock a little on a daily habit, prove it with a photo, and get it all back when you finish. Streaks, levels, and gentle accountability.",
+  "id": "/app",
+  "start_url": "/app",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#FAFAFA",
-  "theme_color": "#F08A4C",
   "orientation": "portrait",
+  "background_color": "#E9E3DA",
+  "theme_color": "#F08A4C",
   "icons": [
     {
-      "src": "/logo.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/uplift/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/uplift/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/uplift/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
