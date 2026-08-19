@@ -73,7 +73,8 @@ const FinalCta: React.FC = () => {
           <div className="relative z-10">
             <h2
               id="final-cta-heading"
-              className="text-white text-[clamp(34px,5vw,56px)] tracking-[-0.02em]"
+              className="text-[clamp(34px,5vw,56px)] tracking-[-0.02em]"
+              style={{ color: '#fff' }}
             >
               Stop hoping. Start finishing.
             </h2>
@@ -133,7 +134,7 @@ const FinalCta: React.FC = () => {
                 >
                   <Check size={13} style={{ color: '#fff' }} />
                 </span>
-                <span className="text-white text-left flex-1">
+                <span className="text-left flex-1" style={{ color: '#fff' }}>
                   {signupResult && signupResult.position > 0 && (
                     <>#{signupResult.position} of {signupResult.count} </>
                   )}
