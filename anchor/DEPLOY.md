@@ -74,6 +74,31 @@ Read state back with `new UpliftEscrowClient(connection).fetchChallenge(id)`.
    enrollment, then anyone calls `settle_challenge(id)`.
 5. Finishers `claim_bonus(id)`.
 
+## Server settlement route
+
+`POST /api/escrow/settle-proof` (in the Next app) lets your verification
+backend attest a proof on-chain with the settlement-authority key, instead of
+exposing that key to the client. It stays inert (503) until you set:
+
+```
+NEXT_PUBLIC_ESCROW_PROGRAM_ID        # your deployed program id
+ESCROW_SETTLEMENT_AUTHORITY_SECRET   # the authority keypair (base58 or JSON array)
+ESCROW_ADMIN_KEY                     # shared secret the caller sends as X-Escrow-Key
+```
+
+Then, after your pipeline confirms a day's proof:
+
+```bash
+curl -X POST https://<host>/api/escrow/settle-proof \
+  -H "X-Escrow-Key: $ESCROW_ADMIN_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"challengeId": 1, "user": "<wallet-base58>"}'
+# -> { signature, challengeId, user, ... }
+```
+
+Keep `ESCROW_SETTLEMENT_AUTHORITY_SECRET` in a server secret store, never a
+`NEXT_PUBLIC_*` var, and move it to an HSM/KMS signer before mainnet.
+
 ## Before mainnet
 
 - **Get a professional audit.** This holds user funds.
