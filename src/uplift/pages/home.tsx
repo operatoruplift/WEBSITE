@@ -95,7 +95,7 @@ export default function Home() {
         <div style={{ fontFamily: 'var(--font-app-display)', fontWeight: 800, fontSize: 21, color: 'var(--text)' }}>Find your next challenge</div>
         <button onClick={() => setLocation('/app/browse')} className="ou-squish" style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-app-display)', fontWeight: 800, fontSize: 14, color: 'var(--orange)', display: 'flex', alignItems: 'center', gap: 2 }}>See all<Icon name="chevron-r" size={16} color="var(--orange)"/></button>
       </div>
-      <div className="ou-hscroll" style={{ display: 'flex', gap: 14, padding: '0 22px 8px', overflowX: 'auto' }}>
+      <div className="ou-hscroll" style={{ display: 'flex', alignItems: 'flex-start', flexShrink: 0, gap: 14, padding: '0 22px 8px', overflowX: 'auto' }}>
         {batches.slice(0, 4).map(b => (
           <div key={b.id} onClick={() => setSheet({ type: 'join', batchId: b.id })} className="ou-squish" style={{ flexShrink: 0, width: 248, cursor: 'pointer' }}>
             <Card pad={0} radius={26} style={{ overflow: 'hidden', boxShadow: 'var(--shadow-soft)' }}>

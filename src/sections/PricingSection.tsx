@@ -112,9 +112,10 @@ const PricingSection: React.FC = () => {
               >
                 {tier.featured && (
                   <div
-                    className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-white text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap"
+                    className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap"
                     style={{
                       background: 'linear-gradient(140deg, #F08A4C, #E0742F)',
+                      color: '#fff',
                       fontFamily: 'var(--font-baloo2, inherit)',
                       letterSpacing: '0.04em',
                     }}

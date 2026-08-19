@@ -54,7 +54,8 @@ const WhySection: React.FC = () => {
           </div>
           <h2
             id="why-heading"
-            className="text-[clamp(34px,5vw,52px)] tracking-[-0.02em] max-w-[760px] mx-auto text-white"
+            className="text-[clamp(34px,5vw,52px)] tracking-[-0.02em] max-w-[760px] mx-auto"
+            style={{ color: '#fff' }}
           >
             Reminders don&apos;t change behavior. Consequences do.
           </h2>
@@ -104,7 +105,7 @@ const WhySection: React.FC = () => {
                     {item.icon}
                   </div>
                   <div>
-                    <h4 className="text-lg font-bold text-white" style={{ fontFamily: 'var(--font-baloo2, inherit)' }}>
+                    <h4 className="text-lg font-bold" style={{ fontFamily: 'var(--font-baloo2, inherit)', color: '#fff' }}>
                       {item.title}
                     </h4>
                     <p className="text-sm font-semibold mt-0.5" style={{ color: '#B8B0A6' }}>

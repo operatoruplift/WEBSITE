@@ -74,11 +74,12 @@ const Hero: React.FC = () => {
         {/* Headline */}
         <h1
           id="hero-heading"
-          className="mt-6 font-medium tracking-[-0.03em] leading-[1.05]"
+          className="mt-6 w-full max-w-full font-medium tracking-[-0.03em] leading-[1.05]"
           style={{
-            fontSize: 'clamp(46px, 8vw, 86px)',
+            fontSize: 'clamp(33px, 8vw, 84px)',
             fontFamily: 'var(--font-baloo2, var(--font-geist-sans))',
             fontWeight: 800,
+            overflowWrap: 'break-word',
           }}
         >
           <SplitChars text={headlineFirst} baseDelay={200} charDelay={20} />
@@ -96,9 +97,9 @@ const Hero: React.FC = () => {
         </h1>
 
         {/* Subhead */}
-        <FadeIn delay={400}>
+        <FadeIn delay={400} block>
           <p
-            className="mt-5 max-w-[600px] mx-auto leading-relaxed"
+            className="mt-5 w-full max-w-[600px] mx-auto leading-relaxed"
             style={{ fontSize: 'clamp(17px, 2.4vw, 21px)', color: 'var(--color-muted)' }}
           >
             Operator Uplift helps you actually follow through. Put money on a goal, prove it
@@ -108,13 +109,12 @@ const Hero: React.FC = () => {
         </FadeIn>
 
         {/* CTA area */}
-        <FadeIn delay={550}>
+        <FadeIn delay={550} block>
           <div className="mt-8 md:mt-10 w-full max-w-[470px] mx-auto">
             {ctaState === 'idle' && (
               <form
                 onSubmit={(e) => { e.preventDefault(); setCtaState('form'); }}
-                className="flex gap-3"
-                style={{ flexDirection: 'row' }}
+                className="flex flex-col sm:flex-row gap-3"
               >
                 <input
                   type="email"
@@ -134,7 +134,7 @@ const Hero: React.FC = () => {
                 />
                 <button
                   type="submit"
-                  className="h-14 px-6 rounded-full font-bold text-base text-white whitespace-nowrap transition-all duration-150 hover:-translate-y-px"
+                  className="h-14 px-6 rounded-full font-bold text-base text-white whitespace-nowrap transition-all duration-150 hover:-translate-y-px w-full sm:w-auto"
                   style={{
                     background: 'linear-gradient(140deg, #F08A4C, #E0742F)',
                     boxShadow: '0 8px 20px -8px rgba(240,138,76,0.7)',
@@ -148,7 +148,7 @@ const Hero: React.FC = () => {
             {ctaState === 'form' && (
               <form
                 onSubmit={handleWaitlistSubmit}
-                className="flex gap-3"
+                className="flex flex-col sm:flex-row gap-3"
               >
                 <input
                   ref={emailInputRef}
@@ -170,7 +170,7 @@ const Hero: React.FC = () => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="h-14 px-6 rounded-full font-bold text-base text-white whitespace-nowrap transition-all duration-150 hover:-translate-y-px disabled:opacity-50"
+                  className="h-14 px-6 rounded-full font-bold text-base text-white whitespace-nowrap transition-all duration-150 hover:-translate-y-px disabled:opacity-50 w-full sm:w-auto"
                   style={{
                     background: 'linear-gradient(140deg, #F08A4C, #E0742F)',
                     boxShadow: '0 8px 20px -8px rgba(240,138,76,0.7)',
@@ -209,8 +209,8 @@ const Hero: React.FC = () => {
 
         {/* Trust strip */}
         {ctaState !== 'done' && (
-          <FadeIn delay={650}>
-            <div className="mt-6 flex gap-6 flex-wrap justify-center">
+          <FadeIn delay={650} block>
+            <div className="mt-6 flex gap-x-6 gap-y-2 flex-wrap justify-center">
               {TRUST_ITEMS.map((item) => (
                 <span key={item.label} className="flex items-center gap-2 font-bold text-sm" style={{ color: 'var(--color-muted)' }}>
                   <span>{item.icon}</span>
