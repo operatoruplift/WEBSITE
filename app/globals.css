@@ -216,7 +216,9 @@
   --color-card: #FFFFFF;
   --color-card-alt: #FBF6EE;
   --color-muted: #57534E;
-  --color-muted-foreground: #A8A29E;
+  /* Darkened from #A8A29E (~2.3:1 on the cream bg, effectively invisible)
+     to #78716C so small muted labels clear WCAG AA. */
+  --color-muted-foreground: #78716C;
   --color-border: #EDE6DA;
   --color-border-visible: #E2D9CB;
   --shadow-card: 0 8px 22px -12px rgba(120, 90, 50, 0.20);
