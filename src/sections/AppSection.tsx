@@ -74,7 +74,7 @@ const HomeScreen: React.FC = () => (
             </div>
             <div style={{ padding: '6px 8px 8px' }}>
               <div style={{ fontWeight: 800, fontSize: 9.5, color: '#1C1917', lineHeight: 1.2, fontFamily: 'var(--font-baloo2, sans-serif)' }}>{b.name}</div>
-              <div style={{ fontWeight: 700, fontSize: 9, color: '#A8A29E', marginTop: 2 }}>{b.price}/day</div>
+              <div style={{ fontWeight: 700, fontSize: 9, color: '#78716C', marginTop: 2 }}>{b.price}/day</div>
             </div>
           </div>
         ))}
@@ -214,7 +214,7 @@ const JourneyScreen: React.FC = () => (
         <div key={s.label} style={{ flex: 1, background: '#fff', borderRadius: 13, padding: '8px 5px', textAlign: 'center', border: '1.5px solid #EDE6DA' }}>
           <div style={{ fontSize: 15 }}>{s.emoji}</div>
           <div style={{ fontWeight: 800, fontSize: 14, color: s.color, fontFamily: 'var(--font-baloo2, sans-serif)' }}>{s.val}</div>
-          <div style={{ fontWeight: 700, fontSize: 8.5, color: '#A8A29E' }}>{s.label}</div>
+          <div style={{ fontWeight: 700, fontSize: 8.5, color: '#78716C' }}>{s.label}</div>
         </div>
       ))}
     </div>
@@ -247,7 +247,7 @@ const JourneyScreen: React.FC = () => (
     <div style={{ padding: '11px 12px 12px', flex: 1 }}>
       <div style={{ fontWeight: 800, fontSize: 11, color: '#1C1917', marginBottom: 8, fontFamily: 'var(--font-baloo2, sans-serif)' }}>
         Trophy room{' '}
-        <span style={{ fontWeight: 700, fontSize: 9, color: '#A8A29E' }}>3/6</span>
+        <span style={{ fontWeight: 700, fontSize: 9, color: '#78716C' }}>3/6</span>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 7 }}>
         {[
@@ -268,7 +268,7 @@ const JourneyScreen: React.FC = () => (
             }}>
               {b.got ? b.emoji : '🔒'}
             </div>
-            <div style={{ fontWeight: 700, fontSize: 8, color: b.got ? '#1C1917' : '#A8A29E', marginTop: 3, lineHeight: 1.2 }}>{b.name}</div>
+            <div style={{ fontWeight: 700, fontSize: 8, color: b.got ? '#1C1917' : '#78716C', marginTop: 3, lineHeight: 1.2 }}>{b.name}</div>
           </div>
         ))}
       </div>
@@ -429,7 +429,7 @@ const AppSection: React.FC = () => {
           <div className="mt-4">
             <span
               className="text-xs font-bold uppercase tracking-[0.14em]"
-              style={{ color: 'var(--color-muted-foreground, #A8A29E)' }}
+              style={{ color: 'var(--color-muted-foreground, #78716C)' }}
             >
               Works in your browser &middot; installs as an app &middot; iOS + Android coming soon
             </span>

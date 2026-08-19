@@ -16,6 +16,7 @@ import './uplift.css';
 import { ErrorBoundary } from '@/src/uplift/error-boundary';
 import { PhoneFrame, TabBar } from '@/src/uplift/system';
 import { useOnboarding } from '@/src/uplift/use-onboarding';
+import { ThemeProvider } from '@/src/uplift/use-theme';
 
 import Home from '@/src/uplift/pages/home';
 import Browse from '@/src/uplift/pages/browse';
@@ -118,12 +119,14 @@ function RoutedErrorBoundary({ children }: { children: ReactNode }) {
 export default function UpliftApp() {
   return (
     <QueryClientProvider client={queryClient}>
-      <WouterRouter>
-        <RoutedErrorBoundary>
-          <AppArea />
-        </RoutedErrorBoundary>
-      </WouterRouter>
-      <Toaster position="top-center" richColors theme="system" />
+      <ThemeProvider>
+        <WouterRouter>
+          <RoutedErrorBoundary>
+            <AppArea />
+          </RoutedErrorBoundary>
+        </WouterRouter>
+        <Toaster position="top-center" richColors theme="system" />
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
