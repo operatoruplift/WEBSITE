@@ -24,14 +24,17 @@ import { test, expect } from '@playwright/test';
  * incarnation of the same bug on /blog, fixed in PR #587).
  */
 
-// 2026-06-03: trimmed to match the live homepage. market-now
-// (TrustedByStrip) was removed earlier, faq moved to /faq, and
-// FaqSection no longer mounts on the homepage. ProblemSection,
-// AppSection, and HowItWorksSection remain.
+// 2026-07 consumer redesign (PR #810): the homepage sections changed.
+// ProblemSection was removed and replaced by WhySection (#why); the
+// redesign also brought FaqSection back onto the homepage. These are the
+// centered-header sections that mount on / today.
 const SECTIONS = [
-    { id: 'problem', name: 'ProblemSection (01 - The problem)' },
-    { id: 'app', name: 'AppSection (02 - The app)' },
-    { id: 'how-it-works', name: 'HowItWorksSection (03)' },
+    { id: 'how-it-works', name: 'HowItWorksSection' },
+    { id: 'why', name: 'WhySection' },
+    { id: 'app', name: 'AppSection' },
+    { id: 'pricing', name: 'PricingSection' },
+    { id: 'proof', name: 'ProofSection' },
+    { id: 'faq', name: 'FaqSection' },
 ];
 
 test.describe('homepage section h2 centering', () => {

@@ -66,27 +66,37 @@ test('homepage hero shows the pivot pitch', async ({ page }) => {
     // "Keep your word. Bet on yourself." Primary CTA is
     // "Join the waitlist" pointing at /waitlist. Source of truth:
     // docs/PIVOT_GAMIFY_GROWTH.md.
-    await expect(page.getByText(/Keep your word\. Bet on yourself\./i).first()).toBeVisible({ timeout: 10_000 });
+    //
+    // The headline animates in character-by-character (SplitChars), so
+    // it is not a single text node; assert the two lines against the
+    // heading element, which reconstructs the full text.
+    // String (not regex) contains-match: SplitChars puts each character in
+    // its own text node, so a regex never sees the whole phrase, but the
+    // string matcher assembles the element's full text first.
+    const heading = page.locator('#hero-heading');
+    await expect(heading).toBeVisible({ timeout: 10_000 });
+    await expect(heading).toContainText('Keep your word');
+    await expect(heading).toContainText('Bet on yourself');
     await expect(page.getByRole('link', { name: /join the waitlist/i }).first()).toBeVisible();
 
     const body = await page.locator('body').innerText();
     assertNoBannedPhrases(body, '/');
 });
 
-test('homepage shows the Problem section (DRIFT / FOG / SILENCE)', async ({ page }) => {
+test('homepage shows the why-it-works section (80% stat + failure modes)', async ({ page }) => {
     await page.goto('/');
 
-    // 2026-05-22 design-template restructure. The old #local-first
-    // problem/solution two-column was replaced with the design ref's
-    // #problem three-card grid (DRIFT / FOG / SILENCE) per the
-    // founder's "use website.html as the template, remove everything
-    // else" brief. Source of truth: src/sections/ProblemSection.tsx.
-    const problem = page.locator('#problem');
-    await expect(problem).toBeVisible({ timeout: 10_000 });
-    await expect(problem).toContainText(/DRIFT/);
-    await expect(problem).toContainText(/FOG/);
-    await expect(problem).toContainText(/SILENCE/);
-    await expect(problem).toContainText(/People don't fail because they lack ambition/i);
+    // 2026-07 consumer redesign (PR #810): the old #problem DRIFT/FOG/
+    // SILENCE grid was replaced by the warm #why block ("Reminders don't
+    // change behavior. Consequences do.") with the 80% stat and the three
+    // failure-mode cards. Source of truth: src/sections/WhySection.tsx.
+    const why = page.locator('#why');
+    await expect(why).toBeVisible({ timeout: 10_000 });
+    await expect(why).toContainText(/Reminders don't change behavior/i);
+    await expect(why).toContainText(/80%/);
+    await expect(why).toContainText(/People don't fail because they lack ambition/i);
+    await expect(why).toContainText(/Habit apps are easy to ignore/i);
+    await expect(why).toContainText(/Quitting is free/i);
 });
 
 test('navbar uses plain-English labels', async ({ page }) => {

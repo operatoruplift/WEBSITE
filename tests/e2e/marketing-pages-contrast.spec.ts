@@ -106,13 +106,14 @@ test('/ homepage defaults to the light marketing palette', async ({ page }) => {
     );
     expect(hasThemeLight, 'homepage should boot with .theme-light class on <html>').toBe(true);
 
-    // Hero h1 colour. .theme-light overrides the foreground token to
-    // #0A0A0A (rgb 10, 10, 10). Lock that so a future palette tweak
-    // can't silently invert it.
+    // Hero h1 colour. The 2026-07 warm-cream redesign (PR #810) set the
+    // .theme-light foreground token to #1C1917 (rgb 28, 25, 23), a warm
+    // near-black. Lock that so a future palette tweak can't silently
+    // invert it to light-on-light.
     const h1Color = await page.locator('#hero-heading').first().evaluate(
         el => getComputedStyle(el).color,
     );
-    expect(h1Color, 'hero h1 should render dark on the light surface').toMatch(/rgb\(10,\s*10,\s*10\)/);
+    expect(h1Color, 'hero h1 should render dark on the light surface').toMatch(/rgb\(28,\s*25,\s*23\)/);
 });
 
 // /pricing converted to the dark redesign palette in PR #679 to
