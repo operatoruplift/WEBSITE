@@ -4,10 +4,10 @@ import React from 'react';
 import { FadeIn } from '@/src/components/Animators';
 
 const STATS = [
-  { big: '53', label: 'paid spots sold pre-launch' },
-  { big: '562', label: 'waitlisted in 72 hours' },
-  { big: '200+', label: 'users in beta' },
-  { big: '4,555+', label: 'community members' },
+  { big: '200+', label: 'paid founding members' },
+  { big: '1,000+', label: 'on the waitlist' },
+  { big: '2,200+', label: 'beta testers' },
+  { big: '4,600+', label: 'pre-launch community' },
 ];
 
 const ProofSection: React.FC = () => {

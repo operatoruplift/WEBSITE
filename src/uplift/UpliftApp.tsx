@@ -42,36 +42,24 @@ const queryClient = new QueryClient({
   },
 });
 
-function AppShell({ children }: { children: ReactNode }) {
-  const [location] = useLocation();
-  const showTabNav = ['/app', '/app/social', '/app/journey', '/app/vault'].includes(location);
-
-  return (
-    <div className="ou-app min-h-[100dvh] bg-stone-900 w-full flex items-center justify-center">
-      <PhoneFrame>
-        {children}
-        {showTabNav && <TabBar active={location} />}
-      </PhoneFrame>
-    </div>
-  );
-}
-
 function AppArea() {
   const { hasSeen, markSeen } = useOnboarding();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
 
-  if (!hasSeen) {
-    return (
-      <Onboarding
-        onDone={() => {
-          markSeen();
-          setLocation('/app');
-        }}
-      />
-    );
-  }
+  // Single source of onboarding state so the phone shell can hide the
+  // tab bar while onboarding is showing (it only belongs on the four
+  // top-level tabs once the user is in the app).
+  const showTabNav =
+    hasSeen && ['/app', '/app/social', '/app/journey', '/app/vault'].includes(location);
 
-  return (
+  const content = !hasSeen ? (
+    <Onboarding
+      onDone={() => {
+        markSeen();
+        setLocation('/app');
+      }}
+    />
+  ) : (
     <Switch>
       <Route path="/app" component={Home} />
       <Route path="/app/browse" component={Browse} />
@@ -111,6 +99,15 @@ function AppArea() {
       <Route component={NotFound} />
     </Switch>
   );
+
+  return (
+    <div className="ou-app min-h-[100dvh] bg-stone-900 w-full flex items-center justify-center">
+      <PhoneFrame>
+        {content}
+        {showTabNav && <TabBar active={location} />}
+      </PhoneFrame>
+    </div>
+  );
 }
 
 function RoutedErrorBoundary({ children }: { children: ReactNode }) {
@@ -123,9 +120,7 @@ export default function UpliftApp() {
     <QueryClientProvider client={queryClient}>
       <WouterRouter>
         <RoutedErrorBoundary>
-          <AppShell>
-            <AppArea />
-          </AppShell>
+          <AppArea />
         </RoutedErrorBoundary>
       </WouterRouter>
       <Toaster position="top-center" richColors theme="system" />

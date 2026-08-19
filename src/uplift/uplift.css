@@ -12,7 +12,10 @@
   --card-alt: #fbf6ee;
   --text: #3e3226;
   --text2: #57534e;
-  --text3: #a8a29e;
+  /* text3 is tertiary/caption text. The reference #a8a29e was ~2.3:1 on
+     cards and near-invisible on the cream --bg; darkened to clear WCAG AA
+     (~4.6:1 on --bg, ~5.4:1 on --card) while still reading as muted. */
+  --text3: #675f58;
   --border: #ede6da;
   --border-s: #e2d9cb;
   --shadow: 0 8px 24px -8px rgba(120, 90, 50, 0.18);
@@ -43,7 +46,8 @@ html.ou-dark .ou-app {
   --card-alt: #382b24;
   --text: #fdfbf7;
   --text2: #d6cfc5;
-  --text3: #8c857c;
+  /* Lightened from #8c857c so captions clear AA on the darker cards. */
+  --text3: #9a938a;
   --border: rgba(255, 255, 255, 0.08);
   --border-s: rgba(255, 255, 255, 0.14);
   --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);

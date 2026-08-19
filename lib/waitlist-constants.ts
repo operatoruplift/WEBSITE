@@ -10,19 +10,21 @@
  *     on this site. The real waitlist also includes people who pledged
  *     via Discord, X DMs, founder direct outreach, and the earliest
  *     pilot cohort that predates the /waitlist page.
- *   - The founder-confirmed off-platform figure (2026-06-08) is 562;
- *     combined with the live table count (~23) it puts the public total
- *     at 585+.
+ *   - The founder-confirmed off-platform figure (2026-08-18) is 950;
+ *     combined with the live table count it puts the public waitlist
+ *     total at 1,000+, matching the traction cohorts on the homepage
+ *     (200+ paid founding members, 1,000+ waitlist, 2,200+ beta,
+ *     4,600+ pre-launch community).
  *
  * Display total = WAITLIST_OFFPLATFORM_BASE + live Supabase count, so
- * the number reads 585+ today and ticks up by one on every new web
+ * the number reads 1,000+ today and ticks up by one on every new web
  * signup, so the person submitting watches it increment in real time.
  * Once on-platform signups dwarf the base, the base stops mattering.
  *
  * Override per-environment with NEXT_PUBLIC_WAITLIST_OFFPLATFORM_BASE.
  * Bump the default whenever the founder confirms new off-platform commits.
  */
-const DEFAULT_OFFPLATFORM_BASE = 562;
+const DEFAULT_OFFPLATFORM_BASE = 950;
 
 const parsedBase = Number(process.env.NEXT_PUBLIC_WAITLIST_OFFPLATFORM_BASE);
 
