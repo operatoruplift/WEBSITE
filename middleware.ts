@@ -79,6 +79,11 @@ const PUBLIC_ROUTES = [
     // gate; without this allowlist entry middleware would 401 before the
     // handler's gate runs, hiding the route's own forbidden envelope.
     '/api/admin/',
+    // On-chain escrow settlement. Called by the verification backend with
+    // an X-Escrow-Key header (not a Privy session), so the handler runs its
+    // own key gate + config-gate; same rationale as /api/admin and
+    // /api/debug. Signs with the settlement-authority key server-side.
+    '/api/escrow/',
 ];
 
 export function middleware(request: NextRequest) {
